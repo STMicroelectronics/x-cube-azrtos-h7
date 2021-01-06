@@ -37,7 +37,9 @@ One of the following toolchains:
 The STMicroelectronics GitHub X-CUBE-AZRTOS repository consists of the following repositories:
 - **Drivers**: contains STM32H7 CMSIS, HAL and BSP drivers
 - **Middlewares**: contains ThreadX, NetX Duo, FileX, LevelX and USBX stacks including porting on STM32 hardware
-- **Projects**: provides ready-to-run applicative examples for Azure RTOS on the supported boards
+- **Projects**: provides ready-to-run applicative examples for Azure RTOS on the supported boards. Projects are structured as follows:
+
+![](_htmresc/AzureRTOS_Projects_Structure.png)
 
 ## Documentation
 More comprehensive documentation will be available in Q1 2021.
