@@ -60,7 +60,7 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 void   MX_ETH_Init(void);
 /* USER CODE BEGIN Private defines */
-//#define  SERVER_SOCKET_MODE         /* if commented it's CLIENT_SOCKET_MODE */
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

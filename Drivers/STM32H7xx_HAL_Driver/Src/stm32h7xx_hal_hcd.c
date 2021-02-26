@@ -1464,6 +1464,7 @@ static void HCD_HC_OUT_IRQHandler(HCD_HandleTypeDef *hhcd, uint8_t chnum)
       {
         hhcd->hc[ch_num].ErrCnt = 0U;
         hhcd->hc[ch_num].urb_state = URB_ERROR;
+        HAL_HCD_HC_NotifyURBChange_Callback(hhcd, (uint8_t)ch_num, hhcd->hc[ch_num].urb_state);
       }
       else
       {
@@ -1520,23 +1521,19 @@ static void HCD_HC_OUT_IRQHandler(HCD_HandleTypeDef *hhcd, uint8_t chnum)
     {
       hhcd->hc[ch_num].urb_state  = URB_STALL;
     }
-    else
-    {
-      /* ... */
-    }
-
-    if ((hhcd->hc[ch_num].state == HC_XACTERR) ||
-        (hhcd->hc[ch_num].state == HC_DATATGLERR))
+    else if ((hhcd->hc[ch_num].state == HC_XACTERR) ||
+             (hhcd->hc[ch_num].state == HC_DATATGLERR))
     {
       hhcd->hc[ch_num].ErrCnt++;
       if (hhcd->hc[ch_num].ErrCnt > 2U)
       {
         hhcd->hc[ch_num].ErrCnt = 0U;
         hhcd->hc[ch_num].urb_state = URB_ERROR;
-        HAL_HCD_HC_NotifyURBChange_Callback(hhcd, (uint8_t)ch_num, hhcd->hc[ch_num].urb_state);
       }
       else
       {
+        hhcd->hc[ch_num].urb_state = URB_NOTREADY;
+
         /* re-activate the channel  */
         tmpreg = USBx_HC(ch_num)->HCCHAR;
         tmpreg &= ~USB_OTG_HCCHAR_CHDIS;
@@ -1546,10 +1543,11 @@ static void HCD_HC_OUT_IRQHandler(HCD_HandleTypeDef *hhcd, uint8_t chnum)
     }
     else
     {
-      HAL_HCD_HC_NotifyURBChange_Callback(hhcd, (uint8_t)ch_num, hhcd->hc[ch_num].urb_state);
+      /* ... */
     }
 
     __HAL_HCD_CLEAR_HC_INT(ch_num, USB_OTG_HCINT_CHH);
+    HAL_HCD_HC_NotifyURBChange_Callback(hhcd, (uint8_t)ch_num, hhcd->hc[ch_num].urb_state);
   }
   else
   {

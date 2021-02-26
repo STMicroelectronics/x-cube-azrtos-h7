@@ -45,7 +45,7 @@ UINT lx_stm32_ospi_initialize(LX_NOR_FLASH *nor_flash)
   if (is_initialized == LX_FALSE)
   {
 
-#if (LX_DRIVER_CALLS_BSP_OSPI_INIT == 1)
+#if (LX_DRIVER_CALLS_OSPI_INIT == 1)
 
     BSP_OSPI_NOR_Init_t ospi_config;
 
@@ -58,7 +58,7 @@ UINT lx_stm32_ospi_initialize(LX_NOR_FLASH *nor_flash)
       return LX_ERROR;
     }
 
-#if (LX_DRIVER_ERASES_OPSI_AFTER_INIT == 1)
+#if (LX_DRIVER_ERASES_OSPI_AFTER_INIT == 1)
 
     if(BSP_OSPI_NOR_Erase_Chip(OSPI_INSTANCE) != BSP_ERROR_NONE)
     {
@@ -107,7 +107,7 @@ UINT lx_stm32_ospi_initialize(LX_NOR_FLASH *nor_flash)
 
 static UINT  lx_ospi_driver_read_sector(ULONG *flash_address, ULONG *destination, ULONG words)
 {
-  if(BSP_OSPI_NOR_Read(OSPI_INSTANCE, (uint8_t *)destination, (uint32_t)flash_address, (uint8_t) words * sizeof(ULONG)) != BSP_ERROR_NONE)
+  if(BSP_OSPI_NOR_Read(OSPI_INSTANCE, (uint8_t *) destination, (uint32_t) flash_address, (uint32_t) words * sizeof(ULONG)) != BSP_ERROR_NONE)
   {
     return(LX_ERROR);
   }
@@ -119,7 +119,7 @@ static UINT  lx_ospi_driver_read_sector(ULONG *flash_address, ULONG *destination
 
 static UINT  lx_ospi_driver_write_sector(ULONG *flash_address, ULONG *source, ULONG words)
 {
-  if(BSP_OSPI_NOR_Write(OSPI_INSTANCE, (uint8_t *) source, (uint32_t) flash_address, (uint32_t)words * sizeof(ULONG)) != BSP_ERROR_NONE)
+  if(BSP_OSPI_NOR_Write(OSPI_INSTANCE, (uint8_t *) source, (uint32_t) flash_address, (uint32_t) words * sizeof(ULONG)) != BSP_ERROR_NONE)
   {
     return(LX_ERROR);
   }

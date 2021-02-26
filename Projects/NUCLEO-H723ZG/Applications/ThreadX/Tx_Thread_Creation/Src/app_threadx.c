@@ -47,7 +47,6 @@
 TX_THREAD MainThread;
 TX_THREAD ThreadOne;
 TX_THREAD ThreadTwo;
-TX_BYTE_POOL BytePool;
 TX_EVENT_FLAGS_GROUP EventFlag;
 /* USER CODE END PV */
 
@@ -58,12 +57,6 @@ void ThreadTwo_Entry(ULONG thread_input);
 void MainThread_Entry(ULONG thread_input);
 void App_Delay(uint32_t Delay);
 /* USER CODE END PFP */
-
-/* Global user code ---------------------------------------------------------*/
-/* USER CODE BEGIN Global user code */
-
-/* USER CODE END Global user code */
-
 /**
   * @brief  Application ThreadX Initialization.
   * @param memory_ptr: memory pointer
@@ -71,19 +64,14 @@ void App_Delay(uint32_t Delay);
   */
 UINT App_ThreadX_Init(VOID *memory_ptr)
 {
-    UINT ret = TX_SUCCESS;
-    /* USER CODE BEGIN  App_ThreadX_Init */
+  UINT ret = TX_SUCCESS;
+  TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+
+  /* USER CODE BEGIN App_ThreadX_Init */
   CHAR *pointer;
-  
-  /* Create a byte memory pool from which to allocate the thread stacks.  */
-  if (tx_byte_pool_create(&BytePool, "Byte Pool", memory_ptr,
-                          APP_BYTE_POOL_SIZE) != TX_SUCCESS)
-  {
-    ret = TX_POOL_ERROR;
-  }
-  
+
   /* Allocate the stack for MainThread.  */
-  if (tx_byte_allocate(&BytePool, (VOID **) &pointer,
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     ret = TX_POOL_ERROR;
@@ -99,7 +87,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   }
   
   /* Allocate the stack for ThreadOne.  */
-  if (tx_byte_allocate(&BytePool, (VOID **) &pointer,
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     ret = TX_POOL_ERROR;
@@ -115,7 +103,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   }
 
   /* Allocate the stack for ThreadTwo.  */
-  if (tx_byte_allocate(&BytePool, (VOID **) &pointer,
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     ret = TX_POOL_ERROR;
@@ -135,15 +123,10 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   {
     ret = TX_GROUP_ERROR;
   }
-    /* USER CODE END  App_ThreadX_Init */
+  /* USER CODE END App_ThreadX_Init */
 
-    return ret;
+  return ret;
 }
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN Private user code */
-
-/* USER CODE END Private user code */
 
 /* USER CODE BEGIN 1 */
 /**
@@ -161,8 +144,6 @@ void MainThread_Entry(ULONG thread_input)
   
   while (count < 3)
   {
-//    old_prio = THREAD_TWO_PRIO;
-//    old_pre_threshold = THREAD_TWO_PREEMPTION_THRESHOLD;
     count++;
     if (tx_event_flags_get(&EventFlag, THREAD_ONE_EVT, TX_OR_CLEAR, 
                            &actual_flags, TX_WAIT_FOREVER) != TX_SUCCESS)
@@ -183,8 +164,6 @@ void MainThread_Entry(ULONG thread_input)
       }
       else
       {
-//        old_prio = NEW_THREAD_TWO_PRIO;
-//        old_pre_threshold = NEW_THREAD_TWO_PREEMPTION_THRESHOLD;
         /* Reset the priority and preemption threshold of ThreadTwo */ 
         tx_thread_priority_change(&ThreadTwo, THREAD_TWO_PRIO, &old_prio);
         tx_thread_preemption_change(&ThreadTwo, THREAD_TWO_PREEMPTION_THRESHOLD, &old_pre_threshold);
@@ -201,7 +180,7 @@ void MainThread_Entry(ULONG thread_input)
   {
     BSP_LED_Toggle(LED_GREEN);
     /* Thread sleep for 1s */
-    tx_thread_sleep(1000);
+    tx_thread_sleep(100);
   }
 }
 
@@ -219,7 +198,7 @@ void ThreadOne_Entry(ULONG thread_input)
   {
     BSP_LED_Toggle(LED_GREEN);
     /* Delay for 500ms (App_Delay is used to avoid context change). */
-    App_Delay(500);
+    App_Delay(50);
     count ++;
     if (count == 10)
     {
@@ -246,7 +225,7 @@ void ThreadTwo_Entry(ULONG thread_input)
   {
     BSP_LED_Toggle(LED_GREEN);
     /* Delay for 200ms (App_Delay is used to avoid context change). */
-    App_Delay(200);
+    App_Delay(20);
     count ++;
     if (count == 25)
     {

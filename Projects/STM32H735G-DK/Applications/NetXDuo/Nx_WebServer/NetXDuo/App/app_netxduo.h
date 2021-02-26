@@ -30,7 +30,6 @@ extern "C" {
 #include "nx_api.h"
 
 /* Private includes ----------------------------------------------------------*/
-
 #include "nx_stm32_eth_driver.h"
 
 /* USER CODE BEGIN Includes */
@@ -49,7 +48,11 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-#define PRINT_ADDRESS(addr) do { \
+#define PRINT_APP_START(test)            do { \
+                                              printf("%s Application started..\n\n", #test);\
+                                            } while(0)
+
+#define PRINT_IP_ADDRESS(addr) do { \
                                     printf("%s: %lu.%lu.%lu.%lu \n", #addr, \
                                     (addr >> 24) & 0xff, \
                                     (addr >> 16) & 0xff, \
@@ -57,20 +60,6 @@ extern "C" {
                                      addr& 0xff);\
                                   }while(0)
 /* USER CODE END EM */
-
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
 
 /* Exported functions prototypes ---------------------------------------------*/
 UINT App_NetXDuo_Init(VOID *memory_ptr);
@@ -80,14 +69,15 @@ UINT App_NetXDuo_Init(VOID *memory_ptr);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-/* USER CODE BEGIN Private defines */
+/* USER CODE BEGIN PD */
 /* Pirority IP creation */
-#define DEFAULT_MEMORY_SIZE      1024
-#define DEFAULT_PRIORITY         10
+#define DEFAULT_MEMORY_SIZE              1024
+#define DEFAULT_MAIN_PRIORITY            10
+#define DEFAULT_PRIORITY                 5
  /*Packet payload size */
 #define PACKET_PAYLOAD_SIZE              1536
 /* Packet pool size */
-#define NX_PACKET_POOL_SIZE              ((1536 + sizeof(NX_PACKET)) * 60)
+#define NX_PACKET_POOL_SIZE              ((1536 + sizeof(NX_PACKET)) * 50)
  /* APP Cache size  */
 #define ARP_CACHE_SIZE                   1024
  /* Wait option for getting @IP */
@@ -114,14 +104,14 @@ UINT App_NetXDuo_Init(VOID *memory_ptr);
 #define SD_DRIVER_INFO_POINTER           0
 
 #define NULL_IP_ADDRESS                  IP_ADDRESS(0,0,0,0)
-/* USER CODE END Private defines */
+/* USER CODE END PD */
 
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
 
 #ifdef __cplusplus
- }
+}
 #endif
 #endif /* __APP_NETXDUO_H__ */
 

@@ -110,7 +110,7 @@
    which places an 0xEF pattern in each byte of each thread's stack.  This is used by
    debuggers with ThreadX-awareness and by the ThreadX run-time stack checking feature.  */
 
-#define TX_DISABLE_STACK_FILLING
+/*#define TX_DISABLE_STACK_FILLING*/
 
 /* Determine whether or not stack checking is enabled. By default, ThreadX stack checking is
    disabled. When the following is defined, ThreadX thread stack checking is enabled.  If stack
@@ -208,10 +208,6 @@
 
 /*#define TX_TIMER_ENABLE_PERFORMANCE_INFO*/
 
-/* Define if the MISRA check is enabled. */
-
-/*#define TX_MISRA_ENABLE*/
-
 /* Define the clock source for trace event entry time stamp. */
 
 /*#define TX_TRACE_TIME_SOURCE  *((ULONG *) 0xE0001004)*/
@@ -235,7 +231,7 @@
 
 /* Define the common timer tick reference for use by other middleware components. */
 
-#define TX_TIMER_TICKS_PER_SECOND                1000
+/*#define TX_TIMER_TICKS_PER_SECOND                100*/
 
 /* Determinate if the basic alignment type is defined. */
 

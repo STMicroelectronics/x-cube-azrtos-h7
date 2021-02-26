@@ -208,10 +208,6 @@
 
 /*#define TX_TIMER_ENABLE_PERFORMANCE_INFO*/
 
-/* Define if the MISRA check is enabled. */
-
-/*#define TX_MISRA_ENABLE*/
-
 /* Define the clock source for trace event entry time stamp. */
 
 /*#define TX_TRACE_TIME_SOURCE  *((ULONG *) 0xE0001004)*/

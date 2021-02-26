@@ -3,7 +3,7 @@
 ******************************************************************************
 * @file    app_netxduo.c
 * @author  MCD Application Team
-* @brief   NetXDuo applicative file
+* @brief   NetXDuo application file
 ******************************************************************************
 * @attention
 *
@@ -67,21 +67,24 @@ static VOID App_TCP_Thread_Entry(ULONG thread_input);
 
 static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr);
 /* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-/* USER CODE END 0 */
-
 /**
-* @brief  Application NetXDuo Initialization.
-* @param memory_ptr: memory pointer
-* @retval int
-*/
+  * @brief  Application NetXDuo Initialization.
+  * @param memory_ptr: memory pointer
+  * @retval int
+  */
 UINT App_NetXDuo_Init(VOID *memory_ptr)
 {
   UINT ret = NX_SUCCESS;
-  /* USER CODE BEGIN  App_NetXDuo_Init */
-  pointer = (UCHAR *) memory_ptr;
+  TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+
+  /* USER CODE BEGIN App_NetXDuo_Init */
+    printf("Nx_TCP_Echo_Server application started..\n");
+
+  /* Allocate the memory for packet_pool.  */
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,  NX_PACKET_POOL_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+  {
+    return TX_POOL_ERROR;
+  }
 
   /* Create the Packet pool to be used for packet allocation */
   ret = nx_packet_pool_create(&AppPool, "Main Packet Pool", PAYLOAD_SIZE, pointer, NX_PACKET_POOL_SIZE);
@@ -90,20 +93,27 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
   {
     return NX_NOT_ENABLED;
   }
-
-  /* Increment the memory pointer by the size of the packet pool to avoid memory overlap */
-  pointer = pointer + NX_PACKET_POOL_SIZE;
+  
+  /* Allocate the memory for Ip_Instance */
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,   2 * DEFAULT_MEMORY_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+  {
+    return TX_POOL_ERROR;
+  }
 
   /* Create the main NX_IP instance */
-  ret = nx_ip_create(&IpInstance, "Main Ip instance", NULL_ADDRESS, NULL_ADDRESS, &AppPool,
-                     nx_driver_stm32h7xx, pointer, 2 * DEFAULT_MEMORY_SIZE, DEFAULT_PRIORITY);
+  ret = nx_ip_create(&IpInstance, "Main Ip instance", NULL_ADDRESS, NULL_ADDRESS, &AppPool, nx_stm32_eth_driver,
+		             pointer, 2 * DEFAULT_MEMORY_SIZE, DEFAULT_PRIORITY);
 
   if (ret != NX_SUCCESS)
   {
     return NX_NOT_ENABLED;
   }
 
-  pointer = pointer + (2 * DEFAULT_MEMORY_SIZE);
+  /* Allocate the memory for ARP */
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, DEFAULT_MEMORY_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+  {
+    return TX_POOL_ERROR;
+  }  
 
   /*  Enable the ARP protocol and provide the ARP cache size for the IP instance */
   ret = nx_arp_enable(&IpInstance, (VOID *)pointer, DEFAULT_MEMORY_SIZE);
@@ -113,9 +123,7 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
     return NX_NOT_ENABLED;
   }
 
-  pointer =  pointer + (2 * DEFAULT_MEMORY_SIZE);
   /* Enable the ICMP */
-
   ret = nx_icmp_enable(&IpInstance);
 
   if (ret != NX_SUCCESS)
@@ -133,7 +141,13 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
   {
     return NX_NOT_ENABLED;
   }
-
+  
+  /* Allocate the memory for main thread   */
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,2 *  DEFAULT_MEMORY_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+  {
+    return TX_POOL_ERROR;
+  }
+  
   /* Create the main thread */
   ret = tx_thread_create(&AppMainThread, "App Main thread", App_Main_Thread_Entry, 0, pointer, 2 * DEFAULT_MEMORY_SIZE,
                          DEFAULT_PRIORITY, DEFAULT_PRIORITY, TX_NO_TIME_SLICE, TX_AUTO_START);
@@ -142,9 +156,13 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
   {
     return NX_NOT_ENABLED;
   }
-
-  pointer =  pointer + (2 * DEFAULT_MEMORY_SIZE);
-
+  
+  /* Allocate the memory for TCP server thread   */
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,2 *  DEFAULT_MEMORY_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+  {
+    return TX_POOL_ERROR;
+  }
+  
   /* create the TCP server thread */
   ret = tx_thread_create(&AppTCPThread, "App TCP Thread", App_TCP_Thread_Entry, 0, pointer, 2 * DEFAULT_MEMORY_SIZE,
                          DEFAULT_PRIORITY, DEFAULT_PRIORITY, TX_NO_TIME_SLICE, TX_DONT_START);
@@ -153,9 +171,6 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
   {
     return NX_NOT_ENABLED;
   }
-
-  pointer =  pointer + (2 * DEFAULT_MEMORY_SIZE);
-
 
   /* create the DHCP client */
   ret = nx_dhcp_create(&DHCPClient, &IpInstance, "DHCP Client");
@@ -168,7 +183,8 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
   /* create a semaphore used to notify the main thread when the IP address is resolved */
   tx_semaphore_create(&Semaphore, "App Semaphore", 0);
 
-  /* USER CODE END  App_NetXDuo_Init */
+  /* USER CODE END App_NetXDuo_Init */
+
   return ret;
 }
 
@@ -264,7 +280,7 @@ static VOID App_TCP_Thread_Entry(ULONG thread_input)
 
   /* create the TCP socket */
   ret = nx_tcp_socket_create(&IpInstance, &TCPSocket, "TCP Server Socket", NX_IP_NORMAL, NX_FRAGMENT_OKAY,
-                             NX_IP_TIME_TO_LIVE, 512, NX_NULL, NX_NULL);
+                             NX_IP_TIME_TO_LIVE, WINDOW_SIZE, NX_NULL, NX_NULL);
   if (ret)
   {
     Error_Handler();
@@ -279,6 +295,10 @@ static VOID App_TCP_Thread_Entry(ULONG thread_input)
   if (ret)
   {
     Error_Handler();
+  }
+  else 
+  {
+    printf("TCP Server listening on PORT %d ..\n", DEFAULT_PORT);
   }
 
   if(tx_semaphore_get(&Semaphore, TX_WAIT_FOREVER) != TX_SUCCESS)
@@ -336,8 +356,6 @@ static VOID App_TCP_Thread_Entry(ULONG thread_input)
         {
           BSP_LED_Toggle(LED_GREEN);
         }
-
-        nx_packet_release(data_packet);
       }
       else
       {

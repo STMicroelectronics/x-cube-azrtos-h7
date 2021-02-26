@@ -49,4 +49,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-README.html
+
+# README files
+/README.html

@@ -12,8 +12,8 @@
 
 /**************************************************************************/
 /**************************************************************************/
-/**                                                                       */ 
-/** USBX Component                                                        */ 
+/**                                                                       */
+/** USBX Component                                                        */
 /**                                                                       */
 /**   STM32 Controller Driver                                             */
 /**                                                                       */
@@ -31,40 +31,40 @@
 #include "ux_host_stack.h"
 
 
-/**************************************************************************/ 
-/*                                                                        */ 
-/*  FUNCTION                                               RELEASE        */ 
-/*                                                                        */ 
-/*    _ux_hcd_stm32_ed_obtain                             PORTABLE C      */ 
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _ux_hcd_stm32_ed_obtain                             PORTABLE C      */
 /*                                                           6.0          */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
 /*                                                                        */
 /*  DESCRIPTION                                                           */
-/*                                                                        */ 
-/*    This function obtains a free ED from the ED list.                   */ 
-/*                                                                        */ 
-/*  INPUT                                                                 */ 
-/*                                                                        */ 
-/*    hcd_stm32                           Pointer to STM32 controller     */ 
-/*                                                                        */ 
-/*  OUTPUT                                                                */ 
-/*                                                                        */ 
-/*    UX_HCD_STM32_ED *                   Pointer to ED                   */ 
-/*                                                                        */ 
-/*  CALLS                                                                 */ 
-/*                                                                        */ 
-/*    _ux_utility_memory_set                Set memory block              */ 
-/*                                                                        */ 
-/*  CALLED BY                                                             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*    This function obtains a free ED from the ED list.                   */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    hcd_stm32                           Pointer to STM32 controller     */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    UX_HCD_STM32_ED *                   Pointer to ED                   */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_utility_memory_set                Set memory block              */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
 /*    STM32 Controller Driver                                             */
-/*                                                                        */ 
-/*  RELEASE HISTORY                                                       */ 
-/*                                                                        */ 
-/*    DATE              NAME                      DESCRIPTION             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*                                                                        */
 /**************************************************************************/
@@ -81,15 +81,15 @@ ULONG                 ed_index;
     {
 
         /* Check the ED status, a free ED is marked with the UNUSED flag.  */
-        if (ed -> ux_stm32_ed_status == UX_UNUSED)
+        if (ed -> ux_stm32_ed_status == UX_HCD_STM32_ED_STATUS_FREE)
         {
 
             /* The ED may have been used, so we reset all fields.  */
             _ux_utility_memory_set(ed, 0, sizeof(UX_HCD_STM32_ED));
 
-            /* This ED is now marked as USED.  */
-            ed -> ux_stm32_ed_status =  UX_USED;
-            
+            /* This ED is now marked as ALLOCATED.  */
+            ed -> ux_stm32_ed_status =  UX_HCD_STM32_ED_STATUS_ALLOCATED;
+
             /* Reset the channel.  */
             ed -> ux_stm32_ed_channel =  UX_HCD_STM32_NO_CHANNEL_ASSIGNED;
 

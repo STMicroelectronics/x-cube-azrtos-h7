@@ -1,4 +1,4 @@
-;/******************** (C) COPYRIGHT 2020 STMicroelectronics ********************
+;/******************** (C) COPYRIGHT 2019 STMicroelectronics ********************
 ;* File Name          : startup_stm32h723xx.s
 ;* Author             : MCD Application Team
 ;* Description        : STM32H723xx devices vector table for EWARM toolchain.
@@ -14,7 +14,7 @@
 ;*******************************************************************************
 ;* @attention
 ;*
-;* <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+;* <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
 ;* All rights reserved.</center></h2>
 ;*
 ;* This software component is licensed by ST under BSD 3-Clause license,

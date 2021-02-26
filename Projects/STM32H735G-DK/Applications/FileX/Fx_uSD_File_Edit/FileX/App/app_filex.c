@@ -18,6 +18,7 @@
 ******************************************************************************
 */
 /* USER CODE END Header */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_filex.h"
 
@@ -33,17 +34,21 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
 #define DEFAULT_STACK_SIZE               (2 * 1024)
+#define DEFAULT_QUEUE_LENGTH             16
+
 /* fx_sd_thread priority */
 #define DEFAULT_THREAD_PRIO              10
-/* Msg content*/
+/* fx_sd_thread preemption priority */
+#define DEFAULT_PREEMPTION_THRESHOLD     DEFAULT_THREAD_PRIO
+
+/* Message content*/
 typedef enum {
 CARD_STATUS_CHANGED             = 99,
 CARD_STATUS_DISCONNECTED        = 88,
 CARD_STATUS_CONNECTED           = 77
 } SD_ConnectionStateTypeDef;
-/* fx_sd_thread preemption priority */
-#define DEFAULT_PREEMPTION_THRESHOLD      DEFAULT_THREAD_PRIO
 
 /* USER CODE END PD */
 
@@ -57,14 +62,13 @@ CARD_STATUS_CONNECTED           = 77
 
 /* Buffer for FileX FX_MEDIA sector cache. this should be 32-Bytes
 aligned to avoid cache maintenance issues */
-
-ALIGN_32BYTES (uint32_t media_memory[512]);
+ALIGN_32BYTES (uint32_t media_memory[DEFAULT_SECTOR_SIZE / sizeof(uint32_t)]);
 
 /* Define FileX global data structures.  */
 FX_MEDIA        sdio_disk;
 FX_FILE         fx_file;
 /* Define ThreadX global data structures.  */
-TX_THREAD       fx_thread;
+TX_THREAD       fx_app_thread;
 TX_QUEUE        tx_msg_queue;
 
 /* USER CODE END PV */
@@ -78,11 +82,6 @@ void Error_Handler(void);
 
 /* USER CODE END PFP */
 
-/* Global user code ---------------------------------------------------------*/
-/* USER CODE BEGIN Global_User_Code */
-
-/* USER CODE END Global_User_Code */
-
 /**
   * @brief  Application FileX Initialization.
   * @param memory_ptr: memory pointer
@@ -90,30 +89,47 @@ void Error_Handler(void);
   */
 UINT App_FileX_Init(VOID *memory_ptr)
 {
-    UINT ret = FX_SUCCESS;
-    /* USER CODE BEGIN App_FileX_Init */
+  UINT ret = FX_SUCCESS;
 
-    UCHAR *tx_msg_queue_mem_start = (UCHAR*)memory_ptr + DEFAULT_STACK_SIZE;
+  TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-    /* Create the main thread.  */
-    tx_thread_create(&fx_thread, "fx_sd_thread", fx_thread_entry, 0,
-                   memory_ptr, DEFAULT_STACK_SIZE,
-                   DEFAULT_THREAD_PRIO,
-                   DEFAULT_PREEMPTION_THRESHOLD,
-                   TX_NO_TIME_SLICE, TX_AUTO_START);
+  /* USER CODE BEGIN App_FileX_Init */
 
-    tx_queue_create(&tx_msg_queue, "sd_event_queue", 1, tx_msg_queue_mem_start, 16 * sizeof(ULONG));
+  VOID *pointer;
 
-    /* Initialize FileX.  */
-    fx_system_initialize();
+  /* Allocate memory for the main thread's stack */
+  ret = tx_byte_allocate(byte_pool, &pointer, DEFAULT_STACK_SIZE, TX_NO_WAIT);
 
-    /* USER CODE END App_FileX_Init */
+  if (ret != FX_SUCCESS)
+  {
+    /* Failed at allocating memory */
+    Error_Handler();
+  }
 
-    return ret;
+  /* Create the main thread.  */
+  tx_thread_create(&fx_app_thread, "FileX App Thread", fx_thread_entry, 0, pointer, DEFAULT_STACK_SIZE,
+                   DEFAULT_THREAD_PRIO, DEFAULT_PREEMPTION_THRESHOLD, TX_NO_TIME_SLICE, TX_AUTO_START);
+
+  /* Allocate memory for the message queue */
+  ret = tx_byte_allocate(byte_pool, &pointer, DEFAULT_QUEUE_LENGTH * sizeof(ULONG), TX_NO_WAIT);
+
+  if (ret != FX_SUCCESS)
+  {
+    /* Failed at allocating memory */
+    Error_Handler();
+  }
+
+  /* Create the message queue */
+  tx_queue_create(&tx_msg_queue, "sd_event_queue", 1, pointer, DEFAULT_QUEUE_LENGTH * sizeof(ULONG));
+
+  /* Initialize FileX.  */
+  fx_system_initialize();
+
+  /* USER CODE END App_FileX_Init */
+  return ret;
 }
 
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN Private_User_Code */
+/* USER CODE BEGIN 1 */
 
 void fx_thread_entry(ULONG thread_input)
 {
@@ -154,7 +170,7 @@ void fx_thread_entry(ULONG thread_input)
         }
       }
 
-      /* check if we received the correct event msg */
+      /* check if we received the correct event message */
       if(r_msg == CARD_STATUS_CHANGED)
       {
         /* reset the status */
@@ -183,7 +199,7 @@ void fx_thread_entry(ULONG thread_input)
     }
 
     /* Open the SD disk driver.  */
-    status =  fx_media_open(&sdio_disk, "STM32_SDIO_DISK", fx_stm32_sd_driver, 0, media_memory, sizeof(media_memory));
+    status =  fx_media_open(&sdio_disk, "STM32_SDIO_DISK", fx_stm32_sd_driver, 0,(VOID *) media_memory, sizeof(media_memory));
 
     /* Check the media open status.  */
     if (status != FX_SUCCESS)
@@ -307,10 +323,6 @@ void fx_thread_entry(ULONG thread_input)
 
   }
 }
-
-/* USER CODE END Private_User_Code */
-
-/* USER CODE BEGIN 1 */
 
 void BSP_SD_DetectCallback(uint32_t Instance, uint32_t Status)
 {

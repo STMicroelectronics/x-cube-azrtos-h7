@@ -64,9 +64,9 @@ UINT  app_usb_device_thread_media_write(VOID *storage, ULONG lun, UCHAR *data_po
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-/* USER CODE BEGIN Private defines */
+/* USER CODE BEGIN PD */
 
-/* USER CODE END Private defines */
+/* USER CODE END PD */
 
 /* USER CODE BEGIN 1 */
 

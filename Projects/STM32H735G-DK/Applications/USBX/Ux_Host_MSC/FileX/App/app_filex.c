@@ -18,12 +18,13 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_filex.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "ux_api.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,7 +43,6 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-extern FX_MEDIA *media;
 UCHAR Read_buffer[100];
 UCHAR Write_buffer[] = "USBX_STM32_Host_Mass_Storage";
 
@@ -53,11 +53,6 @@ UCHAR Write_buffer[] = "USBX_STM32_Host_Mass_Storage";
 
 /* USER CODE END PFP */
 
-/* Global user code ---------------------------------------------------------*/
-/* USER CODE BEGIN Global_User_Code */
-
-/* USER CODE END Global_User_Code */
-
 /**
   * @brief  Application FileX Initialization.
   * @param memory_ptr: memory pointer
@@ -66,18 +61,16 @@ UCHAR Write_buffer[] = "USBX_STM32_Host_Mass_Storage";
 UINT App_FileX_Init(VOID *memory_ptr)
 {
   UINT ret = FX_SUCCESS;
+
+  TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+
   /* USER CODE BEGIN App_FileX_Init */
+  (void)byte_pool;
   /* Initialize FileX.  */
   fx_system_initialize();
   /* USER CODE END App_FileX_Init */
-
   return ret;
 }
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN Private_User_Code */
-
-/* USER CODE END Private_User_Code */
 
 /* USER CODE BEGIN 1 */
 /**
@@ -85,13 +78,13 @@ UINT App_FileX_Init(VOID *memory_ptr)
   * @param  none
   * @retval UINT status
   */
-UINT App_File_Write(void)
+UINT App_File_Write(FX_MEDIA *fx_media)
 {
   FX_FILE my_file;
   UINT status;
 
   /* Open "TEST.TXT" file. */
-  status = fx_file_open(media, &my_file, "TEST.TXT", FX_OPEN_FOR_WRITE);
+  status = fx_file_open(fx_media, &my_file, "TEST.TXT", FX_OPEN_FOR_WRITE);
 
   /* Check the file open status. */
   if (status != FX_SUCCESS)
@@ -124,7 +117,7 @@ UINT App_File_Write(void)
   }
 
   /* Flush media.  */
-  status =  fx_media_flush(media);
+  status =  fx_media_flush(fx_media);
 
   /* Check the file close status. */
   if (status != FX_SUCCESS)
@@ -140,7 +133,7 @@ UINT App_File_Write(void)
 * @param  none
 * @retval UINT status
 */
-UINT App_File_Read(void)
+UINT App_File_Read(FX_MEDIA *fx_media)
 {
   FX_FILE  my_file;
   ULONG    requested_length;
@@ -151,13 +144,13 @@ UINT App_File_Read(void)
   file_attribute = 0;
 
   /* Try to read the file attributes. */
-  status = fx_file_attributes_read(media, "TEST.TXT", &file_attribute);
+  status = fx_file_attributes_read(fx_media, "TEST.TXT", &file_attribute);
 
   /* If this is a directory, pass. */
   if (!(file_attribute & 0x18) && (status == FX_SUCCESS))
   {
     /* Try to open the file. */
-    status = fx_file_open(media, &my_file, "TEST.TXT", FX_OPEN_FOR_READ);
+    status = fx_file_open(fx_media, &my_file, "TEST.TXT", FX_OPEN_FOR_READ);
 
     /* Read the entire file. */
     if (status == FX_SUCCESS)
@@ -201,12 +194,12 @@ UINT App_File_Read(void)
 * @param  none
 * @retval UINT status
 */
-UINT App_File_Create(void)
+UINT App_File_Create( FX_MEDIA *fx_media)
 {
   UINT status;
 
   /* Create a file called TEST.TXT in the root directory. */
-  status = fx_file_create(media, "TEST.TXT");
+  status = fx_file_create(fx_media, "TEST.TXT");
 
   /* Check the create status. */
   if ((status == FX_SUCCESS) || (status == FX_ALREADY_CREATED))

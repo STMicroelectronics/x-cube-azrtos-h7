@@ -77,60 +77,6 @@ void HAL_MspInit(void)
 }
 
 /**
-* @brief OSPI MSP Initialization
-* This function configures the hardware resources used in this example
-* @param hospi: OSPI handle pointer
-* @retval None
-*/
-void HAL_OSPI_MspInit(OSPI_HandleTypeDef* hospi)
-{
-  RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
-  if(hospi->Instance==OCTOSPI1)
-  {
-  /* USER CODE BEGIN OCTOSPI1_MspInit 0 */
-
-  /* USER CODE END OCTOSPI1_MspInit 0 */
-  /** Initializes the peripherals clock
-  */
-    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_OSPI;
-    PeriphClkInitStruct.OspiClockSelection = RCC_OSPICLKSOURCE_PLL;
-    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
-    {
-      Error_Handler();
-    }
-
-    /* Peripheral clock enable */
-    __HAL_RCC_OSPI1_CLK_ENABLE();
-  /* USER CODE BEGIN OCTOSPI1_MspInit 1 */
-
-  /* USER CODE END OCTOSPI1_MspInit 1 */
-  }
-
-}
-
-/**
-* @brief OSPI MSP De-Initialization
-* This function freeze the hardware resources used in this example
-* @param hospi: OSPI handle pointer
-* @retval None
-*/
-void HAL_OSPI_MspDeInit(OSPI_HandleTypeDef* hospi)
-{
-  if(hospi->Instance==OCTOSPI1)
-  {
-  /* USER CODE BEGIN OCTOSPI1_MspDeInit 0 */
-
-  /* USER CODE END OCTOSPI1_MspDeInit 0 */
-    /* Peripheral clock disable */
-    __HAL_RCC_OSPI1_CLK_DISABLE();
-  /* USER CODE BEGIN OCTOSPI1_MspDeInit 1 */
-
-  /* USER CODE END OCTOSPI1_MspDeInit 1 */
-  }
-
-}
-
-/**
 * @brief UART MSP Initialization
 * This function configures the hardware resources used in this example
 * @param huart: UART handle pointer
@@ -157,20 +103,12 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     /* Peripheral clock enable */
     __HAL_RCC_USART3_CLK_ENABLE();
 
-    __HAL_RCC_GPIOC_CLK_ENABLE();
     __HAL_RCC_GPIOD_CLK_ENABLE();
     /**USART3 GPIO Configuration
-    PC11     ------> USART3_RX
+    PD9     ------> USART3_RX
     PD8     ------> USART3_TX
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_11;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = GPIO_PIN_8;
+    GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_8;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -201,12 +139,10 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
     __HAL_RCC_USART3_CLK_DISABLE();
 
     /**USART3 GPIO Configuration
-    PC11     ------> USART3_RX
+    PD9     ------> USART3_RX
     PD8     ------> USART3_TX
     */
-    HAL_GPIO_DeInit(GPIOC, GPIO_PIN_11);
-
-    HAL_GPIO_DeInit(GPIOD, GPIO_PIN_8);
+    HAL_GPIO_DeInit(GPIOD, GPIO_PIN_9|GPIO_PIN_8);
 
   /* USER CODE BEGIN USART3_MspDeInit 1 */
 

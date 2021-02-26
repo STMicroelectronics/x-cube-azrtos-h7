@@ -9,64 +9,144 @@
 /*                                                                        */
 /**************************************************************************/
 
-/* Include necessary files.  */
-#include "lx_stm32_nor_driver.h"
+#include "lx_stm32_nor_custom_driver.h"
 
-static UINT  lx_nor_read(ULONG *flash_address, ULONG *destination, ULONG words);
-static UINT  lx_nor_write(ULONG *flash_address, ULONG *source, ULONG words);
+/* Private includes ----------------------------------------------------------*/
 
-static UINT  lx_nor_block_erase(ULONG block, ULONG erase_count);
-static UINT  lx_nor_block_erased_verify(ULONG block);
+/* USER CODE BEGIN Includes */
 
-UINT  lx_stm32_nor_initialize(LX_NOR_FLASH *nor_flash)
+/* USER CODE END Includes */
+
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
+
+/* USER CODE END PTD */
+
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
+
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+
+/* USER CODE END PM */
+
+/* Private variables ---------------------------------------------------------*/
+/* USER CODE BEGIN PV */
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
+/* USER CODE BEGIN PFP */
+
+/* USER CODE END PFP */
+
+static UINT  lx_nor_driver_read(ULONG *flash_address, ULONG *destination, ULONG words);
+static UINT  lx_nor_driver_write(ULONG *flash_address, ULONG *source, ULONG words);
+
+static UINT  lx_nor_driver_block_erase(ULONG block, ULONG erase_count);
+static UINT  lx_nor_driver_block_erased_verify(ULONG block);
+
+/* USER CODE BEGIN USER_CODE_SECTION_1 */
+
+/* USER CODE END USER_CODE_SECTION_1 */
+
+#ifndef LX_DIRECT_READ
+
+#ifndef NOR_SECTOR_BUFFER_SIZE
+#define NOR_SECTOR_BUFFER_SIZE 512
+#endif
+
+static ULONG nor_sector_memory[NOR_SECTOR_BUFFER_SIZE];
+#endif
+
+UINT  lx_stm32_nor_custom_driver_initialize(LX_NOR_FLASH *nor_flash)
 {
-    /* this function is the main driver entry it should implment
-     * - the specific device initialization.
-     * - setup the nor flash genometry
-     * - define the driver function pointers for the NOR flash services (read, write, eraseblock,)
-     
-     --> Setup geometry of the flash. <--
-     
-       nor_flash->lx_nor_flash_total_blocks <-- define the total blocks in the flash
-       nor_flash->lx_nor_flash_words_per_block <-- setup the words per block
+  UINT ret = LX_SUCCESS;
 
-     -->Setup function pointers for the NOR flash services <--
+  ULONG total_blocks = 0;
+  ULONG words_per_block = 0;
 
-    nor_flash->lx_nor_flash_driver_read = lx_nor_simulator_read;
-    nor_flash->lx_nor_flash_driver_write = lx_nor_simulator_write;
+  /* USER CODE BEGIN Init_Section_0 */
 
-    nor_flash->lx_nor_flash_driver_block_erase = lx_nor_simulator_block_erase;
-    nor_flash->lx_nor_flash_driver_block_erased_verify = lx_nor_simulator_block_erased_verify;
+  /* USER CODE END Init_Section_0 */
 
-    --> etup local buffer for NOR flash operation. This buffer must be the sector size of the NOR flash memory <--
-    nor_flash->lx_nor_flash_sector_buffer <-- define a buffer to be used by the levelx for internal operations.
+  nor_flash->lx_nor_flash_total_blocks    = total_blocks;
+  nor_flash->lx_nor_flash_words_per_block = words_per_block;
 
-    */
-    return(LX_SUCCESS);
+
+  /* USER CODE BEGIN Init_Section_1 */
+
+  /* USER CODE END Init_Section_1 */
+
+
+  nor_flash->lx_nor_flash_driver_read = lx_nor_driver_read;
+  nor_flash->lx_nor_flash_driver_write = lx_nor_driver_write;
+
+  nor_flash->lx_nor_flash_driver_block_erase = lx_nor_driver_block_erase;
+  nor_flash->lx_nor_flash_driver_block_erased_verify = lx_nor_driver_block_erased_verify;
+
+#ifndef LX_DIRECT_READ
+    nor_flash->lx_nor_flash_sector_buffer = nor_sector_memory;
+#endif
+
+  /* USER CODE BEGIN Init_Section_2 */
+
+  /* USER CODE END Init_Section_2 */
+
+    return ret;
 }
 
 
-static UINT  lx_nor_read(ULONG *flash_address, ULONG *destination, ULONG words)
-{
+/* USER CODE BEGIN USER_CODE_SECTION_2 */
 
-    return(LX_SUCCESS);
+/* USER CODE END USER_CODE_SECTION_2 */
+
+static UINT lx_nor_driver_read(ULONG *flash_address, ULONG *destination, ULONG words)
+{
+    UINT ret = LX_SUCCESS;
+
+    /* USER CODE BEGIN NOR_READ */
+
+    /* USER CODE END  NOR_READ */
+
+    return ret;
 }
 
-
-static UINT  lx_nor_write(ULONG *flash_address, ULONG *source, ULONG words)
+static UINT lx_nor_driver_write(ULONG *flash_address, ULONG *source, ULONG words)
 {
+    UINT ret = LX_SUCCESS;
 
-    return(LX_SUCCESS);
+    /* USER CODE BEGIN NOR_WRITE */
+
+    /* USER CODE END  NOR_WRITE */
+
+    return ret;
 }
 
-static UINT  lx_nor_block_erase(ULONG block, ULONG erase_count)
+static UINT lx_nor_driver_block_erase(ULONG block, ULONG erase_count)
 {
 
-    return(LX_SUCCESS);
+    UINT ret = LX_SUCCESS;
+
+    /* USER CODE BEGIN NOR_WRITE */
+
+    /* USER CODE END  NOR_WRITE */
+
+    return ret;
 }
 
-static UINT  lx_nor_block_erased_verify(ULONG block)
+static UINT lx_nor_driver_block_erased_verify(ULONG block)
 {
-    return(LX_SUCCESS);
+    UINT ret = LX_SUCCESS;
+
+    /* USER CODE BEGIN NOR_WRITE */
+
+    /* USER CODE END  NOR_WRITE */
+
+    return ret;
 }
 
+/* USER CODE BEGIN USER_CODE_SECTION_3 */
+
+/* USER CODE END USER_CODE_SECTION_3 */

@@ -295,12 +295,12 @@ uint32_t                HAL_HCD_GetCurrentSpeed(HCD_HandleTypeDef *hhcd);
   */
 /* Private functions prototypes ----------------------------------------------*/
 
- /**
-  * @}
-  */
- /**
-  * @}
-  */
+/**
+ * @}
+ */
+/**
+ * @}
+ */
 #endif /* defined (USB_OTG_FS) || defined (USB_OTG_HS) */
 
 #ifdef __cplusplus

@@ -78,7 +78,7 @@
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            optimized command logic,    */
 /*                                            resulting in version 6.1    */
-/*  11-30-2020     Chaoqiong Xiao           Modified comment(s),          */
+/*  12-31-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            fixed USB CV test issues,   */
 /*                                            resulting in version 6.1.3  */
 /*                                                                        */

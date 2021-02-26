@@ -52,7 +52,6 @@
 /* USER CODE BEGIN PV */
 TX_THREAD ThreadOne;
 TX_THREAD ThreadTwo;
-TX_BYTE_POOL BytePool;
 APP_SYNC_TYPE SyncObject;
 
 extern UART_HandleTypeDef huart3;
@@ -65,12 +64,6 @@ VOID ThreadTwo_Entry(ULONG thread_input);
 static VOID Led_Toggle(Led_TypeDef led, UINT iter);
 static VOID App_Delay(ULONG Delay);
 /* USER CODE END PFP */
-
-/* Global user code ---------------------------------------------------------*/
-/* USER CODE BEGIN Global user code */
-
-/* USER CODE END Global user code */
-
 /**
   * @brief  Application ThreadX Initialization.
   * @param memory_ptr: memory pointer
@@ -78,18 +71,14 @@ static VOID App_Delay(ULONG Delay);
   */
 UINT App_ThreadX_Init(VOID *memory_ptr)
 {
-    UINT ret = TX_SUCCESS;
-    /* USER CODE BEGIN  App_ThreadX_Init */
+  UINT ret = TX_SUCCESS;
+  TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+
+  /* USER CODE BEGIN App_ThreadX_Init */
   CHAR *pointer;
 
-  /* Create a byte memory pool from which to allocate the thread stacks.  */
-  if (tx_byte_pool_create(&BytePool, "Byte Pool", memory_ptr, APP_BYTE_POOL_SIZE) != TX_SUCCESS)
-  {
-    ret = TX_POOL_ERROR;
-  }
-
   /* Allocate the stack for ThreadOne.  */
-  if (tx_byte_allocate(&BytePool, (VOID **) &pointer, APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     ret = TX_POOL_ERROR;
   }
@@ -102,7 +91,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   }
 
   /* Allocate the stack for ThreadTwo.  */
-  if (tx_byte_allocate(&BytePool, (VOID **) &pointer, APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     ret = TX_POOL_ERROR;
   }
@@ -119,15 +108,10 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   {
     ret = TX_SYNC_ERROR;
   }
-    /* USER CODE END  App_ThreadX_Init */
+  /* USER CODE END App_ThreadX_Init */
 
-    return ret;
+  return ret;
 }
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN Private user code */
-
-/* USER CODE END Private user code */
 
 /* USER CODE BEGIN 1 */
 /**
@@ -147,17 +131,17 @@ void ThreadOne_Entry(ULONG thread_input)
     if (APP_SYNC_GET(&SyncObject, TX_NO_WAIT) == TX_SUCCESS)
     {
       printf("** ThreadOne : SyncObject acquired ** \n");
-      
+
       /*sync object acquired, toggle the LED_GREEN each 500ms for 5s */
       Led_Toggle(LED_GREEN, 10);
-      
+
 
       /*release the sync object */
       APP_SYNC_PUT(&SyncObject);
-      
+
       printf("** ThreadOne : SyncObject released ** \n");
 
-      tx_thread_sleep(10);
+      tx_thread_sleep(1);
     }
     else
     {
@@ -188,16 +172,16 @@ void ThreadTwo_Entry(ULONG thread_input)
     if (APP_SYNC_GET(&SyncObject, TX_NO_WAIT) == TX_SUCCESS)
     {
       printf("** ThreadTwo : SyncObject acquired ** \n");
-      
+
       /*Sync object acquired toggle the LED_RED each 500ms for 5s*/
       Led_Toggle(LED_RED, 10);
-      
+
       /*release the sync object*/
       APP_SYNC_PUT(&SyncObject);
-      
+
       printf("** ThreadTwo : SyncObject released ** \n");
 
-      tx_thread_sleep(10);
+      tx_thread_sleep(1);
 
     }
     else
@@ -226,7 +210,8 @@ static VOID Led_Toggle(Led_TypeDef led, UINT iter)
   for (i =0; i < iter; i++)
   {
     BSP_LED_Toggle(led);
-    App_Delay(500);
+    /* Toggle the Led each 500ms */
+    App_Delay(50);
   }
 
   BSP_LED_Off(led);

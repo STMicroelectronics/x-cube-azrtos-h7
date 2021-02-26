@@ -224,8 +224,8 @@
                 </option>
                 <option>
                     <name>CCDefines</name>
-                    <state>NX_INCLUDE_USER_DEFINE_FILE</state>
                     <state>TX_INCLUDE_USER_DEFINE_FILE</state>
+                    <state>NX_INCLUDE_USER_DEFINE_FILE</state>
                     <state>USE_HAL_DRIVER</state>
                     <state>STM32H723xx</state>
                 </option>
@@ -356,18 +356,17 @@
                     <state>$PROJ_DIR$/../NetXDuo/App</state>
                     <state>$PROJ_DIR$/../Core/Inc</state>
                     <state>$PROJ_DIR$/../NetXDuo/Target</state>
-                    <state>$PROJ_DIR$/../AZURE_RTOS/Target</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Include</state>
-                    <state>$PROJ_DIR$/../../../../../../Drivers/BSP/Components/lan8742</state>
-                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/drivers</state>
-                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/addons/dhcp</state>
-                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/inc</state>
-                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/iar/inc</state>
-                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/inc</state>
-                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/inc</state>
+                    <state>$PROJ_DIR$/../../../../../../Drivers/BSP/Components/lan8742/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/drivers/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/addons/dhcp/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/inc/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/iar/inc/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/inc/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/BSP/STM32H7xx_Nucleo</state>
                 </option>
                 <option>
@@ -1129,6 +1128,12 @@
         </group>
     </group>
     <group>
+        <name>Doc</name>
+        <file>
+            <name>$PROJ_DIR$\..\README.md</name>
+        </file>
+    </group>
+    <group>
         <name>Drivers</name>
         <group>
             <name>BSP</name>
@@ -1226,9 +1231,15 @@
         <group>
             <name>Interfaces</name>
             <group>
-                <name>Network/Ethernet</name>
+                <name>Network/Ethernet Interface</name>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\drivers\nx_stm32_eth_driver.c</name>
+                </file>
+            </group>
+            <group>
+                <name>Network/Ethernet Phy Interface/LAN8742_Phy_Interface</name>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\drivers\lan8742\nx_stm32_phy_driver.c</name>
                 </file>
             </group>
         </group>
@@ -1244,7 +1255,7 @@
                 </file>
             </group>
             <group>
-                <name>Network/NetXDuo/NX Core/IPV4</name>
+                <name>Network/NetXDuo/NX Core</name>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_arp_announce_send.c</name>
                 </file>
@@ -1342,6 +1353,9 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmp_ping.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmp_ping6.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmp_queue_process.c</name>
                 </file>
                 <file>
@@ -1355,6 +1369,69 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv4_send_error_message.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_DAD_clear_NDCache_entry.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_DAD_failure.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_dest_table_add.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_dest_table_find.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_destination_table_periodic_update.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_packet_process.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_perform_DAD.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_process_echo_reply.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_process_echo_request.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_process_na.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_process_ns.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_process_packet_too_big.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_process_ra.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_process_redirect.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_send_error_message.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_send_ns.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_send_queued_packets.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_send_rs.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_validate_neighbor_message.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_validate_options.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_icmpv6_validate_ra.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_igmp_enable.c</name>
@@ -1616,6 +1693,51 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ipv4_packet_receive.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ipv6_fragment_process.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ipv6_header_add.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ipv6_multicast_join.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ipv6_multicast_leave.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ipv6_option_error.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ipv6_packet_copy.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ipv6_packet_receive.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ipv6_packet_send.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ipv6_prefix_list_add_entry.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ipv6_prefix_list_delete.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ipv6_prefix_list_delete_entry.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ipv6_process_fragment_option.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ipv6_process_hop_by_hop_option.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ipv6_process_routing_option.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ipv6_util.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_md5.c</name>
@@ -2005,10 +2127,106 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_icmp_source_ping.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_icmpv6_ra_flag_callback_set.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ip_raw_packet_send.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ip_raw_packet_source_send.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_address_change_notify.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_address_delete.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_address_get.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_address_set.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_default_router_add.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_default_router_add_internal.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_default_router_delete.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_default_router_entry_get.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_default_router_get.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_default_router_number_of_entries_get.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_default_router_table_init.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_destination_table_find_next_hop.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_disable.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_enable.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_find_default_router_from_address.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_find_max_prefix_length.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_interface_find.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_multicast_interface_join.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_multicast_interface_leave.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_prefix_router_timer_tick.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_raw_packet_send_internal.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_router_lookup.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_router_solicitation_check.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_search_onlink.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_stateless_address_autoconfig_disable.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_ipv6_stateless_address_autoconfig_enable.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_nd_cache_entry_delete.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_nd_cache_entry_set.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_nd_cache_hardware_address_find.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_nd_cache_invalidate.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_nd_cache_ip_address_find.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxd_tcp_client_socket_connect.c</name>
@@ -2038,10 +2256,58 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_icmp_source_ping.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_icmpv6_ra_flag_callback_set.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_ip_raw_packet_send.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_ip_raw_packet_source_send.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_ipv6_address_change_notify.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_ipv6_address_delete.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_ipv6_address_get.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_ipv6_address_set.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_ipv6_default_router_add.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_ipv6_default_router_delete.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_ipv6_default_router_entry_get.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_ipv6_default_router_get.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_ipv6_default_router_number_of_entries_get.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_ipv6_disable.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_ipv6_enable.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_ipv6_multicast_interface_join.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_ipv6_multicast_interface_leave.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_ipv6_stateless_address_autoconfig_disable.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_ipv6_stateless_address_autoconfig_enable.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxde_tcp_client_socket_connect.c</name>
@@ -2453,7 +2719,7 @@
         <group>
             <name>ThreadX</name>
             <group>
-                <name>RTOS/ThreadX/Core/Default</name>
+                <name>RTOS/ThreadX/Core</name>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_block_allocate.c</name>
                 </file>
@@ -2540,9 +2806,6 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_initialize_kernel_setup.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_misra.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_mutex_cleanup.c</name>
@@ -2740,7 +3003,40 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_time_set.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_activate.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_change.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_create.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_deactivate.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_delete.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_expiration_process.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_info_get.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_initialize.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\ports\cortex_m7\iar\src\tx_timer_interrupt.s</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_system_activate.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_system_deactivate.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_thread_entry.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_block_allocate.c</name>
@@ -2903,42 +3199,6 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_thread_wait_abort.c</name>
-                </file>
-            </group>
-            <group>
-                <name>RTOS/ThreadX/SW timers/Default</name>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_activate.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_change.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_create.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_deactivate.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_delete.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_expiration_process.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_info_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_initialize.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_system_activate.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_system_deactivate.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_thread_entry.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_timer_activate.c</name>

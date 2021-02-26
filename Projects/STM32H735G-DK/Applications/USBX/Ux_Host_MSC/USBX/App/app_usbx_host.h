@@ -73,8 +73,7 @@ VOID  ux_host_error_callback(UINT system_level, UINT system_context, UINT error_
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-/* USER CODE BEGIN Private defines */
-
+/* USER CODE BEGIN PD */
 typedef enum
 {
   USB_VBUS_FALSE = 0,
@@ -99,8 +98,8 @@ typedef struct
 {
   MSC_Device_Type Device_Type;
   Device_state    Dev_state;
-} Device_info;
-/* USER CODE END Private defines */
+} ux_app_devInfotypeDef;
+/* USER CODE END PD */
 
 /* USER CODE BEGIN 1 */
 
@@ -109,6 +108,6 @@ typedef struct
 #ifdef __cplusplus
 }
 #endif
-#endif  /* __APP_USBX_HOST_H__ */
+#endif /* __APP_USBX_HOST_H__ */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

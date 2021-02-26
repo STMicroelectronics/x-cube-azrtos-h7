@@ -90,7 +90,7 @@ int main(void)
   BSP_LED_Init(LED_GREEN);
   BSP_LED_Init(LED_RED);
 
-#if (FX_DRIVER_CALLS_BSP_SD_INIT == 0)
+#if (FX_DRIVER_CALLS_SD_INIT == 0)
     BSP_SD_Init(SD_INSTANCE);
 #endif
 

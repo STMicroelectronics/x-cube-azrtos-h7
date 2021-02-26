@@ -89,4 +89,13 @@
 /* Set to 1 to support auto initialization, see documentation for details. */
 #define TX_FREERTOS_AUTO_INIT 0
 
+/* define interrupts enable/disable*/
+#if defined(__CC_ARM)  /* CC ARM Compiler */
+#define portDISABLE_INTERRUPTS()				__disable_irq()
+#define portENABLE_INTERRUPTS()					__enable_irq()
+#elif defined ( __GNUC__ ) /* GNU Compiler */
+#define portDISABLE_INTERRUPTS()				__disable_interrupts()
+#define portENABLE_INTERRUPTS()					__enable_interrupts()
+#endif
+
 #endif /* #ifndef FREERTOS_CONFIG_H */

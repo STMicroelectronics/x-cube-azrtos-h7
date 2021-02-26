@@ -50,16 +50,16 @@ extern "C" {
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
-extern UINT App_USBX_Device_Init(VOID *memory_ptr);
+UINT App_USBX_Device_Init(VOID *memory_ptr);
 
 /* USER CODE BEGIN EFP */
 void MX_USB_Device_Init(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-/* USER CODE BEGIN Private defines */
+/* USER CODE BEGIN PD */
 
-/* USER CODE END Private defines */
+/* USER CODE END PD */
 
 /* USER CODE BEGIN 1 */
 
@@ -68,5 +68,6 @@ void MX_USB_Device_Init(void);
 #ifdef __cplusplus
 }
 #endif
-#endif  /* __APP_USBX_DEVICE_H__ */
+#endif /* __APP_USBX_DEVICE_H__ */
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

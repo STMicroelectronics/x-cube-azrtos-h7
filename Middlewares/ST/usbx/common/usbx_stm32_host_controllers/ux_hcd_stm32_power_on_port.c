@@ -84,9 +84,6 @@ UINT  _ux_hcd_stm32_power_on_port(UX_HCD_STM32 *hcd_stm32, ULONG port_index)
 
         return(UX_PORT_INDEX_UNKNOWN);
     }
-    
-    /* Set the power to the port.  */
-//    _ux_hcd_stm32_register_set(hcd_stm32, UX_HCD_STM32_OTG_FS_HPRT, UX_HCD_STM32_OTG_FS_HPRT_PPWR);    
 
     /* This function never fails.  */
     return(UX_SUCCESS);

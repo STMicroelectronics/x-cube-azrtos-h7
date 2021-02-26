@@ -12,8 +12,8 @@
 
 /**************************************************************************/
 /**************************************************************************/
-/**                                                                       */ 
-/** USBX Component                                                        */ 
+/**                                                                       */
+/** USBX Component                                                        */
 /**                                                                       */
 /**   STM32 Controller Driver                                             */
 /**                                                                       */
@@ -31,42 +31,42 @@
 #include "ux_host_stack.h"
 
 
-/**************************************************************************/ 
-/*                                                                        */ 
-/*  FUNCTION                                               RELEASE        */ 
-/*                                                                        */ 
-/*    _ux_hcd_stm32_endpoint_destroy                      PORTABLE C      */ 
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _ux_hcd_stm32_endpoint_destroy                      PORTABLE C      */
 /*                                                           6.0          */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
 /*                                                                        */
 /*  DESCRIPTION                                                           */
-/*                                                                        */ 
-/*    This function will destroy an endpoint.                             */ 
-/*                                                                        */ 
-/*  INPUT                                                                 */ 
-/*                                                                        */ 
-/*    hcd_stm32                             Pointer to STM32 controller   */ 
-/*    endpoint                              Pointer to endpoint           */ 
-/*                                                                        */ 
-/*  OUTPUT                                                                */ 
-/*                                                                        */ 
-/*    Completion Status                                                   */ 
-/*                                                                        */ 
-/*  CALLS                                                                 */ 
-/*                                                                        */ 
-/*    _ux_utility_virtual_address           Get virtual address           */ 
-/*    _ux_utility_delay_ms                  Delay ms                      */ 
-/*                                                                        */ 
-/*  CALLED BY                                                             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*    This function will destroy an endpoint.                             */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    hcd_stm32                             Pointer to STM32 controller   */
+/*    endpoint                              Pointer to endpoint           */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    Completion Status                                                   */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_utility_virtual_address           Get virtual address           */
+/*    _ux_utility_delay_ms                  Delay ms                      */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
 /*    STM32 Controller Driver                                             */
-/*                                                                        */ 
-/*  RELEASE HISTORY                                                       */ 
-/*                                                                        */ 
-/*    DATE              NAME                      DESCRIPTION             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*                                                                        */
 /**************************************************************************/
@@ -76,7 +76,7 @@ UINT  _ux_hcd_stm32_endpoint_destroy(UX_HCD_STM32 *hcd_stm32, UX_ENDPOINT *endpo
 UX_HCD_STM32_ED       *ed;
 UX_HCD_STM32_ED       *next_ed;
 UINT                   endpoint_type;
-    
+
     /* From the endpoint container fetch the STM32 ED descriptor.  */
     ed =  (UX_HCD_STM32_ED *) endpoint -> ux_endpoint_ed;
 
@@ -94,44 +94,60 @@ UINT                   endpoint_type;
 
     }
 
+    /* Halt the host channel.  */
     HAL_HCD_HC_Halt(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel);
 
-    /* The endpoint may be active. If so, set the skip bit.  */
-    ed -> ux_stm32_ed_status |=  UX_HCD_STM32_ED_SKIP;
-    
     /* Wait for the controller to finish the current frame processing.  */
     _ux_utility_delay_ms(1);
 
     /* We need to free the channel.  */
     hcd_stm32 -> ux_hcd_stm32_channels_ed[ed -> ux_stm32_ed_channel] =  UX_NULL;
 
+    /* Get endpoint type.  */
     endpoint_type = (endpoint -> ux_endpoint_descriptor.bmAttributes) & UX_MASK_ENDPOINT_TYPE;
+
+    /* Check for periodic endpoints.  */
     if ((endpoint_type == UX_INTERRUPT_ENDPOINT) || (endpoint_type == UX_ISOCHRONOUS_ENDPOINT))
     {
+
+        /* Remove the ED from periodic ED list.  */
         if (hcd_stm32 -> ux_hcd_stm32_periodic_ed_head == ed)
         {
+
+            /* The only one in the list, just set the pointer to null.  */
             hcd_stm32 -> ux_hcd_stm32_periodic_ed_head = UX_NULL;
         }
-        else 
+        else
         {
+
+            /* Get the first ED in the list.  */
             next_ed = hcd_stm32 -> ux_hcd_stm32_periodic_ed_head;
+
+            /* Search for the ED in the list.  */
             while( (next_ed != UX_NULL) && (next_ed -> ux_stm32_ed_next_ed != ed) )
             {
+
+                /* Move to next ED.  */
                 next_ed = next_ed -> ux_stm32_ed_next_ed;
             }
+
+            /* Check if we found the ED.  */
             if (next_ed)
             {
+
+                /* Remove the ED from list.  */
                 next_ed -> ux_stm32_ed_next_ed = next_ed -> ux_stm32_ed_next_ed -> ux_stm32_ed_next_ed;
             }
         }
+
+        /* Decrease the periodic active count.  */
+        hcd_stm32 -> ux_hcd_stm32_periodic_scheduler_active --;
     }
 
     /* Now we can safely make the ED free.  */
-    ed -> ux_stm32_ed_status =  UX_UNUSED;
-    
-    hcd_stm32 -> ux_hcd_stm32_periodic_scheduler_active --;
+    ed -> ux_stm32_ed_status =  UX_HCD_STM32_ED_STATUS_FREE;
     
     /* Return successful completion.  */
-    return(UX_SUCCESS);         
+    return(UX_SUCCESS);
 }
 

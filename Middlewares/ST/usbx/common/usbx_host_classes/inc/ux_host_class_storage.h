@@ -55,7 +55,7 @@
 /*  11-09-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            added exFAT type define,    */
 /*                                            resulting in version 6.1.2  */
-/*  11-30-2020     Chaoqiong Xiao           Modified comment(s),          */
+/*  12-31-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.1.3  */
 /*                                                                        */
 /**************************************************************************/

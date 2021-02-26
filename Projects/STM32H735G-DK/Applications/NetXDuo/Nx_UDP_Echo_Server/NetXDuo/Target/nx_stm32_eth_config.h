@@ -1,3 +1,13 @@
+/**************************************************************************/
+/*                                                                        */
+/*       Copyright (c) Microsoft Corporation. All rights reserved.        */
+/*                                                                        */
+/*       This software is licensed under the Microsoft Software License   */
+/*       Terms for Microsoft Azure RTOS. Full text of the license can be  */
+/*       found in the LICENSE file at https://aka.ms/AzureRTOS_EULA       */
+/*       and in the root directory of this software.                      */
+/*                                                                        */
+/**************************************************************************/
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef NX_STM32_ETH_CONFIG_H
@@ -14,13 +24,40 @@
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
 
-/* USER CODE BEGIN Defines */
-/* USER CODE END Defines */
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
 
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+#define eth_handle heth
+#define nx_eth_init MX_ETH_Init
+/* USER CODE BEGIN EC */
+
+/* USER CODE END EC */
+
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/* USER CODE END EM */
+
+/* Exported functions prototypes ---------------------------------------------*/
+extern ETH_HandleTypeDef heth;
 extern void MX_ETH_Init(void);
 
-/* USER CODE BEGIN Exported_Functions */
-/* USER CODE END Exported_Functions */
+/* USER CODE BEGIN EFP */
+
+/* USER CODE END EFP */
+
+/* Private defines -----------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
+
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 #ifdef __cplusplus
 }
 #endif

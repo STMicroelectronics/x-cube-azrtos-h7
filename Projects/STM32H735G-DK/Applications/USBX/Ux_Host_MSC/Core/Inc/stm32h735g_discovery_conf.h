@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -27,6 +27,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h7xx_hal.h"
+
+#if defined(HAL_SD_MODULE_ENABLED) && (USE_SD_TRANSCEIVER == 1U)
+#error "[This error is thrown on purpose] : USE_SD_TRANSCEIVER should be set to 0U in the stm32h7xx_hal_conf.h"
+#endif
 
 /* COM define */
 #define USE_COM_LOG                         0U

@@ -58,12 +58,7 @@
 /*                                                                        */ 
 /*  CALLS                                                                 */ 
 /*                                                                        */ 
-/*    _ux_hcd_stm32_register_read             Read STM32 register read    */ 
-/*    _ux_hcd_stm32_register_write            Write STM32 register write  */ 
-/*    _ux_hcd_stm32_periodic_tree_create      Create periodic tree        */ 
-/*    _ux_hcd_stm32_power_root_hubs           Power root HUBs             */ 
 /*    _ux_utility_memory_allocate             Allocate memory block       */ 
-/*    _ux_utility_set_interrupt_handler       Setup interrupt handler     */ 
 /*                                                                        */ 
 /*  CALLED BY                                                             */ 
 /*                                                                        */ 
@@ -108,15 +103,17 @@ UX_HCD_STM32          *hcd_stm32;
     /* Set the state of the controller to HALTED first.  */
     hcd -> ux_hcd_status =  UX_HCD_STATUS_HALTED;
     
-    /* Initialize the number of channels for HS core.  */
-    hcd_stm32 -> ux_hcd_stm32_nb_channels =  UX_HCD_STM32_HS_NB_CHANNELS;
+    /* Initialize the number of channels.  */
+    hcd_stm32 -> ux_hcd_stm32_nb_channels =  UX_HCD_STM32_MAX_NB_CHANNELS;
 
+    /* Check if the parameter is null.  */
     if (hcd -> ux_hcd_irq == 0)
     {
         _ux_utility_memory_free(hcd_stm32);
         return(UX_ERROR);
     }
 
+    /* Get HCD handle from parameter.  */
     hcd_stm32 -> hcd_handle = (HCD_HandleTypeDef*)hcd -> ux_hcd_irq;
     hcd_stm32 -> hcd_handle -> pData = hcd;
 
@@ -132,7 +129,6 @@ UX_HCD_STM32          *hcd_stm32;
 #if UX_MAX_DEVICES > 1
     hcd -> ux_hcd_version =  0x200;
 #endif
-
 
     /* The number of ports on the controller is fixed to 1. The number of ports needs to be reflected both 
        for the generic HCD container and the local stm32 container.  */

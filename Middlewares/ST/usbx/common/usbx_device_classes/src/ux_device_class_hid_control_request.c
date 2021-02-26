@@ -77,7 +77,7 @@
 /*  11-09-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            fixed compile warnings 64b, */
 /*                                            resulting in version 6.1.2  */
-/*  11-30-2020     Chaoqiong Xiao           Modified comment(s),          */
+/*  12-31-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            added Get/Set Protocol      */
 /*                                            request support,            */
 /*                                            resulting in version 6.1.3  */

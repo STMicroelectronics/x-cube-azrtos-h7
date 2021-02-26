@@ -55,7 +55,9 @@
 /* Define STM32 generic equivalences.  */
 
 #define UX_DCD_STM32_SLAVE_CONTROLLER                           0x80
+#ifndef UX_DCD_STM32_MAX_ED
 #define UX_DCD_STM32_MAX_ED                                     4
+#endif /* UX_DCD_STM32_MAX_ED */
 #define UX_DCD_STM32_IN_FIFO                                    3
 
 

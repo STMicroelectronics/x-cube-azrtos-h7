@@ -57,18 +57,12 @@
 /*                                                                        */ 
 /*  CALLS                                                                 */ 
 /*                                                                        */ 
-/*    _ux_hcd_stm32_asynch_queue_process          Process asynch queue    */ 
-/*    _ux_hcd_stm32_asynch_schedule               Schedule async work     */ 
 /*    _ux_hcd_stm32_asynchronous_endpoint_create  Create async endpoint   */ 
 /*    _ux_hcd_stm32_asynchronous_endpoint_destroy Destroy async endpoint  */ 
 /*    _ux_hcd_stm32_controller_disable            Disable controller      */ 
 /*    _ux_hcd_stm32_endpoint_reset                Reset endpoint          */ 
 /*    _ux_hcd_stm32_frame_number_get              Get frame number        */ 
-/*    _ux_hcd_stm32_frame_number_set              Set frame number        */ 
 /*    _ux_hcd_stm32_interrupt_endpoint_create     Create endpoint         */ 
-/*    _ux_hcd_stm32_iso_queue_process             Process iso queue       */ 
-/*    _ux_hcd_stm32_iso_schedule                  Schedule iso work       */ 
-/*    _ux_hcd_stm32_isochronous_endpoint_create   Create iso endpoint     */ 
 /*    _ux_hcd_stm32_periodic_endpoint_destroy     Destroy endpoint        */ 
 /*    _ux_hcd_stm32_periodic_schedule             Schedule periodic       */ 
 /*    _ux_hcd_stm32_port_enable                   Enable port             */ 
@@ -180,13 +174,6 @@ UX_INT_SAVE_AREA
     case UX_HCD_GET_FRAME_NUMBER:
 
         status =  _ux_hcd_stm32_frame_number_get(hcd_stm32, (ULONG *) parameter);
-        break;
-
-
-    case UX_HCD_SET_FRAME_NUMBER:
-
-        _ux_hcd_stm32_frame_number_set(hcd_stm32, (ULONG) parameter);
-        status =  UX_SUCCESS;
         break;
 
 

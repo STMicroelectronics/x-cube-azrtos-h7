@@ -37,15 +37,6 @@
 #define APP_QUEUE_SIZE                               5
 #define USBX_APP_STACK_SIZE                          1024
 #define USBX_MEMORY_SIZE                             (64 * 1024)
-#define USBX_APP_BYTE_POOL_SIZE                      (4096 + (USBX_MEMORY_SIZE))
-
-/* Set usbx_pool start address to 0x24027000 */
-#if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = 0x24027000
-#elif defined ( __GNUC__ ) /* GNU Compiler */
-__attribute__((section(".UsbxPoolSection")))
-#endif
-static uint8_t usbx_pool[USBX_APP_BYTE_POOL_SIZE];
 
 /* USER CODE END PD */
 
@@ -56,30 +47,27 @@ static uint8_t usbx_pool[USBX_APP_BYTE_POOL_SIZE];
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-extern HCD_HandleTypeDef            hhcd_USB_OTG_HS;
-TX_THREAD                           ux_app_thread;
-TX_BYTE_POOL                        ux_byte_pool;
-TX_QUEUE                            MsgQueue;
-UX_HOST_CLASS_STORAGE               *storage;
-UX_HOST_CLASS_STORAGE_MEDIA         *storage_media;
-FX_MEDIA                            *media;
-CHAR                                file_name[64];
-UINT                                status;
-Device_info                         dev_info;
+extern HCD_HandleTypeDef                  hhcd_USB_OTG_HS;
+TX_THREAD                                 ux_app_thread;
+TX_THREAD                                 msc_app_thread;
+TX_QUEUE                                  ux_app_MsgQueue;
+TX_QUEUE                                  ux_app_MsgQueue_msc;
+UX_HOST_CLASS_STORAGE                     *storage;
+UX_HOST_CLASS_STORAGE_MEDIA               *storage_media;
+FX_MEDIA                                  *media;
+
+#if defined ( __ICCARM__ ) /* IAR Compiler */
+  #pragma data_alignment=4
+#endif /* defined ( __ICCARM__ ) */
+__ALIGN_BEGIN ux_app_devInfotypeDef        ux_dev_info  __ALIGN_END;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-extern UINT App_File_Write(void);
-extern UINT App_File_Create(void);
-extern UINT App_File_Read(void);
 extern void MX_USB_OTG_HS_HCD_Init(void);
+extern void msc_process_thread_entry(ULONG arg);
+extern void Error_Handler(void);
 /* USER CODE END PFP */
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
-
 /**
   * @brief  Application USBX Host Initialization.
   * @param memory_ptr: memory pointer
@@ -88,19 +76,12 @@ extern void MX_USB_OTG_HS_HCD_Init(void);
 UINT App_USBX_Host_Init(VOID *memory_ptr)
 {
   UINT ret = UX_SUCCESS;
-
-  /* USER CODE BEGIN  App_USBX_Host_Init */
+  TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+  /* USER CODE BEGIN App_USBX_Host_Init */
   CHAR *pointer;
 
-  /* Create a byte memory pool from which to allocate the thread stacks.  */
-  if (tx_byte_pool_create(&ux_byte_pool, "ux byte pool 0", usbx_pool,
-                          USBX_APP_BYTE_POOL_SIZE) != TX_SUCCESS)
-  {
-    ret = TX_POOL_ERROR;
-  }
-
   /* Allocate the stack for thread 0.  */
-  if (tx_byte_allocate(&ux_byte_pool, (VOID **) &pointer,
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        USBX_MEMORY_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     ret = TX_POOL_ERROR;
@@ -116,7 +97,7 @@ UINT App_USBX_Host_Init(VOID *memory_ptr)
   _ux_utility_error_callback_register(&ux_host_error_callback);
 
   /* Allocate the stack for thread 0.  */
-  if (tx_byte_allocate(&ux_byte_pool, (VOID **) &pointer,
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        USBX_APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     ret = TX_POOL_ERROR;
@@ -124,26 +105,55 @@ UINT App_USBX_Host_Init(VOID *memory_ptr)
 
   /* Create the main App thread.  */
   if (tx_thread_create(&ux_app_thread, "thread 0", usbx_app_thread_entry, 0,
-                       pointer, USBX_APP_STACK_SIZE, 20, 20, 1,
+                       pointer, USBX_APP_STACK_SIZE, 25, 25, 0,
                        TX_AUTO_START) != TX_SUCCESS)
   {
     ret = TX_THREAD_ERROR;
   }
 
+    /* Allocate the stack for thread 1.  */
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
+                      (USBX_APP_STACK_SIZE * 2), TX_NO_WAIT) != TX_SUCCESS)
+  {
+    ret = TX_POOL_ERROR;
+  }
+
+  /* Create the storage applicative process thread.  */
+  if (tx_thread_create(&msc_app_thread, "thread 1", msc_process_thread_entry, 0,
+                       pointer, (USBX_APP_STACK_SIZE * 2), 30, 30, 0,
+                       TX_AUTO_START) != TX_SUCCESS)
+  {
+    ret = TX_THREAD_ERROR;
+  }
   /* Allocate Memory for the Queue  */
-  if (tx_byte_allocate(&ux_byte_pool, (VOID **) &pointer,
-                       APP_QUEUE_SIZE * sizeof(Device_info), TX_NO_WAIT) != TX_SUCCESS)
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
+                       APP_QUEUE_SIZE * sizeof(ux_app_devInfotypeDef), TX_NO_WAIT) != TX_SUCCESS)
   {
     ret = TX_POOL_ERROR;
   }
 
   /* Create the MsgQueue   */
-  if (tx_queue_create(&MsgQueue, "Message Queue app", sizeof(Device_info),
-                      pointer, APP_QUEUE_SIZE * sizeof(Device_info)) != TX_SUCCESS)
+  if (tx_queue_create(&ux_app_MsgQueue, "Message Queue app", sizeof(ux_app_devInfotypeDef),
+                      pointer, APP_QUEUE_SIZE * sizeof(ux_app_devInfotypeDef)) != TX_SUCCESS)
   {
     ret = TX_QUEUE_ERROR;
   }
-  /* USER CODE END  App_USBX_Host_Init */
+
+  /* Allocate Memory for the msc_Queue  */
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
+                       APP_QUEUE_SIZE * sizeof(FX_MEDIA*), TX_NO_WAIT) != TX_SUCCESS)
+  {
+    ret = TX_POOL_ERROR;
+  }
+
+  /* Create the msc_MsgQueue   */
+  if (tx_queue_create(&ux_app_MsgQueue_msc, "Message Queue msc", sizeof(FX_MEDIA*),
+                      pointer, APP_QUEUE_SIZE * sizeof(FX_MEDIA*)) != TX_SUCCESS)
+  {
+    ret = TX_QUEUE_ERROR;
+  }
+
+  /* USER CODE END App_USBX_Host_Init */
 
   return ret;
 }
@@ -170,13 +180,22 @@ void  usbx_app_thread_entry(ULONG arg)
   while (1)
   {
     /* wait for message queue from callback event */
-    status = tx_queue_receive(&MsgQueue, &dev_info, TX_WAIT_FOREVER);
-
-    if (dev_info.Dev_state == Device_connected)
+    if (tx_queue_receive(&ux_app_MsgQueue, &ux_dev_info, TX_WAIT_FOREVER)!= TX_SUCCESS)
     {
-      switch (dev_info.Device_Type)
+     Error_Handler();
+    }
+
+    if (ux_dev_info.Dev_state == Device_connected)
+    {
+      switch (ux_dev_info.Device_Type)
       {
         case MSC_Device :
+          if (media ==NULL)
+          {
+           break;
+          }
+          else
+          {
           /* Device_information */
           USBH_UsrLog("USB Mass Storage Device Found");
           USBH_UsrLog("PID: %#x ", (UINT)storage -> ux_host_class_storage_device -> ux_device_descriptor.idProduct);
@@ -184,56 +203,14 @@ void  usbx_app_thread_entry(ULONG arg)
 
           /* start File operations */
           USBH_UsrLog("\n*** Start Files operations ***\n");
-
-          /* Create a file */
-          status = App_File_Create();
-
-          /* check status */
-          if (status == UX_SUCCESS)
-          {
-            USBH_UsrLog("File TEST.TXT Created \n");
-          }
-          else
-          {
-            USBH_ErrLog(" !! Could Not Create TEST.TXT File !! ");
-            break;
-          }
-
-          /* Start write File Operation */
-          USBH_UsrLog("Write Process ...... \n");
-          status = App_File_Write();
-
-          /* check status */
-          if (status == UX_SUCCESS)
-          {
-            USBH_UsrLog("Write Process Success \n");
-          }
-          else
-          {
-            USBH_ErrLog("!! Write Process Fail !! ");
-            break;
-          }
-
-          /* Start Read File Operation and comparison operation */
-          USBH_UsrLog("Read Process  ...... \n");
-          status = App_File_Read();
-
-          /* check status */
-          if (status == UX_SUCCESS)
-          {
-            USBH_UsrLog("Read Process Success  \n");
-            USBH_UsrLog("File Closed \n");
-            USBH_UsrLog("*** End Files operations ***\n")
-          }
-          else
-          {
-            USBH_ErrLog("!! Read Process Fail !! \n");
+          /* send queue to msc_app_process*/
+          tx_queue_send(&ux_app_MsgQueue_msc, &media, TX_NO_WAIT);
           }
           break;
 
         case Unknown_Device :
           USBH_ErrLog("!! Unsupported MSC_Device plugged !!");
-          dev_info.Dev_state = No_Device;
+          ux_dev_info.Dev_state = No_Device;
           break;
 
         case Unsupported_Device :
@@ -269,14 +246,14 @@ UINT MX_USB_Host_Init(void)
   /* The code below is required for installing the host portion of USBX.  */
   if (ux_host_stack_initialize(ux_host_event_callback) != UX_SUCCESS)
   {
-    status = UX_ERROR;
+    ret = UX_ERROR;
   }
 
   /* Register storage class. */
-  if ((status =  ux_host_stack_class_register(_ux_system_host_class_storage_name,
-                                              _ux_host_class_storage_entry)) != UX_SUCCESS)
+  if (ux_host_stack_class_register(_ux_system_host_class_storage_name,
+                                   _ux_host_class_storage_entry) != UX_SUCCESS)
   {
-    status = UX_ERROR;
+    ret = UX_ERROR;
   }
 
   /* Initialize the LL driver */
@@ -288,7 +265,7 @@ UINT MX_USB_Host_Init(void)
                                  USB_OTG_HS_PERIPH_BASE,
                                  (ULONG)&hhcd_USB_OTG_HS) != UX_SUCCESS)
   {
-    status = UX_ERROR;
+    ret = UX_ERROR;
   }
 
   /* Drive vbus to be addedhere */
@@ -337,9 +314,9 @@ UINT ux_host_event_callback(ULONG event, UX_HOST_CLASS *Current_class, VOID *Cur
           if (storage == NULL)
           {
             USBH_UsrLog("unable to start media ");
-            dev_info.Device_Type = Unsupported_Device;
-            dev_info.Dev_state   = Device_connected;
-            tx_queue_send(&MsgQueue, &dev_info, TX_NO_WAIT);
+            ux_dev_info.Device_Type = Unsupported_Device;
+            ux_dev_info.Dev_state   = Device_connected;
+            tx_queue_send(&ux_app_MsgQueue, &ux_dev_info, TX_NO_WAIT);
           }
           else
           {
@@ -350,9 +327,9 @@ UINT ux_host_event_callback(ULONG event, UX_HOST_CLASS *Current_class, VOID *Cur
 
           if (storage->ux_host_class_storage_state != (ULONG) UX_HOST_CLASS_INSTANCE_LIVE)
           {
-            dev_info.Device_Type = Unsupported_Device;
-            dev_info.Dev_state = Device_connected;
-            tx_queue_send(&MsgQueue, &dev_info, TX_NO_WAIT);
+            ux_dev_info.Device_Type = Unsupported_Device;
+            ux_dev_info.Dev_state = Device_connected;
+            tx_queue_send(&ux_app_MsgQueue, &ux_dev_info, TX_NO_WAIT);
           }
           else
           {
@@ -360,11 +337,11 @@ UINT ux_host_event_callback(ULONG event, UX_HOST_CLASS *Current_class, VOID *Cur
             USBH_UsrLog("USB Device Plugged");
 
             /* update USB device Type */
-            dev_info.Device_Type = MSC_Device;
-            dev_info.Dev_state = Device_connected ;
+            ux_dev_info.Device_Type = MSC_Device;
+            ux_dev_info.Dev_state = Device_connected ;
 
             /* put a message queue to usbx_app_thread_entry */
-            tx_queue_send(&MsgQueue, &dev_info, TX_NO_WAIT);
+            tx_queue_send(&ux_app_MsgQueue, &ux_dev_info, TX_NO_WAIT);
           }
         }
       }
@@ -382,9 +359,9 @@ UINT ux_host_event_callback(ULONG event, UX_HOST_CLASS *Current_class, VOID *Cur
         /* free Instance */
         storage = NULL;
         USBH_UsrLog("USB Device Unplugged");
-        dev_info.Dev_state   = No_Device;
-        dev_info.Device_Type = Unknown_Device;
-        tx_queue_send(&MsgQueue, &dev_info, TX_NO_WAIT);
+        ux_dev_info.Dev_state   = No_Device;
+        ux_dev_info.Device_Type = Unknown_Device;
+        tx_queue_send(&ux_app_MsgQueue, &ux_dev_info, TX_NO_WAIT);
       }
       break;
 
@@ -407,9 +384,9 @@ VOID ux_host_error_callback(UINT system_level, UINT system_context, UINT error_c
   switch (error_code)
   {
     case UX_DEVICE_ENUMERATION_FAILURE :
-      dev_info.Device_Type = Unknown_Device;
-      dev_info.Dev_state   = Device_connected;
-      tx_queue_send(&MsgQueue, &dev_info, TX_NO_WAIT);
+      ux_dev_info.Device_Type = Unknown_Device;
+      ux_dev_info.Dev_state   = Device_connected;
+      tx_queue_send(&ux_app_MsgQueue, &ux_dev_info, TX_NO_WAIT);
       break;
 
     case UX_NO_DEVICE_CONNECTED :

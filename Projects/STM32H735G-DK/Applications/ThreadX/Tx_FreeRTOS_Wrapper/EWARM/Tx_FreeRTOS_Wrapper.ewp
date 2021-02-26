@@ -782,7 +782,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$/stm32h735xx_flash.icf</state>
+                    <state>$PROJ_DIR$\stm32h735xx_flash_rw_sram1.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -1100,6 +1100,12 @@
                 <name>$PROJ_DIR$\..\Src\tx_initialize_low_level.s</name>
             </file>
         </group>
+    </group>
+    <group>
+        <name>Doc</name>
+        <file>
+            <name>$PROJ_DIR$\..\README.md</name>
+        </file>
     </group>
     <group>
         <name>Drivers</name>

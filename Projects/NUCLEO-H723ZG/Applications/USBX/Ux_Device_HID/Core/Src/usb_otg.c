@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -27,6 +27,8 @@
    Memory address 0x24027000. */
 #if defined ( __ICCARM__ ) /* IAR Compiler */
 #pragma location = 0x24027000
+#elif defined ( __CC_ARM ) /* MDK ARM Compiler */
+__attribute__((section(".UsbHpcdSection")))
 #elif defined ( __GNUC__ ) /* GNU Compiler */
 __attribute__((section(".UsbHpcdSection")))
 #endif

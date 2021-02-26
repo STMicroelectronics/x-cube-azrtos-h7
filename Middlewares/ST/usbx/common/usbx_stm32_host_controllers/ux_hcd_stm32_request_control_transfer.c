@@ -91,7 +91,7 @@ UINT                    device_speed;
 UINT                    saved_requested_length;
 UINT                    saved_actual_length;
 UINT                    saved_request_type;
-
+UCHAR *                 saved_request_data_pointer;
 
     /* Get the pointer to the Endpoint.  */
     endpoint =  (UX_ENDPOINT *) transfer_request -> ux_transfer_request_endpoint;
@@ -133,9 +133,19 @@ UINT                    saved_request_type;
 
     /* Save the original transfer parameter.  */
     saved_requested_length = transfer_request -> ux_transfer_request_requested_length;
+    saved_request_data_pointer = transfer_request -> ux_transfer_request_data_pointer;
 
     /* Reset requested length for SETUP packet.  */
     transfer_request -> ux_transfer_request_requested_length = 0;
+
+    /* Set the packet length for SETUP packet.  */
+    transfer_request -> ux_transfer_request_packet_length = 8;
+
+    /* Change data pointer to setup data buffer.  */
+    transfer_request -> ux_transfer_request_data_pointer = setup_request;
+
+    /* Set the current status.  */
+    ed -> ux_stm32_ed_status = UX_HCD_STM32_ED_STATUS_CONTROL_SETUP;
 
     /* Initialize the host channel for SETUP phase.  */
     HAL_HCD_HC_Init(hcd_stm32 -> hcd_handle,
@@ -151,6 +161,9 @@ UINT                    saved_request_type;
 
     /* Wait for the completion of the transfer request.  */
     status =  _ux_utility_semaphore_get(&transfer_request -> ux_transfer_request_semaphore, MS_TO_TICK(UX_CONTROL_TRANSFER_TIMEOUT));
+
+    /* Restore original data buffer pointer.  */
+    transfer_request -> ux_transfer_request_data_pointer = saved_request_data_pointer;
 
     /* Free the resources.  */
     _ux_utility_memory_free(setup_request);
@@ -171,6 +184,14 @@ UINT                    saved_request_type;
         return(UX_TRANSFER_TIMEOUT);
     }
 
+    /* Check the transfer request completion code.  */
+    if (transfer_request -> ux_transfer_request_completion_code != UX_SUCCESS)
+    {
+
+        /* Return completion to caller.  */
+        return(transfer_request -> ux_transfer_request_completion_code);
+    }
+
     /* Check if there is data phase.  */
     if (saved_requested_length)
     {
@@ -187,6 +208,15 @@ UINT                    saved_request_type;
                             device_speed,
                             EP_TYPE_CTRL,
                             endpoint -> ux_endpoint_descriptor.wMaxPacketSize);
+
+            /* Set the current status to data IN.  */
+            ed -> ux_stm32_ed_status = UX_HCD_STM32_ED_STATUS_CONTROL_DATA_IN;
+        }
+        else
+        {
+
+            /* Set the current status to data OUT.  */
+            ed -> ux_stm32_ed_status = UX_HCD_STM32_ED_STATUS_CONTROL_DATA_OUT;
         }
 
         /* Save the pending transfer in the ED.  */
@@ -244,6 +274,14 @@ UINT                    saved_request_type;
 
         }
 
+        /* Check the transfer request completion code.  */
+        if (transfer_request -> ux_transfer_request_completion_code != UX_SUCCESS)
+        {
+
+            /* Return completion to caller.  */
+            return(transfer_request -> ux_transfer_request_completion_code);
+        }
+
         if ((transfer_request -> ux_transfer_request_type & UX_REQUEST_DIRECTION) == UX_REQUEST_IN)
         {
 
@@ -251,7 +289,6 @@ UINT                    saved_request_type;
             transfer_request -> ux_transfer_request_actual_length = HAL_HCD_HC_GetXferCount(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel);
         }
     }
-
 
     /* Setup status phase direction.  */
     HAL_HCD_HC_Init(hcd_stm32 -> hcd_handle,
@@ -278,6 +315,10 @@ UINT                    saved_request_type;
 
     /* Reset the packet length.  */
     transfer_request -> ux_transfer_request_packet_length = 0;
+
+    /* Set the current status to data OUT.  */
+    ed -> ux_stm32_ed_status = ((transfer_request -> ux_transfer_request_type & UX_REQUEST_DIRECTION) == UX_REQUEST_IN) ?
+                                UX_HCD_STM32_ED_STATUS_CONTROL_STATUS_IN : UX_HCD_STM32_ED_STATUS_CONTROL_STATUS_OUT;
 
     /* Submit the request for status phase.  */
     HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel,
@@ -310,3 +351,4 @@ UINT                    saved_request_type;
     /* Return completion to caller.  */
     return(transfer_request -> ux_transfer_request_completion_code);
 }
+

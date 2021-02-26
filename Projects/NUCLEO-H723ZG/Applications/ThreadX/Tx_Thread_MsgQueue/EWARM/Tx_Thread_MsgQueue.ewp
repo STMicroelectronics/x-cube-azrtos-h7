@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.50.6.28611</state>
+                    <state>8.50.4.26131</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -356,8 +356,8 @@
                     <state>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Include</state>
-                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/inc</state>
-                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/inc</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/inc/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/BSP/STM32H7xx_Nucleo</state>
                 </option>
                 <option>
@@ -781,7 +781,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$/stm32h723xx_flash.icf</state>
+                    <state>$PROJ_DIR$\stm32h723xx_flash_rw_sram1.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -1014,7 +1014,7 @@
                 </option>
                 <option>
                     <name>IlinkTrustzoneImportLibraryOut</name>
-                    <state></state>
+                    <state>Tx_Thread_MsgQueue_import_lib.o</state>
                 </option>
                 <option>
                     <name>OILinkExtraOption</name>
@@ -1104,6 +1104,12 @@
         </group>
     </group>
     <group>
+        <name>Doc</name>
+        <file>
+            <name>$PROJ_DIR$\..\README.md</name>
+        </file>
+    </group>
+    <group>
         <name>Drivers</name>
         <group>
             <name>BSP</name>
@@ -1183,7 +1189,7 @@
         <group>
             <name>ThreadX</name>
             <group>
-                <name>RTOS/ThreadX/Core/Default</name>
+                <name>RTOS/ThreadX/Core</name>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_block_allocate.c</name>
                 </file>
@@ -1270,9 +1276,6 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_initialize_kernel_setup.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_misra.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_mutex_cleanup.c</name>
@@ -1470,7 +1473,40 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_time_set.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_activate.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_change.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_create.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_deactivate.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_delete.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_expiration_process.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_info_get.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_initialize.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\ports\cortex_m7\iar\src\tx_timer_interrupt.s</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_system_activate.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_system_deactivate.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_thread_entry.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_block_allocate.c</name>
@@ -1633,93 +1669,6 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_thread_wait_abort.c</name>
-                </file>
-            </group>
-            <group>
-                <name>RTOS/ThreadX/PerformanceInfo/Default</name>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_block_pool_performance_info_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_block_pool_performance_system_info_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_byte_pool_performance_info_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_byte_pool_performance_system_info_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_event_flags_performance_info_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_event_flags_performance_system_info_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_mutex_performance_info_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_mutex_performance_system_info_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_queue_performance_info_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_queue_performance_system_info_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_semaphore_performance_info_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_semaphore_performance_system_info_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_performance_info_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_performance_system_info_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_performance_info_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_performance_system_info_get.c</name>
-                </file>
-            </group>
-            <group>
-                <name>RTOS/ThreadX/SW timers/Default</name>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_activate.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_change.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_create.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_deactivate.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_delete.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_expiration_process.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_info_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_initialize.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_system_activate.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_system_deactivate.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_thread_entry.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_timer_activate.c</name>

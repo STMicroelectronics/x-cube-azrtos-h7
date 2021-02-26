@@ -57,7 +57,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-/* USER CODE BEGIN Private defines */
+/* USER CODE BEGIN PD */
 #define APP_STACK_SIZE                           512
 #define APP_BYTE_POOL_SIZE                       (12 * 1024)
 
@@ -73,14 +73,14 @@ UINT App_ThreadX_Init(VOID *memory_ptr);
 
 #define THREAD_ONE_EVT                           0x01
 #define THREAD_TWO_EVT                           0x02
-/* USER CODE END Private defines */
+/* USER CODE END PD */
 
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
 
 #ifdef __cplusplus
- }
+}
 #endif
 #endif /* __APP_THREADX_H__ */
 

@@ -29,8 +29,9 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "fx_api.h"
 
-/* Private includes ----------------------------------------------------------*/
+#include "fx_stm32_levelx_nor_driver.h"
 
+/* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
 #include "string.h"
@@ -56,16 +57,16 @@ extern "C" {
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
-extern UINT App_FileX_Init(VOID *memory_ptr);
+UINT App_FileX_Init(VOID *memory_ptr);
 
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-/* USER CODE BEGIN Private defines */
+/* USER CODE BEGIN PD */
 
-/* USER CODE END Private defines */
+/* USER CODE END PD */
 
 /* USER CODE BEGIN 1 */
 

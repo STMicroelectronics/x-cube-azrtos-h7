@@ -74,12 +74,8 @@
 UINT  _ux_hcd_stm32_frame_number_get(UX_HCD_STM32 *hcd_stm32, ULONG *frame_number)
 {
 
-
-    /* Save the frame # in the controller structure.  */
-    hcd_stm32 -> ux_hcd_stm32_frame_number = HAL_HCD_GetCurrentFrame(hcd_stm32 -> hcd_handle);
-
-    /* Return the frame number.  */
-    *frame_number =  hcd_stm32 -> ux_hcd_stm32_frame_number;
+    /* Call HAL to get the frame number.  */
+    *frame_number = (ULONG)HAL_HCD_GetCurrentFrame(hcd_stm32 -> hcd_handle);
 
     return(UX_SUCCESS);
 }

@@ -52,15 +52,15 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
-void Success_Handler(void);
-/* USER CODE BEGIN EFP */
 
+/* USER CODE BEGIN EFP */
+void Success_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
 void   MX_ETH_Init(void);
 /* USER CODE BEGIN Private defines */
-/*#define  SERVER_SOCKET_MODE */      /* if commented it's CLIENT_SOCKET_MODE */
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

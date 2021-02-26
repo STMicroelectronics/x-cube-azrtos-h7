@@ -18,6 +18,7 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_filex.h"
 
@@ -55,7 +56,7 @@
 
 /* Buffer for FileX FX_MEDIA sector cache. this should be 32-Bytes
 aligned to avoid cache maintenance issues */
-ALIGN_32BYTES (uint32_t media_memory[512]);
+ALIGN_32BYTES (uint32_t media_memory[DEFAULT_SECTOR_SIZE / sizeof(uint32_t)]);
 
 /* Define FileX global data structures.  */
 FX_MEDIA        sdio_disk;
@@ -78,19 +79,8 @@ VOID fx_thread_two_entry(ULONG thread_input);
 VOID App_Error_Handler(INT id);
 
 void Error_Handler(void);
-
+static VOID os_delay(ULONG delay);
 /* USER CODE END PFP */
-
-/* Global user code ---------------------------------------------------------*/
-/* USER CODE BEGIN Global_User_Code */
-static VOID os_delay(ULONG delay)
-{
-  ULONG start = tx_time_get();
-  while ((tx_time_get() - start) < delay)
-  {
-  }
-}
-/* USER CODE END Global_User_Code */
 
 /**
   * @brief  Application FileX Initialization.
@@ -99,50 +89,70 @@ static VOID os_delay(ULONG delay)
   */
 UINT App_FileX_Init(VOID *memory_ptr)
 {
-    UINT ret = FX_SUCCESS;
-    /* USER CODE BEGIN App_FileX_Init */
+  UINT ret = FX_SUCCESS;
 
-    UCHAR *fx_thread_one_stack_start = (UCHAR*)memory_ptr + DEFAULT_STACK_SIZE;
-    UCHAR *fx_thread_two_stack_start = (UCHAR*)memory_ptr + DEFAULT_STACK_SIZE * 2;
+  TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-    /* Create the main thread.  */
-    tx_thread_create(&fx_thread_main, "fx_thread_main", fx_thread_main_entry, 0,
-                   memory_ptr, DEFAULT_STACK_SIZE,
-                   DEFAULT_THREAD_PRIO,
-                   DEFAULT_PREEMPTION_THRESHOLD,
-                   DEFAULT_TIME_SLICE, TX_AUTO_START);
+  /* USER CODE BEGIN App_FileX_Init */
 
-    /* Create the 1st concurrent thread.  */
-    tx_thread_create(&fx_thread_one, "fx_thread_one", fx_thread_one_entry, 0,
-                   (VOID *)fx_thread_one_stack_start, DEFAULT_STACK_SIZE,
-                   DEFAULT_THREAD_PRIO,
-                   DEFAULT_PREEMPTION_THRESHOLD,
-                   DEFAULT_TIME_SLICE, TX_DONT_START);
+  VOID *pointer;
 
-    /* Create the 2nd concurrent thread */
-    tx_thread_create(&fx_thread_two, "fx_thread_two", fx_thread_two_entry, 0,
-                   (VOID *)fx_thread_two_stack_start, DEFAULT_STACK_SIZE,
-                   DEFAULT_THREAD_PRIO,
-                   DEFAULT_PREEMPTION_THRESHOLD,
-                   DEFAULT_TIME_SLICE, TX_DONT_START);
+  /* Allocate memory for the main thread's stack */
+  ret = tx_byte_allocate(byte_pool, &pointer, DEFAULT_STACK_SIZE, TX_NO_WAIT);
 
-    /* An event flag to indicate the status of execution */
-    tx_event_flags_create(&finish_flag, "event_flag");
+  if (ret != FX_SUCCESS)
+  {
+    /* Failed at allocating memory */
+    Error_Handler();
+  }
 
-    /* Initialize FileX.  */
-    fx_system_initialize();
+  /* Create the main thread.  */
+  tx_thread_create(&fx_thread_main, "fx_thread_main", fx_thread_main_entry, 0, pointer, DEFAULT_STACK_SIZE, DEFAULT_THREAD_PRIO,
+                   DEFAULT_PREEMPTION_THRESHOLD, DEFAULT_TIME_SLICE, TX_AUTO_START);
 
-    /* USER CODE END App_FileX_Init */
+  /* Allocate memory for the 1st concurrent thread's stack */
+  ret = tx_byte_allocate(byte_pool, &pointer, DEFAULT_STACK_SIZE, TX_NO_WAIT);
 
-    return ret;
+  if (ret != FX_SUCCESS)
+  {
+    /* Failed at allocating memory */
+    Error_Handler();
+  }
+
+  /* Create the 1st concurrent thread.  */
+  tx_thread_create(&fx_thread_one, "fx_thread_one", fx_thread_one_entry, 0, pointer, DEFAULT_STACK_SIZE, DEFAULT_THREAD_PRIO,
+                   DEFAULT_PREEMPTION_THRESHOLD, DEFAULT_TIME_SLICE, TX_DONT_START);
+
+  /* Allocate memory for the 2nd concurrent thread's stack */
+  ret = tx_byte_allocate(byte_pool, &pointer, DEFAULT_STACK_SIZE, TX_NO_WAIT);
+
+  if (ret != FX_SUCCESS)
+  {
+    /* Failed at allocating memory */
+    Error_Handler();
+  }
+
+  /* Create the 2nd concurrent thread */
+  tx_thread_create(&fx_thread_two, "fx_thread_two", fx_thread_two_entry, 0, pointer, DEFAULT_STACK_SIZE, DEFAULT_THREAD_PRIO,
+                   DEFAULT_PREEMPTION_THRESHOLD, DEFAULT_TIME_SLICE, TX_DONT_START);
+
+  /* An event flag to indicate the status of execution */
+  tx_event_flags_create(&finish_flag, "event_flag");
+
+  /* Initialize FileX.  */
+  fx_system_initialize();
+
+  /* USER CODE END App_FileX_Init */
+  return ret;
 }
 
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN Private_User_Code */
-
-/* USER CODE END Private_User_Code */
-
 /* USER CODE BEGIN 1 */
+
+static VOID os_delay(ULONG delay)
+{
+  ULONG start = tx_time_get();
+  while ((tx_time_get() - start) < delay) {}
+}
 
 VOID fx_thread_main_entry(ULONG thread_input)
 {
@@ -152,7 +162,7 @@ VOID fx_thread_main_entry(ULONG thread_input)
 
 
   /* Open the SD disk driver.  */
-  status =  fx_media_open(&sdio_disk, "STM32_SDIO_DISK", fx_stm32_sd_driver, 0, media_memory, sizeof(media_memory));
+  status =  fx_media_open(&sdio_disk, "STM32_SDIO_DISK", fx_stm32_sd_driver, 0, (VOID *) media_memory, sizeof(media_memory));
 
   /* Check the media open status.  */
   if (status != FX_SUCCESS)

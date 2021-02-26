@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_file_extended_truncate_release                  PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.3        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -88,6 +88,9 @@
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  12-31-2020     William E. Lamie         Modified comment(s), fixed    */
+/*                                            available cluster issue,    */
+/*                                            resulting in version 6.1.3  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_file_extended_truncate_release(FX_FILE *file_ptr, ULONG64 size)
@@ -667,12 +670,12 @@ ULONG                  trace_timestamp;
                 }
 #endif /* FX_ENABLE_EXFAT */
 
+                /* Increment the number of available clusters.  */
+                media_ptr -> fx_media_available_clusters++;
+
 #ifdef FX_ENABLE_FAULT_TOLERANT
             }
 #endif /* FX_ENABLE_FAULT_TOLERANT */
-
-            /* Increment the number of available clusters.  */
-            media_ptr -> fx_media_available_clusters++;
         }
 
         /* Setup for the next cluster.  */

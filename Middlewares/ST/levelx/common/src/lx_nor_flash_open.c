@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nor_flash_open                                  PORTABLE C      */ 
-/*                                                           6.1.2        */
+/*                                                           6.1.3        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -86,6 +86,9 @@
 /*  11-09-2020     William E. Lamie         Modified comment(s),          */
 /*                                            fixed compiler warnings,    */
 /*                                            resulting in version 6.1.2  */
+/*  12-30-2020     William E. Lamie         Modified comment(s),          */
+/*                                            fixed compiler warnings,    */
+/*                                            resulting in version 6.1.3  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nor_flash_open(LX_NOR_FLASH  *nor_flash, CHAR *name, UINT (*nor_driver_initialize)(LX_NOR_FLASH *))
@@ -751,7 +754,7 @@ TX_INTERRUPT_SAVE_AREA
                             /* Read the word directly.  */
                             sector_word =  *(sector_word_ptr);
 #else
-                            status =  _lx_nor_flash_driver_read((sector_word_ptr), &sector_word, 1);
+                            status =  _lx_nor_flash_driver_read(nor_flash, (sector_word_ptr), &sector_word, 1);
 
                             /* Check for an error from flash driver. Drivers should never return an error..  */
                             if (status)

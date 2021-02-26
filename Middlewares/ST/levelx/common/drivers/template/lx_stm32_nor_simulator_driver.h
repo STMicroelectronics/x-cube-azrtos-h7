@@ -15,9 +15,23 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+/* Includes ------------------------------------------------------------------*/
 #include "lx_api.h"
-#include "stm32h7xx.h"
+#include "stm32xxxx.h"
+
+/* USER CODE BEGIN Includes */
+
+/* USER CODE END Includes */
+
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
+
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+/* USER CODE BEGIN EC */
+
+/* USER CODE END EC */
 
 /* define the NOR Flash base address */
 #define LX_NOR_SIMULATOR_FLASH_BASE_ADDRESS  D1_AXISRAM_BASE
@@ -31,7 +45,13 @@ extern "C" {
 /* define the number of sectors per block */
 #define LX_NOR_SIMULATOR_SECTORS_PER_BLOCK   16
 
-/* Define the function prototypes of the LevelX driver entry function.  */
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/* USER CODE END EM */
+
+/* Exported functions prototypes ---------------------------------------------*/
+
 UINT  lx_stm32_nor_simulator_initialize(LX_NOR_FLASH *nor_flash);
 
 #ifdef __cplusplus

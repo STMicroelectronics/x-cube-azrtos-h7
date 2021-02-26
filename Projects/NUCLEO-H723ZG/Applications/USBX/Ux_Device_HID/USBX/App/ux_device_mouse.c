@@ -36,7 +36,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-#define CURSOR_STEP     5
+#define CURSOR_STEP     10
 
 /* USER CODE END PD */
 
@@ -47,7 +47,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+volatile uint8_t User_Button_State = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -79,16 +79,29 @@ void usbx_hid_thread_entry(ULONG arg)
 
   while (1)
   {
+    /* Check if the device state already configured */
     if (device->ux_slave_device_state == UX_DEVICE_CONFIGURED)
     {
+      /* Get the interface */
       interface = device->ux_slave_device_first_interface;
+      /* Get the instance */
       hid = interface->ux_slave_interface_class_instance;
 
       /* sleep for 10ms */
       tx_thread_sleep(0.01 * TX_TIMER_TICKS_PER_SECOND);
 
-      GetPointerData(&hid_event);
-      ux_device_class_hid_event_set(hid, &hid_event);
+      /* Check if user button is pressed */
+      if (User_Button_State)
+      {
+        /* Get the new position */
+        GetPointerData(&hid_event);
+
+        /* Send an event to the hid */
+        ux_device_class_hid_event_set(hid, &hid_event);
+
+        /* Reset User Button state */
+        User_Button_State =0;
+      }
     }
     else
     {
@@ -106,16 +119,36 @@ void usbx_hid_thread_entry(ULONG arg)
 static void GetPointerData(UX_SLAVE_CLASS_HID_EVENT *hid_event)
 {
   static int8_t cnt = 0;
-  int8_t  x = 0, y = 0;
+  static int8_t x = 0, y = 0;
 
-  if (cnt++ > 0)
+  /* Reset counter */
+  if (cnt == 16)
   {
+    cnt = 0;
+  }
+  /* Update pointer position x and y */
+  if ((cnt >= 0) && (cnt < 4))
+  {
+    y=0;
     x = CURSOR_STEP;
+  }
+  else if ((cnt >= 4) && (cnt < 8))
+  {
+    x =0;
+    y = CURSOR_STEP;
+  }
+  else if ((cnt >= 8) && (cnt < 12))
+  {
+    y=0;
+    x = -CURSOR_STEP;
   }
   else
   {
-    x = -CURSOR_STEP;
+    x=0;
+    y = -CURSOR_STEP;
   }
+  /* Increment counter */
+  cnt++;
 
   /* Mouse event. Length is fixed to . */
   hid_event->ux_device_class_hid_event_length = 3;
@@ -129,8 +162,21 @@ static void GetPointerData(UX_SLAVE_CLASS_HID_EVENT *hid_event)
   hid_event->ux_device_class_hid_event_buffer[2] = 0;
 }
 
+/**
+  * @brief  EXTI line detection callback.
+  * @param  GPIO_Pin: Specifies the port pin connected to corresponding EXTI line.
+  * @retval None
+  */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  /* Read User Button state */
+  User_Button_State = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+
+}
+
 /* USER CODE END 0 */
 
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

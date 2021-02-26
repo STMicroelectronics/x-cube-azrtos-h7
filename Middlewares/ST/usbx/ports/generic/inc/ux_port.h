@@ -25,8 +25,8 @@
 /*                                                                        */ 
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */ 
 /*                                                                        */ 
-/*    ux_port.h                                         Cortex-M7/IAR     */ 
-/*                                                           6.1          */
+/*    ux_port.h                                            Generic        */ 
+/*                                                           6.1.3        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -41,7 +41,7 @@
 /*                                                                        */ 
 /*    DATE              NAME                      DESCRIPTION             */ 
 /*                                                                        */ 
-/*  09-30-2020     Chaoqiong Xiao           Initial Version 6.1           */
+/*  12-31-2020     Chaoqiong Xiao           Initial Version 6.1.3         */
 /*                                                                        */
 /**************************************************************************/
 
@@ -88,19 +88,19 @@ typedef long                        SLONG;
 #endif
 
 #ifndef UX_MAX_CLASS_DRIVER
-#define UX_MAX_CLASS_DRIVER                                 8
+#define UX_MAX_CLASS_DRIVER                                 2
 #endif
 
 #ifndef UX_MAX_SLAVE_CLASS_DRIVER
-#define UX_MAX_SLAVE_CLASS_DRIVER                           4
+#define UX_MAX_SLAVE_CLASS_DRIVER                           2
 #endif
 
 #ifndef UX_MAX_HCD
-#define UX_MAX_HCD                                          2
+#define UX_MAX_HCD                                          1
 #endif
 
 #ifndef UX_MAX_DEVICES
-#define UX_MAX_DEVICES                                      8
+#define UX_MAX_DEVICES                                      2
 #endif
 
 #ifndef UX_MAX_ED
@@ -112,7 +112,7 @@ typedef long                        SLONG;
 #endif
 
 #ifndef UX_MAX_ISO_TD
-#define UX_MAX_ISO_TD                                       16
+#define UX_MAX_ISO_TD                                       2
 #endif
 
 #ifndef UX_HOST_ENUM_THREAD_STACK_SIZE
@@ -148,15 +148,15 @@ typedef long                        SLONG;
 #endif
 
 #ifndef UX_MAX_SLAVE_LUN
-#define UX_MAX_SLAVE_LUN                                    2
+#define UX_MAX_SLAVE_LUN                                    1
 #endif
 
 #ifndef UX_MAX_HOST_LUN
-#define UX_MAX_HOST_LUN                                     2
+#define UX_MAX_HOST_LUN                                     1
 #endif
 
 #ifndef UX_HOST_CLASS_STORAGE_MAX_MEDIA
-#define UX_HOST_CLASS_STORAGE_MAX_MEDIA                     2
+#define UX_HOST_CLASS_STORAGE_MAX_MEDIA                     1
 #endif
 
 #ifndef UX_SLAVE_REQUEST_CONTROL_MAX_LENGTH
@@ -165,7 +165,7 @@ typedef long                        SLONG;
 
 
 #ifndef UX_SLAVE_REQUEST_DATA_MAX_LENGTH
-#define UX_SLAVE_REQUEST_DATA_MAX_LENGTH                    4096
+#define UX_SLAVE_REQUEST_DATA_MAX_LENGTH                    2048
 #endif
 
 #ifndef UX_USE_IO_INSTRUCTIONS
@@ -210,7 +210,7 @@ VOID    outpl(ULONG,ULONG);
 
 #ifdef  UX_SYSTEM_INIT
 CHAR                            _ux_version_id[] = 
-                                    "Copyright (c) Microsoft Corporation. All rights reserved. * USBX Cortex-M7/IAR Version 6.1 *";
+                                    "Copyright (c) Microsoft Corporation. All rights reserved. * USBX Generic Version 6.1.3 *";
 #else
 extern  CHAR                    _ux_version_id[];
 #endif

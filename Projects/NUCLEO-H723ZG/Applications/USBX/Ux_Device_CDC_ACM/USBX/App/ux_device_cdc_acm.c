@@ -20,17 +20,21 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-
-
-/* USER CODE BEGIN INCLUDE */
-#include "main.h"
-#include "ux_api.h"
 #include "ux_device_cdc_acm.h"
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+#include "main.h"
 #include "app_usbx_device.h"
-/* USER CODE END INCLUDE */
+/* USER CODE END Includes */
 
-/* USER CODE BEGIN PRIVATE_DEFINES */
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
 
+/* USER CODE END PTD */
+
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
 #define APP_RX_DATA_SIZE                          2048
 #define APP_TX_DATA_SIZE                          2048
 
@@ -44,23 +48,19 @@
 
 /* the minimum baudrate */
 #define MIN_BAUDRATE                              9600
+/* USER CODE END PD */
 
-/* USER CODE END PRIVATE_DEFINES */
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
 
-/* USER CODE BEGIN PRIVATE_FUNCTIONS_DECLARATION */
+/* USER CODE END PM */
 
-static void USBD_CDC_VCP_Config(UX_SLAVE_CLASS_CDC_ACM_LINE_CODING_PARAMETER *);
-
-extern void MX_USART3_UART_Init(void);
-
-extern void Error_Handler(void);
-
-/* USER CODE END PRIVATE_FUNCTIONS_DECLARATION */
-
-/* USER CODE BEGIN PRIVATE_VARIABLES */
-
+/* Private variables ---------------------------------------------------------*/
+/* USER CODE BEGIN PV */
 #if defined ( __ICCARM__ ) /* IAR Compiler */
 #pragma location = 0x24028000
+#elif defined ( __CC_ARM ) /* MDK ARM Compiler */
+__attribute__((section(".UsbxAppSection")))
 #elif defined ( __GNUC__ ) /* GNU Compiler */
 __attribute__((section(".UsbxAppSection")))
 #endif
@@ -82,8 +82,6 @@ uint32_t UserTxBufPtrOut;
 /* uart3 handler */
 extern UART_HandleTypeDef huart3;
 
-/* USER CODE END PRIVATE_VARIABLES */
-
 UX_SLAVE_CLASS_CDC_ACM_LINE_CODING_PARAMETER CDC_VCP_LineCoding =
 {
   115200, /* baud rate */
@@ -92,9 +90,17 @@ UX_SLAVE_CLASS_CDC_ACM_LINE_CODING_PARAMETER CDC_VCP_LineCoding =
   0x08    /* nb. of bits 8 */
 };
 
-/* USER CODE BEGIN EXPORTED_VARIABLES */
+/* USER CODE END PV */
 
-/* USER CODE END EXPORTED_VARIABLES */
+/* Private function prototypes -----------------------------------------------*/
+/* USER CODE BEGIN PFP */
+static void USBD_CDC_VCP_Config(UX_SLAVE_CLASS_CDC_ACM_LINE_CODING_PARAMETER *);
+extern void MX_USART3_UART_Init(void);
+extern void Error_Handler(void);
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
 /**
   * @brief  Initializes the CDC media low layer over the FS USB IP
   * @param  cdc Instance
@@ -563,13 +569,9 @@ static void USBD_CDC_VCP_Config(UX_SLAVE_CLASS_CDC_ACM_LINE_CODING_PARAMETER
   /* Start reception: provide the buffer pointer with offset and the buffer size */
   HAL_UART_Receive_IT(&huart3, (uint8_t *)(UserTxBufferFS + UserTxBufPtrIn), 1);
 }
+/* USER CODE END 0 */
 
-/**
-* @}
-*/
+/* USER CODE BEGIN 1 */
 
-/**
-  * @}
-  */
-
+/* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

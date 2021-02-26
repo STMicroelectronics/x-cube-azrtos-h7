@@ -57,7 +57,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-/* USER CODE BEGIN Private defines */
+/* USER CODE BEGIN PD */
 #define USE_TX_MUTEX
 /*#define USE_TX_SEMAPHORE*/
 
@@ -80,7 +80,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr);
 #define TX_SYNC_ERROR                        TX_SEMAPHORE_ERROR
 
 #define APP_SYNC_GET                         tx_semaphore_get
-#define APP_SYNC_PUT                         tx_semaphore_put
+#define APP_SYNC_PUT(a)                      tx_semaphore_ceiling_put((a), 1)
 #define APP_SYNC_CREATE(a)                   tx_semaphore_create((a),"App Binary Semaphore", 1)
 #endif
 
@@ -93,15 +93,15 @@ UINT App_ThreadX_Init(VOID *memory_ptr);
 #define THREAD_TWO_PRIO                      10
 #define THREAD_TWO_PREEMPTION_THRESHOLD      THREAD_TWO_PRIO
 
-#define DEFAULT_TIME_SLICE                   50 
-/* USER CODE END Private defines */
+#define DEFAULT_TIME_SLICE                   5
+/* USER CODE END PD */
 
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
 
 #ifdef __cplusplus
- }
+}
 #endif
 #endif /* __APP_THREADX_H__ */
 

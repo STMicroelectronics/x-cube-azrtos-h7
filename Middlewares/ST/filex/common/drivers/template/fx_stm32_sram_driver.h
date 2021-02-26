@@ -23,21 +23,52 @@
 extern "C" {
 #endif
 
-/*------- Includes -------*/
-
+/* Includes ------------------------------------------------------------------*/
 #include "fx_api.h"
 
-/* include the stm32h7xx.h to be able to access the memory region defines */
-#include "stm32h7xx.h"
+#include "stm32XXXX.h"
+/* USER CODE BEGIN Includes */
 
-/* define the FileX SRAM DISK base address */
+/* USER CODE END Includes */
 
-#define FX_SRAM_DISK_BASE_ADDRESS         D1_AXISRAM1_BASE
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
+
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+
+#define FX_SRAM_DISK_BASE_ADDRESS         D1_AXISRAM_BASE
 
 /* define the SRAM DISK size */
-#define FX_SRAM_DISK_SIZE                 (128 * 1024)
+#define FX_SRAM_DISK_SIZE                 (32 * 1024)
+
+
+/* USER CODE BEGIN EC */
+
+/* USER CODE END EC */
+
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/* USER CODE END EM */
+
+/* Exported functions prototypes ---------------------------------------------*/
 
 VOID fx_stm32_ram_driver(FX_MEDIA *media_ptr);
+
+/* USER CODE BEGIN EFP */
+
+/* USER CODE END EFP */
+
+/* Private defines -----------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
+
+/* USER CODE BEGIN 0 */
+
+/* USER CODE END 0 */
 
 #ifdef __cplusplus
 }

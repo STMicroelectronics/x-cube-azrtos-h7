@@ -93,9 +93,23 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  
+
   BSP_LED_Init(LED1);
   BSP_LED_Init(LED2);
+
+#if (LX_DRIVER_CALLS_OSPI_INIT == 0)
+
+  BSP_OSPI_NOR_Init_t ospi_config;
+
+  /* OSPI device configuration */
+  ospi_config.InterfaceMode = BSP_OSPI_NOR_OPI_MODE;
+  ospi_config.TransferRate  = BSP_OSPI_NOR_DTR_TRANSFER;
+
+  if(BSP_OSPI_NOR_Init(OSPI_INSTANCE, &ospi_config) != BSP_ERROR_NONE)
+  {
+    Error_Handler();
+  }
+#endif
 
   /* USER CODE END SysInit */
 
@@ -104,7 +118,7 @@ int main(void)
   MX_USART3_UART_Init();
   MX_AZURE_RTOS_Init();
   /* USER CODE BEGIN 2 */
-  
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -189,7 +203,7 @@ static void MX_USART3_UART_Init(void)
 
   /* USER CODE END USART3_Init 1 */
   huart3.Instance = USART3;
-  huart3.Init.BaudRate = 9600;
+  huart3.Init.BaudRate = 115200;
   huart3.Init.WordLength = UART_WORDLENGTH_8B;
   huart3.Init.StopBits = UART_STOPBITS_1;
   huart3.Init.Parity = UART_PARITY_NONE;
@@ -230,7 +244,6 @@ static void MX_GPIO_Init(void)
 {
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 

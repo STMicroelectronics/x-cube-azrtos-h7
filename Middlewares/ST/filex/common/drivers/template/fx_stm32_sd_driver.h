@@ -19,6 +19,17 @@ extern "C" {
 #include "fx_api.h"
 #include "stm32xxxx_{discovery,eval}_sd.h"
 #endif
+/* USER CODE BEGIN Includes */
+
+/* USER CODE END Includes */
+
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
+
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+
 
 #define DEFAULT_TIMEOUT                        (10 * TX_TIMER_TICKS_PER_SECOND)
 #define SD_INSTANCE                             0
@@ -26,9 +37,33 @@ extern "C" {
 #define DEFAULT_SECTOR_SIZE                     512
 #define ENABLE_CACHE_MAINTENANCE                1
 
-#define FX_DRIVER_CALLS_BSP_SD_INIT             0
+#define FX_DRIVER_CALLS_SD_INIT                 0
+
+/* USER CODE END EC */
+
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/* USER CODE END EM */
+
+/* Exported functions prototypes ---------------------------------------------*/
+
 
 VOID  fx_stm32_sd_driver(FX_MEDIA *media_ptr);
+
+/* USER CODE BEGIN EFP */
+
+/* USER CODE END EFP */
+
+/* Private defines -----------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
+
+/* USER CODE BEGIN 0 */
+
+/* USER CODE END 0 */
+
 
 #ifdef __cplusplus
 }

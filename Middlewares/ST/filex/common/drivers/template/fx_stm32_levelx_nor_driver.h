@@ -9,6 +9,7 @@
 /*                                                                        */
 /**************************************************************************/
 
+/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef FX_STM32_LX_NOR_DRIVER_H
 #define FX_STM32_LX_NOR_DRIVER_H
 
@@ -16,13 +17,14 @@
 extern "C" {
 #endif
 
-/*--------------- Includes ---------------*/
+/* Includes ------------------------------------------------------------------*/
 #include "fx_api.h"
 #include "lx_api.h"
 
-//#define LX_NOR_OSPI_DRIVER
-//#define LX_NOR_SIMULATOR_DRIVER
-//#define USE_LX_NOR_CUSTOM_DRIVER
+/* #define LX_NOR_SIMULATOR_DRIVER */
+/* #define LX_NOR_OSPI_DRIVER */
+/* #define LX_NOR_QSPI_DRIVER */
+/* #define LX_NOR_CUSTOM_DRIVER */
 
 #ifdef LX_NOR_SIMULATOR_DRIVER
 #include "lx_stm32_nor_simulator_driver.h"
@@ -38,33 +40,93 @@ extern "C" {
 #define LX_NOR_OSPI_DRIVER_NAME          "FX Levelx OctoSPI driver"
 #endif
 
-/* uncomment the define below to support custom drivers */
-/* #define USE_LX_NOR_CUSTOM_DRIVER */
+#ifdef LX_NOR_QSPI_DRIVER
+#include "lx_stm32_qspi_driver.h"
 
-#ifdef USE_LX_NOR_CUSTOM_DRIVER
+#define LX_NOR_QSPI_DRIVER_ID           0x03
+#define LX_NOR_QSPI_DRIVER_NAME         "FX Levelx QuadSPI driver"
+#endif
+
+#ifdef LX_NOR_CUSTOM_DRIVER
 /*
  * define the Custom levelx nor drivers to be supported by the filex
- * for example:
+ *  for example:
 
-#define CUSTOM_DRIVER_ID          0x10 <-- MUST BE DIFFRENT TO 0 
+#define CUSTOM_DRIVER_ID          0xABCDEF
 #define NOR_CUSTOM_DRIVER_NAME    "NOR CUSTOM DRIVER"
 #include "lx_nor_custom_driver.h"
-                                "driver name"          "driver id"               "levelx entry function"
-#define NOR_CUSTOM_DRIVERS   {NOR_CUSTOM_DRIVER_NAME, CUSTOM_DRIVER_ID, lx_nor_customer_driver_initialize}
+#define LX_NOR_CUSTOM_DRIVERS   {.name = "NOR CUSTOM DRIVER", .id = CUSTOM_DRIVER_ID, .nor_driver_initialize = lx_nor_custom_driver_initialize}
  */
-#define LX_NOR_CUSTOM_DRIVERS
+
+/* USER CODE BEIGN NOR_CUSTOM_DRIVERS */
+
+/* USER CODE END NOR_CUSTOM_DRIVERS */
+
 #endif
 
 #define MAX_LX_NOR_DRIVERS     8
-#define UNKNOWN_DRIVER_ID      0xDEADBEEF
-/* uncomment the define below to force the usage of a single NOR driver */
-#define USE_LX_NOR_DEFAULT_DRIVER
+#define UNKNOWN_DRIVER_ID      0xFFFFFFFF
 
-/* when using a single driver define the NOR_DEFAULT_DRIVER_ID with the one of the above defined drivers ID */
-// #define NOR_DEFAULT_DRIVER  LX_NOR_SIMULATOR_DRIVER_ID
 
-/* main FileX driver entry function */
+/* to enable a default NOR driver:
+  - define the flags LX_NOR_DEFAULT_DRIVER
+  - Provide the driver ID in the NOR_DEFAULT_DRIVER for example
+  #define NOR_DEFAULT_DRIVER LX_NOR_QSPI_DRIVER_ID
+*/
+
+
+/* USER CODE BEGIN DEFAULT_DRIVER */
+
+/* USER CODE END DEFAULT_DRIVER */
+
+#ifdef LX_NOR_DEFAULT_DRIVER
+
+/* USER CODE BEGIN DEFAULT_DRIVER */
+
+/* USER CODE END DEFAULT_DRIVER */
+#endif
+
+#if !defined(NOR_DEFAULT_DRIVER) && !defined(LX_NOR_CUSTOM_DRIVERS) && !defined(LX_NOR_SIMULATOR_DRIVER) && !defined(LX_NOR_QSPI_DRIVER)  && !defined(LX_NOR_OSPI_DRIVER)
+#error "[This error was thrown on purpose] : No NOR lowlevel driver defined"
+#endif
+
+/* USER CODE BEGIN Includes */
+
+/* USER CODE END Includes */
+
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
+
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+
+
+
+/* USER CODE BEGIN EC */
+
+/* USER CODE END EC */
+
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/* USER CODE END EM */
+
+/* Exported functions prototypes ---------------------------------------------*/
 VOID  fx_stm32_levelx_nor_driver(FX_MEDIA *media_ptr);
+
+/* USER CODE BEGIN EFP */
+
+/* USER CODE END EFP */
+
+/* Private defines -----------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
+
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
 
 #ifdef __cplusplus
 }

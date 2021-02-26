@@ -24,10 +24,11 @@
 #ifndef APP_AZURE_RTOS_H
 #define APP_AZURE_RTOS_H
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
+#include "app_azure_rtos_config.h"
 
 #include "app_threadx.h"
 
@@ -59,9 +60,9 @@ void MX_AZURE_RTOS_Process(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-/* USER CODE BEGIN Private defines */
+/* USER CODE BEGIN PD */
 
-/* USER CODE END Private defines */
+/* USER CODE END PD */
 
 #ifdef __cplusplus
 }

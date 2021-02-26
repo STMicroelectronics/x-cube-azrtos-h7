@@ -1,9 +1,9 @@
 /* USER CODE BEGIN Header */
 /**
 ******************************************************************************
-* @file    app_detoxed.c
-* @author  MC Application Team
-* @brief   Dexter applicators file
+* @file    app_netxduo.c
+* @author  MCD Application Team
+* @brief   NetXDuo applicative file
 ******************************************************************************
 * @attention
 *
@@ -68,21 +68,22 @@ static VOID App_UDP_Thread_Entry(ULONG thread_input);
 
 static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr);
 /* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-/* USER CODE END 0 */
-
 /**
-* @brief  Application NetXDuo Initialization.
-* @param memory_ptr: memory pointer
-* @retval int
-*/
+  * @brief  Application NetXDuo Initialization.
+  * @param memory_ptr: memory pointer
+  * @retval int
+  */
 UINT App_NetXDuo_Init(VOID *memory_ptr)
 {
   UINT ret = NX_SUCCESS;
-  /* USER CODE BEGIN  App_NetXDuo_Init */
-  pointer = (UCHAR *) memory_ptr;
+  TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+
+  /* USER CODE BEGIN App_NetXDuo_Init */
+  printf("Nx_UDP_Echo_Server application started..\n");
+
+  /* Allocate the packet pool. */
+  ret = tx_byte_allocate(byte_pool, (VOID **) &pointer,
+                         NX_PACKET_POOL_SIZE, TX_NO_WAIT);
 
   /* Create the Packet pool to be used for packet allocation */
   ret = nx_packet_pool_create(&AppPool, "Main Packet Pool", PAYLOAD_SIZE, pointer, NX_PACKET_POOL_SIZE);
@@ -92,19 +93,22 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
     return NX_NOT_ENABLED;
   }
 
-  /* Increment the memory pointer by the size of the packet pool to avoid memory overlap */
-  pointer = pointer + NX_PACKET_POOL_SIZE;
+   /* Allocate the NX_IP instance pool. */
+  ret = tx_byte_allocate(byte_pool, (VOID **) &pointer,
+                         2 * DEFAULT_MEMORY_SIZE, TX_NO_WAIT);
 
   /* Create the main NX_IP instance */
-  ret = nx_ip_create(&IpInstance, "Main Ip instance", NULL_ADDRESS, NULL_ADDRESS, &AppPool,
-                     nx_driver_stm32h7xx, pointer, 2 * DEFAULT_MEMORY_SIZE, DEFAULT_PRIORITY);
+  ret = nx_ip_create(&IpInstance, "Main Ip instance", NULL_ADDRESS, NULL_ADDRESS, &AppPool, nx_stm32_eth_driver,
+                     pointer, 2 * DEFAULT_MEMORY_SIZE, DEFAULT_PRIORITY);
 
   if (ret != NX_SUCCESS)
   {
     return NX_NOT_ENABLED;
   }
 
-  pointer = pointer + (2 * DEFAULT_MEMORY_SIZE);
+  /* Allocate the packet pool. */
+  ret = tx_byte_allocate(byte_pool, (VOID **) &pointer,
+                         DEFAULT_MEMORY_SIZE, TX_NO_WAIT);
 
   /* Enable the ARP protocol and provide the ARP cache size for the IP instance */
   ret = nx_arp_enable(&IpInstance, (VOID *)pointer, DEFAULT_MEMORY_SIZE);
@@ -114,10 +118,7 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
     return NX_NOT_ENABLED;
   }
 
-  pointer = pointer + DEFAULT_MEMORY_SIZE;
-
   /* Enable the ICMP */
-
   ret = nx_icmp_enable(&IpInstance);
 
   if (ret != NX_SUCCESS)
@@ -125,31 +126,34 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
     return NX_NOT_ENABLED;
   }
 
-    /* Enable the UDP protocol required for  DHCP communication */
+  /* Enable the UDP protocol required for DHCP communication */
   ret = nx_udp_enable(&IpInstance);
+
+  /* Allocate the main thread pool. */
+  ret = tx_byte_allocate(byte_pool, (VOID **) &pointer,
+                         2 * DEFAULT_MEMORY_SIZE, TX_NO_WAIT);
 
   /* Create the main thread */
   ret = tx_thread_create(&AppMainThread, "App Main thread", App_Main_Thread_Entry, 0, pointer, 2 * DEFAULT_MEMORY_SIZE,
-                   DEFAULT_PRIORITY, DEFAULT_PRIORITY, TX_NO_TIME_SLICE, TX_AUTO_START);
+                        DEFAULT_PRIORITY, DEFAULT_PRIORITY, TX_NO_TIME_SLICE, TX_AUTO_START);
 
   if (ret != TX_SUCCESS)
   {
     return NX_NOT_ENABLED;
   }
 
-  pointer =  pointer + (2 * DEFAULT_MEMORY_SIZE);
+  /* Allocate the app UDP thread entry pool. */
+  ret = tx_byte_allocate(byte_pool, (VOID **) &pointer,
+                         2 * DEFAULT_MEMORY_SIZE, TX_NO_WAIT);
 
-  /* create the TCP server thread */
+  /* create the UDP server thread */
   ret = tx_thread_create(&AppUDPThread, "App UDP Thread", App_UDP_Thread_Entry, 0, pointer, 2 * DEFAULT_MEMORY_SIZE,
-                   DEFAULT_PRIORITY, DEFAULT_PRIORITY, TX_NO_TIME_SLICE, TX_DONT_START);
+                        DEFAULT_PRIORITY, DEFAULT_PRIORITY, TX_NO_TIME_SLICE, TX_DONT_START);
 
   if (ret != TX_SUCCESS)
   {
     return NX_NOT_ENABLED;
   }
-
-  pointer =  pointer + (2 * DEFAULT_MEMORY_SIZE);
-
 
   /* create the DHCP client */
   ret = nx_dhcp_create(&DHCPClient, &IpInstance, "DHCP Client");
@@ -160,14 +164,14 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
   }
 
   /* Create a semaphore to be used to notify the main thread when the IP address is resolved*/
-
   tx_semaphore_create(&Semaphore, "DHCP Semaphore", 0);
 
-  /* USER CODE END  App_NetXDuo_Init */
+  /* USER CODE END App_NetXDuo_Init */
 
-  return NX_SUCCESS;
+  return ret;
 }
 
+/* USER CODE BEGIN 1 */
 
 /**
 * @brief  ip address change callback.
@@ -181,7 +185,6 @@ static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr)
   tx_semaphore_put(&Semaphore);
 }
 
-/* USER CODE BEGIN 1 */
 /**
 * @brief  Main thread entry.
 * @param thread_input: ULONG user argument used by the thread entry
@@ -208,7 +211,7 @@ static VOID App_Main_Thread_Entry(ULONG thread_input)
   {
      Error_Handler();
   }
-
+   /* get IP address  */
   ret = nx_ip_address_get(&IpInstance, &IpAddress, &NetMask);
 
   PRINT_IP_ADDRESS(IpAddress);
@@ -239,7 +242,7 @@ static VOID App_UDP_Thread_Entry(ULONG thread_input)
   NX_PACKET *data_packet;
 
   /* create the UDP socket */
-  ret = nx_udp_socket_create(&IpInstance, &UDPSocket, "UDP Server Socket", NX_IP_NORMAL, NX_FRAGMENT_OKAY, NX_IP_TIME_TO_LIVE, 512);
+  ret = nx_udp_socket_create(&IpInstance, &UDPSocket, "UDP Server Socket", NX_IP_NORMAL, NX_FRAGMENT_OKAY, NX_IP_TIME_TO_LIVE, QUEUE_MAX_SIZE);
 
   if (ret != NX_SUCCESS)
   {
@@ -253,12 +256,16 @@ static VOID App_UDP_Thread_Entry(ULONG thread_input)
   {
      Error_Handler();
   }
+  else
+  {
+    printf("UDP Server listening on PORT %d.. \n", DEFAULT_PORT);
+  }
 
   while(1)
   {
     TX_MEMSET(data_buffer, '\0', sizeof(data_buffer));
 
-    /* wait for data for  1 sec */
+    /* wait for data for 1 sec */
     ret = nx_udp_socket_receive(&UDPSocket, &data_packet, 100);
 
     if (ret == NX_SUCCESS)
@@ -275,9 +282,6 @@ static VOID App_UDP_Thread_Entry(ULONG thread_input)
       /* resend the same packet to the client */
       ret =  nx_udp_socket_send(&UDPSocket, data_packet, source_ip_address, source_port);
 
-      /* release the packet after sending it */
-      nx_packet_release(data_packet);
-
       /* toggle the green led to monitor visually the traffic */
       BSP_LED_Toggle(LED_GREEN);
     }
@@ -287,5 +291,5 @@ static VOID App_UDP_Thread_Entry(ULONG thread_input)
         BSP_LED_Toggle(LED_GREEN);
     }
   }
-} 
+}
 /* USER CODE END 1 */

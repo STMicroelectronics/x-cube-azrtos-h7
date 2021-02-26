@@ -42,15 +42,8 @@
 /*                                                                        */
 /*  DESCRIPTION                                                           */
 /*                                                                        */ 
-/*     This function is the interrupt handler for the STM32 interrupts.   */
-/*     Normally an interrupt occurs from the controller when there is     */ 
-/*     either a EOF signal and there has been transfers within the frame  */ 
-/*     or when there is a change on one of the downstream ports.          */
-/*                                                                        */
-/*     All we need to do in the ISR is scan the controllers to find out   */ 
-/*     which one has issued a IRQ. If there is work to do for this        */ 
-/*     controller we need to wake up the corresponding thread to take     */ 
-/*     care of the job.                                                   */ 
+/*     This function is the interrupt handler for the USB interrupts.     */
+/*     This function calls HAL driver for interrupt handling.             */
 /*                                                                        */ 
 /*  INPUT                                                                 */ 
 /*                                                                        */ 
@@ -62,9 +55,7 @@
 /*                                                                        */ 
 /*  CALLS                                                                 */ 
 /*                                                                        */ 
-/*    _ux_hcd_stm32_register_read             Read STM32 HCOR register    */ 
-/*    _ux_hcd_stm32_register_write            Write STM32 HCOR register   */ 
-/*    _ux_utility_semaphore_put               Put producer semaphore      */ 
+/*    HAL_HCD_IRQHandler                      Interrupt handler           */
 /*                                                                        */ 
 /*  CALLED BY                                                             */ 
 /*                                                                        */ 
@@ -98,6 +89,7 @@ UX_HCD_STM32        *hcd_stm32;
             hcd =  &_ux_system_host -> ux_system_host_hcd_array[hcd_index];
             hcd_stm32 =  (UX_HCD_STM32 *) hcd -> ux_hcd_controller_hardware;
 
+            /* Call HAL interrupt handler.  */
             HAL_HCD_IRQHandler(hcd_stm32 -> hcd_handle);
         }
     }

@@ -88,22 +88,33 @@ UINT                length;
     /* Now get the physical ED attached to this endpoint.  */
     ed =  endpoint -> ux_endpoint_ed;
 
+    /* Save the pending transfer in the ED.  */
     ed -> ux_stm32_ed_transfer_request = transfer_request;
 
     /* Direction, 0 : Output / 1 : Input */
     direction = (transfer_request -> ux_transfer_request_type & UX_REQUEST_DIRECTION) == UX_REQUEST_IN ? 1 : 0;
 
+    /* If the direction is OUT, request size is larger than MPS, and DMA is not used, we need to set transfer length to MPS.  */
     if ((direction == 0) && (transfer_request -> ux_transfer_request_requested_length > endpoint -> ux_endpoint_descriptor.wMaxPacketSize) && (hcd_stm32 -> hcd_handle -> Init.dma_enable == 0))
     {
+
+        /* Set transfer length to MPS.  */
         length = endpoint -> ux_endpoint_descriptor.wMaxPacketSize;
     }
     else
     {
+
+        /* Keep the original transfer length.  */
         length = transfer_request -> ux_transfer_request_requested_length;
     }
 
+    /* Save the transfer status in the ED.  */
+    ed -> ux_stm32_ed_status = direction == 0 ? UX_HCD_STM32_ED_STATUS_BULK_OUT : UX_HCD_STM32_ED_STATUS_BULK_IN;
+
+    /* Save the transfer length.  */
     transfer_request -> ux_transfer_request_packet_length = length;
 
+    /* Submit the transfer request.  */
     HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel,
                              direction,
                              EP_TYPE_BULK, USBH_PID_DATA,

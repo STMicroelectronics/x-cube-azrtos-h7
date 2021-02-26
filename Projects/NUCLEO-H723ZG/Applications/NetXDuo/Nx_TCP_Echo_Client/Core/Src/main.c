@@ -1,21 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  */
+******************************************************************************
+* @file           : main.c
+* @brief          : Main program body
+******************************************************************************
+* @attention
+*
+* <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+* All rights reserved.</center></h2>
+*
+* This software component is licensed by ST under Ultimate Liberty license
+* SLA0044, the "License"; You may not use this file except in compliance with
+* the License. You may obtain a copy of the License at:
+*                             www.st.com/SLA0044
+*
+******************************************************************************
+*/
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -51,20 +51,21 @@
 /* Private variables ---------------------------------------------------------*/
 #if defined ( __ICCARM__ ) /*!< IAR Compiler */
 
-#pragma location=0x24018000
+#pragma location=0x24048000
 ETH_DMADescTypeDef  DMARxDscrTab[ETH_RX_DESC_CNT]; /* Ethernet Rx DMA Descriptors */
-#pragma location=0x24018060
+#pragma location=0x24048060
 ETH_DMADescTypeDef  DMATxDscrTab[ETH_TX_DESC_CNT]; /* Ethernet Tx DMA Descriptors */
 
 #elif defined ( __CC_ARM )  /* MDK ARM Compiler */
 
-__attribute__((at(0x24018000))) ETH_DMADescTypeDef  DMARxDscrTab[ETH_RX_DESC_CNT]; /* Ethernet Rx DMA Descriptors */
-__attribute__((at(0x24018060))) ETH_DMADescTypeDef  DMATxDscrTab[ETH_TX_DESC_CNT]; /* Ethernet Tx DMA Descriptors */
+__attribute__((at(0x24048000))) ETH_DMADescTypeDef  DMARxDscrTab[ETH_RX_DESC_CNT]; /* Ethernet Rx DMA Descriptors */
+__attribute__((at(0x24048060))) ETH_DMADescTypeDef  DMATxDscrTab[ETH_TX_DESC_CNT]; /* Ethernet Tx DMA Descriptors */
 
 #elif defined ( __GNUC__ ) /* GNU Compiler */
 
 ETH_DMADescTypeDef DMARxDscrTab[ETH_RX_DESC_CNT] __attribute__((section(".RxDecripSection"))); /* Ethernet Rx DMA Descriptors */
 ETH_DMADescTypeDef DMATxDscrTab[ETH_TX_DESC_CNT] __attribute__((section(".TxDecripSection")));   /* Ethernet Tx DMA Descriptors */
+
 #endif
 
 ETH_TxPacketConfig TxConfig;
@@ -98,7 +99,7 @@ static void MX_USART3_UART_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+  
   /* USER CODE END 1 */
 
   /* MPU Configuration--------------------------------------------------------*/
@@ -116,7 +117,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -132,7 +133,7 @@ int main(void)
   MX_USART3_UART_Init();
   MX_AZURE_RTOS_Init();
   /* USER CODE BEGIN 2 */
-
+  
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -210,11 +211,11 @@ void MX_ETH_Init(void)
 {
 
   /* USER CODE BEGIN ETH_Init 0 */
-
+  
   /* USER CODE END ETH_Init 0 */
 
   /* USER CODE BEGIN ETH_Init 1 */
-
+  
   /* USER CODE END ETH_Init 1 */
   heth.Instance = ETH;
   heth.Init.MACAddr[0] =   0x00;
@@ -229,7 +230,7 @@ void MX_ETH_Init(void)
   heth.Init.RxBuffLen = 1524;
 
   /* USER CODE BEGIN MACADDRESS */
-
+  
   /* USER CODE END MACADDRESS */
 
   if (HAL_ETH_Init(&heth) != HAL_OK)
@@ -242,7 +243,7 @@ void MX_ETH_Init(void)
   TxConfig.ChecksumCtrl = ETH_CHECKSUM_IPHDR_PAYLOAD_INSERT_PHDR_CALC;
   TxConfig.CRCPadCtrl = ETH_CRC_PAD_INSERT;
   /* USER CODE BEGIN ETH_Init 2 */
-
+  
   /* USER CODE END ETH_Init 2 */
 
 }
@@ -256,17 +257,17 @@ static void MX_USART3_UART_Init(void)
 {
 
   /* USER CODE BEGIN USART3_Init 0 */
-
+  
   /* USER CODE END USART3_Init 0 */
 
   /* USER CODE BEGIN USART3_Init 1 */
-
+  
   /* USER CODE END USART3_Init 1 */
   huart3.Instance = USART3;
-  huart3.Init.BaudRate = 9600;
+  huart3.Init.BaudRate = 115200;
   huart3.Init.WordLength = UART_WORDLENGTH_8B;
   huart3.Init.StopBits = UART_STOPBITS_1;
-  huart3.Init.Parity = UART_PARITY_ODD;
+  huart3.Init.Parity = UART_PARITY_NONE;
   huart3.Init.Mode = UART_MODE_TX_RX;
   huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart3.Init.OverSampling = UART_OVERSAMPLING_16;
@@ -290,7 +291,7 @@ static void MX_USART3_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART3_Init 2 */
-
+  
   /* USER CODE END USART3_Init 2 */
 
 }
@@ -314,18 +315,35 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-  /**
-  * @brief  Retargets the C library printf function to the USART.
-  * @param  None
-  * @retval None
-  */
+/**
+* @brief  Retargets the C library printf function to the USART.
+* @param  None
+* @retval None
+*/
 PUTCHAR_PROTOTYPE
 {
   /* Place your implementation of fputc here */
   /* e.g. write a character to the USART3 and Loop until the end of transmission */
   HAL_UART_Transmit(&huart3, (uint8_t *)&ch, 1, 0xFFFF);
-
+  
   return ch;
+}
+
+
+/**
+* @brief  This function is executed in case of success.
+* @retval None
+*/
+void Success_Handler(void)
+{
+  /* USER CODE BEGIN Success_Handler_Debug */
+  BSP_LED_Off(LED2);
+  while(1)
+  {
+    BSP_LED_Toggle(LED1);
+    tx_thread_sleep(50);
+  }
+  /* USER CODE END Success_Handler_Debug */
 }
 
 /* USER CODE END 4 */
@@ -340,41 +358,30 @@ void MPU_Config(void)
   HAL_MPU_Disable();
   /** Initializes and configures the Region and the memory to be protected
   */
-  /* define a 64KB of non-cacheable region to contain the internal nx driver data */
   MPU_InitStruct.Enable = MPU_REGION_ENABLE;
   MPU_InitStruct.Number = MPU_REGION_NUMBER0;
-  MPU_InitStruct.BaseAddress = 0x24018000;
-  MPU_InitStruct.Size = MPU_REGION_SIZE_128KB;
-  MPU_InitStruct.SubRegionDisable = 0x0;
-  MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL1;
-  MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
-  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
-  MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
-  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
-  MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
-
-  HAL_MPU_ConfigRegion(&MPU_InitStruct);
-
-  /** Initializes and configures the Region and the memory to be protected
-  */
-
-  /* reconfigure the first 256 bytes as Device to store the ETH DMA descriptors */
-  MPU_InitStruct.Enable = MPU_REGION_ENABLE;
-  MPU_InitStruct.Number = MPU_REGION_NUMBER1;
-  MPU_InitStruct.BaseAddress = 0x24018000;
-  MPU_InitStruct.Size = MPU_REGION_SIZE_256B;
+  MPU_InitStruct.BaseAddress = 0x24048000;
+  MPU_InitStruct.Size = MPU_REGION_SIZE_32KB;
   MPU_InitStruct.SubRegionDisable = 0x0;
   MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
   MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
   MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
   MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
+  MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
+  MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
+
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+  /** Initializes and configures the Region and the memory to be protected
+  */
+  MPU_InitStruct.Number = MPU_REGION_NUMBER1;
+  MPU_InitStruct.Size = MPU_REGION_SIZE_256B;
   MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
   MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
 
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
-
   /* Enables the MPU */
   HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
+
 }
 /**
   * @brief  Period elapsed callback in non blocking mode
@@ -387,13 +394,13 @@ void MPU_Config(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
-
+  
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM6) {
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
-
+  
   /* USER CODE END Callback 1 */
 }
 
@@ -404,29 +411,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-   BSP_LED_Off(LED1);
-   while(1)
-   {
-     BSP_LED_Toggle(LED2);
-     HAL_Delay(200);
-   }
+  BSP_LED_Off(LED1);
+  while(1)
+  {
+    BSP_LED_Toggle(LED2);
+    tx_thread_sleep(20);
+  }
   /* USER CODE END Error_Handler_Debug */
 }
-/**
-  * @brief  This function is executed in case of success.
-  * @retval None
-  */
-void Success_Handler(void)
-{
-  /* USER CODE BEGIN Error_Handler_Debug */
-   BSP_LED_Off(LED2);
-   while(1)
-   {
-     BSP_LED_Toggle(LED1);
-     HAL_Delay(500);
-   }
-  /* USER CODE END Error_Handler_Debug */
-}
+
 #ifdef  USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
@@ -439,7 +432,7 @@ void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

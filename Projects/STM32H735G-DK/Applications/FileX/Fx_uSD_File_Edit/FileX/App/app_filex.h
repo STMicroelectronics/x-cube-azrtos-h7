@@ -32,7 +32,6 @@ extern "C" {
 #include "fx_stm32_sd_driver.h"
 
 /* Private includes ----------------------------------------------------------*/
-
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
@@ -53,16 +52,16 @@ extern "C" {
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
-extern UINT App_FileX_Init(VOID *memory_ptr);
+UINT App_FileX_Init(VOID *memory_ptr);
 
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-/* USER CODE BEGIN Private defines */
+/* USER CODE BEGIN PD */
 
-/* USER CODE END Private defines */
+/* USER CODE END PD */
 
 /* USER CODE BEGIN 1 */
 

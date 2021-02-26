@@ -44,7 +44,6 @@ TX_THREAD               ux_app_thread;
 TX_THREAD               ux_cdc_read_thread;
 TX_THREAD               ux_cdc_write_thread;
 
-TX_BYTE_POOL            ux_byte_pool;
 TX_EVENT_FLAGS_GROUP    EventFlag;
 
 /* CDC Class Calling Parameter structure */
@@ -53,14 +52,6 @@ UX_SLAVE_CLASS_CDC_ACM_PARAMETER    cdc_acm_parameter;
 /* Define constants.  */
 #define USBX_APP_STACK_SIZE       2048
 #define USBX_MEMORY_SIZE          (32 * 1024)
-#define USBX_APP_BYTE_POOL_SIZE   (10240 + (USBX_MEMORY_SIZE))
-
-#if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = 0x24029000
-#elif defined ( __GNUC__ ) /* GNU Compiler */
-__attribute__((section(".UsbxPoolSection")))
-#endif
-static uint8_t usbx_pool[USBX_APP_BYTE_POOL_SIZE];
 
 /* USER CODE END PD */
 
@@ -78,12 +69,6 @@ static uint8_t usbx_pool[USBX_APP_BYTE_POOL_SIZE];
 /* USER CODE BEGIN PFP */
 void  usbx_app_thread_entry(ULONG arg);
 /* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
-
 /**
   * @brief  Application USBX Device Initialization.
   * @param memory_ptr: memory pointer
@@ -92,8 +77,8 @@ void  usbx_app_thread_entry(ULONG arg);
 UINT App_USBX_Device_Init(VOID *memory_ptr)
 {
   UINT ret = UX_SUCCESS;
-
-  /* USER CODE BEGIN  App_USBX_Device_Init */
+  TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+  /* USER CODE BEGIN App_USBX_Device_Init */
   CHAR *pointer;
   ULONG device_framework_hs_length;
   ULONG device_framework_fs_length;
@@ -105,19 +90,9 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   UCHAR *language_id_framework;
   UINT tx_status = UX_SUCCESS;
 
-  /* Create byte pool memory*/
-  tx_status = tx_byte_pool_create(&ux_byte_pool, "ux byte pool 0", usbx_pool,
-                                  USBX_APP_BYTE_POOL_SIZE);
-
-  /* Check byte pool creation */
-  if (UX_SUCCESS != tx_status)
-  {
-    Error_Handler();
-    return tx_status;
-  }
-
+  
   /* Allocate the stack for thread 0. */
-  tx_status = tx_byte_allocate(&ux_byte_pool, (VOID **) &pointer,
+  tx_status = tx_byte_allocate(byte_pool, (VOID **) &pointer,
                                USBX_MEMORY_SIZE, TX_NO_WAIT);
 
   /* Check memory allocation */
@@ -131,11 +106,11 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   ux_system_initialize(pointer, USBX_MEMORY_SIZE, UX_NULL, 0);
 
   /* Get_Device_Framework_High_Speed and get the length */
-  device_framework_high_speed = USBD_Get_Device_Framework_Speed(HIGH_SPEED,
+  device_framework_high_speed = USBD_Get_Device_Framework_Speed(USBD_HIGH_SPEED,
                                 &device_framework_hs_length);
 
-  /* Get_Device_Framework_High_Speed and get the length */
-  device_framework_full_speed = USBD_Get_Device_Framework_Speed(FULL_SPEED,
+  /* Get_Device_Framework_Full_Speed and get the length */
+  device_framework_full_speed = USBD_Get_Device_Framework_Speed(USBD_FULL_SPEED,
                                 &device_framework_fs_length);
 
   /* Get_String_Framework and get the length */
@@ -185,7 +160,7 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   }
 
   /* Allocate the stack for main_usbx_app_thread_entry. */
-  tx_status = tx_byte_allocate(&ux_byte_pool, (VOID **) &pointer,
+  tx_status = tx_byte_allocate(byte_pool, (VOID **) &pointer,
                                USBX_APP_STACK_SIZE, TX_NO_WAIT);
 
   /* Check memory allocation */
@@ -208,7 +183,7 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   }
 
   /* Allocate the stack for usbx_cdc_acm_read_thread_entry. */
-  tx_status = tx_byte_allocate(&ux_byte_pool, (VOID **) &pointer,
+  tx_status = tx_byte_allocate(byte_pool, (VOID **) &pointer,
                                USBX_APP_STACK_SIZE, TX_NO_WAIT);
 
   /* Check memory allocation */
@@ -232,7 +207,7 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   }
 
   /* Allocate the stack for usbx_cdc_acm_write_thread_entry. */
-  tx_status = tx_byte_allocate(&ux_byte_pool, (VOID **) &pointer,
+  tx_status = tx_byte_allocate(byte_pool, (VOID **) &pointer,
                                USBX_APP_STACK_SIZE, TX_NO_WAIT);
 
   /* Check memory allocation */
@@ -261,14 +236,10 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
     ret = TX_GROUP_ERROR;
   }
 
-  /* USER CODE END  App_USBX_Device_Init */
+  /* USER CODE END App_USBX_Device_Init */
+
   return ret;
 }
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN Private_User_Code */
-
-/* USER CODE END Private_User_Code */
 
 /* USER CODE BEGIN 1 */
 /**

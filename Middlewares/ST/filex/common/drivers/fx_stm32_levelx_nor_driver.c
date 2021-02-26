@@ -11,7 +11,7 @@
 
 #include "fx_stm32_levelx_nor_driver.h"
 
-/* define the stuct used to identify the levelx driver to instantiate */
+/* define the struct used to identify the levelx driver to instantiate */
 struct fx_lx_nor_driver_instance
 {
     LX_NOR_FLASH flash_instance;
@@ -36,7 +36,11 @@ static struct fx_lx_nor_driver_instance  fx_lx_nor_drivers[MAX_LX_NOR_DRIVERS] =
     { .name = LX_NOR_OSPI_DRIVER_NAME, .id = LX_NOR_OSPI_DRIVER_ID, .nor_driver_initialize = lx_stm32_ospi_initialize},
 #endif
 
-#ifdef USE_LX_NOR_CUSTOM_DRIVER
+#ifdef LX_NOR_QSPI_DRIVER
+    { .name = LX_NOR_QSPI_DRIVER_NAME, .id = LX_NOR_QSPI_DRIVER_ID, .nor_driver_initialize = lx_stm32_qspi_initialize},
+#endif
+
+#ifdef LX_NOR_CUSTOM_DRIVER
     LX_NOR_CUSTOM_DRIVERS
 #endif
 };

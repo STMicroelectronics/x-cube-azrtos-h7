@@ -16,27 +16,58 @@
 extern "C" {
 #endif
 
-/*-----------> Includes <-----------*/
+/* Includes ------------------------------------------------------------------*/
 #include "lx_api.h"
 #include "stm32h7xxx_{eval,discovery}_ospi.h"
 
-/*-----------> Defines <-----------*/
+/* USER CODE BEGIN Includes */
 
-/* the OctoSPI instance ,defaut value set to 0 */
+/* USER CODE END Includes */
+
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
+
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+
+
 #define OSPI_INSTANCE   0
 
-/* when set to 1, the BSP_OSPI_Init() is called by the driver, otherwise it is up to the application to intialize it */
-#define LX_DRIVER_CALLS_BSP_OSPI_INIT 1
+#define LX_DRIVER_CALLS_OSPI_INIT 1
 
-#if (LX_DRIVER_CALLS_BSP_OSPI_INIT == 1)
+#if (LX_DRIVER_CALLS_OSPI_INIT == 1)
 
-/* allow the driver to fully erase the OctoSPI chip. This should be used carefully.
- * the call is blocking and takes a while. by default it is set to 0.
- */
-#define LX_DRIVER_ERASES_OPSI_AFTER_INIT  0
+#define LX_DRIVER_ERASES_OSPI_AFTER_INIT  0
 #endif
 
+
+/* USER CODE BEGIN EC */
+
+/* USER CODE END EC */
+
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/* USER CODE END EM */
+
+/* Exported functions prototypes ---------------------------------------------*/
+
+
 UINT  lx_stm32_ospi_initialize(LX_NOR_FLASH *nor_flash);
+
+/* USER CODE BEGIN EFP */
+
+/* USER CODE END EFP */
+
+/* Private defines -----------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
+
+/* USER CODE BEGIN 0 */
+
+/* USER CODE END 0 */
 
 #ifdef __cplusplus
 }

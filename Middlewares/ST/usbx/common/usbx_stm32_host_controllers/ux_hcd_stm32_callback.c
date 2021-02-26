@@ -199,6 +199,7 @@ UX_HCD_STM32        *hcd_stm32;
 UX_HCD_STM32_ED     *ed;
 UX_TRANSFER         *transfer_request;
 
+
     /* Check the URB state.  */
     if (urb_state == URB_DONE || urb_state == URB_STALL || urb_state == URB_ERROR || urb_state == URB_NOTREADY)
     {
@@ -215,7 +216,7 @@ UX_TRANSFER         *transfer_request;
         ed =  hcd_stm32 -> ux_hcd_stm32_channels_ed[chnum];
 
         /* Check if ED is still valid.  */
-        if (ed == UX_NULL || urb_state == URB_ERROR)
+        if (ed == UX_NULL)
         {
 
             /* Disable channel.  */
@@ -288,7 +289,7 @@ UX_TRANSFER         *transfer_request;
                 transfer_request -> ux_transfer_request_completion_code =  UX_SUCCESS;
                 break;
             default:
-                /* Set the completion code to stalled.  */
+                /* Set the completion code to transfer error.  */
                 transfer_request -> ux_transfer_request_completion_code =  UX_TRANSFER_ERROR;
             }
 
@@ -306,26 +307,21 @@ UX_TRANSFER         *transfer_request;
         else
         {
 
-          /* Handle URB_NOTREADY state here.  */
-          /* Check if the request is for bulk OUT or control OUT.  */
-          if ((((ed -> ux_stm32_ed_endpoint -> ux_endpoint_descriptor.bmAttributes) & UX_MASK_ENDPOINT_TYPE) == UX_BULK_ENDPOINT ||
-               ((ed -> ux_stm32_ed_endpoint -> ux_endpoint_descriptor.bmAttributes) & UX_MASK_ENDPOINT_TYPE) == UX_CONTROL_ENDPOINT) &&
-              (transfer_request -> ux_transfer_request_type & UX_REQUEST_DIRECTION) == UX_REQUEST_OUT)
-          {
+            /* Handle URB_NOTREADY state here.  */
+            /* Check if we need to retry the transfer by checking the status.  */
+            if ((ed -> ux_stm32_ed_status == UX_HCD_STM32_ED_STATUS_CONTROL_SETUP) ||
+                (ed -> ux_stm32_ed_status == UX_HCD_STM32_ED_STATUS_CONTROL_DATA_OUT) ||
+                (ed -> ux_stm32_ed_status == UX_HCD_STM32_ED_STATUS_CONTROL_STATUS_OUT) ||
+                (ed -> ux_stm32_ed_status == UX_HCD_STM32_ED_STATUS_BULK_OUT))
+                {
+                    /* Submit the transmit request.  */
+                       HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel, 0,
+                                        ((ed -> ux_stm32_ed_endpoint -> ux_endpoint_descriptor.bmAttributes) & UX_MASK_ENDPOINT_TYPE) == UX_BULK_ENDPOINT ? EP_TYPE_BULK : EP_TYPE_CTRL,
+                                         ed -> ux_stm32_ed_status == UX_HCD_STM32_ED_STATUS_CONTROL_SETUP ? USBH_PID_SETUP : USBH_PID_DATA,
+                                         transfer_request -> ux_transfer_request_data_pointer + transfer_request -> ux_transfer_request_actual_length,
+                                         transfer_request -> ux_transfer_request_packet_length, 0);
+                }
 
-            if ((transfer_request -> ux_transfer_request_requested_length > transfer_request -> ux_transfer_request_actual_length) ||
-                (transfer_request -> ux_transfer_request_requested_length == 0))
-            {
-              transfer_request -> ux_transfer_request_packet_length = UX_MIN(ed->ux_stm32_ed_endpoint->ux_endpoint_descriptor.wMaxPacketSize,
-                                                                             transfer_request -> ux_transfer_request_requested_length - transfer_request -> ux_transfer_request_actual_length);
-              HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel,
-                                       0,
-                                       EP_TYPE_BULK, USBH_PID_DATA,
-                                       transfer_request -> ux_transfer_request_data_pointer + transfer_request -> ux_transfer_request_actual_length,
-                                       transfer_request -> ux_transfer_request_packet_length, 0);
-              return;
-            }
-          }
         }
     }
 }

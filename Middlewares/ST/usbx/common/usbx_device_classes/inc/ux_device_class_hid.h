@@ -46,7 +46,7 @@
 /*                                            TX symbols instead of using */
 /*                                            them directly,              */
 /*                                            resulting in version 6.1    */
-/*  11-30-2020     Chaoqiong Xiao           Modified comment(s),          */
+/*  12-31-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            added Get/Set Protocol      */
 /*                                            request support,            */
 /*                                            resulting in version 6.1.3  */

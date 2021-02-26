@@ -30,7 +30,6 @@ extern "C" {
 #include "nx_api.h"
 
 /* Private includes ----------------------------------------------------------*/
-
 #include "nx_stm32_eth_driver.h"
 
 /* USER CODE BEGIN Includes */
@@ -50,23 +49,8 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-
-/* USER CODE END EM */
-
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
 #define PRINT_IP_ADDRESS(addr)         do {                                         \
-                                            printf("%s: %lu.%lu.%lu.%lu \n", #addr, \
+                                            printf("STM32 %s: %lu.%lu.%lu.%lu \n", #addr, \
                                             (addr >> 24) & 0xff,                    \
                                             (addr >> 16) & 0xff,                    \
                                             (addr >> 8) & 0xff,                     \
@@ -80,39 +64,44 @@ extern "C" {
                                             (addr >> 8) & 0xff,                       \
                                             (addr & 0xff), port, data);               \
                                        } while(0)
-/* USER CODE END PM */
+/* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
 UINT App_NetXDuo_Init(VOID *memory_ptr);
 
+/* USER CODE BEGIN EFP */
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-/* USER CODE BEGIN Private defines */
-
+/* USER CODE BEGIN PD */
 #define PAYLOAD_SIZE             1536
-#define NX_PACKET_POOL_SIZE      (( PAYLOAD_SIZE + sizeof(NX_PACKET)) * 20)
+#define NX_PACKET_POOL_SIZE      (( PAYLOAD_SIZE + sizeof(NX_PACKET)) * 10)
+#define QUEUE_MAX_SIZE           512
 
 #define DEFAULT_MEMORY_SIZE      1024
-#define DEFAULT_PRIORITY         10
+#define DEFAULT_MAIN_PRIORITY    10
+#define DEFAULT_PRIORITY         5
 
 #define NULL_ADDRESS             0
 
 #define DEFAULT_PORT             6000
-
-#define UDP_SERVER_ADDRESS       IP_ADDRESS(192, 168, 1, 1)
 #define UDP_SERVER_PORT          6001
+#define UDP_SERVER_ADDRESS       IP_ADDRESS(192, 168, 1, 2)
 
-#define MAX_PACKET_COUNT         10
-#define DEFAULT_MESSAGE          "NetXDuo UDP Client on STM32H735-DK"
-/* USER CODE END Private defines */
+#define MAX_PACKET_COUNT         100
+#define DEFAULT_MESSAGE          "NetXDuo On STM32H735"
+
+#define DEFAULT_TIMEOUT          10 * NX_IP_PERIODIC_RATE
+
+/* USER CODE END PD */
 
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
 
 #ifdef __cplusplus
- }
+}
 #endif
 #endif /* __APP_NETXDUO_H__ */
 

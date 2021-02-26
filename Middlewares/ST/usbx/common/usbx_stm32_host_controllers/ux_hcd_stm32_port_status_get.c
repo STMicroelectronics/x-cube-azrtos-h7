@@ -82,7 +82,7 @@
 /*                                                                        */ 
 /*  CALLS                                                                 */ 
 /*                                                                        */ 
-/*    _ux_hcd_stm32_hcor_register_read    Read STM32 register             */ 
+/*    HAL_HCD_GetCurrentSpeed             Get device speed                */ 
 /*                                                                        */ 
 /*  CALLED BY                                                             */ 
 /*                                                                        */ 

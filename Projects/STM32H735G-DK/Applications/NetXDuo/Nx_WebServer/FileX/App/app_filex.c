@@ -18,6 +18,7 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_filex.h"
 
@@ -50,11 +51,6 @@
 
 /* USER CODE END PFP */
 
-/* Global user code ---------------------------------------------------------*/
-/* USER CODE BEGIN Global_User_Code */
-
-/* USER CODE END Global_User_Code */
-
 /**
   * @brief  Application FileX Initialization.
   * @param memory_ptr: memory pointer
@@ -62,21 +58,20 @@
   */
 UINT App_FileX_Init(VOID *memory_ptr)
 {
-    UINT ret = FX_SUCCESS;
-    /* USER CODE BEGIN App_FileX_Init */
+  UINT ret = FX_SUCCESS;
 
-    /* Initialize the FILEX system.  */
-    fx_system_initialize();
+  TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-    /* USER CODE END App_FileX_Init */
+  /* USER CODE BEGIN App_FileX_Init */
 
-    return ret;
+  UNUSED (byte_pool);
+
+  /* Initialize the FILEX system.  */
+  fx_system_initialize();
+
+  /* USER CODE END App_FileX_Init */
+  return ret;
 }
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN Private_User_Code */
-
-/* USER CODE END Private_User_Code */
 
 /* USER CODE BEGIN 1 */
 

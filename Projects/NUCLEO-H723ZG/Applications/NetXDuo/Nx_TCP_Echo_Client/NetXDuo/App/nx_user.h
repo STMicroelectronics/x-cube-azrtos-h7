@@ -72,9 +72,7 @@
 
 /* If defined, the link driver is able to specify extra capability, such as
    checksum offloading features. */
-/*
 #define NX_ENABLE_INTERFACE_CAPABILITY
-*/
 
 /* NX_PHYSICAL_HEADER Specifies the size in bytes of the physical header of
    the frame. */
@@ -182,7 +180,7 @@
 #define NX_PACKET_ALIGNMENT 	  				sizeof(ULONG)
 */
 
-/* Defined, packet debug infromation is enabled.  */
+/* Defined, packet debug information is enabled.  */
 /*
 #define NX_ENABLE_PACKET_DEBUG_INFO
 */
@@ -210,7 +208,7 @@
 /************* Configuration options for Neighbor Cache **********************/
 /*****************************************************************************/
 
-/* Define the length of time, in milliseconds, between retransmitting
+/* Define the length of time, in milliseconds, between re-transmitting
    Neighbor Solicitation (NS) packets. */
 /*
 #define NX_RETRANS_TIMER						1000
@@ -393,7 +391,7 @@
 /*****************************************************************************/
 
 /* Defined, disables IPv4 functionality. This option can be used to build NetX
-   Duo to suupport IPv6 only. By default this option is not defined. */
+   Duo to support IPv6 only. By default this option is not defined. */
 /*
 #define NX_DISABLE_IPV4
 */
@@ -424,9 +422,9 @@
 */
 
 /* If defined, application is able to control whether or not to perform IPv6
-   stateless address autoconfiguration with nxd_ipv6_stateless_address_autoconfig_enable()
+   stateless address auto-configuration with nxd_ipv6_stateless_address_autoconfig_enable()
    or nxd_ipv6_stateless_address_autoconfig_disable() service. If defined, the
-   system starts with IPv6 stateless address autoconfiguration enabled.
+   system starts with IPv6 stateless address auto-configuration enabled.
    This feature is disabled by default. */
 /*
 #define NX_IPV6_STATELESS_AUTOCONFIG_CONTROL
@@ -1547,7 +1545,7 @@
    out an MQTT PINGREQ message before the keep-alive time expires. This timer
    is activated if the client connects to the broker with a keep-alive timer
    value set. The default value is TX_TIMER_TICKS_PER_SECOND, which is a
-   one-second timer. The defaut value is TX_TIMER_TICKS_PER_SECOND. */
+   one-second timer. The default value is TX_TIMER_TICKS_PER_SECOND. */
 /*
 #define NXD_MQTT_KEEPALIVE_TIMER_RATE           (NX_IP_PERIODIC_RATE)
 */
@@ -1611,9 +1609,7 @@
    will function without any change if this option is defined. The HTTP Server
    will need to either be modified or the user will have to create a handful
    of FileX services in order to function properly. */
-/*
 #define NX_HTTP_NO_FILEX
-*/
 
 /* Type of service required for the HTTP TCP requests. By default, this value
    is defined as NX_IP_NORMAL to indicate normal IP packet service. */
@@ -2425,7 +2421,7 @@
 */
 
 /* If defined, this macro enables TLS and HTTPS. Leave undefined to free up
-   resources if only plaintext HTTP is desired. By default, this macro is not
+   resources if only plain-text HTTP is desired. By default, this macro is not
    defined. */
 /*
 #define NX_WEB_HTTPS_ENABLE
@@ -2447,9 +2443,7 @@
    will function without any change if this option is defined. The HTTPS Server
    will need to either be modified or the user will have to create a handful of
    FileX services in order to function properly. */
-/*
 #define NX_WEB_HTTP_NO_FILEX
-*/
 
 /* The priority of the HTTPS Server thread. By default, this value is defined
    as 4 to specify priority 4. */

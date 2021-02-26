@@ -54,8 +54,6 @@
 /* Usb Memory Size */
 #define USBX_MEMORY_SIZE                      (32 * 1024)
 
-/* Byte pool size */
-#define USBX_APP_BYTE_POOL_SIZE               ((1024 * 10) + (USBX_MEMORY_SIZE))
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -66,25 +64,18 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 
-TX_BYTE_POOL                        ux_byte_pool;
 TX_THREAD                           ux_app_thread;
 TX_EVENT_FLAGS_GROUP                EventFlag;
 UX_SLAVE_CLASS_STORAGE_PARAMETER    storage_parameter;
 CHAR                                *pointer;
 
-/* Set usbx_pool start address to 0x24028000 */
-#if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = 0x24028000
-#elif defined ( __GNUC__ ) /* GNU Compiler */
-__attribute__((section(".UsbxPoolSection")))
-#endif
-static uint8_t usbx_pool[USBX_APP_BYTE_POOL_SIZE];
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
+
 VOID  usbx_app_thread_entry(ULONG arg);
+
 UINT  app_usb_device_state_change(ULONG event);
 
 UINT  app_usb_device_thread_media_read(VOID *storage, ULONG lun,
@@ -97,15 +88,8 @@ UINT  app_usb_device_thread_media_write(VOID *storage, ULONG lun,
 
 UINT  app_usb_device_thread_media_status(VOID *storage, ULONG lun,
                                          ULONG media_id, ULONG *media_status);
-void  usbx_app_thread_entry(ULONG arg);
 
 /* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
-
 /**
   * @brief  Application USBX Device Initialization.
   * @param memory_ptr: memory pointer
@@ -114,7 +98,8 @@ void  usbx_app_thread_entry(ULONG arg);
 UINT App_USBX_Device_Init(VOID *memory_ptr)
 {
   UINT ret = UX_SUCCESS;
-  /* USER CODE BEGIN  App_USBX_Device_Init */
+  TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+  /* USER CODE BEGIN App_USBX_Device_Init */
   ULONG device_framework_hs_length;
   ULONG device_framework_fs_length;
   ULONG string_framework_length;
@@ -124,23 +109,19 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   UCHAR *string_framework;
   UCHAR *language_id_framework;
 
-  /* Create byte pool memory */
-  tx_byte_pool_create(&ux_byte_pool, "ux byte pool 0",
-                      usbx_pool, USBX_APP_BYTE_POOL_SIZE);
-
   /* Allocate the USBX_MEMORY_SIZE. */
-  tx_byte_allocate(&ux_byte_pool, (VOID **) &pointer,
+  tx_byte_allocate(byte_pool, (VOID **) &pointer,
                    USBX_MEMORY_SIZE, TX_NO_WAIT);
 
   /* Initialize USBX Memory */
   ux_system_initialize(pointer, USBX_MEMORY_SIZE, UX_NULL, 0);
 
   /* Get_Device_Framework_High_Speed and get the length */
-  device_framework_high_speed = USBD_Get_Device_Framework_Speed(HIGH_SPEED,
+  device_framework_high_speed = USBD_Get_Device_Framework_Speed(USBD_HIGH_SPEED,
                                 &device_framework_hs_length);
 
-  /* Get_Device_Framework_High_Speed and get the length */
-  device_framework_full_speed = USBD_Get_Device_Framework_Speed(FULL_SPEED,
+  /* Get_Device_Framework_Full_Speed and get the length */
+  device_framework_full_speed = USBD_Get_Device_Framework_Speed(USBD_FULL_SPEED,
                                 &device_framework_fs_length);
 
   /* Get_String_Framework and get the length */
@@ -201,7 +182,7 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   }
 
   /* Allocate the stack for main_usbx_app_thread_entry. */
-  tx_byte_allocate(&ux_byte_pool, (VOID **) &pointer,
+  tx_byte_allocate(byte_pool, (VOID **) &pointer,
                    USBX_APP_STACK_SIZE, TX_NO_WAIT);
 
   /* Create the usbx_app_thread_entry.  */
@@ -217,15 +198,10 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
     ret = TX_GROUP_ERROR;
   }
 
-  /* USER CODE END  App_USBX_Device_Init */
+  /* USER CODE END App_USBX_Device_Init */
+
   return ret;
 }
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN Private_User_Code */
-
-
-/* USER CODE END Private_User_Code */
 
 /* USER CODE BEGIN 1 */
 /**

@@ -1037,6 +1037,7 @@ HAL_StatusTypeDef HAL_PCD_Stop(PCD_HandleTypeDef *hpcd)
     /* Disable USB Transceiver */
     USBx->GCCFG &= ~(USB_OTG_GCCFG_PWRDWN);
   }
+
   __HAL_UNLOCK(hpcd);
 
   return HAL_OK;
@@ -1627,19 +1628,16 @@ __weak void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef *hpcd)
   */
 HAL_StatusTypeDef HAL_PCD_DevConnect(PCD_HandleTypeDef *hpcd)
 {
-#if defined (USB_OTG_FS) || defined (USB_OTG_HS)
   USB_OTG_GlobalTypeDef *USBx = hpcd->Instance;
-#endif /* defined (USB_OTG_FS) || defined (USB_OTG_HS) */
 
   __HAL_LOCK(hpcd);
-#if defined (USB_OTG_FS) || defined (USB_OTG_HS)
+
   if ((hpcd->Init.battery_charging_enable == 1U) &&
       (hpcd->Init.phy_itface != USB_OTG_ULPI_PHY))
   {
     /* Enable USB Transceiver */
     USBx->GCCFG |= USB_OTG_GCCFG_PWRDWN;
   }
-#endif /* defined (USB_OTG_FS) || defined (USB_OTG_HS) */
   (void)USB_DevConnect(hpcd->Instance);
   __HAL_UNLOCK(hpcd);
 
@@ -1653,21 +1651,17 @@ HAL_StatusTypeDef HAL_PCD_DevConnect(PCD_HandleTypeDef *hpcd)
   */
 HAL_StatusTypeDef HAL_PCD_DevDisconnect(PCD_HandleTypeDef *hpcd)
 {
-#if defined (USB_OTG_FS) || defined (USB_OTG_HS)
   USB_OTG_GlobalTypeDef *USBx = hpcd->Instance;
-#endif /* defined (USB_OTG_FS) || defined (USB_OTG_HS) */
 
   __HAL_LOCK(hpcd);
   (void)USB_DevDisconnect(hpcd->Instance);
 
-#if defined (USB_OTG_FS) || defined (USB_OTG_HS)
   if ((hpcd->Init.battery_charging_enable == 1U) &&
       (hpcd->Init.phy_itface != USB_OTG_ULPI_PHY))
   {
     /* Disable USB Transceiver */
     USBx->GCCFG &= ~(USB_OTG_GCCFG_PWRDWN);
   }
-#endif /* defined (USB_OTG_FS) || defined (USB_OTG_HS) */
 
   __HAL_UNLOCK(hpcd);
 

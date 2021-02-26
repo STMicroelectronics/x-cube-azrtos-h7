@@ -35,7 +35,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_device_class_storage_control_request            PORTABLE C      */ 
-/*                                                           6.1.2        */
+/*                                                           6.1.3        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -70,9 +70,9 @@
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            optimized command logic,    */
 /*                                            resulting in version 6.1    */
-/*  11-30-2020     Chaoqiong Xiao           Modified comment(s),          */
+/*  12-31-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            fixed USB CV test issues,   */
-/*                                            resulting in version 6.1.2  */
+/*                                            resulting in version 6.1.3  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_device_class_storage_control_request(UX_SLAVE_CLASS_COMMAND *command)

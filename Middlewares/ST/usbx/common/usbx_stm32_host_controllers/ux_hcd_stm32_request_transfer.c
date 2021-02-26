@@ -63,9 +63,7 @@
 /*    _ux_hcd_stm32_request_bulk_transfer         Request bulk transfer   */ 
 /*    _ux_hcd_stm32_request_control_transfer      Request control         */ 
 /*                                                    transfer            */ 
-/*    _ux_hcd_stm32_request_interrupt_transfer    Request interrupt       */ 
-/*                                                    transfer            */ 
-/*    _ux_hcd_stm32_request_isochronous_transfer  Request isochronous     */ 
+/*    _ux_hcd_stm32_request_periodic_transfer     Request periodic        */ 
 /*                                                    transfer            */ 
 /*                                                                        */ 
 /*  CALLED BY                                                             */ 
@@ -111,15 +109,11 @@ UINT            status;
             break;
     
         case UX_INTERRUPT_ENDPOINT:
-    
-            status =  _ux_hcd_stm32_request_interrupt_transfer(hcd_stm32, transfer_request);
-            break;
-    
         case UX_ISOCHRONOUS_ENDPOINT:
     
-            status =  _ux_hcd_stm32_request_isochronous_transfer(hcd_stm32, transfer_request);
+            status =  _ux_hcd_stm32_request_periodic_transfer(hcd_stm32, transfer_request);
             break;
-    
+        
         default:
     
             status =  UX_ERROR;

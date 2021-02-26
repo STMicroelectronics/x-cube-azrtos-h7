@@ -96,7 +96,8 @@ HAL_StatusTypeDef USB_CoreInit(USB_OTG_GlobalTypeDef *USBx, USB_OTG_CfgTypeDef c
     {
       USBx->GUSBCFG |= USB_OTG_GUSBCFG_ULPIEVBUSD;
     }
-    /* Reset after a PHY select  */
+
+    /* Reset after a PHY select */
     ret = USB_CoreReset(USBx);
   }
   else /* FS interface (embedded Phy) */
@@ -121,6 +122,10 @@ HAL_StatusTypeDef USB_CoreInit(USB_OTG_GlobalTypeDef *USBx, USB_OTG_CfgTypeDef c
 
   if (cfg.dma_enable == 1U)
   {
+    /* make sure to reserve 18 fifo Locations for DMA buffers */
+    USBx->GDFIFOCFG &= ~(0xFFFFU << 16);
+    USBx->GDFIFOCFG |= 0x3EEU << 16;
+
     USBx->GAHBCFG |= USB_OTG_GAHBCFG_HBSTLEN_2;
     USBx->GAHBCFG |= USB_OTG_GAHBCFG_DMAEN;
   }
@@ -936,7 +941,7 @@ HAL_StatusTypeDef USB_WritePacket(USB_OTG_GlobalTypeDef *USBx, uint8_t *src,
                                   uint8_t ch_ep_num, uint16_t len, uint8_t dma)
 {
   uint32_t USBx_BASE = (uint32_t)USBx;
-  uint32_t *pSrc = (uint32_t *)src;
+  uint8_t *pSrc = src;
   uint32_t count32b, i;
 
   if (dma == 0U)
@@ -945,6 +950,9 @@ HAL_StatusTypeDef USB_WritePacket(USB_OTG_GlobalTypeDef *USBx, uint8_t *src,
     for (i = 0U; i < count32b; i++)
     {
       USBx_DFIFO((uint32_t)ch_ep_num) = __UNALIGNED_UINT32_READ(pSrc);
+      pSrc++;
+      pSrc++;
+      pSrc++;
       pSrc++;
     }
   }
@@ -962,14 +970,34 @@ HAL_StatusTypeDef USB_WritePacket(USB_OTG_GlobalTypeDef *USBx, uint8_t *src,
 void *USB_ReadPacket(USB_OTG_GlobalTypeDef *USBx, uint8_t *dest, uint16_t len)
 {
   uint32_t USBx_BASE = (uint32_t)USBx;
-  uint32_t *pDest = (uint32_t *)dest;
+  uint8_t *pDest = dest;
+  uint32_t pData;
   uint32_t i;
-  uint32_t count32b = ((uint32_t)len + 3U) / 4U;
+  uint32_t count32b = (uint32_t)len >> 2U;
+  uint16_t remaining_bytes = len % 4U;
 
   for (i = 0U; i < count32b; i++)
   {
     __UNALIGNED_UINT32_WRITE(pDest, USBx_DFIFO(0U));
     pDest++;
+    pDest++;
+    pDest++;
+    pDest++;
+  }
+
+  /* When Number of data is not word aligned, read the remaining byte */
+  if (remaining_bytes != 0U)
+  {
+    i = 0U;
+    __UNALIGNED_UINT32_WRITE(&pData, USBx_DFIFO(0U));
+	
+    do
+    {
+      *(uint8_t *)pDest = (uint8_t)(pData >> (8U * (uint8_t)(i)));
+      i++;
+      pDest++;
+      remaining_bytes--;
+    } while (remaining_bytes != 0U);
   }
 
   return ((void *)pDest);

@@ -34,10 +34,10 @@ extern "C" {
 #include "ux_system.h"
 #include "ux_utility.h"
 #include "ux_hcd_stm32.h"
+#include "stm32h7xx_nucleo.h"
 #include "ux_host_class_hid.h"
 #include "ux_host_class_hid_mouse.h"
 #include "ux_host_class_hid_keyboard.h"
-#include "stm32h7xx_nucleo.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -64,21 +64,22 @@ extern "C" {
 UINT App_USBX_Host_Init(VOID *memory_ptr);
 
 /* USER CODE BEGIN EFP */
-
-/* USER CODE END EFP */
-
-/* Private defines -----------------------------------------------------------*/
-/* USER CODE BEGIN Private defines */
+UINT  MX_USB_Host_Init(void);
 void  USBH_DriverVBUS(uint8_t state);
 void  usbx_app_thread_entry(ULONG arg);
 void  hid_mouse_thread_entry(ULONG arg);
 void  hid_keyboard_thread_entry(ULONG arg);
-UINT  MX_USB_Host_Init(void);
-UINT  ux_host_event_callback(ULONG event, UX_HOST_CLASS *p_host_class, VOID *p_instance);
 VOID  ux_host_error_callback(UINT system_level, UINT system_context, UINT error_code);
-/* USER CODE END Private defines */
+UINT  ux_host_event_callback(ULONG event, UX_HOST_CLASS *p_host_class, VOID *p_instance);
+/* USER CODE END EFP */
+
+/* Private defines -----------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
 
 /* USER CODE BEGIN 1 */
+
 typedef enum
 {
   USB_VBUS_FALSE = 0,
@@ -103,13 +104,13 @@ typedef struct
 {
   HID_Device_Type Device_Type;
   Device_state    Dev_state;
-} Device_info;
+} ux_app_devInfotypeDef;
 
 /* USER CODE END 1 */
 
 #ifdef __cplusplus
 }
 #endif
-#endif  /* __APP_USBX_HOST_H__ */
+#endif /* __APP_USBX_HOST_H__ */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

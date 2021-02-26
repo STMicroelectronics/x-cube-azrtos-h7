@@ -47,7 +47,6 @@
 TX_THREAD              MsgSenderThreadOne;
 TX_THREAD              MsgReceiverThread;
 TX_THREAD              MsgSenderThreadTwo;
-TX_BYTE_POOL           BytePool;
 TX_QUEUE               MsgQueueOne;
 TX_QUEUE               MsgQueueTwo;
 /* USER CODE END PV */
@@ -58,12 +57,6 @@ void    MsgSenderThreadOne_Entry(ULONG thread_input);
 void    MsgSenderThreadTwo_Entry(ULONG thread_input);
 void    MsgReceiverThread_Entry(ULONG thread_input);
 /* USER CODE END PFP */
-
-/* Global user code ---------------------------------------------------------*/
-/* USER CODE BEGIN Global user code */
-
-/* USER CODE END Global user code */
-
 /**
   * @brief  Application ThreadX Initialization.
   * @param memory_ptr: memory pointer
@@ -71,19 +64,14 @@ void    MsgReceiverThread_Entry(ULONG thread_input);
   */
 UINT App_ThreadX_Init(VOID *memory_ptr)
 {
-    UINT ret = TX_SUCCESS;
-    /* USER CODE BEGIN  App_ThreadX_Init */
+  UINT ret = TX_SUCCESS;
+  TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+
+  /* USER CODE BEGIN App_ThreadX_Init */
   CHAR *pointer;
-  
-  /* Create a byte memory pool from which to allocate the thread stacks.  */
-  if (tx_byte_pool_create(&BytePool, "Byte Pool", memory_ptr,
-                          APP_BYTE_POOL_SIZE) != TX_SUCCESS)
-  {
-    ret = TX_POOL_ERROR;
-  }
-  
+
   /* Allocate the stack for MsgSenderThreadOne.  */
-  if (tx_byte_allocate(&BytePool, (VOID **) &pointer,
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     ret = TX_POOL_ERROR;
@@ -99,7 +87,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   }
   
   /* Allocate the stack for MsgSenderThreadTwo.  */
-  if (tx_byte_allocate(&BytePool, (VOID **) &pointer,
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     ret = TX_POOL_ERROR;
@@ -115,7 +103,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   }
   
   /* Allocate the stack for MsgReceiverThread.  */
-  if (tx_byte_allocate(&BytePool, (VOID **) &pointer,
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     ret = TX_POOL_ERROR;
@@ -131,7 +119,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   }
   
   /* Allocate the MsgQueueOne.  */
-  if (tx_byte_allocate(&BytePool, (VOID **) &pointer,
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        APP_QUEUE_SIZE*sizeof(ULONG), TX_NO_WAIT) != TX_SUCCESS)
   {
     ret = TX_POOL_ERROR;
@@ -145,7 +133,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   }
   
   /* Allocate the MsgQueueTwo.  */
-  if (tx_byte_allocate(&BytePool, (VOID **) &pointer,
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        APP_QUEUE_SIZE*sizeof(ULONG), TX_NO_WAIT) != TX_SUCCESS)
   {
     ret = TX_POOL_ERROR;
@@ -157,15 +145,10 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   {
     ret = TX_QUEUE_ERROR;
   }
-    /* USER CODE END  App_ThreadX_Init */
+  /* USER CODE END App_ThreadX_Init */
 
-    return ret;
+  return ret;
 }
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN Private user code */
-
-/* USER CODE END Private user code */
 
 /* USER CODE BEGIN 1 */
 /**
@@ -186,7 +169,7 @@ void MsgSenderThreadOne_Entry(ULONG thread_input)
       Error_Handler();
     }
     /* Sleep for 200ms */
-    tx_thread_sleep(200);
+    tx_thread_sleep(20);
   }
 }
 
@@ -208,7 +191,7 @@ void MsgSenderThreadTwo_Entry(ULONG thread_input)
       Error_Handler();
     }
     /* Sleep for 500s */
-    tx_thread_sleep(500);
+    tx_thread_sleep(50);
   }
 }
 

@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nor_flash_extended_cache_enable                 PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.3        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -74,6 +74,9 @@
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  12-31-2020     William E. Lamie         Modified comment(s),          */
+/*                                            fixed compiler warnings,    */
+/*                                            resulting in version 6.1.3  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nor_flash_extended_cache_enable(LX_NOR_FLASH *nor_flash, VOID *memory, ULONG size)
@@ -140,6 +143,10 @@ ULONG   *cache_memory;
     /* Return successful completion.  */
     return(LX_SUCCESS);
 #else
+
+    LX_PARAMETER_NOT_USED(nor_flash);
+    LX_PARAMETER_NOT_USED(memory);
+    LX_PARAMETER_NOT_USED(size);
 
     /* Return disabled error message.  */
     return(LX_DISABLED);
