@@ -97,13 +97,7 @@ For more details about license information relative to each component in this pa
 
 ## Main changes
 
-- First official release of Azure RTOS integration in the STM32Cube Ecosystem for STM32H7 MCU series
-- Azure RTOS update to v6.1.3
-- Add ThreadX CMSIS-RTOS v2 APIs wrapper
-- Rework all Azure RTOS applications to use static memory pool allocation
-- Add 10 Azure RTOS applications including STM32H7 Dual Core support
-- Add support of two boards STM32H747I-DISCO and STM32H743I-EVAL
-- Add support of MDK-ARM toolchain
+- Patch release integrating latest update of ThreadX to support low-power feature
 
 ## Known limitations
 
