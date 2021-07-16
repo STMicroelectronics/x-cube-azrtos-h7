@@ -109,7 +109,7 @@
    which places an 0xEF pattern in each byte of each thread's stack.  This is used by
    debuggers with ThreadX-awareness and by the ThreadX run-time stack checking feature.  */
 
-#define TX_DISABLE_STACK_FILLING
+/*#define TX_DISABLE_STACK_FILLING*/
 
 /* Determine whether or not stack checking is enabled. By default, ThreadX stack checking is
    disabled. When the following is defined, ThreadX thread stack checking is enabled.  If stack
@@ -123,7 +123,7 @@
    enabled. If the application does not use preemption-threshold, it may be disabled to reduce
    code size and improve performance.  */
 
-/*#define TX_DISABLE_PREEMPTION_THRESHOLD*/
+#define TX_DISABLE_PREEMPTION_THRESHOLD
 
 /* Determine if global ThreadX variables should be cleared. If the compiler startup code clears
    the .bss section prior to ThreadX running, the define can be used to eliminate unnecessary
@@ -207,26 +207,13 @@
 
 /*#define TX_TIMER_ENABLE_PERFORMANCE_INFO*/
 
-/* Define if the MISRA check is enabled. */
-
-/*#define TX_MISRA_ENABLE*/
-
-/* Define the clock source for trace event entry time stamp. */
-#ifndef TX_MISRA_ENABLE
-/*#define TX_TRACE_TIME_SOURCE  *((ULONG *) 0xE0001004)*/
-#endif
-
-/* Define the clock source for trace mask. */
-
-/*#define TX_TRACE_TIME_MASK  0xFFFFFFFFUL*/
-
 /* Define if the execution change notify is enabled. */
 
 /*#define TX_ENABLE_EXECUTION_CHANGE_NOTIFY*/
 
 /* Define the get system state macro. */
 
-/*#define TX_THREAD_GET_SYSTEM_STATE */
+/*#define TX_THREAD_GET_SYSTEM_STATE() _tx_thread_system_state */
 
 /* Define the check for whether or not to call the
     _tx_thread_system_return function (TX_THREAD_SYSTEM_RETURN_CHECK(c)). */
@@ -243,16 +230,16 @@
 
 /* Define basic alignment type used in block and byte pool operations. */
 
-#ifdef ALIGN_TYPE_DEFINED
 /*#define ALIGN_TYPE  ULONG*/
-#endif
-/* Define the TX_MEMSET macro to the standard library function. */
-#ifndef TX_MISRA_ENABLE
-/*#define TX_MEMSET  memset((a),(b),(c))*/
-#endif
-/* Define if the IAR library is supported. */
 
+/* Define the TX_MEMSET macro to the standard library function. */
+
+/*#define TX_MEMSET  memset((a),(b),(c))*/
+
+#ifdef __IAR_SYSTEMS_ASM__
+/* Define if the IAR library is supported. */
 /*#define TX_ENABLE_IAR_LIBRARY_SUPPORT*/
+#endif
 
 /* Define if the safety critical configuration is enabled. */
 

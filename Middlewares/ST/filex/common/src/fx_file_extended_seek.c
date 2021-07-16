@@ -37,7 +37,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_file_extended_seek                              PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.7        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -73,6 +73,9 @@
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  06-02-2021     Bhupendra Naphade        Modified comment(s), fixed    */
+/*                                            relative cluster logic,     */
+/*                                            resulting in version 6.1.7  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_file_extended_seek(FX_FILE *file_ptr, ULONG64 byte_offset)
@@ -281,7 +284,7 @@ FX_MEDIA *media_ptr;
     {
 
         /* we should directly access the desired cluster */
-        file_ptr -> fx_file_current_relative_cluster = (ULONG)byte_offset / bytes_per_cluster;
+        file_ptr -> fx_file_current_relative_cluster = (ULONG)(byte_offset / bytes_per_cluster);
 
         file_ptr -> fx_file_current_physical_cluster =
             file_ptr -> fx_file_first_physical_cluster + file_ptr -> fx_file_current_relative_cluster;

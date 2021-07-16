@@ -34,7 +34,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_directory_default_get_copy                      PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.6        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -71,6 +71,9 @@
 /*  09-30-2020     William E. Lamie         Modified comment(s), verified */
 /*                                            memcpy usage,               */
 /*                                            resulting in version 6.1    */
+/*  04-02-2021     William E. Lamie         Modified comment(s), verified */
+/*                                            memcpy usage,               */
+/*                                            resulting in version 6.1.6  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_directory_default_get_copy(FX_MEDIA *media_ptr, CHAR *return_path_name_buffer, UINT return_path_name_buffer_size)
@@ -86,33 +89,23 @@ UINT    path_name_length_with_null_terminator;
     if (status == FX_SUCCESS)
     {
 
-        /* Was a path set?  */
-        if (return_path_name != FX_NULL)
+        /* Get the length of the path.  */
+        path_name_length_with_null_terminator =  _fx_utility_string_length_get(return_path_name, FX_MAXIMUM_PATH) + 1;
+
+        /* Can it fit in the user's buffer? */
+        if (path_name_length_with_null_terminator <= return_path_name_buffer_size)
         {
 
-            /* Get the length of the path.  */
-            path_name_length_with_null_terminator =  _fx_utility_string_length_get(return_path_name, FX_MAXIMUM_PATH) + 1;
-
-            /* Can it fit in the user's buffer? */
-            if (path_name_length_with_null_terminator <= return_path_name_buffer_size)
-            {
-
-                /* Copy the path name into the user's buffer.  */
-                _fx_utility_memory_copy((UCHAR *) return_path_name, (UCHAR *) return_path_name_buffer, path_name_length_with_null_terminator); /* Use case of memcpy is verified. */
-            }
-            else
-            {
-
-                /* Buffer is too small. Return error.  */
-                return(FX_BUFFER_ERROR);
-            }
+            /* Copy the path name into the user's buffer.  */
+            _fx_utility_memory_copy((UCHAR *) return_path_name, (UCHAR *) return_path_name_buffer, path_name_length_with_null_terminator); /* Use case of memcpy is verified. */
         }
         else
         {
 
-            /* Set zero-length string.  */
-            return_path_name_buffer[0] = '\0';
+            /* Buffer is too small. Return error.  */
+            return(FX_BUFFER_ERROR);
         }
+
     }
 
     /* Return successful status.  */

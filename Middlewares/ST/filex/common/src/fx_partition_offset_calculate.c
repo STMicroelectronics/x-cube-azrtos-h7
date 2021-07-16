@@ -52,7 +52,7 @@ UINT    _fx_utility_partition_get(FX_MEDIA_PARTITION *partition_table,
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _fx_partition_offset_calculate                      PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.6        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -103,6 +103,10 @@ UINT    _fx_utility_partition_get(FX_MEDIA_PARTITION *partition_table,
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  04-02-2021     William E. Lamie         Modified comment(s),          */
+/*                                            ignored signature check for */
+/*                                            no partition situation,     */
+/*                                            resulting in version 6.1.6  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_partition_offset_calculate(void  *partition_sector, UINT partition,
@@ -118,14 +122,6 @@ UCHAR               *partition_sector_ptr;
     /* Setup working pointer and initialize count.  */
     partition_sector_ptr =  partition_sector;
     count =  0;
-
-    /* Check signature to make sure the buffer is valid.  */
-    if ((partition_sector_ptr[510] != 0x55) || (partition_sector_ptr[511] != 0xAA))
-    {
-
-        /* Invalid, return an error.  */
-        return(FX_NOT_FOUND);
-    }
 
     /* Check for a real boot sector instead of a partition table.  */
     if ((partition_sector_ptr[0] == 0xe9) || ((partition_sector_ptr[0] == 0xeb) && (partition_sector_ptr[2] == 0x90)))    
@@ -220,6 +216,14 @@ UCHAR               *partition_sector_ptr;
         }
 #endif /* FX_ENABLE_EXFAT */
     }
+
+    /* Check signature to make sure the buffer is valid.  */
+    if ((partition_sector_ptr[510] != 0x55) || (partition_sector_ptr[511] != 0xAA))
+    {
+
+        /* Invalid, return an error.  */
+        return(FX_NOT_FOUND);
+    }
     
     /* Not bootable, look for specific partition.  */
     _fx_utility_partition_get(partition_table, &count, 0, partition_sector_ptr);
@@ -254,7 +258,7 @@ UCHAR               *partition_sector_ptr;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _fx_utility_partition_get                           PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.6        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -291,6 +295,8 @@ UCHAR               *partition_sector_ptr;
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  04-02-2021     William E. Lamie         Modified comment(s),          */
+/*                                            resulting in version 6.1.6  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_utility_partition_get(FX_MEDIA_PARTITION *partition_table, 
@@ -299,24 +305,12 @@ UINT  _fx_utility_partition_get(FX_MEDIA_PARTITION *partition_table,
 
 UINT    i;
 ULONG   base_sector, value;
- 
+
+    /* This parameter has not been supported yet. */
+    FX_PARAMETER_NOT_USED(sector); 
 
     /* Initialize base sector.  */
     base_sector =  0;
-
-    /* Derive the base sector.  */
-    for(i = 0; i < *count; i++)
-    {
-
-        /* Is it in sub partition?  */
-        if (sector == partition_table[i].fx_media_part_start)
-        {
-
-            /* Yes, break out of loop.  */
-            base_sector =  partition_table[i].fx_media_part_start; 
-            break;
-        }
-    }
 
     for(i = 446; i <= 494; i+=16)
     {

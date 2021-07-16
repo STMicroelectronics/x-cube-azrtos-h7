@@ -26,7 +26,7 @@
 /*  APPLICATION INTERFACE DEFINITION                       RELEASE        */
 /*                                                                        */
 /*    lx_api.h                                            PORTABLE C      */
-/*                                                           6.1.3        */
+/*                                                           6.1.7        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -52,6 +52,9 @@
 /*  12-31-2020     William E. Lamie         Modified comment(s), and      */
 /*                                            updated product constants,  */
 /*                                            resulting in version 6.1.3  */
+/*  06-02-2021     Bhupendra Naphade        Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.7  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -71,7 +74,9 @@ extern   "C" {
 
 /* Include necessary system files.  */
 
+#ifndef LX_STANDALONE_ENABLE
 #include "tx_api.h"
+#endif
 
 /* Determine if the optional LevelX user define file should be used.  */
 
@@ -85,6 +90,65 @@ extern   "C" {
 #endif
 
 
+#ifdef LX_STANDALONE_ENABLE
+
+/* Define compiler library include files.  */
+
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
+#ifndef VOID
+#define VOID                                    void
+typedef char                                    CHAR;
+typedef char                                    BOOL;
+typedef unsigned char                           UCHAR;
+typedef int                                     INT;
+typedef unsigned int                            UINT;
+typedef long                                    LONG;
+typedef unsigned long                           ULONG;
+typedef short                                   SHORT;
+typedef unsigned short                          USHORT;
+#endif
+
+#ifndef ULONG64_DEFINED
+#define ULONG64_DEFINED
+typedef unsigned long long                      ULONG64;
+#endif
+
+/* Define basic alignment type used in block and byte pool operations. This data type must
+   be at least 32-bits in size and also be large enough to hold a pointer type.  */
+
+#ifndef ALIGN_TYPE_DEFINED
+#define ALIGN_TYPE_DEFINED
+#define ALIGN_TYPE                              ULONG
+#endif
+
+/* Define the LX_MEMSET macro to the standard library function, if not already defined.  */
+#ifndef LX_MEMSET
+#define LX_MEMSET(a,b,c)                        memset((a),(b),(c))
+#endif
+
+/* Disable usage of ThreadX mutex in standalone mode */
+#ifdef LX_THREAD_SAFE_ENABLE
+#undef LX_THREAD_SAFE_ENABLE
+#endif
+
+#define LX_INTERRUPT_SAVE_AREA
+#define LX_DISABLE
+#define LX_RESTORE
+
+#else
+
+#define LX_MEMSET                               TX_MEMSET
+
+#define LX_INTERRUPT_SAVE_AREA                  TX_INTERRUPT_SAVE_AREA
+#define LX_DISABLE                              TX_DISABLE
+#define LX_RESTORE                              TX_RESTORE
+
+#endif
+
+
 /* Disable warning of parameter not used. */
 #ifndef LX_PARAMETER_NOT_USED
 #define LX_PARAMETER_NOT_USED(p) ((void)(p))
@@ -95,7 +159,7 @@ extern   "C" {
 #define AZURE_RTOS_LEVELX
 #define LEVELX_MAJOR_VERSION                        6
 #define LEVELX_MINOR_VERSION                        1
-#define LEVELX_PATCH_VERSION                        3
+#define LEVELX_PATCH_VERSION                        7
 
 
 /* Define general LevelX Constants.  */

@@ -26,7 +26,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    lx_user.h                                           PORTABLE C      */
-/*                                                           6.1.2        */
+/*                                                           6.1.7        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -45,6 +45,9 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  11-09-2020     William E. Lamie         Initial Version 6.1.2         */
+/*  06-02-2021     Bhupendra Naphade        Modified comment(s), and      */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.7  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -112,6 +115,10 @@
 /*
 #define LX_THREAD_SAFE_ENABLE
 */
+
+/* Defined, LevelX will be used in standalone mode (without Azure RTOS ThreadX) */
+
+/* #define LX_STANDALONE_ENABLE */
 
 
 

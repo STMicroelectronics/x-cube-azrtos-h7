@@ -43,7 +43,7 @@ FX_LOCAL_PATH_SETUP
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_directory_search                                PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.7        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -90,6 +90,10 @@ FX_LOCAL_PATH_SETUP
 /*                                            added conditional to        */
 /*                                            disable media search cache, */
 /*                                            resulting in version 6.1    */
+/*  06-02-2021     Bhupendra Naphade        Modified comment(s), and      */
+/*                                            added check for             */
+/*                                            volume label,               */
+/*                                            resulting in version 6.1.7  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_directory_search(FX_MEDIA *media_ptr, CHAR *name_ptr, FX_DIR_ENTRY *entry_ptr,
@@ -653,6 +657,12 @@ USHORT        hash = 0;
 #endif /* FX_ENABLE_EXFAT */
             {
                 break;
+            }
+
+            /* Determine if the entry is a volume label entry */
+            if ((entry_ptr -> fx_dir_entry_attributes & FX_VOLUME))
+            {
+                continue;
             }
 
             /* Determine if this is an empty entry.  */

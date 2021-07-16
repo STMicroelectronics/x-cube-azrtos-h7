@@ -38,7 +38,7 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-extern BSP_SD_CardInfo USBD_SD_CardInfo;
+
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

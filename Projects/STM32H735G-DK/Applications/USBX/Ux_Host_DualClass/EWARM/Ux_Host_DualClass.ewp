@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.50.1.24770</state>
+                    <state>8.50.6.28611</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -224,7 +224,6 @@
                 </option>
                 <option>
                     <name>CCDefines</name>
-                    <state>UX_DISABLE_INCLUDE_SOURCE_CODE</state>
                     <state>TX_INCLUDE_USER_DEFINE_FILE</state>
                     <state>FX_INCLUDE_USER_DEFINE_FILE</state>
                     <state>UX_INCLUDE_USER_DEFINE_FILE</state>
@@ -322,7 +321,7 @@
                 </option>
                 <option>
                     <name>CCRequirePrototypes</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCDiagWarnAreErr</name>
@@ -1104,6 +1103,9 @@
             </group>
             <group>
                 <name>Core</name>
+                <file>
+                    <name>$PROJ_DIR$\..\Core\Src\app_threadx.c</name>
+                </file>
                 <file>
                     <name>$PROJ_DIR$\..\Core\Src\gpio.c</name>
                 </file>
@@ -2983,6 +2985,9 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_class_register.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_class_unregister.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_configuration_descriptor_parse.c</name>
                 </file>
                 <file>
@@ -2998,6 +3003,9 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_configuration_interface_get.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_configuration_interface_scan.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_configuration_set.c</name>
                 </file>
                 <file>
@@ -3005,6 +3013,12 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_device_address_set.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_device_configuration_activate.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_device_configuration_deactivate.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_device_configuration_get.c</name>
@@ -3026,6 +3040,9 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_device_resources_free.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_device_string_get.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_endpoint_instance_create.c</name>
@@ -3050,6 +3067,9 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_hcd_transfer_request.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_hcd_unregister.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_hnp_polling_thread_entry.c</name>
@@ -3107,6 +3127,9 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_transfer_request_abort.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_uninitialize.c</name>
                 </file>
             </group>
         </group>

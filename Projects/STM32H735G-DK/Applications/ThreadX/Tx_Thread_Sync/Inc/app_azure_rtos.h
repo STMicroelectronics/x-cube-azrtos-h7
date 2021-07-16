@@ -54,7 +54,6 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void MX_AZURE_RTOS_Init(void);
-void MX_AZURE_RTOS_Process(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

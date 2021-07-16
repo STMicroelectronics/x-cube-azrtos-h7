@@ -1113,6 +1113,9 @@
           <name>$PROJ_DIR$\..\Core\Src\tx_initialize_low_level.s</name>
         </file>
         <file>
+          <name>$PROJ_DIR$/../Core/Src/app_threadx.c</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$\..\Core\Src\stm32h7xx_it.c</name>
         </file>
         <file>
@@ -1995,6 +1998,18 @@
       <group>
         <name>Network/NetXDuo/NX Core</name>
         <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_event_insert.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_event_update.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_object_register.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_object_unregister.c</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_arp_announce_send.c</name>
         </file>
         <file>
@@ -2665,18 +2680,6 @@
         </file>
         <file>
           <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_tcp_window_scaling_option_get.c</name>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_event_insert.c</name>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_event_update.c</name>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_object_register.c</name>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_object_unregister.c</name>
         </file>
         <file>
           <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_udp_bind_cleanup.c</name>

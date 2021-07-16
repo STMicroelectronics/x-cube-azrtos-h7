@@ -25,8 +25,8 @@
 
 /* Disable ThreadX error checking.  */
 
-#ifndef TX_DISABLE_ERROR_CHECKING
-#define TX_DISABLE_ERROR_CHECKING
+#ifndef LX_DISABLE_ERROR_CHECKING
+#define LX_DISABLE_ERROR_CHECKING
 #endif
 
 
@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nand_flash_extended_cache_enable                PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.7        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -77,6 +77,8 @@
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  06-02-2021     Bhupendra Naphade        Modified comment(s),          */
+/*                                            resulting in version 6.1.7  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nand_flash_extended_cache_enable(LX_NAND_FLASH  *nand_flash, VOID *memory, ULONG size)
@@ -91,13 +93,13 @@ ULONG   i;
     working_ptr =  (UCHAR *) memory;
     
     /* Check for a NULL pointer. If NULL, disable all the caches.  */
-    if (working_ptr == TX_NULL)
+    if (working_ptr == LX_NULL)
     {
     
         /* Disable all extended caches.  */
-        nand_flash -> lx_nand_flash_block_status_cache =      TX_NULL;
-        nand_flash -> lx_nand_flash_page_extra_bytes_cache =  TX_NULL;
-        nand_flash -> lx_nand_flash_page_0_cache =            TX_NULL;
+        nand_flash -> lx_nand_flash_block_status_cache =      LX_NULL;
+        nand_flash -> lx_nand_flash_page_extra_bytes_cache =  LX_NULL;
+        nand_flash -> lx_nand_flash_page_0_cache =            LX_NULL;
         
         /* Return success!  */
         return(LX_SUCCESS);   

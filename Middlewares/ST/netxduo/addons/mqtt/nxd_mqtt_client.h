@@ -125,12 +125,12 @@ extern   "C" {
 
 /* Deprecated. This symbol is defined for compatibility. */
 #ifndef NXD_MQTT_MAX_TOPIC_NAME_LENGTH
-#define NXD_MQTT_MAX_TOPIC_NAME_LENGTH                                 20
+#define NXD_MQTT_MAX_TOPIC_NAME_LENGTH                                 12
 #endif
 
 /* Deprecated. This symbol is defined for compatibility. */
 #ifndef NXD_MQTT_MAX_MESSAGE_LENGTH
-#define NXD_MQTT_MAX_MESSAGE_LENGTH                                    64
+#define NXD_MQTT_MAX_MESSAGE_LENGTH                                    32
 #endif
 
 #ifndef NXD_MQTT_INITIAL_PACKET_ID_VALUE

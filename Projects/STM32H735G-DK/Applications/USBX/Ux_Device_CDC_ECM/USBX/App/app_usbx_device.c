@@ -87,6 +87,11 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
 {
   UINT ret = UX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+
+  /* USER CODE BEGIN App_USBX_Device_MEM_POOL */
+
+  /* USER CODE END App_USBX_Device_MEM_POOL */
+
   /* USER CODE BEGIN App_USBX_Device_Init */
 
   /* Device framework high speed length*/
@@ -235,7 +240,7 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
 void usbx_app_thread_entry(ULONG arg)
 {
   /* Sleep for 1s */
-  tx_thread_sleep(1 * TX_TIMER_TICKS_PER_SECOND);
+  tx_thread_sleep(MS_TO_TICK(1000));
 
   /* Initialization of USB device */
   MX_USB_Device_Init();

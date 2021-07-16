@@ -313,14 +313,15 @@ UX_TRANSFER         *transfer_request;
                 (ed -> ux_stm32_ed_status == UX_HCD_STM32_ED_STATUS_CONTROL_DATA_OUT) ||
                 (ed -> ux_stm32_ed_status == UX_HCD_STM32_ED_STATUS_CONTROL_STATUS_OUT) ||
                 (ed -> ux_stm32_ed_status == UX_HCD_STM32_ED_STATUS_BULK_OUT))
-                {
-                    /* Submit the transmit request.  */
-                       HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel, 0,
+            {
+
+                /* Submit the transmit request.  */
+                HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel, 0,
                                         ((ed -> ux_stm32_ed_endpoint -> ux_endpoint_descriptor.bmAttributes) & UX_MASK_ENDPOINT_TYPE) == UX_BULK_ENDPOINT ? EP_TYPE_BULK : EP_TYPE_CTRL,
                                          ed -> ux_stm32_ed_status == UX_HCD_STM32_ED_STATUS_CONTROL_SETUP ? USBH_PID_SETUP : USBH_PID_DATA,
                                          transfer_request -> ux_transfer_request_data_pointer + transfer_request -> ux_transfer_request_actual_length,
                                          transfer_request -> ux_transfer_request_packet_length, 0);
-                }
+            }
 
         }
     }

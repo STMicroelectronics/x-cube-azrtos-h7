@@ -12,8 +12,8 @@
 
 /**************************************************************************/
 /**************************************************************************/
-/**                                                                       */ 
-/** USBX Component                                                        */ 
+/**                                                                       */
+/** USBX Component                                                        */
 /**                                                                       */
 /**   STM32 Controller Driver                                             */
 /**                                                                       */
@@ -31,32 +31,32 @@
 #include "ux_host_stack.h"
 
 
-/**************************************************************************/ 
-/*                                                                        */ 
-/*  FUNCTION                                               RELEASE        */ 
-/*                                                                        */ 
-/*    _ux_hcd_stm32_port_status_get                       PORTABLE C      */ 
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _ux_hcd_stm32_port_status_get                       PORTABLE C      */
 /*                                                           6.0          */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
 /*                                                                        */
 /*  DESCRIPTION                                                           */
-/*                                                                        */ 
+/*                                                                        */
 /*     This function will return the status for each port attached to the */
-/*     root HUB.                                                          */ 
-/*                                                                        */ 
-/*  INPUT                                                                 */ 
-/*                                                                        */ 
-/*    hcd_stm32                           Pointer to STM32 controller     */ 
-/*    port_index                            Port index                    */ 
-/*                                                                        */ 
-/*  OUTPUT                                                                */ 
-/*                                                                        */ 
-/*  STM32 Port Status                                                     */ 
-/*                                                                        */ 
+/*     root HUB.                                                          */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    hcd_stm32                           Pointer to STM32 controller     */
+/*    port_index                            Port index                    */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*  STM32 Port Status                                                     */
+/*                                                                        */
 /*    Where port status has the following format:                         */
-/*                                                                        */ 
+/*                                                                        */
 /*               bit 0         device connection status                   */
 /*                             if 0 : no device connected                 */
 /*                             if 1 : device connected to the port        */
@@ -79,19 +79,19 @@
 /*                             if 00 : low speed device attached          */
 /*                             if 01 : full speed device attached         */
 /*                             if 10 : high speed device attached         */
-/*                                                                        */ 
-/*  CALLS                                                                 */ 
-/*                                                                        */ 
-/*    HAL_HCD_GetCurrentSpeed             Get device speed                */ 
-/*                                                                        */ 
-/*  CALLED BY                                                             */ 
-/*                                                                        */ 
-/*    STM32 Controller Driver                                             */ 
-/*                                                                        */ 
-/*  RELEASE HISTORY                                                       */ 
-/*                                                                        */ 
-/*    DATE              NAME                      DESCRIPTION             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    HAL_HCD_GetCurrentSpeed             Get device speed                */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    STM32 Controller Driver                                             */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*                                                                        */
 /**************************************************************************/
@@ -113,11 +113,11 @@ ULONG       port_status;
 
         return(UX_PORT_INDEX_UNKNOWN);
     }
-    
+
     /* The port is valid, build the status mask for this port. This function
-       returns a controller agnostic bit field.  */ 
+       returns a controller agnostic bit field.  */
     port_status =  0;
-                                    
+
     /* Device Connection Status.  */
     if (hcd_stm32 -> ux_hcd_stm32_controller_flag & UX_HCD_STM32_CONTROLLER_FLAG_DEVICE_ATTACHED)
         port_status |=  UX_PS_CCS;
@@ -128,17 +128,17 @@ ULONG       port_status;
         /* High Speed.  */
         port_status |=  UX_PS_DS_HS;
         break;
-        
+
     case 1:
         /* Full Speed.  */
         port_status |=  UX_PS_DS_FS;
         break;
-        
+
     case 2:
         /* Low Speed.  */
         port_status |=  UX_PS_DS_LS;
         break;
-        
+
     default:
         /* Full Speed.  */
         port_status |=  UX_PS_DS_FS;
@@ -146,6 +146,6 @@ ULONG       port_status;
     }
 
     /* Return port status.  */
-    return(port_status);            
+    return(port_status);
 }
 

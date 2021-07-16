@@ -66,7 +66,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>8.50.4.26131</state>
+          <state>8.50.6.28611</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -224,10 +224,10 @@
         </option>
         <option>
           <name>CCDefines</name>
-          <state>TX_INCLUDE_USER_DEFINE_FILE</state>
-          <state>NX_INCLUDE_USER_DEFINE_FILE</state>
           <state>USE_HAL_DRIVER</state>
           <state>STM32H735xx</state>
+          <state>TX_INCLUDE_USER_DEFINE_FILE</state>
+          <state>NX_INCLUDE_USER_DEFINE_FILE</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -352,14 +352,15 @@
         </option>
         <option>
           <name>CCIncludePath2</name>
-          <state>$PROJ_DIR$/../AZURE_RTOS/App</state>
-          <state>$PROJ_DIR$/../NetXDuo/App</state>
           <state>$PROJ_DIR$/../Core/Inc</state>
-          <state>$PROJ_DIR$/../NetXDuo/Target</state>
           <state>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc</state>
           <state>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy</state>
           <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include</state>
           <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Include</state>
+          <state>$PROJ_DIR$/../../../../../../Drivers/BSP/STM32H735G-DK</state>
+          <state>$PROJ_DIR$/../AZURE_RTOS/App</state>
+          <state>$PROJ_DIR$/../NetXDuo/App</state>
+          <state>$PROJ_DIR$/../NetXDuo/Target</state>
           <state>$PROJ_DIR$/../../../../../../Drivers/BSP/Components/lan8742/</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/drivers/</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/addons/dhcp/</state>
@@ -367,7 +368,6 @@
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/iar/inc/</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/inc/</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/inc/</state>
-          <state>$PROJ_DIR$/../../../../../../Drivers/BSP/STM32H735G-DK</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1107,6 +1107,9 @@
           <name>$PROJ_DIR$\..\Core\Src\tx_initialize_low_level.s</name>
         </file>
         <file>
+          <name>$PROJ_DIR$\..\Core\Src\app_threadx.c</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$\..\Core\Src\stm32h7xx_it.c</name>
         </file>
         <file>
@@ -1126,6 +1129,12 @@
         </group>
       </group>
     </group>
+  </group>
+  <group>
+    <name>Doc</name>
+    <file>
+      <name>$PROJ_DIR$\..\README.md</name>
+    </file>
   </group>
   <group>
     <name>Drivers</name>
@@ -1219,12 +1228,6 @@
         <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_uart_ex.c</name>
       </file>
     </group>
-  </group>
-  <group>
-    <name>Doc</name>
-    <file>
-      <name>$PROJ_DIR$/../README.md</name>
-    </file>
   </group>
   <group>
     <name>Middlewares</name>
@@ -1927,18 +1930,6 @@
         </file>
         <file>
           <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_tcp_window_scaling_option_get.c</name>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_event_insert.c</name>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_event_update.c</name>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_object_register.c</name>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_object_unregister.c</name>
         </file>
         <file>
           <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_udp_bind_cleanup.c</name>

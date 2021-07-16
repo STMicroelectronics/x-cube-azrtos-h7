@@ -25,7 +25,6 @@
 
 /* Include necessary system files.  */
 
-#include "tx_api.h"
 #include "fx_api.h"
 #include "fx_media.h"
 
@@ -40,7 +39,7 @@ UINT  fx_media_format_volume_id_set(ULONG new_volume_id);
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _fx_media_format_media_volume_id_set                PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.5        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -74,6 +73,8 @@ UINT  fx_media_format_volume_id_set(ULONG new_volume_id);
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  03-02-2021     William E. Lamie         Modified comment(s),          */
+/*                                            resulting in version 6.1.5  */
 /*                                                                        */
 /**************************************************************************/
 UINT  fx_media_format_volume_id_set(ULONG new_volume_id)

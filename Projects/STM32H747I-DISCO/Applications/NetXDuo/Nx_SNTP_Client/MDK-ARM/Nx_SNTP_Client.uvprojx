@@ -10,14 +10,14 @@
       <TargetName>Nx_SNTP_Client_CM4</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <pCCUsed>6140000::V6.14::ARMCLANG</pCCUsed>
+      <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32H747XIHx:CM4</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32H7xx_DFP.2.7.0</PackID>
-          <PackURL>http://www.keil.com/pack/</PackURL>
+          <PackID>Keil.STM32H7xx_DFP.2.4.3</PackID>
+          <PackURL>https://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x10000000-0x10047FFF) IRAM2(0x18000000-0x1800FFFF) IROM(0x8100000-0x81FFFFF) CLOCK(12000000) FPU3(SFPU) CPUTYPE("Cortex-M4") TZ</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -52,9 +52,9 @@
           <OutputName>Nx_SNTP_Client_CM4</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>0</CreateHexFile>
+          <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>0</BrowseInformation>
+          <BrowseInformation>1</BrowseInformation>
           <ListingPath></ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -189,7 +189,7 @@
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>0</useUlib>
+            <useUlib>1</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>CORE_CM4,USE_HAL_DRIVER,STM32H747xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../CM4/Core/Inc;   ../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;   ../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;   ../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;   ../../../../../../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../CM4/Core/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -352,7 +352,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <ClangAsOpt>4</ClangAsOpt>
+            <ClangAsOpt>1</ClangAsOpt>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -370,7 +370,7 @@
             <TextAddressRange></TextAddressRange>
             <DataAddressRange></DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile>stm32h747xx_flash_CM4.sct</ScatterFile>
+            <ScatterFile>.\Nx_SNTP_Client_CM4.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc></Misc>
@@ -415,7 +415,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -494,7 +494,7 @@
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
                 <useXO>2</useXO>
-                <ClangAsOpt>0</ClangAsOpt>
+                <ClangAsOpt>1</ClangAsOpt>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -573,7 +573,7 @@
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
                 <useXO>2</useXO>
-                <ClangAsOpt>0</ClangAsOpt>
+                <ClangAsOpt>1</ClangAsOpt>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -593,6 +593,11 @@
               <FileName>tx_initialize_low_level.s</FileName>
               <FileType>2</FileType>
               <FilePath>../CM7/Core/Src/tx_initialize_low_level.s</FilePath>
+            </File>
+            <File>
+              <FileName>app_threadx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../CM7/Core/Src/app_threadx.c</FilePath>
             </File>
             <File>
               <FileName>stm32h7xx_it.c</FileName>
@@ -672,7 +677,7 @@
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
                 <useXO>2</useXO>
-                <ClangAsOpt>0</ClangAsOpt>
+                <ClangAsOpt>1</ClangAsOpt>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -1363,7 +1368,7 @@
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
                 <useXO>2</useXO>
-                <ClangAsOpt>0</ClangAsOpt>
+                <ClangAsOpt>1</ClangAsOpt>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -1493,7 +1498,7 @@
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
                 <useXO>2</useXO>
-                <ClangAsOpt>0</ClangAsOpt>
+                <ClangAsOpt>1</ClangAsOpt>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -1623,7 +1628,7 @@
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
                 <useXO>2</useXO>
-                <ClangAsOpt>0</ClangAsOpt>
+                <ClangAsOpt>1</ClangAsOpt>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -1753,7 +1758,7 @@
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
                 <useXO>2</useXO>
-                <ClangAsOpt>0</ClangAsOpt>
+                <ClangAsOpt>1</ClangAsOpt>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -1883,7 +1888,7 @@
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
                 <useXO>2</useXO>
-                <ClangAsOpt>0</ClangAsOpt>
+                <ClangAsOpt>1</ClangAsOpt>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -2069,7 +2074,7 @@
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
                 <useXO>2</useXO>
-                <ClangAsOpt>0</ClangAsOpt>
+                <ClangAsOpt>1</ClangAsOpt>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -14572,230 +14577,6 @@
               <FileName>nx_tcp_window_scaling_option_get.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_tcp_window_scaling_option_get.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>nx_trace_event_insert.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_event_insert.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>nx_trace_event_update.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_event_update.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>nx_trace_object_register.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_object_register.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>nx_trace_object_unregister.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_object_unregister.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -29359,7 +29140,7 @@
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
                 <useXO>2</useXO>
-                <ClangAsOpt>0</ClangAsOpt>
+                <ClangAsOpt>1</ClangAsOpt>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -29371,9 +29152,9 @@
           </GroupOption>
           <Files>
             <File>
-              <FileName>tx_thread_context_restore.s</FileName>
+              <FileName>tx_thread_context_restore.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_context_restore.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_context_restore.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -29402,7 +29183,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -29414,9 +29195,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>tx_thread_context_save.s</FileName>
+              <FileName>tx_thread_context_save.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_context_save.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_context_save.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -29445,7 +29226,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -29457,9 +29238,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_control.s</FileName>
+              <FileName>tx_thread_interrupt_control.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_control.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_control.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -29488,7 +29269,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -29500,9 +29281,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_disable.s</FileName>
+              <FileName>tx_thread_interrupt_disable.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_disable.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_disable.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -29531,7 +29312,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -29543,9 +29324,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_restore.s</FileName>
+              <FileName>tx_thread_interrupt_restore.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_restore.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_restore.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -29574,7 +29355,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -29586,9 +29367,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>tx_thread_schedule.s</FileName>
+              <FileName>tx_thread_schedule.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_schedule.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_schedule.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -29617,7 +29398,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -29629,9 +29410,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>tx_thread_stack_build.s</FileName>
+              <FileName>tx_thread_stack_build.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_stack_build.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_stack_build.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -29660,7 +29441,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -29672,9 +29453,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>tx_thread_system_return.s</FileName>
+              <FileName>tx_thread_system_return.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_system_return.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_system_return.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -29703,7 +29484,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -29715,9 +29496,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>tx_timer_interrupt.s</FileName>
+              <FileName>tx_timer_interrupt.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_timer_interrupt.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_timer_interrupt.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -29746,7 +29527,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -38556,7 +38337,7 @@
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
                 <useXO>2</useXO>
-                <ClangAsOpt>0</ClangAsOpt>
+                <ClangAsOpt>1</ClangAsOpt>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -39474,14 +39255,14 @@
       <TargetName>Nx_SNTP_Client_CM7</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <pCCUsed>6140000::V6.14::ARMCLANG</pCCUsed>
+      <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32H747XIHx:CM7</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32H7xx_DFP.2.7.0</PackID>
-          <PackURL>http://www.keil.com/pack/</PackURL>
+          <PackID>Keil.STM32H7xx_DFP.2.4.3</PackID>
+          <PackURL>https://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000-0x2001FFFF) IRAM2(0x00000000-0xFFFF) IROM(0x8000000-0x80FFFFF) CLOCK(12000000) FPU3(DFPU) CPUTYPE("Cortex-M7") ELITTLE TZ</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -39516,9 +39297,9 @@
           <OutputName>Nx_SNTP_Client_CM7</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>0</CreateHexFile>
+          <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>0</BrowseInformation>
+          <BrowseInformation>1</BrowseInformation>
           <ListingPath></ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -39602,7 +39383,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -39777,7 +39558,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>4</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -39790,7 +39571,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
-            <uGnu>0</uGnu>
+            <uGnu>1</uGnu>
             <useXO>0</useXO>
             <v6Lang>5</v6Lang>
             <v6LangP>3</v6LangP>
@@ -39803,7 +39584,7 @@
               <MiscControls></MiscControls>
               <Define>CORE_CM7,TX_INCLUDE_USER_DEFINE_FILE,NX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H747xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../CM7/AZURE_RTOS/App;   ../CM7/NetXDuo/App;   ../CM7/Core/Inc;   ../CM7/NetXDuo/Target;   ../../../../../../Drivers/BSP/Components/lan8742/;   ../../../../../../Middlewares/ST/netxduo/common/drivers/;   ../../../../../../Middlewares/ST/netxduo/addons/sntp/;   ../../../../../../Middlewares/ST/netxduo/addons/dns/;   ../../../../../../Middlewares/ST/netxduo/addons/dhcp/;   ../../../../../../Middlewares/ST/netxduo/common/inc/;   ../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/ac5/inc/;   ../../../../../../Middlewares/ST/threadx/common/inc/;   ../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/inc/;   ../../../../../../Drivers/BSP/STM32H747I-DISCO;   ../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;   ../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;   ../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;   ../../../../../../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../CM7/AZURE_RTOS/App;../CM7/Core/Inc;../CM7/NetXDuo/App;../CM7/NetXDuo/Target;../../../../../../Drivers/BSP/Components/lan8742/;../../../../../../Middlewares/ST/netxduo/common/drivers/;../../../../../../Middlewares/ST/netxduo/addons/sntp/;../../../../../../Middlewares/ST/netxduo/addons/dns/;../../../../../../Middlewares/ST/netxduo/addons/dhcp/;../../../../../../Middlewares/ST/netxduo/common/inc/;../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/ac5/inc/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H747I-DISCO;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -39816,9 +39597,9 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <ClangAsOpt>4</ClangAsOpt>
+            <ClangAsOpt>1</ClangAsOpt>
             <VariousControls>
-              <MiscControls>--cpreproc</MiscControls>
+              <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
@@ -39834,7 +39615,7 @@
             <TextAddressRange></TextAddressRange>
             <DataAddressRange></DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile>stm32h747xx_flash_CM7.sct</ScatterFile>
+            <ScatterFile>.\Nx_SNTP_Client_CM7.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc></Misc>
@@ -39884,7 +39665,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -39919,6 +39700,11 @@
               <FileName>tx_initialize_low_level.s</FileName>
               <FileType>2</FileType>
               <FilePath>../CM7/Core/Src/tx_initialize_low_level.s</FilePath>
+            </File>
+            <File>
+              <FileName>app_threadx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../CM7/Core/Src/app_threadx.c</FilePath>
             </File>
             <File>
               <FileName>stm32h7xx_it.c</FileName>
@@ -40008,7 +39794,7 @@
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
                 <useXO>2</useXO>
-                <ClangAsOpt>0</ClangAsOpt>
+                <ClangAsOpt>1</ClangAsOpt>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -41380,26 +41166,6 @@
               <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_tcp_window_scaling_option_get.c</FilePath>
             </File>
             <File>
-              <FileName>nx_trace_event_insert.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_event_insert.c</FilePath>
-            </File>
-            <File>
-              <FileName>nx_trace_event_update.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_event_update.c</FilePath>
-            </File>
-            <File>
-              <FileName>nx_trace_object_register.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_object_register.c</FilePath>
-            </File>
-            <File>
-              <FileName>nx_trace_object_unregister.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_object_unregister.c</FilePath>
-            </File>
-            <File>
               <FileName>nx_udp_bind_cleanup.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_udp_bind_cleanup.c</FilePath>
@@ -42695,49 +42461,49 @@
           <GroupName>Middlewares/ThreadX/RTOS/ThreadX/Core</GroupName>
           <Files>
             <File>
-              <FileName>tx_thread_context_restore.s</FileName>
+              <FileName>tx_thread_context_restore.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_context_restore.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_context_restore.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_context_save.s</FileName>
+              <FileName>tx_thread_context_save.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_context_save.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_context_save.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_control.s</FileName>
+              <FileName>tx_thread_interrupt_control.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_control.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_control.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_disable.s</FileName>
+              <FileName>tx_thread_interrupt_disable.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_disable.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_disable.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_restore.s</FileName>
+              <FileName>tx_thread_interrupt_restore.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_restore.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_restore.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_schedule.s</FileName>
+              <FileName>tx_thread_schedule.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_schedule.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_schedule.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_stack_build.s</FileName>
+              <FileName>tx_thread_stack_build.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_stack_build.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_stack_build.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_system_return.s</FileName>
+              <FileName>tx_thread_system_return.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_system_return.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_system_return.S</FilePath>
             </File>
             <File>
-              <FileName>tx_timer_interrupt.s</FileName>
+              <FileName>tx_timer_interrupt.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_timer_interrupt.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_timer_interrupt.S</FilePath>
             </File>
             <File>
               <FileName>tx_initialize_high_level.c</FileName>

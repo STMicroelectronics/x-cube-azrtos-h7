@@ -26,7 +26,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    tx_port.h                                         Cortex-M33/AC6    */
-/*                                                            6.1.3       */
+/*                                                            6.1.7       */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -47,7 +47,14 @@
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  12-31-2020     Scott Larson             Initial Version 6.1.3         */
+/*  09-30-2020     Scott Larson             Initial Version 6.1           */
+/*  04-02-2021     Bhupendra Naphade        Modified comment(s),updated   */
+/*                                            macro definition,           */
+/*                                            resulting in version 6.1.6  */
+/*  06-02-2021     Bhupendra Naphade        Modified comment(s),          */
+/*                                            added symbol to enable      */
+/*                                            stack error handler,        */
+/*                                            resulting in version 6.1.7  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -89,6 +96,12 @@ UINT    _txe_thread_secure_stack_allocate(struct TX_THREAD_STRUCT *thread_ptr, U
 UINT    _txe_thread_secure_stack_free(struct TX_THREAD_STRUCT *thread_ptr);
 UINT    _tx_thread_secure_stack_allocate(struct TX_THREAD_STRUCT *tx_thread, ULONG stack_size);
 UINT    _tx_thread_secure_stack_free(struct TX_THREAD_STRUCT *tx_thread);
+
+/* This port overrides tx_thread_stack_error_notify with an architecture specific version */
+#define TX_PORT_THREAD_STACK_ERROR_NOTIFY
+
+/* This port overrides tx_thread_stack_error_handler with an architecture specific version */
+#define TX_PORT_THREAD_STACK_ERROR_HANDLER
 
 /* This hardware has stack checking that we take advantage of - do NOT define. */
 #ifdef TX_ENABLE_STACK_CHECKING
@@ -538,7 +551,7 @@ VOID                                            _tx_thread_interrupt_restore(UIN
 
 #else
 
-#define TX_INTERRUPT_SAVE_AREA                  unsigned int  was_masked;
+#define TX_INTERRUPT_SAVE_AREA                  UINT was_masked;
 #define TX_DISABLE                              was_masked = __disable_irq();
 #define TX_RESTORE                              if (was_masked == 0) __enable_irq();
 
@@ -567,7 +580,7 @@ unsigned int          was_masked;
 
 #ifdef TX_THREAD_INIT
 CHAR                            _tx_version_id[] = 
-                                    "Copyright (c) Microsoft Corporation. All rights reserved.  *  ThreadX Cortex-M33/AC6 Version 6.1 *";
+                                    "Copyright (c) Microsoft Corporation. All rights reserved.  *  ThreadX Cortex-M33/AC6 Version 6.1.6 *";
 #else
 #ifdef TX_MISRA_ENABLE
 extern  CHAR                    _tx_version_id[100];

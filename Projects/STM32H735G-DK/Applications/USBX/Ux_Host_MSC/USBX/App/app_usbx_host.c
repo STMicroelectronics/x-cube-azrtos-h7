@@ -24,7 +24,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -77,6 +76,10 @@ UINT App_USBX_Host_Init(VOID *memory_ptr)
 {
   UINT ret = UX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+
+  /* USER CODE BEGIN App_USBX_Host_MEM_POOL */
+  /* USER CODE END App_USBX_Host_MEM_POOL */
+
   /* USER CODE BEGIN App_USBX_Host_Init */
   CHAR *pointer;
 

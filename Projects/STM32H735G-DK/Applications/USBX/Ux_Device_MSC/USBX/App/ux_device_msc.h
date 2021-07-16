@@ -53,14 +53,14 @@ extern "C" {
 
 /* USER CODE BEGIN EFP */
 
-UINT  app_usb_device_thread_media_status(VOID *storage, ULONG lun, UCHAR *data_pointer,
-                                         ULONG number_blocks, ULONG lba, ULONG *media_status);
+UINT  STORAGE_Status(VOID *storage, ULONG lun, ULONG media_id, ULONG *media_status);
 
-UINT  app_usb_device_thread_media_read(VOID *storage, ULONG lun, UCHAR *data_pointer,
-                                       ULONG number_blocks, ULONG lba, ULONG *media_status);
+UINT  STORAGE_Read(VOID *storage, ULONG lun, UCHAR *data_pointer,
+                   ULONG number_blocks, ULONG lba, ULONG *media_status);
 
-UINT  app_usb_device_thread_media_write(VOID *storage, ULONG lun, UCHAR *data_pointer,
-                                        ULONG number_blocks, ULONG lba, ULONG *media_status);
+UINT  STORAGE_Write(VOID *storage, ULONG lun, UCHAR *data_pointer,
+                    ULONG number_blocks, ULONG lba, ULONG *media_status);
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

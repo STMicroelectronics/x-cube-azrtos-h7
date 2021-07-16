@@ -109,7 +109,7 @@ None
 
 ### <b>Keywords</b>
 
-RTOS, ThreadX, FileX, LevelX, File System, NOR, OCTO SPI, FAT32
+RTOS, ThreadX, FileX, LevelX, File System, NOR, OCTOSPI, FAT32
 
 ### <b>Hardware and Software environment</b>
 

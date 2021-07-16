@@ -94,6 +94,10 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
 {
   UINT ret = UX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+
+  /* USER CODE BEGIN App_USBX_Device_MEM_POOL */
+  /* USER CODE END App_USBX_Device_MEM_POOL */
+
   /* USER CODE BEGIN App_USBX_Device_Init */
 
   CHAR    *pointer;
@@ -124,7 +128,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   if (UX_SUCCESS != tx_status)
   {
     Error_Handler();
-    return tx_status;
   }
 
   /* Initialize USBX Memory */
@@ -156,7 +159,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   if (ret != UX_SUCCESS)
   {
     Error_Handler();
-    return ret;
   }
 
   /* Initialize the cdc class parameters for the device. */
@@ -178,7 +180,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   if (ret != UX_SUCCESS)
   {
     Error_Handler();
-    return ret;
   }
 
   /* Initialize the hid class parameters for the device. */
@@ -201,7 +202,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   if (ret != UX_SUCCESS)
   {
     Error_Handler();
-    return ret;
   }
   /* Allocate the stack for main_usbx_app_thread_entry.  */
   tx_status = tx_byte_allocate(byte_pool, (VOID **) &pointer,
@@ -211,7 +211,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   if (UX_SUCCESS != tx_status)
   {
     Error_Handler();
-    return tx_status;
   }
 
   /* Create the usbx_app_thread_entry main thread.  */
@@ -223,7 +222,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   if (UX_SUCCESS != tx_status)
   {
     Error_Handler();
-    return tx_status;
   }
 
   /* Allocate the stack for usbx_cdc_acm_read_thread_entry.  */
@@ -234,7 +232,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   if (UX_SUCCESS != tx_status)
   {
     Error_Handler();
-    return tx_status;
   }
 
   /* Create the usbx_cdc_acm_thread_entry thread.  */
@@ -247,7 +244,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   if (UX_SUCCESS != tx_status)
   {
     Error_Handler();
-    return tx_status;
   }
 
   /* Allocate the stack for usbx_cdc_acm_write_thread_entry.  */
@@ -258,7 +254,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   if (UX_SUCCESS != tx_status)
   {
     Error_Handler();
-    return tx_status;
   }
 
   /* Create the usbx_cdc_acm_thread_entry thread.  */
@@ -271,7 +266,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   if (UX_SUCCESS != tx_status)
   {
     Error_Handler();
-    return tx_status;
   }
 
   /* Create the event flags group.  */
@@ -288,7 +282,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   if (UX_SUCCESS != tx_status)
   {
     Error_Handler();
-    return tx_status;
   }
 
   /* Create the usbx_hid_thread_entry thread.  */
@@ -301,7 +294,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   if (UX_SUCCESS != tx_status)
   {
     Error_Handler();
-    return tx_status;
   }
   /* USER CODE END App_USBX_Device_Init */
 

@@ -30,7 +30,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_secure_tls_client_handshake                     PORTABLE C      */
-/*                                                           6.1.3        */
+/*                                                           6.1.5        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -111,6 +111,13 @@
 /*                                            improved buffer length      */
 /*                                            verification,               */
 /*                                            resulting in version 6.1.3  */
+/*  02-02-2021     Timothy Stapko           Modified comment(s), added    */
+/*                                            support for fragmented TLS  */
+/*                                            Handshake messages,         */
+/*                                            resulting in version 6.1.4  */
+/*  03-02-2021     Timothy Stapko           Modified comment(s),          */
+/*                                            fixed compiler warnings,    */
+/*                                            resulting in version 6.1.5  */
 /*                                                                        */
 /**************************************************************************/
 UINT _nx_secure_tls_client_handshake(NX_SECURE_TLS_SESSION *tls_session, UCHAR *packet_buffer,
@@ -156,10 +163,14 @@ const NX_CRYPTO_METHOD
             return(status);
         }
 
-        /* Check for fragmented records. */
+        /* Check for fragmented message. */
         if((message_length + header_bytes) > data_length)
         {
-            /* Incomplete record! We need to obtain the next fragment. */
+            /* Incomplete message! A single message is fragmented across several records. We need to obtain the next fragment. */
+            tls_session -> nx_secure_tls_handshake_record_expected_length = message_length + header_bytes;
+
+            tls_session -> nx_secure_tls_handshake_record_fragment_state = NX_SECURE_TLS_HANDSHAKE_RECEIVED_FRAGMENT;
+
             return(NX_SECURE_TLS_HANDSHAKE_FRAGMENT_RECEIVED);
         }
 
@@ -337,7 +348,6 @@ const NX_CRYPTO_METHOD
             /* This means an error was encountered at some point in processing a valid message. At this point
                the alert was sent, so just return a status indicating as much. */
             return(NX_SECURE_TLS_HANDSHAKE_FAILURE);
-            break;
 #ifndef NX_SECURE_TLS_DISABLE_SECURE_RENEGOTIATION
         case NX_SECURE_TLS_CLIENT_STATE_HELLO_REQUEST:
             /* Server sent a hello request, indicating it wants to restart the handshake process with a new ClientHello. */

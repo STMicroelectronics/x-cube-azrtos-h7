@@ -45,7 +45,6 @@ extern "C" {
 #define USBD_CONFIG_MAXPOWER                           25U
 #define USBD_COMPOSITE_USE_IAD                         1U
 #define USBD_DEVICE_FRAMEWORK_BUILDER_ENABLED          1U
-
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
 /* USER CODE END ET */
@@ -58,6 +57,7 @@ typedef enum
   CLASS_TYPE_CDC_ACM = 2,
   CLASS_TYPE_MSC     = 3,
   CLASS_TYPE_CDC_ECM = 4,
+  CLASS_TYPE_DFU     = 5,
 } USBD_CompositeClassTypeDef;
 
 /* USB Endpoint handle structure */

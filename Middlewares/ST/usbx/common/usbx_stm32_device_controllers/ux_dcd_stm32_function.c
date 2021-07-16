@@ -12,8 +12,8 @@
 
 /**************************************************************************/
 /**************************************************************************/
-/**                                                                       */ 
-/** USBX Component                                                        */ 
+/**                                                                       */
+/** USBX Component                                                        */
 /**                                                                       */
 /**   STM32 Controller Driver                                             */
 /**                                                                       */
@@ -29,7 +29,6 @@
 #include "ux_api.h"
 #include "ux_dcd_stm32.h"
 #include "ux_device_stack.h"
-
 
 /**************************************************************************/
 /*                                                                        */
@@ -54,26 +53,26 @@
 /*                                                                        */
 /*  OUTPUT                                                                */
 /*                                                                        */
-/*    Completion Status                                                   */ 
+/*    Completion Status                                                   */
 /*                                                                        */
-/*  CALLS                                                                 */ 
-/*                                                                        */ 
+/*  CALLS                                                                 */
+/*                                                                        */
 /*    _ux_dcd_stm32_endpoint_create         Create endpoint               */
 /*    _ux_dcd_stm32_endpoint_destroy        Destroy endpoint              */
 /*    _ux_dcd_stm32_endpoint_reset          Reset endpoint                */
 /*    _ux_dcd_stm32_endpoint_stall          Stall endpoint                */
-/*    _ux_dcd_stm32_endpoint_status         Get endpoint status           */ 
+/*    _ux_dcd_stm32_endpoint_status         Get endpoint status           */
 /*    _ux_dcd_stm32_frame_number_get        Get frame number              */
 /*    _ux_dcd_stm32_transfer_request        Request data transfer         */
-/*                                                                        */ 
-/*  CALLED BY                                                             */ 
-/*                                                                        */ 
-/*    USBX Device Stack                                                   */ 
-/*                                                                        */ 
-/*  RELEASE HISTORY                                                       */ 
-/*                                                                        */ 
-/*    DATE              NAME                      DESCRIPTION             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    USBX Device Stack                                                   */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s), used ST  */
 /*                                            HAL library to drive the    */
@@ -84,7 +83,7 @@
 UINT  _ux_dcd_stm32_function(UX_SLAVE_DCD *dcd, UINT function, VOID *parameter)
 {
 
-UINT            status;
+UINT            status = 0U;
 UX_DCD_STM32     *dcd_stm32;
 
 
@@ -145,7 +144,12 @@ UX_DCD_STM32     *dcd_stm32;
 
     case UX_DCD_CHANGE_STATE:
 
-        status =  UX_SUCCESS;
+        if ((ULONG) parameter == UX_DEVICE_FORCE_DISCONNECT)
+        {
+          /* Disconnect the USB device */
+          status =  HAL_PCD_Stop(dcd_stm32 -> pcd_handle);
+        }
+
         break;
 
     case UX_DCD_ENDPOINT_STATUS:

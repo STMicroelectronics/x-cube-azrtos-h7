@@ -38,7 +38,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_utility_logical_sector_read                     PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.6        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -92,6 +92,10 @@
 /*                                            added conditional to        */
 /*                                            disable cache,              */
 /*                                            resulting in version 6.1    */
+/*  04-02-2021     Bhupendra Naphade        Modified comment(s),          */
+/*                                            updated check for logical   */
+/*                                            sector value,               */
+/*                                            resulting in version 6.1.6  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_utility_logical_sector_read(FX_MEDIA *media_ptr, ULONG64 logical_sector,
@@ -227,7 +231,7 @@ UINT              status;
            entry.  */
 
         /* Compare against logical sector to make sure it is valid.  */
-        if (logical_sector >= (ULONG)media_ptr -> fx_media_total_sectors)
+        if (logical_sector >= media_ptr -> fx_media_total_sectors)
         {
             return(FX_SECTOR_INVALID);
         }

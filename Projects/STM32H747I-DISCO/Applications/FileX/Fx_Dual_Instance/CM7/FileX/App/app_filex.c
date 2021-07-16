@@ -91,8 +91,10 @@ void Error_Handler(void);
 UINT App_FileX_Init(VOID *memory_ptr)
 {
   UINT ret = FX_SUCCESS;
-
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+
+  /* USER CODE BEGIN App_FileX_MEM_POOL */
+  /* USER CODE END App_FileX_MEM_POOL */
 
   /* USER CODE BEGIN App_FileX_Init */
   CHAR *pointer;
@@ -138,6 +140,7 @@ UINT App_FileX_Init(VOID *memory_ptr)
   fx_system_initialize();
 
   /* USER CODE END App_FileX_Init */
+
   return ret;
 }
 

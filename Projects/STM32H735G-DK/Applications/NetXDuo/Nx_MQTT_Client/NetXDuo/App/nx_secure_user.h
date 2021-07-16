@@ -60,7 +60,7 @@
    default value is 4096 for a 4096-bit modulus. Other values can be 3072,
    2048, or 1024 (not recommended). */
 /*
-#define NX_CRYPTO_MAX_RSA_MODULUS_SIZE	    4096
+#define NX_CRYPTO_MAX_RSA_MODULUS_SIZE      4096
 */
 
 /* Defined, this option enables extra security features required for
@@ -107,12 +107,12 @@
 
 /* This option define drbg use df.*/
 /*
-#define NX_CRYPTO_DRBG_USE_DF		  1
+#define NX_CRYPTO_DRBG_USE_DF         1
 */
 
 /* This option defines drbg prediction resistance.*/
 /*
-#define NX_CRYPTO_DRBG_PREDICTION_RESISTANCE		  1
+#define NX_CRYPTO_DRBG_PREDICTION_RESISTANCE         1
 */
 
 /* Defined, this option enables crypto hardware random initialize.*/
@@ -122,27 +122,27 @@
 
 /* This option defines crypto ecdsa scratch buffer size.*/
 /*
-#define NX_CRYPTO_ECDSA_SCRATCH_BUFFER_SIZE		    3016
+#define NX_CRYPTO_ECDSA_SCRATCH_BUFFER_SIZE         3016
 */
 
 /* This option defines ecdh scratch buffer size.*/
 /*
-#define NX_CRYPTO_ECDH_SCRATCH_BUFFER_SIZE		   2464
+#define NX_CRYPTO_ECDH_SCRATCH_BUFFER_SIZE         2464
 */
 
 /* This option defines the ecjpake scratch buffer size.*/
 /*
-#define NX_CRYPTO_ECJPAKE_SCRATCH_BUFFER_SIZE		    4096
+#define NX_CRYPTO_ECJPAKE_SCRATCH_BUFFER_SIZE         4096
 */
 
 /* This option defines the hmac max pad size.*/
 /*
-#define NX_CRYPTO_HMAC_MAX_PAD_SIZE		    128
+#define NX_CRYPTO_HMAC_MAX_PAD_SIZE         128
 */
 
 /* This option defines the huge number bits.*/
 /*
-#define NX_CRYPTO_HUGE_NUMBER_BITS		    32
+#define NX_CRYPTO_HUGE_NUMBER_BITS         32
 */
 
 /* Defined, this option allows TLS to accept self-signed certificates from

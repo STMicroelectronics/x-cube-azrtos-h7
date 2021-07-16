@@ -27,8 +27,8 @@ Azure RTOS is a professional grade, highly reliable and market proven Middleware
 One of the following toolchains:
 
 - IAR Embedded Workbench for ARM (EWARM) toolchain 8.50.6 + ST-LINKV3.
-- [STM32CubeIDE V1.6.0](https://www.st.com/en/development-tools/stm32cubeide.html)  + ST-LINKV3 
-- RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.31 + ST-LINKV3
+- [STM32CubeIDE V1.7.0](https://www.st.com/en/development-tools/stm32cubeide.html)  + ST-LINKV3 
+- RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.32 + ST-LINKV3
 
 ## Supported Devices and Boards
 - [NUCLEO-H723ZG](https://www.st.com/en/evaluation-tools/nucleo-h723zg.html) *(MB1364-E01)*
@@ -72,6 +72,8 @@ For more details about license information relative to each component in this pa
 |ThreadX | Tx_Thread_MsgQueue      | It demonstrates how to exchange message between threads using Message Queue API and how to handle message from different queues using event queue chaining feature. [readme](./Projects/NUCLEO-H723ZG/Applications/ThreadX/Tx_Thread_MsgQueue/README.md) |
 |ThreadX | Tx_FreeRTOS_Wrapper     | It demonstrates how to create threads using the FreeRTOS wrapper APIs. [readme](./Projects/STM32H735G-DK/Applications/ThreadX/Tx_FreeRTOS_Wrapper/README.md) |
 |ThreadX | Tx_CMSIS_Wrapper        | It demonstrates how CMSIS RTOS adaptation layer for Azure RTOS ThreadX, it shows how to develop an application using the CMSIS RTOS 2 APIs. [readme](./Projects/STM32H747I-DISCO/Applications/ThreadX/Tx_CMSIS_Wrapper/README.md) |
+|ThreadX | Tx_LowPower             | It demonstrates how to configure the LowPower feature of Azure RTOS ThreadX stack. In addition, it shows how to use ThreadX MACRO related to the LowPower feature. [readme](./Projects/NUCLEO-H723ZG/Applications/ThreadX/Tx_LowPower/README.md) |
+|ThreadX | Tx_MPU                  | It demonstrates how to load, start and unload modules. In addition, it shows how ThreadX memory protection on modules using the Memory Protection Unit (MPU). [readme](./Projects/STM32H747I-DISCO/Applications/ThreadX/Tx_MPU/README.md) |
 |USBX    | Ux_Host_MSC             | It demonstrates how to develop USB Host Mass Storage "MSC" able to enumerate and communicates with a removable usb flash disk. The application is designed to behave as an USB MSC Host able to operate with an USB flash disk using the Bulk Only Transfer (BOT) and Small Computer System Interface (SCSI) transparent commands combined with a file system AzureRTOS FileX.  [readme](./Projects/STM32H735G-DK/Applications/USBX/Ux_Host_MSC/README.md) |
 |USBX    | Ux_Host_HID             | It demonstrates how to develop USB Host Human Interface "HID" able to enumerate and communicates with a mouse or a keyboard. The application is designed to behave as an USB HID Host, the code provides required requests to properly enumerate HID devices , HID Class APIs to decode HID reports received from a mouse or a keyboard and display data on uart HyperTerminal.  [readme](./Projects/NUCLEO-H723ZG/Applications/USBX/Ux_Host_HID/README.md) |
 |USBX    | Ux_Host_CDC_ACM         | It demonstrates how to develop USB Host CDC ACM device able to properly enumerate CDC devices then send and receive data that can be displayed on Hyperterminal or alike. [readme](./Projects/NUCLEO-H723ZG/Applications/USBX/Ux_Host_CDC_ACM/README.md) |
@@ -81,6 +83,7 @@ For more details about license information relative to each component in this pa
 |USBX    | Ux_Device_CDC_ECM       | It demonstrates how to develop USB Device CDC ECM communication. It shows how to run Web HTTP server based application stack over USB interface using USB CDC ECM protocol. [readme](./Projects/STM32H735G-DK/Applications/USBX/Ux_Device_CDC_ECM/README.md)  |
 |USBX    | Ux_Host_DualClass       | It demonstrates how to develop USB Host supporting two device classes: USB_HID (mouse or keyboard) and USB_MSC (removable flash disk). [readme](./Projects/STM32H735G-DK/Applications/USBX/Ux_Host_DualClass/README.md) |
 |USBX    | Ux_Device_HID_CDC_ACM   | It demonstrates how to develop a composite USB Device application. The application is designed to emulate a USB HID mouse combined with an USB-to-UART bridge following the Virtual COM Port (VCP) implementation, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant composite USB HID and CDC_ACM device. [readme](./Projects/STM32H747I-DISCO/Applications/USBX/Ux_Device_HID_CDC_ACM/README.md). |
+|USBX    | Ux_Device_DFU           | It demonstrates how to develop USB Device Firmware Upgrade "DFU" based application.The application is designed to emulate an USB DFU device, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB DFU device. [readme](./Projects/NUCLEO-H723ZG/Applications/USBX/Ux_Device_DFU/README.md) |
 |FileX   | Fx_uSD_File_Edit        | It demonstrates how to develop a basic SD card file operations application. The application is designed to handle SD card insertion/removal events, and depending on that state, it starts and stops file operations from and into the SD card. [readme](./Projects/STM32H735G-DK/Applications/FileX/Fx_uSD_File_Edit/README.md)  |
 |FileX   | Fx_MultiAccess          | It demonstrates the FileX's concurrent file access capabilities. The application is designed to execute file operations on the SD card device, the code provides all required software code for handling SD card I/O operations. [readme](./Projects/STM32H735G-DK/Applications/FileX/Fx_MultiAccess/README.md) |
 |FileX   | Fx_NoR_Write_Read_File  | It demonstrates how to create a Fat File system on the NOR flash using FileX alongside LevelX. The application is designed to execute file operations on the MX25LM51245G NOR flash device, the code provides all required software code for properly managing it. [readme](./Projects/STM32H735G-DK/Applications/FileX/Fx_NoR_Write_Read_File/README.md) |
@@ -97,14 +100,26 @@ For more details about license information relative to each component in this pa
 
 ## Main changes
 
-- Patch release integrating latest update of ThreadX to support low-power feature
+- Maintenance release
+- Azure RTOS update to V6.1.7
+- Add new Azure RTOS applications:
+   + Tx_MPU
+   + Tx_Lowpower
+   + Ux_Device_DFU
+- Migrate to MDK-ARM AC6 compiler
+- Fix device enumeration on Linux host for CDC ACM applications
+- All applications files regenerated using STM32CubeMX V6.3.0 and new Azure RTOS pack v1.1.0
 
 ## Known limitations
 
 - USBX composite device descriptors
    - A maximum of 3 different class driver can be selected (restriction due to limited EP numbers)
+
 - NetXDuo
    - Ethernet cable hot-plug detection not supported
+
+- ThreadX
+   - Tx_MPU application is built with MDK-ARM AC5 compiler and requires manual changes when migrating it to MDK-ARM AC6
 
 ## Troubleshooting
 **Caution**  : The issues are  **strictly limited**  to submit problems or suggestions related to the software delivered in this repository.

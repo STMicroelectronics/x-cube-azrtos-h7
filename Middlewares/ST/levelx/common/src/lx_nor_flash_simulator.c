@@ -23,7 +23,6 @@
 
 /* Include necessary files.  */
 
-#include "tx_api.h"
 #include "lx_api.h"
 
 /* Define constants for the NOR flash simulation. */

@@ -26,7 +26,7 @@
 /*  APPLICATION INTERFACE DEFINITION                       RELEASE        */
 /*                                                                        */
 /*    fx_api.h                                            PORTABLE C      */
-/*                                                           6.1.3        */
+/*                                                           6.1.7        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -54,6 +54,15 @@
 /*  12-31-2020     William E. Lamie         Modified comment(s), and      */
 /*                                            updated product constants,  */
 /*                                            resulting in version 6.1.3  */
+/*  03-02-2021     William E. Lamie         Modified comment(s), and      */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.5  */
+/*  04-02-2021     William E. Lamie         Modified comment(s), and      */
+/*                                            updated product constants,  */
+/*                                            resulting in version 6.1.6  */
+/*  06-02-2021     William E. Lamie         Modified comment(s), and      */
+/*                                            updated product constants,  */
+/*                                            resulting in version 6.1.7  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -91,6 +100,11 @@ extern   "C" {
 
 #include "fx_port.h"
 
+/* Define compiler library include files */
+ 
+#ifdef FX_STANDALONE_ENABLE
+#include   "string.h"
+#endif
 
 /* Define the major/minor version information that can be used by the application
    and the FileX source as well.  */
@@ -98,10 +112,35 @@ extern   "C" {
 #define AZURE_RTOS_FILEX
 #define FILEX_MAJOR_VERSION     6
 #define FILEX_MINOR_VERSION     1
-#define FILEX_PATCH_VERSION     3
+#define FILEX_PATCH_VERSION     7
 
 /* Define the following symbols for backward compatibility */
 #define EL_PRODUCT_FILEX
+
+#ifdef FX_STANDALONE_ENABLE
+
+/* FileX will be used without Azure RTOS ThreadX */
+
+#ifndef FX_SINGLE_THREAD
+#define FX_SINGLE_THREAD
+#endif /* !FX_SINGLE_THREAD */
+
+
+/* FileX will be used with local path logic disabled */
+
+#ifndef FX_NO_LOCAL_PATH
+#define FX_NO_LOCAL_PATH
+#endif /* !FX_NO_LOCAL_PATH */
+
+
+/* FileX is built without update to the time parameters. */
+
+#ifndef FX_NO_TIMER
+#define FX_NO_TIMER
+#endif /* !FX_NO_TIMER */
+
+#endif
+
 
 /* Override the interrupt protection provided in FileX port files to simply use ThreadX protection,
    which is often in-line assembly.  */
@@ -148,14 +187,17 @@ extern   "C" {
 
 #ifndef FX_NO_LOCAL_PATH
 #ifndef FX_LOCAL_PATH_SETUP
+#ifndef FX_SINGLE_THREAD
 #define FX_LOCAL_PATH_SETUP     extern TX_THREAD *_tx_thread_current_ptr;
+#else
+#define FX_NO_LOCAL_PATH
 #endif
 #endif
-
+#endif
 
 /* Determine if tracing is enabled.  */
 
-#ifdef TX_ENABLE_EVENT_TRACE
+#if defined(TX_ENABLE_EVENT_TRACE) && !defined(FX_STANDALONE_ENABLE)
 
 
 /* Trace is enabled. Remap calls so that interrupts can be disabled around the actual event logging.  */

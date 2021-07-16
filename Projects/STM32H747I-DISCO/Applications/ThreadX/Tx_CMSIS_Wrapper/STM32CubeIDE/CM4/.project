@@ -40,11 +40,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/CM4/Src/stm32h7xx_hal_msp.c</locationURI>
 		</link>
 		<link>
-			<name>Application/User/stm32h7xx_hal_timebase_tim.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/CM4/Src/stm32h7xx_hal_timebase_tim.c</locationURI>
-		</link>
-		<link>
 			<name>Application/User/stm32h7xx_it.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/CM4/Src/stm32h7xx_it.c</locationURI>
@@ -168,11 +163,6 @@
 			<name>Middlewares/cmsis_rtos_threadx/cmsis_os2.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/cmsis_rtos_threadx/cmsis_os2.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery.c</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

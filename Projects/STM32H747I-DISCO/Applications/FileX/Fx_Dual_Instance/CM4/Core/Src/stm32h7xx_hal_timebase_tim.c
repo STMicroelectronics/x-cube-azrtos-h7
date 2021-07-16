@@ -59,6 +59,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   {
     return HAL_ERROR;
   }
+
   /* Enable TIM7 clock */
   __HAL_RCC_TIM7_CLK_ENABLE();
 
@@ -93,6 +94,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   htim7.Init.Prescaler = uwPrescalerValue;
   htim7.Init.ClockDivision = 0;
   htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
+
   if(HAL_TIM_Base_Init(&htim7) == HAL_OK)
   {
     /* Start the TIM time Base generation in interrupt mode */

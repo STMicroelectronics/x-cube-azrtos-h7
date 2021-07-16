@@ -38,7 +38,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_utility_logical_sector_write                    PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.6        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -87,6 +87,10 @@
 /*                                            added conditional to        */
 /*                                            disable cache,              */
 /*                                            resulting in version 6.1    */
+/*  04-02-2021     Bhupendra Naphade        Modified comment(s),          */
+/*                                            updated check for logical   */
+/*                                            sector value,               */
+/*                                            resulting in version 6.1.6  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_utility_logical_sector_write(FX_MEDIA *media_ptr, ULONG64 logical_sector,
@@ -311,7 +315,7 @@ UCHAR             cache_found = FX_FALSE;
         }
 
         /* Compare logical sector against total sectors to make sure it is valid.  */
-        if ((logical_sector + sectors - 1) >= (ULONG)media_ptr -> fx_media_total_sectors)
+        if ((logical_sector + sectors - 1) >= media_ptr -> fx_media_total_sectors)
         {
             return(FX_SECTOR_INVALID);
         }
@@ -381,7 +385,7 @@ UCHAR             cache_found = FX_FALSE;
         }
 
         /* Compare logical sector against total sectors to make sure it is valid.  */
-        if ((logical_sector + sectors - 1) >= (ULONG)media_ptr -> fx_media_total_sectors)
+        if ((logical_sector + sectors - 1) >= media_ptr -> fx_media_total_sectors)
         {
             return(FX_SECTOR_INVALID);
         }

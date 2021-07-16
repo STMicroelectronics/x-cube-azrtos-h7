@@ -16,4 +16,12 @@ LR_IROM1 0x08000000 0x00100000  {    ; load region size_region
    RW_NXDriverSection 0x24048200 0x7E00  {
   *(.NetXPoolSection)
   }
+  
+  RW_RxDecripSection 0x24048000 0x60  {
+   *(.RxDecripSection)
+  }
+
+  RW_TxDecripSection 0x24048060 0x60  {
+   *(.TxDecripSection)
+  }
 }

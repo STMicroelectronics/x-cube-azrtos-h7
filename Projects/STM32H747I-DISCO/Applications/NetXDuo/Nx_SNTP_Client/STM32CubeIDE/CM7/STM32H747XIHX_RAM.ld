@@ -1,13 +1,13 @@
 /*
 ******************************************************************************
 **
-**  File        : LinkerScript.ld
+**  File        : LinkerScript.ld (debug in RAM dedicated)
 **
 **  Author      : STM32CubeIDE
 **
 **  Abstract    : Linker script for STM32H7 series
 **                      2048Kbytes FLASH
-**                      512Kbytes RAM
+**                      800Kbytes RAM
 **
 **                Set heap size, stack size and stack location according
 **                to application requirements.
@@ -22,7 +22,7 @@
 *****************************************************************************
 ** @attention
 **
-** <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+** <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
 ** All rights reserved.</center></h2>
 **
 ** This software component is licensed by ST under BSD 3-Clause license,
@@ -37,7 +37,7 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-_estack = ORIGIN(RAM) + LENGTH(RAM); /* end of "RAM" Ram type memory */
+_estack = ORIGIN(RAM_D1) + LENGTH(RAM_D1); /* end of "RAM_D1" Ram type memory */
 
 _Min_Heap_Size = 0x200 ; /* required amount of heap  */
 _Min_Stack_Size = 0x400 ; /* required amount of stack */
@@ -45,7 +45,7 @@ _Min_Stack_Size = 0x400 ; /* required amount of stack */
 /* Memories definition */
 MEMORY
 {
-  RAM    (xrw)   : ORIGIN = 0x24000000, LENGTH =  256K    /* Memory is divided. Actual start is 0x24000000 and actual length is 512K */
+  RAM_D1 (xrw)   : ORIGIN = 0x24000000, LENGTH =  512K    /* Memory is divided. Actual start is 0x24000000 and actual length is 512K */
   FLASH   (rx)   : ORIGIN = 0x08000000, LENGTH = 1024K    /* Memory is divided. Actual start is 0x8000000 and actual length is 2048K */
   DTCMRAM (xrw)  : ORIGIN = 0x20000000, LENGTH = 128K
   RAM_D2 (xrw)   : ORIGIN = 0x30000000, LENGTH = 288K
@@ -62,7 +62,7 @@ SECTIONS
     . = ALIGN(4);
     KEEP(*(.isr_vector)) /* Startup code */
     . = ALIGN(4);
-  } >RAM
+  } >RAM_D1
 
   /* The program code and other data into "RAM" Ram type memory */
   .text :
@@ -81,7 +81,7 @@ SECTIONS
 
     . = ALIGN(4);
     _etext = .;        /* define a global symbols at end of code */
-  } >RAM
+  } >RAM_D1
 
   /* Constant data into "RAM" Ram type memory */
   .rodata :
@@ -90,13 +90,13 @@ SECTIONS
     *(.rodata)         /* .rodata sections (constants, strings, etc.) */
     *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */
     . = ALIGN(4);
-  } >RAM
+  } >RAM_D1
 
   .ARM.extab   : { 
     . = ALIGN(4);
     *(.ARM.extab* .gnu.linkonce.armextab.*)
     . = ALIGN(4);
-  } >RAM
+  } >RAM_D1
   
   .ARM : {
     . = ALIGN(4);
@@ -104,7 +104,7 @@ SECTIONS
     *(.ARM.exidx*)
     __exidx_end = .;
     . = ALIGN(4);
-  } >RAM
+  } >RAM_D1
 
   .preinit_array     :
   {
@@ -113,7 +113,7 @@ SECTIONS
     KEEP (*(.preinit_array*))
     PROVIDE_HIDDEN (__preinit_array_end = .);
     . = ALIGN(4);
-  } >RAM
+  } >RAM_D1
   
   .init_array :
   {
@@ -123,7 +123,7 @@ SECTIONS
     KEEP (*(.init_array*))
     PROVIDE_HIDDEN (__init_array_end = .);
     . = ALIGN(4);
-  } >RAM
+  } >RAM_D1
   
   .fini_array :
   {
@@ -133,7 +133,7 @@ SECTIONS
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
     . = ALIGN(4);
-  } >RAM
+  } >RAM_D1
 
   /* Used by the startup to initialize data */
   _sidata = LOADADDR(.data);
@@ -149,7 +149,7 @@ SECTIONS
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
     
-  } >RAM
+  } >RAM_D1
 
   /* Uninitialized data section into "RAM" Ram type memory */
   . = ALIGN(4);
@@ -165,7 +165,7 @@ SECTIONS
     . = ALIGN(4);
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
-  } >RAM
+  } >RAM_D1
 
   /* User_heap_stack section, used to check that there is enough "RAM" Ram  type memory left */
   ._user_heap_stack :
@@ -177,7 +177,7 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
     __RAM_segment_used_end__ = .;        /* define a global symbol at segment used end */
-  } >RAM
+  } >RAM_D1
 
   /* Remove information from the compiler libraries */
   /DISCARD/ :

@@ -26,7 +26,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */ 
 /*                                                                        */ 
 /*    fx_port.h                                         Cortex-M3/GNU     */ 
-/*                                                           6.1          */
+/*                                                           6.1.5        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -47,6 +47,8 @@
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  03-02-2021     William E. Lamie         Modified comment(s),          */
+/*                                            resulting in version 6.1.5  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -68,6 +70,7 @@
 
 /* Include the ThreadX api file.  */
 
+#ifndef FX_STANDALONE_ENABLE
 #include "tx_api.h"
 
 
@@ -78,13 +81,45 @@
 typedef unsigned long long  ULONG64;
 #endif
 
+#else
+
+/* Define compiler library include files.  */
+
+#include <stdint.h>
+#include <stdlib.h>
+
+#define VOID                                    void
+typedef char                                    CHAR;
+typedef char                                    BOOL;
+typedef unsigned char                           UCHAR;
+typedef int                                     INT;
+typedef unsigned int                            UINT;
+typedef long                                    LONG;
+typedef unsigned long                           ULONG;
+typedef short                                   SHORT;
+typedef unsigned short                          USHORT;
+
+#ifndef ULONG64_DEFINED
+#define ULONG64_DEFINED
+typedef unsigned long long                      ULONG64;
+#endif
+
+/* Define basic alignment type used in block and byte pool operations. This data type must
+   be at least 32-bits in size and also be large enough to hold a pointer type.  */
+
+#ifndef ALIGN_TYPE_DEFINED
+#define ALIGN_TYPE_DEFINED
+#define ALIGN_TYPE                              ULONG
+#endif
+
+#endif
 
 /* Define FileX internal protection macros.  If FX_SINGLE_THREAD is defined,
    these protection macros are effectively disabled.  However, for multi-thread
    uses, the macros are setup to utilize a ThreadX mutex for multiple thread 
    access control into an open media.  */
 
-#ifdef FX_SINGLE_THREAD
+#if defined(FX_SINGLE_THREAD) || defined(FX_STANDALONE_ENABLE)
 #define FX_PROTECT                   
 #define FX_UNPROTECT
 #else
@@ -96,16 +131,33 @@ typedef unsigned long long  ULONG64;
 
 /* Define interrupt lockout constructs to protect the system date/time from being updated
    while they are being read.  */
-
+#ifndef FX_STANDALONE_ENABLE
+#ifndef FX_INT_SAVE_AREA
 #define FX_INT_SAVE_AREA                unsigned int  old_interrupt_posture;
-#define FX_DISABLE_INTS                 old_interrupt_posture =  tx_interrupt_control(TX_INT_DISABLE);
-#define FX_RESTORE_INTS                 tx_interrupt_control(old_interrupt_posture);
+#endif
 
+#ifndef FX_DISABLE_INTS
+#define FX_DISABLE_INTS                 old_interrupt_posture =  tx_interrupt_control(TX_INT_DISABLE);
+#endif
+
+#ifndef FX_RESTORE_INTS
+#define FX_RESTORE_INTS                 tx_interrupt_control(old_interrupt_posture);
+#endif
+#else
+/* Disable use of ThreadX protection in standalone mode for FileX */
+#ifndef FX_LEGACY_INTERRUPT_PROTECTION
+#define FX_LEGACY_INTERRUPT_PROTECTION
+#endif
+#define FX_INT_SAVE_AREA
+#define FX_DISABLE_INTS
+#define FX_RESTORE_INTS
+#endif
 
 /* Define the error checking logic to determine if there is a caller error in the FileX API.  
    The default definitions assume ThreadX is being used.  This code can be completely turned 
    off by just defining these macros to white space.  */
 
+#ifndef FX_STANDALONE_ENABLE
 #ifndef TX_TIMER_PROCESS_IN_ISR
 
 #define FX_CALLER_CHECKING_EXTERNS      extern  TX_THREAD      *_tx_thread_current_ptr; \
@@ -124,6 +176,10 @@ typedef unsigned long long  ULONG64;
 #define FX_CALLER_CHECKING_CODE         if ((TX_THREAD_GET_SYSTEM_STATE()) || \
                                             (_tx_thread_current_ptr == TX_NULL)) \
                                             return(FX_CALLER_ERROR);
+#endif
+#else
+#define FX_CALLER_CHECKING_EXTERNS
+#define FX_CALLER_CHECKING_CODE
 #endif
 
 
@@ -146,7 +202,7 @@ typedef unsigned long long  ULONG64;
    this value is derived from TX_TIMER_TICKS_PER_SECOND.  */
  
 #ifndef FX_UPDATE_RATE_IN_TICKS
-#ifdef TX_TIMER_TICKS_PER_SECOND
+#if (defined(TX_TIMER_TICKS_PER_SECOND) && (!defined(FX_STANDALONE_ENABLE)))
 #define FX_UPDATE_RATE_IN_TICKS         (TX_TIMER_TICKS_PER_SECOND * FX_UPDATE_RATE_IN_SECONDS)
 #else
 #define FX_UPDATE_RATE_IN_TICKS         1000 
@@ -158,7 +214,7 @@ typedef unsigned long long  ULONG64;
 
 #ifdef FX_SYSTEM_INIT
 CHAR                            _fx_version_id[] = 
-                                    "Copyright (c) Microsoft Corporation. All rights reserved.  *  FileX Cortex-M3/GNU Version 6.1 *";
+                                    "Copyright (c) Microsoft Corporation. All rights reserved.  *  FileX Cortex-M3/GNU Version 6.1.5 *";
 #else
 extern  CHAR                    _fx_version_id[];
 #endif

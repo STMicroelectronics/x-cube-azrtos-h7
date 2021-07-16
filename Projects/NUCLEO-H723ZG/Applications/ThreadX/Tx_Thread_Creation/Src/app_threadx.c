@@ -57,6 +57,7 @@ void ThreadTwo_Entry(ULONG thread_input);
 void MainThread_Entry(ULONG thread_input);
 void App_Delay(uint32_t Delay);
 /* USER CODE END PFP */
+
 /**
   * @brief  Application ThreadX Initialization.
   * @param memory_ptr: memory pointer
@@ -66,6 +67,9 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
 {
   UINT ret = TX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+
+  /* USER CODE BEGIN App_ThreadX_MEM_POOL */
+  /* USER CODE END App_ThreadX_MEM_POOL */
 
   /* USER CODE BEGIN App_ThreadX_Init */
   CHAR *pointer;

@@ -1,0 +1,58 @@
+parameters:
+  # Use the variable name itself (no $() or other wrapping syntax). This is
+  # because we use runtime and macro expressions for conditions and script
+  # invocations
+  DependenciesVariableName: vcpkg.deps
+
+steps:
+  - pwsh: |
+      $TargetPath = "$(Agent.TempDirectory)/vcpkg"
+      Remove-Item -Path $TargetPath -Recurse -Force -ErrorAction Ignore
+      New-Item -ItemType Directory -Path $TargetPath  -Force
+
+      $VcpkgCommit = $(Get-Content eng/vcpkg-commit.txt)
+      Write-Host "Target Path for vcpkg: $TargetPath"
+      Write-Host "Vcpkg SHA: $VcpkgCommit"
+
+      Write-Host "##vso[task.prependpath]$TargetPath"
+      Write-Host "##vso[task.setvariable variable=VCPKG_INSTALLATION_ROOT]$TargetPath"
+      Write-Host "##vso[task.setvariable variable=VcpkgCommit]$VcpkgCommit"
+    displayName: Set Vcpkg Variables
+    condition: >-
+      and(
+        succeeded(),
+        not(eq(variables['${{ parameters.DependenciesVariableName }}'], ''))
+      )
+
+  - task: Cache@2
+    inputs:
+      key: >-
+        $(Agent.JobName)
+        | "$(VcpkgCommit)"
+        | $(Agent.Os)
+        | $(${{ parameters.DependenciesVariableName }})
+      path: $(VCPKG_INSTALLATION_ROOT)
+      cacheHitVar: VcpkgRestoredFromCache
+    displayName: Vcpkg Cache
+    condition: >-
+      and(
+        succeeded(),
+        not(eq(variables['${{ parameters.DependenciesVariableName }}'], '')),
+        not(eq(variables['Skip.VcpkgCache'], 'true'))
+      )
+
+  - task: PowerShell@2
+    inputs:
+      targetType: filePath
+      filePath: eng/scripts/vcpkg.ps1
+      arguments: >-
+        -Ref $(VcpkgCommit)
+        -Dependencies "$(${{ parameters.DependenciesVariableName }})"
+        -VcpkgPath $(VCPKG_INSTALLATION_ROOT)
+      pwsh: true
+    condition: >-
+      and(
+        succeeded(),
+        not(eq(variables['${{ parameters.DependenciesVariableName }}'], '')),
+        ne(variables['VcpkgRestoredFromCache'], true)
+      )

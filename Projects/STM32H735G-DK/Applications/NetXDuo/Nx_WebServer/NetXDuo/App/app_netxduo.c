@@ -116,6 +116,9 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
   UINT ret = NX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
+  /* USER CODE BEGIN App_NetXDuo_MEM_POOL */
+  /* USER CODE END App_NetXDuo_MEM_POOL */
+
   /* USER CODE BEGIN App_NetXDuo_Init */
   PRINT_APP_START(Nx_WebServer);
 
@@ -305,7 +308,6 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
     printf("Semaphore creation failed : 0x%02x\n", ret);
     Error_Handler();
   }
-
   /* USER CODE END App_NetXDuo_Init */
 
   return ret;

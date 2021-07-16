@@ -643,14 +643,14 @@ static void USBD_FrameWork_CDCDesc(USBD_DevClassHandleTypeDef *pdev,
   pHeadDesc->bLength = 0x05;
   pHeadDesc->bDescriptorType = 0x24;
   pHeadDesc->bDescriptorSubtype = 0x00;
-  pHeadDesc->bcdCDC = 0x1001;
+  pHeadDesc->bcdCDC = 0x0110;
   *Sze += (uint32_t)sizeof(USBD_CDCHeaderFuncDescTypedef);
 
   /* Call Management Functional Descriptor*/
   pCallMgmDesc = ((USBD_CDCCallMgmFuncDescTypedef *)((uint32_t)pConf + *Sze));
   pCallMgmDesc->bLength = 0x05;
   pCallMgmDesc->bDescriptorType = 0x24;
-  pCallMgmDesc->bDescriptorSubtype = 0x00;
+  pCallMgmDesc->bDescriptorSubtype = 0x01;
   pCallMgmDesc->bmCapabilities = 0x00;
   pCallMgmDesc->bDataInterface = pdev->tclasslist[pdev->classId].Ifs[1];
   *Sze += (uint32_t)sizeof(USBD_CDCCallMgmFuncDescTypedef);

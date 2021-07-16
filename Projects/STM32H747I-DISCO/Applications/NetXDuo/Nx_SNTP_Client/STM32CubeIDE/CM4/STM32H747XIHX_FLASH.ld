@@ -21,8 +21,8 @@
 *****************************************************************************
 ** @attention
 **
-** Copyright (c) 2019 STMicroelectronics.
-** All rights reserved.
+** <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
+** All rights reserved.</center></h2>
 **
 ** This software component is licensed by ST under BSD 3-Clause license,
 ** the "License"; You may not use this file except in compliance with the
@@ -36,7 +36,7 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-_estack = 0x10048000;    /* end of RAM */
+_estack = ORIGIN(RAM) + LENGTH(RAM);    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x200 ;      /* required amount of heap  */
 _Min_Stack_Size = 0x400 ; /* required amount of stack */
@@ -44,7 +44,7 @@ _Min_Stack_Size = 0x400 ; /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-FLASH (rx)      : ORIGIN = 0x08100000, LENGTH = 1024K
+FLASH (rx)     : ORIGIN = 0x08100000, LENGTH = 1024K
 RAM (xrw)      : ORIGIN = 0x10000000, LENGTH = 288K
 }
 

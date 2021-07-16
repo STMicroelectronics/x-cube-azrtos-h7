@@ -22,6 +22,7 @@ extern "C" {
 #include "lx_api.h"
 
 /* enable the driver to be used */
+
 #define LX_NOR_QSPI_DRIVER
 
 #ifdef LX_NOR_SIMULATOR_DRIVER
@@ -34,15 +35,6 @@ extern "C" {
 #ifdef LX_NOR_OSPI_DRIVER
 #include "lx_stm32_ospi_driver.h"
 
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
-/* Exported types ------------------------------------------------------------*/
-/* USER CODE BEGIN ET */
-
-/* USER CODE END ET */
-
-/* Exported constants --------------------------------------------------------*/
 #define LX_NOR_OSPI_DRIVER_ID            0x02
 #define LX_NOR_OSPI_DRIVER_NAME          "FX Levelx OctoSPI driver"
 #endif
@@ -58,17 +50,26 @@ extern "C" {
 /*
  * define the Custom levelx nor drivers to be supported by the filex
  *  for example:
-
-#define CUSTOM_DRIVER_ID          0xABCDEF
+*/
+#define CUSTOM_DRIVER_ID          0xBBBB
 #define NOR_CUSTOM_DRIVER_NAME    "NOR CUSTOM DRIVER"
-#include "lx_nor_custom_driver.h"
-#define NOR_CUSTOM_DRIVERS   {"NOR CUSTOM DRIVER", CUSTOM_DRIVER_ID, lx_nor_customer_driver_initialize}
- */
+#include "lx_stm32_nor_custom_driver.h"
+#define LX_NOR_CUSTOM_DRIVERS   {.name = "NOR CUSTOM DRIVER", .id = CUSTOM_DRIVER_ID, .nor_driver_initialize = lx_stm32_nor_custom_driver_initialize}
+
+/* USER CODE BEIGN NOR_CUSTOM_DRIVERS */
+
+/* USER CODE END NOR_CUSTOM_DRIVERS */
 
 #endif
 
 #define MAX_LX_NOR_DRIVERS     8
 #define UNKNOWN_DRIVER_ID      0xFFFFFFFF
+
+/* to enable a default NOR driver:
+  - define the flags LX_NOR_DEFAULT_DRIVER
+  - Provide the driver ID in the NOR_DEFAULT_DRIVER for example
+  #define NOR_DEFAULT_DRIVER LX_NOR_QSPI_DRIVER_ID
+*/
 
 /* USER CODE BEGIN DEFAULT_DRIVER */
 
@@ -82,6 +83,36 @@ extern "C" {
 #endif
 /* USER CODE END DEFAULT_DRIVER */
 
+#ifdef LX_NOR_DEFAULT_DRIVER
+
+/* USER CODE BEGIN DEFAULT_DRIVER */
+
+/* uncomment the define below to define the default driver
+   to use.
+*/
+/* #define LX_NOR_DEFAULT_DRIVER */
+
+#ifdef LX_NOR_DEFAULT_DRIVER
+#define NOR_DEFAULT_DRIVER    /* add Driver ID from the defines above (for example LX_NOR_SIMULATOR_DRIVER_ID) */
+#endif
+/* USER CODE END DEFAULT_DRIVER */
+#endif
+
+#if !defined(NOR_DEFAULT_DRIVER) && !defined(LX_NOR_CUSTOM_DRIVERS) && !defined(LX_NOR_SIMULATOR_DRIVER) && !defined(LX_NOR_QSPI_DRIVER)  && !defined(LX_NOR_OSPI_DRIVER)
+#error "[This error was thrown on purpose] : No NOR lowlevel driver defined"
+#endif
+
+/* USER CODE BEGIN Includes */
+
+/* USER CODE END Includes */
+
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
+
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+
 /* USER CODE BEGIN EC */
 
 /* USER CODE END EC */
@@ -91,9 +122,6 @@ extern "C" {
 
 /* USER CODE END EM */
 
-#if !defined(NOR_DEFAULT_DRIVER) && !defined(NOR_CUSTOM_DRIVERS) && !defined(LX_NOR_SIMULATOR_DRIVER) && !defined(LX_NOR_QSPI_DRIVER)  && !defined(LX_NOR_OSPI_DRIVER)
-#error "[This error was thrown on purpose] : No NOR low -level driver defined"
-#endif
 /* Exported functions prototypes ---------------------------------------------*/
 VOID  fx_stm32_levelx_nor_driver(FX_MEDIA *media_ptr);
 

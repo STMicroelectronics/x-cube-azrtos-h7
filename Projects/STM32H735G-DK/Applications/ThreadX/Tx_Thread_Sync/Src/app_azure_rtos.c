@@ -153,19 +153,6 @@ void MX_AZURE_RTOS_Init(void)
   /* USER CODE END  Kernel_Start_Error */
 }
 
-/**
-  * @brief  MX_AZURE_RTOS_Process
-  * @param  None
-  * @retval None
-  */
-void MX_AZURE_RTOS_Process(void)
-{
-  /* USER CODE BEGIN  1 */
-
-  /* USER CODE END  1 */
-
-}
-
 /* USER CODE BEGIN  2 */
 
 /* USER CODE END  2 */

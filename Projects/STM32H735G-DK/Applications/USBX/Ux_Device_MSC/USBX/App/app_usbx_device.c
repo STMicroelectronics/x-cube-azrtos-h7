@@ -68,27 +68,12 @@ TX_THREAD                           ux_app_thread;
 TX_EVENT_FLAGS_GROUP                EventFlag;
 UX_SLAVE_CLASS_STORAGE_PARAMETER    storage_parameter;
 CHAR                                *pointer;
-
+extern BSP_SD_CardInfo USBD_SD_CardInfo;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-
 VOID  usbx_app_thread_entry(ULONG arg);
-
-UINT  app_usb_device_state_change(ULONG event);
-
-UINT  app_usb_device_thread_media_read(VOID *storage, ULONG lun,
-                                       UCHAR *data_pointer, ULONG number_blocks,
-                                       ULONG lba, ULONG *media_status);
-
-UINT  app_usb_device_thread_media_write(VOID *storage, ULONG lun,
-                                        UCHAR *data_pointer, ULONG number_blocks,
-                                        ULONG lba, ULONG *media_status);
-
-UINT  app_usb_device_thread_media_status(VOID *storage, ULONG lun,
-                                         ULONG media_id, ULONG *media_status);
-
 /* USER CODE END PFP */
 /**
   * @brief  Application USBX Device Initialization.
@@ -99,6 +84,11 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
 {
   UINT ret = UX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+
+  /* USER CODE BEGIN App_USBX_Device_MEM_POOL */
+
+  /* USER CODE END App_USBX_Device_MEM_POOL */
+
   /* USER CODE BEGIN App_USBX_Device_Init */
   ULONG device_framework_hs_length;
   ULONG device_framework_fs_length;
@@ -163,13 +153,13 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   ux_slave_class_storage_media_removable_flag = 0x80;
 
   storage_parameter.ux_slave_class_storage_parameter_lun[0].
-  ux_slave_class_storage_media_read = app_usb_device_thread_media_read;
+  ux_slave_class_storage_media_read = STORAGE_Read;
 
   storage_parameter.ux_slave_class_storage_parameter_lun[0].
-  ux_slave_class_storage_media_write = app_usb_device_thread_media_write;
+  ux_slave_class_storage_media_write = STORAGE_Write;
 
   storage_parameter.ux_slave_class_storage_parameter_lun[0].
-  ux_slave_class_storage_media_status = app_usb_device_thread_media_status;
+  ux_slave_class_storage_media_status = STORAGE_Status;
 
   /* Initialize the device storage class. The class is connected with interface 0 on configuration 1. */
   ret =  _ux_device_stack_class_register(_ux_system_slave_class_storage_name,

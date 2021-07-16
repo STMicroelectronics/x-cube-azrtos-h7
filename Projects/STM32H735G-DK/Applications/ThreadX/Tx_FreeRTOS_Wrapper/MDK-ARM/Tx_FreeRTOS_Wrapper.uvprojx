@@ -10,14 +10,14 @@
       <TargetName>Tx_FreeRTOS_Wrapper</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <pCCUsed>6150000::V6.15::ARMCLANG</pCCUsed>
+      <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32H735IGKx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32H7xx_DFP.2.7.0</PackID>
-          <PackURL>http://www.keil.com/pack/</PackURL>
+          <PackID>Keil.STM32H7xx_DFP.2.4.3</PackID>
+          <PackURL>https://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000-0x2001FFFF) IRAM2(0x24000000-0x2404FFFF) IROM(0x8000000-0x80FFFFF) CLOCK(12000000) FPU3(DFPU) CPUTYPE("Cortex-M7") ELITTLE TZ</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -54,7 +54,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>0</BrowseInformation>
+          <BrowseInformation>1</BrowseInformation>
           <ListingPath></ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -326,12 +326,12 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
-            <uGnu>0</uGnu>
+            <uGnu>1</uGnu>
             <useXO>0</useXO>
             <v6Lang>5</v6Lang>
             <v6LangP>3</v6LangP>
-            <vShortEn>0</vShortEn>
-            <vShortWch>0</vShortWch>
+            <vShortEn>1</vShortEn>
+            <vShortWch>1</vShortWch>
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>TX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H735xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/inc/;../../../../../../Drivers/BSP/STM32H735G-DK;..\..\..\..\..\..\Middlewares\ST\threadx\utility\rtos_compatibility_layers\FreeRTOS</IncludePath>
+              <IncludePath>..\Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H735G-DK;../../../../../../Middlewares\ST\threadx\utility\rtos_compatibility_layers\FreeRTOS</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -352,9 +352,9 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <ClangAsOpt>4</ClangAsOpt>
+            <ClangAsOpt>1</ClangAsOpt>
             <VariousControls>
-              <MiscControls>--cpreproc</MiscControls>
+              <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
@@ -370,7 +370,7 @@
             <TextAddressRange></TextAddressRange>
             <DataAddressRange></DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile></ScatterFile>
+            <ScatterFile>Tx_FreeRTOS_Wrapper\Tx_FreeRTOS_Wrapper.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc></Misc>
@@ -394,29 +394,29 @@
           <GroupName>Application/User</GroupName>
           <Files>
             <File>
-              <FileName>main.c</FileName>
+              <FileName>app_tx_freertos.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Src/main.c</FilePath>
+              <FilePath>..\Src\app_tx_freertos.c</FilePath>
             </File>
             <File>
-              <FileName>stm32h7xx_it.c</FileName>
+              <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Src/stm32h7xx_it.c</FilePath>
+              <FilePath>..\Src\main.c</FilePath>
             </File>
             <File>
               <FileName>stm32h7xx_hal_msp.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Src/stm32h7xx_hal_msp.c</FilePath>
+              <FilePath>..\Src\stm32h7xx_hal_msp.c</FilePath>
             </File>
             <File>
               <FileName>stm32h7xx_hal_timebase_tim.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Src/stm32h7xx_hal_timebase_tim.c</FilePath>
+              <FilePath>..\Src\stm32h7xx_hal_timebase_tim.c</FilePath>
             </File>
             <File>
-              <FileName>app_tx_freertos.c</FileName>
+              <FileName>stm32h7xx_it.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\app_tx_freertos.c</FilePath>
+              <FilePath>..\Src\stm32h7xx_it.c</FilePath>
             </File>
             <File>
               <FileName>tx_initialize_low_level.s</FileName>
@@ -426,12 +426,12 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>BSPDrivers/BSP/STM32H735G-DK</GroupName>
+          <GroupName>Drivers/BSP/STM32H735G-DK</GroupName>
           <Files>
             <File>
               <FileName>stm32h735g_discovery.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.c</FilePath>
+              <FilePath>../../../../../../Drivers/BSP/STM32H735G-DK/stm32h735g_discovery.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -528,16 +528,6 @@
               <FileType>1</FileType>
               <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.c</FilePath>
             </File>
-            <File>
-              <FileName>stm32h7xx_hal_uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32h7xx_hal_uart_ex.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart_ex.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -546,7 +536,7 @@
             <File>
               <FileName>system_stm32h7xx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Src/system_stm32h7xx.c</FilePath>
+              <FilePath>..\Src\system_stm32h7xx.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -554,49 +544,49 @@
           <GroupName>Middlewares/ThreadX/RTOS/ThreadX/Core</GroupName>
           <Files>
             <File>
-              <FileName>tx_thread_context_restore.s</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_context_restore.s</FilePath>
+              <FileName>tx_thread_context_restore.S</FileName>
+              <FileType>2</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_context_restore.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_context_save.s</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_context_save.s</FilePath>
+              <FileName>tx_thread_context_save.S</FileName>
+              <FileType>2</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_context_save.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_control.s</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_control.s</FilePath>
+              <FileName>tx_thread_interrupt_control.S</FileName>
+              <FileType>2</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_control.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_disable.s</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_disable.s</FilePath>
+              <FileName>tx_thread_interrupt_disable.S</FileName>
+              <FileType>2</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_disable.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_restore.s</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_restore.s</FilePath>
+              <FileName>tx_thread_interrupt_restore.S</FileName>
+              <FileType>2</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_restore.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_schedule.s</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_schedule.s</FilePath>
+              <FileName>tx_thread_schedule.S</FileName>
+              <FileType>2</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_schedule.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_stack_build.s</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_stack_build.s</FilePath>
+              <FileName>tx_thread_stack_build.S</FileName>
+              <FileType>2</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_stack_build.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_system_return.s</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_system_return.s</FilePath>
+              <FileName>tx_thread_system_return.S</FileName>
+              <FileType>2</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_system_return.S</FilePath>
             </File>
             <File>
-              <FileName>tx_timer_interrupt.s</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_timer_interrupt.s</FilePath>
+              <FileName>tx_timer_interrupt.S</FileName>
+              <FileType>2</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_timer_interrupt.S</FilePath>
             </File>
             <File>
               <FileName>tx_initialize_high_level.c</FileName>
@@ -612,11 +602,6 @@
               <FileName>tx_initialize_kernel_setup.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_initialize_kernel_setup.c</FilePath>
-            </File>
-            <File>
-              <FileName>tx_misra.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_misra.c</FilePath>
             </File>
             <File>
               <FileName>tx_block_allocate.c</FileName>
@@ -1401,7 +1386,7 @@
             <File>
               <FileName>README.md</FileName>
               <FileType>5</FileType>
-              <FilePath>..\README.md</FilePath>
+              <FilePath>../README.md</FilePath>
             </File>
           </Files>
         </Group>

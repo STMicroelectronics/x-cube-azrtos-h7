@@ -25,8 +25,8 @@
 
 /* Disable ThreadX error checking.  */
 
-#ifndef TX_DISABLE_ERROR_CHECKING
-#define TX_DISABLE_ERROR_CHECKING
+#ifndef LX_DISABLE_ERROR_CHECKING
+#define LX_DISABLE_ERROR_CHECKING
 #endif
 
 
@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nor_flash_open                                  PORTABLE C      */ 
-/*                                                           6.1.3        */
+/*                                                           6.1.7        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -89,6 +89,9 @@
 /*  12-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            fixed compiler warnings,    */
 /*                                            resulting in version 6.1.3  */
+/*  06-02-2021     Bhupendra Naphade        Modified comment(s), and      */
+/*                                            updated product constants   */
+/*                                            resulting in version 6.1.7  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nor_flash_open(LX_NOR_FLASH  *nor_flash, CHAR *name, UINT (*nor_driver_initialize)(LX_NOR_FLASH *))
@@ -114,12 +117,12 @@ ULONG           *sector_word_ptr;
 ULONG           sector_word;
 #endif
 LX_NOR_FLASH   *tail_ptr;
-TX_INTERRUPT_SAVE_AREA
+LX_INTERRUPT_SAVE_AREA
 
     LX_PARAMETER_NOT_USED(name);
 
     /* Clear the NOR flash control block.  */
-    TX_MEMSET(nor_flash, 0, sizeof(LX_NOR_FLASH));
+    LX_MEMSET(nor_flash, 0, sizeof(LX_NOR_FLASH));
    
     /* Call the flash driver's initialization function.  */
     (nor_driver_initialize)(nor_flash);
@@ -814,7 +817,7 @@ TX_INTERRUPT_SAVE_AREA
     status =  tx_mutex_create(&nor_flash -> lx_nor_flash_mutex, "NOR Flash Mutex", TX_NO_INHERIT);
 
     /* Determine if the mutex creation encountered an error.  */
-    if (status != TX_SUCCESS)
+    if (status != LX_SUCCESS)
     {
     
         /* Call system error handler, since this should not happen.  */
@@ -833,7 +836,7 @@ TX_INTERRUPT_SAVE_AREA
     nor_flash -> lx_nor_flash_found_sector_search =  0;
 
     /* Lockout interrupts.  */
-    TX_DISABLE
+    LX_DISABLE
 
     /* At this point, the NOR flash has been opened successfully.  Place the 
        NOR flash control block on the linked list of currently opened NOR flashes.  */
@@ -872,7 +875,7 @@ TX_INTERRUPT_SAVE_AREA
     _lx_nor_flash_opened_count++;
 
     /* Restore interrupts.  */
-    TX_RESTORE
+    LX_RESTORE
 
     /* Return a successful completion.  */
     return(LX_SUCCESS);

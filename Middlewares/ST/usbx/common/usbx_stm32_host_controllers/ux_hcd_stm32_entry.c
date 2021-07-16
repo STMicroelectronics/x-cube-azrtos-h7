@@ -12,8 +12,8 @@
 
 /**************************************************************************/
 /**************************************************************************/
-/**                                                                       */ 
-/** USBX Component                                                        */ 
+/**                                                                       */
+/** USBX Component                                                        */
 /**                                                                       */
 /**   STM32 Controller Driver                                             */
 /**                                                                       */
@@ -30,60 +30,60 @@
 #include "ux_hcd_stm32.h"
 #include "ux_host_stack.h"
 
-/**************************************************************************/ 
-/*                                                                        */ 
-/*  FUNCTION                                               RELEASE        */ 
-/*                                                                        */ 
-/*    _ux_hcd_stm32_entry                                 PORTABLE C      */ 
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _ux_hcd_stm32_entry                                 PORTABLE C      */
 /*                                                           6.x          */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
 /*                                                                        */
 /*  DESCRIPTION                                                           */
-/*                                                                        */ 
+/*                                                                        */
 /*    This function dispatch the HCD function internally to the STM32     */
-/*    controller driver.                                                  */ 
-/*                                                                        */ 
-/*  INPUT                                                                 */ 
-/*                                                                        */ 
-/*    HCD                                   Pointer to HCD                */ 
-/*    function                              Function for driver to perform*/ 
-/*    parameter                             Pointer to parameter(s)       */ 
-/*                                                                        */ 
-/*  OUTPUT                                                                */ 
-/*                                                                        */ 
-/*    Completion Status                                                   */ 
-/*                                                                        */ 
-/*  CALLS                                                                 */ 
-/*                                                                        */ 
-/*    _ux_hcd_stm32_asynchronous_endpoint_create  Create async endpoint   */ 
-/*    _ux_hcd_stm32_asynchronous_endpoint_destroy Destroy async endpoint  */ 
-/*    _ux_hcd_stm32_controller_disable            Disable controller      */ 
-/*    _ux_hcd_stm32_endpoint_reset                Reset endpoint          */ 
-/*    _ux_hcd_stm32_frame_number_get              Get frame number        */ 
-/*    _ux_hcd_stm32_interrupt_endpoint_create     Create endpoint         */ 
-/*    _ux_hcd_stm32_periodic_endpoint_destroy     Destroy endpoint        */ 
-/*    _ux_hcd_stm32_periodic_schedule             Schedule periodic       */ 
-/*    _ux_hcd_stm32_port_enable                   Enable port             */ 
-/*    _ux_hcd_stm32_port_disable                  Disable port            */ 
-/*    _ux_hcd_stm32_port_reset                    Reset port              */ 
-/*    _ux_hcd_stm32_port_resume                   Resume port             */ 
-/*    _ux_hcd_stm32_port_status_get               Get port status         */ 
-/*    _ux_hcd_stm32_port_suspend                  Suspend port            */ 
-/*    _ux_hcd_stm32_power_down_port               Power down port         */ 
-/*    _ux_hcd_stm32_power_on_port                 Power on port           */ 
-/*    _ux_hcd_stm32_request_transfer              Request transfer        */ 
-/*    _ux_hcd_stm32_transfer_abort                Abort transfer          */ 
-/*                                                                        */ 
-/*  CALLED BY                                                             */ 
-/*                                                                        */ 
-/*    Host Stack                                                          */ 
-/*                                                                        */ 
-/*  RELEASE HISTORY                                                       */ 
-/*                                                                        */ 
-/*    DATE              NAME                      DESCRIPTION             */ 
-/*                                                                        */ 
+/*    controller driver.                                                  */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    HCD                                   Pointer to HCD                */
+/*    function                              Function for driver to perform*/
+/*    parameter                             Pointer to parameter(s)       */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    Completion Status                                                   */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_hcd_stm32_asynchronous_endpoint_create  Create async endpoint   */
+/*    _ux_hcd_stm32_asynchronous_endpoint_destroy Destroy async endpoint  */
+/*    _ux_hcd_stm32_controller_disable            Disable controller      */
+/*    _ux_hcd_stm32_endpoint_reset                Reset endpoint          */
+/*    _ux_hcd_stm32_frame_number_get              Get frame number        */
+/*    _ux_hcd_stm32_interrupt_endpoint_create     Create endpoint         */
+/*    _ux_hcd_stm32_periodic_endpoint_destroy     Destroy endpoint        */
+/*    _ux_hcd_stm32_periodic_schedule             Schedule periodic       */
+/*    _ux_hcd_stm32_port_enable                   Enable port             */
+/*    _ux_hcd_stm32_port_disable                  Disable port            */
+/*    _ux_hcd_stm32_port_reset                    Reset port              */
+/*    _ux_hcd_stm32_port_resume                   Resume port             */
+/*    _ux_hcd_stm32_port_status_get               Get port status         */
+/*    _ux_hcd_stm32_port_suspend                  Suspend port            */
+/*    _ux_hcd_stm32_power_down_port               Power down port         */
+/*    _ux_hcd_stm32_power_on_port                 Power on port           */
+/*    _ux_hcd_stm32_request_transfer              Request transfer        */
+/*    _ux_hcd_stm32_transfer_abort                Abort transfer          */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Host Stack                                                          */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  xx-xx-xxxx     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.x    */
@@ -109,7 +109,7 @@ UX_INT_SAVE_AREA
 
         return(UX_CONTROLLER_UNKNOWN);
     }
-            
+
     /* Get the pointer to the STM32 HCD.  */
     hcd_stm32 =  (UX_HCD_STM32 *) hcd -> ux_hcd_controller_hardware;
 
@@ -127,14 +127,14 @@ UX_INT_SAVE_AREA
 
         status =  _ux_hcd_stm32_port_status_get(hcd_stm32, (ULONG) parameter);
         break;
-    
-    
+
+
     case UX_HCD_ENABLE_PORT:
-    
+
         status =  _ux_hcd_stm32_port_enable(hcd_stm32, (ULONG) parameter);
         break;
-    
-    
+
+
     case UX_HCD_DISABLE_PORT:
 
         status =  _ux_hcd_stm32_port_disable(hcd_stm32, (ULONG) parameter);
@@ -142,7 +142,7 @@ UX_INT_SAVE_AREA
 
 
     case UX_HCD_POWER_ON_PORT:
-        
+
         status =  _ux_hcd_stm32_power_on_port(hcd_stm32, (ULONG) parameter);
         break;
 
@@ -218,7 +218,7 @@ UX_INT_SAVE_AREA
         break;
 
     default:
-    
+
         /* Error trap. */
         _ux_system_error_handler(UX_SYSTEM_LEVEL_THREAD, UX_SYSTEM_CONTEXT_HCD, UX_FUNCTION_NOT_SUPPORTED);
 
@@ -228,9 +228,9 @@ UX_INT_SAVE_AREA
         /* Unknown request, return an error.  */
         status =  UX_FUNCTION_NOT_SUPPORTED;
         break;
-        
-    }        
-    
+
+    }
+
     /* Return completion status.  */
     return(status);
 }

@@ -48,6 +48,7 @@
 #define _NX_CRYPTO_PORT_H_
 #include <stdlib.h>
 #include <string.h>
+#include "cmsis_compiler.h"
 
 #ifdef NX_CRYPTO_STANDALONE_ENABLE
 

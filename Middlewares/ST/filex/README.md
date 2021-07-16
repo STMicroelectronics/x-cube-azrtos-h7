@@ -10,7 +10,7 @@ Documentation for this library can be found here: http://docs.microsoft.com/azur
 
 FileX supports the Microsoft exFAT file system format using the FX_ENABLE_EXFAT define. See [common/inc/fx_user_sample.h](common/inc/fx_user_sample.h) for more information about configuration of FileX.
 
-Your use of exFAT technology in your products requires a separate license from Microsoft. Please see the following link for further details on exFAT licensing: https://www.microsoft.com/en-us/legal/intellectualproperty/tech-licensing/programs?activetab=pivot1:primaryr5
+The Azure RTOS FileX implementation of exFAT technology is licensed when used in [listed components](https://github.com/azure-rtos/filex/blob/master/LICENSED-HARDWARE.txt) obtained through a licensed partner.  Other implementations of exFAT technology in your products may require a separate license from Microsoft.  Please see the following link for further details on exFAT licensing from Microsoft [here](https://www.microsoft.com/en-us/legal/intellectualproperty/tech-licensing/programs?activetab=pivot1:primaryr5).
 
 # Understanding inter-component dependencies
 

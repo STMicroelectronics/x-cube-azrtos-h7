@@ -1,4 +1,4 @@
-;******************** (C) COPYRIGHT 2021 STMicroelectronics ********************
+;******************** (C) COPYRIGHT 2019 STMicroelectronics ********************
 ;* File Name          : startup_stm32h735xx.s
 ;* @author  MCD Application Team
 ;* Description        : STM32H7xx devices vector table for MDK-ARM toolchain. 
@@ -14,7 +14,7 @@
 ;******************************************************************************
 ;* @attention
 ;*
-;* Copyright (c) 2021 STMicroelectronics.
+;* Copyright (c) 2019 STMicroelectronics.
 ;* All rights reserved.
 ;*
 ;* This software component is licensed by ST under BSD 3-Clause license,

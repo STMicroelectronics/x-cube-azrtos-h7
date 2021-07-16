@@ -152,6 +152,11 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart_ex.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/Core/app_threadx.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/app_threadx.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/Core/main.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/main.c</locationURI>
@@ -1520,26 +1525,6 @@
 			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_tcp_window_scaling_option_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_tcp_window_scaling_option_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_trace_event_insert.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_trace_event_insert.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_trace_event_update.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_trace_event_update.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_trace_object_register.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_trace_object_register.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_trace_object_unregister.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_trace_object_unregister.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_udp_bind_cleanup.c</name>

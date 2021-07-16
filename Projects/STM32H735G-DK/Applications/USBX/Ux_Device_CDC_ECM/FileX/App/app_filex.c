@@ -60,17 +60,19 @@
 UINT App_FileX_Init(VOID *memory_ptr)
 {
   UINT ret = FX_SUCCESS;
-
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-  /* USER CODE BEGIN App_FileX_Init */
+  /* USER CODE BEGIN App_FileX_MEM_POOL */
+  (void)byte_pool;
+  /* USER CODE END App_FileX_MEM_POOL */
 
-  UNUSED(byte_pool);
+  /* USER CODE BEGIN App_FileX_Init */
 
   /* Initialize the FILEX system.  */
   fx_system_initialize();
 
   /* USER CODE END App_FileX_Init */
+
   return ret;
 }
 

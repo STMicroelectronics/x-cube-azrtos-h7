@@ -38,6 +38,7 @@
 /* USER CODE BEGIN PD */
 #define SD_READ_FLAG                         0x01
 #define SD_WRITE_FLAG                        0x02
+#define SD_TIMEOUT                           100
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -63,10 +64,7 @@ static int32_t check_sd_status(uint32_t instance);
   * @param arg: Not used
   * @retval status
   */
-UINT  app_usb_device_thread_media_status(VOID *storage, ULONG lun,
-                                         UCHAR *data_pointer,
-                                         ULONG number_blocks, ULONG lba,
-                                         ULONG *media_status)
+UINT STORAGE_Status(VOID *storage, ULONG lun, ULONG media_id, ULONG *media_status)
 {
 
   /* The ATA drive never fails. This is just for app_usb_device only !!!! */
@@ -83,10 +81,8 @@ UINT  app_usb_device_thread_media_status(VOID *storage, ULONG lun,
   * @param  media_status: Not used
   * @retval Status (0 : OK / -1 : Error)
   */
-UINT  app_usb_device_thread_media_read(VOID *storage, ULONG lun,
-                                       UCHAR *data_pointer,
-                                       ULONG number_blocks,
-                                       ULONG lba, ULONG *media_status)
+UINT STORAGE_Read(VOID *storage, ULONG lun, UCHAR *data_pointer,
+                  ULONG number_blocks, ULONG lba, ULONG *media_status)
 {
   UINT status = 0U;
   ULONG ReadFlags = 0U;
@@ -122,10 +118,8 @@ UINT  app_usb_device_thread_media_read(VOID *storage, ULONG lun,
   * @param  media_status: Not used
   * @retval Status (0 : OK / -1 : Error)
   */
-UINT  app_usb_device_thread_media_write(VOID *storage, ULONG lun,
-                                        UCHAR *data_pointer,
-                                        ULONG number_blocks,
-                                        ULONG lba, ULONG *media_status)
+UINT STORAGE_Write(VOID *storage, ULONG lun, UCHAR *data_pointer,
+                   ULONG number_blocks, ULONG lba, ULONG *media_status)
 {
 
   UINT status = 0U;
@@ -189,7 +183,7 @@ static int32_t check_sd_status(uint32_t Instance)
 {
   uint32_t start = tx_time_get();
 
-  while (tx_time_get() - start < 100)
+  while (tx_time_get() - start < SD_TIMEOUT)
   {
     if (BSP_SD_GetCardState(Instance) == SD_TRANSFER_OK)
     {

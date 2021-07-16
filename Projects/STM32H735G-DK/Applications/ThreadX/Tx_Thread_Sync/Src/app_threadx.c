@@ -39,7 +39,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#ifdef __GNUC__
+#if defined ( __GNUC__) && !defined(__clang__)
 /* With GCC, small printf (option LD Linker->Libraries->Small printf
    set to 'Yes') calls __io_putchar() */
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
@@ -64,6 +64,7 @@ VOID ThreadTwo_Entry(ULONG thread_input);
 static VOID Led_Toggle(Led_TypeDef led, UINT iter);
 static VOID App_Delay(ULONG Delay);
 /* USER CODE END PFP */
+
 /**
   * @brief  Application ThreadX Initialization.
   * @param memory_ptr: memory pointer
@@ -73,6 +74,9 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
 {
   UINT ret = TX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+
+  /* USER CODE BEGIN App_ThreadX_MEM_POOL */
+  /* USER CODE END App_ThreadX_MEM_POOL */
 
   /* USER CODE BEGIN App_ThreadX_Init */
   CHAR *pointer;

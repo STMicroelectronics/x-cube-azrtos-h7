@@ -353,8 +353,8 @@
                 <option>
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$/../AZURE_RTOS/App</state>
-                    <state>$PROJ_DIR$/../NetXDuo/App</state>
                     <state>$PROJ_DIR$/../Core/Inc</state>
+                    <state>$PROJ_DIR$/../NetXDuo/App</state>
                     <state>$PROJ_DIR$/../NetXDuo/Target</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy</state>
@@ -1100,6 +1100,9 @@
             </group>
             <group>
                 <name>Core</name>
+                <file>
+                    <name>$PROJ_DIR$\..\Core\Src\app_threadx.c</name>
+                </file>
                 <file>
                     <name>$PROJ_DIR$\..\Core\Src\main.c</name>
                 </file>
@@ -2038,18 +2041,6 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_window_scaling_option_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_trace_event_insert.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_trace_event_update.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_trace_object_register.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_trace_object_unregister.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_udp_bind_cleanup.c</name>

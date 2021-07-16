@@ -146,7 +146,7 @@ UINT                   endpoint_type;
 
     /* Now we can safely make the ED free.  */
     ed -> ux_stm32_ed_status =  UX_HCD_STM32_ED_STATUS_FREE;
-    
+
     /* Return successful completion.  */
     return(UX_SUCCESS);
 }

@@ -12,8 +12,8 @@
 
 /**************************************************************************/
 /**************************************************************************/
-/**                                                                       */ 
-/** USBX Component                                                        */ 
+/**                                                                       */
+/** USBX Component                                                        */
 /**                                                                       */
 /**   STM32 Controller Driver                                             */
 /**                                                                       */
@@ -31,43 +31,43 @@
 #include "ux_host_stack.h"
 
 
-/**************************************************************************/ 
-/*                                                                        */ 
-/*  FUNCTION                                               RELEASE        */ 
-/*                                                                        */ 
-/*    _ux_hcd_stm32_initialize                            PORTABLE C      */ 
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _ux_hcd_stm32_initialize                            PORTABLE C      */
 /*                                                           6.0          */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
 /*                                                                        */
 /*  DESCRIPTION                                                           */
-/*                                                                        */ 
-/*    This function initializes the STM32 HS USB host controller. This    */ 
-/*    is not for the OTG mode. It forces the chip in Host mode only.      */ 
-/*    For OTG support, the filex in the usbx_otg subdirectory must be     */ 
-/*    used.                                                               */ 
-/*                                                                        */ 
-/*  INPUT                                                                 */ 
-/*                                                                        */ 
-/*    HCD                                   Pointer to HCD                */ 
-/*                                                                        */ 
-/*  OUTPUT                                                                */ 
-/*                                                                        */ 
-/*    Completion Status                                                   */ 
-/*                                                                        */ 
-/*  CALLS                                                                 */ 
-/*                                                                        */ 
-/*    _ux_utility_memory_allocate             Allocate memory block       */ 
-/*                                                                        */ 
-/*  CALLED BY                                                             */ 
-/*                                                                        */ 
-/*    Host Stack                                                          */ 
-/*                                                                        */ 
-/*  RELEASE HISTORY                                                       */ 
-/*                                                                        */ 
-/*    DATE              NAME                      DESCRIPTION             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*    This function initializes the STM32 HS USB host controller. This    */
+/*    is not for the OTG mode. It forces the chip in Host mode only.      */
+/*    For OTG support, the filex in the usbx_otg subdirectory must be     */
+/*    used.                                                               */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    HCD                                   Pointer to HCD                */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    Completion Status                                                   */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_utility_memory_allocate             Allocate memory block       */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Host Stack                                                          */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*                                                                        */
 /**************************************************************************/
@@ -80,7 +80,7 @@ UX_HCD_STM32          *hcd_stm32;
     /* The controller initialized here is of STM32 type.  */
     hcd -> ux_hcd_controller_type =  UX_HCD_STM32_CONTROLLER;
 
-    /* Initialize the max bandwidth for periodic endpoints. On STM32, the spec says 
+    /* Initialize the max bandwidth for periodic endpoints. On STM32, the spec says
        no more than 90% to be allocated for periodic.  */
 #if UX_MAX_DEVICES > 1
     hcd -> ux_hcd_available_bandwidth =  UX_HCD_STM32_AVAILABLE_BANDWIDTH;
@@ -102,7 +102,7 @@ UX_HCD_STM32          *hcd_stm32;
 
     /* Set the state of the controller to HALTED first.  */
     hcd -> ux_hcd_status =  UX_HCD_STATUS_HALTED;
-    
+
     /* Initialize the number of channels.  */
     hcd_stm32 -> ux_hcd_stm32_nb_channels =  UX_HCD_STM32_MAX_NB_CHANNELS;
 
@@ -130,7 +130,7 @@ UX_HCD_STM32          *hcd_stm32;
     hcd -> ux_hcd_version =  0x200;
 #endif
 
-    /* The number of ports on the controller is fixed to 1. The number of ports needs to be reflected both 
+    /* The number of ports on the controller is fixed to 1. The number of ports needs to be reflected both
        for the generic HCD container and the local stm32 container.  */
     hcd -> ux_hcd_nb_root_hubs             =  UX_HCD_STM32_NB_ROOT_PORTS;
 

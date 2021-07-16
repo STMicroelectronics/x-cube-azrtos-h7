@@ -52,12 +52,12 @@
 void SystemClock_Config(void);
 static void MPU_Config(void);
 /* USER CODE BEGIN PFP */
-#ifdef __GNUC__
-  /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
-     set to 'Yes') calls __io_putchar() */
-  #define UART_DISPLAY int __io_putchar(int ch)
+#if defined ( __GNUC__) && !defined(__clang__)
+/* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
+   set to 'Yes') calls __io_putchar() */
+#define UART_DISPLAY int __io_putchar(int ch)
 #else
-  #define UART_DISPLAY int fputc(int ch, FILE *f)
+#define UART_DISPLAY int fputc(int ch, FILE *f)
 #endif /* __GNUC__ */
 /* USER CODE END PFP */
 
@@ -221,6 +221,7 @@ void MPU_Config(void)
   HAL_MPU_Enable(MPU_HFNMI_PRIVDEF);
 
 }
+
 /**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM6 interrupt took place, inside

@@ -44,7 +44,9 @@ extern "C" {
 
 #define USE_MEMORY_POOL_ALLOCATION               1
 
-#define UX_DEVICE_APP_MEM_POOL_SIZE              43008
+#define TX_APP_MEM_POOL_SIZE                     1024
+
+#define UX_DEVICE_APP_MEM_POOL_SIZE              42*1024
 
 /* USER CODE BEGIN EC */
 

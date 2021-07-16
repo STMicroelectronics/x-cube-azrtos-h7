@@ -224,7 +224,6 @@
         </option>
         <option>
           <name>CCDefines</name>
-          <state>UX_DISABLE_INCLUDE_SOURCE_CODE</state>
           <state>TX_INCLUDE_USER_DEFINE_FILE</state>
           <state>UX_INCLUDE_USER_DEFINE_FILE</state>
           <state>USE_HAL_DRIVER</state>
@@ -363,8 +362,6 @@
           <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Include</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/inc/</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/ports/generic/inc/</state>
-          <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/inc</state>
-          <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/ports/generic/inc</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/inc/</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/inc/</state>
@@ -1109,6 +1106,9 @@
         </file>
         <file>
           <name>$PROJ_DIR$\..\Core\Src\gpio.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\Core\Src\app_threadx.c</name>
         </file>
         <file>
           <name>$PROJ_DIR$\..\Core\Src\dma.c</name>

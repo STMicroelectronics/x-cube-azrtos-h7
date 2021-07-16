@@ -112,7 +112,7 @@
 
 /* #define FX_MAX_FAT_CACHE         16 */
 
-/* Defines the maximum size of long file names supported by FileX. The default value is 33.
+/* Defines the maximum size of long file names supported by FileX.
    The minimum value is 13 and the maximum value is 256.  */
 
 /* #define FX_MAX_LAST_NAME_LEN         256 */

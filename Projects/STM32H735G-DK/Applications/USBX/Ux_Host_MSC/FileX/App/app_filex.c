@@ -61,14 +61,17 @@ UCHAR Write_buffer[] = "USBX_STM32_Host_Mass_Storage";
 UINT App_FileX_Init(VOID *memory_ptr)
 {
   UINT ret = FX_SUCCESS;
-
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-  /* USER CODE BEGIN App_FileX_Init */
+  /* USER CODE BEGIN App_FileX_MEM_POOL */
   (void)byte_pool;
+  /* USER CODE END App_FileX_MEM_POOL */
+
+  /* USER CODE BEGIN App_FileX_Init */
   /* Initialize FileX.  */
   fx_system_initialize();
   /* USER CODE END App_FileX_Init */
+
   return ret;
 }
 

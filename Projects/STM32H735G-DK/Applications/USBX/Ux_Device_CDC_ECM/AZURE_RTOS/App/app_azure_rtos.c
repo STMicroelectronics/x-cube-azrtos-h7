@@ -47,6 +47,10 @@
 
 /* USER CODE END PV */
 #if (USE_MEMORY_POOL_ALLOCATION == 1)
+/* USER CODE BEGIN TX_Pool_Buffer */
+/* USER CODE END TX_Pool_Buffer */
+static UCHAR tx_byte_pool_buffer[TX_APP_MEM_POOL_SIZE];
+static TX_BYTE_POOL tx_app_byte_pool;
 
 /* USER CODE BEGIN FX_Pool_Buffer */
 /* USER CODE END FX_Pool_Buffer */
@@ -59,7 +63,7 @@ static UCHAR  nx_byte_pool_buffer[NX_APP_MEM_POOL_SIZE];
 static TX_BYTE_POOL nx_app_byte_pool;
 
 /* USER CODE BEGIN UX_Device_Pool_Buffer */
-/* Set usbx_pool start address to 0x24028000 */
+/* Set usbx_pool start address to 0x24036000 */
 #if defined ( __ICCARM__ ) /* IAR Compiler */
 #pragma location = 0x24036000
 #elif defined ( __CC_ARM ) /* MDK ARM Compiler */
@@ -75,16 +79,6 @@ static TX_BYTE_POOL ux_device_app_byte_pool;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-/* Error handler prototype */
-void Error_Handler(void);
-
-VOID os_delay(ULONG delay)
-{
-  ULONG start = tx_time_get();
-  while ((tx_time_get() - start) < delay)
-  {
-  }
-}
 /* USER CODE END PFP */
 
 /**
@@ -99,6 +93,32 @@ VOID tx_application_define(VOID *first_unused_memory)
     /* USER CODE END  tx_application_define_1 */
 #if (USE_MEMORY_POOL_ALLOCATION == 1)
   VOID *memory_ptr;
+
+  if (tx_byte_pool_create(&tx_app_byte_pool, "Tx App memory pool", tx_byte_pool_buffer, TX_APP_MEM_POOL_SIZE) != TX_SUCCESS)
+  {
+    /* USER CODE BEGIN TX_Byte_Pool_Error */
+    Error_Handler();
+    /* USER CODE END TX_Byte_Pool_Error */
+  }
+  else
+  {
+    /* USER CODE BEGIN TX_Byte_Pool_Success */
+
+    /* USER CODE END TX_Byte_Pool_Success */
+
+    memory_ptr = (VOID *)&tx_app_byte_pool;
+
+    if (App_ThreadX_Init(memory_ptr) != TX_SUCCESS)
+    {
+          /* USER CODE BEGIN  App_ThreadX_Init_Error */
+      Error_Handler();
+          /* USER CODE END  App_ThreadX_Init_Error */
+    }
+      /* USER CODE BEGIN  App_ThreadX_Init_Success */
+
+      /* USER CODE END  App_ThreadX_Init_Success */
+
+  }
 
   if (tx_byte_pool_create(&fx_app_byte_pool, "Fx App memory pool", fx_byte_pool_buffer, FX_APP_MEM_POOL_SIZE) != TX_SUCCESS)
   {
@@ -231,19 +251,6 @@ void MX_AZURE_RTOS_Init(void)
   /* USER CODE BEGIN  Kernel_Start_Error */
 
   /* USER CODE END  Kernel_Start_Error */
-}
-
-/**
-  * @brief  MX_AZURE_RTOS_Process
-  * @param  None
-  * @retval None
-  */
-void MX_AZURE_RTOS_Process(void)
-{
-  /* USER CODE BEGIN  1 */
-
-  /* USER CODE END  1 */
-
 }
 
 /* USER CODE BEGIN  2 */

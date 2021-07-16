@@ -76,8 +76,11 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
 {
   UINT ret = UX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
-  /* USER CODE BEGIN App_USBX_Device_Init */
 
+  /* USER CODE BEGIN App_USBX_Device_MEM_POOL */
+  /* USER CODE END App_USBX_Device_MEM_POOL */
+
+  /* USER CODE BEGIN App_USBX_Device_Init */
   CHAR *pointer;
   ULONG device_framework_hs_length;
   ULONG device_framework_fs_length;
@@ -123,7 +126,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   if (ret != UX_SUCCESS)
   {
     Error_Handler();
-    return ret;
   }
 
   /* Initialize the hid class parameters for the device. */
@@ -142,7 +144,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   if (ret != UX_SUCCESS)
   {
     Error_Handler();
-    return ret;
   }
 
   /* Put system definition stuff in here, e.g. thread creates and other assorted
@@ -165,7 +166,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   slice.  */
   tx_thread_create(&ux_hid_thread, "hid_usbx_app_thread_entry", usbx_hid_thread_entry, 1,
                    pointer, USBX_APP_STACK_SIZE, 20, 20, 1, TX_AUTO_START);
-
   /* USER CODE END App_USBX_Device_Init */
 
   return ret;
@@ -180,7 +180,7 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
 void usbx_app_thread_entry(ULONG arg)
 {
   /* Sleep for 100 ms */
-  tx_thread_sleep(0.1 * TX_TIMER_TICKS_PER_SECOND);
+  tx_thread_sleep(MS_TO_TICK(100));
 
   /* Initialization of USB device */
   MX_USB_Device_Init();

@@ -35,7 +35,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#if defined ( __GNUC__)
+#if defined ( __GNUC__) && !defined(__clang__)
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 #else
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
@@ -226,6 +226,7 @@ void MPU_Config(void)
   HAL_MPU_Enable(MPU_HFNMI_PRIVDEF);
 
 }
+
 /**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM6 interrupt took place, inside
@@ -255,12 +256,11 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
   BSP_LED_Off(LED_GREEN);
   while (1)
   {
     BSP_LED_Toggle(LED_RED);
-    HAL_Delay(1000);
+    HAL_Delay(100);
   }
   /* USER CODE END Error_Handler_Debug */
 }
@@ -278,6 +278,9 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  while(1)
+  {
+  }
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

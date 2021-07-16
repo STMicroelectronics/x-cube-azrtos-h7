@@ -1426,8 +1426,6 @@
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/inc/</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/ports/generic/inc/</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/inc/</state>
-          <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/inc</state>
-          <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/ports/generic/inc</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/inc/</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/inc/</state>
@@ -2222,6 +2220,9 @@
             <name>$PROJ_DIR$\..\CM7\Core\Src\gpio.c</name>
           </file>
           <file>
+            <name>$PROJ_DIR$\..\CM7\Core\Src\app_threadx.c</name>
+          </file>
+          <file>
             <name>$PROJ_DIR$\..\CM7\Core\Src\dma.c</name>
           </file>
           <file>
@@ -2387,665 +2388,1361 @@
   <group>
     <name>Middlewares</name>
     <group>
-      <name>USBX</name>
+      <name>ThreadX</name>
       <excluded>
         <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
       </excluded>
       <group>
-        <name>USB/USBX/UX Device CoreStack/RTOS_MODE</name>
+        <name>RTOS/ThreadX/Core</name>
         <excluded>
           <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
         </excluded>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_alternate_setting_get.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\ports\cortex_m7\iar\src\tx_thread_context_restore.s</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_alternate_setting_set.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\ports\cortex_m7\iar\src\tx_thread_context_save.s</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_class_register.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\ports\cortex_m7\iar\src\tx_thread_interrupt_control.s</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_class_unregister.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\ports\cortex_m7\iar\src\tx_thread_interrupt_disable.s</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_clear_feature.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\ports\cortex_m7\iar\src\tx_thread_interrupt_restore.s</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_configuration_get.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\ports\cortex_m7\iar\src\tx_thread_schedule.s</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_configuration_set.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\ports\cortex_m7\iar\src\tx_thread_stack_build.s</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_control_request_process.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\ports\cortex_m7\iar\src\tx_thread_system_return.s</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_descriptor_send.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\ports\cortex_m7\iar\src\tx_timer_interrupt.s</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_disconnect.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_initialize_high_level.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_endpoint_stall.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_initialize_kernel_enter.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_get_status.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_initialize_kernel_setup.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_host_wakeup.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\ports\cortex_m7\iar\src\tx_iar.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_initialize.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_block_allocate.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_interface_delete.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_block_pool_cleanup.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_interface_get.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_block_pool_create.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_interface_set.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_block_pool_delete.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_interface_start.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_block_pool_info_get.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_microsoft_extension_register.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_block_pool_initialize.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_set_feature.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_block_pool_prioritize.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_transfer_abort.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_block_release.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_transfer_all_request_abort.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_byte_allocate.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_transfer_request.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_byte_pool_cleanup.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_uninitialize.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_byte_pool_create.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_byte_pool_delete.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_byte_pool_info_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_byte_pool_initialize.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_byte_pool_prioritize.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_byte_pool_search.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_byte_release.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_event_flags_cleanup.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_event_flags_create.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_event_flags_delete.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_event_flags_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_event_flags_info_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_event_flags_initialize.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_event_flags_set.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_event_flags_set_notify.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_mutex_cleanup.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_mutex_create.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_mutex_delete.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_mutex_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_mutex_info_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_mutex_initialize.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_mutex_prioritize.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_mutex_priority_change.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_mutex_put.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_queue_cleanup.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_queue_create.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_queue_delete.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_queue_flush.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_queue_front_send.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_queue_info_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_queue_initialize.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_queue_prioritize.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_queue_receive.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_queue_send.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_queue_send_notify.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_semaphore_ceiling_put.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_semaphore_cleanup.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_semaphore_create.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_semaphore_delete.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_semaphore_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_semaphore_info_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_semaphore_initialize.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_semaphore_prioritize.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_semaphore_put.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_semaphore_put_notify.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_create.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_delete.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_entry_exit_notify.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_identify.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_info_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_initialize.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_preemption_change.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_priority_change.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_relinquish.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_reset.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_resume.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_shell_entry.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_sleep.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_stack_analyze.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_stack_error_handler.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_stack_error_notify.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_suspend.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_system_preempt_check.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_system_resume.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_system_suspend.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_terminate.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_time_slice.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_time_slice_change.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_timeout.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_thread_wait_abort.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_time_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_time_set.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_block_allocate.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_block_pool_create.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_block_pool_delete.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_block_pool_info_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_block_pool_prioritize.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_block_release.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_byte_allocate.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_byte_pool_create.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_byte_pool_delete.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_byte_pool_info_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_byte_pool_prioritize.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_byte_release.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_event_flags_create.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_event_flags_delete.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_event_flags_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_event_flags_info_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_event_flags_set.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_event_flags_set_notify.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_mutex_create.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_mutex_delete.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_mutex_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_mutex_info_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_mutex_prioritize.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_mutex_put.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_queue_create.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_queue_delete.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_queue_flush.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_queue_front_send.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_queue_info_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_queue_prioritize.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_queue_receive.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_queue_send.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_queue_send_notify.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_semaphore_ceiling_put.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_semaphore_create.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_semaphore_delete.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_semaphore_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_semaphore_info_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_semaphore_prioritize.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_semaphore_put.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_semaphore_put_notify.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_thread_create.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_thread_delete.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_thread_entry_exit_notify.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_thread_info_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_thread_preemption_change.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_thread_priority_change.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_thread_relinquish.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_thread_reset.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_thread_resume.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_thread_suspend.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_thread_terminate.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_thread_time_slice_change.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_thread_wait_abort.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_activate.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_change.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_create.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_deactivate.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_delete.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_expiration_process.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_info_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_initialize.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_system_activate.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_system_deactivate.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_timer_thread_entry.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_timer_activate.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_timer_change.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_timer_create.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_timer_deactivate.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_timer_delete.c</name>
+          <excluded>
+            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_timer_info_get.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
       </group>
-      <group>
-        <name>USB/USBX/UX Device Class HID</name>
-        <excluded>
-          <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-        </excluded>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_activate.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_control_request.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_deactivate.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_descriptor_send.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_entry.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_event_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_event_set.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_initialize.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_interrupt_thread.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_report_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_report_set.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_uninitialize.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-      </group>
+    </group>
+    <group>
+      <name>USBX</name>
+      <excluded>
+        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+      </excluded>
       <group>
         <name>USB/USBX/CoreSystem</name>
         <excluded>
           <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
         </excluded>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_debug_callback_register.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_debug_callback_register.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_debug_log.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_debug_log.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_delay_ms.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_delay_ms.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_descriptor_pack.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_descriptor_pack.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_descriptor_parse.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_descriptor_parse.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_error_callback_register.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_error_callback_register.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_event_flags_create.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_event_flags_create.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_event_flags_delete.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_event_flags_delete.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_event_flags_get.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_event_flags_get.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_event_flags_set.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_event_flags_set.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_long_get.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_long_get.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_long_get_big_endian.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_long_get_big_endian.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_long_put.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_long_put.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_long_put_big_endian.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_long_put_big_endian.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_memory_allocate.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_memory_allocate.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_memory_allocate_add_safe.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_memory_allocate_add_safe.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_memory_allocate_mulc_safe.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_memory_allocate_mulc_safe.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_memory_allocate_mulv_safe.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_memory_allocate_mulv_safe.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_memory_compare.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_memory_compare.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_memory_copy.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_memory_copy.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_memory_free.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_memory_free.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_memory_free_block_best_get.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_memory_free_block_best_get.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_memory_set.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_memory_set.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_mutex_create.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_mutex_create.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_mutex_delete.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_mutex_delete.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_mutex_off.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_mutex_off.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_mutex_on.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_mutex_on.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_pci_class_scan.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_pci_class_scan.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_pci_read.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_pci_read.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_pci_write.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_pci_write.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_physical_address.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_physical_address.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_semaphore_create.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_semaphore_create.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_semaphore_delete.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_semaphore_delete.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_semaphore_get.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_semaphore_get.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_semaphore_put.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_semaphore_put.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_set_interrupt_handler.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_set_interrupt_handler.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_short_get.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_short_get.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_short_get_big_endian.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_short_get_big_endian.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_short_put.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_short_put.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_short_put_big_endian.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_short_put_big_endian.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_string_length_check.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_string_length_check.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_string_length_get.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_string_length_get.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_string_to_unicode.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_string_to_unicode.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_thread_create.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_thread_create.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_thread_delete.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_thread_delete.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_thread_identify.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_thread_identify.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_thread_relinquish.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_thread_relinquish.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_thread_resume.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_thread_resume.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_thread_schedule_other.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_thread_schedule_other.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_thread_sleep.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_thread_sleep.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_thread_suspend.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_thread_suspend.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_timer_create.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_timer_create.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_unicode_to_string.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_unicode_to_string.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_virtual_address.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_virtual_address.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_system_error_handler.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_system_error_handler.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_system_initialize.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_system_initialize.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/src/ux_system_uninitialize.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-      </group>
-      <group>
-        <name>USB/USBX/UX Device Controllers</name>
-        <excluded>
-          <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-        </excluded>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_callback.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_endpoint_create.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_endpoint_destroy.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_endpoint_reset.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_endpoint_stall.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_endpoint_status.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_frame_number_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_function.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_initialize.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_initialize_complete.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_interrupt_handler.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_transfer_request.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_uninitialize.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_system_uninitialize.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
@@ -3057,1081 +3754,385 @@
           <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
         </excluded>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_activate.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_activate.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_bulkin_thread.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_bulkin_thread.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_bulkout_thread.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_bulkout_thread.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_control_request.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_control_request.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_deactivate.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_deactivate.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_entry.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_entry.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_initialize.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_initialize.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_ioctl.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_ioctl.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_read.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_read.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_unitialize.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_unitialize.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_write.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_write.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_write_with_callback.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_write_with_callback.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
       </group>
-    </group>
-    <group>
-      <name>ThreadX</name>
-      <excluded>
-        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-      </excluded>
       <group>
-        <name>RTOS/ThreadX/Core</name>
+        <name>USB/USBX/UX Device Class HID</name>
         <excluded>
           <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
         </excluded>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/src/tx_thread_context_restore.s</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_activate.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/src/tx_thread_context_save.s</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_control_request.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/src/tx_thread_interrupt_control.s</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_deactivate.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/src/tx_thread_interrupt_disable.s</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_descriptor_send.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/src/tx_thread_interrupt_restore.s</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_entry.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/src/tx_thread_schedule.s</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_event_get.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/src/tx_thread_stack_build.s</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_event_set.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/src/tx_thread_system_return.s</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_initialize.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/src/tx_timer_interrupt.s</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_interrupt_thread.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_initialize_high_level.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_report_get.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_initialize_kernel_enter.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_report_set.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_initialize_kernel_setup.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_uninitialize.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
+      </group>
+      <group>
+        <name>USB/USBX/UX Device Controllers</name>
+        <excluded>
+          <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+        </excluded>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/src/tx_iar.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_callback.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_block_allocate.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_endpoint_create.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_block_pool_cleanup.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_endpoint_destroy.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_block_pool_create.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_endpoint_reset.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_block_pool_delete.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_endpoint_stall.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_block_pool_info_get.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_endpoint_status.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_block_pool_initialize.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_frame_number_get.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_block_pool_prioritize.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_function.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_block_release.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_initialize.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_byte_allocate.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_initialize_complete.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_byte_pool_cleanup.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_interrupt_handler.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_byte_pool_create.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_transfer_request.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_byte_pool_delete.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_uninitialize.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
+      </group>
+      <group>
+        <name>USB/USBX/UX Device CoreStack/RTOS_MODE</name>
+        <excluded>
+          <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+        </excluded>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_byte_pool_info_get.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_alternate_setting_get.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_byte_pool_initialize.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_alternate_setting_set.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_byte_pool_prioritize.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_class_register.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_byte_pool_search.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_class_unregister.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_byte_release.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_clear_feature.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_event_flags_cleanup.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_configuration_get.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_event_flags_create.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_configuration_set.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_event_flags_delete.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_control_request_process.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_event_flags_get.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_descriptor_send.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_event_flags_info_get.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_disconnect.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_event_flags_initialize.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_endpoint_stall.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_event_flags_set.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_get_status.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_event_flags_set_notify.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_host_wakeup.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_mutex_cleanup.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_initialize.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_mutex_create.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_interface_delete.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_mutex_delete.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_interface_get.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_mutex_get.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_interface_set.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_mutex_info_get.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_interface_start.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_mutex_initialize.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_microsoft_extension_register.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_mutex_prioritize.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_set_feature.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_mutex_priority_change.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_transfer_abort.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_mutex_put.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_transfer_all_request_abort.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_queue_cleanup.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_transfer_request.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_queue_create.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_queue_delete.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_queue_flush.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_queue_front_send.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_queue_info_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_queue_initialize.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_queue_prioritize.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_queue_receive.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_queue_send.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_queue_send_notify.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_semaphore_ceiling_put.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_semaphore_cleanup.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_semaphore_create.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_semaphore_delete.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_semaphore_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_semaphore_info_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_semaphore_initialize.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_semaphore_prioritize.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_semaphore_put.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_semaphore_put_notify.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_create.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_delete.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_entry_exit_notify.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_identify.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_info_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_initialize.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_preemption_change.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_priority_change.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_relinquish.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_reset.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_resume.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_shell_entry.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_sleep.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_stack_analyze.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_stack_error_handler.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_stack_error_notify.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_suspend.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_system_preempt_check.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_system_resume.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_system_suspend.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_terminate.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_time_slice.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_time_slice_change.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_timeout.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_wait_abort.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_time_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_time_set.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_block_allocate.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_block_pool_create.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_block_pool_delete.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_block_pool_info_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_block_pool_prioritize.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_block_release.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_byte_allocate.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_byte_pool_create.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_byte_pool_delete.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_byte_pool_info_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_byte_pool_prioritize.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_byte_release.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_event_flags_create.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_event_flags_delete.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_event_flags_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_event_flags_info_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_event_flags_set.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_event_flags_set_notify.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_mutex_create.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_mutex_delete.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_mutex_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_mutex_info_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_mutex_prioritize.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_mutex_put.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_queue_create.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_queue_delete.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_queue_flush.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_queue_front_send.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_queue_info_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_queue_prioritize.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_queue_receive.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_queue_send.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_queue_send_notify.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_semaphore_ceiling_put.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_semaphore_create.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_semaphore_delete.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_semaphore_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_semaphore_info_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_semaphore_prioritize.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_semaphore_put.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_semaphore_put_notify.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_thread_create.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_thread_delete.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_thread_entry_exit_notify.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_thread_info_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_thread_preemption_change.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_thread_priority_change.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_thread_relinquish.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_thread_reset.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_thread_resume.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_thread_suspend.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_thread_terminate.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_thread_time_slice_change.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_thread_wait_abort.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_timer_activate.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_timer_change.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_timer_create.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_timer_deactivate.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_timer_delete.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_timer_expiration_process.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_timer_info_get.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_timer_initialize.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_timer_system_activate.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_timer_system_deactivate.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_timer_thread_entry.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_timer_activate.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_timer_change.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_timer_create.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_timer_deactivate.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_timer_delete.c</name>
-          <excluded>
-            <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_timer_info_get.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_uninitialize.c</name>
           <excluded>
             <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
           </excluded>

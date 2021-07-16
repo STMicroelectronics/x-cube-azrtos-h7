@@ -83,8 +83,10 @@ static VOID os_delay(ULONG delay);
 UINT App_FileX_Init(VOID *memory_ptr)
 {
   UINT ret = FX_SUCCESS;
-
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+
+  /* USER CODE BEGIN App_FileX_MEM_POOL */
+  /* USER CODE END App_FileX_MEM_POOL */
 
   /* USER CODE BEGIN App_FileX_Init */
   CHAR *pointer;
@@ -112,6 +114,7 @@ UINT App_FileX_Init(VOID *memory_ptr)
   fx_system_initialize();
 
   /* USER CODE END App_FileX_Init */
+
   return ret;
 }
 
@@ -143,7 +146,7 @@ void fx_thread_entry(ULONG thread_input)
   }
 
   /* Print the absolute size of the NOR chip*/
-  printf("[Cortex-M4]: Total NOR Flash Chip size is: %lu bytes.\n", qspi_info.FlashSize);
+  printf("[Cortex-M4]: Total NOR Flash Chip size is: %lu bytes.\n", (unsigned long)qspi_info.FlashSize);
 
   /* Format the NOR flash as FAT */
   status =  fx_media_format(&nor_flash_disk,

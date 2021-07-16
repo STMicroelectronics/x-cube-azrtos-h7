@@ -162,6 +162,11 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart_ex.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/Core/app_threadx.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/app_threadx.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/Core/main.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/main.c</locationURI>
@@ -1757,26 +1762,6 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_tcp_window_scaling_option_get.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_trace_event_insert.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_trace_event_insert.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_trace_event_update.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_trace_event_update.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_trace_object_register.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_trace_object_register.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_trace_object_unregister.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_trace_object_unregister.c</locationURI>
-		</link>
-		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_udp_bind_cleanup.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_udp_bind_cleanup.c</locationURI>
@@ -3312,6 +3297,11 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_tls_packet_allocate.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_tls_packet_release.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_tls_packet_release.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_tls_process_certificate_request.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_tls_process_certificate_request.c</locationURI>
@@ -3815,6 +3805,11 @@
 			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_x509_find_certificate_methods.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_x509_find_certificate_methods.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_x509_find_curve_method.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_x509_find_curve_method.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_x509_free_certificate_get.c</name>

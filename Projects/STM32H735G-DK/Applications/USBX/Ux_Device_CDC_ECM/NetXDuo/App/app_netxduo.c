@@ -75,7 +75,7 @@ ALIGN_32BYTES(uint32_t DataBuffer[512]);
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 
-/* Set nx_server_pool start address to 0x24038000 */
+/* Set nx_server_pool start address to 0x24046000 */
 #if defined ( __ICCARM__ ) /* IAR Compiler */
 #pragma location = 0x24046000
 #elif defined ( __CC_ARM ) /* MDK ARM Compiler */
@@ -111,6 +111,10 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
 {
   UINT ret = NX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+
+  /* USER CODE BEGIN App_NetXDuo_MEM_POOL */
+
+  /* USER CODE END App_NetXDuo_MEM_POOL */
 
   /* USER CODE BEGIN App_NetXDuo_Init */
 
@@ -365,15 +369,13 @@ UINT webserver_request_notify_callback(NX_WEB_HTTP_SERVER *server_ptr,
 void nx_server_thread_entry(ULONG thread_input)
 {
   /* Sleep for 1s */
-  tx_thread_sleep(1 * TX_TIMER_TICKS_PER_SECOND);
-
+  tx_thread_sleep(MS_TO_TICK(1000)); 
+  
   /* HTTP WEB SERVER THREAD Entry */
   UINT    status;
   NX_PARAMETER_NOT_USED(thread_input);
 
-
   printf("Starting DHCP client...\n");
-
 
   /* Start the DHCP Client. */
   status = nx_dhcp_start(&DHCPClient);

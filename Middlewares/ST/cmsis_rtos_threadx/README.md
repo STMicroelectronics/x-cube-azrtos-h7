@@ -25,6 +25,25 @@ The list of features supported by the current implementation are as below:
 
 For more information about CMSIS-RTOS v2 APIs, please refer to the ARM manual: [CMSIS-RTOS API v2](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS.html)
 
+# Update history
+
+### V1.0.1 / 21-June-2021
+
+Main changes
+- Fix the remaining stack space calculation
+- Add the missing suspension state (TX_QUEUE_SUSP, TX_SEMAPHORE_SUSP, TX_EVENT_FLAG, TX_BLOCK_MEMORY, TX_BYTE_MEMORY, TX_IO_DRIVER, TX_FILE, TX_TCP_IP, TX_MUTEX_SUSP, TX_PRIORITY_CHANGE)
+
+Dependencies:
+- Azure RTOS ThreadX V6.1.7
+
+### V1.0.0 / 25-February-2021
+
+Main changes
+- First official release of CMSIS-RTOS v2 wrapper for ThreadX on STM32 MCU series
+
+Dependencies:
+- Azure RTOS ThreadX V6.1.3
+
 # CMSIS-RTOS v2 design
 
 ### Kernel Initialize and Start
@@ -137,7 +156,7 @@ Thread Flags are a more specialized version of the Event Flags. See Event Flags.
                     
 **Notes:**
  - Thread flag management functions cannot be called from Interrupt Service Routines, except for osThreadFlagsSet.
- - The Thread flag management functions are not supported in the current CMSIS RTOS v2 inmplementation and will be implemented in the future version.
+ - The Thread flag management functions are not supported in the current CMSIS RTOS v2 implementation and will be implemented in the future version.
 
 ### Event Flags
 
@@ -253,7 +272,7 @@ Freeing memory to the pool (using osMemoryPoolFree) simply rechains the block in
 
 **Notes:**
  - The functions osMemoryPoolAlloc, osMemoryPoolFree, osMemoryPoolGetCapacity, osMemoryPoolGetBlockSize, osMemoryPoolGetCount, osMemoryPoolGetSpace can be called from Interrupt Service Routines.
- - TheMemory Pool management functions are not supported in the current CMSIS RTOS v2 inmplementation and will be implemented in the future version.
+ - TheMemory Pool management functions are not supported in the current CMSIS RTOS v2 implementation and will be implemented in the future version.
 
 ### Message Queue
 

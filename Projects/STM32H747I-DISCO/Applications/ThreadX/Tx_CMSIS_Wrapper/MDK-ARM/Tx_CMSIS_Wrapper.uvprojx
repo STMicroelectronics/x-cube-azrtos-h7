@@ -10,14 +10,14 @@
       <TargetName>Tx_CMSIS_Wrapper_CM4</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <pCCUsed>6150000::V6.15::ARMCLANG</pCCUsed>
+      <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32H747XIHx:CM4</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32H7xx_DFP.2.7.0</PackID>
-          <PackURL>http://www.keil.com/pack/</PackURL>
+          <PackID>Keil.STM32H7xx_DFP.2.4.3</PackID>
+          <PackURL>https://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x10000000-0x10047FFF) IRAM2(0x18000000-0x1800FFFF) IROM(0x8100000-0x81FFFFF) CLOCK(12000000) FPU3(SFPU) CPUTYPE("Cortex-M4") TZ</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -54,7 +54,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>0</BrowseInformation>
+          <BrowseInformation>1</BrowseInformation>
           <ListingPath></ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -326,7 +326,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
-            <uGnu>0</uGnu>
+            <uGnu>1</uGnu>
             <useXO>0</useXO>
             <v6Lang>5</v6Lang>
             <v6LangP>3</v6LangP>
@@ -337,9 +337,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>CORE_CM4,USE_HAL_DRIVER,STM32H747xx,TX_INCLUDE_USER_DEFINE_FILE</Define>
+              <Define>CORE_CM4,USE_HAL_DRIVER,STM32H747xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../CM4/Inc;../../../../../../Drivers/BSP/STM32H747I-DISCO;../../../../../../Drivers/CMSIS/RTOS2/Include;../Common/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../CM4/Inc;../../../../../../Drivers/CMSIS/RTOS2/Include;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -352,9 +352,9 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <ClangAsOpt>4</ClangAsOpt>
+            <ClangAsOpt>1</ClangAsOpt>
             <VariousControls>
-              <MiscControls>--cpreproc</MiscControls>
+              <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
@@ -415,7 +415,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -494,7 +494,7 @@
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
                 <useXO>2</useXO>
-                <ClangAsOpt>0</ClangAsOpt>
+                <ClangAsOpt>1</ClangAsOpt>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -508,7 +508,7 @@
             <File>
               <FileName>app_tx_cmsisrtos.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../CM7/Src/app_tx_cmsisrtos.c</FilePath>
+              <FilePath>..\CM7\Src\app_tx_cmsisrtos.c</FilePath>
             </File>
             <File>
               <FileName>main.c</FileName>
@@ -555,46 +555,90 @@
               <FileType>1</FileType>
               <FilePath>../CM4/Src/stm32h7xx_hal_msp.c</FilePath>
             </File>
-            <File>
-              <FileName>stm32h7xx_hal_timebase_tim.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../CM4/Src/stm32h7xx_hal_timebase_tim.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Drivers/BSP/STM32H747I-DISCO</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>0</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>0</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <uGnu>2</uGnu>
+                <useXO>2</useXO>
+                <v6Lang>0</v6Lang>
+                <v6LangP>0</v6LangP>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>2</v6Lto>
+                <v6WtE>2</v6WtE>
+                <v6Rtti>2</v6Rtti>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <ClangAsOpt>0</ClangAsOpt>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
           <Files>
             <File>
               <FileName>stm32h747i_discovery.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../../../../../../Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery.c</FilePath>
+              <FilePath>..\..\..\..\..\..\Drivers\BSP\STM32H747I-DISCO\stm32h747i_discovery.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Drivers/STM32H7xx_HAL_Driver</GroupName>
           <Files>
-            <File>
-              <FileName>stm32h7xx_hal_uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32h7xx_hal_uart_ex.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart_ex.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32h7xx_hal_usart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_usart.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32h7xx_hal_usart_ex.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_usart_ex.c</FilePath>
-            </File>
             <File>
               <FileName>stm32h7xx_hal_cortex.c</FileName>
               <FileType>1</FileType>
@@ -685,6 +729,118 @@
               <FileType>1</FileType>
               <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32h7xx_hal_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <uGnu>2</uGnu>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>2</v6Lto>
+                    <v6WtE>2</v6WtE>
+                    <v6Rtti>2</v6Rtti>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>stm32h7xx_hal_uart_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart_ex.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <uGnu>2</uGnu>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>2</v6Lto>
+                    <v6WtE>2</v6WtE>
+                    <v6Rtti>2</v6Rtti>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -758,7 +914,7 @@
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
                 <useXO>2</useXO>
-                <ClangAsOpt>0</ClangAsOpt>
+                <ClangAsOpt>1</ClangAsOpt>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -770,9 +926,9 @@
           </GroupOption>
           <Files>
             <File>
-              <FileName>tx_thread_context_restore.s</FileName>
+              <FileName>tx_thread_context_restore.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_context_restore.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_context_restore.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -801,7 +957,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -813,9 +969,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>tx_thread_context_save.s</FileName>
+              <FileName>tx_thread_context_save.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_context_save.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_context_save.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -844,7 +1000,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -856,9 +1012,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_control.s</FileName>
+              <FileName>tx_thread_interrupt_control.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_control.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_control.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -887,7 +1043,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -899,9 +1055,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_disable.s</FileName>
+              <FileName>tx_thread_interrupt_disable.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_disable.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_disable.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -930,7 +1086,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -942,9 +1098,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_restore.s</FileName>
+              <FileName>tx_thread_interrupt_restore.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_restore.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_restore.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -973,7 +1129,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -985,9 +1141,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>tx_thread_schedule.s</FileName>
+              <FileName>tx_thread_schedule.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_schedule.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_schedule.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -1016,7 +1172,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1028,9 +1184,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>tx_thread_stack_build.s</FileName>
+              <FileName>tx_thread_stack_build.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_stack_build.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_stack_build.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -1059,7 +1215,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1071,9 +1227,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>tx_thread_system_return.s</FileName>
+              <FileName>tx_thread_system_return.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_system_return.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_system_return.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -1102,7 +1258,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1114,9 +1270,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>tx_timer_interrupt.s</FileName>
+              <FileName>tx_timer_interrupt.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_timer_interrupt.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_timer_interrupt.S</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -1145,7 +1301,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1272,62 +1428,6 @@
               <FileName>tx_initialize_kernel_setup.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_initialize_kernel_setup.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>tx_misra.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_misra.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -10025,7 +10125,7 @@
             <File>
               <FileName>cmsis_os2.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/cmsis_rtos_threadx/cmsis_os2.c</FilePath>
+              <FilePath>..\..\..\..\..\..\Middlewares\ST\cmsis_rtos_threadx\cmsis_os2.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -10035,7 +10135,7 @@
             <File>
               <FileName>README.md</FileName>
               <FileType>5</FileType>
-              <FilePath>..\README.md</FilePath>
+              <FilePath>../README.md</FilePath>
             </File>
           </Files>
         </Group>
@@ -10048,14 +10148,14 @@
       <TargetName>Tx_CMSIS_Wrapper_CM7</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <pCCUsed>6150000::V6.15::ARMCLANG</pCCUsed>
+      <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32H747XIHx:CM7</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32H7xx_DFP.2.7.0</PackID>
-          <PackURL>http://www.keil.com/pack/</PackURL>
+          <PackID>Keil.STM32H7xx_DFP.2.4.3</PackID>
+          <PackURL>https://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000-0x2001FFFF) IRAM2(0x00000000-0xFFFF) IROM(0x8000000-0x80FFFFF) CLOCK(12000000) FPU3(DFPU) CPUTYPE("Cortex-M7") ELITTLE TZ</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -10092,7 +10192,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>0</BrowseInformation>
+          <BrowseInformation>1</BrowseInformation>
           <ListingPath></ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -10176,7 +10276,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -10364,7 +10464,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
-            <uGnu>0</uGnu>
+            <uGnu>1</uGnu>
             <useXO>0</useXO>
             <v6Lang>5</v6Lang>
             <v6LangP>3</v6LangP>
@@ -10377,7 +10477,7 @@
               <MiscControls></MiscControls>
               <Define>CORE_CM7,TX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H747xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../CM7/Inc;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/inc/;../../../../../../Drivers/BSP/STM32H747I-DISCO;../../../../../../Drivers/CMSIS/RTOS2/Include;../Common/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../CM7/Inc;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H747I-DISCO;../../../../../../Drivers/CMSIS/RTOS2/Include;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -10390,9 +10490,9 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <ClangAsOpt>4</ClangAsOpt>
+            <ClangAsOpt>1</ClangAsOpt>
             <VariousControls>
-              <MiscControls>--cpreproc</MiscControls>
+              <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
@@ -10458,7 +10558,7 @@
                     <NoWarn>2</NoWarn>
                     <uSurpInc>2</uSurpInc>
                     <useXO>2</useXO>
-                    <ClangAsOpt>0</ClangAsOpt>
+                    <ClangAsOpt>1</ClangAsOpt>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -10477,7 +10577,7 @@
             <File>
               <FileName>app_tx_cmsisrtos.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../CM7/Src/app_tx_cmsisrtos.c</FilePath>
+              <FilePath>..\CM7\Src\app_tx_cmsisrtos.c</FilePath>
             </File>
             <File>
               <FileName>main.c</FileName>
@@ -10567,7 +10667,7 @@
                 <NoWarn>2</NoWarn>
                 <uSurpInc>2</uSurpInc>
                 <useXO>2</useXO>
-                <ClangAsOpt>0</ClangAsOpt>
+                <ClangAsOpt>1</ClangAsOpt>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -10593,11 +10693,6 @@
               <FileType>1</FileType>
               <FilePath>../CM4/Src/stm32h7xx_hal_msp.c</FilePath>
             </File>
-            <File>
-              <FileName>stm32h7xx_hal_timebase_tim.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../CM4/Src/stm32h7xx_hal_timebase_tim.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -10606,33 +10701,13 @@
             <File>
               <FileName>stm32h747i_discovery.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../../../../../../Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery.c</FilePath>
+              <FilePath>..\..\..\..\..\..\Drivers\BSP\STM32H747I-DISCO\stm32h747i_discovery.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Drivers/STM32H7xx_HAL_Driver</GroupName>
           <Files>
-            <File>
-              <FileName>stm32h7xx_hal_uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32h7xx_hal_uart_ex.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart_ex.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32h7xx_hal_usart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_usart.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32h7xx_hal_usart_ex.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_usart_ex.c</FilePath>
-            </File>
             <File>
               <FileName>stm32h7xx_hal_cortex.c</FileName>
               <FileType>1</FileType>
@@ -10723,6 +10798,16 @@
               <FileType>1</FileType>
               <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32h7xx_hal_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32h7xx_hal_uart_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_uart_ex.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -10739,49 +10824,49 @@
           <GroupName>Middlewares/ThreadX/RTOS/ThreadX/Core</GroupName>
           <Files>
             <File>
-              <FileName>tx_thread_context_restore.s</FileName>
+              <FileName>tx_thread_context_restore.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_context_restore.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_context_restore.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_context_save.s</FileName>
+              <FileName>tx_thread_context_save.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_context_save.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_context_save.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_control.s</FileName>
+              <FileName>tx_thread_interrupt_control.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_control.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_control.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_disable.s</FileName>
+              <FileName>tx_thread_interrupt_disable.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_disable.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_disable.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_restore.s</FileName>
+              <FileName>tx_thread_interrupt_restore.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_restore.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_restore.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_schedule.s</FileName>
+              <FileName>tx_thread_schedule.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_schedule.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_schedule.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_stack_build.s</FileName>
+              <FileName>tx_thread_stack_build.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_stack_build.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_stack_build.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_system_return.s</FileName>
+              <FileName>tx_thread_system_return.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_system_return.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_system_return.S</FilePath>
             </File>
             <File>
-              <FileName>tx_timer_interrupt.s</FileName>
+              <FileName>tx_timer_interrupt.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_timer_interrupt.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_timer_interrupt.S</FilePath>
             </File>
             <File>
               <FileName>tx_initialize_high_level.c</FileName>
@@ -10797,11 +10882,6 @@
               <FileName>tx_initialize_kernel_setup.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_initialize_kernel_setup.c</FilePath>
-            </File>
-            <File>
-              <FileName>tx_misra.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_misra.c</FilePath>
             </File>
             <File>
               <FileName>tx_block_allocate.c</FileName>
@@ -11576,7 +11656,7 @@
             <File>
               <FileName>cmsis_os2.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/cmsis_rtos_threadx/cmsis_os2.c</FilePath>
+              <FilePath>..\..\..\..\..\..\Middlewares\ST\cmsis_rtos_threadx\cmsis_os2.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -11586,7 +11666,7 @@
             <File>
               <FileName>README.md</FileName>
               <FileType>5</FileType>
-              <FilePath>..\README.md</FilePath>
+              <FilePath>../README.md</FilePath>
             </File>
           </Files>
         </Group>
@@ -11600,8 +11680,8 @@
   <RTE>
     <apis/>
     <components>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="4.3.0" condition="CMSIS Core">
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="4.5.0"/>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.4.0" condition="ARMv6_7_8-M Device">
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.7.0"/>
         <targetInfos>
           <targetInfo name="Tx_CMSIS_Wrapper_CM4"/>
           <targetInfo name="Tx_CMSIS_Wrapper_CM7"/>

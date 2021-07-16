@@ -53,6 +53,10 @@
 /*                                            use builtins, added         */
 /*                                            ULONG64_DEFINED,            */
 /*                                            resulting in version 6.1.5  */
+/*  06-02-2021      Yuxin Zhou              Modified comment(s), added    */
+/*                                            conditional compilation     */
+/*                                            for ARMv8-M (Cortex M23/33) */
+/*                                            resulting in version 6.1.7  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -86,6 +90,12 @@ typedef unsigned long long                      ULONG64;
 typedef short                                   SHORT;
 typedef unsigned short                          USHORT;
 #define ULONG64_DEFINED
+
+/* This port overrides tx_thread_stack_error_notify with an architecture specific version */
+#define TX_PORT_THREAD_STACK_ERROR_NOTIFY
+
+/* This port overrides tx_thread_stack_error_handler with an architecture specific version */
+#define TX_PORT_THREAD_STACK_ERROR_HANDLER
 
 /* Function prototypes for this port. */
 struct  TX_THREAD_STRUCT;
@@ -416,7 +426,7 @@ unsigned int interrupt_save;
 }
 
 
-#define TX_INTERRUPT_SAVE_AREA  unsigned int interrupt_save;
+#define TX_INTERRUPT_SAVE_AREA                  UINT interrupt_save;
 
 #define TX_DISABLE                              interrupt_save =  __disable_interrupts();
 #define TX_RESTORE                              __restore_interrupts(interrupt_save);
@@ -429,7 +439,7 @@ unsigned int interrupt_save;
 
 #else
 
-#define TX_INTERRUPT_SAVE_AREA  unsigned int interrupt_save;
+#define TX_INTERRUPT_SAVE_AREA                  UINT interrupt_save;
 
 #define TX_DISABLE                              interrupt_save = _tx_thread_interrupt_control(TX_INT_DISABLE);
 #define TX_RESTORE                              _tx_thread_interrupt_control(interrupt_save);

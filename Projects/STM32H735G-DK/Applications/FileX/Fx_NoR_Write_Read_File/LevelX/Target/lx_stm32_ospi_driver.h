@@ -34,7 +34,7 @@ extern "C" {
 /* the OctoSPI instance ,default value set to 0 */
 #define OSPI_INSTANCE   0
 
-/* when set to 1, the BSP_OSPI_Init() is called by the driver, otherwise it is up to the application to initialize it */
+/* when set to 1, the OSPI init is done by the driver, otherwise it is up to the application to initialize it */
 #define LX_DRIVER_CALLS_OSPI_INIT 1
 
 #if (LX_DRIVER_CALLS_OSPI_INIT == 1)

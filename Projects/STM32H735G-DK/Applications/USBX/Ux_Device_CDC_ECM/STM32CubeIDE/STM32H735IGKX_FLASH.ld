@@ -6,7 +6,7 @@
 **  Author      : STM32CubeIDE
 **
 **  Abstract    : Linker script for STM32H7 series
-**                1024Kbytes FLASH and 192Kbytes RAM
+**                1024Kbytes FLASH and 560Kbytes RAM
 **
 **                Set heap size, stack size and stack location according
 **                to application requirements.
@@ -21,8 +21,8 @@
 *****************************************************************************
 ** @attention
 **
-** Copyright (c) 2020 STMicroelectronics.
-** All rights reserved.
+** <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
+** All rights reserved.</center></h2>
 **
 ** This software component is licensed by ST under BSD 3-Clause license,
 ** the "License"; You may not use this file except in compliance with the
@@ -45,7 +45,7 @@ _Min_Stack_Size = 0x400 ; /* required amount of stack */
 MEMORY
 {
   ITCMRAM (xrw)    : ORIGIN = 0x00000000,   LENGTH = 64K
-  RAM     (xrw)    : ORIGIN = 0x20000000,   LENGTH = 128K
+  DTCMRAM (xrw)    : ORIGIN = 0x20000000,   LENGTH = 128K
   FLASH    (rx)    : ORIGIN = 0x08000000,   LENGTH = 1024K
   RAM_D1  (xrw)    : ORIGIN = 0x24000000,   LENGTH = 320K
   RAM_D2  (xrw)    : ORIGIN = 0x30000000,   LENGTH = 32K
@@ -102,6 +102,7 @@ SECTIONS
     KEEP (*(.preinit_array*))
     PROVIDE_HIDDEN (__preinit_array_end = .);
   } >FLASH
+
   .init_array :
   {
     PROVIDE_HIDDEN (__init_array_start = .);
@@ -109,6 +110,7 @@ SECTIONS
     KEEP (*(.init_array*))
     PROVIDE_HIDDEN (__init_array_end = .);
   } >FLASH
+
   .fini_array :
   {
     PROVIDE_HIDDEN (__fini_array_start = .);
@@ -120,7 +122,7 @@ SECTIONS
   /* used by the startup to initialize data */
   _sidata = LOADADDR(.data);
 
-  /* Initialized data sections goes into RAM_D1, load LMA copy after code */
+  /* Initialized data sections goes into RAM, load LMA copy after code */
   .data :
   {
     . = ALIGN(4);
@@ -150,7 +152,7 @@ SECTIONS
     __bss_end__ = _ebss;
   } >RAM_D1
 
-  /* User_heap_stack section, used to check that there is enough RAM_D1 left */
+  /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :
   {
     . = ALIGN(8);
@@ -164,19 +166,16 @@ SECTIONS
   .usbx_data 0x24035000 (NOLOAD): 
   {  
     *(.UsbHpcdSection)
-    
   } >RAM_D1
   
   .uart_bss 0x24036000 (NOLOAD): 
   { 
-    *(.UsbxAppSection)
-    
+    *(.UsbxPoolSection)
   } >RAM_D1
   
   .NX_bss 0x24046000 (NOLOAD): 
   { 
     *(.NxServerPoolSection)
-    
   } >RAM_D1
 
   /* Remove information from the standard libraries */

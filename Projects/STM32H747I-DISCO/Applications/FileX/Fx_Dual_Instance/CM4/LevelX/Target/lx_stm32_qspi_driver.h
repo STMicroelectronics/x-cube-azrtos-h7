@@ -32,12 +32,12 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* the QuadSPI instance ,default value set to 0 */
-#define QSPI_INSTANCE   0
+#define QSPI_INSTANCE                       0
 
-#define DEFAULT_BLOCK_SIZE (4 * 1024)
+#define DEFAULT_BLOCK_SIZE                  (4 * 1024)
 
 /* when set to 1, the QSPI init is done by the driver, otherwise it is up to the application to initialize it */
-#define LX_DRIVER_CALLS_QSPI_INIT 1
+#define LX_DRIVER_CALLS_QSPI_INIT           1
 
 #if (LX_DRIVER_CALLS_QSPI_INIT == 1)
 
@@ -45,7 +45,7 @@ extern "C" {
  * the call is blocking and takes a while. by default it is set to 0.
  * When creating a fresh file system on the NOR Flash this flag should be enabled.
  */
-#define LX_DRIVER_ERASES_QSPI_AFTER_INIT  1
+#define LX_DRIVER_ERASES_QSPI_AFTER_INIT    1
 #endif
 
 /* USER CODE BEGIN EC */

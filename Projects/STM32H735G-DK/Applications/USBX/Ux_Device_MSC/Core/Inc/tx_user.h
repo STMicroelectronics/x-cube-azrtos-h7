@@ -208,21 +208,13 @@
 
 /*#define TX_TIMER_ENABLE_PERFORMANCE_INFO*/
 
-/* Define the clock source for trace event entry time stamp. */
-
-/*#define TX_TRACE_TIME_SOURCE  *((ULONG *) 0xE0001004)*/
-
-/* Define the clock source for trace mask. */
-
-/*#define TX_TRACE_TIME_MASK  0xFFFFFFFFUL*/
-
 /* Define if the execution change notify is enabled. */
 
 /*#define TX_ENABLE_EXECUTION_CHANGE_NOTIFY*/
 
 /* Define the get system state macro. */
 
-/*#define TX_THREAD_GET_SYSTEM_STATE */
+/*#define TX_THREAD_GET_SYSTEM_STATE()*/
 
 /* Define the check for whether or not to call the
     _tx_thread_system_return function (TX_THREAD_SYSTEM_RETURN_CHECK(c)). */
@@ -245,9 +237,10 @@
 
 /*#define TX_MEMSET  memset((a),(b),(c))*/
 
+#ifdef __IAR_SYSTEMS_ASM__
 /* Define if the IAR library is supported. */
-
 /*#define TX_ENABLE_IAR_LIBRARY_SUPPORT*/
+#endif
 
 /* Define if the safety critical configuration is enabled. */
 

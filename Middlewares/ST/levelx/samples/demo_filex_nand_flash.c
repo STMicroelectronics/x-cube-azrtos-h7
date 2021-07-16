@@ -40,20 +40,34 @@ FX_FILE                 my_file1;
 
 /* Define ThreadX global data structures.  */
 
+#ifndef LX_STANDALONE_ENABLE
 TX_THREAD       thread_0;
+#endif
 ULONG           thread_0_counter;
 
 
 int  main(void)
 {
-
     /* Enter the ThreadX kernel.  */
+#ifndef LX_STANDALONE_ENABLE
     tx_kernel_enter();
+#else
+
+    /* Initialize NAND flash.  */
+    lx_nand_flash_initialize();    
+    
+    /* Initialize FileX.  */
+    fx_system_initialize();
+
+    thread_0_entry(0);
+#endif
+
 }
 
 
 /* Define what the initial system looks like.  */
 
+#ifndef LX_STANDALONE_ENABLE
 void    tx_application_define(void *first_unused_memory)
 {
 
@@ -72,7 +86,7 @@ void    tx_application_define(void *first_unused_memory)
     /* Initialize FileX.  */
     fx_system_initialize();
 }
-
+#endif
 
 
 void    thread_0_entry(ULONG thread_input)

@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -679,7 +678,7 @@ osThreadId_t osThreadNew(osThreadFunc_t func, void *argument, const osThreadAttr
   /* The thread priority */
   UINT priority;
   /* The thread entry input */
-  ULONG *entry_input = NULL;
+  ULONG entry_input = 0;
 
   /* Check if this API is called from Interrupt Service Routines
      or the thread_id is NULL */
@@ -715,7 +714,7 @@ osThreadId_t osThreadNew(osThreadFunc_t func, void *argument, const osThreadAttr
       if (argument != NULL)
       {
         /* Set the entry_input */
-        entry_input = (ULONG *)argument;
+        entry_input = (ULONG) argument;
       }
 
       /* Check if the stack size is equal to 0 */
@@ -819,7 +818,7 @@ osThreadId_t osThreadNew(osThreadFunc_t func, void *argument, const osThreadAttr
       if (argument != NULL)
       {
         /* Set the entry_input */
-        entry_input = (ULONG *)argument;
+        entry_input = (ULONG) argument;
       }
 
       /* Allocate the stack for the thread to be created */
@@ -846,7 +845,7 @@ osThreadId_t osThreadNew(osThreadFunc_t func, void *argument, const osThreadAttr
        Note: By default the preempt_threshold shall be deactivated by setting
        its value to the priority or deactivated using
        TX_DISABLE_PREEMPTION_THRESHOLD */
-    if (tx_thread_create(thread_ptr, name_ptr, (void(*)(ULONG))func, *entry_input, stack_start, stack_size, priority,
+    if (tx_thread_create(thread_ptr, name_ptr, (void(*)(ULONG))func, entry_input, stack_start, stack_size, priority,
                          priority, TX_NO_TIME_SLICE, TX_AUTO_START) != TX_SUCCESS)
     {
       /* Check if the memory for thread control block has been internally
@@ -1012,6 +1011,16 @@ osThreadState_t osThreadGetState(osThreadId_t thread_id)
           }
           /* The thread is in SUSPENDED state */
           case TX_SUSPENDED:
+          case TX_QUEUE_SUSP:
+          case TX_SEMAPHORE_SUSP:
+          case TX_EVENT_FLAG:
+          case TX_BLOCK_MEMORY:
+          case TX_BYTE_MEMORY:
+          case TX_IO_DRIVER:
+          case TX_FILE:
+          case TX_TCP_IP:
+          case TX_MUTEX_SUSP:
+          case TX_PRIORITY_CHANGE:
           {
             state = osThreadBlocked;
             break;
@@ -1022,7 +1031,7 @@ osThreadState_t osThreadGetState(osThreadId_t thread_id)
             state = osThreadBlocked;
             break;
           }
-          /* The thread is in unkown state */
+          /* The thread is in unknown state */
           default:
           {
             state = osThreadError;
@@ -1061,7 +1070,7 @@ uint32_t osThreadGetStackSize(osThreadId_t thread_id)
   }
   else
   {
-    /* The stack_size get the alocated thread stack size in the thread creation step */
+    /* The stack_size get the allocated thread stack size in the thread creation step */
     stack_size = thread_ptr->tx_thread_stack_size;
   }
 
@@ -1095,8 +1104,8 @@ uint32_t osThreadGetStackSpace(osThreadId_t thread_id)
   else
   {
     /* Compute the remaining free stack size for the given thread */
-    remaining_stack_space = (unsigned int)((CHAR *)thread_ptr->tx_thread_stack_end -
-                                           (CHAR *)thread_ptr->tx_thread_stack_ptr);
+    remaining_stack_space = (unsigned int)((CHAR *)thread_ptr->tx_thread_stack_ptr -
+                                           (CHAR *)thread_ptr->tx_thread_stack_start);
   }
 
   return (remaining_stack_space);
@@ -1372,7 +1381,7 @@ __NO_RETURN void osThreadExit(void)
       tx_thread_terminate(thread_ptr);
     }
   }
-  /* Infinit loop */
+  /* Infinite loop */
   for (;;);
 }
 
@@ -1913,7 +1922,7 @@ osStatus_t osTimerStop(osTimerId_t timer_id)
     /* Return osErrorISR error */
     status = osErrorISR;
   }
-  /* Check if the timer control bloc is valid */
+  /* Check if the timer control block is valid */
   else if ((timer_id == NULL) || (timer_ptr->tx_timer_id != TX_TIMER_ID))
   {
     /* Return osErrorParameter error */
@@ -1984,7 +1993,7 @@ osStatus_t osTimerStart(osTimerId_t timer_id, uint32_t ticks)
     /* Return osErrorISR error */
     status = osErrorISR;
   }
-  /* Check if the timer control bloc is valid */
+  /* Check if the timer control block is valid */
   else if ((timer_id == NULL) || (timer_ptr->tx_timer_id != TX_TIMER_ID))
   {
     /* Return osErrorParameter error */
@@ -2079,7 +2088,7 @@ osStatus_t osTimerDelete(osTimerId_t timer_id)
     /* Return osErrorISR error */
     status = osErrorISR;
   }
-  /* Check if the timer control bloc is valid */
+  /* Check if the timer control block is valid */
   else if ((timer_id == NULL) || (timer_ptr->tx_timer_id != TX_TIMER_ID))
   {
     /* Return osErrorParameter error */
@@ -2253,7 +2262,7 @@ uint32_t osEventFlagsSet(osEventFlagsId_t ef_id, uint32_t flags)
   TX_EVENT_FLAGS_GROUP *eventflags_ptr = (TX_EVENT_FLAGS_GROUP *)ef_id;
   /* The returned flags_status or error */
   uint32_t flags_status;
-  /* Falgs to set */
+  /* Flags to set */
   ULONG flags_to_set = (ULONG) flags;
 
   /* Check if the event flags ID is NULL or the event flags is invalid */
@@ -2301,7 +2310,7 @@ uint32_t osEventFlagsClear(osEventFlagsId_t ef_id, uint32_t flags)
   TX_EVENT_FLAGS_GROUP *eventflags_ptr = (TX_EVENT_FLAGS_GROUP *)ef_id;
   /* The returned flags_status or error */
   uint32_t flags_status;
-  /* Falgs to clear */
+  /* Flags to clear */
   ULONG flags_to_clear = (ULONG) ~flags;
 
   /* Check if the event flags ID is NULL or the event flags is invalid */
@@ -2386,7 +2395,7 @@ uint32_t osEventFlagsWait(osEventFlagsId_t ef_id, uint32_t flags,
 {
   /* For ThreadX the control block pointer is the semaphore identifier */
   TX_EVENT_FLAGS_GROUP *eventflags_ptr = (TX_EVENT_FLAGS_GROUP *)ef_id;
-  /* Falgs to get */
+  /* Flags to get */
   ULONG requested_flags = (ULONG) flags;
   /* The ThreadX wait option */
   ULONG wait_option = (ULONG) timeout;

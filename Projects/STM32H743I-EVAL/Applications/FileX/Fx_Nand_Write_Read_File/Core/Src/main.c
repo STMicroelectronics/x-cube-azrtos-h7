@@ -54,7 +54,7 @@ static void MPU_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
-#if defined ( __GNUC__)
+#if defined ( __GNUC__) && !defined(__clang__)
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 #else
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
@@ -288,6 +288,7 @@ void MPU_Config(void)
   HAL_MPU_Enable(MPU_HFNMI_PRIVDEF);
 
 }
+
 /**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM6 interrupt took place, inside

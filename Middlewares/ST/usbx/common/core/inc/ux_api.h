@@ -26,7 +26,7 @@
 /*  APPLICATION INTERFACE DEFINITION                       RELEASE        */ 
 /*                                                                        */ 
 /*    ux_api.h                                            PORTABLE C      */ 
-/*                                                           6.1.3        */
+/*                                                           6.1.7        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -71,6 +71,27 @@
 /*  12-31-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            added BOS support,          */
 /*                                            resulting in version 6.1.3  */
+/*  02-02-2021     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added configuration activate*/
+/*                                            and deactivate support,     */
+/*                                            added host printer get      */
+/*                                            device ID support,          */
+/*                                            added host device string    */
+/*                                            descriptor get support,     */
+/*                                            added events for device     */
+/*                                            connection/disconnection,   */
+/*                                            resulting in version 6.1.4  */
+/*  03-02-2021     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            resulting in version 6.1.5  */
+/*  04-02-2021     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added macros for Word/DWord */
+/*                                            to bytes extraction,        */
+/*                                            resulting in version 6.1.6  */
+/*  06-02-2021     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added trace dependency test,*/
+/*                                            changed transfer timeout    */
+/*                                            value,                      */
+/*                                            resulting in version 6.1.7  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -205,7 +226,7 @@ typedef signed char               SCHAR;
 #define AZURE_RTOS_USBX
 #define USBX_MAJOR_VERSION            6
 #define USBX_MINOR_VERSION            1
-#define USBX_PATCH_VERSION            3
+#define USBX_PATCH_VERSION            7
 
 /* Macros for concatenating tokens, where UX_CONCATn concatenates n tokens.  */
 
@@ -220,6 +241,14 @@ typedef signed char               SCHAR;
 
 #define UX_MIN(a, b)                  ((a) < (b) ? (a) : (b))
 #define UX_MAX(a, b)                  ((a) > (b) ? (a) : (b))
+
+#define UX_W0(word)                   ( (word)         & 0xFF)
+#define UX_W1(word)                   (((word)  >>  8) & 0xFF)
+
+#define UX_DW0(dword)                 ( (dword)        & 0xFF)
+#define UX_DW1(dword)                 (((dword) >>  8) & 0xFF)
+#define UX_DW2(dword)                 (((dword) >> 16) & 0xFF)
+#define UX_DW3(dword)                 (((dword) >> 24) & 0xFF)
 
 /* Safe arithmetic check macros.  */
 
@@ -306,6 +335,9 @@ VOID _ux_utility_debug_log(UCHAR *debug_location, UCHAR *debug_message, ULONG de
 /* Determine if tracing is enabled.  */
 
 #ifdef TX_ENABLE_EVENT_TRACE
+#ifndef UX_TRACE_INSERT_MACROS
+#error UX_TRACE_INSERT_MACROS must be defined to support TX_ENABLE_EVENT_TRACE
+#endif
 
 /* Trace is enabled. Remap calls so that interrupts can be disabled around the actual event logging.  */
 
@@ -395,6 +427,9 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_TRACE_HOST_STACK_HCD_UNREGISTER                              (UX_TRACE_HOST_STACK_EVENTS_BASE + 35)              /* I1 = hcd name        , I2 = parameter 1     , I3 = parameter 2                                   */    
 #define UX_TRACE_HOST_STACK_CLASS_REGISTER                              (UX_TRACE_HOST_STACK_EVENTS_BASE + 36)              /* I1 = class name      , I2 = entry function                                                       */    
 #define UX_TRACE_HOST_STACK_CLASS_UNREGISTER                            (UX_TRACE_HOST_STACK_EVENTS_BASE + 37)              /* I1 = class entry                                                                                 */    
+#define UX_TRACE_HOST_STACK_DEVICE_STRING_GET                           (UX_TRACE_HOST_STACK_EVENTS_BASE + 38)              /* I1 = device          , I2 = buffer          , I3 = length            , I4 = (langID<<16) | index */    
+#define UX_TRACE_HOST_STACK_DEVICE_CONFIGURATION_ACTIVATE               (UX_TRACE_HOST_STACK_EVENTS_BASE + 39)              /* I1 = device          , I2 = configuration                                                        */    
+#define UX_TRACE_HOST_STACK_DEVICE_CONFIGURATION_DEACTIVATE             (UX_TRACE_HOST_STACK_EVENTS_BASE + 40)              /* I1 = device          , I2 = configuration                                                        */    
                                                                                                                                                                                                                     
 /* Define the USBX host class events.  */                                                                                                                                                                     
 
@@ -490,6 +525,7 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_TRACE_HOST_CLASS_PRINTER_WRITE                               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 104)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */                                      
 #define UX_TRACE_HOST_CLASS_PRINTER_SOFT_RESET                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 105)             /* I1 = class instance                                                                              */                                      
 #define UX_TRACE_HOST_CLASS_PRINTER_STATUS_GET                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 106)             /* I1 = class instance  , I2 = printer status                                                       */                                      
+#define UX_TRACE_HOST_CLASS_PRINTER_DEVICE_ID_GET                       (UX_TRACE_HOST_CLASS_EVENTS_BASE + 107)             /* I1 = class instance  , I2 = printer         , I3 = data pointer      , I4 = buffer length        */                                      
                                                                                                                                                                                                                               
 #define UX_TRACE_HOST_CLASS_PROLIFIC_ACTIVATE                           (UX_TRACE_HOST_CLASS_EVENTS_BASE + 110)             /* I1 = class instance                                                                              */       
 #define UX_TRACE_HOST_CLASS_PROLIFIC_DEACTIVATE                         (UX_TRACE_HOST_CLASS_EVENTS_BASE + 111)             /* I1 = class instance                                                                              */       
@@ -971,8 +1007,13 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_CAPABILITY_CONFIGURATION_SUMMARY                             0x10u
 
 
-#define UX_CONTROL_TRANSFER_TIMEOUT                                     1000
-#define UX_NON_CONTROL_TRANSFER_TIMEOUT                                 5000
+#ifndef UX_CONTROL_TRANSFER_TIMEOUT
+#define UX_CONTROL_TRANSFER_TIMEOUT                                     10000
+#endif
+
+#ifndef UX_NON_CONTROL_TRANSFER_TIMEOUT
+#define UX_NON_CONTROL_TRANSFER_TIMEOUT                                 50000
+#endif
 #define UX_PORT_ENABLE_WAIT                                             50 
 #define UX_DEVICE_ADDRESS_SET_WAIT                                      50
 #define UX_HIGH_SPEED_DETECTION_HANDSHAKE_SUSPEND_WAIT                  200
@@ -1019,12 +1060,20 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_TRANSFER_PHASE_STATUS_IN                                     4
 #define UX_TRANSFER_PHASE_STATUS_OUT                                    5
                                                                         
-#define UX_DEVICE_INSERTION                                             1
-#define UX_DEVICE_REMOVAL                                               2
-#define UX_HID_CLIENT_INSERTION                                         3
-#define UX_HID_CLIENT_REMOVAL                                           4
-#define UX_STORAGE_MEDIA_INSERTION                                      5
-#define UX_STORAGE_MEDIA_REMOVAL                                        6
+
+/* Host change callback events : _callback(event, *class, *instance)  */
+
+#define UX_DEVICE_INSERTION                                             0x01u
+#define UX_DEVICE_REMOVAL                                               0x02u
+#define UX_HID_CLIENT_INSERTION                                         0x03u
+#define UX_HID_CLIENT_REMOVAL                                           0x04u
+#define UX_STORAGE_MEDIA_INSERTION                                      0x05u
+#define UX_STORAGE_MEDIA_REMOVAL                                        0x06u
+
+/* Host change callback events : _callback(event, NULL, *device_instance)  */
+
+#define UX_DEVICE_CONNECTION                                            0x81u
+#define UX_DEVICE_DISCONNECTION                                         0x82u
                                                                         
                                                                         
 /* Define USBX transfer request status constants.  */                   
@@ -1135,6 +1184,7 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_MEMORY_CORRUPTED                                             0x19
 #define UX_MEMORY_ARRAY_FULL                                            0x1a
 #define UX_FATAL_ERROR                                                  0x1b
+#define UX_ALREADY_ACTIVATED                                            0x1c
                                                                         
 #define UX_TRANSFER_STALLED                                             0x21
 #define UX_TRANSFER_NO_ANSWER                                           0x22
@@ -1588,7 +1638,8 @@ typedef struct UX_DEVICE_STRUCT
     ULONG           ux_device_address;
     ULONG           ux_device_speed;
     ULONG           ux_device_power_source;
-    UINT            ux_device_current_configuration;
+    struct UX_CONFIGURATION_STRUCT
+                    *ux_device_current_configuration;
     UX_SEMAPHORE    ux_device_protection_semaphore;
     struct UX_HOST_CLASS_STRUCT                       
                     *ux_device_class;
@@ -2232,9 +2283,12 @@ typedef struct UX_HOST_CLASS_DPUMP_STRUCT
 #define ux_host_stack_class_register                            _ux_host_stack_class_register
 #define ux_host_stack_class_unregister                          _ux_host_stack_class_unregister
 #define ux_host_stack_configuration_interface_get               _ux_host_stack_configuration_interface_get
+#define ux_host_stack_device_configuration_activate             _ux_host_stack_device_configuration_activate
+#define ux_host_stack_device_configuration_deactivate           _ux_host_stack_device_configuration_deactivate
 #define ux_host_stack_device_configuration_get                  _ux_host_stack_device_configuration_get
 #define ux_host_stack_device_configuration_select               _ux_host_stack_device_configuration_select
 #define ux_host_stack_device_get                                _ux_host_stack_device_get
+#define ux_host_stack_device_string_get                         _ux_host_stack_device_string_get
 #define ux_host_stack_endpoint_transfer_abort                   _ux_host_stack_endpoint_transfer_abort
 #define ux_host_stack_hcd_register                              _ux_host_stack_hcd_register
 #define ux_host_stack_hcd_unregister                            _ux_host_stack_hcd_unregister
@@ -2303,9 +2357,12 @@ UINT    ux_host_stack_class_register(UCHAR *class_name, UINT (*class_entry_funct
 UINT    ux_host_stack_class_unregister(UINT (*class_entry_function)(struct UX_HOST_CLASS_COMMAND_STRUCT *));
 UINT    ux_host_stack_configuration_interface_get(UX_CONFIGURATION *configuration, UINT interface_index,
                                     UINT alternate_setting_index, UX_INTERFACE **interface);
+UINT    ux_host_stack_device_configuration_activate(UX_CONFIGURATION *configuration);
+UINT    ux_host_stack_device_configuration_deactivate(UX_DEVICE *device);
 UINT    ux_host_stack_device_configuration_get(UX_DEVICE *device, UINT configuration_index, UX_CONFIGURATION **configuration);
 UINT    ux_host_stack_device_configuration_select(UX_CONFIGURATION *configuration);
 UINT    ux_host_stack_device_get(ULONG device_index, UX_DEVICE **device);
+UINT    ux_host_stack_device_string_get(UX_DEVICE *device, UCHAR *descriptor_buffer, ULONG length, ULONG language_id, ULONG string_index);
 UINT    ux_host_stack_endpoint_transfer_abort(UX_ENDPOINT *endpoint);
 UINT    ux_host_stack_hcd_register(UCHAR *hcd_name, UINT (*hcd_initialize_function)(struct UX_HCD_STRUCT *), ULONG hcd_param1, ULONG hcd_param2);
 UINT    ux_host_stack_hcd_unregister(UCHAR *hcd_name, ULONG hcd_param1, ULONG hcd_param2);

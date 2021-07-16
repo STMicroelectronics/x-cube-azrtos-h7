@@ -34,7 +34,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#if defined ( __GNUC__)
+#if defined ( __GNUC__) && !defined(__clang__)
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 #else
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
@@ -214,16 +214,19 @@ void MX_ETH_Init(void)
   
   /* USER CODE END ETH_Init 0 */
 
+   static uint8_t MACAddr[6];
+
   /* USER CODE BEGIN ETH_Init 1 */
   
   /* USER CODE END ETH_Init 1 */
   heth.Instance = ETH;
-  heth.Init.MACAddr[0] =   0x00;
-  heth.Init.MACAddr[1] =   0x11;
-  heth.Init.MACAddr[2] =   0x83;
-  heth.Init.MACAddr[3] =   0x45;
-  heth.Init.MACAddr[4] =   0x26;
-  heth.Init.MACAddr[5] =   0x20;
+  MACAddr[0] = 0x00;
+  MACAddr[1] = 0x11;
+  MACAddr[2] = 0x83;
+  MACAddr[3] = 0x45;
+  MACAddr[4] = 0x26;
+  MACAddr[5] = 0x20;
+  heth.Init.MACAddr = &MACAddr[0];
   heth.Init.MediaInterface = HAL_ETH_RMII_MODE;
   heth.Init.TxDesc = DMATxDscrTab;
   heth.Init.RxDesc = DMARxDscrTab;
@@ -383,6 +386,7 @@ void MPU_Config(void)
   HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
 
 }
+
 /**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM6 interrupt took place, inside

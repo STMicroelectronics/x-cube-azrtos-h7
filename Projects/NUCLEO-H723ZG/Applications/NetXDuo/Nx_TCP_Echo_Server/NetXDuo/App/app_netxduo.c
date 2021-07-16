@@ -77,8 +77,11 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
   UINT ret = NX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
+  /* USER CODE BEGIN App_NetXDuo_MEM_POOL */
+  /* USER CODE END App_NetXDuo_MEM_POOL */
+
   /* USER CODE BEGIN App_NetXDuo_Init */
-    printf("Nx_TCP_Echo_Server application started..\n");
+  printf("Nx_TCP_Echo_Server application started..\n");
 
   /* Allocate the memory for packet_pool.  */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,  NX_PACKET_POOL_SIZE, TX_NO_WAIT) != TX_SUCCESS)

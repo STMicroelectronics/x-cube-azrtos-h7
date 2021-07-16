@@ -40,7 +40,7 @@ FX_LOCAL_PATH_SETUP
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_directory_local_path_get                        PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.5        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -74,6 +74,8 @@ FX_LOCAL_PATH_SETUP
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  03-02-2021     William E. Lamie         Modified comment(s),          */
+/*                                            resulting in version 6.1.5  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_directory_local_path_get(FX_MEDIA *media_ptr, CHAR **return_path_name)
@@ -95,6 +97,8 @@ UINT  _fx_directory_local_path_get(FX_MEDIA *media_ptr, CHAR **return_path_name)
     }
 
 #ifdef FX_NO_LOCAL_PATH
+
+    FX_PARAMETER_NOT_USED(return_path_name);
 
     /* Error, return to caller.  */
     return(FX_NOT_IMPLEMENTED);

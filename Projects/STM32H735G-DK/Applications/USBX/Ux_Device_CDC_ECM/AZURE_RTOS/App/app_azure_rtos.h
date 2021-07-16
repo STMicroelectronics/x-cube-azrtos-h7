@@ -30,6 +30,8 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "app_azure_rtos_config.h"
 
+#include "app_threadx.h"
+
 #include "app_filex.h"
 
 #include "app_netxduo.h"
@@ -38,7 +40,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "main.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -58,7 +60,6 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void MX_AZURE_RTOS_Init(void);
-void MX_AZURE_RTOS_Process(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

@@ -1,6 +1,5 @@
 /* This is a small demo of the high-performance FileX FAT file system. It includes setup for
    a small 34KB RAM disk and a loop that writes and reads a small file.  */
-
 #include "fx_api.h"
 #ifdef FX_ENABLE_FAULT_TOLERANT
 #include "fx_fault_tolerant.h"
@@ -33,25 +32,41 @@ void    thread_0_entry(ULONG thread_input);
 
 FX_MEDIA        ram_disk;
 FX_FILE         my_file;
-CHAR            *ram_disk_memory;
 
+#ifndef FX_STANDALONE_ENABLE
+CHAR            *ram_disk_memory;
+#else
+unsigned char   ram_disk_memory[256*512];
+#endif
 
 /* Define ThreadX global data structures.  */
 
+#ifndef FX_STANDALONE_ENABLE
 TX_THREAD       thread_0;
+#endif
 ULONG           thread_0_counter;
 
 
 void  main(void)
 {
 
+#ifdef FX_STANDALONE_ENABLE  
+
+    /* Initialize FileX.  */
+    fx_system_initialize();
+  
+    thread_0_entry(0);
+#else
     /* Enter the ThreadX kernel.  */
     tx_kernel_enter();
+#endif
+
 }
 
 
 /* Define what the initial system looks like.  */
 
+#ifndef FX_STANDALONE_ENABLE
 void    tx_application_define(void *first_unused_memory)
 {
 
@@ -76,7 +91,7 @@ CHAR *pointer;
     fx_system_initialize();
 }
 
-
+#endif
 
 void    thread_0_entry(ULONG thread_input)
 {

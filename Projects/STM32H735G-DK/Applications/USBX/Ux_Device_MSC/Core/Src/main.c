@@ -91,16 +91,17 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
- 
+  BSP_LED_Init(LED_RED);
+
   BSP_SD_Init(SD_INSTANCE);
-  
+
   while(BSP_SD_IsDetected(0) == SD_NOT_PRESENT)
   {
   }
-  
+
   /* Get SD card info */
   status = BSP_SD_GetCardInfo(SD_INSTANCE, &USBD_SD_CardInfo);
-  
+
   if (status != BSP_ERROR_NONE)
   {
     Error_Handler();
@@ -147,7 +148,7 @@ void SystemClock_Config(void)
   * in the RCC_OscInitTypeDef structure.
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48|RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
   RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
@@ -213,6 +214,7 @@ void MPU_Config(void)
   HAL_MPU_Enable(MPU_HFNMI_PRIVDEF);
 
 }
+
 /**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM6 interrupt took place, inside
@@ -242,9 +244,10 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
   while (1)
   {
+    BSP_LED_Toggle(LED_RED);
+    HAL_Delay(100);
   }
   /* USER CODE END Error_Handler_Debug */
 }
@@ -262,6 +265,9 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  while (1)
+  {
+  }
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

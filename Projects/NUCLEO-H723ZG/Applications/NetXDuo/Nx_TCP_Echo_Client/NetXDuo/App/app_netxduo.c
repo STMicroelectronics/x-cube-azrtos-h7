@@ -77,6 +77,9 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
   UINT ret = NX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
+  /* USER CODE BEGIN App_NetXDuo_MEM_POOL */
+  /* USER CODE END App_NetXDuo_MEM_POOL */
+
   /* USER CODE BEGIN App_NetXDuo_Init */
   printf("Nx_TCP_Echo_Client application started..\n");
   
@@ -183,6 +186,7 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
   /* set DHCP notification callback  */
   
   tx_semaphore_create(&Semaphore, "App Semaphore", 0);
+
   /* USER CODE END App_NetXDuo_Init */
 
   return ret;

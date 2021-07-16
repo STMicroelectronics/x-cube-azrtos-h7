@@ -10,8 +10,8 @@
       <TargetName>Nx_TCP_Echo_Server</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
+      <pCCUsed>6140000::V6.14::ARMCLANG</pCCUsed>
+      <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32H723ZGTx</Device>
@@ -326,7 +326,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
-            <uGnu>0</uGnu>
+            <uGnu>1</uGnu>
             <useXO>0</useXO>
             <v6Lang>5</v6Lang>
             <v6LangP>3</v6LangP>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>TX_INCLUDE_USER_DEFINE_FILE,NX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H723xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../AZURE_RTOS/App;../NetXDuo/App;../Core/Inc;../NetXDuo/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Drivers/BSP/Components/lan8742/;../../../../../../Middlewares/ST/netxduo/common/drivers/;../../../../../../Middlewares/ST/netxduo/addons/dhcp/;../../../../../../Middlewares/ST/netxduo/common/inc/;../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/ac5/inc/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/inc/;../../../../../../Drivers/BSP/STM32H7xx_Nucleo</IncludePath>
+              <IncludePath>../AZURE_RTOS/App;../Core/Inc;../NetXDuo/App;../NetXDuo/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Drivers/BSP/Components/lan8742/;../../../../../../Middlewares/ST/netxduo/common/drivers/;../../../../../../Middlewares/ST/netxduo/addons/dhcp/;../../../../../../Middlewares/ST/netxduo/common/inc/;../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/ac5/inc/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H7xx_Nucleo</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -352,9 +352,9 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <ClangAsOpt>4</ClangAsOpt>
+            <ClangAsOpt>1</ClangAsOpt>
             <VariousControls>
-              <MiscControls>--cpreproc</MiscControls>
+              <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
@@ -402,6 +402,11 @@
               <FileName>tx_initialize_low_level.s</FileName>
               <FileType>2</FileType>
               <FilePath>../Core/Src/tx_initialize_low_level.s</FilePath>
+            </File>
+            <File>
+              <FileName>app_threadx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/Src/app_threadx.c</FilePath>
             </File>
             <File>
               <FileName>stm32h7xx_it.c</FileName>
@@ -1754,26 +1759,6 @@
               <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_tcp_window_scaling_option_get.c</FilePath>
             </File>
             <File>
-              <FileName>nx_trace_event_insert.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_event_insert.c</FilePath>
-            </File>
-            <File>
-              <FileName>nx_trace_event_update.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_event_update.c</FilePath>
-            </File>
-            <File>
-              <FileName>nx_trace_object_register.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_object_register.c</FilePath>
-            </File>
-            <File>
-              <FileName>nx_trace_object_unregister.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_object_unregister.c</FilePath>
-            </File>
-            <File>
               <FileName>nx_udp_bind_cleanup.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_udp_bind_cleanup.c</FilePath>
@@ -3069,49 +3054,49 @@
           <GroupName>Middlewares/ThreadX/RTOS/ThreadX/Core</GroupName>
           <Files>
             <File>
-              <FileName>tx_thread_context_restore.s</FileName>
+              <FileName>tx_thread_context_restore.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_context_restore.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_context_restore.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_context_save.s</FileName>
+              <FileName>tx_thread_context_save.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_context_save.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_context_save.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_control.s</FileName>
+              <FileName>tx_thread_interrupt_control.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_control.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_control.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_disable.s</FileName>
+              <FileName>tx_thread_interrupt_disable.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_disable.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_disable.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_interrupt_restore.s</FileName>
+              <FileName>tx_thread_interrupt_restore.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_interrupt_restore.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_interrupt_restore.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_schedule.s</FileName>
+              <FileName>tx_thread_schedule.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_schedule.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_schedule.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_stack_build.s</FileName>
+              <FileName>tx_thread_stack_build.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_stack_build.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_stack_build.S</FilePath>
             </File>
             <File>
-              <FileName>tx_thread_system_return.s</FileName>
+              <FileName>tx_thread_system_return.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_thread_system_return.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_thread_system_return.S</FilePath>
             </File>
             <File>
-              <FileName>tx_timer_interrupt.s</FileName>
+              <FileName>tx_timer_interrupt.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac5/src/tx_timer_interrupt.s</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/src/tx_timer_interrupt.S</FilePath>
             </File>
             <File>
               <FileName>tx_initialize_high_level.c</FileName>

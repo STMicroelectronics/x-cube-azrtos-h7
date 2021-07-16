@@ -24,7 +24,7 @@
 #include "string.h"
 
 /* Set hpcd_USB_OTG_HS at the end of non-cacheable
-   Memory address 0x24027000. */
+   Memory address 0x24035000. */
 #if defined ( __ICCARM__ ) /* IAR Compiler */
 #pragma location = 0x24035000
 #elif defined ( __CC_ARM ) /* MDK ARM Compiler */

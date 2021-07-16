@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_media_volume_set                                PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.7        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -76,6 +76,10 @@
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  06-02-2021     Bhupendra Naphade        Modified comment(s),updated   */
+/*                                            the initialization of       */
+/*                                            dir_entry for exFAT format, */
+/*                                            resulting in version 6.1.7  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_media_volume_set(FX_MEDIA *media_ptr, CHAR *volume_name)
@@ -108,6 +112,12 @@ CHAR         alpha;
 #ifdef FX_ENABLE_EXFAT
     if (media_ptr -> fx_media_FAT_type == FX_exFAT)
     {
+
+        /* Setup pointer to media name buffer.  */
+        dir_entry.fx_dir_entry_name =  media_ptr -> fx_media_name_buffer;
+
+        /* Clear the short name string.  */
+        dir_entry.fx_dir_entry_short_name[0] =  0;
 
         /* Attempt to find the volume name in the root directory.  */
         i =  0;

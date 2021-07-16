@@ -26,7 +26,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    fx_user.h                                           PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.5        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -50,6 +50,9 @@
 /*                                            to enable code              */
 /*                                            size optimization,          */
 /*                                            resulting in version 6.1    */
+/*  03-02-2021     William E. Lamie         Modified comment(s), and      */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.5  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -160,6 +163,11 @@
    access control into an open media.  */
 
 /* #define FX_SINGLE_THREAD   */
+
+
+/* Defined, Filex will be used in standalone mode (without ThreadX) */
+
+/* #define FX_STANDALONE_ENABLE */
 
 
 /* Defined, data sector write requests are flushed immediately to the driver.  */

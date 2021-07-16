@@ -152,6 +152,11 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usb.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/Core/app_threadx.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/app_threadx.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/Core/gpio.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/gpio.c</locationURI>
@@ -2812,6 +2817,11 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_class_register.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_class_unregister.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_class_unregister.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_configuration_descriptor_parse.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_configuration_descriptor_parse.c</locationURI>
@@ -2837,6 +2847,11 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_configuration_interface_get.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_configuration_interface_scan.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_configuration_interface_scan.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_configuration_set.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_configuration_set.c</locationURI>
@@ -2850,6 +2865,16 @@
 			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_device_address_set.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_device_address_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_device_configuration_activate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_device_configuration_activate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_device_configuration_deactivate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_device_configuration_deactivate.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_device_configuration_get.c</name>
@@ -2885,6 +2910,11 @@
 			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_device_resources_free.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_device_resources_free.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_device_string_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_device_string_get.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_endpoint_instance_create.c</name>
@@ -2925,6 +2955,11 @@
 			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_hcd_transfer_request.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_hcd_transfer_request.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_hcd_unregister.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_hcd_unregister.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_hnp_polling_thread_entry.c</name>
@@ -3020,6 +3055,11 @@
 			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_transfer_request_abort.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_transfer_request_abort.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_uninitialize.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_uninitialize.c</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

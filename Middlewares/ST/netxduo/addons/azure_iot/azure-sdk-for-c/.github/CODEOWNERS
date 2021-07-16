@@ -1,0 +1,39 @@
+# Instructions for CODEOWNERS file format and automatic build failure notifications:
+# https://github.com/Azure/azure-sdk/blob/master/docs/policies/opensource.md#codeowners
+
+###########
+# SDK
+###########
+
+# Catch all for non-code project files
+* @rickwinter @joshfree
+
+# SDK team
+/sdk/ @ahsonkhan @antkmsft @rickwinter @vhvb1989
+
+# Samples
+/samples/ @rickwinter
+
+# Service teams
+# Core
+sdk/docs/core/                @ahsonkhan @antkmsft @rickwinter @vhvb1989
+sdk/inc/azure/core/           @ahsonkhan @antkmsft @rickwinter @vhvb1989
+sdk/samples/core/             @ahsonkhan @antkmsft @rickwinter @vhvb1989
+sdk/src/azure/core/           @ahsonkhan @antkmsft @rickwinter @vhvb1989
+sdk/tests/core/               @ahsonkhan @antkmsft @rickwinter @vhvb1989
+
+# IoT
+sdk/docs/iot/                 @CIPop @danewalton @ericwol-msft @ewertons @hihigupt @jspaith @momuno
+sdk/inc/azure/iot/            @CIPop @danewalton @ericwol-msft @ewertons @hihigupt @jspaith @momuno
+sdk/samples/iot/              @CIPop @danewalton @ericwol-msft @ewertons @hihigupt @jspaith @momuno
+sdk/src/azure/iot/            @CIPop @danewalton @ericwol-msft @ewertons @hihigupt @jspaith @momuno
+sdk/tests/iot/                @CIPop @danewalton @ericwol-msft @ewertons @hihigupt @jspaith @momuno
+
+# Platform
+sdk/src/azure/platform/       @ahsonkhan @antkmsft @rickwinter @vhvb1989
+
+###########
+# Eng Sys
+###########
+/eng/       @danieljurek @azure/azure-sdk-eng
+/**/ci.yml  @danieljurek @azure/azure-sdk-eng

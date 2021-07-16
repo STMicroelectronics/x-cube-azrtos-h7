@@ -211,6 +211,7 @@ UINT                    endpoint_type;
        of any transfer in the transfer request.  */
     endpoint -> ux_endpoint_transfer_request.ux_transfer_request_maximum_length =  UX_HCD_STM32_MAX_PACKET_COUNT *
                                                                                    endpoint -> ux_endpoint_descriptor.wMaxPacketSize;
+
     /* Return successful completion.  */
     return(UX_SUCCESS);
 }
