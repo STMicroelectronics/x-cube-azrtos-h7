@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -123,6 +122,24 @@ void App_ThreadX_LowPower_Exit(void)
   /* Reconfigure the system clock*/
   SystemClock_Restore();
   /* USER CODE END  App_ThreadX_LowPower_Exit */
+}
+
+/**
+  * @brief  MX_ThreadX_Init
+  * @param  None
+  * @retval None
+  */
+void MX_ThreadX_Init(void)
+{
+  /* USER CODE BEGIN  Before_Kernel_Start */
+
+  /* USER CODE END  Before_Kernel_Start */
+
+  tx_kernel_enter();
+
+  /* USER CODE BEGIN  Kernel_Start_Error */
+
+  /* USER CODE END  Kernel_Start_Error */
 }
 
 /* USER CODE BEGIN 1 */

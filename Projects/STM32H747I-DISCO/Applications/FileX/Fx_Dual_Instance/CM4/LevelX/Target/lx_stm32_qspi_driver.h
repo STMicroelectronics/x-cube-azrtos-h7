@@ -18,11 +18,11 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "lx_api.h"
-
-#include "stm32h747i_discovery_qspi.h"
+#include "stm32h7xx_hal.h"
+#include "mt25tl01g.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "stm32h747i_discovery_qspi.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -31,21 +31,24 @@ extern "C" {
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
-/* the QuadSPI instance ,default value set to 0 */
-#define QSPI_INSTANCE                       0
 
-#define DEFAULT_BLOCK_SIZE                  (4 * 1024)
+/* the QuadSPI instance, default value set to 0 */
+#define LX_STM32_QSPI_INSTANCE                           0
+#define LX_STM32_QSPI_DEFAULT_TIMEOUT                    10 * TX_TIMER_TICKS_PER_SECOND
+#define LX_STM32_DEFAULT_SECTOR_SIZE                     LX_STM32_QSPI_SECTOR_SIZE
+#define LX_STM32_QSPI_DMA_API                            0
 
-/* when set to 1, the QSPI init is done by the driver, otherwise it is up to the application to initialize it */
-#define LX_DRIVER_CALLS_QSPI_INIT           1
+/* when set to 1 LevelX is initializing the QuadSPI memory,
+ * otherwise it is the up to the application to perform it.
+ */
+#define LX_STM32_QSPI_INIT                               1
 
-#if (LX_DRIVER_CALLS_QSPI_INIT == 1)
+#if (LX_STM32_QSPI_INIT == 1)
 
 /* allow the driver to fully erase the QuadSPI chip. This should be used carefully.
  * the call is blocking and takes a while. by default it is set to 0.
- * When creating a fresh file system on the NOR Flash this flag should be enabled.
  */
-#define LX_DRIVER_ERASES_QSPI_AFTER_INIT    1
+#define LX_STM32_QSPI_ERASE                              0
 #endif
 
 /* USER CODE BEGIN EC */
@@ -55,10 +58,43 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 
+#define LX_STM32_QSPI_CURRENT_TIME                              tx_time_get
+
+#define LX_STM32_QSPI_POST_INIT()
+
+#define LX_STM32_QSPI_PRE_READ_TRANSFER(__status__)
+
+#define LX_STM32_QSPI_READ_CPLT_NOTIFY(__status__)
+
+#define LX_STM32_QSPI_POST_READ_TRANSFER(__status__)
+
+#define LX_STM32_QSPI_READ_TRANSFER_ERROR(__status__)
+
+#define LX_STM32_QSPI_PRE_WRITE_TRANSFER(__status__)
+
+#define LX_STM32_QSPI_WRITE_CPLT_NOTIFY(__status__)
+
+#define LX_STM32_QSPI_POST_WRITE_TRANSFER(__status__)
+
+#define LX_STM32_QSPI_WRITE_TRANSFER_ERROR(__status__)
+
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
-UINT  lx_stm32_qspi_initialize(LX_NOR_FLASH *nor_flash);
+INT lx_stm32_qspi_lowlevel_init(UINT instance);
+
+INT lx_stm32_qspi_get_status(UINT instance);
+INT lx_stm32_qspi_get_info(UINT instance, ULONG *block_size, ULONG *total_blocks);
+
+INT lx_stm32_qspi_read(UINT instance, ULONG *address, ULONG *buffer, ULONG words);
+INT lx_stm32_qspi_write(UINT instance, ULONG *address, ULONG *buffer, ULONG words);
+
+INT lx_stm32_qspi_erase(UINT instance, ULONG block, ULONG erase_count, UINT full_chip_erase);
+INT lx_stm32_qspi_is_block_erased(UINT instance, ULONG block);
+
+UINT lx_qspi_driver_system_error(UINT error_code);
+
+UINT lx_stm32_qspi_initialize(LX_NOR_FLASH *nor_flash);
 
 /* USER CODE BEGIN EFP */
 
@@ -68,6 +104,8 @@ UINT  lx_stm32_qspi_initialize(LX_NOR_FLASH *nor_flash);
 /* USER CODE BEGIN PD */
 
 /* USER CODE END PD */
+
+#define LX_STM32_QSPI_SECTOR_SIZE                 MT25TL01G_SUBSECTOR_SIZE
 
 /* USER CODE BEGIN 1 */
 

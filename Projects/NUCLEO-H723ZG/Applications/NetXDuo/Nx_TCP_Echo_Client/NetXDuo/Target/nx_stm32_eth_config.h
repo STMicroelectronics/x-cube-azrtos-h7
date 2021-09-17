@@ -30,8 +30,10 @@
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
+
 #define eth_handle heth
 #define nx_eth_init MX_ETH_Init
+
 /* USER CODE BEGIN EC */
 
 /* USER CODE END EC */
@@ -42,6 +44,7 @@
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
+
 extern ETH_HandleTypeDef heth;
 extern void MX_ETH_Init(void);
 

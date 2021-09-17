@@ -290,7 +290,7 @@
                 <option>
                     <name>CCAllowList</name>
                     <version>1</version>
-                    <state>11111110</state>
+                    <state>00000000</state>
                 </option>
                 <option>
                     <name>CCDebugInfo</name>
@@ -357,19 +357,19 @@
                     <state>$PROJ_DIR$/../Core/Inc</state>
                     <state>$PROJ_DIR$/../AZURE_RTOS/App</state>
                     <state>$PROJ_DIR$/../FileX/App</state>
-                    <state>$PROJ_DIR$/../NetXDuo/App</state>
-                    <state>$PROJ_DIR$/../USBX/App</state>
                     <state>$PROJ_DIR$/../FileX/Target</state>
+                    <state>$PROJ_DIR$/../USBX/App</state>
                     <state>$PROJ_DIR$/../USBX/Target</state>
+                    <state>$PROJ_DIR$/../NetXDuo/App</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Include</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/filex/common/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/filex/ports/generic/inc/</state>
-                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_network/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/ports/generic/inc/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_network/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/addons/dhcp/</state>
@@ -394,7 +394,7 @@
                 </option>
                 <option>
                     <name>CCOptLevel</name>
-                    <state>3</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCOptStrategy</name>
@@ -403,7 +403,7 @@
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
-                    <state>3</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CompilerMisraRules98</name>
@@ -1147,6 +1147,12 @@
                         <name>$PROJ_DIR$\..\FileX\App\app_filex.c</name>
                     </file>
                 </group>
+                <group>
+                    <name>Target</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\FileX\Target\fx_stm32_sd_driver_glue.c</name>
+                    </file>
+                </group>
             </group>
             <group>
                 <name>NetXDuo</name>
@@ -1287,7 +1293,7 @@
         <group>
             <name>FileX</name>
             <group>
-                <name>File System/FileX/Core/RTOS_MODE</name>
+                <name>File System/FileX/Core</name>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\filex\common\src\fx_directory_attributes_read.c</name>
                 </file>
@@ -4224,7 +4230,7 @@
                 </file>
             </group>
             <group>
-                <name>USB/USBX/UX Device CoreStack/RTOS_MODE</name>
+                <name>USB/USBX/UX Device CoreStack</name>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_alternate_setting_get.c</name>
                 </file>

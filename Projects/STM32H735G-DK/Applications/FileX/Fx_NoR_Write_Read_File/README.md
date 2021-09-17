@@ -21,8 +21,8 @@ Chip erase operation takes considerable time to finish whole flash reset, theref
 
 following flags in "lx_stm32_ospi_driver.h":
 
-  - LX_DRIVER_ERASES_OPSI_AFTER_INIT
-  - LX_DRIVER_CALLS_BSP_OSPI_INIT
+  - LX_STM32_OSPI_ERASE
+  - LX_STM32_OSPI_INIT
 
 Upon successful opening of the flash media, FileX continue with creating a file called "STM32.TXT" into the root directory, then write into it 
 
@@ -63,9 +63,9 @@ None
 
  - ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.
  - ThreadX is configured with 100 ticks/sec by default, this should be taken into account when using delays or timeouts at application. It is always possible to reconfigure it in the "tx_user.h", the "TX_TIMER_TICKS_PER_SECOND" define,but this should be reflected in "tx_initialize_low_level.s" file too.
- - ThreadX is disabling all interrupts during kernel start-up to avoid any unexpected behavior, therefore all system related calls (HAL, BSP) should be done either at the beginning of the application or inside the thread entry functions.
+ - ThreadX is disabling all interrupts during kernel start-up to avoid any unexpected behavior, therefore all system related calls (HAL) should be done either at the beginning of the application or inside the thread entry functions.
  - ThreadX offers the "tx_application_define()" function, that is automatically called by the tx_kernel_enter() API.
-   It is highly recommended to use it to create all applications ThreadX related resources (threads, semaphores, memory pools...)  but it should not in any way contain a system API call (HAL or BSP).
+   It is highly recommended to use it to create all applications ThreadX related resources (threads, semaphores, memory pools...)  but it should not in any way contain a system API call (HAL).
  - Using dynamic memory allocation requires to apply some changes to the linker file.
    ThreadX needs to pass a pointer to the first free memory location in RAM to the tx_application_define() function,
    using the "first_unused_memory" argument.

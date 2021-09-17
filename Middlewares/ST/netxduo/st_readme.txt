@@ -7,6 +7,11 @@
   ******************************************************************************
   */
 
+### 03-September-2021 ###
+========================
+- Add STM32F4 Series to Azure RTOS licensed hardware list
+- Restore cortex_a7 port files
+
 ### 21-June-2021 ###
 ========================
 - Upgrade to Azure RTOS NetXDuo 6.1.7 with additional following patch

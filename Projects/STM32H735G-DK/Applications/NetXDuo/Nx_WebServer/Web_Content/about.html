@@ -1,0 +1,229 @@
+<!doctype html>
+<!-- 
+* Bootstrap Simple Admin Template
+* Version: 2.1
+* Author: Alexis Luna
+* Website: https://github.com/alexis-luna/bootstrap-simple-admin-template
+-->
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>NetXDuo WebServer Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css"
+        integrity="sha512-OdEXQYCOldjqUEsuMKsZRj93Ht23QRlhIb8E/X0sbwZhme8eUw6g8q7AdxGJKakcBbv7+/PX0Gc2btf7Ru8cZA=="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/v4-shims.min.css"
+        integrity="sha512-iaLhEHW3p+ZNgkDKBi4zEfH+aWAMGJ7I7njqD3jKnbN0ux4Gkumu2vjuI71YUov20OIPl3R32v8HO+V+6OgbvQ=="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css"
+        integrity="sha512-jQqzj2vHVxA/yCojT8pVZjKGOe9UmoYvnOuM/2sQ110vxiajBU+4WkyRs1ODMmd4AfntwUEV4J+VfM6DkfjLRg=="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css"
+        integrity="sha512-Ez0cGzNzHR1tYAv56860NLspgUGuQw16GiOOp/I2LuTmpSK9xDXlgJz3XN4cnpXWDmkNBKXR/VDMTCnAaEooxA=="
+        crossorigin="anonymous" />
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato'>
+
+    <link rel="stylesheet" href="assets/master.css" type="text/css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <nav id="sidebar" class="active">
+            <div class="sidebar-header">
+                <a href="https://www.st.com/content/st_com/en.html">
+                    <img src="assets/st_logo.svg" alt="ST_logo" class="app-logo" style="width: 90%; height: 90%;">
+                </a>
+            </div>
+            <ul class="list-unstyled components text-secondary">
+                <li>
+                    <a href="index.html"><i class="fa fa-home"></i> Home</a>
+                </li>
+                <li>
+                    <a href="dashboard.html"><i class="fa fa-tachometer"></i> Dashboard</a>
+                </li>
+            </ul>
+        </nav>
+        <div id="body" class="active">
+            <nav class="navbar navbar-expand-lg navbar-white bg-white">
+                <button type="button" id="sidebarCollapse" class="btn btn-light"><i
+                        class="fas fa-bars"></i><span></span></button>
+                        <label style=" top: 10%; right: 40%; position: absolute; font-size:x-large;font-weight: bold; color:darkblue;">NetXDuo WebServer Demo</label>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                </div>
+            </nav>
+            <div class="content">
+                <div class="content">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12">
+                                <div class="card">
+                                    <div class="page-title" style="margin-left: 10px; color: darkblue;">
+                                        <h3>Product Overview</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div>
+                                            <img src ="assets/STM32H735_DK.jpg" class="txt-wrap" style="width: 680px; height: 320px;">
+                                        <p style="left: 50%;">The <b>STM32H735G-DK</b>Discovery kit is used as a reference design for user application development before porting to the final product, thus simplifying the application development.
+                                        The full range of hardware features available on the board helps users to enhance their application development by an evaluation of all the peripherals (such as USB OTG FS, Ethernet, microSD card, USART, CAN FD, SAI audio DAC stereo with audio jack input and output, MEMS digital  microphone, HyperRAM, Octo-SPI Flash memory, RGB interface LCD with capacitive touch panel, and others). ARDUINO® Uno V3,
+                                        PmodT and STMod+ connectors provide easy connection to extension shields or daughterboards for specific applications. STLINK-V3E is integrated into the board, as the embedded in-circuit debugger and programmer for the STM32 MCU and USB Virtual COM port bridge.
+                                        The STM32H735G-DK board comes with the STM32CubeH7 MCU Package, which provides an STM32 comprehensive software HAL library as well as various software examples.<br>
+                                    </p>
+                                    <div class="page-title" style="color: darkblue;">
+                                        <h3>All Features</h3>
+                                    </div>      
+                                    <ul class="feature_ul"  data-columns="2" style="width: fit-content;">
+                                        <li>
+                                            STM32H735IGK6U microcontroller featuring 1&nbsp;Mbyte of Flash memory and 564&nbsp;Kbytes of SRAM in UFBGA176+25 package 
+                                        </li>
+                                        <li>
+                                            4.3" TFT 480×272 pixels colored LCD module with capacitive touch panel and RGB interface 
+                                        </li>
+                                        <li>
+                                            Ethernet compliant with IEEE-802.3-2002 and PoE (Power over Ethernet) 
+                                        </li>
+                                        <li>
+                                            USB OTG FS
+                                        </li>
+                                        <li>
+                                            SAI audio codec 
+                                        </li>
+                                        <li>
+                                            MEMS sensors from STMicroelectronics
+                                        </li>
+                                        <li>
+                                            One ST-MEMS digital microphone
+                                        </li>
+                                        <li>
+                                            512-Mbit Octal-SPI NOR Flash memory 
+                                        </li>
+                                        <li>
+                                            128-Mbit HyperRAM
+                                        </li>
+                                        <li>
+                                            2 user LEDs
+                                        </li>
+                                        <li>
+                                            User push-button
+                                        </li>
+                                        <li>
+                                            Reset push-button
+                                        </li>
+                                        <li data-automation-text="feature-text">Board connectors:
+                                          <ul class="st-list">
+                                            <li>
+                                              USB FS Micro-AB
+                                            </li>                           
+                                              <li>
+                                                USB ST-LINK&nbsp;Micro-B
+                                              </li>        
+                                              <li>
+                                                Ethernet RJ45
+                                              </li>       
+                                              <li>
+                                                Stereo headset jack including analog microphone input
+                                              </li>       
+                                              <li>
+                                                Audio header for external speakers
+                                              </li>       
+                                              <li>
+                                                microSD card
+                                              </li>       
+                                              <li>
+                                                TAG connector 10-pin footprint
+                                              </li>                         
+                                              <li>
+                                                SMA connector
+                                              </li>       
+                                              <li>
+                                                Arm<sup>®</sup>&nbsp;Cortex<sup>®</sup> 10-pin 1.27&nbsp;mm-pitch debug connector over STDC14 footprint
+                                              </li>       
+                                              <li>
+                                                ARDUINO<sup>®</sup> Uno V3 expansion connector
+                                              </li>      
+                                              <li>
+                                                STMod+ expansion connector
+                                              </li>       
+                                              <li>
+                                                PmodT Type-2A and Type-4A expansion connector
+                                              </li>       
+                                              <li>
+                                                Audio MEMS daughterboard expansion connector
+                                              </li>        
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            Flexible power-supply options: ST-LINK, USB VBUS, or external sources
+                                        </li>
+                                        <li>
+                                            On-board STLINK-V3E debugger/programmer with USB re-enumeration capability: mass storage, Virtual COM port, and debug port
+                                        </li>
+                                        <li>
+                                            Comprehensive free software libraries and examples available with the STM32CubeH7 MCU Package
+                                        </li>
+                                        <li>
+                                            Support of a wide choice of Integrated Development Environments (IDEs) including IART, Keil<sup>®</sup>, and STM32CubeIDE 
+                                        </li>
+                                    </ul>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12">
+                                <div class="card">
+                                    <div class="page-title" style="margin-left: 10px; color: darkblue;">
+                                        <h3>About the demo</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div>
+                                            <p style="left: 50%;">
+                                                this demo is a WebServer running on the <b>STM32H735G-DK</b> board using the NetXDuo API. The WebServer offers 2 webpages.
+                                                <ul>
+                                                    <li>
+                                                        <a href="about.html" style="color: rgb(104, 200, 245);text-decoration: underline;">about.html </a>: this page giving an overall description of the demo and the <a href="https://www.st.com/en/evaluation-tools/stm32h735g-dk.html" style="color: rgb(104, 200, 245);text-decoration: underline;">STM32H735G-DK HW features</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="dashboard.html" style="color: rgb(104, 200, 245);text-decoration: underline;">dashboard.html</a> a simple dashboard interface to let the user:<br>
+                                                            <ul>
+                                                                <li>
+                                                                    Monitor some performance infos collected from the ThreadX and NetXDuo. These infos are updated each 3 seconds via JQuery AJAX requests.
+                                                                </li>
+                                                                <li>
+                                                                   Perform a simple action on the board, that is toggling the green led, using a toggle switch button.                                                                   
+                                                                </li>
+                                                            </ul>
+                                                    </li>
+                                                </ul>
+                                            </p>
+                                        <p style="font-style: italic;"><b>Note: To correctly display the webpage, the web browser should be connected to the internet.</b></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+                integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+                crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.min.js"
+                integrity="sha512-EKWWs1ZcA2ZY9lbLISPz8aGR2+L7JVYqBAYTq5AXgBkSjRSuQEGqWx8R1zAX16KdXPaCjOCaKE8MCpU0wcHlHA=="
+                crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+                crossorigin="anonymous"></script>
+            <script src="assets/script.js"></script>
+</body>
+
+</html>

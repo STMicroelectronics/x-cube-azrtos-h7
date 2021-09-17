@@ -1512,307 +1512,307 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_stm32_host_controllers/ux_hcd_stm32_transfer_abort.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_bandwidth_check.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_bandwidth_check.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_bandwidth_check.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_bandwidth_claim.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_bandwidth_claim.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_bandwidth_claim.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_bandwidth_release.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_bandwidth_release.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_bandwidth_release.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_class_call.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_class_call.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_class_call.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_class_device_scan.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_class_device_scan.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_class_device_scan.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_class_get.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_class_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_class_get.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_class_instance_create.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_class_instance_create.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_class_instance_create.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_class_instance_destroy.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_class_instance_destroy.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_class_instance_destroy.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_class_instance_get.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_class_instance_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_class_instance_get.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_class_instance_verify.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_class_instance_verify.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_class_instance_verify.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_class_interface_scan.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_class_interface_scan.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_class_interface_scan.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_class_register.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_class_register.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_class_register.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_class_unregister.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_class_unregister.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_class_unregister.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_configuration_descriptor_parse.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_configuration_descriptor_parse.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_configuration_descriptor_parse.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_configuration_enumerate.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_configuration_enumerate.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_configuration_enumerate.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_configuration_instance_create.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_configuration_instance_create.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_configuration_instance_create.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_configuration_instance_delete.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_configuration_instance_delete.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_configuration_instance_delete.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_configuration_interface_get.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_configuration_interface_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_configuration_interface_get.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_configuration_interface_scan.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_configuration_interface_scan.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_configuration_interface_scan.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_configuration_set.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_configuration_set.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_configuration_set.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_delay_ms.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_delay_ms.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_delay_ms.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_device_address_set.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_device_address_set.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_device_address_set.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_device_configuration_activate.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_device_configuration_activate.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_device_configuration_activate.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_device_configuration_deactivate.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_device_configuration_deactivate.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_device_configuration_deactivate.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_device_configuration_get.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_device_configuration_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_device_configuration_get.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_device_configuration_reset.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_device_configuration_reset.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_device_configuration_reset.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_device_configuration_select.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_device_configuration_select.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_device_configuration_select.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_device_descriptor_read.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_device_descriptor_read.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_device_descriptor_read.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_device_get.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_device_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_device_get.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_device_remove.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_device_remove.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_device_remove.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_device_resources_free.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_device_resources_free.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_device_resources_free.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_device_string_get.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_device_string_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_device_string_get.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_endpoint_instance_create.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_endpoint_instance_create.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_endpoint_instance_create.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_endpoint_instance_delete.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_endpoint_instance_delete.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_endpoint_instance_delete.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_endpoint_reset.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_endpoint_reset.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_endpoint_reset.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_endpoint_transfer_abort.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_endpoint_transfer_abort.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_endpoint_transfer_abort.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_enum_thread_entry.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_enum_thread_entry.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_enum_thread_entry.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_hcd_register.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_hcd_register.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_hcd_register.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_hcd_thread_entry.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_hcd_thread_entry.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_hcd_thread_entry.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_hcd_transfer_request.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_hcd_transfer_request.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_hcd_transfer_request.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_hcd_unregister.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_hcd_unregister.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_hcd_unregister.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_hnp_polling_thread_entry.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_hnp_polling_thread_entry.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_hnp_polling_thread_entry.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_initialize.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_initialize.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_initialize.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_interface_endpoint_get.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_interface_endpoint_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_interface_endpoint_get.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_interface_instance_create.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_interface_instance_create.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_interface_instance_create.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_interface_instance_delete.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_interface_instance_delete.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_interface_instance_delete.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_interface_set.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_interface_set.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_interface_set.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_interface_setting_select.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_interface_setting_select.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_interface_setting_select.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_interfaces_scan.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_interfaces_scan.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_interfaces_scan.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_new_configuration_create.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_new_configuration_create.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_new_configuration_create.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_new_device_create.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_new_device_create.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_new_device_create.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_new_device_get.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_new_device_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_new_device_get.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_new_endpoint_create.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_new_endpoint_create.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_new_endpoint_create.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_new_interface_create.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_new_interface_create.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_new_interface_create.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_rh_change_process.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_rh_change_process.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_rh_change_process.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_rh_device_extraction.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_rh_device_extraction.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_rh_device_extraction.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_rh_device_insertion.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_rh_device_insertion.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_rh_device_insertion.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_role_swap.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_role_swap.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_role_swap.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_transfer_request.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_transfer_request.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_transfer_request.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_transfer_request_abort.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_transfer_request_abort.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_transfer_request_abort.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE/ux_host_stack_uninitialize.c</name>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_uninitialize.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_uninitialize.c</locationURI>
 		</link>

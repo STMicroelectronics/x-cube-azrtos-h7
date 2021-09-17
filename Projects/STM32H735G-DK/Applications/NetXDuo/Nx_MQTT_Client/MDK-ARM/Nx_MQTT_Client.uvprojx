@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>TX_INCLUDE_USER_DEFINE_FILE,NX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H735xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../AZURE_RTOS/App;../Core/Inc;../NetXDuo/App;../NetXDuo/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Drivers/BSP/Components/lan8742/;../../../../../../Middlewares/ST/netxduo/common/drivers/;../../../../../../Middlewares/ST/netxduo/addons/mqtt/;../../../../../../Middlewares/ST/netxduo/addons/dns/;../../../../../../Middlewares/ST/netxduo/addons/dhcp/;../../../../../../Middlewares/ST/netxduo/common/inc/;../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/ac5/inc/;../../../../../../Middlewares/ST/netxduo/nx_secure/inc/;../../../../../../Middlewares/ST/netxduo/nx_secure/ports/;../../../../../../Middlewares/ST/netxduo/crypto_libraries/inc/;../../../../../../Middlewares/ST/netxduo/crypto_libraries/ports/cortex_m7/ac5/inc/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H735G-DK</IncludePath>
+              <IncludePath>../Core/Inc;../AZURE_RTOS/App;../NetXDuo/App;../NetXDuo/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Drivers/BSP/Components/lan8742/;../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/;../../../../../../Middlewares/ST/netxduo/addons/mqtt/;../../../../../../Middlewares/ST/netxduo/addons/dns/;../../../../../../Middlewares/ST/netxduo/addons/dhcp/;../../../../../../Middlewares/ST/netxduo/common/inc/;../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/ac5/inc/;../../../../../../Middlewares/ST/netxduo/nx_secure/inc/;../../../../../../Middlewares/ST/netxduo/nx_secure/ports/;../../../../../../Middlewares/ST/netxduo/crypto_libraries/inc/;../../../../../../Middlewares/ST/netxduo/crypto_libraries/ports/cortex_m7/ac5/inc/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H735G-DK</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -616,7 +616,7 @@
             <File>
               <FileName>nx_stm32_eth_driver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/drivers/nx_stm32_eth_driver.c</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/nx_stm32_eth_driver.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -626,7 +626,7 @@
             <File>
               <FileName>nx_stm32_phy_driver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/drivers/lan8742/nx_stm32_phy_driver.c</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/lan8742/nx_stm32_phy_driver.c</FilePath>
             </File>
           </Files>
         </Group>

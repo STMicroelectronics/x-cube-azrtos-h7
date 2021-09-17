@@ -1,13 +1,15 @@
 
 ## <b>Fx_uSD_File_Edit application description</b>
- 
-This application provides an example of Azure RTOS FileX stack usage on STM32H735G-DK board, it shows how to develop a basic SD card file 
 
-operations application. The application is designed to handle SD card insertion/removal events, and depending on that state, it starts 
+This application provides an example of Azure RTOS FileX stack usage on STM32H735G-DK board, it shows how to develop a basic SD card file
+
+operations application. The application is designed to handle SD card insertion/removal events, and depending on that state, it starts
 
 and stops file operations from and into the SD card.
 
-The main entry function, tx_application_define(), is called by ThreadX during kernel start. At this stage, all FileX resources are initialized, 
+The application is developed using HAL, so managing leds, SD initialisation or any SD card insertion/removal mechanisms are implemented using HAL drivers without any reference to BSP.
+
+The main entry function, tx_application_define(), is called by ThreadX during kernel start. At this stage, all FileX resources are initialized,
 
 the SD card detection event is registered and drivers are initialized.
 
@@ -19,15 +21,15 @@ A message queue is used to signal the SD card detection event to the fx_thread t
 
   - tx_msg_queue (Msg size : 1 (UINT); total messages : 16) used to notify the fx_thread about the SD card insertion status.
 
-The fx_thread starts by checking whether the SD card is initially inserted or not. In the true case, it sends a message to the queue to ensure 
+The fx_thread starts by checking whether the SD card is initially inserted or not. In the true case, it sends a message to the queue to ensure
 
-that the first iteration starts properly. The wait on the message queue blocks till it receives a new message about whether the SD card is inserted 
+that the first iteration starts properly. The wait on the message queue blocks till it receives a new message about whether the SD card is inserted
 
 or removed. Interrupt callback for SD detection is registered and it is used to send the event information to the message queue.
 
-The fx_thread uses FileX services to open the SD media for file operations and attempt to create file STM32.TXT. If the file exists already, 
+The fx_thread uses FileX services to open the SD media for file operations and attempt to create file STM32.TXT. If the file exists already,
 
-it will be overwritten. Dummy content is then written into the file and it is closed. The file is opened once again in read mode and content 
+it will be overwritten. Dummy content is then written into the file and it is closed. The file is opened once again in read mode and content
 
 is checked if matches what was previously written.
 
@@ -63,9 +65,9 @@ None
 
  - ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.
  - ThreadX is configured with 100 ticks/sec by default, this should be taken into account when using delays or timeouts at application. It is always possible to reconfigure it in the "tx_user.h", the "TX_TIMER_TICKS_PER_SECOND" define,but this should be reflected in "tx_initialize_low_level.s" file too.
- - ThreadX is disabling all interrupts during kernel start-up to avoid any unexpected behavior, therefore all system related calls (HAL, BSP) should be done either at the beginning of the application or inside the thread entry functions.
+ - ThreadX is disabling all interrupts during kernel start-up to avoid any unexpected behavior, therefore all system related calls (HAL) should be done either at the beginning of the application or inside the thread entry functions.
  - ThreadX offers the "tx_application_define()" function, that is automatically called by the tx_kernel_enter() API.
-   It is highly recommended to use it to create all applications ThreadX related resources (threads, semaphores, memory pools...)  but it should not in any way contain a system API call (HAL or BSP).
+   It is highly recommended to use it to create all applications ThreadX related resources (threads, semaphores, memory pools...)  but it should not in any way contain a system API call (HAL).
  - Using dynamic memory allocation requires to apply some changes to the linker file.
    ThreadX needs to pass a pointer to the first free memory location in RAM to the tx_application_define() function,
    using the "first_unused_memory" argument.
@@ -81,7 +83,7 @@ None
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
 	```
     + For STM32CubeIDE add the following section into the .ld file:
-	``` 
+	```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -89,17 +91,17 @@ None
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	``` 
-	
+	```
+
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
-       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.	 
-       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).	 
+       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
        Read more in STM32CubeIDE User Guide, chapter: "Linker script".
-	  
+
     + The "tx_initialize_low_level.s" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
-               
-               
+
+
 #### <b>FileX/LevelX usage hints</b>
 
 - FileX sd driver is using the DMA, thus the DTCM (0x20000000) memory should not be used by the application, as it is not accessible by the SD DMA.

@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -24,6 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -80,15 +80,15 @@ static VOID os_delay(ULONG delay);
   * @param memory_ptr: memory pointer
   * @retval int
   */
-UINT App_FileX_Init(VOID *memory_ptr)
+UINT MX_FileX_Init(VOID *memory_ptr)
 {
   UINT ret = FX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-  /* USER CODE BEGIN App_FileX_MEM_POOL */
-  /* USER CODE END App_FileX_MEM_POOL */
+  /* USER CODE BEGIN MX_FileX_MEM_POOL */
+  /* USER CODE END MX_FileX_MEM_POOL */
 
-  /* USER CODE BEGIN App_FileX_Init */
+  /* USER CODE BEGIN MX_FileX_Init */
   VOID *pointer;
 
   /* Allocate memory for the main thread's stack */
@@ -116,8 +116,7 @@ UINT App_FileX_Init(VOID *memory_ptr)
   /* Initialize FileX.  */
   fx_system_initialize();
 
-  /* USER CODE END App_FileX_Init */
-
+  /* USER CODE END MX_FileX_Init */
   return ret;
 }
 
@@ -138,18 +137,11 @@ void fx_thread_entry(ULONG thread_input)
   ULONG available_space_post;
   CHAR read_buffer[32];
   CHAR data[] = "This is FileX working on STM32";
-  BSP_OSPI_NOR_Info_t ospi_info;
 
   printf("FileX/LevelX NOR OCTO-SPI Application Start.\n");
 
-  /* Get NOR chip info */
-  if(BSP_OSPI_NOR_GetInfo(OSPI_INSTANCE, &ospi_info) != BSP_ERROR_NONE)
-  {
-    while(1);
-  }
-
   /* Print the absolute size of the NOR chip*/
-  printf("Total NOR Flash Chip size is: %lu bytes.\n", (unsigned long) ospi_info.FlashSize);
+  printf("Total NOR Flash Chip size is: %lu bytes.\n", (unsigned long)LX_STM32_OSPI_FLASH_SIZE);
 
   /* Format the NOR flash as FAT */
   status =  fx_media_format(&nor_flash_disk,
@@ -161,7 +153,7 @@ void fx_thread_entry(ULONG thread_input)
                             1,                            // Number of FATs
                             32,                           // Directory Entries
                             0,                            // Hidden sectors
-                            ospi_info.FlashSize / DEFAULT_SECTOR_SIZE,      // Total sectors
+                            LX_STM32_OSPI_FLASH_SIZE / DEFAULT_SECTOR_SIZE,      // Total sectors
                             DEFAULT_SECTOR_SIZE,          // Sector size
                             8,                            // Sectors per cluster
                             1,                            // Heads
@@ -301,7 +293,7 @@ void fx_thread_entry(ULONG thread_input)
   status =  fx_media_space_available(&nor_flash_disk, &available_space_post);
 
   printf("User available NOR Flash disk space size after file is written: %lu bytes.\n", available_space_post);
-  printf("The test file occupied a total of %lu cluster(s) (%u per cluster).",
+  printf("The test file occupied a total of %lu cluster(s) (%u per cluster).\n",
          (available_space_pre - available_space_post) / (nor_flash_disk.fx_media_bytes_per_sector * nor_flash_disk.fx_media_sectors_per_cluster),
          nor_flash_disk.fx_media_bytes_per_sector * nor_flash_disk.fx_media_sectors_per_cluster);
 
@@ -323,7 +315,7 @@ void fx_thread_entry(ULONG thread_input)
 
   while(1)
   {
-      BSP_LED_Toggle(LED1);
+      HAL_GPIO_TogglePin(LED1_GPIO_PORT, LED1_PIN);
       os_delay(40);
   }
 

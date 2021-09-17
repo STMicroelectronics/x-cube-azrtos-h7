@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -56,6 +55,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern OSPI_HandleTypeDef hospi1;
 extern TIM_HandleTypeDef htim6;
 
 /* USER CODE BEGIN EV */
@@ -174,7 +174,33 @@ void TIM6_DAC_IRQHandler(void)
   /* USER CODE END TIM6_DAC_IRQn 1 */
 }
 
+/**
+  * @brief This function handles FPU global interrupt.
+  */
+void FPU_IRQHandler(void)
+{
+  /* USER CODE BEGIN FPU_IRQn 0 */
+
+  /* USER CODE END FPU_IRQn 0 */
+  /* USER CODE BEGIN FPU_IRQn 1 */
+
+  /* USER CODE END FPU_IRQn 1 */
+}
+
+/**
+  * @brief This function handles OCTOSPI1 global interrupt.
+  */
+void OCTOSPI1_IRQHandler(void)
+{
+  /* USER CODE BEGIN OCTOSPI1_IRQn 0 */
+
+  /* USER CODE END OCTOSPI1_IRQn 0 */
+  HAL_OSPI_IRQHandler(&hospi1);
+  /* USER CODE BEGIN OCTOSPI1_IRQn 1 */
+
+  /* USER CODE END OCTOSPI1_IRQn 1 */
+}
+
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

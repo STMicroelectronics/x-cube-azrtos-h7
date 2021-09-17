@@ -122,7 +122,7 @@ SECTIONS
   /* used by the startup to initialize data */
   _sidata = LOADADDR(.data);
 
-  /* Initialized data sections goes into RAM_D1, load LMA copy after code */
+  /* Initialized data sections goes into RAM, load LMA copy after code */
   .data :
   {
     . = ALIGN(4);
@@ -152,7 +152,7 @@ SECTIONS
     __bss_end__ = _ebss;
   } >RAM_D1
 
-  /* User_heap_stack section, used to check that there is enough RAM_D1 left */
+  /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :
   {
     . = ALIGN(8);
@@ -168,7 +168,7 @@ SECTIONS
     *(.UsbxPoolSection)
 
   } >RAM_D1
-  
+
   /* Remove information from the standard libraries */
   /DISCARD/ :
   {

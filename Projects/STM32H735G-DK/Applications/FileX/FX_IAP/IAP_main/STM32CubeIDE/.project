@@ -197,11 +197,6 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Drivers/BSP/STM32H735G-DK/stm32h735g_discovery.c</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/STM32H735G-DK/stm32h735g_discovery_sd.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Drivers/BSP/STM32H735G-DK/stm32h735g_discovery_sd.c</locationURI>
-		</link>
-		<link>
 			<name>Application/User/AZURE_RTOS/App/app_azure_rtos.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/AZURE_RTOS/App/app_azure_rtos.c</locationURI>
@@ -212,9 +207,1174 @@
 			<locationURI>PARENT-1-PROJECT_LOC/FileX/App/app_filex.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/FileX/Target/fx_stm32_sd_driver_glue.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/FileX/Target/fx_stm32_sd_driver_glue.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/Interfaces/File System/FileX SD interface/fx_stm32_sd_driver.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/drivers/fx_stm32_sd_driver.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_attributes_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_attributes_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_attributes_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_attributes_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_create.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_create.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_default_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_default_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_default_get_copy.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_default_get_copy.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_default_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_default_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_delete.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_delete.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_entry_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_entry_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_entry_write.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_entry_write.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_exFAT_entry_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_exFAT_entry_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_exFAT_entry_write.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_exFAT_entry_write.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_exFAT_free_search.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_exFAT_free_search.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_exFAT_unicode_entry_write.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_exFAT_unicode_entry_write.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_first_entry_find.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_first_entry_find.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_first_full_entry_find.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_first_full_entry_find.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_free_search.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_free_search.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_information_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_information_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_local_path_clear.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_local_path_clear.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_local_path_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_local_path_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_local_path_get_copy.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_local_path_get_copy.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_local_path_restore.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_local_path_restore.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_local_path_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_local_path_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_long_name_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_long_name_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_long_name_get_extended.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_long_name_get_extended.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_name_extract.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_name_extract.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_name_test.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_name_test.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_next_entry_find.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_next_entry_find.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_next_full_entry_find.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_next_full_entry_find.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_rename.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_rename.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_search.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_search.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_short_name_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_short_name_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_directory_short_name_get_extended.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_short_name_get_extended.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_add_FAT_log.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_add_FAT_log.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_add_bitmap_log.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_add_bitmap_log.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_add_checksum_log.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_add_checksum_log.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_add_dir_log.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_add_dir_log.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_apply_logs.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_apply_logs.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_calculate_checksum.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_calculate_checksum.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_cleanup_FAT_chain.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_cleanup_FAT_chain.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_create_log_file.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_create_log_file.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_enable.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_enable.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_read_FAT.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_read_FAT.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_read_directory_sector.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_read_directory_sector.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_read_log_file.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_read_log_file.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_recover.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_recover.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_reset_log_file.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_reset_log_file.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_set_FAT_chain.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_set_FAT_chain.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_transaction_end.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_transaction_end.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_transaction_fail.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_transaction_fail.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_transaction_start.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_transaction_start.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_fault_tolerant_write_log_file.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_write_log_file.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_allocate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_allocate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_attributes_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_attributes_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_attributes_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_attributes_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_best_effort_allocate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_best_effort_allocate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_close.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_close.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_create.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_create.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_date_time_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_date_time_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_delete.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_delete.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_extended_allocate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_extended_allocate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_extended_best_effort_allocate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_extended_best_effort_allocate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_extended_relative_seek.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_extended_relative_seek.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_extended_seek.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_extended_seek.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_extended_truncate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_extended_truncate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_extended_truncate_release.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_extended_truncate_release.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_open.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_open.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_relative_seek.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_relative_seek.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_rename.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_rename.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_seek.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_seek.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_truncate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_truncate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_truncate_release.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_truncate_release.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_write.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_write.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_file_write_notify_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_write_notify_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_abort.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_abort.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_boot_info_extract.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_boot_info_extract.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_cache_invalidate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_cache_invalidate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_check.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_check.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_check_FAT_chain_check.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_check_FAT_chain_check.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_check_lost_cluster_check.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_check_lost_cluster_check.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_close.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_close.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_close_notify_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_close_notify_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_exFAT_format.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_exFAT_format.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_extended_space_available.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_extended_space_available.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_flush.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_flush.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_format.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_format.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_format_oem_name_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_format_oem_name_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_format_type_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_format_type_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_format_volume_id_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_format_volume_id_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_open.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_open.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_open_notify_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_open_notify_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_space_available.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_space_available.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_volume_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_volume_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_volume_get_extended.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_volume_get_extended.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_volume_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_volume_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_media_write.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_write.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_partition_offset_calculate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_partition_offset_calculate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_system_date_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_system_date_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_system_date_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_system_date_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_system_initialize.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_system_initialize.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_system_time_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_system_time_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_system_time_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_system_time_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_system_timer_entry.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_system_timer_entry.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_unicode_directory_create.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_directory_create.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_unicode_directory_entry_change.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_directory_entry_change.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_unicode_directory_entry_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_directory_entry_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_unicode_directory_rename.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_directory_rename.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_unicode_directory_search.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_directory_search.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_unicode_file_create.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_file_create.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_unicode_file_rename.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_file_rename.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_unicode_length_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_length_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_unicode_length_get_extended.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_length_get_extended.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_unicode_name_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_name_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_unicode_name_get_extended.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_name_get_extended.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_unicode_short_name_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_short_name_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_unicode_short_name_get_extended.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_short_name_get_extended.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_16_unsigned_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_16_unsigned_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_16_unsigned_write.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_16_unsigned_write.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_32_unsigned_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_32_unsigned_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_32_unsigned_write.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_32_unsigned_write.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_64_unsigned_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_64_unsigned_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_64_unsigned_write.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_64_unsigned_write.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_FAT_entry_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_FAT_entry_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_FAT_entry_write.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_FAT_entry_write.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_FAT_flush.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_FAT_flush.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_FAT_map_flush.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_FAT_map_flush.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_FAT_sector_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_FAT_sector_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_absolute_path_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_absolute_path_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_allocate_new_cluster.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_allocate_new_cluster.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_bitmap_cache_prepare.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_bitmap_cache_prepare.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_bitmap_cache_update.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_bitmap_cache_update.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_bitmap_flush.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_bitmap_flush.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_bitmap_free_cluster_find.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_bitmap_free_cluster_find.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_bitmap_initialize.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_bitmap_initialize.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_bitmap_start_sector_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_bitmap_start_sector_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_cluster_free.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_cluster_free.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_cluster_state_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_cluster_state_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_cluster_state_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_cluster_state_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_geometry_check.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_geometry_check.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_name_hash_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_name_hash_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_size_calculate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_size_calculate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_system_area_checksum_verify.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_system_area_checksum_verify.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_system_area_checksum_write.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_system_area_checksum_write.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_system_area_format.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_system_area_format.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_system_sector_write.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_system_sector_write.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_unicode_name_hash_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_unicode_name_hash_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_exFAT_upcase_table.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_upcase_table.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_logical_sector_cache_entry_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_logical_sector_cache_entry_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_logical_sector_flush.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_logical_sector_flush.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_logical_sector_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_logical_sector_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_logical_sector_write.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_logical_sector_write.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_memory_copy.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_memory_copy.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_memory_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_memory_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_string_length_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_string_length_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fx_utility_token_length_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_token_length_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_attributes_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_attributes_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_attributes_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_attributes_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_create.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_create.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_default_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_default_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_default_get_copy.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_default_get_copy.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_default_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_default_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_delete.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_delete.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_first_entry_find.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_first_entry_find.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_first_full_entry_find.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_first_full_entry_find.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_information_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_information_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_local_path_clear.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_local_path_clear.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_local_path_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_local_path_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_local_path_get_copy.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_local_path_get_copy.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_local_path_restore.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_local_path_restore.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_local_path_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_local_path_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_long_name_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_long_name_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_long_name_get_extended.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_long_name_get_extended.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_name_test.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_name_test.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_next_entry_find.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_next_entry_find.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_next_full_entry_find.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_next_full_entry_find.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_rename.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_rename.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_short_name_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_short_name_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_directory_short_name_get_extended.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_short_name_get_extended.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_fault_tolerant_enable.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_fault_tolerant_enable.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_allocate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_allocate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_attributes_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_attributes_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_attributes_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_attributes_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_best_effort_allocate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_best_effort_allocate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_close.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_close.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_create.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_create.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_date_time_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_date_time_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_delete.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_delete.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_extended_allocate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_extended_allocate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_extended_best_effort_allocate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_extended_best_effort_allocate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_extended_relative_seek.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_extended_relative_seek.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_extended_seek.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_extended_seek.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_extended_truncate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_extended_truncate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_extended_truncate_release.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_extended_truncate_release.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_open.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_open.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_relative_seek.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_relative_seek.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_rename.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_rename.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_seek.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_seek.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_truncate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_truncate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_truncate_release.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_truncate_release.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_write.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_write.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_file_write_notify_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_write_notify_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_media_abort.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_abort.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_media_cache_invalidate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_cache_invalidate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_media_check.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_check.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_media_close.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_close.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_media_close_notify_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_close_notify_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_media_exFAT_format.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_exFAT_format.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_media_extended_space_available.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_extended_space_available.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_media_flush.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_flush.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_media_format.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_format.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_media_open.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_open.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_media_open_notify_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_open_notify_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_media_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_media_space_available.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_space_available.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_media_volume_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_volume_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_media_volume_get_extended.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_volume_get_extended.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_media_volume_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_volume_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_media_write.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_write.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_system_date_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_system_date_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_system_date_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_system_date_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_system_time_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_system_time_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_system_time_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_system_time_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_unicode_directory_create.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_unicode_directory_create.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_unicode_directory_rename.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_unicode_directory_rename.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_unicode_file_create.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_unicode_file_create.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_unicode_file_rename.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_unicode_file_rename.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_unicode_name_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_unicode_name_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_unicode_name_get_extended.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_unicode_name_get_extended.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_unicode_short_name_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_unicode_short_name_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/FileX/File System/FileX/Core/fxe_unicode_short_name_get_extended.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_unicode_short_name_get_extended.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/ThreadX/RTOS/ThreadX/Core/tx_block_allocate.c</name>
@@ -1030,1166 +2190,6 @@
 			<name>Middlewares/ThreadX/RTOS/ThreadX/Core/txe_timer_info_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/txe_timer_info_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_attributes_read.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_attributes_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_attributes_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_attributes_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_create.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_create.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_default_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_default_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_default_get_copy.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_default_get_copy.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_default_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_default_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_delete.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_delete.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_entry_read.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_entry_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_entry_write.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_entry_write.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_exFAT_entry_read.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_exFAT_entry_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_exFAT_entry_write.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_exFAT_entry_write.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_exFAT_free_search.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_exFAT_free_search.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_exFAT_unicode_entry_write.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_exFAT_unicode_entry_write.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_first_entry_find.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_first_entry_find.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_first_full_entry_find.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_first_full_entry_find.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_free_search.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_free_search.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_information_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_information_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_local_path_clear.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_local_path_clear.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_local_path_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_local_path_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_local_path_get_copy.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_local_path_get_copy.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_local_path_restore.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_local_path_restore.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_local_path_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_local_path_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_long_name_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_long_name_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_long_name_get_extended.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_long_name_get_extended.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_name_extract.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_name_extract.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_name_test.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_name_test.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_next_entry_find.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_next_entry_find.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_next_full_entry_find.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_next_full_entry_find.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_rename.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_rename.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_search.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_search.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_short_name_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_short_name_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_directory_short_name_get_extended.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_directory_short_name_get_extended.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_add_FAT_log.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_add_FAT_log.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_add_bitmap_log.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_add_bitmap_log.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_add_checksum_log.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_add_checksum_log.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_add_dir_log.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_add_dir_log.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_apply_logs.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_apply_logs.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_calculate_checksum.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_calculate_checksum.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_cleanup_FAT_chain.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_cleanup_FAT_chain.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_create_log_file.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_create_log_file.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_enable.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_enable.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_read_FAT.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_read_FAT.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_read_directory_sector.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_read_directory_sector.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_read_log_file.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_read_log_file.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_recover.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_recover.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_reset_log_file.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_reset_log_file.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_set_FAT_chain.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_set_FAT_chain.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_transaction_end.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_transaction_end.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_transaction_fail.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_transaction_fail.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_transaction_start.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_transaction_start.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_fault_tolerant_write_log_file.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_fault_tolerant_write_log_file.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_allocate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_allocate.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_attributes_read.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_attributes_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_attributes_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_attributes_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_best_effort_allocate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_best_effort_allocate.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_close.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_close.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_create.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_create.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_date_time_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_date_time_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_delete.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_delete.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_extended_allocate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_extended_allocate.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_extended_best_effort_allocate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_extended_best_effort_allocate.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_extended_relative_seek.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_extended_relative_seek.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_extended_seek.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_extended_seek.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_extended_truncate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_extended_truncate.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_extended_truncate_release.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_extended_truncate_release.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_open.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_open.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_read.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_relative_seek.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_relative_seek.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_rename.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_rename.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_seek.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_seek.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_truncate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_truncate.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_truncate_release.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_truncate_release.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_write.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_write.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_file_write_notify_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_file_write_notify_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_abort.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_abort.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_boot_info_extract.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_boot_info_extract.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_cache_invalidate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_cache_invalidate.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_check.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_check.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_check_FAT_chain_check.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_check_FAT_chain_check.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_check_lost_cluster_check.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_check_lost_cluster_check.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_close.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_close.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_close_notify_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_close_notify_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_exFAT_format.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_exFAT_format.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_extended_space_available.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_extended_space_available.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_flush.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_flush.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_format.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_format.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_format_oem_name_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_format_oem_name_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_format_type_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_format_type_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_format_volume_id_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_format_volume_id_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_open.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_open.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_open_notify_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_open_notify_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_read.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_space_available.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_space_available.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_volume_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_volume_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_volume_get_extended.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_volume_get_extended.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_volume_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_volume_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_media_write.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_media_write.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_partition_offset_calculate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_partition_offset_calculate.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_system_date_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_system_date_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_system_date_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_system_date_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_system_initialize.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_system_initialize.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_system_time_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_system_time_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_system_time_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_system_time_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_system_timer_entry.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_system_timer_entry.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_unicode_directory_create.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_directory_create.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_unicode_directory_entry_change.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_directory_entry_change.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_unicode_directory_entry_read.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_directory_entry_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_unicode_directory_rename.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_directory_rename.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_unicode_directory_search.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_directory_search.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_unicode_file_create.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_file_create.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_unicode_file_rename.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_file_rename.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_unicode_length_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_length_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_unicode_length_get_extended.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_length_get_extended.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_unicode_name_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_name_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_unicode_name_get_extended.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_name_get_extended.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_unicode_short_name_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_short_name_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_unicode_short_name_get_extended.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_unicode_short_name_get_extended.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_16_unsigned_read.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_16_unsigned_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_16_unsigned_write.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_16_unsigned_write.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_32_unsigned_read.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_32_unsigned_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_32_unsigned_write.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_32_unsigned_write.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_64_unsigned_read.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_64_unsigned_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_64_unsigned_write.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_64_unsigned_write.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_FAT_entry_read.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_FAT_entry_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_FAT_entry_write.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_FAT_entry_write.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_FAT_flush.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_FAT_flush.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_FAT_map_flush.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_FAT_map_flush.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_FAT_sector_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_FAT_sector_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_absolute_path_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_absolute_path_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_allocate_new_cluster.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_allocate_new_cluster.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_bitmap_cache_prepare.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_bitmap_cache_prepare.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_bitmap_cache_update.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_bitmap_cache_update.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_bitmap_flush.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_bitmap_flush.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_bitmap_free_cluster_find.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_bitmap_free_cluster_find.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_bitmap_initialize.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_bitmap_initialize.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_bitmap_start_sector_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_bitmap_start_sector_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_cluster_free.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_cluster_free.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_cluster_state_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_cluster_state_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_cluster_state_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_cluster_state_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_geometry_check.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_geometry_check.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_name_hash_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_name_hash_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_size_calculate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_size_calculate.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_system_area_checksum_verify.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_system_area_checksum_verify.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_system_area_checksum_write.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_system_area_checksum_write.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_system_area_format.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_system_area_format.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_system_sector_write.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_system_sector_write.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_unicode_name_hash_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_unicode_name_hash_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_exFAT_upcase_table.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_exFAT_upcase_table.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_logical_sector_cache_entry_read.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_logical_sector_cache_entry_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_logical_sector_flush.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_logical_sector_flush.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_logical_sector_read.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_logical_sector_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_logical_sector_write.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_logical_sector_write.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_memory_copy.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_memory_copy.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_memory_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_memory_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_string_length_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_string_length_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fx_utility_token_length_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fx_utility_token_length_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_attributes_read.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_attributes_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_attributes_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_attributes_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_create.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_create.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_default_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_default_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_default_get_copy.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_default_get_copy.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_default_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_default_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_delete.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_delete.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_first_entry_find.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_first_entry_find.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_first_full_entry_find.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_first_full_entry_find.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_information_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_information_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_local_path_clear.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_local_path_clear.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_local_path_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_local_path_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_local_path_get_copy.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_local_path_get_copy.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_local_path_restore.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_local_path_restore.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_local_path_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_local_path_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_long_name_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_long_name_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_long_name_get_extended.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_long_name_get_extended.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_name_test.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_name_test.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_next_entry_find.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_next_entry_find.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_next_full_entry_find.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_next_full_entry_find.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_rename.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_rename.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_short_name_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_short_name_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_directory_short_name_get_extended.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_directory_short_name_get_extended.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_fault_tolerant_enable.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_fault_tolerant_enable.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_allocate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_allocate.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_attributes_read.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_attributes_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_attributes_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_attributes_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_best_effort_allocate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_best_effort_allocate.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_close.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_close.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_create.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_create.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_date_time_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_date_time_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_delete.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_delete.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_extended_allocate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_extended_allocate.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_extended_best_effort_allocate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_extended_best_effort_allocate.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_extended_relative_seek.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_extended_relative_seek.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_extended_seek.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_extended_seek.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_extended_truncate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_extended_truncate.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_extended_truncate_release.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_extended_truncate_release.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_open.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_open.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_read.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_relative_seek.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_relative_seek.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_rename.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_rename.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_seek.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_seek.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_truncate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_truncate.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_truncate_release.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_truncate_release.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_write.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_write.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_file_write_notify_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_file_write_notify_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_media_abort.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_abort.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_media_cache_invalidate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_cache_invalidate.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_media_check.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_check.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_media_close.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_close.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_media_close_notify_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_close_notify_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_media_exFAT_format.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_exFAT_format.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_media_extended_space_available.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_extended_space_available.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_media_flush.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_flush.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_media_format.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_format.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_media_open.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_open.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_media_open_notify_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_open_notify_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_media_read.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_media_space_available.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_space_available.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_media_volume_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_volume_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_media_volume_get_extended.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_volume_get_extended.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_media_volume_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_volume_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_media_write.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_media_write.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_system_date_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_system_date_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_system_date_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_system_date_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_system_time_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_system_time_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_system_time_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_system_time_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_unicode_directory_create.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_unicode_directory_create.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_unicode_directory_rename.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_unicode_directory_rename.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_unicode_file_create.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_unicode_file_create.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_unicode_file_rename.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_unicode_file_rename.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_unicode_name_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_unicode_name_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_unicode_name_get_extended.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_unicode_name_get_extended.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_unicode_short_name_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_unicode_short_name_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/FileX/File System/FileX/Core/RTOS_MODE/fxe_unicode_short_name_get_extended.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/filex/common/src/fxe_unicode_short_name_get_extended.c</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

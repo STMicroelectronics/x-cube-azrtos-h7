@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -88,14 +87,21 @@ UINT STORAGE_Read(VOID *storage, ULONG lun, UCHAR *data_pointer,
   ULONG ReadFlags = 0U;
 
   /* Check if the SD card is present */
-  if (BSP_SD_IsDetected(0) != SD_NOT_PRESENT)
+  if (BSP_SD_IsDetected(SD_INSTANCE) != SD_NOT_PRESENT)
   {
     /* Check id SD card is ready */
-    check_sd_status(0);
+    if(check_sd_status(SD_INSTANCE) != BSP_ERROR_NONE)
+    {
+      Error_Handler();
+    }
 
     /* Start the Dma write */
-    status =  BSP_SD_ReadBlocks_DMA(SD_INSTANCE, (uint32_t *) data_pointer,
-                                    lba, number_blocks);
+    status =  BSP_SD_ReadBlocks_DMA(SD_INSTANCE,(uint32_t *) data_pointer, lba, number_blocks);
+
+    if(status != BSP_ERROR_NONE)
+    {
+      Error_Handler();
+    }
 
     /* Wait on readflag until SD card is ready to use for new operation */
     if (tx_event_flags_get(&EventFlag, SD_READ_FLAG, TX_OR_CLEAR,
@@ -126,14 +132,21 @@ UINT STORAGE_Write(VOID *storage, ULONG lun, UCHAR *data_pointer,
   ULONG WriteFlags = 0U;
 
   /* Check if the SD card is present */
-  if (BSP_SD_IsDetected(0) != SD_NOT_PRESENT)
+  if (BSP_SD_IsDetected(SD_INSTANCE) != SD_NOT_PRESENT)
   {
     /* Check id SD card is ready */
-    check_sd_status(0);
+    if(check_sd_status(SD_INSTANCE) != BSP_ERROR_NONE)
+    {
+      Error_Handler();
+    }
 
     /* Start the Dma write */
-    status =  BSP_SD_WriteBlocks_DMA(SD_INSTANCE, (uint32_t *) data_pointer,
-                                     lba, number_blocks);
+    status = BSP_SD_WriteBlocks_DMA(SD_INSTANCE,(uint32_t *) data_pointer, lba, number_blocks);
+
+    if(status != BSP_ERROR_NONE)
+    {
+      Error_Handler();
+    }
 
     /* Wait on writeflag until SD card is ready to use for new operation */
     if (tx_event_flags_get(&EventFlag, SD_WRITE_FLAG, TX_OR_CLEAR,
@@ -198,4 +211,3 @@ static int32_t check_sd_status(uint32_t Instance)
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

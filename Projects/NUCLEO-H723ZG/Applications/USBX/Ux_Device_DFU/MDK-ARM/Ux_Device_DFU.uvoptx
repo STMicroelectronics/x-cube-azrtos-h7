@@ -10,7 +10,7 @@
     <aExt>*.s*; *.src; *.a*</aExt>
     <oExt>*.obj; *.o</oExt>
     <lExt>*.lib</lExt>
-    <tExt>*.txt; *.h; *.inc</tExt>
+    <tExt>*.txt; *.h; *.inc; *.md</tExt>
     <pExt>*.plm</pExt>
     <CppX>*.cpp</CppX>
     <nMigrate>0</nMigrate>
@@ -140,7 +140,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>UL2CM3</Key>
-          <Name>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32H72x-73x_1024 -FS08000000 -FL0100000 -FP0($$Device:STM32H723ZGTx$CMSIS\Flash\STM32H72x-73x_1024.FLM))</Name>
+          <Name>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC8000 -FN1 -FF0STM32H72x-73x_1024 -FS08000000 -FL0100000 -FP0($$Device:STM32H723ZGTx$CMSIS\Flash\STM32H72x-73x_1024.FLM))</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -338,8 +338,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>../USBX/App/app_usbx_device.c</PathWithFileName>
-      <FilenameWithoutPath>app_usbx_device.c</FilenameWithoutPath>
+      <PathWithFileName>../USBX/App/ux_device_descriptors.c</PathWithFileName>
+      <FilenameWithoutPath>ux_device_descriptors.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -350,8 +350,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>../USBX/App/ux_device_descriptors.c</PathWithFileName>
-      <FilenameWithoutPath>ux_device_descriptors.c</FilenameWithoutPath>
+      <PathWithFileName>../USBX/App/ux_device_dfu_media.c</PathWithFileName>
+      <FilenameWithoutPath>ux_device_dfu_media.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -362,8 +362,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>../USBX/App/ux_device_dfu_media.c</PathWithFileName>
-      <FilenameWithoutPath>ux_device_dfu_media.c</FilenameWithoutPath>
+      <PathWithFileName>../USBX/App/app_usbx_device.c</PathWithFileName>
+      <FilenameWithoutPath>app_usbx_device.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -710,7 +710,7 @@
   </Group>
 
   <Group>
-    <GroupName>Middlewares/USBX/USB/USBX/UX Device CoreStack/RTOS_MODE</GroupName>
+    <GroupName>Middlewares/USBX/USB/USBX/UX Device CoreStack</GroupName>
     <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>

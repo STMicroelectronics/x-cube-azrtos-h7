@@ -1,22 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-******************************************************************************
-* @file    app_filex.c
-* @author  MCD Application Team
-* @brief   FileX applicative file
-******************************************************************************
-* @attention
-*
-* <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-* All rights reserved.</center></h2>
-*
-* This software component is licensed by ST under Ultimate Liberty license
-* SLA0044, the "License"; You may not use this file except in compliance with
-* the License. You may obtain a copy of the License at:
-*                             www.st.com/SLA0044
-*
-******************************************************************************
-*/
+  ******************************************************************************
+  * @file    app_filex.c
+  * @author  MCD Application Team
+  * @brief   FileX applicative file
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
@@ -77,7 +76,7 @@ TX_QUEUE        tx_msg_queue;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-
+static int32_t SD_IsDetected(uint32_t Instance);
 void fx_thread_entry(ULONG thread_input);
 void Error_Handler(void);
 
@@ -88,16 +87,16 @@ void Error_Handler(void);
   * @param memory_ptr: memory pointer
   * @retval int
   */
-UINT App_FileX_Init(VOID *memory_ptr)
+UINT MX_FileX_Init(VOID *memory_ptr)
 {
   UINT ret = FX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-  /* USER CODE BEGIN App_FileX_MEM_POOL */
-  /* USER CODE END App_FileX_MEM_POOL */
+  /* USER CODE BEGIN MX_FileX_MEM_POOL */
+  /* USER CODE END MX_FileX_MEM_POOL */
 
-  /* USER CODE BEGIN App_FileX_Init */
-  CHAR *pointer;
+  /* USER CODE BEGIN MX_FileX_Init */
+ CHAR *pointer;
 
   /*Allocate memory for fx_thread_entry*/
   ret = tx_byte_allocate(byte_pool, (VOID **) &pointer, FILEX_DEFAULT_STACK_SIZE, TX_NO_WAIT);
@@ -138,9 +137,7 @@ UINT App_FileX_Init(VOID *memory_ptr)
 
   /* Initialize FileX.  */
   fx_system_initialize();
-
-  /* USER CODE END App_FileX_Init */
-
+  /* USER CODE END MX_FileX_Init */
   return ret;
 }
 
@@ -157,7 +154,7 @@ void fx_thread_entry(ULONG thread_input)
   CHAR read_buffer[32];
   CHAR data[] = "This is FileX working on STM32";
 
-  if(BSP_SD_IsDetected(SD_INSTANCE) == SD_PRESENT)
+  if(SD_IsDetected(FX_STM32_SD_INSTANCE) == SD_PRESENT)
   {
     /* SD card is already inserted, place the info into the queue */
     tx_queue_send(&tx_msg_queue, &s_msg, TX_NO_WAIT);
@@ -165,7 +162,7 @@ void fx_thread_entry(ULONG thread_input)
   else
   {
     /* Indicate that SD card is not inserted from start */
-    BSP_LED_On(LED_RED);
+    HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
   }
 
   /* Infinite Loop */
@@ -178,10 +175,10 @@ void fx_thread_entry(ULONG thread_input)
 
       while(tx_queue_receive(&tx_msg_queue, &r_msg, TX_TIMER_TICKS_PER_SECOND / 2) != TX_SUCCESS)
       {
-        /* Toggle GREEN LED to indicate idle state after a successful operation */
+        /* Toggle Blue LED to indicate idle state after a successful operation */
         if(last_status == CARD_STATUS_CONNECTED)
         {
-          BSP_LED_Toggle(LED_BLUE);
+          HAL_GPIO_TogglePin(LED4_GPIO_Port, LED4_Pin);
         }
       }
 
@@ -194,20 +191,23 @@ void fx_thread_entry(ULONG thread_input)
         /* for debouncing purpose we wait a bit till it settles down */
         tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND / 2);
 
-        if(BSP_SD_IsDetected(SD_INSTANCE) == SD_PRESENT)
+        if(SD_IsDetected(FX_STM32_SD_INSTANCE) == SD_PRESENT)
         {
           /* We have a valid SD insertion event, start processing.. */
           /* Update last known status */
           last_status = CARD_STATUS_CONNECTED;
-          BSP_LED_Off(LED_RED);
+          HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_SET);
+
+
           break;
         }
         else
         {
           /* Update last known status */
           last_status = CARD_STATUS_DISCONNECTED;
-          BSP_LED_Off(LED_BLUE);
-          BSP_LED_On(LED_RED);
+          /* Switch on the Red LED and switch off the Blue LED */
+          HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET);
+          HAL_GPIO_WritePin(LED4_GPIO_Port, LED4_Pin, GPIO_PIN_SET);
         }
       }
 
@@ -339,16 +339,31 @@ void fx_thread_entry(ULONG thread_input)
   }
 }
 
-void BSP_SD_DetectCallback(uint32_t Instance, uint32_t Status)
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   ULONG s_msg = CARD_STATUS_CHANGED;
-
-  if(Instance == SD_INSTANCE)
+  if (GPIO_Pin == SD_DETECT_PIN)
   {
     tx_queue_send(&tx_msg_queue, &s_msg, TX_NO_WAIT);
   }
+}
 
-  UNUSED(Status);
+static int32_t SD_IsDetected(uint32_t Instance)
+{
+  int32_t ret;
+
+  ret = (uint32_t)HAL_GPIO_ReadPin(SD_DETECT_GPIO_PORT, SD_DETECT_PIN);
+
+  if(ret != GPIO_PIN_RESET)
+  {
+    ret = (int32_t)SD_NOT_PRESENT;
+  }
+  else
+  {
+    ret = (int32_t)SD_PRESENT;
+  }
+
+  return ret;
 }
 
 /* USER CODE END 1 */

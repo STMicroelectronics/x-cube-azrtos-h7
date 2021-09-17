@@ -1,22 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-******************************************************************************
-* @file    app_netxduo.c
-* @author  MCD Application Team
-* @brief   NetXDuo applicative file
-******************************************************************************
-* @attention
-*
-* <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-* All rights reserved.</center></h2>
-*
-* This software component is licensed by ST under Ultimate Liberty license
-* SLA0044, the "License"; You may not use this file except in compliance with
-* the License. You may obtain a copy of the License at:
-*                             www.st.com/SLA0044
-*
-******************************************************************************
-*/
+  ******************************************************************************
+  * @file    app_netxduo.c
+  * @author  MCD Application Team
+  * @brief   NetXDuo applicative file
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
@@ -73,15 +72,16 @@ static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr);
   * @param memory_ptr: memory pointer
   * @retval int
   */
-UINT App_NetXDuo_Init(VOID *memory_ptr)
+UINT MX_NetXDuo_Init(VOID *memory_ptr)
 {
   UINT ret = NX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-  /* USER CODE BEGIN App_NetXDuo_MEM_POOL */
-  /* USER CODE END App_NetXDuo_MEM_POOL */
+  /* USER CODE BEGIN MX_NetXDuo_MEM_POOL */
+  
+  /* USER CODE END MX_NetXDuo_MEM_POOL */
 
-  /* USER CODE BEGIN App_NetXDuo_Init */
+  /* USER CODE BEGIN MX_NetXDuo_Init */
   printf("Nx_UDP_Echo_Server application started..\n");
 
   /* Allocate the packet pool. */
@@ -97,9 +97,13 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
   }
 
    /* Allocate the NX_IP instance pool. */
-  ret = tx_byte_allocate(byte_pool, (VOID **) &pointer,
-                         2 * DEFAULT_MEMORY_SIZE, TX_NO_WAIT);
+  ret = tx_byte_allocate(byte_pool, (VOID **) &pointer, 2 * DEFAULT_MEMORY_SIZE, TX_NO_WAIT);
 
+  if (ret != NX_SUCCESS)
+  {
+    return NX_NOT_ENABLED;
+  }
+  
   /* Create the main NX_IP instance */
   ret = nx_ip_create(&IpInstance, "Main Ip instance", NULL_ADDRESS, NULL_ADDRESS, &AppPool, nx_stm32_eth_driver,
                      pointer, 2 * DEFAULT_MEMORY_SIZE, DEFAULT_PRIORITY);
@@ -110,8 +114,12 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
   }
 
   /* Allocate the packet pool. */
-  ret = tx_byte_allocate(byte_pool, (VOID **) &pointer,
-                         DEFAULT_MEMORY_SIZE, TX_NO_WAIT);
+  ret = tx_byte_allocate(byte_pool, (VOID **) &pointer, DEFAULT_MEMORY_SIZE, TX_NO_WAIT);
+
+  if (ret != NX_SUCCESS)
+  {
+    return NX_NOT_ENABLED;
+  }
 
   /* Enable the ARP protocol and provide the ARP cache size for the IP instance */
   ret = nx_arp_enable(&IpInstance, (VOID *)pointer, DEFAULT_MEMORY_SIZE);
@@ -131,11 +139,20 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
 
   /* Enable the UDP protocol required for DHCP communication */
   ret = nx_udp_enable(&IpInstance);
-
+  
+  if (ret != NX_SUCCESS)
+  {
+    return NX_NOT_ENABLED;
+  }
+  
   /* Allocate the main thread pool. */
-  ret = tx_byte_allocate(byte_pool, (VOID **) &pointer,
-                         2 * DEFAULT_MEMORY_SIZE, TX_NO_WAIT);
+  ret = tx_byte_allocate(byte_pool, (VOID **) &pointer, 2 * DEFAULT_MEMORY_SIZE, TX_NO_WAIT);
 
+  if (ret != TX_SUCCESS)
+  {
+    return NX_NOT_ENABLED;
+  }
+  
   /* Create the main thread */
   ret = tx_thread_create(&AppMainThread, "App Main thread", App_Main_Thread_Entry, 0, pointer, 2 * DEFAULT_MEMORY_SIZE,
                         DEFAULT_PRIORITY, DEFAULT_PRIORITY, TX_NO_TIME_SLICE, TX_AUTO_START);
@@ -146,9 +163,13 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
   }
 
   /* Allocate the app UDP thread entry pool. */
-  ret = tx_byte_allocate(byte_pool, (VOID **) &pointer,
-                         2 * DEFAULT_MEMORY_SIZE, TX_NO_WAIT);
+  ret = tx_byte_allocate(byte_pool, (VOID **) &pointer, 2 * DEFAULT_MEMORY_SIZE, TX_NO_WAIT);
 
+  if (ret != TX_SUCCESS)
+  {
+    return NX_NOT_ENABLED;
+  }
+  
   /* create the UDP server thread */
   ret = tx_thread_create(&AppUDPThread, "App UDP Thread", App_UDP_Thread_Entry, 0, pointer, 2 * DEFAULT_MEMORY_SIZE,
                         DEFAULT_PRIORITY, DEFAULT_PRIORITY, TX_NO_TIME_SLICE, TX_DONT_START);
@@ -169,7 +190,7 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
   /* Create a semaphore to be used to notify the main thread when the IP address is resolved*/
   tx_semaphore_create(&Semaphore, "DHCP Semaphore", 0);
 
-  /* USER CODE END App_NetXDuo_Init */
+  /* USER CODE END MX_NetXDuo_Init */
 
   return ret;
 }
@@ -200,32 +221,31 @@ static VOID App_Main_Thread_Entry(ULONG thread_input)
   ret = nx_ip_address_change_notify(&IpInstance, ip_address_change_notify_callback, NULL);
   if (ret != NX_SUCCESS)
   {
-     Error_Handler();
+    Error_Handler();
   }
 
   ret = nx_dhcp_start(&DHCPClient);
   if (ret != NX_SUCCESS)
   {
-     Error_Handler();
+    Error_Handler();
   }
 
-   /* wait until an IP address is ready */
+  /* wait until an IP address is ready */
   if(tx_semaphore_get(&Semaphore, TX_WAIT_FOREVER) != TX_SUCCESS)
   {
-     Error_Handler();
+    Error_Handler();
   }
-   /* get IP address  */
+  /* get IP address */
   ret = nx_ip_address_get(&IpInstance, &IpAddress, &NetMask);
 
   PRINT_IP_ADDRESS(IpAddress);
-  PRINT_IP_ADDRESS(NetMask);
 
   if (ret != TX_SUCCESS)
   {
-     Error_Handler();
+    Error_Handler();
   }
 
-  /* the network is correctly initialized, start the TCP server thread */
+  /* Now the network is correctly initialized, start the UDP server thread */
   tx_thread_resume(&AppUDPThread);
 
   /* this thread is not needed any more, we relinquish it */

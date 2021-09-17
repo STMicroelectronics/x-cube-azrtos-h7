@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.50.6.28611</state>
+                    <state>8.50.6.28950</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -360,9 +360,9 @@
                     <state>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Include</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/ports/generic/inc/</state>
-                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_host_controllers/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/inc/</state>
@@ -2040,7 +2040,7 @@
                 </file>
             </group>
             <group>
-                <name>USB/USBX/UX Host CoreStack/RTOS_MODE</name>
+                <name>USB/USBX/UX Host CoreStack</name>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_bandwidth_check.c</name>
                 </file>

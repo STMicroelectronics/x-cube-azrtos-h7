@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -50,8 +49,8 @@ TX_EVENT_FLAGS_GROUP    EventFlag;
 UX_SLAVE_CLASS_CDC_ACM_PARAMETER    cdc_acm_parameter;
 
 /* Define constants.  */
-#define USBX_APP_STACK_SIZE       2048
-#define USBX_MEMORY_SIZE          (32 * 1024)
+#define USBX_APP_STACK_SIZE       1024
+#define USBX_MEMORY_SIZE          (7 * 1024)
 
 /* USER CODE END PD */
 
@@ -74,27 +73,32 @@ void  usbx_app_thread_entry(ULONG arg);
   * @param memory_ptr: memory pointer
   * @retval int
   */
-UINT App_USBX_Device_Init(VOID *memory_ptr)
+UINT MX_USBX_Device_Init(VOID *memory_ptr)
 {
   UINT ret = UX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-  /* USER CODE BEGIN App_USBX_Device_MEM_POOL */
-  /* USER CODE END App_USBX_Device_MEM_POOL */
+  /* USER CODE BEGIN MX_USBX_Device_MEM_POOL */
+  /* USER CODE END MX_USBX_Device_MEM_POOL */
 
-  /* USER CODE BEGIN App_USBX_Device_Init */
+  /* USER CODE BEGIN MX_USBX_Device_Init */
   CHAR *pointer;
-  ULONG device_framework_hs_length;
+  /* Device framework FS length*/
   ULONG device_framework_fs_length;
+  /* Device String framework length*/
   ULONG string_framework_length;
+  /* Device language id framework length*/
   ULONG languge_id_framework_length;
-  UCHAR *device_framework_high_speed;
+  /* Device Framework Full Speed */
   UCHAR *device_framework_full_speed;
+  /* String Framework*/
   UCHAR *string_framework;
+  /* Language_Id_Framework*/
   UCHAR *language_id_framework;
+  /* Status Tx */
   UINT tx_status = UX_SUCCESS;
 
-  /* Allocate the stack for thread 0. */
+  /* Allocate USBX_MEMORY_SIZE. */
   tx_status = tx_byte_allocate(byte_pool, (VOID **) &pointer,
                                USBX_MEMORY_SIZE, TX_NO_WAIT);
 
@@ -106,10 +110,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
 
   /* Initialize USBX Memory */
   ux_system_initialize(pointer, USBX_MEMORY_SIZE, UX_NULL, 0);
-
-  /* Get_Device_Framework_High_Speed and get the length */
-  device_framework_high_speed = USBD_Get_Device_Framework_Speed(USBD_HIGH_SPEED,
-                                &device_framework_hs_length);
 
   /* Get_Device_Framework_Full_Speed and get the length */
   device_framework_full_speed = USBD_Get_Device_Framework_Speed(USBD_FULL_SPEED,
@@ -123,8 +123,8 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
 
   /* The code below is required for installing the device portion of USBX.
   In this application */
-  ret =  ux_device_stack_initialize(device_framework_high_speed,
-                                    device_framework_hs_length,
+  ret =  ux_device_stack_initialize(NULL,
+                                    0,
                                     device_framework_full_speed,
                                     device_framework_fs_length,
                                     string_framework,
@@ -132,7 +132,7 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
                                     language_id_framework,
                                     languge_id_framework_length, UX_NULL);
 
-  /* Check the Stack initialize status */
+  /* Check the device stack class status */
   if (ret != UX_SUCCESS)
   {
     Error_Handler();
@@ -191,9 +191,11 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   }
 
   /* Create the usbx_cdc_acm_thread_entry thread. */
-  tx_status = tx_thread_create(&ux_cdc_read_thread, "cdc_acm_read_usbx_app_thread_entry",
+  tx_status = tx_thread_create(&ux_cdc_read_thread,
+                               "cdc_acm_read_usbx_app_thread_entry",
                                usbx_cdc_acm_read_thread_entry, 1,
-                               pointer, USBX_APP_STACK_SIZE, 20, 20, TX_NO_TIME_SLICE,
+                               pointer, USBX_APP_STACK_SIZE, 20, 20,
+                               TX_NO_TIME_SLICE,
                                TX_AUTO_START);
 
   /* Check usbx_cdc_acm_read_thread_entry creation */
@@ -229,7 +231,7 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   {
     ret = TX_GROUP_ERROR;
   }
-  /* USER CODE END App_USBX_Device_Init */
+  /* USER CODE END MX_USBX_Device_Init */
 
   return ret;
 }

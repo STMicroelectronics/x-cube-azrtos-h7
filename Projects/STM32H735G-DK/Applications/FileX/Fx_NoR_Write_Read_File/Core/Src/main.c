@@ -1,28 +1,28 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  */
+******************************************************************************
+* @file           : main.c
+* @brief          : Main program body
+******************************************************************************
+* @attention
+*
+* Copyright (c) 2020-2021 STMicroelectronics.
+* All rights reserved.
+*
+* This software is licensed under terms that can be found in the LICENSE file
+* in the root directory of this software component.
+* If no LICENSE file comes with this software, it is provided AS-IS.
+*
+******************************************************************************
+*/
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "app_azure_rtos.h"
+#include "app_threadx.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -40,6 +40,8 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+
+OSPI_HandleTypeDef hospi1;
 
 UART_HandleTypeDef huart3;
 
@@ -94,33 +96,16 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
 
-  BSP_LED_Init(LED1);
-  BSP_LED_Init(LED2);
-
-#if (LX_DRIVER_CALLS_OSPI_INIT == 0)
-
-  BSP_OSPI_NOR_Init_t ospi_config;
-
-  /* OSPI device configuration */
-  ospi_config.InterfaceMode = BSP_OSPI_NOR_OPI_MODE;
-  ospi_config.TransferRate  = BSP_OSPI_NOR_DTR_TRANSFER;
-
-  if(BSP_OSPI_NOR_Init(OSPI_INSTANCE, &ospi_config) != BSP_ERROR_NONE)
-  {
-    Error_Handler();
-  }
-#endif
-
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART3_UART_Init();
-  MX_AZURE_RTOS_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
 
+  MX_ThreadX_Init();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -188,6 +173,60 @@ void SystemClock_Config(void)
 }
 
 /**
+  * @brief OCTOSPI1 Initialization Function
+  * @param None
+  * @retval None
+  */
+void MX_OCTOSPI1_Init(void)
+{
+
+  /* USER CODE BEGIN OCTOSPI1_Init 0 */
+
+  /* USER CODE END OCTOSPI1_Init 0 */
+
+  OSPIM_CfgTypeDef sOspiManagerCfg = {0};
+
+  /* USER CODE BEGIN OCTOSPI1_Init 1 */
+
+  /* USER CODE END OCTOSPI1_Init 1 */
+  /* OCTOSPI1 parameter configuration*/
+  hospi1.Instance = OCTOSPI1;
+  hospi1.Init.FifoThreshold = 4;
+  hospi1.Init.DualQuad = HAL_OSPI_DUALQUAD_DISABLE;
+  hospi1.Init.MemoryType = HAL_OSPI_MEMTYPE_MACRONIX;
+  hospi1.Init.DeviceSize = 26;
+  hospi1.Init.ChipSelectHighTime = 2;
+  hospi1.Init.FreeRunningClock = HAL_OSPI_FREERUNCLK_DISABLE;
+  hospi1.Init.ClockMode = HAL_OSPI_CLOCK_MODE_0;
+  hospi1.Init.WrapSize = HAL_OSPI_WRAP_NOT_SUPPORTED;
+  hospi1.Init.ClockPrescaler = 2;
+  hospi1.Init.SampleShifting = HAL_OSPI_SAMPLE_SHIFTING_NONE;
+  hospi1.Init.DelayHoldQuarterCycle = HAL_OSPI_DHQC_ENABLE;
+  hospi1.Init.ChipSelectBoundary = 0;
+  hospi1.Init.ClkChipSelectHighTime = 2;
+  hospi1.Init.DelayBlockBypass = HAL_OSPI_DELAY_BLOCK_USED;
+  hospi1.Init.MaxTran = 0;
+  hospi1.Init.Refresh = 0;
+  if (HAL_OSPI_Init(&hospi1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sOspiManagerCfg.ClkPort = 1;
+  sOspiManagerCfg.DQSPort = 1;
+  sOspiManagerCfg.NCSPort = 1;
+  sOspiManagerCfg.IOLowPort = HAL_OSPIM_IOPORT_1_LOW;
+  sOspiManagerCfg.IOHighPort = HAL_OSPIM_IOPORT_1_HIGH;
+  if (HAL_OSPIM_Config(&hospi1, &sOspiManagerCfg, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN OCTOSPI1_Init 2 */
+
+  /* USER CODE END OCTOSPI1_Init 2 */
+
+}
+
+/**
   * @brief USART3 Initialization Function
   * @param None
   * @retval None
@@ -242,19 +281,35 @@ static void MX_USART3_UART_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOG_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOE_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOF_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2|GPIO_PIN_3, GPIO_PIN_SET);
+
+  /*Configure GPIO pins : PC2 PC3 */
+  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_3;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 }
 
 /* USER CODE BEGIN 4 */
 /**
-  * @brief  Retargets the C library printf function to the USART.
-  * @param  None
-  * @retval None
-  */
+* @brief  Retargets the C library printf function to the USART.
+* @param  None
+* @retval None
+*/
 PUTCHAR_PROTOTYPE
 {
   /* Place your implementation of fputc here */
@@ -294,9 +349,10 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);
   while (1)
   {
-    BSP_LED_Toggle(LED_RED);
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_2);
     HAL_Delay(200);
   }
   /* USER CODE END Error_Handler_Debug */
@@ -314,9 +370,7 @@ void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

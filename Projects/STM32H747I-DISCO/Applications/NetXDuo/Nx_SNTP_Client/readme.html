@@ -45,7 +45,7 @@
 </ul>
 <p>The <strong>AppSNTPThread</strong>, once started:</p>
 <ul>
-<li><p>creates a dns_client with DNS_SERVER_ADDRESS used as DNS server.</p></li>
+<li><p>creates a dns_client with USER_DNS_ADDRESS used as DNS server.</p></li>
 <li><p>initialize SntpClient in Unicast mode and set SNTP_SERVER_NAME predefined in app_netxduo.h</p></li>
 <li><p>run SntpClient</p></li>
 <li><p>once a valid time update received, time will be displayed on the Hyperterminal and set to RTC</p></li>

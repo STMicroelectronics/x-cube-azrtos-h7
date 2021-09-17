@@ -62,7 +62,7 @@
 <tr class="odd">
 <td>ThreadX</td>
 <td>Tx_Thread_MsgQueue</td>
-<td>It demonstrates how to exchange message between threads using Message Queue API and how to handle message from different queues using event queue chaining feature. <a href="./NUCLEO-H723ZG/Applications/ThreadX/Tx_Thread_MsgQueue/readme.html">more …</a></td>
+<td>It demonstrates how to exchange message between threads using Message Queue API and how to handle message from different queues using oddt queue chaining feature. <a href="./NUCLEO-H723ZG/Applications/ThreadX/Tx_Thread_MsgQueue/readme.html">more …</a></td>
 </tr>
 <tr class="even">
 <td>ThreadX</td>
@@ -101,13 +101,23 @@
 </tr>
 <tr class="odd">
 <td>USBX</td>
-<td>Ux_Device_MSC</td>
-<td>It demonstrates how to develop USB Device mass storage class based application. The application is designed to emulate an USB MSC device, the code provides all required device descriptors framework and the associated Class descriptor report to build a compliant USB MSC device <a href="./STM32H735G-DK/Applications/USBX/Ux_Device_MSC/readme.html">more …</a></td>
+<td>Ux_Host_DualClass</td>
+<td>It demonstrates how to develop USB Host supporting two device classes: USB_HID (mouse or keyboard) and USB_MSC (removable flash disk). <a href="./STM32H735G-DK/Applications/USBX/Ux_Host_DualClass/readme.html">more …</a></td>
 </tr>
 <tr class="even">
 <td>USBX</td>
-<td>Ux_Device_CDC_ACM</td>
-<td>It demonstrates how to develop USB Device communication Class “CDC_ACM” based application. The application is designed to emulate an USB-to-UART bridge following the Virtual COM Port (VCP) implementation, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB CDC_ACM device. <a href="./NUCLEO-H723ZG/Applications/USBX/Ux_Device_CDC_ACM/readme.html">more …</a>.</td>
+<td>Ux_Host_HID_CDC_ACM</td>
+<td>It demonstrates how to develop a composite "USB HID CDC_ACM Host" that is able to enumerate and communicate with composite USB HID CDC_ACM and simple HID/CDC_ACM devices.<a href="./STM32H735G-DK/Applications/USBX/Ux_Host_HID_CDC_ACM/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>USBX</td>
+<td>Ux_Device_HID_CDC_ACM</td>
+<td>It demonstrates how to develop a composite USB Device application. The application is designed to emulate a USB HID mouse combined with an USB-to-UART bridge following the Virtual COM Port (VCP) implementation, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant composite USB HID and CDC_ACM device. <a href="./STM32H747I-DISCO/Applications/USBX/Ux_Device_HID_CDC_ACM/readme.html">more …</a>.</td>
+</tr>
+<tr class="even">
+<td>USBX</td>
+<td>Ux_Device_DFU</td>
+<td>It demonstrates how to develop USB Device Firmware Upgrade “DFU” based application.The application is designed to emulate an USB DFU device, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB DFU device. <a href="./NUCLEO-H723ZG/Applications/USBX/Ux_Device_DFU/readme.html">more …</a>.</td>
 </tr>
 <tr class="odd">
 <td>USBX</td>
@@ -121,49 +131,50 @@
 </tr>
 <tr class="odd">
 <td>USBX</td>
-<td>Ux_Host_DualClass</td>
-<td>It demonstrates how to develop USB Host supporting two device classes: USB_HID (mouse or keyboard) and USB_MSC (removable flash disk). <a href="./STM32H735G-DK/Applications/USBX/Ux_Host_DualClass/readme.html">more …</a></td>
+<td>Ux_Device_MSC</td>
+<td>It demonstrates how to develop USB Device mass storage class based application. The application is designed to emulate an USB MSC device, the code provides all required device descriptors framework and the associated Class descriptor report to build a compliant USB MSC device <a href="./STM32H735G-DK/Applications/USBX/Ux_Device_MSC/readme.html">more …</a></td>
 </tr>
 <tr class="even">
 <td>USBX</td>
-<td>Ux_Device_HID_CDC_ACM</td>
-<td>It demonstrates how to develop a composite USB Device application. The application is designed to emulate a USB HID mouse combined with an USB-to-UART bridge following the Virtual COM Port (VCP) implementation, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant composite USB HID and CDC_ACM device. <a href="./STM32H747I-DISCO/Applications/USBX/Ux_Device_HID_CDC_ACM/readme.html">more …</a>.</td>
+<td>Ux_Device_CDC_ACM</td>
+<td>It demonstrates how to develop USB Device communication Class “CDC_ACM” based application. The application is designed to emulate an USB-to-UART bridge following the Virtual COM Port (VCP) implementation, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB CDC_ACM device. <a href="./NUCLEO-H723ZG/Applications/USBX/Ux_Device_CDC_ACM/readme.html">more …</a>.</td>
 </tr>
 <tr class="odd">
-<td>USBX</td>
-<td>Ux_Device_DFU</td>
-<td>It demonstrates how to develop USB Device Firmware Upgrade “DFU” based application.The application is designed to emulate an USB DFU device, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB DFU device. <a href="./NUCLEO-H723ZG/Applications/USBX/Ux_Device_DFU/readme.html">more …</a>.</td>
-</tr>
-<tr class="even">
 <td>FileX</td>
 <td>Fx_uSD_File_Edit</td>
-<td>It demonstrates how to develop a basic SD card file operations application. The application is designed to handle SD card insertion/removal events, and depending on that state, it starts and stops file operations from and into the SD card. <a href="./STM32H735G-DK/Applications/FileX/Fx_uSD_File_Edit/readme.html">more …</a></td>
+<td>It demonstrates how to develop a basic SD card file operations application. The application is designed to handle SD card insertion/removal oddts, and depending on that state, it starts and stops file operations from and into the SD card. <a href="./STM32H735G-DK/Applications/FileX/Fx_uSD_File_Edit/readme.html">more …</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>FileX</td>
 <td>Fx_MultiAccess</td>
 <td>It demonstrates the FileX’s concurrent file access capabilities. The application is designed to execute file operations on the SD card device, the code provides all required software code for handling SD card I/O operations. <a href="./STM32H735G-DK/Applications/FileX/Fx_MultiAccess/readme.html">more …</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>FileX</td>
 <td>Fx_NoR_Write_Read_File</td>
 <td>It demonstrates how to create a Fat File system on the NOR flash using FileX alongside LevelX. The application is designed to execute file operations on the MX25LM51245G NOR flash device, the code provides all required software code for properly managing it. <a href="./STM32H735G-DK/Applications/FileX/Fx_NoR_Write_Read_File/readme.html">more …</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>FileX</td>
 <td>Fx_DualInstance</td>
 <td>It demonstrates the coexistence capability of two FileX/Levelx stacks running independently on each core. <a href="./STM32H747I-DISCO/Applications/FileX/Fx_Dual_Instance/readme.html">more …</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>FileX</td>
 <td>Fx_IAP</td>
 <td>It demonstrates how to implement an In-Application programming (IAP) using FileX’s SD file access capabilities. The application is designed to erase and write to on-chip flash memory, it provides all required software code for handling SD card and flash memory I/O operations. This is a typical application on how to use the SD card peripheral for firmware upgrade application or IAP, allowing user to erase and write to on-chip flash memory. <a href="./STM32H735G-DK/Applications/FileX/FX_IAP/IAP_main/readme.html">more …</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>FileX</td>
 <td>Fx_NAND_Write_Read_File</td>
 <td>It demonstrates create a Fat File system on the NAND flash using FileX alongside LevelX. The application is designed to execute file operations on the Micron MT29F2G16ABAEAWP NAND flash device, the code provides all required software code for properly managing it. <a href="./STM32H743I-EVAL/Applications/FileX/Fx_Nand_Write_Read_File/readme.html">more …</a></td>
 </tr>
+<tr class="odd">
+<td>FileX</td>
+<td>Fx_SRAM_File_Edit_Standalone</td>
+<td>It demonstrates how to create a Fat File system on the internal SRAM memory using FileX running in standalone mode without ThreadX. <a href="./NUCLEO-H723ZG/Applications/FileX/Fx_SRAM_File_Edit_Standalone/readme.html">more …</a></td>
+</tr>
+
 <tr class="even">
 <td>NetXDuo</td>
 <td>Nx_TCP_Echo_Server</td>

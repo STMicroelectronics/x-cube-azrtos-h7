@@ -1,22 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-******************************************************************************
-* @file    app_netxduo.c
-* @author  MCD Application Team
-* @brief   NetXDuo application file
-******************************************************************************
-* @attention
-*
-* <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-* All rights reserved.</center></h2>
-*
-* This software component is licensed by ST under Ultimate Liberty license
-* SLA0044, the "License"; You may not use this file except in compliance with
-* the License. You may obtain a copy of the License at:
-*                             www.st.com/SLA0044
-*
-******************************************************************************
-*/
+  ******************************************************************************
+  * @file    app_netxduo.c
+  * @author  MCD Application Team
+  * @brief   NetXDuo applicative file
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
@@ -24,10 +23,26 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+
+/* USER CODE END PTD */
+
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
+
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+
+/* USER CODE END PM */
+
+/* Private variables ---------------------------------------------------------*/
+/* USER CODE BEGIN PV */
 
 TX_THREAD AppMainThread;
 TX_THREAD AppTCPThread;
@@ -43,21 +58,7 @@ NX_IP IpInstance;
 NX_DHCP DHCPClient;
 NX_TCP_SOCKET TCPSocket;
 
-UCHAR *pointer;
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
-/* USER CODE BEGIN PV */
-
+CHAR *pointer;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -72,16 +73,16 @@ static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr);
   * @param memory_ptr: memory pointer
   * @retval int
   */
-UINT App_NetXDuo_Init(VOID *memory_ptr)
+UINT MX_NetXDuo_Init(VOID *memory_ptr)
 {
   UINT ret = NX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-  /* USER CODE BEGIN App_NetXDuo_MEM_POOL */
-  /* USER CODE END App_NetXDuo_MEM_POOL */
+  /* USER CODE BEGIN MX_NetXDuo_MEM_POOL */
+  /* USER CODE END MX_NetXDuo_MEM_POOL */
 
-  /* USER CODE BEGIN App_NetXDuo_Init */
-  printf("Nx_TCP_Echo_Server application started..\n");
+  /* USER CODE BEGIN MX_NetXDuo_Init */
+ printf("Nx_TCP_Echo_Server application started..\n");
 
   /* Allocate the memory for packet_pool.  */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,  NX_PACKET_POOL_SIZE, TX_NO_WAIT) != TX_SUCCESS)
@@ -137,6 +138,11 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
   /* Enable the UDP protocol required for  DHCP communication */
   ret = nx_udp_enable(&IpInstance);
 
+  if (ret != NX_SUCCESS)
+  {
+    return NX_NOT_ENABLED;
+  }
+  
   /* Enable the TCP protocol */
   ret = nx_tcp_enable(&IpInstance);
 
@@ -186,7 +192,7 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
   /* create a semaphore used to notify the main thread when the IP address is resolved */
   tx_semaphore_create(&Semaphore, "App Semaphore", 0);
 
-  /* USER CODE END App_NetXDuo_Init */
+  /* USER CODE END MX_NetXDuo_Init */
 
   return ret;
 }
@@ -227,7 +233,6 @@ static VOID App_Main_Thread_Entry(ULONG thread_input)
 
   /* print the IP address and the net mask */
   PRINT_IP_ADDRESS(IpAddress);
-  PRINT_IP_ADDRESS(NetMask);
 
   if (ret != TX_SUCCESS)
   {
@@ -374,4 +379,5 @@ static VOID App_TCP_Thread_Entry(ULONG thread_input)
     }
   }
 }
+
 /* USER CODE END 1 */

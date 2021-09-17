@@ -23,30 +23,44 @@
 <div class="row">
 <section id="nx_webserver-application-description" class="col-sm-12 col-lg-8">
 <h2><b>Nx_WebServer application description</b></h2>
-<p>This application provides an example of Azure RTOS NetX Duo stack usage on STM32H735G-DK board, it shows how to develop Web HTTP server based application. The application is designed to load files and static web pages stored in SD card using a Web HTTP server, the code provides all required features to build a compliant Web HTTP Server. The main entry function tx_application_define() is called by ThreadX during kernel start, at this stage, all NetX and FileX resources are created.</p>
+<p>This application provides an example of Azure RTOS NetX Duo stack usage on STM32H735G-DK board, it shows how to develop Web HTTP server based application. The application is designed to load files and dyncamic web pages stored in SD card using a Web HTTP server, the code provides all required features to build a compliant Web HTTP Server. The main entry function tx_application_define() is called by ThreadX during kernel start, at this stage, all NetX and FileX resources are created.</p>
 <ul>
-<li>A NX_PACKET_POOL <strong>AppPool</strong> is allocated</li>
-<li>A NX_IP instance <strong>IpInstance</strong> using that pool is initialized</li>
-<li>A NX_PACKET_POOL <strong>WebServerPool</strong> is allocated</li>
-<li>A NX_WEB_HTTP_SERVER <strong>HTTPServer</strong> instance using that pool is initialized</li>
-<li>The ARP, ICMP and protocols (TCP and UDP) are enabled for the NX_IP instance</li>
-<li>A DHCP client is created.</li>
+<li><p>A NX_PACKET_POOL <strong>EthPool</strong> is allocated</p></li>
+<li><p>A NX_IP instance <strong>IpInstance</strong> using that pool is initialized</p></li>
+<li><p>A NX_PACKET_POOL <strong>WebServerPool</strong> is allocated</p></li>
+<li><p>A NX_WEB_HTTP_SERVER <strong>HTTPServer</strong> instance using that pool is initialized</p></li>
+<li><p>The ARP, ICMP and protocols (TCP and UDP) are enabled for the NX_IP instance</p></li>
+<li><p>A DHCP client is created.</p></li>
 </ul>
 <p>The application then creates 2 threads with different priorities:</p>
 <ul>
-<li><strong>AppMainThread</strong> (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.</li>
-<li><strong>AppWebServerThread</strong> (priority 5, PreemtionThreashold 5) : created with the TX_DONT_START flag to be started later.</li>
+<li><p><strong>AppMainThread</strong> (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.</p></li>
+<li><p><strong>AppServerThread</strong> (priority 5, PreemtionThreashold 5) : created with the TX_DONT_START flag to be started later.</p></li>
+<li><p><strong>LedThread</strong> (priority 15, PreemtionThreashold 15) : created with the TX_DONT_START flag to be started later.</p></li>
 </ul>
 <p>The <strong>AppMainThread</strong> starts and perform the following actions:</p>
 <ul>
-<li>starts the DHCP client</li>
-<li>waits for the IP address resolution</li>
-<li>resumes the <strong>AppWebServerThread</strong></li>
+<li><p>Starts the DHCP client</p></li>
+<li><p>Waits for the IP address resolution</p></li>
+<li><p>Resumes the <strong>AppServerThread</strong></p></li>
 </ul>
-<p>The <strong>AppWebServerThread</strong>, once started:</p>
-<p>The user’s browser can load a static web page, download a zip folder or watch a video that are stored in SD card. In order to open simultaneous sessions for the server, you should define the number of simultaneous sessions NX_WEB_HTTP_SERVER_SESSION_MAX in “nx_user.h”.</p>
+<p>The <strong>AppServerThread</strong>, once started:</p>
+<ul>
+<li><p>Fx_media_open.</p></li>
+<li><p>Starts HTTP server.</p></li>
+<li><p>Each command coming from client (browser) is treated on the callback webserver_request_notify_callback.</p></li>
+</ul>
+<p>The <strong>LedThread</strong>, once resumed from the dashboard:</p>
+<ul>
+<li>Green Led is toggling &amp; message printed on HyperTerminal.</li>
+</ul>
 <h4 id="expected-success-behavior"><b>Expected success behavior</b></h4>
-<p>When an SD card is inserted into the STM32H735G-DK SD card reader and the board is powered up and connected to DHCP enabled Ethernet network, the green LED switches ON when the Web HTTP server is successfully started. Then the static files can be loaded on the web browser after entring the url http://<span class="citation" data-cites="IP/file_name">@IP/file_name</span>. An example web page is provided for testing the application that can be found under “NetXDuo/Nx_WebServer/Web_Content/index.html”.</p>
+<ul>
+<li><p>The board IP address “IP@” is printed on the HyperTerminal</p></li>
+<li><p>Home page is well displayed on the browser after entering the url: http://IP@/about.html</p></li>
+<li><p>Dashboard is well displayed on the browser after entering the url: http://IP@/dashboard.html</p></li>
+<li><p>On dashboard, You can command Green LED and watch some infos about threadx and netxduo.</p></li>
+</ul>
 <h4 id="error-behaviors"><b>Error behaviors</b></h4>
 <p>If the WEB HTTP server is not successfully started, the green LED stays OFF. In case of other errors, the Web HTTP server does not operate as designed (Files stored in the SD card are not loaded in the web browser).</p>
 <h4 id="assumptions-if-any"><b>Assumptions if any</b></h4>

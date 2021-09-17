@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -444,11 +444,6 @@
           <GroupName>Application/User/USBX/App</GroupName>
           <Files>
             <File>
-              <FileName>app_usbx_host.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../USBX/App/app_usbx_host.c</FilePath>
-            </File>
-            <File>
               <FileName>ux_host_keyboard.c</FileName>
               <FileType>1</FileType>
               <FilePath>../USBX/App/ux_host_keyboard.c</FilePath>
@@ -457,6 +452,11 @@
               <FileName>ux_host_mouse.c</FileName>
               <FileType>1</FileType>
               <FilePath>../USBX/App/ux_host_mouse.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_usbx_host.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../USBX/App/app_usbx_host.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -641,7 +641,7 @@
                     <v6LangP>0</v6LangP>
                     <vShortEn>2</vShortEn>
                     <vShortWch>2</vShortWch>
-                    <v6Lto>0</v6Lto>
+                    <v6Lto>2</v6Lto>
                     <v6WtE>2</v6WtE>
                     <v6Rtti>2</v6Rtti>
                     <VariousControls>
@@ -707,7 +707,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE</GroupName>
+          <GroupName>Middlewares/USBX/USB/USBX/UX Host CoreStack</GroupName>
           <Files>
             <File>
               <FileName>ux_host_stack_bandwidth_check.c</FileName>

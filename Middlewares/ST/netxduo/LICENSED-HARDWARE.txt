@@ -1,6 +1,6 @@
 LICENSED HARDWARE LIST
 
-Last Updated June 21, 2021
+Last Updated September 3, 2021
 
 Microsoft has entered into OEM Agreements with manufacturers of the following microprocessors and
 microcontrollers (the “hardware”) to enable those manufacturers to include and distribute Azure RTOS
@@ -17,3 +17,5 @@ Licensed Microcontrollers and Microprocessors:
 	STM32H7 Series
 
 	STM32U5 Series
+
+	STM32F4 Series

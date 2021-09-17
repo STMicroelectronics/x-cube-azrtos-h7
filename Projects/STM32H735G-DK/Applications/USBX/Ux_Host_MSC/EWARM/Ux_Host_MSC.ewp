@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.50.6.28611</state>
+                    <state>8.50.6.28950</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -1252,7 +1252,7 @@
         <group>
             <name>FileX</name>
             <group>
-                <name>File System/FileX/Core/RTOS_MODE</name>
+                <name>File System/FileX/Core</name>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\filex\common\src\fx_directory_attributes_read.c</name>
                 </file>
@@ -2803,7 +2803,7 @@
                 </file>
             </group>
             <group>
-                <name>USB/USBX/UX Host CoreStack/RTOS_MODE</name>
+                <name>USB/USBX/UX Host CoreStack</name>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_bandwidth_check.c</name>
                 </file>

@@ -1,12 +1,12 @@
 ﻿# X-CUBE-AZRTOS-H7 Azure RTOS Software Expansion for STM32Cube
 
+![latest tag](https://img.shields.io/github/v/tag/STMicroelectronics/x-cube-azrtos-h7.svg?color=brightgreen)
+
 With Azure RTOS complementing the extensive STM32Cube ecosystem providing free development tools, software bricks, and software expansion packages, STM32 users can also leverage the rich services of Azure RTOS, which meet the needs of tiny, smart, connected devices.
 
 **X-CUBE-AZRTOS-H7** (Azure RTOS Software Expansion for STM32Cube) provides a full integration of **Microsoft Azure RTOS** in the STM32Cube environment for the STM32H7 series of microcontrollers. Ready-to-run applicative examples are also provided for the *NUCLEO-H723ZG*, *STM32H735G-DK*, *STM32H747I-DK* and *STM32H743I-EVAL* evaluation boards, thus **reducing the learning curve** and ensuring a **smooth application development experience** with Azure RTOS and STM32H7 MCUs.
 
 The scope of this package covers the following Azure RTOS middleware: RTOS (***ThreadX***), USB Device and Host (***USBX***), File System including NOR/NAND memories support (***FileX*** and ***LevelX***) and Networking including Ethernet and WiFi media (***NetXDuo***).
-
-The current **X-CUBE-AZRTOS-H7** package is the **first milestone** of ST's **Azure RTOS integration in the STM32Cube Ecosystem**.
 
 ![](_htmresc/OverviewAzureRTOS_in_STM32Cube.png)
 
@@ -30,7 +30,7 @@ One of the following toolchains:
 - [STM32CubeIDE V1.7.0](https://www.st.com/en/development-tools/stm32cubeide.html)  + ST-LINKV3 
 - RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.32 + ST-LINKV3
 
-## Supported Devices and Boards
+## Supported Devices and Boards by applications
 - [NUCLEO-H723ZG](https://www.st.com/en/evaluation-tools/nucleo-h723zg.html) *(MB1364-E01)*
 - [STM32H735G-DK](https://www.st.com/en/evaluation-tools/stm32h735g-dk.html) *(MB1520-B02)*
 - [STM32H747I-DK](https://www.st.com/en/evaluation-tools/stm32h747i-disco.html) *(MB1248-D01)*
@@ -67,62 +67,71 @@ For more details about license information relative to each component in this pa
 ## Applications
 | Middleware   |  Applications                    |       Short Description      |
 |--------------|----------------------------------|------------------------------|
-|ThreadX | Tx_Thread_Creation      | It demonstrates how to create and destroy multiple threads using Azure RTOS ThreadX APIs. In addition, it shows how to use preemption threshold between threads and change priorities on-fly. [readme](./Projects/NUCLEO-H723ZG/Applications/ThreadX/Tx_Thread_Creation/README.md) |
-|ThreadX | Tx_Thread_Sync          | It demonstrates how to synchronize between threads using binary semaphores or mutexes. [readme](./Projects/STM32H735G-DK/Applications/ThreadX/Tx_Thread_Sync/README.md) |
-|ThreadX | Tx_Thread_MsgQueue      | It demonstrates how to exchange message between threads using Message Queue API and how to handle message from different queues using event queue chaining feature. [readme](./Projects/NUCLEO-H723ZG/Applications/ThreadX/Tx_Thread_MsgQueue/README.md) |
-|ThreadX | Tx_FreeRTOS_Wrapper     | It demonstrates how to create threads using the FreeRTOS wrapper APIs. [readme](./Projects/STM32H735G-DK/Applications/ThreadX/Tx_FreeRTOS_Wrapper/README.md) |
-|ThreadX | Tx_CMSIS_Wrapper        | It demonstrates how CMSIS RTOS adaptation layer for Azure RTOS ThreadX, it shows how to develop an application using the CMSIS RTOS 2 APIs. [readme](./Projects/STM32H747I-DISCO/Applications/ThreadX/Tx_CMSIS_Wrapper/README.md) |
-|ThreadX | Tx_LowPower             | It demonstrates how to configure the LowPower feature of Azure RTOS ThreadX stack. In addition, it shows how to use ThreadX MACRO related to the LowPower feature. [readme](./Projects/NUCLEO-H723ZG/Applications/ThreadX/Tx_LowPower/README.md) |
-|ThreadX | Tx_MPU                  | It demonstrates how to load, start and unload modules. In addition, it shows how ThreadX memory protection on modules using the Memory Protection Unit (MPU). [readme](./Projects/STM32H747I-DISCO/Applications/ThreadX/Tx_MPU/README.md) |
-|USBX    | Ux_Host_MSC             | It demonstrates how to develop USB Host Mass Storage "MSC" able to enumerate and communicates with a removable usb flash disk. The application is designed to behave as an USB MSC Host able to operate with an USB flash disk using the Bulk Only Transfer (BOT) and Small Computer System Interface (SCSI) transparent commands combined with a file system AzureRTOS FileX.  [readme](./Projects/STM32H735G-DK/Applications/USBX/Ux_Host_MSC/README.md) |
-|USBX    | Ux_Host_HID             | It demonstrates how to develop USB Host Human Interface "HID" able to enumerate and communicates with a mouse or a keyboard. The application is designed to behave as an USB HID Host, the code provides required requests to properly enumerate HID devices , HID Class APIs to decode HID reports received from a mouse or a keyboard and display data on uart HyperTerminal.  [readme](./Projects/NUCLEO-H723ZG/Applications/USBX/Ux_Host_HID/README.md) |
-|USBX    | Ux_Host_CDC_ACM         | It demonstrates how to develop USB Host CDC ACM device able to properly enumerate CDC devices then send and receive data that can be displayed on Hyperterminal or alike. [readme](./Projects/NUCLEO-H723ZG/Applications/USBX/Ux_Host_CDC_ACM/README.md) |
-|USBX    | Ux_Device_MSC           | It demonstrates how to develop USB Device mass storage class based application. The application is designed to emulate an USB MSC device, the code provides all required device descriptors framework and the associated Class descriptor report to build a compliant USB MSC device  [readme](./Projects/STM32H735G-DK/Applications/USBX/Ux_Device_MSC/README.md) |
-|USBX    | Ux_Device_CDC_ACM       | It demonstrates how to develop USB Device communication Class "CDC_ACM" based application. The application is designed to emulate an USB-to-UART bridge following the Virtual COM Port (VCP) implementation, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB CDC_ACM device. [readme](./Projects/NUCLEO-H723ZG/Applications/USBX/Ux_Device_CDC_ACM/README.md). |
-|USBX    | Ux_Device_HID           | It demonstrates how to develop USB Device Human Interface "HID" mouse based application. The application is designed to emulate an USB HID mouse device, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB HID mouse device. [readme](./Projects/NUCLEO-H723ZG/Applications/USBX/Ux_Device_HID/README.md)  |
-|USBX    | Ux_Device_CDC_ECM       | It demonstrates how to develop USB Device CDC ECM communication. It shows how to run Web HTTP server based application stack over USB interface using USB CDC ECM protocol. [readme](./Projects/STM32H735G-DK/Applications/USBX/Ux_Device_CDC_ECM/README.md)  |
-|USBX    | Ux_Host_DualClass       | It demonstrates how to develop USB Host supporting two device classes: USB_HID (mouse or keyboard) and USB_MSC (removable flash disk). [readme](./Projects/STM32H735G-DK/Applications/USBX/Ux_Host_DualClass/README.md) |
-|USBX    | Ux_Device_HID_CDC_ACM   | It demonstrates how to develop a composite USB Device application. The application is designed to emulate a USB HID mouse combined with an USB-to-UART bridge following the Virtual COM Port (VCP) implementation, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant composite USB HID and CDC_ACM device. [readme](./Projects/STM32H747I-DISCO/Applications/USBX/Ux_Device_HID_CDC_ACM/README.md). |
-|USBX    | Ux_Device_DFU           | It demonstrates how to develop USB Device Firmware Upgrade "DFU" based application.The application is designed to emulate an USB DFU device, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB DFU device. [readme](./Projects/NUCLEO-H723ZG/Applications/USBX/Ux_Device_DFU/README.md) |
-|FileX   | Fx_uSD_File_Edit        | It demonstrates how to develop a basic SD card file operations application. The application is designed to handle SD card insertion/removal events, and depending on that state, it starts and stops file operations from and into the SD card. [readme](./Projects/STM32H735G-DK/Applications/FileX/Fx_uSD_File_Edit/README.md)  |
-|FileX   | Fx_MultiAccess          | It demonstrates the FileX's concurrent file access capabilities. The application is designed to execute file operations on the SD card device, the code provides all required software code for handling SD card I/O operations. [readme](./Projects/STM32H735G-DK/Applications/FileX/Fx_MultiAccess/README.md) |
-|FileX   | Fx_NoR_Write_Read_File  | It demonstrates how to create a Fat File system on the NOR flash using FileX alongside LevelX. The application is designed to execute file operations on the MX25LM51245G NOR flash device, the code provides all required software code for properly managing it. [readme](./Projects/STM32H735G-DK/Applications/FileX/Fx_NoR_Write_Read_File/README.md) |
-|FileX   | Fx_DualInstance         | It demonstrates the coexistence capability of two FileX/Levelx stacks running independently on each core. [readme](./Projects/STM32H747I-DISCO/Applications/FileX/Fx_Dual_Instance/README.md) |
-|FileX   | Fx_IAP                  | It demonstrates how to implement an In-Application programming (IAP) using FileX's SD file access capabilities. The application is designed to erase and write to on-chip flash memory, it provides all required software code for handling SD card and flash memory I/O operations. This is a typical application on how to use the SD card peripheral for firmware upgrade application or IAP, allowing user to erase and write to on-chip flash memory. [readme](./Projects/STM32H735G-DK/Applications/FileX/FX_IAP/IAP_main/README.md) |
-|FileX   | Fx_NAND_Write_Read_File | It demonstrates create a Fat File system on the NAND flash using FileX alongside LevelX. The application is designed to execute file operations on the Micron MT29F2G16ABAEAWP NAND flash device, the code provides all required software code for properly managing it. [readme](./Projects/STM32H743I-EVAL/Applications/FileX/Fx_Nand_Write_Read_File/README.md) |
-|NetXDuo | Nx_TCP_Echo_Server      | It demonstrates how to develop a NetX TCP server to communicate with a remote client using the NetX TCP socket API. [readme](./Projects/NUCLEO-H723ZG/Applications/NetXDuo/Nx_TCP_Echo_Server/README.md) |
-|NetXDuo | Nx_TCP_Echo_Client      | It demonstrates how to develop a NetX TCP client to communicate with a remote sever using the NetX TCP socket API. [readme](./Projects/NUCLEO-H723ZG/Applications/NetXDuo/Nx_TCP_Echo_Client/README.md) |
-|NetXDuo | Nx_UDP_Echo_Server      | It demonstrates how to develop a NetX UDP server to communicate with a remote client using the NetX UDP socket API. [readme](./Projects/STM32H735G-DK/Applications/NetXDuo/Nx_UDP_Echo_Server/README.md) |
-|NetXDuo | Nx_UDP_Echo_Client      | It demonstrates how to develop a NetX UDP client to communicate with a remote sever using the NetX UDP socket API. [readme](./Projects/STM32H735G-DK/Applications/NetXDuo/Nx_UDP_Echo_Client/README.md) |
-|NetXDuo | Nx_WebServer            | It demonstrates how to develop Web HTTP server based application.It is designed to load files and static web pages stored in SD card using a Web HTTP server, the code provides all required features to build a compliant Web HTTP Server.  [readme](./Projects/STM32H735G-DK/Applications/NetXDuo/Nx_WebServer/README.md) |
-|NetXDuo | Nx_MQTT_Client          | It demonstrates how to exchange data between client and server using MQTT protocol in an encrypted mode supporting TLS v1.2. [readme](./Projects/STM32H735G-DK/Applications/NetXDuo/Nx_MQTT_Client/README.md) |
-|NetXDuo | Nx_SNTP_Client          | It demonstrates how to develop a NetX SNTP client and connect with an STNP server to get a time update. [readme](./Projects/STM32H747I-DISCO/Applications/NetXDuo/Nx_SNTP_Client/README.md) |
+|ThreadX | Tx_Thread_Creation            | It demonstrates how to create and destroy multiple threads using Azure RTOS ThreadX APIs. In addition, it shows how to use preemption threshold between threads and change priorities on-fly. [readme](./Projects/NUCLEO-H723ZG/Applications/ThreadX/Tx_Thread_Creation/README.md) |
+|ThreadX | Tx_Thread_Sync                | It demonstrates how to synchronize between threads using binary semaphores or mutexes. [readme](./Projects/STM32H735G-DK/Applications/ThreadX/Tx_Thread_Sync/README.md) |
+|ThreadX | Tx_Thread_MsgQueue            | It demonstrates how to exchange message between threads using Message Queue API and how to handle message from different queues using event queue chaining feature. [readme](./Projects/NUCLEO-H723ZG/Applications/ThreadX/Tx_Thread_MsgQueue/README.md) |
+|ThreadX | Tx_FreeRTOS_Wrapper           | It demonstrates how to create threads using the FreeRTOS wrapper APIs. [readme](./Projects/STM32H735G-DK/Applications/ThreadX/Tx_FreeRTOS_Wrapper/README.md) |
+|ThreadX | Tx_CMSIS_Wrapper              | It demonstrates how CMSIS RTOS adaptation layer for Azure RTOS ThreadX, it shows how to develop an application using the CMSIS RTOS 2 APIs. [readme](./Projects/STM32H747I-DISCO/Applications/ThreadX/Tx_CMSIS_Wrapper/README.md) |
+|ThreadX | Tx_LowPower                   | It demonstrates how to configure the LowPower feature of Azure RTOS ThreadX stack. In addition, it shows how to use ThreadX MACRO related to the LowPower feature. [readme](./Projects/NUCLEO-H723ZG/Applications/ThreadX/Tx_LowPower/README.md) |
+|ThreadX | Tx_MPU                        | It demonstrates how to load, start and unload modules. In addition, it shows how ThreadX memory protection on modules using the Memory Protection Unit (MPU). [readme](./Projects/STM32H747I-DISCO/Applications/ThreadX/Tx_MPU/README.md) |
+|USBX    | Ux_Host_MSC                   | It demonstrates how to develop USB Host Mass Storage "MSC" able to enumerate and communicates with a removable usb flash disk. The application is designed to behave as an USB MSC Host able to operate with an USB flash disk using the Bulk Only Transfer (BOT) and Small Computer System Interface (SCSI) transparent commands combined with a file system AzureRTOS FileX.  [readme](./Projects/STM32H735G-DK/Applications/USBX/Ux_Host_MSC/README.md) |
+|USBX    | Ux_Host_HID                   | It demonstrates how to develop USB Host Human Interface "HID" able to enumerate and communicates with a mouse or a keyboard. The application is designed to behave as an USB HID Host, the code provides required requests to properly enumerate HID devices , HID Class APIs to decode HID reports received from a mouse or a keyboard and display data on uart HyperTerminal.  [readme](./Projects/NUCLEO-H723ZG/Applications/USBX/Ux_Host_HID/README.md) |
+|USBX    | Ux_Host_CDC_ACM               | It demonstrates how to develop USB Host CDC ACM device able to properly enumerate CDC devices then send and receive data that can be displayed on Hyperterminal or alike. [readme](./Projects/NUCLEO-H723ZG/Applications/USBX/Ux_Host_CDC_ACM/README.md) |
+|USBX    | Ux_Device_MSC                 | It demonstrates how to develop USB Device mass storage class based application. The application is designed to emulate an USB MSC device, the code provides all required device descriptors framework and the associated Class descriptor report to build a compliant USB MSC device  [readme](./Projects/STM32H735G-DK/Applications/USBX/Ux_Device_MSC/README.md) |
+|USBX    | Ux_Device_CDC_ACM             | It demonstrates how to develop USB Device communication Class "CDC_ACM" based application. The application is designed to emulate an USB-to-UART bridge following the Virtual COM Port (VCP) implementation, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB CDC_ACM device. [readme](./Projects/NUCLEO-H723ZG/Applications/USBX/Ux_Device_CDC_ACM/README.md). |
+|USBX    | Ux_Device_HID                 | It demonstrates how to develop USB Device Human Interface "HID" mouse based application. The application is designed to emulate an USB HID mouse device, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB HID mouse device. [readme](./Projects/NUCLEO-H723ZG/Applications/USBX/Ux_Device_HID/README.md)  |
+|USBX    | Ux_Device_CDC_ECM             | It demonstrates how to develop USB Device CDC ECM communication. It shows how to run Web HTTP server based application stack over USB interface using USB CDC ECM protocol. [readme](./Projects/STM32H735G-DK/Applications/USBX/Ux_Device_CDC_ECM/README.md)  |
+|USBX    | Ux_Host_DualClass             | It demonstrates how to develop USB Host supporting two device classes: USB_HID (mouse or keyboard) and USB_MSC (removable flash disk). [readme](./Projects/STM32H735G-DK/Applications/USBX/Ux_Host_DualClass/README.md) |
+|USBX    | Ux_Device_HID_CDC_ACM         | It demonstrates how to develop a composite USB Device application. The application is designed to emulate a USB HID mouse combined with an USB-to-UART bridge following the Virtual COM Port (VCP) implementation, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant composite USB HID and CDC_ACM device. [readme](./Projects/STM32H747I-DISCO/Applications/USBX/Ux_Device_HID_CDC_ACM/README.md). |
+|USBX    | Ux_Device_DFU                 | It demonstrates how to develop USB Device Firmware Upgrade "DFU" based application.The application is designed to emulate an USB DFU device, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB DFU device. [readme](./Projects/NUCLEO-H723ZG/Applications/USBX/Ux_Device_DFU/README.md) |
+|USBX    | Ux_Host_HID_CDC_ACM           | It demonstrates how to develop a composite "USB HID CDC_ACM Host" that is able to enumerate and communicate with composite USB HID CDC_ACM and simple HID/CDC_ACM devices. [readme](./Projects/STM32H735G-DK/Applications/USBX/Ux_Host_HID_CDC_ACM/README.md) |
+|FileX   | Fx_uSD_File_Edit              | It demonstrates how to develop a basic SD card file operations application. The application is designed to handle SD card insertion/removal events, and depending on that state, it starts and stops file operations from and into the SD card. [readme](./Projects/STM32H735G-DK/Applications/FileX/Fx_uSD_File_Edit/README.md)  |
+|FileX   | Fx_MultiAccess                | It demonstrates how the FileX's concurrent file access capabilities. The application is designed to execute file operations on the SD card device, the code provides all required software code for handling SD card I/O operations. [readme](./Projects/STM32H735G-DK/Applications/FileX/Fx_MultiAccess/README.md) |
+|FileX   | Fx_NoR_Write_Read_File        | It demonstrates how to create a Fat File system on the NOR flash using FileX alongside LevelX. The application is designed to execute file operations on the MX25LM51245G NOR flash device, the code provides all required software code for properly managing it. [readme](./Projects/STM32H735G-DK/Applications/FileX/Fx_NoR_Write_Read_File/README.md) |
+|FileX   | Fx_DualInstance               | It demonstrates how the coexistence capability of two FileX/Levelx stacks running independently on each core. [readme](./Projects/STM32H747I-DISCO/Applications/FileX/Fx_Dual_Instance/README.md) |
+|FileX   | Fx_IAP                        | It demonstrates how to implement an In-Application programming (IAP) using FileX's SD file access capabilities. The application is designed to erase and write to on-chip flash memory, it provides all required software code for handling SD card and flash memory I/O operations. This is a typical application on how to use the SD card peripheral for firmware upgrade application or IAP, allowing user to erase and write to on-chip flash memory. [readme](./Projects/STM32H735G-DK/Applications/FileX/FX_IAP/IAP_main/README.md) |
+|FileX   | Fx_SRAM_File_Edit_Standalone  | It demonstrates how to create a Fat File system on the internal SRAM memory using FileX running in standalone mode without ThreadX. [readme](./Projects/NUCLEO-H723ZG/Applications/FileX/Fx_SRAM_File_Edit_Standalone/README.md) |
+|FileX   | Fx_NAND_Write_Read_File       | It demonstrates how create a Fat File system on the NAND flash using FileX alongside LevelX. The application is designed to execute file operations on the Micron MT29F2G16ABAEAWP NAND flash device, the code provides all required software code for properly managing it. [readme](./Projects/STM32H743I-EVAL/Applications/FileX/Fx_Nand_Write_Read_File/README.md) |
+|NetXDuo | Nx_TCP_Echo_Server            | It demonstrates how to develop a NetX TCP server to communicate with a remote client using the NetX TCP socket API. [readme](./Projects/NUCLEO-H723ZG/Applications/NetXDuo/Nx_TCP_Echo_Server/README.md) |
+|NetXDuo | Nx_TCP_Echo_Client            | It demonstrates how to develop a NetX TCP client to communicate with a remote sever using the NetX TCP socket API. [readme](./Projects/NUCLEO-H723ZG/Applications/NetXDuo/Nx_TCP_Echo_Client/README.md) |
+|NetXDuo | Nx_UDP_Echo_Server            | It demonstrates how to develop a NetX UDP server to communicate with a remote client using the NetX UDP socket API. [readme](./Projects/STM32H735G-DK/Applications/NetXDuo/Nx_UDP_Echo_Server/README.md) |
+|NetXDuo | Nx_UDP_Echo_Client            | It demonstrates how to develop a NetX UDP client to communicate with a remote sever using the NetX UDP socket API. [readme](./Projects/STM32H735G-DK/Applications/NetXDuo/Nx_UDP_Echo_Client/README.md) |
+|NetXDuo | Nx_WebServer                  | It demonstrates how to develop Web HTTP server based application. It is designed to load files and static web pages stored in SD card using a Web HTTP server, the code provides all required features to build a compliant Web HTTP Server.  [readme](./Projects/STM32H735G-DK/Applications/NetXDuo/Nx_WebServer/README.md) |
+|NetXDuo | Nx_MQTT_Client                | It demonstrates how to exchange data between client and server using MQTT protocol in an encrypted mode supporting TLS v1.2. [readme](./Projects/STM32H735G-DK/Applications/NetXDuo/Nx_MQTT_Client/README.md) |
+|NetXDuo | Nx_SNTP_Client                | It demonstrates how to develop a NetX SNTP client and connect with an STNP server to get a time update. [readme](./Projects/STM32H747I-DISCO/Applications/NetXDuo/Nx_SNTP_Client/README.md) |
 
 ## Main changes
 
 - Maintenance release
-- Azure RTOS update to V6.1.7
 - Add new Azure RTOS applications:
-   + Tx_MPU
-   + Tx_Lowpower
-   + Ux_Device_DFU
-- Migrate to MDK-ARM AC6 compiler
-- Fix device enumeration on Linux host for CDC ACM applications
-- All applications files regenerated using STM32CubeMX V6.3.0 and new Azure RTOS pack v1.1.0
+   + Fx_SRAM_File_Edit_Standalone
+   + Ux_Host_HID_CDC_ACM
+- General updates to fix known defects and implement enhancements:
+  - Rework the FileX/LevelX drivers by decoupling the drivers from the BSP APIs to ease portability across different devices.
+  - Improve Azure RTOS USBX device applications footprint. Similar improvement will cover other Azure RTOS applications in the future releases.
+  - Enhance the  Nx_WebServer application to support dynamic web pages.
+  - Rework Ux_Device_CDC_ECM  application to use the “NetXDuo Addons Web" instead of “NetXDuo Addons HTTP”
+  - Rework the FileX applications to use HAL SD APIs.
+  - All Azure RTOS applications files regenerated using STM32CubeMX V6.3.0 and new Azure RTOS pack v2.0.0
 
 ## Known limitations
 
 - USBX composite device descriptors
    - A maximum of 3 different class driver can be selected (restriction due to limited EP numbers)
+   - When creating an USBX based application with MDK-ARM AC6 compiler make sure to disable the optimization for stm32h7xx_ll_usb.c file, otherwise application might not work correctly.
+    This limitation will be fixed in future release.
+   - A list of USB device Applications supporting auto generation of USB Device framework descriptors provided for these USB class drivers :MSC, HID mouse, CDC ACM, CDC ECM, DFU.
+    For the other device class drivers, user needs first to disable the device framework builder (refer to : USBX wiki section 2.2 How to customize) and provide the full set of
+	required device descriptors.
 
 - NetXDuo
    - Ethernet cable hot-plug detection not supported
 
 - ThreadX
-   - Tx_MPU application is built with MDK-ARM AC5 compiler and requires manual changes when migrating it to MDK-ARM AC6
+  - Tx_MPU application is not provided for MDK-ARM AC6
 
 ## Troubleshooting
 **Caution**  : The issues are  **strictly limited**  to submit problems or suggestions related to the software delivered in this repository.
 
-**For any other question**  related to the product, the hardware performance or characteristics, the tools, the environment, you can submit it to the  **ST Community**  on the STM32 MCUs related  [page](https://community.st.com/s/group/0F90X000000AXsASAW/stm32-mcus).
+**For any other question**  related to the product, the hardware performance or characteristics, the tools, the environment, you can submit it to the  **ST Community**  on the STM32 MCUs related  [page](https://community.st.com/s/topic/0TO0X000000BSqSWAW/stm32-mcus).
 

@@ -66,7 +66,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>8.50.6.28611</state>
+          <state>8.32.3.20186</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -116,7 +116,7 @@
         </option>
         <option>
           <name>GBECoreSlave</name>
-          <version>28</version>
+          <version>27</version>
           <state>41</state>
         </option>
         <option>
@@ -133,12 +133,12 @@
         </option>
         <option>
           <name>CoreVariant</name>
-          <version>28</version>
-          <state>41</state>
+          <version>27</version>
+          <state>59</state>
         </option>
         <option>
           <name>GFPUDeviceSlave</name>
-          <state>STM32H723ZG	ST STM32H723ZG</state>
+          <state></state>
         </option>
         <option>
           <name>FPU2</name>
@@ -156,8 +156,8 @@
         </option>
         <option>
           <name>GFPUCoreSlave2</name>
-          <version>28</version>
-          <state>41</state>
+          <version>27</version>
+          <state>59</state>
         </option>
         <option>
           <name>OGCMSISPackSelectDevice</name>
@@ -198,7 +198,7 @@
         </option>
         <option>
           <name>DSPExtension</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>TrustZone</name>
@@ -215,7 +215,7 @@
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>36</version>
+        <version>35</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -227,6 +227,7 @@
           <state>TX_INCLUDE_USER_DEFINE_FILE</state>
           <state>USE_HAL_DRIVER</state>
           <state>STM32H723xx</state>
+          <state></state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -477,10 +478,6 @@
           <name>OICompilerExtraOption</name>
           <state>1</state>
         </option>
-        <option>
-          <name>CCStackProtection</name>
-          <state>0</state>
-        </option>
       </data>
     </settings>
     <settings>
@@ -701,7 +698,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>23</version>
+        <version>22</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -782,7 +779,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$\stm32h723xx_flash_rw_sram1.icf</state>
+          <state>$PROJ_DIR$/stm32h723xx_flash_rw_sram1.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -1015,27 +1012,11 @@
         </option>
         <option>
           <name>IlinkTrustzoneImportLibraryOut</name>
-          <state>Tx_LowPower_import_lib.o</state>
+          <state></state>
         </option>
         <option>
           <name>OILinkExtraOption</name>
           <state>1</state>
-        </option>
-        <option>
-          <name>IlinkRawBinaryFile2</name>
-          <state></state>
-        </option>
-        <option>
-          <name>IlinkRawBinarySymbol2</name>
-          <state></state>
-        </option>
-        <option>
-          <name>IlinkRawBinarySegment2</name>
-          <state></state>
-        </option>
-        <option>
-          <name>IlinkRawBinaryAlign2</name>
-          <state></state>
         </option>
       </data>
     </settings>
@@ -1076,38 +1057,38 @@
     <group>
       <name>EWARM</name>
       <file>
-        <name>$PROJ_DIR$\startup_stm32h723xx.s</name>
+        <name>$PROJ_DIR$/startup_stm32h723xx.s</name>
       </file>
     </group>
     <group>
       <name>User</name>
       <file>
-        <name>$PROJ_DIR$\..\Src\main.c</name>
+        <name>$PROJ_DIR$/../Src/main.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\Src\tx_initialize_low_level.s</name>
+        <name>$PROJ_DIR$/../Src/tx_initialize_low_level.s</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\Src\app_threadx.c</name>
+        <name>$PROJ_DIR$/../Src/app_threadx.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\Src\app_azure_rtos.c</name>
+        <name>$PROJ_DIR$/../Src/app_azure_rtos.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\Src\stm32h7xx_it.c</name>
+        <name>$PROJ_DIR$/../Src/stm32h7xx_it.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\Src\stm32h7xx_hal_msp.c</name>
+        <name>$PROJ_DIR$/../Src/stm32h7xx_hal_msp.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\Src\stm32h7xx_hal_timebase_tim.c</name>
+        <name>$PROJ_DIR$/../Src/stm32h7xx_hal_timebase_tim.c</name>
       </file>
     </group>
   </group>
   <group>
     <name>Doc</name>
     <file>
-      <name>$PROJ_DIR$\..\README.md</name>
+      <name>$PROJ_DIR$/../README.md</name>
     </file>
   </group>
   <group>
@@ -1117,71 +1098,71 @@
       <group>
         <name>STM32H7xx_Nucleo</name>
         <file>
-          <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\BSP\STM32H7xx_Nucleo\stm32h7xx_nucleo.c</name>
+          <name>$PROJ_DIR$/../../../../../../Drivers/BSP/STM32H7xx_Nucleo/stm32h7xx_nucleo.c</name>
         </file>
       </group>
     </group>
     <group>
-      <name>CMSIS</name>
+      <name>STM32H7xx_HAL_Driver</name>
       <file>
-        <name>$PROJ_DIR$\..\Src\system_stm32h7xx.c</name>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc_ex.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash_ex.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_gpio.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_hsem.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma_ex.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mdma.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr_ex.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c_ex.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_exti.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.c</name>
       </file>
     </group>
     <group>
-      <name>STM32H7xx_HAL_Driver</name>
+      <name>CMSIS</name>
       <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_cortex.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_rcc.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_rcc_ex.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_flash.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_flash_ex.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_gpio.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_hsem.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_dma.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_dma_ex.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_mdma.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_pwr.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_pwr_ex.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_i2c.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_i2c_ex.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_exti.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_tim.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_tim_ex.c</name>
+        <name>$PROJ_DIR$/../Src/system_stm32h7xx.c</name>
       </file>
     </group>
   </group>

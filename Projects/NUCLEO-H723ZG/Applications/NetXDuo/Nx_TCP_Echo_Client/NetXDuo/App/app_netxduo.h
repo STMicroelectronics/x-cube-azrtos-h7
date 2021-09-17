@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -33,7 +32,6 @@ extern "C" {
 #include "nx_stm32_eth_driver.h"
 
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
 #include "main.h"
 #include "nxd_dhcp_client.h"
 #include "stm32h7xx_nucleo.h"
@@ -71,7 +69,7 @@ extern "C" {
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
-UINT App_NetXDuo_Init(VOID *memory_ptr);
+UINT MX_NetXDuo_Init(VOID *memory_ptr);
 
 /* USER CODE BEGIN EFP */
 
@@ -90,7 +88,7 @@ UINT App_NetXDuo_Init(VOID *memory_ptr);
 
 #define DEFAULT_PORT             6000
 #define TCP_SERVER_PORT          6001
-#define TCP_SERVER_ADDRESS       IP_ADDRESS(192, 168, 1, 2)
+#define TCP_SERVER_ADDRESS       IP_ADDRESS(192, 168, 1, 1)
 
 #define MAX_PACKET_COUNT         100
 #define DEFAULT_MESSAGE          "TCP Client on STM32H723-Nucleo"
@@ -105,5 +103,3 @@ UINT App_NetXDuo_Init(VOID *memory_ptr);
 }
 #endif
 #endif /* __APP_NETXDUO_H__ */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

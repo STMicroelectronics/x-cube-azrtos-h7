@@ -12,7 +12,7 @@ To report a bug or a request please file an issue in the right repository
 
 Please check the following boxes before posting an issue:
 - [ ] `Make sure you are using the latest commit (major releases are tagged, but corrections are available as new commits).`
-- [ ] `Make sure your issue is a question/feedback/suggestions RELATED TO the software provided in this repository.` Otherwise, it should be submitted to the ST Community under the MCU topic [page](https://community.st.com/s/group/0F90X000000AXsASAW/stm32-mcus).
+- [ ] `Make sure your issue is a question/feedback/suggestions RELATED TO the software provided in this repository.` Otherwise, it should be submitted to the ST Community under the MCU topic [page](https://community.st.com/s/topic/0TO0X000000BSqSWAW/stm32-mcus).
 - [ ] `Make sure your issue is not already reported/fixed on GitHub or discussed on a previous issue.` Do not forget to browse into the **closed** issues.
 
 ### 2. Posting the issue

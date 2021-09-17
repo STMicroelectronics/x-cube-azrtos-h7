@@ -7,6 +7,13 @@
   ******************************************************************************
   */
 
+### 03-September-2021 ###
+========================
+- Add STM32F4 Series to Azure RTOS licensed hardware list
+- Restore cortex_a7 port files
+- Remove Green Hills Software Tools (ghs) port files
+- Remove AC6 example_build projects for supported cortex
+
 ### 09-July-2021 ###
 ========================
 - Fix a regression when Low Power feature is enabled

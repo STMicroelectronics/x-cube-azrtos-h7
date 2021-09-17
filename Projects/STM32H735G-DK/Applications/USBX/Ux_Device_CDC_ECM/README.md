@@ -32,6 +32,9 @@ The board must be in a DHCP Ethernet network.
 
 Hotplug is not implemented for this example, that is, the SD card is expected to be inserted before application running.
 
+When creating an USBX based application with MDK-ARM AC6 compiler make sure to disable the optimization for stm32h7xx_ll_usb.c file, otherwise application might not work correctly.
+This limitation will be fixed in future release.
+
 ### <b>Notes</b>
 
  1. Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from Flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.

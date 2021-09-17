@@ -1,18 +1,17 @@
 /**
   ******************************************************************************
-  * @file    stm32h7xx_hal_conf.h
+  * @file    app_filex.c
   * @author  MCD Application Team
-  * @brief   HAL configuration file.
+  * @brief   FileX applicative file
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -165,7 +164,7 @@
   * @brief This is the HAL system configuration section
   */
 #define  VDD_VALUE                    (3300UL) /*!< Value of VDD in mv */
-#define  TICK_INT_PRIORITY            (0UL) /*!< tick interrupt priority */
+#define  TICK_INT_PRIORITY            (15UL) /*!< tick interrupt priority */
 #define  USE_RTOS                     0
 #define  USE_SD_TRANSCEIVER           0U               /*!< use uSD Transceiver */
 #define  USE_SPI_CRC	              0U               /*!< use CRC in SPI */
@@ -509,4 +508,3 @@
 
 #endif /* STM32H7xx_HAL_CONF_H */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>TX_INCLUDE_USER_DEFINE_FILE,UX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H723xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../AZURE_RTOS/App;../USBX/App;../USBX/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Middlewares/ST/usbx/common/core/inc/;../../../../../../Middlewares/ST/usbx/ports/generic/inc/;../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/inc/;../../../../../../Middlewares/ST/usbx/common/usbx_stm32_host_controllers/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H7xx_Nucleo</IncludePath>
+              <IncludePath>../Core/Inc;../AZURE_RTOS/App;../USBX/App;../USBX/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/inc/;../../../../../../Middlewares/ST/usbx/common/core/inc/;../../../../../../Middlewares/ST/usbx/ports/generic/inc/;../../../../../../Middlewares/ST/usbx/common/usbx_stm32_host_controllers/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H7xx_Nucleo</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -444,14 +444,14 @@
           <GroupName>Application/User/USBX/App</GroupName>
           <Files>
             <File>
-              <FileName>app_usbx_host.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../USBX/App/app_usbx_host.c</FilePath>
-            </File>
-            <File>
               <FileName>ux_host_cdc_acm.c</FileName>
               <FileType>1</FileType>
               <FilePath>../USBX/App/ux_host_cdc_acm.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_usbx_host.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../USBX/App/app_usbx_host.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -636,7 +636,7 @@
                     <v6LangP>0</v6LangP>
                     <vShortEn>2</vShortEn>
                     <vShortWch>2</vShortWch>
-                    <v6Lto>0</v6Lto>
+                    <v6Lto>2</v6Lto>
                     <v6WtE>2</v6WtE>
                     <v6Rtti>2</v6Rtti>
                     <VariousControls>
@@ -662,7 +662,82 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE</GroupName>
+          <GroupName>Middlewares/USBX/USB/USBX/UX Host Class CDC ACM</GroupName>
+          <Files>
+            <File>
+              <FileName>ux_host_class_cdc_acm_activate.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_activate.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_class_cdc_acm_capabilities_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_capabilities_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_class_cdc_acm_command.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_command.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_class_cdc_acm_configure.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_configure.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_class_cdc_acm_deactivate.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_deactivate.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_class_cdc_acm_endpoints_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_endpoints_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_class_cdc_acm_entry.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_entry.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_class_cdc_acm_ioctl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_ioctl.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_class_cdc_acm_read.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_read.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_class_cdc_acm_reception_callback.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_reception_callback.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_class_cdc_acm_reception_start.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_reception_start.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_class_cdc_acm_reception_stop.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_reception_stop.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_class_cdc_acm_transfer_request_completed.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_transfer_request_completed.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_class_cdc_acm_write.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_write.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/USBX/USB/USBX/UX Host CoreStack</GroupName>
           <Files>
             <File>
               <FileName>ux_host_stack_bandwidth_check.c</FileName>
@@ -968,81 +1043,6 @@
               <FileName>ux_host_stack_uninitialize.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_host_stack_uninitialize.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Middlewares/USBX/USB/USBX/UX Host Class CDC ACM</GroupName>
-          <Files>
-            <File>
-              <FileName>ux_host_class_cdc_acm_activate.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_activate.c</FilePath>
-            </File>
-            <File>
-              <FileName>ux_host_class_cdc_acm_capabilities_get.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_capabilities_get.c</FilePath>
-            </File>
-            <File>
-              <FileName>ux_host_class_cdc_acm_command.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_command.c</FilePath>
-            </File>
-            <File>
-              <FileName>ux_host_class_cdc_acm_configure.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_configure.c</FilePath>
-            </File>
-            <File>
-              <FileName>ux_host_class_cdc_acm_deactivate.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_deactivate.c</FilePath>
-            </File>
-            <File>
-              <FileName>ux_host_class_cdc_acm_endpoints_get.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_endpoints_get.c</FilePath>
-            </File>
-            <File>
-              <FileName>ux_host_class_cdc_acm_entry.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_entry.c</FilePath>
-            </File>
-            <File>
-              <FileName>ux_host_class_cdc_acm_ioctl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_ioctl.c</FilePath>
-            </File>
-            <File>
-              <FileName>ux_host_class_cdc_acm_read.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_read.c</FilePath>
-            </File>
-            <File>
-              <FileName>ux_host_class_cdc_acm_reception_callback.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_reception_callback.c</FilePath>
-            </File>
-            <File>
-              <FileName>ux_host_class_cdc_acm_reception_start.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_reception_start.c</FilePath>
-            </File>
-            <File>
-              <FileName>ux_host_class_cdc_acm_reception_stop.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_reception_stop.c</FilePath>
-            </File>
-            <File>
-              <FileName>ux_host_class_cdc_acm_transfer_request_completed.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_transfer_request_completed.c</FilePath>
-            </File>
-            <File>
-              <FileName>ux_host_class_cdc_acm_write.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_write.c</FilePath>
             </File>
           </Files>
         </Group>

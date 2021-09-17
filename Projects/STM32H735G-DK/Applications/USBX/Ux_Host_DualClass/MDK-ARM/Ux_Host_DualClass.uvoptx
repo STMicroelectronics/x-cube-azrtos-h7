@@ -140,7 +140,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>UL2CM3</Key>
-          <Name>UL2CM3(-S0 -C0 -P0 -FD24000000 -FC1000 -FN1 -FF0STM32H72x-73x_1024 -FS08000000 -FL0100000 -FP0($$Device:STM32H735IGKx$CMSIS\Flash\STM32H72x-73x_1024.FLM))</Name>
+          <Name>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC8000 -FN1 -FF0STM32H72x-73x_1024 -FS08000000 -FL0100000 -FP0($$Device:STM32H735IGKx$CMSIS\Flash\STM32H72x-73x_1024.FLM))</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -350,18 +350,6 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>../USBX/App/app_usbx_host.c</PathWithFileName>
-      <FilenameWithoutPath>app_usbx_host.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>3</GroupNumber>
-      <FileNumber>12</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
       <PathWithFileName>../USBX/App/ux_host_keyboard.c</PathWithFileName>
       <FilenameWithoutPath>ux_host_keyboard.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
@@ -369,7 +357,7 @@
     </File>
     <File>
       <GroupNumber>3</GroupNumber>
-      <FileNumber>13</FileNumber>
+      <FileNumber>12</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -381,7 +369,7 @@
     </File>
     <File>
       <GroupNumber>3</GroupNumber>
-      <FileNumber>14</FileNumber>
+      <FileNumber>13</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -391,23 +379,15 @@
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
-  </Group>
-
-  <Group>
-    <GroupName>Application/User/FileX/App</GroupName>
-    <tvExp>0</tvExp>
-    <tvExpOptDlg>0</tvExpOptDlg>
-    <cbSel>0</cbSel>
-    <RteFlg>0</RteFlg>
     <File>
-      <GroupNumber>4</GroupNumber>
-      <FileNumber>15</FileNumber>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>14</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>../FileX/App/app_filex.c</PathWithFileName>
-      <FilenameWithoutPath>app_filex.c</FilenameWithoutPath>
+      <PathWithFileName>../USBX/App/app_usbx_host.c</PathWithFileName>
+      <FilenameWithoutPath>app_usbx_host.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -420,14 +400,34 @@
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
     <File>
-      <GroupNumber>5</GroupNumber>
-      <FileNumber>16</FileNumber>
+      <GroupNumber>4</GroupNumber>
+      <FileNumber>15</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>../AZURE_RTOS/App/app_azure_rtos.c</PathWithFileName>
       <FilenameWithoutPath>app_azure_rtos.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+  </Group>
+
+  <Group>
+    <GroupName>Application/User/FileX/App</GroupName>
+    <tvExp>0</tvExp>
+    <tvExpOptDlg>0</tvExpOptDlg>
+    <cbSel>0</cbSel>
+    <RteFlg>0</RteFlg>
+    <File>
+      <GroupNumber>5</GroupNumber>
+      <FileNumber>16</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>../FileX/App/app_filex.c</PathWithFileName>
+      <FilenameWithoutPath>app_filex.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -766,7 +766,7 @@
   </Group>
 
   <Group>
-    <GroupName>Middlewares/FileX/File System/FileX/Core/RTOS_MODE</GroupName>
+    <GroupName>Middlewares/FileX/File System/FileX/Core</GroupName>
     <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
@@ -4018,7 +4018,7 @@
   </Group>
 
   <Group>
-    <GroupName>Middlewares/USBX/USB/USBX/UX Host CoreStack/RTOS_MODE</GroupName>
+    <GroupName>Middlewares/USBX/USB/USBX/UX Host CoreStack</GroupName>
     <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>

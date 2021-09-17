@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>TX_INCLUDE_USER_DEFINE_FILE,FX_INCLUDE_USER_DEFINE_FILE,NX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H735xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../AZURE_RTOS/App;../Core/Inc;../FileX/App;../NetXDuo/App;../FileX/Target;../NetXDuo/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Middlewares/ST/filex/common/inc/;../../../../../../Middlewares/ST/filex/ports/generic/inc/;../../../../../../Drivers/BSP/Components/lan8742/;../../../../../../Middlewares/ST/netxduo/common/drivers/;../../../../../../Middlewares/ST/netxduo/addons/dhcp/;../../../../../../Middlewares/ST/netxduo/common/inc/;../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/ac5/inc/;../../../../../../Middlewares/ST/netxduo/addons/web/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H735G-DK</IncludePath>
+              <IncludePath>../Core/Inc;../AZURE_RTOS/App;../FileX/App;../FileX/Target;../NetXDuo/App;../NetXDuo/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Middlewares/ST/filex/common/inc/;../../../../../../Middlewares/ST/filex/ports/generic/inc/;../../../../../../Drivers/BSP/Components/lan8742/;../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/;../../../../../../Middlewares/ST/netxduo/addons/dhcp/;../../../../../../Middlewares/ST/netxduo/common/inc/;../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/ac5/inc/;../../../../../../Middlewares/ST/netxduo/addons/web/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H735G-DK</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -422,6 +422,16 @@
               <FileName>stm32h7xx_hal_timebase_tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32h7xx_hal_timebase_tim.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/User/FileX/Target</GroupName>
+          <Files>
+            <File>
+              <FileName>fx_stm32_sd_driver_glue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../FileX/Target/fx_stm32_sd_driver_glue.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -636,7 +646,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Middlewares/FileX/File System/FileX/Core/RTOS_MODE</GroupName>
+          <GroupName>Middlewares/FileX/File System/FileX/Core</GroupName>
           <Files>
             <File>
               <FileName>fx_directory_attributes_read.c</FileName>
@@ -1806,7 +1816,7 @@
             <File>
               <FileName>nx_stm32_eth_driver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/drivers/nx_stm32_eth_driver.c</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/nx_stm32_eth_driver.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1826,7 +1836,7 @@
             <File>
               <FileName>nx_stm32_phy_driver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/drivers/lan8742/nx_stm32_phy_driver.c</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/lan8742/nx_stm32_phy_driver.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5102,6 +5112,91 @@
               <FileName>txe_timer_info_get.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/threadx/common/src/txe_timer_info_get.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/ThreadX/RTOS/ThreadX/PerformanceInfo</GroupName>
+          <Files>
+            <File>
+              <FileName>tx_thread_performance_info_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_thread_performance_info_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>tx_thread_performance_system_info_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_thread_performance_system_info_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>tx_block_pool_performance_info_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_block_pool_performance_info_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>tx_block_pool_performance_system_info_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_block_pool_performance_system_info_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>tx_byte_pool_performance_info_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_byte_pool_performance_info_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>tx_byte_pool_performance_system_info_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_byte_pool_performance_system_info_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>tx_event_flags_performance_info_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_event_flags_performance_info_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>tx_event_flags_performance_system_info_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_event_flags_performance_system_info_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>tx_mutex_performance_info_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_mutex_performance_info_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>tx_mutex_performance_system_info_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_mutex_performance_system_info_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>tx_queue_performance_info_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_queue_performance_info_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>tx_queue_performance_system_info_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_queue_performance_system_info_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>tx_semaphore_performance_info_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_semaphore_performance_info_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>tx_semaphore_performance_system_info_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_semaphore_performance_system_info_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>tx_timer_performance_info_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_timer_performance_info_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>tx_timer_performance_system_info_get.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/threadx/common/src/tx_timer_performance_system_info_get.c</FilePath>
             </File>
           </Files>
         </Group>

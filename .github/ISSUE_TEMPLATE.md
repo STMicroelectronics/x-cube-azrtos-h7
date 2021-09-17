@@ -9,7 +9,7 @@ assignees: ''
 **Caution**
 
 The Issues are strictly limited for the reporting of problem encountered with the software provided in this project.
-For any other problem related to the STM32 product, the performance, the hardware characteristics and boards, the tools the environment in general, please post your report to the **ST Community** in the STM32 MCUs dedicated [page](https://community.st.com/s/group/0F90X000000AXsASAW/stm32-mcus).
+For any other problem related to the STM32 product, the performance, the hardware characteristics and boards, the tools the environment in general, please post your report to the **ST Community** in the STM32 MCUs dedicated [page](https://community.st.com/s/topic/0TO0X000000BSqSWAW/stm32-mcus).
 
 **Describe the set-up**
 

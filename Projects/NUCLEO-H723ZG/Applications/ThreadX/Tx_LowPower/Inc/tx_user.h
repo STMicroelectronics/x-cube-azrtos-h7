@@ -214,12 +214,12 @@
 
 /* Define the get system state macro. */
 
-/*#define TX_THREAD_GET_SYSTEM_STATE()*/
+/*#define TX_THREAD_GET_SYSTEM_STATE() _tx_thread_system_state */
 
 /* Define the check for whether or not to call the
     _tx_thread_system_return function (TX_THREAD_SYSTEM_RETURN_CHECK(c)). */
 
-/*#define #define TX_THREAD_SYSTEM_RETURN_CHECK (c)  ((ULONG) _tx_thread_preempt_disable)*/
+/*#define TX_THREAD_SYSTEM_RETURN_CHECK (c)  ((ULONG) _tx_thread_preempt_disable)*/
 
 /* Define the common timer tick reference for use by other middleware components. */
 

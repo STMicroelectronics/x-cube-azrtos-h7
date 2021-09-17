@@ -32,7 +32,7 @@ The **AppMainThread** starts and perform the following actions:
 
 The **AppSNTPThread**, once started:
 
-  + creates a dns_client with DNS_SERVER_ADDRESS used as DNS server.
+  + creates a dns_client with USER_DNS_ADDRESS used as DNS server.
 
   + initialize SntpClient in Unicast mode and set SNTP_SERVER_NAME predefined in app_netxduo.h
   

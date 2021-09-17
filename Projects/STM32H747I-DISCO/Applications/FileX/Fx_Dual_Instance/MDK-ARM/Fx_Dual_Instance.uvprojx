@@ -16,8 +16,8 @@
         <TargetCommonOption>
           <Device>STM32H747XIHx:CM4</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32H7xx_DFP.2.4.3</PackID>
-          <PackURL>https://www.keil.com/pack/</PackURL>
+          <PackID>Keil.STM32H7xx_DFP.2.7.0</PackID>
+          <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x10000000-0x10047FFF) IRAM2(0x18000000-0x1800FFFF) IROM(0x8100000-0x81FFFFF) CLOCK(12000000) FPU2 CPUTYPE("Cortex-M4") TZ</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -211,7 +211,7 @@
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
             <Im1Chk>1</Im1Chk>
-            <Im2Chk>1</Im2Chk>
+            <Im2Chk>0</Im2Chk>
             <OnChipMemories>
               <Ocm1>
                 <Type>0</Type>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>CORE_CM4,TX_INCLUDE_USER_DEFINE_FILE,FX_INCLUDE_USER_DEFINE_FILE,LX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H747xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../CM4/AZURE_RTOS/App;../CM4/Core/Inc;../CM4/FileX/App;../CM4/LevelX/App;../CM4/FileX/Target;../CM4/LevelX/Target;../../../../../../Middlewares/ST/filex/common/inc/;../../../../../../Middlewares/ST/filex/ports/generic/inc/;../../../../../../Drivers/BSP/Components/mt25tl01g/;../../../../../../Middlewares/ST/levelx/common/inc/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m4/ac6/inc/;../../../../../../Drivers/BSP/STM32H747I-DISCO;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../CM4/Core/Inc;../CM4/AZURE_RTOS/App;../CM4/FileX/App;../CM4/LevelX/App;../CM4/FileX/Target;../CM4/LevelX/Target;../../../../../../Middlewares/ST/filex/common/inc/;../../../../../../Middlewares/ST/filex/ports/generic/inc/;../../../../../../Drivers/BSP/Components/mt25tl01g/;../../../../../../Middlewares/ST/levelx/common/inc/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m4/ac6/inc/;../../../../../../Drivers/BSP/STM32H747I-DISCO;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -361,7 +361,7 @@
             </VariousControls>
           </Aads>
           <LDads>
-            <umfTarg>0</umfTarg>
+            <umfTarg>1</umfTarg>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
             <noStLib>0</noStLib>
@@ -617,6 +617,85 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Application/User/CM7/FileX/Target</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>0</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>4</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <uGnu>2</uGnu>
+                <useXO>2</useXO>
+                <v6Lang>0</v6Lang>
+                <v6LangP>0</v6LangP>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>2</v6Lto>
+                <v6WtE>2</v6WtE>
+                <v6Rtti>2</v6Rtti>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <ClangAsOpt>1</ClangAsOpt>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
+          <Files>
+            <File>
+              <FileName>fx_stm32_sd_driver_glue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../CM7/FileX/Target/fx_stm32_sd_driver_glue.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>Application/User/CM7/FileX/App</GroupName>
           <GroupOption>
             <CommonProperty>
@@ -696,6 +775,16 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Application/User/CM4/LevelX/Target</GroupName>
+          <Files>
+            <File>
+              <FileName>lx_stm32_qspi_driver_glue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../CM4/LevelX/Target/lx_stm32_qspi_driver_glue.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>Application/User/CM4/Core</GroupName>
           <Files>
             <File>
@@ -767,62 +856,6 @@
               <FileName>stm32h747i_discovery.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32h747i_discovery_sd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery_sd.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
             </File>
             <File>
               <FileName>stm32h747i_discovery_qspi.c</FileName>
@@ -1186,7 +1219,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Middlewares/FileX/File System/FileX/Core/RTOS_MODE</GroupName>
+          <GroupName>Middlewares/FileX/File System/FileX/Core</GroupName>
           <Files>
             <File>
               <FileName>fx_directory_attributes_read.c</FileName>
@@ -3758,8 +3791,8 @@
         <TargetCommonOption>
           <Device>STM32H747XIHx:CM7</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32H7xx_DFP.2.4.3</PackID>
-          <PackURL>https://www.keil.com/pack/</PackURL>
+          <PackID>Keil.STM32H7xx_DFP.2.7.0</PackID>
+          <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000-0x2001FFFF) IRAM2(0x00000000-0xFFFF) IROM(0x8000000-0x80FFFFF) CLOCK(12000000) FPU3(DFPU) CPUTYPE("Cortex-M7") ELITTLE TZ</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -3796,7 +3829,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>0</BrowseInformation>
+          <BrowseInformation>1</BrowseInformation>
           <ListingPath></ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -4042,12 +4075,12 @@
               </OCR_RVCT8>
               <OCR_RVCT9>
                 <Type>0</Type>
-                <StartAddress>0x20000000</StartAddress>
+                <StartAddress>0x24000000</StartAddress>
                 <Size>0x20000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
-                <StartAddress>0x0</StartAddress>
+                <StartAddress>0x20000000</StartAddress>
                 <Size>0x10000</Size>
               </OCR_RVCT10>
             </OnChipMemories>
@@ -4081,7 +4114,7 @@
               <MiscControls></MiscControls>
               <Define>CORE_CM7,TX_INCLUDE_USER_DEFINE_FILE,FX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H747xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../CM7/AZURE_RTOS/App;../CM7/Core/Inc;../CM7/FileX/App;../CM7/FileX/Target;../../../../../../Middlewares/ST/filex/common/inc/;../../../../../../Middlewares/ST/filex/ports/generic/inc/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H747I-DISCO;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../CM7/Core/Inc;../CM7/AZURE_RTOS/App;../CM7/FileX/App;../CM7/FileX/Target;../../../../../../Middlewares/ST/filex/common/inc/;../../../../../../Middlewares/ST/filex/ports/generic/inc/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -4103,7 +4136,7 @@
             </VariousControls>
           </Aads>
           <LDads>
-            <umfTarg>0</umfTarg>
+            <umfTarg>1</umfTarg>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
             <noStLib>0</noStLib>
@@ -4221,12 +4254,101 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Application/User/CM7/FileX/Target</GroupName>
+          <Files>
+            <File>
+              <FileName>fx_stm32_sd_driver_glue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../CM7/FileX/Target/fx_stm32_sd_driver_glue.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>Application/User/CM7/FileX/App</GroupName>
           <Files>
             <File>
               <FileName>app_filex.c</FileName>
               <FileType>1</FileType>
               <FilePath>../CM7/FileX/App/app_filex.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/User/CM4/LevelX/Target</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>0</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>4</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <uGnu>2</uGnu>
+                <useXO>2</useXO>
+                <v6Lang>0</v6Lang>
+                <v6LangP>0</v6LangP>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>2</v6Lto>
+                <v6WtE>2</v6WtE>
+                <v6Rtti>2</v6Rtti>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <ClangAsOpt>1</ClangAsOpt>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
+          <Files>
+            <File>
+              <FileName>lx_stm32_qspi_driver_glue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../CM4/LevelX/Target/lx_stm32_qspi_driver_glue.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4509,11 +4631,57 @@
               <FileName>stm32h747i_discovery.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32h747i_discovery_sd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery_sd.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <uGnu>2</uGnu>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>2</v6Lto>
+                    <v6WtE>2</v6WtE>
+                    <v6Rtti>2</v6Rtti>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
             <File>
               <FileName>stm32h747i_discovery_qspi.c</FileName>
@@ -4928,7 +5096,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Middlewares/FileX/File System/FileX/Core/RTOS_MODE</GroupName>
+          <GroupName>Middlewares/FileX/File System/FileX/Core</GroupName>
           <Files>
             <File>
               <FileName>fx_directory_attributes_read.c</FileName>

@@ -1,22 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-******************************************************************************
-* @file    app_netxduo.c
-* @author  MCD Application Team
-* @brief   NetXDuo applicative file
-******************************************************************************
-* @attention
-*
-* <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-* All rights reserved.</center></h2>
-*
-* This software component is licensed by ST under Ultimate Liberty license
-* SLA0044, the "License"; You may not use this file except in compliance with
-* the License. You may obtain a copy of the License at:
-*                             www.st.com/SLA0044
-*
-******************************************************************************
-*/
+  ******************************************************************************
+  * @file    app_netxduo.c
+  * @author  MCD Application Team
+  * @brief   NetXDuo applicative file
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
@@ -31,20 +30,6 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-TX_THREAD AppMainThread;
-TX_THREAD AppUDPThread;
-
-TX_SEMAPHORE Semaphore;
-
-NX_PACKET_POOL AppPool;
-
-NX_IP IpInstance;
-NX_DHCP DHCPClient;
-NX_UDP_SOCKET UDPSocket;
-ULONG IpAddress;
-ULONG NetMask;
-
-UCHAR *pointer;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -58,7 +43,20 @@ UCHAR *pointer;
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
+TX_THREAD AppMainThread;
+TX_THREAD AppUDPThread;
 
+TX_SEMAPHORE Semaphore;
+
+NX_PACKET_POOL AppPool;
+
+NX_IP IpInstance;
+NX_DHCP DHCPClient;
+NX_UDP_SOCKET UDPSocket;
+ULONG IpAddress;
+ULONG NetMask;
+
+CHAR *pointer;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -73,16 +71,17 @@ static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr);
   * @param memory_ptr: memory pointer
   * @retval int
   */
-UINT App_NetXDuo_Init(VOID *memory_ptr)
+UINT MX_NetXDuo_Init(VOID *memory_ptr)
 {
   UINT ret = NX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-  /* USER CODE BEGIN App_NetXDuo_MEM_POOL */
-  /* USER CODE END App_NetXDuo_MEM_POOL */
+  /* USER CODE BEGIN MX_NetXDuo_MEM_POOL */
+ 
+  /* USER CODE END MX_NetXDuo_MEM_POOL */
 
-  /* USER CODE BEGIN App_NetXDuo_Init */
-  printf("Nx_UDP_Echo_Client application started..\n");
+  /* USER CODE BEGIN MX_NetXDuo_Init */
+ printf("Nx_UDP_Echo_Client application started..\n");
 
   /* Allocate the memory for packet_pool.  */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,  NX_PACKET_POOL_SIZE, TX_NO_WAIT) != TX_SUCCESS)
@@ -154,7 +153,6 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
     return NX_NOT_ENABLED;
   }
 
-
   /* Allocate the memory for UDP client thread   */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,2 *  DEFAULT_MEMORY_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
@@ -180,7 +178,8 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
   /* set DHCP notification callback  */
 
   tx_semaphore_create(&Semaphore, "DHCP Semaphore", 0);
-  /* USER CODE END App_NetXDuo_Init */
+
+  /* USER CODE END MX_NetXDuo_Init */
 
   return ret;
 }
@@ -207,13 +206,15 @@ static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr)
 static VOID App_Main_Thread_Entry(ULONG thread_input)
 {
   UINT ret;
-
+  
+  /* register the IP address change callback */
   ret = nx_ip_address_change_notify(&IpInstance, ip_address_change_notify_callback, NULL);
   if (ret != NX_SUCCESS)
   {
     Error_Handler();
   }
 
+  /* start the DHCP client */
   ret = nx_dhcp_start(&DHCPClient);
   if (ret != NX_SUCCESS)
   {
@@ -228,6 +229,7 @@ static VOID App_Main_Thread_Entry(ULONG thread_input)
   /* get IP address */
   ret = nx_ip_address_get(&IpInstance, &IpAddress, &NetMask);
 
+  /* print the IP address */
   PRINT_IP_ADDRESS(IpAddress);
 
   if (ret != TX_SUCCESS)
@@ -320,7 +322,7 @@ static VOID App_UDP_Thread_Entry(ULONG thread_input)
       break;
     }
     /* Add a short timeout to let the echool tool correctly
-    process the just  sent packet before sending a new one */
+    process the just sent packet before sending a new one */
     tx_thread_sleep(20);
   }
   /* unbind the socket and delete it */

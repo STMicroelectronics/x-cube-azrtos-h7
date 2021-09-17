@@ -6,20 +6,19 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "app_azure_rtos.h"
+#include "app_threadx.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -44,6 +43,8 @@ typedef  void (*pFunction)(void);
 
 /* Private variables ---------------------------------------------------------*/
 
+SD_HandleTypeDef hsd1;
+
 UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
@@ -55,6 +56,7 @@ uint32_t JumpAddress;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
+static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 static void CallUserApp(uint32_t Address);
 
@@ -115,17 +117,18 @@ int main(void)
     CallUserApp((uint32_t)APP_ADDRESS);
   }
 
-#if (FX_DRIVER_CALLS_SD_INIT == 0)
-    BSP_SD_Init(SD_INSTANCE);
-#endif
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  MX_AZURE_RTOS_Init();
+  MX_USART3_UART_Init();
+
+  /* Initialize interrupts */
+  MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
 
+  MX_ThreadX_Init();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -190,6 +193,48 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief NVIC Configuration.
+  * @retval None
+  */
+static void MX_NVIC_Init(void)
+{
+  /* SDMMC1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(SDMMC1_IRQn, 15, 0);
+  HAL_NVIC_EnableIRQ(SDMMC1_IRQn);
+}
+
+/**
+  * @brief SDMMC1 Initialization Function
+  * @param None
+  * @retval None
+  */
+void MX_SDMMC1_SD_Init(void)
+{
+
+  /* USER CODE BEGIN SDMMC1_Init 0 */
+
+  /* USER CODE END SDMMC1_Init 0 */
+
+  /* USER CODE BEGIN SDMMC1_Init 1 */
+
+  /* USER CODE END SDMMC1_Init 1 */
+  hsd1.Instance = SDMMC1;
+  hsd1.Init.ClockEdge = SDMMC_CLOCK_EDGE_RISING;
+  hsd1.Init.ClockPowerSave = SDMMC_CLOCK_POWER_SAVE_DISABLE;
+  hsd1.Init.BusWide = SDMMC_BUS_WIDE_4B;
+  hsd1.Init.HardwareFlowControl = SDMMC_HARDWARE_FLOW_CONTROL_DISABLE;
+  hsd1.Init.ClockDiv = 0;
+  if (HAL_SD_Init(&hsd1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SDMMC1_Init 2 */
+
+  /* USER CODE END SDMMC1_Init 2 */
+
 }
 
 /**
@@ -370,5 +415,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

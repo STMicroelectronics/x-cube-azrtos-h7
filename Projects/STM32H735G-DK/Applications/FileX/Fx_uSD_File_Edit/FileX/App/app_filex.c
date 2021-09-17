@@ -1,22 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-******************************************************************************
-* @file    app_filex.c
-* @author  MCD Application Team
-* @brief   FileX applicative file
-******************************************************************************
-* @attention
-*
-* <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-* All rights reserved.</center></h2>
-*
-* This software component is licensed by ST under Ultimate Liberty license
-* SLA0044, the "License"; You may not use this file except in compliance with
-* the License. You may obtain a copy of the License at:
-*                             www.st.com/SLA0044
-*
-******************************************************************************
-*/
+  ******************************************************************************
+  * @file    app_filex.c
+  * @author  MCD Application Team
+  * @brief   FileX applicative file
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
@@ -24,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "stm32h735g_discovery.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -62,7 +61,7 @@ CARD_STATUS_CONNECTED           = 77
 
 /* Buffer for FileX FX_MEDIA sector cache. this should be 32-Bytes
 aligned to avoid cache maintenance issues */
-ALIGN_32BYTES (uint32_t media_memory[DEFAULT_SECTOR_SIZE / sizeof(uint32_t)]);
+ALIGN_32BYTES (uint32_t media_memory[FX_STM32_SD_DEFAULT_SECTOR_SIZE / sizeof(uint32_t)]);
 
 /* Define FileX global data structures.  */
 FX_MEDIA        sdio_disk;
@@ -87,16 +86,16 @@ void Error_Handler(void);
   * @param memory_ptr: memory pointer
   * @retval int
   */
-UINT App_FileX_Init(VOID *memory_ptr)
+UINT MX_FileX_Init(VOID *memory_ptr)
 {
   UINT ret = FX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-  /* USER CODE BEGIN App_FileX_MEM_POOL */
-  /* USER CODE END App_FileX_MEM_POOL */
+  /* USER CODE BEGIN MX_FileX_MEM_POOL */
+  (void)byte_pool;
+  /* USER CODE END MX_FileX_MEM_POOL */
 
-  /* USER CODE BEGIN App_FileX_Init */
-
+  /* USER CODE BEGIN MX_FileX_Init */
   VOID *pointer;
 
   /* Allocate memory for the main thread's stack */
@@ -127,8 +126,7 @@ UINT App_FileX_Init(VOID *memory_ptr)
   /* Initialize FileX.  */
   fx_system_initialize();
 
-  /* USER CODE END App_FileX_Init */
-
+  /* USER CODE END MX_FileX_Init */
   return ret;
 }
 
@@ -145,7 +143,7 @@ void fx_thread_entry(ULONG thread_input)
   CHAR read_buffer[32];
   CHAR data[] = "This is FileX working on STM32";
 
-  if(BSP_SD_IsDetected(SD_INSTANCE) == SD_PRESENT)
+  if(SD_IsDetected(FX_STM32_SD_INSTANCE) == SD_PRESENT)
   {
     /* SD card is already inserted, place the info into the queue */
     tx_queue_send(&tx_msg_queue, &s_msg, TX_NO_WAIT);
@@ -153,7 +151,7 @@ void fx_thread_entry(ULONG thread_input)
   else
   {
     /* Indicate that SD card is not inserted from start */
-    BSP_LED_On(LED_RED);
+    HAL_GPIO_WritePin(LED1_GPIO_PORT, LED2_PIN, GPIO_PIN_RESET);
   }
 
   /* Infinite Loop */
@@ -169,7 +167,7 @@ void fx_thread_entry(ULONG thread_input)
         /* Toggle GREEN LED to indicate idle state after a successful operation */
         if(last_status == CARD_STATUS_CONNECTED)
         {
-          BSP_LED_Toggle(LED_GREEN);
+          HAL_GPIO_TogglePin(LED1_GPIO_PORT, LED1_PIN);
         }
       }
 
@@ -182,20 +180,20 @@ void fx_thread_entry(ULONG thread_input)
         /* for debouncing purpose we wait a bit till it settles down */
         tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND / 2);
 
-        if(BSP_SD_IsDetected(SD_INSTANCE) == SD_PRESENT)
+        if(SD_IsDetected(FX_STM32_SD_INSTANCE) == SD_PRESENT)
         {
           /* We have a valid SD insertion event, start processing.. */
           /* Update last known status */
           last_status = CARD_STATUS_CONNECTED;
-          BSP_LED_Off(LED_RED);
+          HAL_GPIO_WritePin(LED1_GPIO_PORT, LED2_PIN, GPIO_PIN_SET); /*Led Red Off*/
           break;
         }
         else
         {
           /* Update last known status */
           last_status = CARD_STATUS_DISCONNECTED;
-          BSP_LED_Off(LED_GREEN);
-          BSP_LED_On(LED_RED);
+          HAL_GPIO_WritePin(LED1_GPIO_PORT, LED1_PIN, GPIO_PIN_SET);  /*LED Green Off*/
+          HAL_GPIO_WritePin(LED1_GPIO_PORT, LED2_PIN, GPIO_PIN_RESET); /*LED Red On*/
         }
       }
 
@@ -327,16 +325,47 @@ void fx_thread_entry(ULONG thread_input)
   }
 }
 
-void BSP_SD_DetectCallback(uint32_t Instance, uint32_t Status)
+/**
+ * @brief  Detects if SD card is correctly plugged in the memory slot or not.
+ * @param Instance  SD Instance
+ * @retval Returns if SD is detected or not
+ */
+int32_t SD_IsDetected(uint32_t Instance)
+{
+  int32_t ret;
+  if(Instance >= 1)
+  {
+    ret = HAL_ERROR;
+  }
+  else
+  {
+    /* Check SD card detect pin */
+    if (HAL_GPIO_ReadPin(SD_DETECT_GPIO_PORT, SD_DETECT_PIN) == GPIO_PIN_SET)
+    {
+      ret = SD_NOT_PRESENT;
+    }
+    else
+    {
+      ret = SD_PRESENT;
+    }
+  }
+
+  return(int32_t)ret;
+}
+
+/**
+  * @brief  EXTI line detection callback.
+  * @param  GPIO_Pin: Specifies the port pin connected to corresponding EXTI line.
+  * @retval None
+  */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   ULONG s_msg = CARD_STATUS_CHANGED;
 
-  if(Instance == SD_INSTANCE)
+  if(GPIO_Pin == SD_DETECT_PIN)
   {
     tx_queue_send(&tx_msg_queue, &s_msg, TX_NO_WAIT);
   }
-
-  UNUSED(Status);
 }
 
 /* USER CODE END 1 */

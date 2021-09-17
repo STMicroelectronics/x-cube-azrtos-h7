@@ -113,12 +113,6 @@
 </ul>
 <pre><code>place in RAM_region    { last section FREE_MEM };</code></pre>
 <ul>
-<li>For MDK-ARM:</li>
-</ul>
-<pre><code>either define the RW_IRAM1 region in the &quot;.sct&quot; file
-or modify the line below in &quot;tx_low_level_initilize.s to match the memory region being used
-    LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|</code></pre>
-<ul>
 <li>For STM32CubeIDE add the following section into the .ld file:</li>
 </ul>
 <pre><code>._threadx_heap :

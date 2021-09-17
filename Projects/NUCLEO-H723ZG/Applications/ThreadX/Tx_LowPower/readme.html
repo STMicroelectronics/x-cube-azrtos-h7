@@ -23,7 +23,7 @@
 <div class="row">
 <section id="tx_lowpower-application-description" class="col-sm-12 col-lg-8">
 <h2><b>Tx_LowPower application description</b></h2>
-<p>This application provides an example of Azure RTOS ThreadX stack usage, it shows how to develop an application using ThreadX lowpower feature. The main entry function tx_application_define() is then called by ThreadX during kernel start, at this stage, the application creates 1 thread and 1 semaphore:</p>
+<p>This application provides an example of Azure RTOS ThreadX stack usage, it shows how to develop an application using ThreadX lowpower feature. It demonstrates how to configure the LowPower feature of Azure RTOS ThreadX stack. In addition, it shows how to use ThreadX MACRO related to the LowPower feature. The main entry function tx_application_define() is then called by ThreadX during kernel start, at this stage, the application creates 1 thread and 1 semaphore:</p>
 <ul>
 <li><p>MainThread (Prio : 10; Preemption Threshold : 10)</p></li>
 <li><p>Semaphore (Initial count = 0 to prevent its acquisition by the MainThread, on the application start)</p></li>
@@ -96,8 +96,8 @@ or modify the line below in &quot;tx_low_level_initilize.s to match the memory r
    } &gt;RAM_D1 AT&gt; RAM_D1</code></pre>
 <pre><code>The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
 In the example above the ThreadX heap size is set to 64KBytes.
-The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.  
-Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).  
+The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
 Read more in STM32CubeIDE User Guide, chapter: &quot;Linker script&quot;.</code></pre>
 <ul>
 <li>The “tx_initialize_low_level.s” should be also modified to enable the “USE_DYNAMIC_MEMORY_ALLOCATION” flag.</li>

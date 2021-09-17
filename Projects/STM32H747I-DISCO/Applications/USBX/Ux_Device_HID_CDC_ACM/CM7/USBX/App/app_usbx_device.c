@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -45,10 +44,10 @@
 /* Define constants.  */
 
 /* USB stack size */
-#define USBX_APP_STACK_SIZE       2048
+#define USBX_APP_STACK_SIZE       1024
 
 /* USB memory size */
-#define USBX_MEMORY_SIZE          (32 * 1024)
+#define USBX_MEMORY_SIZE          (12 * 1024)
 
 /* USER CODE END PD */
 
@@ -90,16 +89,15 @@ void  usbx_app_thread_entry(ULONG arg);
   * @param memory_ptr: memory pointer
   * @retval int
   */
-UINT App_USBX_Device_Init(VOID *memory_ptr)
+UINT MX_USBX_Device_Init(VOID *memory_ptr)
 {
   UINT ret = UX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-  /* USER CODE BEGIN App_USBX_Device_MEM_POOL */
-  /* USER CODE END App_USBX_Device_MEM_POOL */
+  /* USER CODE BEGIN MX_USBX_Device_MEM_POOL */
+  /* USER CODE END MX_USBX_Device_MEM_POOL */
 
-  /* USER CODE BEGIN App_USBX_Device_Init */
-
+  /* USER CODE BEGIN MX_USBX_Device_Init */
   CHAR    *pointer;
   /* Device framework HS length*/
   ULONG device_framework_hs_length;
@@ -295,7 +293,7 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   {
     Error_Handler();
   }
-  /* USER CODE END App_USBX_Device_Init */
+  /* USER CODE END MX_USBX_Device_Init */
 
   return ret;
 }

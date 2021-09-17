@@ -1,22 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-******************************************************************************
-* @file    app_filex.c
-* @author  MCD Application Team
-* @brief   FileX applicative file
-******************************************************************************
-* @attention
-*
-* <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-* All rights reserved.</center></h2>
-*
-* This software component is licensed by ST under Ultimate Liberty license
-* SLA0044, the "License"; You may not use this file except in compliance with
-* the License. You may obtain a copy of the License at:
-*                             www.st.com/SLA0044
-*
-******************************************************************************
-*/
+  ******************************************************************************
+  * @file    app_filex.c
+  * @author  MCD Application Team
+  * @brief   FileX applicative file
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
@@ -80,15 +79,15 @@ static VOID os_delay(ULONG delay);
   * @param memory_ptr: memory pointer
   * @retval int
   */
-UINT App_FileX_Init(VOID *memory_ptr)
+UINT MX_FileX_Init(VOID *memory_ptr)
 {
   UINT ret = FX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-  /* USER CODE BEGIN App_FileX_MEM_POOL */
-  /* USER CODE END App_FileX_MEM_POOL */
+  /* USER CODE BEGIN MX_FileX_MEM_POOL */
+  /* USER CODE END MX_FileX_MEM_POOL */
 
-  /* USER CODE BEGIN App_FileX_Init */
+  /* USER CODE BEGIN MX_FileX_Init */
   CHAR *pointer;
 
   /*Allocate memory for fx_thread_entry*/
@@ -112,9 +111,7 @@ UINT App_FileX_Init(VOID *memory_ptr)
 
   /* Initialize FileX.  */
   fx_system_initialize();
-
-  /* USER CODE END App_FileX_Init */
-
+  /* USER CODE END MX_FileX_Init */
   return ret;
 }
 
@@ -140,7 +137,7 @@ void fx_thread_entry(ULONG thread_input)
   printf("[Cortex-M4]: FileX/LevelX NOR QUAD-SPI Application Start.\n");
 
   /* Get NOR chip info */
-  if(BSP_QSPI_GetInfo(QSPI_INSTANCE, &qspi_info) != BSP_ERROR_NONE)
+  if(BSP_QSPI_GetInfo(LX_STM32_QSPI_INSTANCE, &qspi_info) != BSP_ERROR_NONE)
   {
     Error_Handler();
   }
@@ -167,6 +164,7 @@ void fx_thread_entry(ULONG thread_input)
   /* Check if the format status */
   if (status != FX_SUCCESS)
   {
+    printf ("[Cortex-M4] : FileX Error ! (0x%02x)", status);
     Error_Handler();
   }
 
@@ -176,6 +174,7 @@ void fx_thread_entry(ULONG thread_input)
   /* Check the media open status.  */
   if (status != FX_SUCCESS)
   {
+    printf ("[Cortex-M4] : FileX Error ! (0x%02x)", status);
     Error_Handler();
   }
 

@@ -6,22 +6,21 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "app_threadx.h"
 #include "dma.h"
 #include "gpio.h"
-#include "app_azure_rtos.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -75,7 +74,6 @@ int main(void)
   /* USER CODE END 1 */
 /* USER CODE BEGIN Boot_Mode_Sequence_0 */
   int32_t timeout;
-  
 /* USER CODE END Boot_Mode_Sequence_0 */
 
   /* MPU Configuration--------------------------------------------------------*/
@@ -88,17 +86,13 @@ int main(void)
   SCB_EnableDCache();
 
 /* USER CODE BEGIN Boot_Mode_Sequence_1 */
-  
   /* Wait until CPU2 boots and enters in stop mode or timeout*/
-  
   timeout = 0xFFFF;
-  
   while((__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) != RESET) && (timeout-- > 0));
   if ( timeout < 0 )
   {
-    Error_Handler();
+  Error_Handler();
   }
-  
 /* USER CODE END Boot_Mode_Sequence_1 */
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -112,28 +106,21 @@ int main(void)
   /* Configure the system clock */
   SystemClock_Config();
 /* USER CODE BEGIN Boot_Mode_Sequence_2 */
-  
-  /* When system initialization is finished, Cortex-M7 will release Cortex-M4 by means of
-  HSEM notification */
-  
-  /*HW semaphore Clock enable*/
-  __HAL_RCC_HSEM_CLK_ENABLE();
-  
-  /*Take HSEM */
-  HAL_HSEM_FastTake(HSEM_ID_0);
-  
-  /*Release HSEM in order to notify the CPU2(CM4)*/
-  HAL_HSEM_Release(HSEM_ID_0,0);
-  
-  /* wait until CPU2 wakes up from stop mode */
-  timeout = 0xFFFF;
-  while((__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) == RESET) && (timeout-- > 0));
-  
-  if ( timeout < 0 )
-  {
-    Error_Handler();
-  }
-
+/* When system initialization is finished, Cortex-M7 will release Cortex-M4 by means of
+HSEM notification */
+/*HW semaphore Clock enable*/
+__HAL_RCC_HSEM_CLK_ENABLE();
+/*Take HSEM */
+HAL_HSEM_FastTake(HSEM_ID_0);
+/*Release HSEM in order to notify the CPU2(CM4)*/
+HAL_HSEM_Release(HSEM_ID_0,0);
+/* wait until CPU2 wakes up from stop mode */
+timeout = 0xFFFF;
+while((__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) == RESET) && (timeout-- > 0));
+if ( timeout < 0 )
+{
+Error_Handler();
+}
 /* USER CODE END Boot_Mode_Sequence_2 */
 
   /* USER CODE BEGIN SysInit */
@@ -143,11 +130,11 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-  MX_AZURE_RTOS_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
 
+  MX_ThreadX_Init();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -292,7 +279,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-    
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
   while (1)
@@ -319,5 +305,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

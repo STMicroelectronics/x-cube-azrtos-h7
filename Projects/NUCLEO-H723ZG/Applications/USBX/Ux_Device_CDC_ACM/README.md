@@ -54,7 +54,9 @@ Host PC shows that USB device does not operate as designed (CDC Device enumerati
 User is familiar with USB 2.0 "Universal Serial BUS" Specification and CDC_ACM class Specification.
 
 #### <b> Known limitations</b>
-None.
+
+When creating an USBX based application with MDK-ARM AC6 compiler make sure to disable the optimization for stm32h7xx_ll_usb.c file, otherwise application might not work correctly.
+This limitation will be fixed in future release.
 
 ### <b>Notes</b>
 

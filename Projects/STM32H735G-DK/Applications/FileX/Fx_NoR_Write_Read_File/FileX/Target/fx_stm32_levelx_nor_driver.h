@@ -68,29 +68,23 @@ extern "C" {
 /* to enable a default NOR driver:
   - define the flags LX_NOR_DEFAULT_DRIVER
   - Provide the driver ID in the NOR_DEFAULT_DRIVER for example
-  #define NOR_DEFAULT_DRIVER LX_NOR_QSPI_DRIVER_ID
+  #define NOR_DEFAULT_DRIVER LX_NOR_OSPI_DRIVER_ID
 */
-
 /* USER CODE BEGIN DEFAULT_DRIVER */
 
-#define USE_LX_NOR_DEFAULT_DRIVER 
-
-#ifdef USE_LX_NOR_DEFAULT_DRIVER
-#define NOR_DEFAULT_DRIVER         LX_NOR_OSPI_DRIVER_ID
-#endif
-/* USER CODE END DEFAULT_DRIVER */
+#define LX_NOR_DEFAULT_DRIVER 
 
 #ifdef LX_NOR_DEFAULT_DRIVER
 
-/* USER CODE BEGIN DEFAULT_DRIVER */
-
 #define USE_LX_NOR_DEFAULT_DRIVER 
 
 #ifdef USE_LX_NOR_DEFAULT_DRIVER
 #define NOR_DEFAULT_DRIVER         LX_NOR_OSPI_DRIVER_ID
 #endif
+
+#endif /* LX_NOR_DEFAULT_DRIVER */
+
 /* USER CODE END DEFAULT_DRIVER */
-#endif
 
 #if !defined(NOR_DEFAULT_DRIVER) && !defined(LX_NOR_CUSTOM_DRIVERS) && !defined(LX_NOR_SIMULATOR_DRIVER) && !defined(LX_NOR_QSPI_DRIVER)  && !defined(LX_NOR_OSPI_DRIVER)
 #error "[This error was thrown on purpose] : No NOR lowlevel driver defined"

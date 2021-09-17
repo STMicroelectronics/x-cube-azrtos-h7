@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -78,28 +77,28 @@ extern void Error_Handler(void);
   * @param memory_ptr: memory pointer
   * @retval int
   */
-UINT App_USBX_Host_Init(VOID *memory_ptr)
+UINT MX_USBX_Host_Init(VOID *memory_ptr)
 {
   UINT ret = UX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-  /* USER CODE BEGIN App_USBX_Host_MEM_POOL */
-  /* USER CODE END App_USBX_Host_MEM_POOL */
+  /* USER CODE BEGIN MX_USBX_Host_MEM_POOL */
+  /* USER CODE END MX_USBX_Host_MEM_POOL */
 
-  /* USER CODE BEGIN App_USBX_Host_Init */
+  /* USER CODE BEGIN MX_USBX_Host_Init */
   CHAR *pointer;
 
   /* Allocate the stack for thread 0.  */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        USBX_MEMORY_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Initialize USBX memory. */
   if (ux_system_initialize(pointer, USBX_MEMORY_SIZE, UX_NULL, 0) != UX_SUCCESS)
   {
-    ret = UX_ERROR;
+    return UX_ERROR;
   }
   /* register a callback error function */
 
@@ -109,7 +108,7 @@ UINT App_USBX_Host_Init(VOID *memory_ptr)
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        USBX_APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Create the main App thread.  */
@@ -117,14 +116,14 @@ UINT App_USBX_Host_Init(VOID *memory_ptr)
                        pointer, USBX_APP_STACK_SIZE, 25, 25, 0,
                        TX_AUTO_START) != TX_SUCCESS)
   {
-    ret = TX_THREAD_ERROR;
+    return TX_THREAD_ERROR;
   }
 
   /* Allocate the stack for thread 1. */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        USBX_APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Create the HID mouse App thread. */
@@ -132,14 +131,14 @@ UINT App_USBX_Host_Init(VOID *memory_ptr)
                        pointer, USBX_APP_STACK_SIZE, 30, 30, 0,
                        TX_AUTO_START) != TX_SUCCESS)
   {
-    ret = TX_THREAD_ERROR;
+    return TX_THREAD_ERROR;
   }
 
   /* Allocate the stack for the HID Keyboard App thread. */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        USBX_APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Create the HID Keyboard App thread. */
@@ -147,14 +146,14 @@ UINT App_USBX_Host_Init(VOID *memory_ptr)
                        pointer, USBX_APP_STACK_SIZE, 30, 30, 0,
                        TX_AUTO_START) != TX_SUCCESS)
   {
-    ret = TX_THREAD_ERROR;
+    return TX_THREAD_ERROR;
   }
 
   /* Allocate the stack for the msc_app_thread.  */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                       (USBX_APP_STACK_SIZE * 2), TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Create the storage applicative process thread.  */
@@ -162,36 +161,36 @@ UINT App_USBX_Host_Init(VOID *memory_ptr)
                        pointer, (USBX_APP_STACK_SIZE * 2), 30, 30, 0,
                        TX_AUTO_START) != TX_SUCCESS)
   {
-    ret = TX_THREAD_ERROR;
+    return TX_THREAD_ERROR;
   }
   /* Allocate Memory for the Queue  */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        APP_QUEUE_SIZE * sizeof(ux_app_devInfotypeDef), TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Create the MsgQueue   */
   if (tx_queue_create(&ux_app_MsgQueue, "Message Queue app", sizeof(ux_app_devInfotypeDef),
                       pointer, APP_QUEUE_SIZE * sizeof(ux_app_devInfotypeDef)) != TX_SUCCESS)
   {
-    ret = TX_QUEUE_ERROR;
+    return TX_QUEUE_ERROR;
   }
 
   /* Allocate Memory for the msc_Queue  */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        APP_QUEUE_SIZE * sizeof(FX_MEDIA *), TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Create the MsgQueue for msc_app_thread   */
   if (tx_queue_create(&ux_app_MsgQueue_msc, "Message Queue msc", sizeof(FX_MEDIA *),
                       pointer, APP_QUEUE_SIZE * sizeof(FX_MEDIA *)) != TX_SUCCESS)
   {
-    ret = TX_QUEUE_ERROR;
+    return TX_QUEUE_ERROR;
   }
-  /* USER CODE END App_USBX_Host_Init */
+  /* USER CODE END MX_USBX_Host_Init */
 
   return ret;
 }
@@ -286,7 +285,7 @@ void  usbx_app_thread_entry(ULONG arg)
     }
     else
     {
-      tx_thread_sleep(50);
+      tx_thread_sleep(MS_TO_TICK(50));
     }
   }
 }

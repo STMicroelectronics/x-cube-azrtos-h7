@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>TX_INCLUDE_USER_DEFINE_FILE,FX_INCLUDE_USER_DEFINE_FILE,UX_INCLUDE_USER_DEFINE_FILE,NX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H735xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../AZURE_RTOS/App;../FileX/App;../NetXDuo/App;../USBX/App;../FileX/Target;../USBX/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Middlewares/ST/filex/common/inc/;../../../../../../Middlewares/ST/filex/ports/generic/inc/;../../../../../../Middlewares/ST/usbx/common/usbx_network/inc/;../../../../../../Middlewares/ST/usbx/common/core/inc/;../../../../../../Middlewares/ST/usbx/ports/generic/inc/;../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/inc/;../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/;../../../../../../Middlewares/ST/netxduo/addons/dhcp/;../../../../../../Middlewares/ST/netxduo/common/inc/;../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/ac5/inc/;../../../../../../Middlewares/ST/netxduo/addons/web/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H735G-DK</IncludePath>
+              <IncludePath>../Core/Inc;../AZURE_RTOS/App;../FileX/App;../FileX/Target;../USBX/App;../USBX/Target;../NetXDuo/App;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Middlewares/ST/filex/common/inc/;../../../../../../Middlewares/ST/filex/ports/generic/inc/;../../../../../../Middlewares/ST/usbx/common/core/inc/;../../../../../../Middlewares/ST/usbx/ports/generic/inc/;../../../../../../Middlewares/ST/usbx/common/usbx_network/inc/;../../../../../../Middlewares/ST/usbx/common/usbx_device_classes/inc/;../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/;../../../../../../Middlewares/ST/netxduo/addons/dhcp/;../../../../../../Middlewares/ST/netxduo/common/inc/;../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/ac5/inc/;../../../../../../Middlewares/ST/netxduo/addons/web/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H735G-DK</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -444,14 +444,24 @@
           <GroupName>Application/User/USBX/App</GroupName>
           <Files>
             <File>
+              <FileName>ux_device_descriptors.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../USBX/App/ux_device_descriptors.c</FilePath>
+            </File>
+            <File>
               <FileName>app_usbx_device.c</FileName>
               <FileType>1</FileType>
               <FilePath>../USBX/App/app_usbx_device.c</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/User/FileX/Target</GroupName>
+          <Files>
             <File>
-              <FileName>ux_device_descriptors.c</FileName>
+              <FileName>fx_stm32_sd_driver_glue.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../USBX/App/ux_device_descriptors.c</FilePath>
+              <FilePath>../FileX/Target/fx_stm32_sd_driver_glue.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -686,7 +696,7 @@
                     <v6LangP>0</v6LangP>
                     <vShortEn>2</vShortEn>
                     <vShortWch>2</vShortWch>
-                    <v6Lto>0</v6Lto>
+                    <v6Lto>2</v6Lto>
                     <v6WtE>2</v6WtE>
                     <v6Rtti>2</v6Rtti>
                     <VariousControls>
@@ -712,7 +722,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Middlewares/FileX/File System/FileX/Core/RTOS_MODE</GroupName>
+          <GroupName>Middlewares/FileX/File System/FileX/Core</GroupName>
           <Files>
             <File>
               <FileName>fx_directory_attributes_read.c</FileName>
@@ -1877,17 +1887,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Middlewares/USBX/USB/USBX/UX Network Driver</GroupName>
-          <Files>
-            <File>
-              <FileName>ux_network_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_network/src/ux_network_driver.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Middlewares/USBX/USB/USBX/UX Device CoreStack/RTOS_MODE</GroupName>
+          <GroupName>Middlewares/USBX/USB/USBX/UX Device CoreStack</GroupName>
           <Files>
             <File>
               <FileName>ux_device_stack_alternate_setting_get.c</FileName>
@@ -2008,6 +2008,16 @@
               <FileName>ux_device_stack_uninitialize.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_device_stack_uninitialize.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/USBX/USB/USBX/UX Network Driver</GroupName>
+          <Files>
+            <File>
+              <FileName>ux_network_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_network/src/ux_network_driver.c</FilePath>
             </File>
           </Files>
         </Group>

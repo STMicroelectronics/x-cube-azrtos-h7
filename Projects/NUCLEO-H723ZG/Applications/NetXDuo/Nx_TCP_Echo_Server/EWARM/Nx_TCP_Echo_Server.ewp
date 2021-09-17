@@ -352,8 +352,8 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state>$PROJ_DIR$/../AZURE_RTOS/App</state>
                     <state>$PROJ_DIR$/../Core/Inc</state>
+                    <state>$PROJ_DIR$/../AZURE_RTOS/App</state>
                     <state>$PROJ_DIR$/../NetXDuo/App</state>
                     <state>$PROJ_DIR$/../NetXDuo/Target</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc</state>
@@ -361,7 +361,7 @@
                     <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Include</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/BSP/Components/lan8742/</state>
-                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/drivers/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/addons/dhcp/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/iar/inc/</state>
@@ -1236,13 +1236,13 @@
             <group>
                 <name>Network/Ethernet Interface</name>
                 <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\drivers\nx_stm32_eth_driver.c</name>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\drivers\ethernet\nx_stm32_eth_driver.c</name>
                 </file>
             </group>
             <group>
                 <name>Network/Ethernet Phy Interface/LAN8742_Phy_Interface</name>
                 <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\drivers\lan8742\nx_stm32_phy_driver.c</name>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\drivers\ethernet\lan8742\nx_stm32_phy_driver.c</name>
                 </file>
             </group>
         </group>

@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -121,11 +120,12 @@ static void GetPointerData(UX_SLAVE_CLASS_HID_EVENT *hid_event)
   static int8_t cnt = 0;
   static int8_t x = 0, y = 0;
 
+  /* Reset counter */
   if (cnt == 16)
   {
     cnt = 0;
   }
-
+  /* Update pointer position x and y */
   if ((cnt >= 0) && (cnt < 4))
   {
     y=0;
@@ -146,7 +146,7 @@ static void GetPointerData(UX_SLAVE_CLASS_HID_EVENT *hid_event)
     x=0;
     y = -CURSOR_STEP;
   }
-
+  /* Increment counter */
   cnt++;
 
   /* Mouse event. Length is fixed to . */
@@ -180,4 +180,3 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

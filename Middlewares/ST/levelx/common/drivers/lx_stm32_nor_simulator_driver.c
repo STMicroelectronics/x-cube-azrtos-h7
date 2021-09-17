@@ -42,7 +42,7 @@ UINT  lx_stm32_nor_simulator_initialize(LX_NOR_FLASH *nor_flash)
 
     if (is_erased == 0)
     {
-        mem_set(nor_flash->lx_nor_flash_base_address, '\0', LX_NOR_SIMULATOR_FLASH_SIZE);
+        mem_set(nor_flash->lx_nor_flash_base_address, 0xff, LX_NOR_SIMULATOR_FLASH_SIZE);
         is_erased = 1;
     }
     /* Setup geometry of the flash.  */
@@ -68,12 +68,7 @@ UINT  lx_stm32_nor_simulator_initialize(LX_NOR_FLASH *nor_flash)
 static UINT  lx_nor_simulator_read(ULONG *flash_address, ULONG *destination, ULONG words)
 {
 
-    /* Loop to read flash.  */
-    while (words--)
-    {
-        /* Copy word.  */
-        *destination++ = *flash_address++;
-    }
+    memcpy((VOID *)destination, (VOID *)flash_address, words * sizeof(ULONG));
 
     return(LX_SUCCESS);
 }
@@ -82,13 +77,7 @@ static UINT  lx_nor_simulator_read(ULONG *flash_address, ULONG *destination, ULO
 static UINT  lx_nor_simulator_write(ULONG *flash_address, ULONG *source, ULONG words)
 {
 
-    /* Loop to write flash.  */
-    while (words--)
-    {
-
-        /* Copy word.  */
-        *flash_address++ = *source++;
-    }
+    memcpy((VOID *)flash_address, (VOID *)source, words * sizeof(ULONG));
 
     return(LX_SUCCESS);
 }
@@ -97,7 +86,6 @@ static UINT  lx_nor_simulator_block_erase(ULONG block, ULONG erase_count)
 {
 
     ULONG   *pointer;
-    ULONG   words;
 
     LX_PARAMETER_NOT_USED(erase_count);
 
@@ -106,13 +94,8 @@ static UINT  lx_nor_simulator_block_erase(ULONG block, ULONG erase_count)
     pointer = (ULONG *) (LX_NOR_SIMULATOR_FLASH_BASE_ADDRESS + block * (LX_NOR_SIMULATOR_SECTOR_SIZE * LX_NOR_SIMULATOR_SECTORS_PER_BLOCK));
 
     /* Loop to erase block.  */
-    words =  words_per_block;
-    while (words--)
-    {
-        /* Erase word of block.  */
-        *pointer++ =  (ULONG) 0xFFFFFFFF;
-    }
 
+    mem_set((VOID *) pointer, 0xff, words_per_block * sizeof(ULONG));
     return(LX_SUCCESS);
 }
 

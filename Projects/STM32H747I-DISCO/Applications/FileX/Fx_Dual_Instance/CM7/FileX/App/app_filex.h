@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -30,10 +29,9 @@ extern "C" {
 #include "fx_api.h"
 
 #include "fx_stm32_sd_driver.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "stm32h747i_discovery.h"
+#include "main.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -52,7 +50,7 @@ extern "C" {
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
-UINT App_FileX_Init(VOID *memory_ptr);
+UINT MX_FileX_Init(VOID *memory_ptr);
 
 /* USER CODE BEGIN EFP */
 
@@ -60,7 +58,11 @@ UINT App_FileX_Init(VOID *memory_ptr);
 
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define SD_DETECT_PIN                        GPIO_PIN_8
+#define SD_DETECT_GPIO_PORT                  GPIOI
 
+#define SD_NOT_PRESENT                       -1
+#define SD_PRESENT                            0
 /* USER CODE END PD */
 
 /* USER CODE BEGIN 1 */
@@ -70,5 +72,3 @@ UINT App_FileX_Init(VOID *memory_ptr);
 }
 #endif
 #endif /* __APP_FILEX_H__ */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

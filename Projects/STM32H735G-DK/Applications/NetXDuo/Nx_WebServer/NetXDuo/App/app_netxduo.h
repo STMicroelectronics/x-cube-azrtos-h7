@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -48,9 +47,6 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-#define PRINT_APP_START(test)            do { \
-                                              printf("%s Application started..\n\n", #test);\
-                                            } while(0)
 
 #define PRINT_IP_ADDRESS(addr) do { \
                                     printf("%s: %lu.%lu.%lu.%lu \n", #addr, \
@@ -62,7 +58,7 @@ extern "C" {
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
-UINT App_NetXDuo_Init(VOID *memory_ptr);
+UINT MX_NetXDuo_Init(VOID *memory_ptr);
 
 /* USER CODE BEGIN EFP */
 
@@ -73,6 +69,7 @@ UINT App_NetXDuo_Init(VOID *memory_ptr);
 /* Pirority IP creation */
 #define DEFAULT_MEMORY_SIZE              1024
 #define DEFAULT_MAIN_PRIORITY            10
+#define TOGGLE_LED_PRIORITY              15   
 #define DEFAULT_PRIORITY                 5
  /*Packet payload size */
 #define PACKET_PAYLOAD_SIZE              1536
@@ -98,6 +95,7 @@ UINT App_NetXDuo_Init(VOID *memory_ptr);
 #define SERVER_PACKET_SIZE               (NX_WEB_HTTP_SERVER_MIN_PACKET_SIZE * 2)
 /* Server stack */
 #define SERVER_STACK                     4096
+
 /* Server pool size */
 #define SERVER_POOL_SIZE                 (SERVER_PACKET_SIZE * 4)
 /* SD Driver information pointer */
@@ -114,5 +112,3 @@ UINT App_NetXDuo_Init(VOID *memory_ptr);
 }
 #endif
 #endif /* __APP_NETXDUO_H__ */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

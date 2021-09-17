@@ -2,37 +2,59 @@
 ## <b>Nx_WebServer application description</b>
 
 This application provides an example of Azure RTOS NetX Duo stack usage on STM32H735G-DK board, it shows how to develop Web HTTP server based application.
-The application is designed to load files and static web pages stored in SD card using a Web HTTP server, the code provides all required features to build a compliant Web HTTP Server.
+The application is designed to load files and dyncamic web pages stored in SD card using a Web HTTP server, the code provides all required features to build a compliant Web HTTP Server.
 The main entry function tx_application_define() is called by ThreadX during kernel start, at this stage, all NetX and FileX resources are created.
 
- + A NX_PACKET_POOL **AppPool** is allocated
+ + A NX_PACKET_POOL **EthPool** is allocated
+
  + A NX_IP instance **IpInstance** using that pool is initialized
+
  + A NX_PACKET_POOL **WebServerPool** is allocated
+
  + A NX_WEB_HTTP_SERVER **HTTPServer** instance using that pool is initialized
+
  + The ARP, ICMP and protocols (TCP and UDP) are enabled for the NX_IP instance
+
  + A DHCP client is created.
 
  The application then creates 2 threads with different priorities:
 
  + **AppMainThread** (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.
- + **AppWebServerThread** (priority 5, PreemtionThreashold 5) : created with the TX_DONT_START flag to be started later.
+
+ + **AppServerThread** (priority 5, PreemtionThreashold 5) : created with the TX_DONT_START flag to be started later.
+
+ + **LedThread** (priority 15, PreemtionThreashold 15) : created with the TX_DONT_START flag to be started later.
 
 The **AppMainThread** starts and perform the following actions:
 
-  + starts the DHCP client
-  + waits for the IP address resolution
-  + resumes the **AppWebServerThread**
+  + Starts the DHCP client
 
-The **AppWebServerThread**, once started:
+  + Waits for the IP address resolution
 
-The user's browser can load a static web page, download a zip folder or watch a video that are stored in SD card.
-In order to open simultaneous sessions for the server, you should define the number of simultaneous sessions NX_WEB_HTTP_SERVER_SESSION_MAX in "nx_user.h".
+  + Resumes the **AppServerThread**
+
+The **AppServerThread**, once started:
+
+  + Fx_media_open.
+
+  + Starts HTTP server.
+
+  + Each command coming from client (browser) is treated on the callback webserver_request_notify_callback.
+
+The **LedThread**, once resumed from the dashboard:
+
+  + Green Led is toggling & message printed on HyperTerminal.
 
 #### <b>Expected success behavior</b>
 
-When an SD card is inserted into the STM32H735G-DK SD card reader and the board is powered up and connected to DHCP enabled Ethernet network, the green LED switches ON when the Web HTTP server is successfully started.
-Then the static files can be loaded on the web browser after entring the url http://@IP/file_name.
-An example web page is provided for testing the application that can be found under "NetXDuo/Nx_WebServer/Web_Content/index.html".
+ + The board IP address "IP@" is printed on the HyperTerminal
+
+ + Home page is well displayed on the browser after entering the url: http://IP@/about.html
+
+ + Dashboard is well displayed on the browser after entering the url: http://IP@/dashboard.html
+
+ + On dashboard, You can command Green LED and watch some infos about threadx and netxduo.
+
 
 #### <b>Error behaviors</b>
 

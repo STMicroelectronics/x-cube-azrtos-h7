@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -51,10 +50,10 @@
 #define DEFAULT_PREEMPTION_THRESHOLD          DEFAULT_THREAD_PRIO
 
 /* USB App Stack Size */
-#define USBX_APP_STACK_SIZE                   (2 * 1024)
+#define USBX_APP_STACK_SIZE                   1024
 
 /* Usb Memory Size */
-#define USBX_MEMORY_SIZE                      (52 * 1024)
+#define USBX_MEMORY_SIZE                      (38 * 1024)
 
 /* USER CODE END PD */
 
@@ -83,19 +82,16 @@ void  usbx_app_thread_entry(ULONG arg);
   * @param memory_ptr: memory pointer
   * @retval int
   */
-UINT App_USBX_Device_Init(VOID *memory_ptr)
+UINT MX_USBX_Device_Init(VOID *memory_ptr)
 {
   UINT ret = UX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-  /* USER CODE BEGIN App_USBX_Device_MEM_POOL */
+  /* USER CODE BEGIN MX_USBX_Device_MEM_POOL */
 
-  /* USER CODE END App_USBX_Device_MEM_POOL */
+  /* USER CODE END MX_USBX_Device_MEM_POOL */
 
-  /* USER CODE BEGIN App_USBX_Device_Init */
-
-  /* Device framework high speed length*/
-  ULONG device_framework_hs_length;
+  /* USER CODE BEGIN MX_USBX_Device_Init */
 
   /* Device framework full speed length */
   ULONG device_framework_fs_length;
@@ -105,9 +101,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
 
   /* Device string framework length */
   ULONG languge_id_framework_length;
-
-  /* Device framework high speed */
-  UCHAR *device_framework_high_speed;
 
   /* Device framework full speed */
   UCHAR *device_framework_full_speed;
@@ -135,10 +128,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   /* Initialize USBX Memory */
   ux_system_initialize(ux_app_pointer, USBX_MEMORY_SIZE, UX_NULL, 0);
 
-  /* Get_Device_Framework_High_Speed and get the length */
-  device_framework_high_speed = USBD_Get_Device_Framework_Speed(USBD_HIGH_SPEED,
-                                                                &device_framework_hs_length);
-
   /* Get_Device_Framework_Full_Speed and get the length */
   device_framework_full_speed = USBD_Get_Device_Framework_Speed(USBD_FULL_SPEED,
                                                                 &device_framework_fs_length);
@@ -151,8 +140,8 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
 
   /* The code below is required for installing the device portion of USBX.
      In this application */
-  ret =  _ux_device_stack_initialize(device_framework_high_speed,
-                                     device_framework_hs_length,
+  ret =  _ux_device_stack_initialize(NULL,
+                                     0,
                                      device_framework_full_speed,
                                      device_framework_fs_length,
                                      string_framework,
@@ -226,7 +215,7 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
     Error_Handler();
   }
 
-  /* USER CODE END App_USBX_Device_Init */
+  /* USER CODE END MX_USBX_Device_Init */
 
   return ret;
 }
@@ -239,9 +228,6 @@ UINT App_USBX_Device_Init(VOID *memory_ptr)
   */
 void usbx_app_thread_entry(ULONG arg)
 {
-  /* Sleep for 1s */
-  tx_thread_sleep(MS_TO_TICK(1000));
-
   /* Initialization of USB device */
   MX_USB_Device_Init();
 }

@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -278,12 +277,12 @@ void usbx_cdc_acm_read_thread_entry(ULONG arg)
 
   while (1)
   {
-    /* Get Data interface */
-    data_interface = device->ux_slave_device_first_interface->ux_slave_interface_next_interface;
-
     /* Check if device is configured */
     if (device->ux_slave_device_state == UX_DEVICE_CONFIGURED)
     {
+      /* Get Data interface */
+      data_interface = device->ux_slave_device_first_interface->ux_slave_interface_next_interface;
+
       /* Compares two memory blocks ux_slave_class_name and _ux_system_slave_class_cdc_acm_name */
       ux_status = ux_utility_memory_compare(data_interface->ux_slave_interface_class->ux_slave_class_name,
                                             _ux_system_slave_class_cdc_acm_name,
@@ -574,4 +573,3 @@ static void USBD_CDC_VCP_Config(UX_SLAVE_CLASS_CDC_ACM_LINE_CODING_PARAMETER
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -17,78 +17,90 @@ static UINT  lx_qspi_driver_write_sector(ULONG *flash_address, ULONG *source, UL
 static UINT  lx_qspi_driver_erase_block(ULONG block, ULONG erase_count);
 static UINT  lx_qspi_driver_block_erased_verify(ULONG block);
 
-static UINT  lx_qspi_driver_system_error(UINT error_code);
-
-static UINT  check_status(void);
-
 #ifndef LX_DIRECT_READ
-ULONG  nor_sector_memory[DEFAULT_BLOCK_SIZE * 2];
+extern ULONG  qspi_sector_buffer[LX_STM32_QSPI_SECTOR_SIZE/sizeof(ULONG)];
 #endif
 
 static UINT is_initialized = LX_FALSE;
 
+/**
+* @brief check the status of the octospi memory.
+* @param none
+* @retval LX_SUCCESS if the octospi is ready, LX_ERROR otherwise
+*/
+
 static UINT check_status(void)
 {
-  ULONG start = tx_time_get();
-  while( BSP_QSPI_GetStatus(QSPI_INSTANCE) < 0 )
+  ULONG start = LX_STM32_QSPI_CURRENT_TIME();
+  while (LX_STM32_QSPI_CURRENT_TIME() - start < LX_STM32_QSPI_DEFAULT_TIMEOUT)
   {
-    if(tx_time_get() - start > (120 * TX_TIMER_TICKS_PER_SECOND))
+    if (lx_stm32_qspi_get_status(LX_STM32_QSPI_INSTANCE) == 0)
+    {
+      return LX_SUCCESS;
+    }
+    else
+    {
       return LX_ERROR;
+    }
   }
 
-  return LX_SUCCESS;
+  return LX_ERROR;
 }
+
+/**
+* @brief initialize the OctoSPI memory
+* @param LX_NOR_FLASH * the levelx NOR flash main instance.
+* @retval LX_SUCCESS if the octospi is ready, LX_ERROR otherwise
+*/
 
 UINT lx_stm32_qspi_initialize(LX_NOR_FLASH *nor_flash)
 {
-  BSP_QSPI_Info_t qspi_info;
+  INT ret;
+  ULONG block_size;
+  ULONG total_blocks;
 
   if (is_initialized == LX_FALSE)
   {
-    if(BSP_QSPI_GetInfo(QSPI_INSTANCE, &qspi_info) != BSP_ERROR_NONE)
+
+#if (LX_STM32_QSPI_INIT == 1)
+
+    ret = lx_stm32_qspi_lowlevel_init(LX_STM32_QSPI_INSTANCE);
+
+    if (ret != 0)
     {
       return LX_ERROR;
     }
 
-#if (LX_DRIVER_CALLS_QSPI_INIT == 1)
+#if (LX_STM32_QSPI_ERASE == 1)
 
-    TX_INTERRUPT_SAVE_AREA
-      BSP_QSPI_Init_t qspi_config;
+    ret = lx_stm32_qspi_erase(LX_STM32_QSPI_INSTANCE, (ULONG)0, (ULONG)0, 1);
 
-    /* QSPI device configuration */
-    qspi_config.InterfaceMode = BSP_QSPI_QPI_MODE;
-    qspi_config.TransferRate  = BSP_QSPI_DTR_TRANSFER;
-
-    TX_DISABLE
-
-      if(BSP_QSPI_Init(QSPI_INSTANCE, &qspi_config) != BSP_ERROR_NONE)
-      {
-        return LX_ERROR;
-      }
-
-#if (LX_DRIVER_ERASES_QSPI_AFTER_INIT == 1)
-    if( BSP_QSPI_EraseChip(QSPI_INSTANCE) != BSP_ERROR_NONE)
+    if (ret != 0)
     {
       return LX_ERROR;
     }
-
-    if(check_status() != LX_SUCCESS)
-    {
-      return LX_ERROR;
-    }
+#endif
 
 #endif
 
-    TX_RESTORE
+    if (check_status() != LX_SUCCESS)
+    {
+      return LX_ERROR;
+    }
 
-#endif
+    ret = lx_stm32_qspi_get_info(LX_STM32_QSPI_INSTANCE, &block_size, &total_blocks);
 
-      /* Setup the base address of the flash memory.  */
-      nor_flash->lx_nor_flash_base_address = 0;
+    if (ret != 0)
+    {
+      return LX_ERROR;
+    }
+
+    /* Setup the base address of the flash memory.  */
+    nor_flash->lx_nor_flash_base_address = 0;
 
     /* Setup geometry of the flash.  */
-    nor_flash->lx_nor_flash_total_blocks = qspi_info.FlashSize / qspi_info.EraseSectorSize;
-    nor_flash->lx_nor_flash_words_per_block = qspi_info.EraseSectorSize / sizeof(ULONG);
+    nor_flash->lx_nor_flash_total_blocks = total_blocks;
+    nor_flash->lx_nor_flash_words_per_block = block_size / sizeof(ULONG);
 
     nor_flash->lx_nor_flash_driver_read = lx_qspi_driver_read_sector;
     nor_flash->lx_nor_flash_driver_write = lx_qspi_driver_write_sector;
@@ -100,83 +112,142 @@ UINT lx_stm32_qspi_initialize(LX_NOR_FLASH *nor_flash)
 
 #ifndef LX_DIRECT_READ
     /* Setup local buffer for NOR flash operation. This buffer must be the sector size of the NOR flash memory.  */
-    nor_flash->lx_nor_flash_sector_buffer =  &nor_sector_memory[0];
+    nor_flash->lx_nor_flash_sector_buffer =  &qspi_sector_buffer[0];
 #endif
     is_initialized = LX_TRUE;
   }
+
+  /* call post init routine*/
+  LX_STM32_QSPI_POST_INIT();
+
   /* Return success.  */
-  return(LX_SUCCESS);
+  return LX_SUCCESS;
 }
 
-static UINT  lx_qspi_driver_read_sector(ULONG *flash_address, ULONG *destination, ULONG words)
+/**
+* @brief read data from flash memory address into a destination buffer
+* @param ULONG* flash_address the flash address to read from
+* @param ULONG* destination the buffer to hold the read data
+* @param ULONG words the number of words to read
+* @retval LX_SUCCESS if data is read correctly, LX_ERROR on errors
+*/
+
+
+static UINT lx_qspi_driver_read_sector(ULONG *flash_address, ULONG *destination, ULONG words)
 {
-  if(check_status() != LX_SUCCESS)
+  UINT status = LX_SUCCESS;
+
+  if (check_status() != LX_SUCCESS)
   {
     return LX_ERROR;
   }
 
-  if(BSP_QSPI_Read(QSPI_INSTANCE, (uint8_t *)destination, (uint32_t)flash_address, (uint32_t) words * sizeof(ULONG)) != BSP_ERROR_NONE)
+  LX_STM32_QSPI_PRE_READ_TRANSFER(status);
+
+  if (status != LX_SUCCESS)
   {
-    return(LX_ERROR);
+    return status;
+  }
+
+  if (lx_stm32_qspi_read(LX_STM32_QSPI_INSTANCE, flash_address, destination, words) != 0)
+  {
+    status = LX_ERROR;
+    LX_STM32_QSPI_READ_TRANSFER_ERROR(status);
   }
   else
   {
-    return(LX_SUCCESS);
+    LX_STM32_QSPI_READ_CPLT_NOTIFY(status);
   }
+
+  LX_STM32_QSPI_POST_READ_TRANSFER(status);
+
+  return status;
 }
+
+/**
+* @brief write source buffer into flash memory address
+* @param ULONG* flash_address the flash address to write into
+* @param ULONG* source the data buffer to be written
+* @param ULONG words the number of words to write
+* @retval LX_SUCCESS if data is written correctly, LX_ERROR on errors
+*/
 
 static UINT  lx_qspi_driver_write_sector(ULONG *flash_address, ULONG *source, ULONG words)
 {
-  if(check_status() != LX_SUCCESS)
+  UINT status = LX_SUCCESS;
+
+  if (check_status() != LX_SUCCESS)
   {
     return LX_ERROR;
   }
 
-  if(BSP_QSPI_Write(QSPI_INSTANCE, (uint8_t *) source, (uint32_t) flash_address, (uint32_t) words * sizeof(ULONG)) != BSP_ERROR_NONE)
+  LX_STM32_QSPI_PRE_WRITE_TRANSFER(status);
+
+  if (status != LX_SUCCESS)
   {
-    return(LX_ERROR);
+    return status;
+  }
+
+  if (lx_stm32_qspi_write(LX_STM32_QSPI_INSTANCE, flash_address, source, words) != 0)
+  {
+    status = LX_ERROR;
+    LX_STM32_QSPI_WRITE_TRANSFER_ERROR(status);
   }
   else
   {
-    return(LX_SUCCESS);
+    LX_STM32_QSPI_WRITE_CPLT_NOTIFY(status);
   }
+
+  LX_STM32_QSPI_POST_WRITE_TRANSFER(status);
+
+  return status;
 }
 
 static UINT  lx_qspi_driver_erase_block(ULONG block, ULONG erase_count)
 {
-  LX_PARAMETER_NOT_USED(erase_count);
+  UINT status;
 
-  if(check_status() != LX_SUCCESS)
+  if (check_status() != LX_SUCCESS)
   {
     return LX_ERROR;
   }
 
-  if(BSP_QSPI_EraseBlock(QSPI_INSTANCE, block * DEFAULT_BLOCK_SIZE, BSP_QSPI_ERASE_8K) != BSP_ERROR_NONE)
+  if (lx_stm32_qspi_erase(LX_STM32_QSPI_INSTANCE, block, erase_count, 0) != 0)
   {
-    return(LX_ERROR);
+    status = LX_ERROR;
   }
   else
   {
-    return(LX_SUCCESS);
+    status = check_status();
   }
+
+  return status;
 }
 
-static UINT  lx_qspi_driver_block_erased_verify(ULONG block)
+static UINT lx_qspi_driver_block_erased_verify(ULONG block)
 {
-  LX_PARAMETER_NOT_USED(block);
+  UINT status;
 
-  /*
-  * Implemnting this API is costy as we need to read the block and verify that it was actually erased.
-  * We rely on the HW and just return LX_SUCCESS
-  */
+  if (check_status() != LX_SUCCESS)
+  {
+    return LX_ERROR;
+  }
 
-  return(LX_SUCCESS);
+  if (lx_stm32_qspi_is_block_erased(LX_STM32_QSPI_INSTANCE, block) == 0)
+  {
+    status = LX_SUCCESS;
+  }
+  else
+  {
+    status = LX_ERROR;
+  }
+
+  return status;
 }
 
-static UINT  lx_qspi_driver_system_error(UINT error_code)
+__WEAK UINT lx_qspi_driver_system_error(UINT error_code)
 {
   LX_PARAMETER_NOT_USED(error_code);
 
-  return(LX_ERROR);
+  return LX_ERROR;
 }
-

@@ -107,12 +107,7 @@ The above configuration results in an attributes word equals 0x00000007
      ```
 	 place in RAM_region    { last section FREE_MEM };
 	 ```
-    + For MDK-ARM:
-	```
-    either define the RW_IRAM1 region in the ".sct" file
-    or modify the line below in "tx_low_level_initilize.s to match the memory region being used
-        LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+
     + For STM32CubeIDE add the following section into the .ld file:
 	```
     ._threadx_heap :

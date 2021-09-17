@@ -201,7 +201,7 @@
 /* Determine if thread performance gathering is required by the application. When the following is
    defined, ThreadX gathers various thread performance information. */
 
-/*#define TX_THREAD_ENABLE_PERFORMANCE_INFO*/
+#define TX_THREAD_ENABLE_PERFORMANCE_INFO
 
 /* Determine if timer performance gathering is required by the application. When the following is
    defined, ThreadX gathers various timer performance information. */
@@ -219,7 +219,7 @@
 /* Define the check for whether or not to call the
     _tx_thread_system_return function (TX_THREAD_SYSTEM_RETURN_CHECK(c)). */
 
-/*#define #define TX_THREAD_SYSTEM_RETURN_CHECK (c)  ((ULONG) _tx_thread_preempt_disable)*/
+/*#define TX_THREAD_SYSTEM_RETURN_CHECK (c)  ((ULONG) _tx_thread_preempt_disable)*/
 
 /* Define the common timer tick reference for use by other middleware components. */
 

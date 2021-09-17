@@ -204,12 +204,12 @@
 		<link>
 			<name>Middlewares/Interfaces/Network/Ethernet Interface/nx_stm32_eth_driver.c</name>
 			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/common/drivers/nx_stm32_eth_driver.c</locationURI>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/common/drivers/ethernet/nx_stm32_eth_driver.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/Interfaces/Network/Ethernet Phy Interface/LAN8742_Phy_Interface/nx_stm32_phy_driver.c</name>
 			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/common/drivers/lan8742/nx_stm32_phy_driver.c</locationURI>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/netxduo/common/drivers/ethernet/lan8742/nx_stm32_phy_driver.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/Addons DHCP Client/nxd_dhcp_client.c</name>

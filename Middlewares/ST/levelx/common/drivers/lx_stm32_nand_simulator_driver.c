@@ -237,7 +237,7 @@ UINT    i, j;
     pointer =  (ULONG *) &nand_memory_area[0];
 
     /* Loop to erase block.  */
-    words =  sizeof(nand_memory_area)/sizeof(ULONG);
+    words =  (ULONG)(sizeof(nand_memory_area))/sizeof(ULONG);
     while (words--)
     {
         

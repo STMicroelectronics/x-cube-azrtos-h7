@@ -40,7 +40,11 @@ Host PC shows that USB device does not operate as designed (MSC enumeration fail
 
 #### <b>Known limitations</b>
 
-  - The Eject operation is not supported yet by MSC class.
+The Eject operation is not supported yet by MSC class.
+
+When creating an USBX based application with MDK-ARM AC6 compiler make sure to disable the optimization for stm32h7xx_ll_usb.c file, otherwise application might not work correctly.
+This limitation will be fixed in future release.
+
 
 ### <b>Notes</b>
 

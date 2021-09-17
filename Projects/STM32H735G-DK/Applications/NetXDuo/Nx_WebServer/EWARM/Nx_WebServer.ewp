@@ -353,11 +353,11 @@
         </option>
         <option>
           <name>CCIncludePath2</name>
+          <state>$PROJ_DIR$/../Core/Inc</state>
           <state>$PROJ_DIR$/../AZURE_RTOS/App</state>
           <state>$PROJ_DIR$/../FileX/App</state>
-          <state>$PROJ_DIR$/../NetXDuo/App</state>
-          <state>$PROJ_DIR$/../Core/Inc</state>
           <state>$PROJ_DIR$/../FileX/Target</state>
+          <state>$PROJ_DIR$/../NetXDuo/App</state>
           <state>$PROJ_DIR$/../NetXDuo/Target</state>
           <state>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc</state>
           <state>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy</state>
@@ -366,7 +366,7 @@
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/filex/common/inc/</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/filex/ports/generic/inc/</state>
           <state>$PROJ_DIR$/../../../../../../Drivers/BSP/Components/lan8742/</state>
-          <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/drivers/</state>
+          <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/addons/dhcp/</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/inc/</state>
           <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/iar/inc/</state>
@@ -1113,7 +1113,7 @@
           <name>$PROJ_DIR$\..\Core\Src\tx_initialize_low_level.s</name>
         </file>
         <file>
-          <name>$PROJ_DIR$/../Core/Src/app_threadx.c</name>
+          <name>$PROJ_DIR$\..\Core\Src\app_threadx.c</name>
         </file>
         <file>
           <name>$PROJ_DIR$\..\Core\Src\stm32h7xx_it.c</name>
@@ -1131,6 +1131,12 @@
           <name>App</name>
           <file>
             <name>$PROJ_DIR$\..\FileX\App\app_filex.c</name>
+          </file>
+        </group>
+        <group>
+          <name>Target</name>
+          <file>
+            <name>$PROJ_DIR$\..\FileX\Target\fx_stm32_sd_driver_glue.c</name>
           </file>
         </group>
       </group>
@@ -1264,7 +1270,7 @@
     <group>
       <name>FileX</name>
       <group>
-        <name>File System/FileX/Core/RTOS_MODE</name>
+        <name>File System/FileX/Core</name>
         <file>
           <name>$PROJ_DIR$/../../../../../../Middlewares/ST/filex/common/src/fx_directory_attributes_read.c</name>
         </file>
@@ -1968,7 +1974,7 @@
       <group>
         <name>Network/Ethernet Interface</name>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/drivers/nx_stm32_eth_driver.c</name>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/nx_stm32_eth_driver.c</name>
         </file>
       </group>
       <group>
@@ -1980,7 +1986,7 @@
       <group>
         <name>Network/Ethernet Phy Interface/LAN8742_Phy_Interface</name>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/drivers/lan8742/nx_stm32_phy_driver.c</name>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/lan8742/nx_stm32_phy_driver.c</name>
         </file>
       </group>
     </group>
@@ -1997,18 +2003,6 @@
       </group>
       <group>
         <name>Network/NetXDuo/NX Core</name>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_event_insert.c</name>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_event_update.c</name>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_object_register.c</name>
-        </file>
-        <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_trace_object_unregister.c</name>
-        </file>
         <file>
           <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_arp_announce_send.c</name>
         </file>
@@ -3967,6 +3961,57 @@
         </file>
         <file>
           <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/txe_timer_info_get.c</name>
+        </file>
+      </group>
+      <group>
+        <name>RTOS/ThreadX/PerformanceInfo</name>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_performance_info_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_thread_performance_system_info_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_block_pool_performance_info_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_block_pool_performance_system_info_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_byte_pool_performance_info_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_byte_pool_performance_system_info_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_event_flags_performance_info_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_event_flags_performance_system_info_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_mutex_performance_info_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_mutex_performance_system_info_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_queue_performance_info_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_queue_performance_system_info_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_semaphore_performance_info_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_semaphore_performance_system_info_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_timer_performance_info_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/src/tx_timer_performance_system_info_get.c</name>
         </file>
       </group>
     </group>

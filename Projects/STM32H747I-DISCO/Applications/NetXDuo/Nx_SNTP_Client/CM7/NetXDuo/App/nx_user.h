@@ -283,8 +283,10 @@
 #define NX_DISABLE_RX_SIZE_CHECKING
 */
 
-/* This defines specifies the number of ThreadX timer ticks in one second.
-   The default value is based on ThreadX timer interrupt. */
+/* The symbol "NX_IP_PERIODIC_RATE" specifies the number of ThreadX timer ticks in one second.
+   The value should be derived from TX_TIMER_TICKS_PER_SECOND, which is defined in ThreadX port.
+   If TX_TIMER_TICKS_PER_SECOND is not defined, NX_IP_PERIODIC_RATE defaults to 100 ticks per second. */
+
 /*
 #ifdef TX_TIMER_TICKS_PER_SECOND
 #define NX_IP_PERIODIC_RATE                     TX_TIMER_TICKS_PER_SECOND
@@ -1594,7 +1596,9 @@
    will function without any change if this option is defined. The HTTP Server
    will need to either be modified or the user will have to create a handful
    of FileX services in order to function properly. */
+/*
 #define NX_HTTP_NO_FILEX
+*/
 
 /* Type of service required for the HTTP TCP requests. By default, this value
    is defined as NX_IP_NORMAL to indicate normal IP packet service. */
@@ -2424,7 +2428,9 @@
    will function without any change if this option is defined. The HTTPS Server
    will need to either be modified or the user will have to create a handful of
    FileX services in order to function properly. */
+/*
 #define NX_WEB_HTTP_NO_FILEX
+*/
 
 /* The priority of the HTTPS Server thread. By default, this value is defined
    as 4 to specify priority 4. */

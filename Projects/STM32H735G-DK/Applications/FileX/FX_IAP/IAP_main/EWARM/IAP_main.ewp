@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.50.6.28611</state>
+                    <state>8.50.4.26131</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -352,8 +352,8 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state>$PROJ_DIR$/../AZURE_RTOS/App</state>
                     <state>$PROJ_DIR$/../Core/Inc</state>
+                    <state>$PROJ_DIR$/../AZURE_RTOS/App</state>
                     <state>$PROJ_DIR$/../FileX/App</state>
                     <state>$PROJ_DIR$/../FileX/Target</state>
                     <state>$PROJ_DIR$/../../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc</state>
@@ -1124,6 +1124,12 @@
                         <name>$PROJ_DIR$\..\FileX\App\app_filex.c</name>
                     </file>
                 </group>
+                <group>
+                    <name>Target</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\FileX\Target\fx_stm32_sd_driver_glue.c</name>
+                    </file>
+                </group>
             </group>
         </group>
     </group>
@@ -1141,9 +1147,6 @@
                 <name>STM32H735G-DK</name>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\..\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\..\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.c</name>
                 </file>
             </group>
         </group>
@@ -1234,7 +1237,7 @@
         <group>
             <name>FileX</name>
             <group>
-                <name>File System/FileX/Core/RTOS_MODE</name>
+                <name>File System/FileX/Core</name>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\..\Middlewares\ST\filex\common\src\fx_directory_attributes_read.c</name>
                 </file>

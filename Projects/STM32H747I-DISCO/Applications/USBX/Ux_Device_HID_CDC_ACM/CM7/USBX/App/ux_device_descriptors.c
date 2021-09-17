@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -173,7 +172,7 @@ static void USBD_FrameWork_AssignEp(USBD_DevClassHandleTypeDef *pdev, uint8_t Ad
                                     uint8_t Type, uint32_t Sze);
 
 #if USBD_HID_CLASS_ACTIVATED == 1U
-static void USBD_FrameWork_HIDMouseDesc(USBD_DevClassHandleTypeDef *pdev,
+static void USBD_FrameWork_HID_Desc(USBD_DevClassHandleTypeDef *pdev,
                                         uint32_t pConf, uint32_t *Sze);
 #endif /* USBD_HID_CLASS_ACTIVATED == 1U */
 
@@ -283,7 +282,7 @@ uint8_t *USBD_Get_String_Framework(ULONG *Length)
 }
 
 /**
-  * @brief  USBD_Get_String_Framework
+  * @brief  USBD_Get_Language_Id_Framework
   *         Return the language_id_framework
   * @param  Length : Length of Language_Id_Framework
   * @retval Pointer to language_id_framework buffer
@@ -565,7 +564,7 @@ uint8_t  USBD_FrameWork_AddToConfDesc(USBD_DevClassHandleTypeDef *pdev, uint8_t 
       }
 
       /* Configure and Append the Descriptor */
-      USBD_FrameWork_HIDMouseDesc(pdev, (uint32_t)pCmpstConfDesc, &pdev->CurrConfDescSz);
+      USBD_FrameWork_HID_Desc(pdev, (uint32_t)pCmpstConfDesc, &pdev->CurrConfDescSz);
 
       break;
 #endif /* USBD_HID_CLASS_ACTIVATED */
@@ -710,19 +709,19 @@ static void  USBD_FrameWork_AssignEp(USBD_DevClassHandleTypeDef *pdev,
 
 #if USBD_HID_CLASS_ACTIVATED == 1U
 /**
-  * @brief  USBD_FrameWork_HIDMouseDesc
-  *         Configure and Append the HID Mouse Descriptor
+  * @brief  USBD_FrameWork_HID_Desc
+  *         Configure and Append the HID Descriptor
   * @param  pdev: device instance
   * @param  pConf: Configuration descriptor pointer
   * @param  Sze: pointer to the current configuration descriptor size
   * @retval None
   */
-static void  USBD_FrameWork_HIDMouseDesc(USBD_DevClassHandleTypeDef *pdev,
-                                         uint32_t pConf, uint32_t *Sze)
+static void  USBD_FrameWork_HID_Desc(USBD_DevClassHandleTypeDef *pdev,
+                                     uint32_t pConf, uint32_t *Sze)
 {
   static USBD_IfDescTypedef       *pIfDesc;
   static USBD_EpDescTypedef       *pEpDesc;
-  static USBD_HIDMouseDescTypedef *pHidMouseDesc;
+  static USBD_HIDDescTypedef      *pHidMouseDesc;
 
   /* Append HID Interface descriptor to Configuration descriptor */
   __USBD_FRAMEWORK_SET_IF(pdev->tclasslist[pdev->classId].Ifs[0], 0U, \
@@ -730,15 +729,15 @@ static void  USBD_FrameWork_HIDMouseDesc(USBD_DevClassHandleTypeDef *pdev,
                           0x03U, 0x01U, 0x02U, 0U);
 
   /* Append HID Functional descriptor to Configuration descriptor */
-  pHidMouseDesc = ((USBD_HIDMouseDescTypedef *)(pConf + *Sze));
-  pHidMouseDesc->bLength = (uint8_t)sizeof(USBD_HIDMouseDescTypedef);
+  pHidMouseDesc = ((USBD_HIDDescTypedef *)(pConf + *Sze));
+  pHidMouseDesc->bLength = (uint8_t)sizeof(USBD_HIDDescTypedef);
   pHidMouseDesc->bDescriptorType = HID_DESCRIPTOR_TYPE;
   pHidMouseDesc->bcdHID = 0x0111U;
   pHidMouseDesc->bCountryCode = 0x00U;
   pHidMouseDesc->bNumDescriptors = 0x01U;
   pHidMouseDesc->bHIDDescriptorType = 0x22U;
   pHidMouseDesc->wItemLength = USBD_HID_MOUSE_REPORT_DESC_SIZE;
-  *Sze += (uint32_t)sizeof(USBD_HIDMouseDescTypedef);
+  *Sze += (uint32_t)sizeof(USBD_HIDDescTypedef);
 
   if (pdev->Speed == USBD_HIGH_SPEED)
   {
@@ -870,4 +869,3 @@ static void USBD_FrameWork_CDCDesc(USBD_DevClassHandleTypeDef *pdev,
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

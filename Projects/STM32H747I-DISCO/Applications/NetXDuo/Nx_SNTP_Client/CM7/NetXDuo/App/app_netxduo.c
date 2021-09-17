@@ -1,22 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-******************************************************************************
-* @file    app_netxduo.c
-* @author  MCD Application Team
-* @brief   NetXDuo applicative file
-******************************************************************************
-* @attention
-*
-* <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-* All rights reserved.</center></h2>
-*
-* This software component is licensed by ST under Ultimate Liberty license
-* SLA0044, the "License"; You may not use this file except in compliance with
-* the License. You may obtain a copy of the License at:
-*                             www.st.com/SLA0044
-*
-******************************************************************************
-*/
+  ******************************************************************************
+  * @file    app_netxduo.c
+  * @author  MCD Application Team
+  * @brief   NetXDuo applicative file
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
@@ -32,6 +31,22 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+
+/* USER CODE END PTD */
+
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+static UINT kiss_of_death_handler(NX_SNTP_CLIENT *client_ptr, UINT KOD_code);
+/* USER CODE END PD */
+
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+static void display_rtc_time(RTC_HandleTypeDef *hrtc);
+static void rtc_time_update(NX_SNTP_CLIENT *client_ptr);
+/* USER CODE END PM */
+
+/* Private variables ---------------------------------------------------------*/
+/* USER CODE BEGIN PV */
 TX_THREAD AppMainThread;
 TX_THREAD AppSNTPThread;
 
@@ -51,29 +66,15 @@ ULONG                    NetMask;
 
 CHAR                     buffer[64];
 
-UCHAR                    *pointer;
-
+CHAR                    *pointer;
 
 struct tm timeInfos;
 /* RTC handler declaration */
 RTC_HandleTypeDef RtcHandle;
-/* USER CODE END PTD */
 
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-static UINT kiss_of_death_handler(NX_SNTP_CLIENT *client_ptr, UINT KOD_code);
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-static void display_rtc_time(RTC_HandleTypeDef *hrtc);
-static void rtc_time_update(NX_SNTP_CLIENT *client_ptr);
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
-/* USER CODE BEGIN PV */
 /* set the SNTP network interface to the primary interface. */
 UINT  iface_index =0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -89,18 +90,16 @@ static VOID time_update_callback(NX_SNTP_TIME_MESSAGE *time_update_ptr, NX_SNTP_
   * @param memory_ptr: memory pointer
   * @retval int
   */
-UINT App_NetXDuo_Init(VOID *memory_ptr)
+UINT MX_NetXDuo_Init(VOID *memory_ptr)
 {
   UINT ret = NX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-  /* USER CODE BEGIN App_NetXDuo_MEM_POOL */
-  /* USER CODE END App_NetXDuo_MEM_POOL */
+  /* USER CODE BEGIN MX_NetXDuo_MEM_POOL */
+  /* USER CODE END MX_NetXDuo_MEM_POOL */
 
-  /* USER CODE BEGIN App_NetXDuo_Init */
+  /* USER CODE BEGIN MX_NetXDuo_Init */
   printf("Nx_SNTP_Client application started..\n");
-
-  CHAR *pointer;
 
   /* Allocate the memory for packet_pool.  */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,  NX_PACKET_POOL_SIZE, TX_NO_WAIT) != TX_SUCCESS)
@@ -218,7 +217,7 @@ UINT App_NetXDuo_Init(VOID *memory_ptr)
 
   /* set DHCP notification callback  */
   tx_semaphore_create(&Semaphore, "DHCP Semaphore", 0);
-  /* USER CODE END App_NetXDuo_Init */
+  /* USER CODE END MX_NetXDuo_Init */
 
   return ret;
 }
@@ -301,7 +300,7 @@ UINT dns_create(NX_DNS *dns_ptr)
   }
 
   /* Initialize DNS instance with the DNS server Address */
-  ret = nx_dns_server_add(dns_ptr, DNS_SERVER_ADDRESS);
+  ret = nx_dns_server_add(dns_ptr, USER_DNS_ADDRESS);
   if (ret)
   {
     Error_Handler();
@@ -512,22 +511,22 @@ static VOID time_update_callback(NX_SNTP_TIME_MESSAGE *time_update_ptr, NX_SNTP_
 /* This application updates Time from SNTP to STM32 RTC */
 static void rtc_time_update(NX_SNTP_CLIENT *client_ptr)
 {
-  RTC_DateTypeDef sdatestructure;
-  RTC_TimeTypeDef stimestructure;
+  RTC_DateTypeDef sdatestructure ={0};
+  RTC_TimeTypeDef stimestructure ={0};
   struct tm ts;
-  CHAR  temp[2] = {0, 0};
-
+  CHAR  temp[32] = {0};
+  
   /* convert SNTP time (seconds since 01-01-1900 to 01-01-1970)
-
+  
   EPOCH_TIME_DIFF is equivalent to 70 years in sec
   calculated with www.epochconverter.com/date-difference
   This constant is used to delete difference between :
   Epoch converter (referenced to 1970) and SNTP (referenced to 1900) */
   time_t timestamp = client_ptr->nx_sntp_current_server_time_message.receive_time.seconds - EPOCH_TIME_DIFF;
-
+  
   /* convert time in yy/mm/dd hh:mm:sec */
   ts = *localtime(&timestamp);
-
+  
   /* convert date composants to hex format */
   sprintf(temp, "%d", (ts.tm_year - 100));
   sdatestructure.Year = strtol(temp, NULL, 16);
@@ -560,8 +559,8 @@ static void rtc_time_update(NX_SNTP_CLIENT *client_ptr)
 /* this application displays time from RTC */
 static void display_rtc_time(RTC_HandleTypeDef *hrtc)
 {
-  RTC_TimeTypeDef RTC_Time;
-  RTC_DateTypeDef RTC_Date;
+  RTC_TimeTypeDef RTC_Time = {0};
+  RTC_DateTypeDef RTC_Date = {0};
 
   HAL_RTC_GetTime(&RtcHandle,&RTC_Time,RTC_FORMAT_BCD);
   HAL_RTC_GetDate(&RtcHandle,&RTC_Date,RTC_FORMAT_BCD);

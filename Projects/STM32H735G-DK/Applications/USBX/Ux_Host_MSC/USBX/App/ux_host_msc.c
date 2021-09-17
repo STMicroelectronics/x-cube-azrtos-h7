@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -45,6 +44,7 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 extern UX_HOST_CLASS_STORAGE        *storage;
+extern FX_MEDIA                     *media;
 extern TX_QUEUE                     ux_app_MsgQueue_msc;
 /* USER CODE END PV */
 
@@ -69,15 +69,14 @@ void  msc_process_thread_entry(ULONG arg)
 {
 
   UINT        status ;
-  FX_MEDIA    *fx_media;
 
   while(1)
   {
-    status = tx_queue_receive(&ux_app_MsgQueue_msc, &fx_media, TX_WAIT_FOREVER);
-    if ((storage != NULL) && (fx_media != NULL))
+    status = tx_queue_receive(&ux_app_MsgQueue_msc, &media, TX_WAIT_FOREVER);
+    if ((storage != NULL) && (media != NULL))
     {
       /* Create a file */
-      status = App_File_Create(fx_media);
+      status = App_File_Create(media);
 
       /* check status */
       if (status == UX_SUCCESS)
@@ -92,7 +91,7 @@ void  msc_process_thread_entry(ULONG arg)
 
       /* Start write File Operation */
       USBH_UsrLog("Write Process ...... \n");
-      status = App_File_Write(fx_media);
+      status = App_File_Write(media);
 
       /* check status */
       if (status == UX_SUCCESS)
@@ -107,7 +106,7 @@ void  msc_process_thread_entry(ULONG arg)
 
       /* Start Read File Operation and comparison operation */
       USBH_UsrLog("Read Process  ...... \n");
-      status = App_File_Read(fx_media);
+      status = App_File_Read(media);
 
       /* check status */
       if (status == UX_SUCCESS)
@@ -125,7 +124,7 @@ void  msc_process_thread_entry(ULONG arg)
     }
     else
     {
-      tx_thread_sleep(10);
+      tx_thread_sleep(MS_TO_TICK(10));
     }
   }
 }

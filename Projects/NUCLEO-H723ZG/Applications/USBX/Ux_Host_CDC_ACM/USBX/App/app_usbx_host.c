@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -72,15 +71,15 @@ extern void Error_Handler(void);
   * @param memory_ptr: memory pointer
   * @retval int
   */
-UINT App_USBX_Host_Init(VOID *memory_ptr)
+UINT MX_USBX_Host_Init(VOID *memory_ptr)
 {
   UINT ret = UX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-  /* USER CODE BEGIN App_USBX_Host_MEM_POOL */
-  /* USER CODE END App_USBX_Host_MEM_POOL */
+  /* USER CODE BEGIN MX_USBX_Host_MEM_POOL */
+  /* USER CODE END MX_USBX_Host_MEM_POOL */
 
-  /* USER CODE BEGIN App_USBX_Host_Init */
+  /* USER CODE BEGIN MX_USBX_Host_Init */
   CHAR *pointer;
 
   /* Store byte_pool into ux_app_byte_bool */
@@ -90,13 +89,13 @@ UINT App_USBX_Host_Init(VOID *memory_ptr)
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        USBX_MEMORY_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Initialize USBX memory. */
   if (ux_system_initialize(pointer, USBX_MEMORY_SIZE, UX_NULL, 0) != UX_SUCCESS)
   {
-    ret = UX_ERROR;
+    return UX_ERROR;
   }
 
   /* register a callback error function */
@@ -106,7 +105,7 @@ UINT App_USBX_Host_Init(VOID *memory_ptr)
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        USBX_APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Create the main App thread.  */
@@ -114,14 +113,14 @@ UINT App_USBX_Host_Init(VOID *memory_ptr)
                        pointer, USBX_APP_STACK_SIZE, 25, 25, 0,
                        TX_AUTO_START) != TX_SUCCESS)
   {
-    ret = TX_THREAD_ERROR;
+    return TX_THREAD_ERROR;
   }
 
   /* Allocate the stack for thread 1.  */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        (USBX_APP_STACK_SIZE * 3), TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Create the cdc_acm_recieve thread.  */
@@ -129,14 +128,14 @@ UINT App_USBX_Host_Init(VOID *memory_ptr)
                        pointer, (USBX_APP_STACK_SIZE * 3), 30, 30, 0,
                        TX_AUTO_START) != TX_SUCCESS)
   {
-    ret = TX_THREAD_ERROR;
+    return TX_THREAD_ERROR;
   }
 
   /* Allocate the stack for thread 2.  */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        (USBX_APP_STACK_SIZE * 2), TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Create the cdc_acm_send  thread.  */
@@ -144,14 +143,14 @@ UINT App_USBX_Host_Init(VOID *memory_ptr)
                        pointer, (USBX_APP_STACK_SIZE * 2), 30, 30, 0,
                        TX_AUTO_START) != TX_SUCCESS)
   {
-    ret = TX_THREAD_ERROR;
+    return TX_THREAD_ERROR;
   }
 
   /* Allocate Memory for the Queue */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        APP_QUEUE_SIZE * sizeof(ux_app_devInfotypeDef), TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Create the MsgQueue */
@@ -164,10 +163,10 @@ UINT App_USBX_Host_Init(VOID *memory_ptr)
   /* Create the event flags group. */
   if (tx_event_flags_create(&ux_app_EventFlag, "Event Flag") != TX_SUCCESS)
   {
-    ret = TX_GROUP_ERROR;
+    return TX_GROUP_ERROR;
   }
 
-  /* USER CODE END App_USBX_Host_Init */
+  /* USER CODE END MX_USBX_Host_Init */
 
   return ret;
 }
@@ -236,14 +235,14 @@ UINT MX_USB_Host_Init(void)
   /* The code below is required for installing the host portion of USBX.  */
   if (ux_host_stack_initialize(ux_host_event_callback) != UX_SUCCESS)
   {
-    ret = UX_ERROR;
+    return UX_ERROR;
   }
 
   /* Register cdc_acm class. */
   if ((ux_host_stack_class_register(_ux_system_host_class_cdc_acm_name,
                                     _ux_host_class_cdc_acm_entry)) != UX_SUCCESS)
   {
-    ret = UX_ERROR;
+    return UX_ERROR;
   }
 
   /* Initialize the LL driver */
@@ -255,7 +254,7 @@ UINT MX_USB_Host_Init(void)
                                  USB_OTG_HS_PERIPH_BASE,
                                  (ULONG)&hhcd_USB_OTG_HS) != UX_SUCCESS)
   {
-    ret = UX_ERROR;
+    return UX_ERROR;
   }
 
   /* Drive vbus to be addedhere */
@@ -322,12 +321,14 @@ UINT ux_host_event_callback(ULONG event, UX_HOST_CLASS *Current_class, VOID *Cur
       break;
 
     case UX_DEVICE_REMOVAL :
-
+      if (app_cdc_acm != NULL)
+      {
       USBH_UsrLog("Device Removal");
       app_cdc_acm = NULL;
       ux_dev_info.Dev_state   = Device_disconnected;
       ux_dev_info.Device_Type = Unknown_Device;
       tx_queue_send(&ux_app_MsgQueue, &ux_dev_info, TX_NO_WAIT);
+      }
       break;
 
     default:

@@ -10,7 +10,7 @@
       <TargetName>Nx_TCP_Echo_Client</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6140000::V6.14::ARMCLANG</pCCUsed>
+      <pCCUsed>6140001::V6.14.1::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -54,7 +54,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>0</BrowseInformation>
+          <BrowseInformation>1</BrowseInformation>
           <ListingPath></ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>TX_INCLUDE_USER_DEFINE_FILE,NX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H723xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../AZURE_RTOS/App;../Core/Inc;../NetXDuo/App;../NetXDuo/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Drivers/BSP/Components/lan8742/;../../../../../../Middlewares/ST/netxduo/common/drivers/;../../../../../../Middlewares/ST/netxduo/addons/dhcp/;../../../../../../Middlewares/ST/netxduo/common/inc/;../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/ac5/inc/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H7xx_Nucleo</IncludePath>
+              <IncludePath>../Core/Inc;../AZURE_RTOS/App;../NetXDuo/App;../NetXDuo/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Drivers/BSP/Components/lan8742/;../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/;../../../../../../Middlewares/ST/netxduo/addons/dhcp/;../../../../../../Middlewares/ST/netxduo/common/inc/;../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/ac5/inc/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H7xx_Nucleo</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -606,7 +606,7 @@
             <File>
               <FileName>nx_stm32_eth_driver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/drivers/nx_stm32_eth_driver.c</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/nx_stm32_eth_driver.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -616,7 +616,7 @@
             <File>
               <FileName>nx_stm32_phy_driver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/drivers/lan8742/nx_stm32_phy_driver.c</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/lan8742/nx_stm32_phy_driver.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3899,20 +3899,5 @@
     </components>
     <files/>
   </RTE>
-
-  <LayerInfo>
-    <Layers>
-      <Layer>
-        <LayName>&lt;Project Info&gt;</LayName>
-        <LayDesc></LayDesc>
-        <LayUrl></LayUrl>
-        <LayKeys></LayKeys>
-        <LayCat></LayCat>
-        <LayLic></LayLic>
-        <LayTarg>0</LayTarg>
-        <LayPrjMark>1</LayPrjMark>
-      </Layer>
-    </Layers>
-  </LayerInfo>
 
 </Project>

@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>STM32H735IGKx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32H7xx_DFP.2.6.0</PackID>
+          <PackID>Keil.STM32H7xx_DFP.2.4.3</PackID>
           <PackURL>https://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000-0x2001FFFF) IRAM2(0x24000000-0x2404FFFF) IROM(0x8000000-0x80FFFFF) CLOCK(12000000) FPU3(DFPU) CPUTYPE("Cortex-M7") ELITTLE TZ</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -54,7 +54,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>0</BrowseInformation>
+          <BrowseInformation>1</BrowseInformation>
           <ListingPath></ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>TX_INCLUDE_USER_DEFINE_FILE,FX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H735xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../AZURE_RTOS/App;../Core/Inc;../FileX/App;../FileX/Target;../../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../../Drivers/CMSIS/Include;../../../../../../../Middlewares/ST/filex/common/inc/;../../../../../../../Middlewares/ST/filex/ports/generic/inc/;../../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../../Drivers/BSP/STM32H735G-DK</IncludePath>
+              <IncludePath>../Core/Inc;../AZURE_RTOS/App;../FileX/App;../FileX/Target;../../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../../Drivers/CMSIS/Include;../../../../../../../Middlewares/ST/filex/common/inc/;../../../../../../../Middlewares/ST/filex/ports/generic/inc/;../../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../../Drivers/BSP/STM32H735G-DK</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -426,6 +426,16 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Application/User/FileX/Target</GroupName>
+          <Files>
+            <File>
+              <FileName>fx_stm32_sd_driver_glue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../FileX/Target/fx_stm32_sd_driver_glue.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>Application/User/FileX/App</GroupName>
           <Files>
             <File>
@@ -462,11 +472,6 @@
               <FileName>stm32h735g_discovery.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../../Drivers/BSP/STM32H735G-DK/stm32h735g_discovery.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32h735g_discovery_sd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../../Drivers/BSP/STM32H735G-DK/stm32h735g_discovery_sd.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -606,7 +611,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Middlewares/FileX/File System/FileX/Core/RTOS_MODE</GroupName>
+          <GroupName>Middlewares/FileX/File System/FileX/Core</GroupName>
           <Files>
             <File>
               <FileName>fx_directory_attributes_read.c</FileName>

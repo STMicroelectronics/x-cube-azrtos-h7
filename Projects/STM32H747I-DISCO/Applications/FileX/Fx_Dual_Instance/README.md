@@ -55,7 +55,7 @@ To enable it, please set the following flags in "lx_stm32_qspi_driver.h":
   - LX_DRIVER_CALLS_QSPI_INIT
   - LX_DRIVER_ERASES_QPSI_AFTER_INIT
 
-Upon successful opening of the flash media, FileX continue with creating a file called "STM32.TXT" into the root directory, then write into it some dummy data. Then file is re-opened in read only mode and content is checked.
+Upon successful opening of the flash media, FileX creates a file called "STM32.TXT" into the root directory, then writes into it some dummy data. Then file is re-opened in read only mode and its content is checked.
 
 Through all the steps, FileX/LevelX services are called to print (using USRAT1) the flash size available before and after the example file is written into the flash. The number of occupied sectors is also shown.
 
@@ -100,6 +100,7 @@ None
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
       - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+ 4. The Application was only tested in release mode for the STM32CubeIDE and may encounter runtime issues in debug mode.
 
 #### <b>ThreadX usage hints</b>
 

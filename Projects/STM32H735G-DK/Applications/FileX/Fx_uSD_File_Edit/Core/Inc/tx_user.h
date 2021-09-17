@@ -124,7 +124,7 @@
    enabled. If the application does not use preemption-threshold, it may be disabled to reduce
    code size and improve performance.  */
 
-/*#define TX_DISABLE_PREEMPTION_THRESHOLD*/
+#define TX_DISABLE_PREEMPTION_THRESHOLD
 
 /* Determine if global ThreadX variables should be cleared. If the compiler startup code clears
    the .bss section prior to ThreadX running, the define can be used to eliminate unnecessary
@@ -149,7 +149,7 @@
    enabled. If the application does not use notify callbacks, they may be disabled to reduce
    code size and improve performance.  */
 
-/*#define TX_DISABLE_NOTIFY_CALLBACKS*/
+#define TX_DISABLE_NOTIFY_CALLBACKS
 
 /* Determine if the tx_thread_resume and tx_thread_suspend services should have their internal
    code in-line. This results in a larger image, but improves the performance of the thread
@@ -219,7 +219,7 @@
 /* Define the check for whether or not to call the
     _tx_thread_system_return function (TX_THREAD_SYSTEM_RETURN_CHECK(c)). */
 
-/*#define #define TX_THREAD_SYSTEM_RETURN_CHECK (c)  ((ULONG) _tx_thread_preempt_disable)*/
+/*#define TX_THREAD_SYSTEM_RETURN_CHECK (c)  ((ULONG) _tx_thread_preempt_disable)*/
 
 /* Define the common timer tick reference for use by other middleware components. */
 
