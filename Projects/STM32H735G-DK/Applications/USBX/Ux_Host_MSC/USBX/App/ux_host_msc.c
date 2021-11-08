@@ -51,6 +51,7 @@ extern TX_QUEUE                     ux_app_MsgQueue_msc;
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
 void  msc_process_thread_entry(ULONG arg);
+void  Error_Handler(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -72,7 +73,12 @@ void  msc_process_thread_entry(ULONG arg)
 
   while(1)
   {
-    status = tx_queue_receive(&ux_app_MsgQueue_msc, &media, TX_WAIT_FOREVER);
+    if (tx_queue_receive(&ux_app_MsgQueue_msc, &media, TX_WAIT_FOREVER) != TX_SUCCESS)
+    {
+      Error_Handler();
+    }
+
+
     if ((storage != NULL) && (media != NULL))
     {
       /* Create a file */

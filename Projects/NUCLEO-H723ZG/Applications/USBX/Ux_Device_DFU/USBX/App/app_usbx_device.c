@@ -226,8 +226,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
 
   /* Allocate Memory for the Queue */
   ret = tx_byte_allocate(byte_pool, (VOID **) &pointer,
-                         APP_QUEUE_SIZE * sizeof(ux_dfu_downloadInfotypeDef),
-                         TX_NO_WAIT);
+                         APP_QUEUE_SIZE * sizeof(ULONG), TX_NO_WAIT);
 
   if (ret != TX_SUCCESS)
   {
@@ -235,10 +234,8 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
   }
 
   /* Create the MsgQueue */
-  ret = tx_queue_create(&ux_app_MsgQueue, "Message Queue app",
-                        sizeof(ux_dfu_downloadInfotypeDef),
-                        pointer,
-                        APP_QUEUE_SIZE * sizeof(ux_dfu_downloadInfotypeDef)) ;
+  ret = tx_queue_create(&ux_app_MsgQueue, "Message Queue app", TX_1_ULONG,
+                        pointer, APP_QUEUE_SIZE * sizeof(ULONG)) ;
 
   if (ret != TX_SUCCESS)
   {

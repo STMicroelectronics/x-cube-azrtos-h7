@@ -193,16 +193,14 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
 
   /* Allocate Memory for the Queue */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
-                       APP_QUEUE_SIZE * sizeof(ux_app_devInfotypeDef),
-                       TX_NO_WAIT) != TX_SUCCESS)
+                       APP_QUEUE_SIZE * sizeof(ULONG), TX_NO_WAIT) != TX_SUCCESS)
   {
     ret = TX_POOL_ERROR;
   }
 
   /* Create the MsgQueue */
-  if (tx_queue_create(&ux_app_MsgQueue, "Message Queue app",
-                      sizeof(ux_app_devInfotypeDef), pointer,
-                      APP_QUEUE_SIZE * sizeof(ux_app_devInfotypeDef)) != TX_SUCCESS)
+  if (tx_queue_create(&ux_app_MsgQueue, "Message Queue app", TX_1_ULONG, 
+                      pointer, APP_QUEUE_SIZE * sizeof(ULONG)) != TX_SUCCESS)
   {
     ret = TX_QUEUE_ERROR;
   }

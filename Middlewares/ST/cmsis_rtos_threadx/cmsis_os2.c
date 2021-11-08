@@ -103,6 +103,11 @@
 #define RTOS2_BYTE_POOL_HEAP_SIZE               4 * 1024
 #endif
 
+/* Default time slice for the created threads */
+#ifndef RTOS2_DEFAULT_TIME_SLICE
+#define RTOS2_DEFAULT_TIME_SLICE                4
+#endif
+
 /* Default stack byte pool memory type */
 #define RTOS2_BYTE_POOL_STACK_TYPE              1
 
@@ -846,7 +851,7 @@ osThreadId_t osThreadNew(osThreadFunc_t func, void *argument, const osThreadAttr
        its value to the priority or deactivated using
        TX_DISABLE_PREEMPTION_THRESHOLD */
     if (tx_thread_create(thread_ptr, name_ptr, (void(*)(ULONG))func, entry_input, stack_start, stack_size, priority,
-                         priority, TX_NO_TIME_SLICE, TX_AUTO_START) != TX_SUCCESS)
+                         priority, RTOS2_DEFAULT_TIME_SLICE, TX_AUTO_START) != TX_SUCCESS)
     {
       /* Check if the memory for thread control block has been internally
          allocated */
@@ -1061,7 +1066,7 @@ uint32_t osThreadGetStackSize(osThreadId_t thread_id)
   /* The specific thread stack size in bytes */
   unsigned int stack_size;
 
-  /* Check if this API is called from Interrupt Service Routines, the thread_id 
+  /* Check if this API is called from Interrupt Service Routines, the thread_id
      is NULL or thread_id->tx_thread_id != TX_THREAD_ID */
   if (IS_IRQ_MODE() || (thread_ptr == NULL) || (thread_ptr->tx_thread_id != TX_THREAD_ID))
   {
@@ -1724,7 +1729,7 @@ osTimerId_t osTimerNew(osTimerFunc_t func, osTimerType_t type, void *argument, c
   /* The name_ptr as null-terminated string */
   CHAR *name_ptr = NULL;
   /* The timer expiration input */
-  ULONG *expiration_input = NULL;
+  ULONG expiration_input = 0U;
   /* The timer reschedule ticks */
   ULONG reschedule_ticks = 0U;
   /* The size of control block */
@@ -1803,11 +1808,11 @@ osTimerId_t osTimerNew(osTimerFunc_t func, osTimerType_t type, void *argument, c
     if (argument != NULL)
     {
       /* Set the expiration_input */
-      expiration_input = (ULONG *)argument;
+      expiration_input = (ULONG)argument;
     }
 
     /* Call the tx_timer_create function to create the new timer */
-    if (tx_timer_create(timer_ptr, name_ptr, (void(*)(ULONG))func, *expiration_input, 1, reschedule_ticks,
+    if (tx_timer_create(timer_ptr, name_ptr, (void(*)(ULONG))func, expiration_input, 1, reschedule_ticks,
                         TX_NO_ACTIVATE) != TX_SUCCESS)
     {
       /* Check if the memory for timer control block has been internally
@@ -3139,8 +3144,8 @@ osStatus_t osSemaphoreDelete(osSemaphoreId_t semaphore_id)
 /*---------------------------------------------------------------------------*/
 
 /**
-  * @brief   The function osMessageQueueNew creates and initializes a message queue 
-  *         object. The function returns a message queue object identifier 
+  * @brief   The function osMessageQueueNew creates and initializes a message queue
+  *         object. The function returns a message queue object identifier
   *         or NULL in case of an error.
   *         The function can be called after kernel initialization with osKernelInitialize.
   *         It is possible to create message queue objects before the RTOS kernel is
@@ -3721,13 +3726,18 @@ osStatus_t osMessageQueueGet(osMessageQueueId_t mq_id, void *msg_ptr, uint8_t *m
     }
     else if (tx_status == TX_QUEUE_EMPTY)
     {
-      /* Return osErrorResource in case of error */
-      status = osErrorResource;
+      /* Return osErrorTimeout in case of error */
+      status = osErrorTimeout;
+    }
+    else if (tx_status == TX_WAIT_ERROR)
+    {
+      /* Return osErrorParameter when a non-zero timeout is used in ISR context */
+      status = osErrorParameter;
     }
     else
     {
-      /* Return osErrorTimeout in case of error */
-      status = osErrorTimeout;
+      /* Return osErrorResource in case of error */
+      status = osErrorResource;
     }
   }
 

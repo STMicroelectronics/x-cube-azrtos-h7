@@ -70,7 +70,7 @@ UINT  ux_host_event_callback(ULONG event, UX_HOST_CLASS *p_host_class, VOID *p_i
 
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define APP_QUEUE_SIZE                               5
+#define APP_QUEUE_SIZE                               1
 #define USBX_APP_STACK_SIZE                          1024
 #define USBX_MEMORY_SIZE                             (64 * 1024)
 #define NEW_RECEIVED_DATA                            0x01

@@ -14,8 +14,8 @@ The list of features supported by the current implementation are as below:
 |-------------------------------|------------|------------------------------|
 |Kernel Information and Control |      Y     | It provide version/system information and starts/controls the RTOS Kernel. [More...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__KernelCtrl.html) |
 |Thread Management              |      Y     | It define, create, and control thread functions.. [More...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__ThreadMgmt.html) |
-|Thread Flags                   |      Y     | It synchronize threads using flags. [More...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__ThreadFlagsMgmt.html) |
-|Event Flags                    |      N     | It synchronize threads using event flags. [More...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__EventFlags.html) |
+|Thread Flags                   |      N     | It synchronize threads using flags. [More...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__ThreadFlagsMgmt.html) |
+|Event Flags                    |      Y     | It synchronize threads using event flags. [More...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__EventFlags.html) |
 |Generic Wait Functions         |      Y     | It wait for a certain period of time..  [More...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__Wait.html) |
 |Timer Management               |      Y     | It create and control timer and timer callback functions.  [More...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__TimerMgmt.html) |
 |Mutex Management               |      Y     | It synchronize resource access using Mutual Exclusion (Mutex). [More...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__MutexMgmt.html) |

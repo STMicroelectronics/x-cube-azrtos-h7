@@ -45,7 +45,7 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-#define APP_QUEUE_SIZE          5
+#define APP_QUEUE_SIZE          1
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/

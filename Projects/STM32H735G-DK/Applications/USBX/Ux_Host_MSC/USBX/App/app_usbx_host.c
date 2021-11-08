@@ -33,7 +33,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define APP_QUEUE_SIZE                               5
+#define APP_QUEUE_SIZE                               1
 #define USBX_APP_STACK_SIZE                          1024
 #define USBX_MEMORY_SIZE                             (64 * 1024)
 
@@ -131,28 +131,28 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
   }
   /* Allocate Memory for the Queue  */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
-                       APP_QUEUE_SIZE * sizeof(ux_app_devInfotypeDef), TX_NO_WAIT) != TX_SUCCESS)
+                       APP_QUEUE_SIZE * sizeof(ULONG), TX_NO_WAIT) != TX_SUCCESS)
   {
     return TX_POOL_ERROR;
   }
 
   /* Create the MsgQueue   */
-  if (tx_queue_create(&ux_app_MsgQueue, "Message Queue app", sizeof(ux_app_devInfotypeDef),
-                      pointer, APP_QUEUE_SIZE * sizeof(ux_app_devInfotypeDef)) != TX_SUCCESS)
+  if (tx_queue_create(&ux_app_MsgQueue, "Message Queue app", TX_1_ULONG,
+                      pointer, APP_QUEUE_SIZE * sizeof(ULONG)) != TX_SUCCESS)
   {
     return TX_QUEUE_ERROR;
   }
 
   /* Allocate Memory for the msc_Queue  */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
-                       APP_QUEUE_SIZE * sizeof(FX_MEDIA*), TX_NO_WAIT) != TX_SUCCESS)
+                       sizeof(FX_MEDIA*), TX_NO_WAIT) != TX_SUCCESS)
   {
     return TX_POOL_ERROR;
   }
 
   /* Create the msc_MsgQueue   */
-  if (tx_queue_create(&ux_app_MsgQueue_msc, "Message Queue msc", sizeof(FX_MEDIA*),
-                      pointer, APP_QUEUE_SIZE * sizeof(FX_MEDIA*)) != TX_SUCCESS)
+  if (tx_queue_create(&ux_app_MsgQueue_msc, "Message Queue msc", TX_1_ULONG,
+                      pointer, sizeof(FX_MEDIA*)) != TX_SUCCESS)
   {
     return TX_QUEUE_ERROR;
   }

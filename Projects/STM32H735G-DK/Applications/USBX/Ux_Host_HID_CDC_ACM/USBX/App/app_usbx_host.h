@@ -74,7 +74,7 @@ void cdc_acm_recieve_app_thread_entry(ULONG arg);
 /* USER CODE BEGIN PD */
 #define USBX_APP_STACK_SIZE                          1024
 #define USBX_MEMORY_SIZE                             (64 * 1024)
-#define APP_QUEUE_SIZE                               5
+#define APP_QUEUE_SIZE                               1
 #define NEW_RECEIVED_DATA                            0x01
 #define NEW_DATA_TO_SEND                             0x02
 #define BUTTON_KEY                                   BUTTON_USER

@@ -44,12 +44,28 @@
 <section id="update-history" class="col-sm-12 col-lg-8">
 <h1>Update history</h1>
 <div class="collapse">
-<input type="checkbox" id="collapse-section3" checked aria-hidden="true"> <label for="collapse-section3" aria-hidden="true"><strong>V1.0.2 / 27-August-2021</strong></label>
+<input type="checkbox" id="collapse-section5" checked aria-hidden="true"> <label for="collapse-section5" aria-hidden="true"><strong>V1.0.4 / 08-November-2021</strong></label>
 <div>
 <h2 id="main-changes">Main changes</h2>
 <ul>
-<li>Add Release_Notes.html file</li>
-<li>Update the way to declare licenses and add LICENSE.md file</li>
+<li>Fix return values for the osMessageQueueGet API</li>
+</ul>
+<ul>
+<li>Fix osThreadNew() API to support time-slice scheduling</li>
+</ul>
+<h2 id="dependencies">Dependencies:</h2>
+<ul>
+<li>Azure RTOS ThreadX V6.1.7 or higher</li>
+</ul>
+</div>
+</div>
+
+<div class="collapse">
+<input type="checkbox" id="collapse-section4" checked aria-hidden="true"> <label for="collapse-section4" aria-hidden="true"><strong>V1.0.3 / 24-September-2021</strong></label>
+<div>
+<h2 id="main-changes">Main changes</h2>
+<ul>
+<li>Fix hardfault crash when passing NULL argument in the osTimerNew()</li>
 </ul>
 <h2 id="dependencies">Dependencies:</h2>
 <ul>
@@ -58,12 +74,12 @@
 </div>
 </div>
 <div class="collapse">
-<input type="checkbox" id="collapse-section2" checked aria-hidden="true"> <label for="collapse-section2" aria-hidden="true"><strong>V1.0.1 / 21-June-2021</strong></label>
+<input type="checkbox" id="collapse-section3" checked aria-hidden="true"> <label for="collapse-section3" aria-hidden="true"><strong>V1.0.2 / 26-August-2021</strong></label>
 <div>
 <h2 id="main-changes-1">Main changes</h2>
 <ul>
-<li>Fix the remaining stack space calculation</li>
-<li>Add the missing suspension state (TX_QUEUE_SUSP, TX_SEMAPHORE_SUSP, TX_EVENT_FLAG, TX_BLOCK_MEMORY, TX_BYTE_MEMORY, TX_IO_DRIVER, TX_FILE, TX_TCP_IP, TX_MUTEX_SUSP, TX_PRIORITY_CHANGE)</li>
+<li>Add Release_Notes.html file</li>
+<li>Update the way to declare licenses and add LICENSE.md file</li>
 </ul>
 <h2 id="dependencies-1">Dependencies:</h2>
 <ul>
@@ -72,13 +88,27 @@
 </div>
 </div>
 <div class="collapse">
-<input type="checkbox" id="collapse-section1" checked aria-hidden="true"> <label for="collapse-section1" aria-hidden="true"><strong>V1.0.0 / 25-February-2021</strong></label>
+<input type="checkbox" id="collapse-section2" checked aria-hidden="true"> <label for="collapse-section2" aria-hidden="true"><strong>V1.0.1 / 21-June-2021</strong></label>
 <div>
 <h2 id="main-changes-2">Main changes</h2>
 <ul>
-<li>First official release of CMSIS-RTOS v2 wrapper for ThreadX on STM32 MCU series</li>
+<li>Fix the remaining stack space calculation</li>
+<li>Add the missing suspension state (TX_QUEUE_SUSP, TX_SEMAPHORE_SUSP, TX_EVENT_FLAG, TX_BLOCK_MEMORY, TX_BYTE_MEMORY, TX_IO_DRIVER, TX_FILE, TX_TCP_IP, TX_MUTEX_SUSP, TX_PRIORITY_CHANGE)</li>
 </ul>
 <h2 id="dependencies-2">Dependencies:</h2>
+<ul>
+<li>Azure RTOS ThreadX V6.1.7</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section1" checked aria-hidden="true"> <label for="collapse-section1" aria-hidden="true"><strong>V1.0.0 / 25-February-2021</strong></label>
+<div>
+<h2 id="main-changes-3">Main changes</h2>
+<ul>
+<li>First official release of CMSIS-RTOS v2 wrapper for ThreadX on STM32 MCU series</li>
+</ul>
+<h2 id="dependencies-3">Dependencies:</h2>
 <ul>
 <li>Azure RTOS ThreadX V6.1.3</li>
 </ul>

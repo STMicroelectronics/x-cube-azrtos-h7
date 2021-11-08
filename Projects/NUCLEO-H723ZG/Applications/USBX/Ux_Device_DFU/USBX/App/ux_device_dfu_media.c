@@ -213,7 +213,7 @@ UINT DFU_Write(VOID *dfu, ULONG block_number, UCHAR * data_pointer,
   }
 
   /* put a message queue to usbx_dfu_download_thread_entry */
-  if (tx_queue_send(&ux_app_MsgQueue, &ux_dfu_download, TX_NO_WAIT))
+  if (tx_queue_send(&ux_app_MsgQueue, &ux_dfu_download, TX_NO_WAIT) != TX_SUCCESS)
   {
     Error_Handler();
   }
@@ -287,7 +287,7 @@ void usbx_dfu_download_thread_entry(ULONG arg)
     status = tx_queue_receive(&ux_app_MsgQueue, &ux_dfu_download, TX_WAIT_FOREVER);
 
     /* Check the completion code and the actual flags returned. */
-    if (status == UX_SUCCESS)
+    if (status == TX_SUCCESS)
     {
 
       if(ux_dfu_download.wblock_num == 0)
