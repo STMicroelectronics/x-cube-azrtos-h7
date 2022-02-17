@@ -1,13 +1,13 @@
 
 ## <b>Fx_NAND_Write_Read_File application description</b>
 
-  - This application provides an example of Azure RTOS FileX and LevelX stacks usage on STM32H743I-EVAL board, it demonstrates how to 
-  
-  create a Fat File system on the NAND flash using FileX alongside LevelX. The application is designed to execute file operations on 
-  
-  the Micron MT29F2G16ABAEAWP NAND flash device, the code provides all required software code for properly managing it.
+This application provides an example of Azure RTOS FileX and LevelX stacks usage on custom 
+board(doesn't run on STM32H743I-EVAL board unless a custom board is added). It demonstrates how to create a Fat File system 
+on the NAND flash using FileX alongside LevelX. The application is designed to execute file operations on the Micron MT29F2G16ABAEAWP 
+NAND flash device, the code provides all required software code for properly managing it.
 
-  - The Mciron MT29F2G16ABAEAWP NAND Flash is configured as below:
+ - This application has been tested using an internal custom test board embedding a Micron MT29F2G16ABAEAWP NAND flash device configured as below:
+ 
       - MemoryDataWidth = 16 bit
       - PageSize = 1024 words
       - SpareAreaSize = 32 words
@@ -24,7 +24,8 @@
       - HoldSetupTime = 2
       - HiZSetupTime = 8
 
-  - Below FMC GPIO configuration:
+  - User can design his own hardware according to the following FMC GPIO configuration:
+	
       - PG9   ------> FMC_NCE
       - PD0   ------> FMC_D2
       - PD1   ------> FMC_D3
@@ -149,8 +150,8 @@ RTOS, ThreadX, FileX, LevelX, File System, NAND, FMC, FAT32
 ### <b>Hardware and Software environment</b>
 
   - This application runs on STM32H743xx devices.
-  - This application has been tested with STMicroelectronics STM32H743I-EVAL boards Revision: MB1246-B03.
-    and can be easily tailored to any other supported device and development board.
+  - This application has been tested using an internal custom test board embedding a Micron MT29F2G16ABAEAWP NAND flash device and plugged on 
+    STM32H743I-EVAL boards Revision: MB1246-B03 and can be easily tailored to any other supported device and development board.
 
   - This application uses USART1 to display logs, the hyperterminal configuration is as follows:
       - BaudRate = 115200 baud
