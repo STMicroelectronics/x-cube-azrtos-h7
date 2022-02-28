@@ -12,8 +12,8 @@
 
 /**************************************************************************/
 /**************************************************************************/
-/**                                                                       */ 
-/** USBX Component                                                        */ 
+/**                                                                       */
+/** USBX Component                                                        */
 /**                                                                       */
 /**   STM32 Controller Driver                                             */
 /**                                                                       */
@@ -32,12 +32,165 @@
 #include "ux_utility.h"
 
 
+static inline void _ux_dcd_stm32_setup_in(UX_DCD_STM32_ED * ed, UX_SLAVE_TRANSFER *transfer_request)
+{
+
+    /* The endpoint is IN.  This is important to memorize the direction for the control endpoint
+        in case of a STALL. */
+    ed -> ux_dcd_stm32_ed_direction = UX_ENDPOINT_IN;
+
+    /* Set the state to TX.  */
+    ed -> ux_dcd_stm32_ed_state = UX_DCD_STM32_ED_STATE_DATA_TX;
+
+    /* Call the Control Transfer dispatcher.  */
+    _ux_device_stack_control_request_process(transfer_request);
+}
+
+static inline void _ux_dcd_stm32_setup_out(UX_DCD_STM32_ED * ed, UX_SLAVE_TRANSFER *transfer_request,
+                                           PCD_HandleTypeDef *hpcd)
+{
+
+    /* Set the completion code to no error.  */
+    transfer_request -> ux_slave_transfer_request_completion_code =  UX_SUCCESS;
+
+    /* The endpoint is IN.  This is important to memorize the direction for the control endpoint
+        in case of a STALL. */
+    ed -> ux_dcd_stm32_ed_direction = UX_ENDPOINT_IN;
+
+    /* We are using a Control endpoint on a OUT transaction and there was a payload.  */
+    if (_ux_device_stack_control_request_process(transfer_request) == UX_SUCCESS)
+    {
+
+        /* Set the state to STATUS phase TX.  */
+        ed -> ux_dcd_stm32_ed_state = UX_DCD_STM32_ED_STATE_STATUS_TX;
+
+        /* Arm the status transfer.  */
+        HAL_PCD_EP_Transmit(hpcd, 0x00U, UX_NULL, 0U);
+    }
+}
+
+static inline void _ux_dcd_stm32_setup_status(UX_DCD_STM32_ED * ed, UX_SLAVE_TRANSFER *transfer_request,
+                                              PCD_HandleTypeDef *hpcd)
+{
+
+    /* The endpoint is IN.  This is important to memorize the direction for the control endpoint
+            in case of a STALL. */
+    ed -> ux_dcd_stm32_ed_direction = UX_ENDPOINT_IN;
+
+    /* Call the Control Transfer dispatcher.  */
+    if (_ux_device_stack_control_request_process(transfer_request) == UX_SUCCESS)
+    {
+
+        /* Set the state to STATUS RX.  */
+        ed -> ux_dcd_stm32_ed_state = UX_DCD_STM32_ED_STATE_STATUS_RX;
+        HAL_PCD_EP_Transmit(hpcd, 0x00U, UX_NULL, 0U);
+    }
+}
+
+#if defined(UX_DEVICE_STANDALONE)
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                                RELEASE       */
+/*                                                                        */
+/*    _ux_dcd_stm32_setup_isr_pending                      PORTABLE C     */
+/*                                                            6.1.10      */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function handles pending control ISR from HAL driver.          */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    hpcd                                  Pointer to PCD handle         */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    None                                                                */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_device_stack_control_request_process                            */
+/*                                          Process control request       */
+/*    HAL_PCD_EP_Transmit                   Transmit data                 */
+/*    HAL_PCD_EP_Receive                    Receive data                  */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    STM32 HAL Driver                                                    */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  01-31-2022     Chaoqiong Xiao           Initial Version 6.1.10        */
+/*                                                                        */
+/**************************************************************************/
+VOID     _ux_dcd_stm32_setup_isr_pending(UX_DCD_STM32 *dcd_stm32)
+{
+UX_INTERRUPT_SAVE_AREA
+UX_DCD_STM32_ED         *ed;
+UX_SLAVE_TRANSFER       *transfer_request;
+ULONG                   ed_status;
+
+    /* Fetch the address of the physical endpoint.  */
+    ed =  &dcd_stm32 -> ux_dcd_stm32_ed[0];
+
+    /* Get the pointer to the transfer request.  */
+    transfer_request =  &ed -> ux_dcd_stm32_ed_endpoint -> ux_slave_endpoint_transfer_request;
+
+    UX_DISABLE
+
+    /* Get the ED status.  */
+    ed_status = ed -> ux_dcd_stm32_ed_status;
+
+    /* Check if Task is pending to avoid re-entry.  */
+    if (ed_status & UX_DCD_STM32_ED_STATUS_TASK_PENDING)
+    {
+        UX_RESTORE
+        return;
+    }
+
+    /* Check if SETUP ISR is pending.  */
+    ed_status &= UX_DCD_STM32_ED_STATUS_SETUP;
+    if (ed_status == 0)
+    {
+        UX_RESTORE
+        return;
+    }
+    ed -> ux_dcd_stm32_ed_status &= ~UX_DCD_STM32_ED_STATUS_SETUP;
+    ed -> ux_dcd_stm32_ed_status |= UX_DCD_STM32_ED_STATUS_TASK_PENDING;
+    UX_RESTORE
+
+    /* Handle different SETUP cases.  */
+    switch(ed_status)
+    {
+    case UX_DCD_STM32_ED_STATUS_SETUP_IN:
+        _ux_dcd_stm32_setup_in(ed, transfer_request);
+        break;
+
+    case UX_DCD_STM32_ED_STATUS_SETUP_OUT:
+        _ux_dcd_stm32_setup_out(ed, transfer_request, dcd_stm32 -> pcd_handle);
+        break;
+
+    default: /* UX_DCD_STM32_ED_STATUS_SETUP_STATUS  */
+        _ux_dcd_stm32_setup_status(ed, transfer_request, dcd_stm32 -> pcd_handle);
+        break;
+    }
+
+    /* Task is done.  */
+    ed -> ux_dcd_stm32_ed_status &= ~UX_DCD_STM32_ED_STATUS_TASK_PENDING;
+}
+#endif
+
 /**************************************************************************/
 /*                                                                        */
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    HAL_PCD_SetupStageCallback                          PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -52,24 +205,27 @@
 /*                                                                        */
 /*  OUTPUT                                                                */
 /*                                                                        */
-/*    None                                                                */ 
+/*    None                                                                */
 /*                                                                        */
-/*  CALLS                                                                 */ 
-/*                                                                        */ 
-/*    _ux_device_stack_control_request_process                            */ 
-/*                                          Process control request       */ 
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_device_stack_control_request_process                            */
+/*                                          Process control request       */
 /*    HAL_PCD_EP_Transmit                   Transmit data                 */
 /*    HAL_PCD_EP_Receive                    Receive data                  */
-/*                                                                        */ 
-/*  CALLED BY                                                             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
 /*    STM32 HAL Driver                                                    */
-/*                                                                        */ 
-/*  RELEASE HISTORY                                                       */ 
-/*                                                                        */ 
-/*    DATE              NAME                      DESCRIPTION             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
 /*  09-30-2020     Chaoqiong Xiao           Initial Version 6.1           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 void HAL_PCD_SetupStageCallback(PCD_HandleTypeDef *hpcd)
@@ -107,21 +263,18 @@ UX_SLAVE_ENDPOINT       *endpoint;
     transfer_request -> ux_slave_transfer_request_completion_code =  UX_SUCCESS;
 
     /* Set the status of the endpoint to not stalled.  */
-    ed -> ux_dcd_stm32_ed_status &= ~UX_DCD_STM32_ED_STATUS_STALLED;
+    ed -> ux_dcd_stm32_ed_status &= ~(UX_DCD_STM32_ED_STATUS_STALLED |
+                                      UX_DCD_STM32_ED_STATUS_TRANSFER |
+                                      UX_DCD_STM32_ED_STATUS_DONE);
 
     /* Check if the transaction is IN.  */
     if (*transfer_request -> ux_slave_transfer_request_setup & UX_REQUEST_IN)
     {
-
-        /* The endpoint is IN.  This is important to memorize the direction for the control endpoint
-           in case of a STALL. */
-        ed -> ux_dcd_stm32_ed_direction  = UX_ENDPOINT_IN;
-
-        /* Call the Control Transfer dispatcher.  */
-        _ux_device_stack_control_request_process(transfer_request);
-
-        /* Set the state to TX.  */
-        ed -> ux_dcd_stm32_ed_state =  UX_DCD_STM32_ED_STATE_DATA_TX;
+#if defined(UX_DEVICE_STANDALONE)
+        ed -> ux_dcd_stm32_ed_status |= UX_DCD_STM32_ED_STATUS_SETUP_IN;
+#else
+        _ux_dcd_stm32_setup_in(ed, transfer_request);
+#endif
     }
     else
     {
@@ -135,19 +288,11 @@ UX_SLAVE_ENDPOINT       *endpoint;
         if (*(transfer_request -> ux_slave_transfer_request_setup + 6) == 0 &&
             *(transfer_request -> ux_slave_transfer_request_setup + 7) == 0)
         {
-
-            /* The endpoint is IN.  This is important to memorize the direction for the control endpoint
-                   in case of a STALL. */
-            ed -> ux_dcd_stm32_ed_direction  = UX_ENDPOINT_IN;
-
-            /* Call the Control Transfer dispatcher.  */
-            if (_ux_device_stack_control_request_process(transfer_request) == UX_SUCCESS)
-            {
-
-                /* Set the state to STATUS RX.  */
-                ed -> ux_dcd_stm32_ed_state =  UX_DCD_STM32_ED_STATE_STATUS_RX;
-                HAL_PCD_EP_Transmit(hpcd, 0x00U, UX_NULL, 0U);
-            }
+#if defined(UX_DEVICE_STANDALONE)
+            ed -> ux_dcd_stm32_ed_status |= UX_DCD_STM32_ED_STATUS_SETUP_STATUS;
+#else
+            _ux_dcd_stm32_setup_status(ed, transfer_request, hpcd);
+#endif
         }
         else
         {
@@ -167,6 +312,10 @@ UX_SLAVE_ENDPOINT       *endpoint;
 
                 /* Next phase is a SETUP.  */
                 ed -> ux_dcd_stm32_ed_state =  UX_DCD_STM32_ED_STATE_IDLE;
+
+#if defined(UX_DEVICE_STANDALONE)
+                ed -> ux_dcd_stm32_ed_status |= UX_DCD_STM32_ED_STATUS_SETUP_STATUS;
+#endif
 
                 /* We are done.  */
                 return;
@@ -199,7 +348,7 @@ UX_SLAVE_ENDPOINT       *endpoint;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    HAL_PCD_DataInStageCallback                         PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -215,23 +364,27 @@ UX_SLAVE_ENDPOINT       *endpoint;
 /*                                                                        */
 /*  OUTPUT                                                                */
 /*                                                                        */
-/*    None                                                                */ 
+/*    None                                                                */
 /*                                                                        */
-/*  CALLS                                                                 */ 
-/*                                                                        */ 
-/*    _ux_utility_semaphore_put             Put semaphore                 */ 
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_utility_semaphore_put             Put semaphore                 */
 /*    HAL_PCD_EP_Transmit                   Transmit data                 */
 /*    HAL_PCD_EP_Receive                    Receive data                  */
-/*                                                                        */ 
-/*  CALLED BY                                                             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
 /*    STM32 HAL Driver                                                    */
-/*                                                                        */ 
-/*  RELEASE HISTORY                                                       */ 
-/*                                                                        */ 
-/*    DATE              NAME                      DESCRIPTION             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
 /*  09-30-2020     Chaoqiong Xiao           Initial Version 6.1           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            added bi-dir EP support,    */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 void HAL_PCD_DataInStageCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
@@ -252,6 +405,11 @@ UX_SLAVE_ENDPOINT       *endpoint;
     dcd_stm32 = (UX_DCD_STM32 *) dcd -> ux_slave_dcd_controller_hardware;
 
     /* Fetch the address of the physical endpoint.  */
+#if defined(UX_DEVICE_BIDIRECTIONAL_ENDPOINT_SUPPORT)
+    if ((epnum & 0xF) != 0)
+        ed =  &dcd_stm32 -> ux_dcd_stm32_ed_in[epnum & 0xF];
+    else
+#endif /* defined(UX_DEVICE_BIDIRECTIONAL_ENDPOINT_SUPPORT) */
     ed =  &dcd_stm32 -> ux_dcd_stm32_ed[epnum & 0xF];
 
     /* Get the pointer to the transfer request.  */
@@ -272,7 +430,8 @@ UX_SLAVE_ENDPOINT       *endpoint;
             HAL_PCD_EP_Receive(hpcd, 0, 0, 0);
 
             /* Are we done with this transfer ? */
-            if (transfer_request -> ux_slave_transfer_request_in_transfer_length <= endpoint -> ux_slave_endpoint_descriptor.wMaxPacketSize)
+            if (transfer_request -> ux_slave_transfer_request_in_transfer_length <=
+                endpoint -> ux_slave_endpoint_descriptor.wMaxPacketSize)
             {
 
                 /* There is no data to send but we may need to send a Zero Length Packet.  */
@@ -280,7 +439,7 @@ UX_SLAVE_ENDPOINT       *endpoint;
                 {
 
                     /* Arm a ZLP packet on IN.  */
-                    HAL_PCD_EP_Transmit(hpcd, 
+                    HAL_PCD_EP_Transmit(hpcd,
                             endpoint->ux_slave_endpoint_descriptor.bEndpointAddress, 0, 0);
 
                     /* Reset the ZLP condition.  */
@@ -295,9 +454,17 @@ UX_SLAVE_ENDPOINT       *endpoint;
 
                     /* The transfer is completed.  */
                     transfer_request -> ux_slave_transfer_request_status =  UX_TRANSFER_STATUS_COMPLETED;
+                    transfer_request -> ux_slave_transfer_request_actual_length =
+                        transfer_request -> ux_slave_transfer_request_requested_length;
+
+#if defined(UX_DEVICE_STANDALONE)
+
+                    /* Control status phase done.  */
+                    ed -> ux_dcd_stm32_ed_status |= UX_DCD_STM32_ED_STATUS_DONE;
+#endif
 
                     /* We are using a Control endpoint, if there is a callback, invoke it. We are still under ISR.  */
-                    if (transfer_request -> ux_slave_transfer_request_completion_function)  
+                    if (transfer_request -> ux_slave_transfer_request_completion_function)
                         transfer_request -> ux_slave_transfer_request_completion_function (transfer_request) ;
 
                     /* State is now STATUS RX.  */
@@ -325,8 +492,8 @@ UX_SLAVE_ENDPOINT       *endpoint;
                 transfer_request -> ux_slave_transfer_request_in_transfer_length -= transfer_length;
 
                 /* Transmit data.  */
-                HAL_PCD_EP_Transmit(hpcd, 
-                            endpoint->ux_slave_endpoint_descriptor.bEndpointAddress, 
+                HAL_PCD_EP_Transmit(hpcd,
+                            endpoint->ux_slave_endpoint_descriptor.bEndpointAddress,
                             transfer_request->ux_slave_transfer_request_current_data_pointer,
                             transfer_length);
             }
@@ -340,9 +507,16 @@ UX_SLAVE_ENDPOINT       *endpoint;
 
         /* The transfer is completed.  */
         transfer_request -> ux_slave_transfer_request_status =  UX_TRANSFER_STATUS_COMPLETED;
+        transfer_request -> ux_slave_transfer_request_actual_length =
+            transfer_request -> ux_slave_transfer_request_requested_length;
+
+#if defined(UX_DEVICE_STANDALONE)
+        ed -> ux_dcd_stm32_ed_status |= UX_DCD_STM32_ED_STATUS_DONE;
+#else
 
         /* Non control endpoint operation, use semaphore.  */
         _ux_utility_semaphore_put(&transfer_request -> ux_slave_transfer_request_semaphore);
+#endif /* defined(UX_DEVICE_STANDALONE) */
     }
 }
 
@@ -352,7 +526,7 @@ UX_SLAVE_ENDPOINT       *endpoint;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    HAL_PCD_DataOutStageCallback                        PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -368,25 +542,28 @@ UX_SLAVE_ENDPOINT       *endpoint;
 /*                                                                        */
 /*  OUTPUT                                                                */
 /*                                                                        */
-/*    None                                                                */ 
+/*    None                                                                */
 /*                                                                        */
-/*  CALLS                                                                 */ 
-/*                                                                        */ 
-/*    _ux_device_stack_control_request_process                            */ 
-/*                                          Process control request       */ 
-/*    _ux_utility_semaphore_put             Put semaphore                 */ 
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_device_stack_control_request_process                            */
+/*                                          Process control request       */
+/*    _ux_utility_semaphore_put             Put semaphore                 */
 /*    HAL_PCD_EP_Transmit                   Transmit data                 */
 /*    HAL_PCD_EP_Receive                    Receive data                  */
-/*                                                                        */ 
-/*  CALLED BY                                                             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
 /*    STM32 HAL Driver                                                    */
-/*                                                                        */ 
-/*  RELEASE HISTORY                                                       */ 
-/*                                                                        */ 
-/*    DATE              NAME                      DESCRIPTION             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
 /*  09-30-2020     Chaoqiong Xiao           Initial Version 6.1           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 void HAL_PCD_DataOutStageCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
@@ -401,16 +578,16 @@ UX_SLAVE_ENDPOINT       *endpoint;
 
 
     /* Get the pointer to the DCD.  */
-    dcd =  &_ux_system_slave -> ux_system_slave_dcd;
+    dcd = &_ux_system_slave -> ux_system_slave_dcd;
 
     /* Get the pointer to the STM32 DCD.  */
     dcd_stm32 = (UX_DCD_STM32 *) dcd -> ux_slave_dcd_controller_hardware;
 
     /* Fetch the address of the physical endpoint.  */
-    ed =  &dcd_stm32 -> ux_dcd_stm32_ed[epnum & 0xF];
+    ed = &dcd_stm32 -> ux_dcd_stm32_ed[epnum & 0xF];
 
     /* Get the pointer to the transfer request.  */
-    transfer_request =  &(ed -> ux_dcd_stm32_ed_endpoint -> ux_slave_endpoint_transfer_request);
+    transfer_request = &(ed -> ux_dcd_stm32_ed_endpoint -> ux_slave_endpoint_transfer_request);
 
     /* Endpoint 0 is different.  */
     if (epnum == 0U)
@@ -421,10 +598,10 @@ UX_SLAVE_ENDPOINT       *endpoint;
         {
 
             /* Get the pointer to the logical endpoint from the transfer request.  */
-            endpoint =  transfer_request -> ux_slave_transfer_request_endpoint;
+            endpoint = transfer_request -> ux_slave_transfer_request_endpoint;
 
             /* Read the received data length for the Control endpoint.  */
-            transfer_length = HAL_PCD_EP_GetRxCount(hpcd, epnum); 
+            transfer_length = HAL_PCD_EP_GetRxCount(hpcd, epnum);
 
             /* Update the length of the data received.  */
             transfer_request -> ux_slave_transfer_request_actual_length += transfer_length;
@@ -436,35 +613,22 @@ UX_SLAVE_ENDPOINT       *endpoint;
 
                 /* Are we done with this transfer ? */
                 if ((transfer_request -> ux_slave_transfer_request_actual_length ==
-                     transfer_request -> ux_slave_transfer_request_requested_length) || 
+                     transfer_request -> ux_slave_transfer_request_requested_length) ||
                     (transfer_length != endpoint -> ux_slave_endpoint_descriptor.wMaxPacketSize))
                 {
-
-                    /* Set the completion code to no error.  */
-                    transfer_request -> ux_slave_transfer_request_completion_code =  UX_SUCCESS;
-
-                    /* The endpoint is IN.  This is important to memorize the direction for the control endpoint
-                       in case of a STALL. */
-                    ed -> ux_dcd_stm32_ed_direction  = UX_ENDPOINT_IN;
-
-                    /* We are using a Control endpoint on a OUT transaction and there was a payload.  */
-                    if (_ux_device_stack_control_request_process(transfer_request) == UX_SUCCESS)
-                    {
-
-                        /* Set the state to STATUS phase TX.  */
-                        ed -> ux_dcd_stm32_ed_state =  UX_DCD_STM32_ED_STATE_STATUS_TX;
-
-                        /* Arm the status transfer.  */
-                        HAL_PCD_EP_Transmit(hpcd, 0x00U, UX_NULL, 0U);
-                    }
+#if defined(UX_DEVICE_STANDALONE)
+                    ed -> ux_dcd_stm32_ed_status |= UX_DCD_STM32_ED_STATUS_SETUP_OUT;
+#else
+                    _ux_dcd_stm32_setup_out(ed, transfer_request, hpcd);
+#endif
                 }
                 else
                 {
 
                     /* Rearm the OUT control endpoint for one packet. */
                     transfer_request -> ux_slave_transfer_request_current_data_pointer += endpoint -> ux_slave_endpoint_descriptor.wMaxPacketSize;
-                    HAL_PCD_EP_Receive(hpcd, 
-                                endpoint -> ux_slave_endpoint_descriptor.bEndpointAddress, 
+                    HAL_PCD_EP_Receive(hpcd,
+                                endpoint -> ux_slave_endpoint_descriptor.bEndpointAddress,
                                 transfer_request -> ux_slave_transfer_request_current_data_pointer,
                                 endpoint -> ux_slave_endpoint_descriptor.wMaxPacketSize);
                 }
@@ -478,9 +642,15 @@ UX_SLAVE_ENDPOINT       *endpoint;
                 /* If trace is enabled, insert this event into the trace buffer.  */
                 UX_TRACE_IN_LINE_INSERT(UX_TRACE_ERROR, UX_TRANSFER_BUFFER_OVERFLOW, transfer_request, 0, 0, UX_TRACE_ERRORS, 0, 0)
 
+#if defined(UX_DEVICE_STANDALONE)
+
+                /* Control status phase done.  */
+                ed -> ux_dcd_stm32_ed_status |= UX_DCD_STM32_ED_STATUS_DONE;
+#endif
+
                 /* We are using a Control endpoint, if there is a callback, invoke it. We are still under ISR.  */
-                if (transfer_request -> ux_slave_transfer_request_completion_function)  
-                    transfer_request -> ux_slave_transfer_request_completion_function (transfer_request) ;  
+                if (transfer_request -> ux_slave_transfer_request_completion_function)
+                    transfer_request -> ux_slave_transfer_request_completion_function (transfer_request) ;
             }
         }
     }
@@ -497,8 +667,13 @@ UX_SLAVE_ENDPOINT       *endpoint;
         /* The transfer is completed.  */
         transfer_request -> ux_slave_transfer_request_status =  UX_TRANSFER_STATUS_COMPLETED;
 
+#if defined(UX_DEVICE_STANDALONE)
+        ed -> ux_dcd_stm32_ed_status |= UX_DCD_STM32_ED_STATUS_DONE;
+#else
+
         /* Non control endpoint operation, use semaphore.  */
         _ux_utility_semaphore_put(&transfer_request -> ux_slave_transfer_request_semaphore);
+#endif
     }
 
 }
@@ -509,7 +684,7 @@ UX_SLAVE_ENDPOINT       *endpoint;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    HAL_PCD_ResetCallback                               PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -524,22 +699,24 @@ UX_SLAVE_ENDPOINT       *endpoint;
 /*                                                                        */
 /*  OUTPUT                                                                */
 /*                                                                        */
-/*    None                                                                */ 
+/*    None                                                                */
 /*                                                                        */
-/*  CALLS                                                                 */ 
-/*                                                                        */ 
-/*    _ux_device_stack_disconnect           Disconnect device             */ 
-/*    _ux_dcd_stm32_initialize_complete     Complete initialization       */ 
-/*                                                                        */ 
-/*  CALLED BY                                                             */ 
-/*                                                                        */ 
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_device_stack_disconnect           Disconnect device             */
+/*    _ux_dcd_stm32_initialize_complete     Complete initialization       */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
 /*    STM32 HAL Driver                                                    */
-/*                                                                        */ 
-/*  RELEASE HISTORY                                                       */ 
-/*                                                                        */ 
-/*    DATE              NAME                      DESCRIPTION             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
 /*  09-30-2020     Chaoqiong Xiao           Initial Version 6.1           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 void HAL_PCD_ResetCallback(PCD_HandleTypeDef *hpcd)
@@ -567,7 +744,7 @@ void HAL_PCD_ResetCallback(PCD_HandleTypeDef *hpcd)
 
         /* We are connected at full speed.  */
         _ux_system_slave -> ux_system_slave_speed =  UX_FULL_SPEED_DEVICE;
-        break;   
+        break;
 
     default:
 
@@ -588,8 +765,8 @@ void HAL_PCD_ResetCallback(PCD_HandleTypeDef *hpcd)
 /*                                                                        */
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
-/*    HAL_PCD_ResetCallback                               PORTABLE C      */
-/*                                                           6.1          */
+/*    HAL_PCD_DisconnectCallback                          PORTABLE C      */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -604,21 +781,23 @@ void HAL_PCD_ResetCallback(PCD_HandleTypeDef *hpcd)
 /*                                                                        */
 /*  OUTPUT                                                                */
 /*                                                                        */
-/*    None                                                                */ 
+/*    None                                                                */
 /*                                                                        */
-/*  CALLS                                                                 */ 
-/*                                                                        */ 
-/*    _ux_device_stack_disconnect           Disconnect device             */ 
-/*                                                                        */ 
-/*  CALLED BY                                                             */ 
-/*                                                                        */ 
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_device_stack_disconnect           Disconnect device             */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
 /*    STM32 HAL Driver                                                    */
-/*                                                                        */ 
-/*  RELEASE HISTORY                                                       */ 
-/*                                                                        */ 
-/*    DATE              NAME                      DESCRIPTION             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
 /*  09-30-2020     Chaoqiong Xiao           Initial Version 6.1           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef *hpcd)
@@ -632,3 +811,153 @@ void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef *hpcd)
         _ux_device_stack_disconnect();
     }
 }
+
+#if defined(USBD_HAL_ISOINCOMPLETE_CALLBACK)
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                                RELEASE       */
+/*                                                                        */
+/*    HAL_PCD_ISOINIncompleteCallback                      PORTABLE C     */
+/*                                                            6.1.10      */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function handles callback from HAL driver.                     */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    hpcd                                  Pointer to PCD handle         */
+/*    epnum                                 Endpoint number               */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    None                                                                */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    HAL_PCD_EP_Transmit                   Transmit data                 */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    STM32 HAL Driver                                                    */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  01-31-2022     Chaoqiong Xiao           Initial Version 6.1.10        */
+/*                                                                        */
+/**************************************************************************/
+void HAL_PCD_ISOINIncompleteCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
+{
+UX_SLAVE_DCD            *dcd;
+UX_DCD_STM32            *dcd_stm32;
+UX_DCD_STM32_ED         *ed;
+UX_SLAVE_ENDPOINT       *endpoint;
+
+    UX_PARAMETER_NOT_USED(epnum);
+
+    /* Get the pointer to the DCD.  */
+    dcd =  &_ux_system_slave -> ux_system_slave_dcd;
+
+    /* Get the pointer to the STM32 DCD.  */
+    dcd_stm32 = (UX_DCD_STM32 *) dcd -> ux_slave_dcd_controller_hardware;
+
+#if defined(UX_DEVICE_BIDIRECTIONAL_ENDPOINT_SUPPORT)
+    ed =  &dcd_stm32 -> ux_dcd_stm32_ed_in[epnum & 0xF];
+#else
+    ed =  &dcd_stm32 -> ux_dcd_stm32_ed[epnum & 0xF];
+#endif /* defined(UX_DEVICE_BIDIRECTIONAL_ENDPOINT_SUPPORT) */
+
+    if ((ed -> ux_dcd_stm32_ed_status & UX_DCD_STM32_ED_STATUS_USED) == 0U)
+        return;
+
+    endpoint = ed->ux_dcd_stm32_ed_endpoint;
+
+    if ((endpoint->ux_slave_endpoint_descriptor.bmAttributes & UX_MASK_ENDPOINT_TYPE) == 1 &&
+        (endpoint->ux_slave_endpoint_descriptor.bEndpointAddress & UX_ENDPOINT_DIRECTION) != 0)
+    {
+
+        /* Incomplete, discard data and retry.  */
+        HAL_PCD_EP_Transmit(dcd_stm32 -> pcd_handle,
+                        endpoint->ux_slave_endpoint_descriptor.bEndpointAddress,
+                        endpoint->ux_slave_endpoint_transfer_request.ux_slave_transfer_request_data_pointer,
+                        endpoint->ux_slave_endpoint_transfer_request.ux_slave_transfer_request_requested_length);
+    }
+}
+
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                                RELEASE       */
+/*                                                                        */
+/*    HAL_PCD_ISOOUTIncompleteCallback                     PORTABLE C     */
+/*                                                            6.1.10      */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function handles callback from HAL driver.                     */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    hpcd                                  Pointer to PCD handle         */
+/*    epnum                                 Endpoint number               */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    None                                                                */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    HAL_PCD_EP_Receive                    Receive data                  */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    STM32 HAL Driver                                                    */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  01-31-2022     Chaoqiong Xiao           Initial Version 6.1.10        */
+/*                                                                        */
+/**************************************************************************/
+void HAL_PCD_ISOOUTIncompleteCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
+{
+UX_SLAVE_DCD            *dcd;
+UX_DCD_STM32            *dcd_stm32;
+UX_DCD_STM32_ED         *ed;
+UX_SLAVE_ENDPOINT       *endpoint;
+
+    UX_PARAMETER_NOT_USED(epnum);
+
+    /* Get the pointer to the DCD.  */
+    dcd =  &_ux_system_slave -> ux_system_slave_dcd;
+
+    /* Get the pointer to the STM32 DCD.  */
+    dcd_stm32 = (UX_DCD_STM32 *) dcd -> ux_slave_dcd_controller_hardware;
+
+    ed =  &dcd_stm32 -> ux_dcd_stm32_ed[epnum & 0xF];
+    if ((ed -> ux_dcd_stm32_ed_status & UX_DCD_STM32_ED_STATUS_USED) == 0)
+        return;
+
+    endpoint = ed->ux_dcd_stm32_ed_endpoint;
+
+    if ((endpoint->ux_slave_endpoint_descriptor.bmAttributes & UX_MASK_ENDPOINT_TYPE) == 1 &&
+        (endpoint->ux_slave_endpoint_descriptor.bEndpointAddress & UX_ENDPOINT_DIRECTION) == 0)
+    {
+
+        /* Incomplete, discard data and retry.  */
+        HAL_PCD_EP_Receive(dcd_stm32 -> pcd_handle,
+                        endpoint->ux_slave_endpoint_descriptor.bEndpointAddress,
+                        endpoint->ux_slave_endpoint_transfer_request.ux_slave_transfer_request_data_pointer,
+                        endpoint->ux_slave_endpoint_transfer_request.ux_slave_transfer_request_requested_length);
+    }
+}
+#endif /* defined(USBD_HAL_ISOINCOMPLETE_CALLBACK) */

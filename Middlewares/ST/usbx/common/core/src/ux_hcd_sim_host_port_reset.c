@@ -36,7 +36,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_hcd_sim_host_port_reset                         PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -70,12 +70,22 @@
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  08-02-2021     Wen Wang                 Modified comment(s),          */
+/*                                            fixed spelling error,       */
+/*                                            resulting in version 6.1.8  */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_hcd_sim_host_port_reset(UX_HCD_SIM_HOST *hcd_sim_host, ULONG port_index)
 {
 
 UX_SLAVE_DEVICE     *device; 
+
+#if defined(UX_HOST_STANDALONE)
+    /* No port reset wait simulated, return _STATE_NEXT later to move state.  */
+#endif
 
     UX_PARAMETER_NOT_USED(hcd_sim_host);
     UX_PARAMETER_NOT_USED(port_index);
@@ -86,7 +96,7 @@ UX_SLAVE_DEVICE     *device;
     /* Is this a connection?  */
     if (device -> ux_slave_device_state == UX_DEVICE_RESET)
 
-        /* Complete the device initialization. Note that everytime the device
+        /* Complete the device initialization. Note that every time the device
            is disconnected, this must be called again for connection.  */
         _ux_dcd_sim_slave_initialize_complete();
 
@@ -105,6 +115,10 @@ UX_SLAVE_DEVICE     *device;
     device -> ux_slave_device_state =  UX_DEVICE_ATTACHED;
 
     /* This function should never fail.  */
+#if defined(UX_HOST_STANDALONE)
+    return(UX_STATE_NEXT);
+#else
     return(UX_SUCCESS);
+#endif
 }
 

@@ -35,7 +35,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_host_class_cdc_acm_endpoints_get                PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -69,6 +69,13 @@
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  10-15-2021     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            use pre-calculated value    */
+/*                                            instead of wMaxPacketSize,  */
+/*                                            resulting in version 6.1.9  */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            initialized timeout value,  */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_host_class_cdc_acm_endpoints_get(UX_HOST_CLASS_CDC_ACM *cdc_acm)
@@ -100,6 +107,9 @@ UX_TRANSFER     *transfer_request;
                 /* This transfer_request always have the OUT direction.  */
                 endpoint -> ux_endpoint_transfer_request.ux_transfer_request_type =  UX_REQUEST_OUT;
 
+                /* Set default timeout for transfer.  */
+                endpoint -> ux_endpoint_transfer_request.ux_transfer_request_timeout_value = UX_HOST_CLASS_CDC_ACM_CLASS_TRANSFER_TIMEOUT;
+
                 /* We have found the bulk endpoint, save it.  */
                 cdc_acm -> ux_host_class_cdc_acm_bulk_out_endpoint =  endpoint;
 
@@ -115,6 +125,9 @@ UX_TRANSFER     *transfer_request;
 
                 /* This transfer_request always have the IN direction.  */
                 endpoint -> ux_endpoint_transfer_request.ux_transfer_request_type =  UX_REQUEST_IN;
+
+                /* Set default timeout for transfer.  */
+                endpoint -> ux_endpoint_transfer_request.ux_transfer_request_timeout_value = UX_HOST_CLASS_CDC_ACM_CLASS_TRANSFER_TIMEOUT;
 
                 /* We have found the bulk endpoint, save it.  */
                 cdc_acm -> ux_host_class_cdc_acm_bulk_in_endpoint =  endpoint;
@@ -162,7 +175,7 @@ UX_TRANSFER     *transfer_request;
 
                 /* The endpoint is correct, Fill in the transfer request with the length requested for this endpoint.  */
                 transfer_request =  &cdc_acm -> ux_host_class_cdc_acm_interrupt_endpoint -> ux_endpoint_transfer_request;
-                transfer_request -> ux_transfer_request_requested_length =  cdc_acm -> ux_host_class_cdc_acm_interrupt_endpoint -> ux_endpoint_descriptor.wMaxPacketSize;
+                transfer_request -> ux_transfer_request_requested_length =  transfer_request -> ux_transfer_request_packet_length;
                 transfer_request -> ux_transfer_request_actual_length =     0;
 
                 /* The direction is always IN for the CDC interrupt endpoint.  */

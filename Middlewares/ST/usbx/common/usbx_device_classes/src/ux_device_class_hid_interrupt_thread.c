@@ -29,19 +29,22 @@
 #include "ux_device_stack.h"
 
 
+#if !defined(UX_DEVICE_STANDALONE)
 /**************************************************************************/ 
 /*                                                                        */ 
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_device_class_hid_interrupt_thread               PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
 /*                                                                        */
 /*  DESCRIPTION                                                           */
 /*                                                                        */ 
-/*    This function is the thread of the hid interrupt endpoint           */ 
+/*    This function is the thread of the hid interrupt (IN) endpoint      */ 
+/*                                                                        */ 
+/*    It's for RTOS mode.                                                 */
 /*                                                                        */ 
 /*  INPUT                                                                 */ 
 /*                                                                        */ 
@@ -58,7 +61,7 @@
 /*    _ux_device_class_hid_event_get        Get HID event                 */
 /*    _ux_device_stack_transfer_request     Request transfer              */ 
 /*    _ux_utility_memory_copy               Copy memory                   */ 
-/*    _ux_utility_thread_suspend            Suspend thread                */
+/*    _ux_device_thread_suspend             Suspend thread                */
 /*                                                                        */ 
 /*  CALLED BY                                                             */ 
 /*                                                                        */ 
@@ -75,6 +78,12 @@
 /*                                            refer to TX symbols instead */
 /*                                            of using them directly,     */
 /*                                            resulting in version 6.1    */
+/*  10-15-2021     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            improved idle generation,   */
+/*                                            resulting in version 6.1.9  */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            off for standalone compile, */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 VOID  _ux_device_class_hid_interrupt_thread(ULONG hid_class)
@@ -122,25 +131,34 @@ ULONG                       actual_flags;
 
                 /* There is no event exists on timeout, insert last.  */
 
-                /* If last request is sent, repeat it, else fill zeros.  */
-                if (transfer_request_in -> ux_slave_transfer_request_requested_length)
+                /* Check if no request been ready.  */
+                if (transfer_request_in -> ux_slave_transfer_request_requested_length == 0)
                 {
-                    hid_event.ux_device_class_hid_event_length = transfer_request_in -> ux_slave_transfer_request_requested_length;
-                    _ux_utility_memory_copy(hid_event.ux_device_class_hid_event_buffer,
-                                            transfer_request_in -> ux_slave_transfer_request_data_pointer,
-                                            hid_event.ux_device_class_hid_event_length); /* Use case of memcpy is verified. */
-                }
-                else
-                {
-                    hid_event.ux_device_class_hid_event_report_id = 0;
-                    hid_event.ux_device_class_hid_event_length = transfer_request_in -> ux_slave_transfer_request_endpoint -> ux_slave_endpoint_descriptor.wMaxPacketSize & 0x7FF;
-                    _ux_utility_memory_set(hid_event.ux_device_class_hid_event_buffer, 0,
-                                            hid_event.ux_device_class_hid_event_length); /* Use case of memset is verified. */
-                }
-                _ux_device_class_hid_event_set(hid, &hid_event);
 
-                /* Continue to process queue.  */
-                status = UX_SUCCESS;
+                    /* Assume the request use whole interrupt transfer payload.  */
+                    transfer_request_in -> ux_slave_transfer_request_requested_length =
+                            transfer_request_in -> ux_slave_transfer_request_transfer_length;
+
+                    /* Set the data to zeros.  */
+                    _ux_utility_memory_set(
+                        transfer_request_in -> ux_slave_transfer_request_data_pointer, 0,
+                        transfer_request_in -> ux_slave_transfer_request_requested_length); /* Use case of memset is verified. */
+                }
+
+                /* Send the request to the device controller.  */
+                status =  _ux_device_stack_transfer_request(transfer_request_in, 
+                                transfer_request_in -> ux_slave_transfer_request_requested_length,
+                                transfer_request_in -> ux_slave_transfer_request_requested_length);
+
+                /* Check error code. We don't want to invoke the error callback
+                   if the device was disconnected, since that's expected.  */
+                if (status != UX_SUCCESS && status != UX_TRANSFER_BUS_RESET)
+
+                    /* Error trap. */
+                    _ux_system_error_handler(UX_SYSTEM_LEVEL_THREAD, UX_SYSTEM_CONTEXT_CLASS, status);
+
+                /* Next: check events.  */
+                continue;
             }
 
             /* Check the completion code. */
@@ -179,6 +197,7 @@ ULONG                       actual_flags;
         }
              
         /* We need to suspend ourselves. We will be resumed by the device enumeration module.  */
-        _ux_utility_thread_suspend(&class -> ux_slave_class_thread);
+        _ux_device_thread_suspend(&class -> ux_slave_class_thread);
     }
 }
+#endif

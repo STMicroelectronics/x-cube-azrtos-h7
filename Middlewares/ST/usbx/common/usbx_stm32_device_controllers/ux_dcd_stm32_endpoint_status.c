@@ -12,8 +12,8 @@
 
 /**************************************************************************/
 /**************************************************************************/
-/**                                                                       */ 
-/** USBX Component                                                        */ 
+/**                                                                       */
+/** USBX Component                                                        */
 /**                                                                       */
 /**   STM32 Controller Driver                                             */
 /**                                                                       */
@@ -36,7 +36,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_dcd_stm32_endpoint_status                       PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -52,25 +52,28 @@
 /*                                                                        */
 /*  OUTPUT                                                                */
 /*                                                                        */
-/*    Completion Status                                                   */ 
+/*    Completion Status                                                   */
 /*                                                                        */
-/*  CALLS                                                                 */ 
-/*                                                                        */ 
-/*    None                                                                */ 
-/*                                                                        */ 
-/*  CALLED BY                                                             */ 
-/*                                                                        */ 
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    None                                                                */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
 /*    STM32 Controller Driver                                             */
-/*                                                                        */ 
-/*  RELEASE HISTORY                                                       */ 
-/*                                                                        */ 
-/*    DATE              NAME                      DESCRIPTION             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s), used ST  */
 /*                                            HAL library to drive the    */
 /*                                            controller,                 */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added bi-dir EP support,    */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_dcd_stm32_endpoint_status(UX_DCD_STM32 *dcd_stm32, ULONG endpoint_index)
@@ -80,7 +83,7 @@ UX_DCD_STM32_ED      *ed;
 
 
     /* Fetch the address of the physical endpoint.  */
-    ed =  &dcd_stm32 -> ux_dcd_stm32_ed[endpoint_index];
+    ed = _stm32_ed_get(dcd_stm32, endpoint_index);
 
     /* Check the endpoint status, if it is free, we have a illegal endpoint.  */
     if ((ed -> ux_dcd_stm32_ed_status & UX_DCD_STM32_ED_STATUS_USED) == 0)
@@ -92,4 +95,3 @@ UX_DCD_STM32_ED      *ed;
     else
         return(UX_TRUE);
 }
-

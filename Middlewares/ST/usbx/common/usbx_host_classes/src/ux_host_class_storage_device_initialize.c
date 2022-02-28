@@ -30,12 +30,13 @@
 #include "ux_host_stack.h"
 
 
+#if !defined(UX_HOST_STANDALONE)
 /**************************************************************************/ 
 /*                                                                        */ 
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_host_class_storage_device_initialize            PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -43,6 +44,8 @@
 /*  DESCRIPTION                                                           */
 /*                                                                        */ 
 /*    This function initializes the USB storage device.                   */ 
+/*                                                                        */ 
+/*    This function is for RTOS mode.                                     */
 /*                                                                        */ 
 /*  INPUT                                                                 */ 
 /*                                                                        */ 
@@ -79,6 +82,14 @@
 /*                                            added option to disable FX  */
 /*                                            media integration,          */
 /*                                            resulting in version 6.1    */
+/*  08-02-2021     Wen Wang                 Modified comment(s),          */
+/*                                            fixed logic of creating     */
+/*                                            multiple storage media,     */
+/*                                            resulting in version 6.1.8  */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            improved media insert/eject */
+/*                                            management without FX,      */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_host_class_storage_device_initialize(UX_HOST_CLASS_STORAGE *storage)
@@ -159,7 +170,9 @@ UINT                            inst_index;
         {
 
         case UX_HOST_CLASS_STORAGE_MEDIA_FAT_DISK:
+            /* Fall through.  */
         case UX_HOST_CLASS_STORAGE_MEDIA_OPTICAL_DISK:
+            /* Fall through.  */
         case UX_HOST_CLASS_STORAGE_MEDIA_IOMEGA_CLICK:
 
 #if !defined(UX_HOST_CLASS_STORAGE_NO_FILEX)
@@ -186,25 +199,30 @@ UINT                            inst_index;
             storage_media ++, inst_index++)
         {
 
-            /* Skip used storage media slots.  */
-            if (storage_media -> ux_host_class_storage_media_storage != UX_NULL)
-                continue;
-
-            /* Use this free storage media slot.  */
-            storage_media -> ux_host_class_storage_media_storage = storage;
-
-            /* Save media information.  */
-            storage_media -> ux_host_class_storage_media_lun = (UCHAR)storage -> ux_host_class_storage_lun;
-            storage_media -> ux_host_class_storage_media_sector_size = (USHORT)storage -> ux_host_class_storage_sector_size;
-            storage_media -> ux_host_class_storage_media_number_sectors = storage -> ux_host_class_storage_last_sector_number + 1;
-
-            /* Invoke callback for media insertion.  */
-            if (_ux_system_host -> ux_system_host_change_function != UX_NULL)
+            /* Find an unused storage media slot.  */
+            if (storage_media -> ux_host_class_storage_media_status != UX_USED)
             {
 
-                /* Call system change function.  */
-                _ux_system_host ->  ux_system_host_change_function(UX_STORAGE_MEDIA_INSERTION,
-                                    storage -> ux_host_class_storage_class, (VOID *) storage_media);
+                /* Use this free storage media slot.  */
+                storage_media -> ux_host_class_storage_media_status = UX_USED;
+                storage_media -> ux_host_class_storage_media_storage = storage;
+
+                /* Save media information.  */
+                storage_media -> ux_host_class_storage_media_lun = (UCHAR)storage -> ux_host_class_storage_lun;
+                storage_media -> ux_host_class_storage_media_sector_size = (USHORT)storage -> ux_host_class_storage_sector_size;
+                storage_media -> ux_host_class_storage_media_number_sectors = storage -> ux_host_class_storage_last_sector_number + 1;
+
+                /* Invoke callback for media insertion.  */
+                if (_ux_system_host -> ux_system_host_change_function != UX_NULL)
+                {
+
+                    /* Call system change function.  */
+                    _ux_system_host ->  ux_system_host_change_function(UX_STORAGE_MEDIA_INSERTION,
+                                        storage -> ux_host_class_storage_class, (VOID *) storage_media);
+                }
+                
+                /* Media inserted in slot, done.  */
+                break;
             }
         }
 #endif
@@ -214,4 +232,4 @@ UINT                            inst_index;
        return success. The storage thread will try to remount the ones that failed.  */
     return(UX_SUCCESS);
 }
-
+#endif

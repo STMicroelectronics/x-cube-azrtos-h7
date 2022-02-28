@@ -33,7 +33,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_device_stack_control_request_process            PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -80,6 +80,13 @@
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  10-15-2021     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed possible buffer issue */
+/*                                            for control vendor request, */
+/*                                            resulting in version 6.1.9  */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added printer support,      */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_device_stack_control_request_process(UX_SLAVE_TRANSFER *transfer_request)
@@ -138,6 +145,7 @@ ULONG                       application_data_length;
 
                 /* This is a Microsoft extended function. It happens before the device is configured. 
                    The request is passed to the application directly.  */
+                application_data_length = UX_SLAVE_REQUEST_CONTROL_MAX_LENGTH;
                 status = _ux_system_slave -> ux_system_slave_device_vendor_request_function(request, request_value, 
                                                                                             request_index, request_length, 
                                                                                             transfer_request -> ux_slave_transfer_request_data_pointer,
@@ -155,9 +163,9 @@ ULONG                       application_data_length;
     
                     /* Set the direction to OUT.  */
                     transfer_request -> ux_slave_transfer_request_phase =  UX_TRANSFER_PHASE_DATA_OUT;
-    
+
                     /* Perform the data transfer.  */
-                    _ux_device_stack_transfer_request(transfer_request, request_length, application_data_length);
+                    _ux_device_stack_transfer_request(transfer_request, application_data_length, request_length);
 
                     /* We are done here.  */
                     return(UX_SUCCESS);
@@ -187,6 +195,13 @@ ULONG                       application_data_length;
             for (class_index = 0; class_index < UX_MAX_SLAVE_INTERFACES; class_index ++)
             {
 
+                /* Get the class for the interface.  */
+                class =  _ux_system_slave -> ux_system_slave_interface_class_array[class_index];
+
+                /* If class is not ready, try next.  */
+                if (class == UX_NULL)
+                    continue;
+
                 /* Is the request target to an interface?  */
                 if ((request_type & UX_REQUEST_TARGET) == UX_REQUEST_TARGET_INTERFACE)
                 {
@@ -194,16 +209,15 @@ ULONG                       application_data_length;
                     /* Yes, so the request index contains the index of the interface 
                        the request is for. So if the current index does not match 
                        the request index, we should go to the next one.  */
-                    if ((request_index & 0xFF) != class_index)
-                    continue;
+                    /* For printer class (0x07) GET_DEVICE_ID (0x00) the high byte of 
+                       wIndex is interface index (for recommended index sequence the interface
+                       number is same as interface index inside configuration).  */
+                    if (((request_index & 0xFF) != class_index) ||
+                        ((class -> ux_slave_class_interface -> ux_slave_interface_descriptor.bInterfaceClass == 0x07) &&
+                         (request == 0x00) &&
+                         *(transfer_request -> ux_slave_transfer_request_setup + UX_SETUP_INDEX + 1) != class_index))
+                        continue;
                 }
-
-                /* Get the class for the interface.  */
-                class =  _ux_system_slave -> ux_system_slave_interface_class_array[class_index];
-
-                /* If class is not ready, try next.  */
-                if (class == UX_NULL)
-                    continue;
 
                 /* Memorize the class in the command.  */
                 class_command.ux_slave_class_command_class_ptr = class;

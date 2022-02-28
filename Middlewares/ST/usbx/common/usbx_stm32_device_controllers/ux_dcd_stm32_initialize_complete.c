@@ -12,8 +12,8 @@
 
 /**************************************************************************/
 /**************************************************************************/
-/**                                                                       */ 
-/** USBX Component                                                        */ 
+/**                                                                       */
+/** USBX Component                                                        */
 /**                                                                       */
 /**   STM32 Controller Driver                                             */
 /**                                                                       */
@@ -45,31 +45,31 @@
 /*                                                                        */
 /*  DESCRIPTION                                                           */
 /*                                                                        */
-/*    This function completes the initialization of the USB slave         */ 
+/*    This function completes the initialization of the USB slave         */
 /*    controller for the STM32 chip.                                      */
 /*                                                                        */
 /*  INPUT                                                                 */
 /*                                                                        */
-/*    None                                                                */ 
-/*                                                                        */ 
+/*    None                                                                */
+/*                                                                        */
 /*  OUTPUT                                                                */
 /*                                                                        */
-/*    Completion Status                                                   */ 
+/*    Completion Status                                                   */
 /*                                                                        */
-/*  CALLS                                                                 */ 
-/*                                                                        */ 
-/*    (ux_slave_dcd_function)               Process the DCD function      */ 
-/*    _ux_utility_descriptor_parse          Parse descriptor              */ 
-/*    _ux_utility_memory_allocate           Allocate memory               */ 
-/*                                                                        */ 
-/*  CALLED BY                                                             */ 
-/*                                                                        */ 
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    (ux_slave_dcd_function)               Process the DCD function      */
+/*    _ux_utility_descriptor_parse          Parse descriptor              */
+/*    _ux_utility_memory_allocate           Allocate memory               */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
 /*    STM32 Controller Driver                                             */
-/*                                                                        */ 
-/*  RELEASE HISTORY                                                       */ 
-/*                                                                        */ 
-/*    DATE              NAME                      DESCRIPTION             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            prefixed UX to MS_TO_TICK,  */
@@ -147,7 +147,7 @@ UX_SLAVE_TRANSFER       *transfer_request;
     transfer_request -> ux_slave_transfer_request_timeout =  UX_MS_TO_TICK(UX_CONTROL_TRANSFER_TIMEOUT);
 
     /* Adjust the current data pointer as well.  */
-    transfer_request -> ux_slave_transfer_request_current_data_pointer =  
+    transfer_request -> ux_slave_transfer_request_current_data_pointer =
                             transfer_request -> ux_slave_transfer_request_data_pointer;
 
     /* Update the transfer request endpoint pointer with the default endpoint.  */
@@ -158,7 +158,7 @@ UX_SLAVE_TRANSFER       *transfer_request;
                                 device -> ux_slave_device_descriptor.bMaxPacketSize0;
 
     /* On the control endpoint, always expect the maximum.  */
-    transfer_request -> ux_slave_transfer_request_requested_length =  
+    transfer_request -> ux_slave_transfer_request_requested_length =
                                 device -> ux_slave_device_descriptor.bMaxPacketSize0;
 
     /* Attach the control endpoint to the transfer request.  */
@@ -166,15 +166,17 @@ UX_SLAVE_TRANSFER       *transfer_request;
 
     /* Create the default control endpoint attached to the device.
        Once this endpoint is enabled, the host can then send a setup packet
-       The device controller will receive it and will call the setup function 
+       The device controller will receive it and will call the setup function
        module.  */
     dcd -> ux_slave_dcd_function(dcd, UX_DCD_CREATE_ENDPOINT,
                                     (VOID *) &device -> ux_slave_device_control_endpoint);
 
     /* Open Control OUT endpoint.  */
+    HAL_PCD_EP_Flush(dcd_stm32 -> pcd_handle, 0x00U);
     HAL_PCD_EP_Open(dcd_stm32 -> pcd_handle, 0x00U, device -> ux_slave_device_descriptor.bMaxPacketSize0, UX_CONTROL_ENDPOINT);
 
     /* Open Control IN endpoint.  */
+    HAL_PCD_EP_Flush(dcd_stm32 -> pcd_handle, 0x80U);
     HAL_PCD_EP_Open(dcd_stm32 -> pcd_handle, 0x80U, device -> ux_slave_device_descriptor.bMaxPacketSize0, UX_CONTROL_ENDPOINT);
 
     /* Ensure the control endpoint is properly reset.  */
@@ -184,7 +186,7 @@ UX_SLAVE_TRANSFER       *transfer_request;
     transfer_request -> ux_slave_transfer_request_type =  UX_TRANSFER_PHASE_SETUP;
 
     /* Mark this transfer request as pending.  */
-    transfer_request -> ux_slave_transfer_request_status =  UX_TRANSFER_STATUS_PENDING; 
+    transfer_request -> ux_slave_transfer_request_status =  UX_TRANSFER_STATUS_PENDING;
 
     /* Ask for 8 bytes of the SETUP packet.  */
     transfer_request -> ux_slave_transfer_request_requested_length =    UX_SETUP_SIZE;

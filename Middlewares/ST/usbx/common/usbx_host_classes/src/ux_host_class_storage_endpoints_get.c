@@ -35,7 +35,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_host_class_storage_endpoints_get                PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -69,6 +69,13 @@
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  10-15-2021     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            use pre-calculated value    */
+/*                                            instead of wMaxPacketSize,  */
+/*                                            resulting in version 6.1.9  */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            initial the timeout value,  */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_host_class_storage_endpoints_get(UX_HOST_CLASS_STORAGE *storage)
@@ -150,6 +157,14 @@ UX_ENDPOINT     *endpoint;
         return(UX_ENDPOINT_HANDLE_UNKNOWN);
     }
 
+    /* Set default transfer timeout value.  */
+    endpoint = storage -> ux_host_class_storage_bulk_in_endpoint;
+    endpoint -> ux_endpoint_transfer_request.ux_transfer_request_timeout_value =
+                UX_MS_TO_TICK_NON_ZERO(UX_HOST_CLASS_STORAGE_TRANSFER_TIMEOUT);
+    endpoint = storage -> ux_host_class_storage_bulk_out_endpoint;
+    endpoint -> ux_endpoint_transfer_request.ux_transfer_request_timeout_value =
+                UX_MS_TO_TICK_NON_ZERO(UX_HOST_CLASS_STORAGE_TRANSFER_TIMEOUT);
+
 #ifdef UX_HOST_CLASS_STORAGE_INCLUDE_LEGACY_PROTOCOL_SUPPORT
     /* Search the Interrupt IN endpoint. This endpoint is optional and only valid for
        storage devices that use the CBI protocol.  */
@@ -177,7 +192,7 @@ UX_ENDPOINT     *endpoint;
 
                 /* The size of the transfer is fixed to the endpoint size.  */
                 endpoint -> ux_endpoint_transfer_request.ux_transfer_request_requested_length =
-                                                                    endpoint -> ux_endpoint_descriptor.wMaxPacketSize;
+                                            endpoint -> ux_endpoint_transfer_request.ux_transfer_request_packet_length;
 
                 /* Get some memory for this data transfer.  */
                 endpoint -> ux_endpoint_transfer_request.ux_transfer_request_data_pointer =

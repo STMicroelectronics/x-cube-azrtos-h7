@@ -26,7 +26,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */ 
 /*                                                                        */ 
 /*    ux_host_class_dpump.h                               PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -43,11 +43,28 @@
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  08-02-2021     Wen Wang                 Modified comment(s),          */
+/*                                            added extern "C" keyword    */
+/*                                            for compatibility with C++, */
+/*                                            resulting in version 6.1.8  */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 
 #ifndef UX_HOST_CLASS_DPUMP_H
 #define UX_HOST_CLASS_DPUMP_H
+
+/* Determine if a C++ compiler is being used.  If so, ensure that standard 
+   C is used to process the API information.  */ 
+
+#ifdef   __cplusplus 
+
+/* Yes, C++ compiler is present.  Use standard C.  */ 
+extern   "C" { 
+
+#endif  
 
 
 /* Define Data Pump Class constants.  */
@@ -67,6 +84,10 @@
 
 #define    UX_HOST_CLASS_DPUMP_GENERIC_NAME                   "USB DPUMP"
 
+/* Define R/W lock bits for standalone mode.  */
+
+#define UX_HOST_CLASS_DPUMP_READ_LOCK                         (1u<<0)
+#define UX_HOST_CLASS_DPUMP_WRITE_LOCK                        (1u<<1)
 
 /* Define Printer Class function prototypes.  */
 
@@ -87,5 +108,11 @@ UINT    _ux_host_class_dpump_ioctl(UX_HOST_CLASS_DPUMP *dpump, ULONG ioctl_funct
 #define ux_host_class_dpump_read                                _ux_host_class_dpump_read
 #define ux_host_class_dpump_write                               _ux_host_class_dpump_write
 #define ux_host_class_dpump_ioctl                               _ux_host_class_dpump_ioctl
+
+/* Determine if a C++ compiler is being used.  If so, complete the standard 
+   C conditional started above.  */   
+#ifdef __cplusplus
+} 
+#endif 
 
 #endif

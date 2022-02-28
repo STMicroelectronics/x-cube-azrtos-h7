@@ -26,7 +26,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */ 
 /*                                                                        */ 
 /*    ux_host_class_hid.h                                 PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -47,11 +47,29 @@
 /*                                            them directly, fixed struct */
 /*                                            field definition issues,    */
 /*                                            resulting in version 6.1    */
+/*  08-02-2021     Wen Wang                 Modified comment(s),          */
+/*                                            added extern "C" keyword    */
+/*                                            for compatibility with C++, */
+/*                                            resulting in version 6.1.8  */
+/*  01-31-2022     Xiuwen Cai, CQ Xiao      Modified comment(s),          */
+/*                                            added interrupt OUT support,*/
+/*                                            added standalone mode,      */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 
 #ifndef UX_HOST_CLASS_HID_H
 #define UX_HOST_CLASS_HID_H
+
+/* Determine if a C++ compiler is being used.  If so, ensure that standard 
+   C is used to process the API information.  */ 
+
+#ifdef   __cplusplus 
+
+/* Yes, C++ compiler is present.  Use standard C.  */ 
+extern   "C" { 
+
+#endif  
 
 
 /* Define HID Class constants.  */
@@ -751,6 +769,14 @@
 #define UX_HOST_CLASS_HID_MAX_GLOBAL                            4
 #define UX_HOST_CLASS_HID_MAX_COLLECTION                        4
 
+/* Define HID flags.  */
+#define UX_HOST_CLASS_HID_FLAG_LOCK                             1ul
+#define UX_HOST_CLASS_HID_FLAG_PROTECT                          2ul
+
+#ifndef UX_HOST_CLASS_HID_REPORT_TRANSFER_TIMEOUT
+#define UX_HOST_CLASS_HID_REPORT_TRANSFER_TIMEOUT               10000
+#endif
+
 /* Define HID Class descriptor.  */
 
 typedef struct UX_HID_DESCRIPTOR_STRUCT
@@ -929,6 +955,9 @@ typedef struct UX_HOST_CLASS_HID_STRUCT
     UX_HOST_CLASS   *ux_host_class_hid_class;
     UX_DEVICE       *ux_host_class_hid_device;
     UX_ENDPOINT     *ux_host_class_hid_interrupt_endpoint;
+#if defined(UX_HOST_CLASS_HID_INTERRUPT_OUT_SUPPORT)
+    UX_ENDPOINT     *ux_host_class_hid_interrupt_out_endpoint;
+#endif
     UINT            ux_host_class_hid_interrupt_endpoint_status;
     UX_INTERFACE    *ux_host_class_hid_interface;
     ULONG           ux_host_class_hid_state;
@@ -938,8 +967,42 @@ typedef struct UX_HOST_CLASS_HID_STRUCT
                     ux_host_class_hid_parser;
     struct UX_HOST_CLASS_HID_CLIENT_STRUCT       
                     *ux_host_class_hid_client;
+#if !defined(UX_HOST_STANDALONE)
     UX_SEMAPHORE    ux_host_class_hid_semaphore;
+#else
+    ULONG           ux_host_class_hid_flags;
+    UCHAR           *ux_host_class_hid_allocated;
+    UINT            ux_host_class_hid_status;
+    UCHAR           ux_host_class_hid_enum_state;
+    UCHAR           ux_host_class_hid_next_state;
+    UCHAR           ux_host_class_hid_cmd_state;
+    UCHAR           reserved[1];
+#endif
 } UX_HOST_CLASS_HID;
+
+#if defined(UX_HOST_STANDALONE)
+#define _ux_host_class_hid_lock_fail_return(hid)                                \
+    UX_DISABLE                                                                  \
+    if (hid -> ux_host_class_hid_flags & UX_HOST_CLASS_HID_FLAG_LOCK)           \
+    {                                                                           \
+        UX_RESTORE                                                              \
+        status = UX_BUSY;                                                       \
+        return(status);                                                         \
+    }                                                                           \
+    hid -> ux_host_class_hid_flags |= UX_HOST_CLASS_HID_FLAG_LOCK;              \
+    UX_RESTORE
+#define _ux_host_class_hid_unlock(hid) do {                                     \
+        hid -> ux_host_class_hid_flags &= ~UX_HOST_CLASS_HID_FLAG_LOCK;         \
+    } while(0)
+#else
+#define _ux_host_class_hid_lock_fail_return(hid)                                \
+    status =  _ux_host_semaphore_get(&hid -> ux_host_class_hid_semaphore,       \
+                                    UX_WAIT_FOREVER);                           \
+    if (status != UX_SUCCESS)                                                   \
+        return(status);
+#define _ux_host_class_hid_unlock(hid)                                          \
+    _ux_host_semaphore_put(&hid -> ux_host_class_hid_semaphore);
+#endif
 
 
 /* Define HID Class client command format structure.  */
@@ -975,9 +1038,16 @@ typedef struct UX_HOST_CLASS_HID_CLIENT_STRUCT
 {
 
     ULONG           ux_host_class_hid_client_status;
+#if defined(UX_NAME_REFERENCED_BY_POINTER)
+    UCHAR           *ux_host_class_hid_client_name;
+#else
     UCHAR           ux_host_class_hid_client_name[UX_HOST_CLASS_HID_MAX_CLIENT_NAME_LENGTH + 1]; /* "+1" for string null-terminator */
+#endif
     UINT            (*ux_host_class_hid_client_handler) (struct UX_HOST_CLASS_HID_CLIENT_COMMAND_STRUCT *);
     VOID            *ux_host_class_hid_client_local_instance;  
+#if defined(UX_HOST_STANDALONE)
+    VOID            (*ux_host_class_hid_client_function)(struct UX_HOST_CLASS_HID_CLIENT_STRUCT *);
+#endif
 } UX_HOST_CLASS_HID_CLIENT;
 
 /* Define HID Class function prototypes.  */
@@ -1015,6 +1085,10 @@ UINT    _ux_host_class_hid_report_set(UX_HOST_CLASS_HID *hid, UX_HOST_CLASS_HID_
 UINT    _ux_host_class_hid_resources_free(UX_HOST_CLASS_HID *hid);
 VOID    _ux_host_class_hid_transfer_request_completed(UX_TRANSFER *transfer_request);
 
+UINT    _ux_host_class_hid_tasks_run(UX_HOST_CLASS *hid_class);
+UINT    _ux_host_class_hid_idle_set_run(UX_HOST_CLASS_HID *hid, USHORT idle_time, USHORT report_id);
+UINT    _ux_host_class_hid_report_set_run(UX_HOST_CLASS_HID *hid, UX_HOST_CLASS_HID_CLIENT_REPORT *client_report);
+
 /* Define HID Class API prototypes.  */
 
 #define ux_host_class_hid_client_register                   _ux_host_class_hid_client_register
@@ -1031,6 +1105,12 @@ VOID    _ux_host_class_hid_transfer_request_completed(UX_TRANSFER *transfer_requ
 #define ux_host_class_hid_report_get                        _ux_host_class_hid_report_get
 #define ux_host_class_hid_report_id_get                     _ux_host_class_hid_report_id_get
 #define ux_host_class_hid_report_set                        _ux_host_class_hid_report_set
+
+/* Determine if a C++ compiler is being used.  If so, complete the standard 
+   C conditional started above.  */   
+#ifdef __cplusplus
+} 
+#endif 
 
 #endif
 

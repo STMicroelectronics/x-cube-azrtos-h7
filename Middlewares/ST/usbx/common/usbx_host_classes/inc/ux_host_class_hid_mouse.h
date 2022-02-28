@@ -26,7 +26,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */ 
 /*                                                                        */ 
 /*    ux_host_class_hid_mouse.h                           PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -43,11 +43,28 @@
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  08-02-2021     Wen Wang                 Modified comment(s),          */
+/*                                            added extern "C" keyword    */
+/*                                            for compatibility with C++, */
+/*                                            resulting in version 6.1.8  */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 
 #ifndef UX_HOST_CLASS_HID_MOUSE_H
 #define UX_HOST_CLASS_HID_MOUSE_H
+
+/* Determine if a C++ compiler is being used.  If so, ensure that standard 
+   C is used to process the API information.  */ 
+
+#ifdef   __cplusplus 
+
+/* Yes, C++ compiler is present.  Use standard C.  */ 
+extern   "C" { 
+
+#endif  
 
 
 /* Define HID Mouse Class constants.  */
@@ -81,7 +98,10 @@ typedef struct UX_HOST_CLASS_HID_MOUSE_STRUCT
     SLONG           ux_host_class_hid_mouse_y_position;
     ULONG           ux_host_class_hid_mouse_buttons;
     SLONG           ux_host_class_hid_mouse_wheel;
-    
+#if defined(UX_HOST_STANDALONE)
+    UINT            ux_host_class_hid_mouse_enum_state;
+    UINT            ux_host_class_hid_mouse_status;
+#endif
     
 } UX_HOST_CLASS_HID_MOUSE;
 
@@ -105,5 +125,11 @@ UINT  _ux_host_class_hid_mouse_wheel_get(UX_HOST_CLASS_HID_MOUSE *mouse_instance
 #define ux_host_class_hid_mouse_buttons_get                 _ux_host_class_hid_mouse_buttons_get
 #define ux_host_class_hid_mouse_position_get                _ux_host_class_hid_mouse_position_get
 #define ux_host_class_hid_mouse_wheel_get                   _ux_host_class_hid_mouse_wheel_get
+
+/* Determine if a C++ compiler is being used.  If so, complete the standard 
+   C conditional started above.  */   
+#ifdef __cplusplus
+} 
+#endif 
 
 #endif
