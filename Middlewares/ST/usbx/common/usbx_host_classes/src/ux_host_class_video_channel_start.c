@@ -35,7 +35,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_host_class_video_channel_start                  PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -61,8 +61,8 @@
 /*                                          Select alternate setting      */
 /*    _ux_host_stack_interface_endpoint_get Get interface endpoint        */
 /*    _ux_host_stack_transfer_request       Process transfer request      */ 
-/*    _ux_utility_semaphore_get             Get semaphore                 */ 
-/*    _ux_utility_semaphore_put             Release semaphore             */ 
+/*    _ux_host_semaphore_get                Get semaphore                 */ 
+/*    _ux_host_semaphore_put                Release semaphore             */ 
 /*    _ux_utility_memory_allocate           Allocate memory block         */ 
 /*    _ux_utility_memory_free               Release memory block          */ 
 /*    _ux_utility_long_get                  Get 32-bit value              */
@@ -78,6 +78,13 @@
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  10-15-2021     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed bandwidth check,      */
+/*                                            saved max payload size,     */
+/*                                            resulting in version 6.1.9  */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            refined macros names,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_host_class_video_channel_start(UX_HOST_CLASS_VIDEO *video, UX_HOST_CLASS_VIDEO_PARAMETER_CHANNEL *video_parameter)
@@ -97,7 +104,7 @@ UINT                    max_payload_size;
 
 
     /* Protect thread reentry to this instance.  */
-    status =  _ux_utility_semaphore_get(&video -> ux_host_class_video_semaphore, UX_WAIT_FOREVER);
+    status =  _ux_host_semaphore_get(&video -> ux_host_class_video_semaphore, UX_WAIT_FOREVER);
 
     /* We need to get the default control endpoint transfer request pointer.  */
     control_endpoint =  &video -> ux_host_class_video_device -> ux_device_control_endpoint;
@@ -112,7 +119,7 @@ UINT                    max_payload_size;
     {
 
         /* Unprotect thread reentry to this instance.  */
-        status =  _ux_utility_semaphore_put(&video -> ux_host_class_video_semaphore);
+        status =  _ux_host_semaphore_put(&video -> ux_host_class_video_semaphore);
 
         /* Return error.  */        
         return(UX_MEMORY_INSUFFICIENT);
@@ -191,68 +198,76 @@ UINT                    max_payload_size;
                     /* Search for the non zero alternate setting of the video stream.  */
                     status =  _ux_host_class_video_alternate_setting_locate(video, max_payload_size, &alternate_setting);
 
-                    /* Now the Commit has been done, the alternate setting can be requested.  */
-                    /* We found the alternate setting for the sampling values demanded, now we need 
-                        to search its container.  */
-                    configuration =        video -> ux_host_class_video_streaming_interface -> ux_interface_configuration;
-                    interface =            configuration -> ux_configuration_first_interface;  
-
-                
-                    /* Scan all interfaces.  */
-                    while (interface != UX_NULL)     
+                    if (status == UX_SUCCESS)
                     {
-                
-                        /* We search for both the right interface and alternate setting.  */
-                        if ((interface -> ux_interface_descriptor.bInterfaceNumber == streaming_interface) &&
-                            (interface -> ux_interface_descriptor.bAlternateSetting == alternate_setting))
-                        {
-                            
-                            /* We have found the right interface/alternate setting combination 
-                               The stack will select it for us.  */
-                            status =  _ux_host_stack_interface_setting_select(interface);
-                            
-                            /* If the alternate setting for the streaming interface could be selected, we memorize it.  */
-                            if (status == UX_SUCCESS)
-                            {
-                
-                                /* Memorize the interface.  */
-                                video -> ux_host_class_video_streaming_interface =  interface;
-                
-                                /* We need to research the isoch endpoint now.  */
-                                for (endpoint_index = 0; endpoint_index < interface -> ux_interface_descriptor.bNumEndpoints; endpoint_index++)
-                                {                        
-                
-                                    /* Get the list of endpoints one by one.  */
-                                    status =  _ux_host_stack_interface_endpoint_get(video -> ux_host_class_video_streaming_interface,
-                                                                                                    endpoint_index, &endpoint);
-                
-                                    /* Check completion status.  */
-                                    if (status == UX_SUCCESS)
-                                    {
-                
-                                        /* Check if endpoint is ISOCH, regardless of the direction.  */
-                                        if ((endpoint -> ux_endpoint_descriptor.bmAttributes & UX_MASK_ENDPOINT_TYPE) == UX_ISOCHRONOUS_ENDPOINT)
-                                        {
-                
-                                            /* We have found the isoch endpoint, save it.  */
-                                            video -> ux_host_class_video_isochronous_endpoint =  endpoint;
-                
-                                            /* Free all used resources.  */
-                                            _ux_utility_memory_free(control_buffer);
 
-                                            /* Unprotect thread reentry to this instance.  */
-                                            status =  _ux_utility_semaphore_put(&video -> ux_host_class_video_semaphore);
-                
-                                            /* Return successful completion.  */
-                                            return(UX_SUCCESS);             
-                                        }
-                                    }                
-                                }            
+                        /* Now the Commit has been done, the alternate setting can be requested.  */
+                        /* We found the alternate setting for the sampling values demanded, now we need 
+                            to search its container.  */
+                        configuration = video -> ux_host_class_video_streaming_interface -> ux_interface_configuration;
+                        interface =     configuration -> ux_configuration_first_interface;  
+
+                        /* Scan all interfaces.  */
+                        while (interface != UX_NULL)     
+                        {
+                    
+                            /* We search for both the right interface and alternate setting.  */
+                            if ((interface -> ux_interface_descriptor.bInterfaceNumber == streaming_interface) &&
+                                (interface -> ux_interface_descriptor.bAlternateSetting == alternate_setting))
+                            {
+                                
+                                /* We have found the right interface/alternate setting combination 
+                                The stack will select it for us.  */
+                                status =  _ux_host_stack_interface_setting_select(interface);
+                                
+                                /* If the alternate setting for the streaming interface could be selected, we memorize it.  */
+                                if (status == UX_SUCCESS)
+                                {
+                    
+                                    /* Memorize the interface.  */
+                                    video -> ux_host_class_video_streaming_interface =  interface;
+                    
+                                    /* We need to research the isoch endpoint now.  */
+                                    for (endpoint_index = 0; endpoint_index < interface -> ux_interface_descriptor.bNumEndpoints; endpoint_index++)
+                                    {                        
+                    
+                                        /* Get the list of endpoints one by one.  */
+                                        status =  _ux_host_stack_interface_endpoint_get(video -> ux_host_class_video_streaming_interface,
+                                                                                                        endpoint_index, &endpoint);
+                    
+                                        /* Check completion status.  */
+                                        if (status == UX_SUCCESS)
+                                        {
+                    
+                                            /* Check if endpoint is ISOCH, regardless of the direction.  */
+                                            if ((endpoint -> ux_endpoint_descriptor.bmAttributes & UX_MASK_ENDPOINT_TYPE) == UX_ISOCHRONOUS_ENDPOINT)
+                                            {
+                    
+                                                /* We have found the isoch endpoint, save it.  */
+                                                video -> ux_host_class_video_isochronous_endpoint =  endpoint;
+
+                                                /* Save the max payload size.
+                                                It's not exceeding endpoint bandwidth since the interface alternate
+                                                setting is located by max payload size.  */
+                                                video -> ux_host_class_video_current_max_payload_size = max_payload_size;
+                    
+                                                /* Free all used resources.  */
+                                                _ux_utility_memory_free(control_buffer);
+
+                                                /* Unprotect thread reentry to this instance.  */
+                                                status =  _ux_host_semaphore_put(&video -> ux_host_class_video_semaphore);
+                    
+                                                /* Return successful completion.  */
+                                                return(UX_SUCCESS);             
+                                            }
+                                        }                
+                                    }            
+                                }
                             }
+                    
+                            /* Move to next interface.  */
+                            interface =  interface -> ux_interface_next_interface;
                         }
-                
-                        /* Move to next interface.  */
-                        interface =  interface -> ux_interface_next_interface;
                     }
                 }
             }
@@ -262,7 +277,7 @@ UINT                    max_payload_size;
     _ux_utility_memory_free(control_buffer);
 
     /* Unprotect thread reentry to this instance.  */
-    _ux_utility_semaphore_put(&video -> ux_host_class_video_semaphore);
+    _ux_host_semaphore_put(&video -> ux_host_class_video_semaphore);
 
     /* Return completion status.  */
     return(status);

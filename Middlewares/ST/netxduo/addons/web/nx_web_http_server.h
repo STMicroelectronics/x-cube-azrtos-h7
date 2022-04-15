@@ -27,7 +27,7 @@
 /*  APPLICATION INTERFACE DEFINITION                       RELEASE        */
 /*                                                                        */
 /*    nx_web_http_server.h                                PORTABLE C      */
-/*                                                           6.1.6        */
+/*                                                           6.1.9        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -50,6 +50,13 @@
 /*                                            improved the logic of       */
 /*                                            parsing base64,             */
 /*                                            resulting in version 6.1.6  */
+/*  08-02-2021     Yuxin Zhou               Modified comment(s), and      */
+/*                                            improved the logic of       */
+/*                                            converting number to string,*/
+/*                                            resulting in version 6.1.8  */
+/*  10-15-2021     Yuxin Zhou               Modified comment(s), and      */
+/*                                            deprecated unused macros,   */
+/*                                            resulting in version 6.1.9  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -138,6 +145,7 @@ extern   "C" {
 #define NX_WEB_HTTP_SERVER_MAX_PENDING          (NX_WEB_HTTP_SERVER_SESSION_MAX << 1)
 #endif
 
+/* Deprecated. This symbol is defined for compatibility. */
 #ifndef NX_WEB_HTTP_SERVER_THREAD_TIME_SLICE
 #define NX_WEB_HTTP_SERVER_THREAD_TIME_SLICE    2
 #endif
@@ -557,7 +565,6 @@ UINT        _nx_web_http_server_basic_authenticate(NX_WEB_HTTP_SERVER *server_pt
 UINT        _nx_web_http_server_retrieve_basic_authorization(NX_PACKET *packet_ptr, CHAR *authorization_request_ptr);
 UINT        _nx_web_http_server_retrieve_resource(NX_WEB_HTTP_SERVER *server_ptr, NX_PACKET *packet_ptr, CHAR *destination, UINT max_size);
 UINT        _nx_web_http_server_calculate_content_offset(NX_PACKET *packet_ptr);
-UINT        _nx_web_http_server_number_convert(UINT number, CHAR *string);
 UINT        _nx_web_http_server_type_get(NX_WEB_HTTP_SERVER *server_ptr, CHAR *name, CHAR *http_type_string, UINT *string_size);
 UINT        _nx_web_http_server_type_get_extended(NX_WEB_HTTP_SERVER *server_ptr, CHAR *name, UINT name_length,
                                                   CHAR *http_type_string, UINT http_type_string_max_size, UINT *string_size);

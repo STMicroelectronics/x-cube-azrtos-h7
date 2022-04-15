@@ -85,19 +85,11 @@ extern   "C" {
 /* Define the number of descriptors and attached packets for transmit and receive operations. */
 
 #ifndef NX_DRIVER_TX_DESCRIPTORS
-#ifdef STM32_ETH_HAL_LEGACY
-#define NX_DRIVER_TX_DESCRIPTORS   ETH_TXBUFNB
-#else
 #define NX_DRIVER_TX_DESCRIPTORS   ETH_TX_DESC_CNT
-#endif
 #endif
 
 #ifndef NX_DRIVER_RX_DESCRIPTORS
-#ifdef STM32_ETH_HAL_LEGACY
-#define NX_DRIVER_RX_DESCRIPTORS   ETH_RXBUFNB
-#else
 #define NX_DRIVER_RX_DESCRIPTORS   ETH_RX_DESC_CNT
-#endif
 #endif
 
 /****** DRIVER SPECIFIC ****** End of part/vendor specific constant area!  */
@@ -113,11 +105,6 @@ extern   "C" {
                                NX_INTERFACE_CAPABILITY_ICMPV6_TX_CHECKSUM | \
                                NX_INTERFACE_CAPABILITY_ICMPV6_RX_CHECKSUM )
 
-/* Define the duplex mode for Legacy. */
-#ifdef STM32_ETH_HAL_LEGACY
-#define ETH_FULLDUPLEX_MODE   ETH_MODE_FULLDUPLEX
-#define ETH_HALFDUPLEX_MODE   ETH_MODE_HALFDUPLEX
-#endif
 
 /* Define basic Ethernet driver information typedef. Note that this typedefs is designed to be used only
    in the driver's C file. */
@@ -152,11 +139,6 @@ typedef struct NX_DRIVER_INFORMATION_STRUCT
 
     /* Define the number of transmit buffers in use.  */
     UINT                nx_driver_information_number_of_transmit_buffers_in_use;
-
-#ifdef STM32_ETH_HAL_LEGACY
-    ETH_DMADescTypeDef  nx_driver_information_dma_rx_descriptors[NX_DRIVER_RX_DESCRIPTORS];
-    ETH_DMADescTypeDef  nx_driver_information_dma_tx_descriptors[NX_DRIVER_TX_DESCRIPTORS];
-#endif
 
     /* Define the association between buffer descriptors and NetX packets.  */
     NX_PACKET           *nx_driver_information_transmit_packets[NX_DRIVER_TX_DESCRIPTORS];

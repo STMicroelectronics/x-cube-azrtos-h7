@@ -83,6 +83,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr);
 #define DEFAULT_MEMORY_SIZE      1024
 #define DEFAULT_PRIORITY         10
 #define WINDOW_SIZE              512
+#define LINK_PRIORITY            11
 
 #define NULL_ADDRESS             0
 

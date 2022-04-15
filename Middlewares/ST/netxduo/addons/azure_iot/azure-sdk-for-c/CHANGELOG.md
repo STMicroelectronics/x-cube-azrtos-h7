@@ -1,5 +1,85 @@
 # Release History
 
+## 1.2.0 (2021-09-08)
+
+### Features Added
+
+- Add `az_iot_provisioning_client_get_request_payload()` to create MQTT payload bodies during Device Provisioning.
+- This version provides new APIs to follow the IoT Plug and Play convention to implement Telemetry, Commands, Properties and Components defined in a DTDL model.
+  - To read/write properties, the SDK now provides functions to produce the right payload for components, as shown in the header `azure/iot/az_iot_hub_client_properties.h`.
+  - To send telemetry messages, the required header is added to identify components.
+  - When responding to a command invocation the component name is automatically parsed and provided when available.
+  - All new samples follow the IoT Plug and Play convention and can be connected to IoT Hub (with or without DPS), or IoT Central.
+
+### Bugs Fixed
+
+- [[#1905]](https://github.com/Azure/azure-sdk-for-c/pull/1905) Fix the internal state of the JSON writer during calls to `az_json_writer_append_json_text()` by taking into account the required buffer space for commas. (A community contribution, courtesy of _[hwmaier](https://github.com/hwmaier)_)
+
+### Acknowledgments
+
+Thank you to our developer community members who helped to make Azure SDK for C better with their contributions to this release:
+
+- Henrik Maier _([GitHub](https://github.com/hwmaier))_
+
+## 1.2.0-beta.1 (2021-07-09)
+
+### New Features
+
+- Added a current depth field to the JSON reader.
+- Added base64 encoding and decoding APIs that accept `az_span`, available from the `azure/core/az_base64.h` header.
+- Public preview version of a new set of APIs to simplify the experience using Azure IoT Plug and Play. To consume this new feature, the `az::iot::hub` CMake target has been updated. The APIs can be found in the header files: `az_iot_hub_client.h` and `az_iot_hub_client_properties.h`.
+- New samples showing how to consume the new IoT Plug and Play APIs:
+  - paho_iot_pnp_component_sample.c
+  - paho_iot_pnp_sample.c
+  - paho_iot_pnp_with_provisioning_sample.c
+
+### Bug Fixes
+
+- [[#1640]](https://github.com/Azure/azure-sdk-for-c/pull/1640) Update precondition on `az_iot_provisioning_client_parse_received_topic_and_payload()` to require topic and payload minimum size of 1 instead of 0.
+- [[#1699]](https://github.com/Azure/azure-sdk-for-c/pull/1699) Update precondition on `az_iot_message_properties_init()` to not allow `written_length` larger than the passed span.
+
+## 1.1.0 (2021-03-09)
+
+### Breaking Changes
+
+- Compared to the previous 1.0.0 release, there are **no** breaking changes.
+- Removed `az_iot_pnp_client.h`, which included some beta APIs related to IoT Plug and Play such as `az_iot_pnp_client()`.
+  - These will ship in a future release (1.2.0).
+
+### Bug Fixes
+
+- [[#1600]](https://github.com/Azure/azure-sdk-for-c/pull/1600) Make sure `az_json_writer_append_json_text()` appends a comma between elements of a JSON array.
+- [[#1580]](https://github.com/Azure/azure-sdk-for-c/pull/1580) Fix build on Ubuntu 18.04 by updating CMake policy and MSVC runtime libraries.
+
+## 1.1.0-beta.2 (2020-11-11)
+
+### Bug Fixes
+
+- [[#1472]](https://github.com/Azure/azure-sdk-for-c/pull/1472) Fix `az_iot_message_properties_next()` when the buffer in which the properties were kept was bigger than the length of characters in the buffer.
+
+### Other Changes and Improvements
+
+- [[#1473]](https://github.com/Azure/azure-sdk-for-c/pull/1473) Add remote server certificate validation on paho and ESP8266 samples.
+- [[#1449]](https://github.com/Azure/azure-sdk-for-c/pull/1449) Add basic reconnection capability for the ESP8266 sample.
+- [[#1490]](https://github.com/Azure/azure-sdk-for-c/pull/1490) Fix static analyzer flagging of non-checked return value in `az_iot_hub_client_c2d_parse_received_topic()`.
+
+## 1.1.0-beta.1 (2020-10-06)
+
+### New Features
+
+- Added an `az_log_classification_filter_fn` callback function type along with a setter `az_log_set_classification_filter_callback()`, allowing the caller to filter log messages.
+
+### Bug Fixes
+
+- Fix bounds check while processing incomplete JSON string containing escaped characters to avoid out-of-range access.
+- Fix Windows to use /MT when building the CRT and static libraries.
+- Fail gracefully on invalid/incomplete HTTP response processing by avoiding reading from size 0 span.
+
+### Other Changes and Improvements
+
+- Add precondition check to validate clients are initialized before passed in to public APIs.
+- Add high-level and simplified az_core.h and az_iot.h files for simpler include experience for customers.
+
 ## 1.0.0 (2020-09-21)
 
 ### Breaking Changes
@@ -148,4 +228,4 @@
 
 ## 1.0.0-preview.1 (2020-05-12)
 
-Initial release. Please see the [README](https://github.com/Azure/azure-sdk-for-c/blob/master/README.md) for more information.
+Initial release. Please see the [README](https://github.com/Azure/azure-sdk-for-c/blob/main/README.md) for more information.

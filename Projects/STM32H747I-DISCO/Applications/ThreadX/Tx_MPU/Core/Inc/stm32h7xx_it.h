@@ -1,12 +1,13 @@
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    Templates/BootCM4_CM7/CM7/Inc/stm32h7xx_it.h
+  * @file    ThreadX/Core/Inc/stm32h7xx_it.h
   * @author  MCD Application Team
   * @brief   This file contains the headers of the interrupt handlers for Cortex-M7.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2019-2021 STMicroelectronics.
+  * Copyright (c) 2020-2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -15,6 +16,7 @@
   *
   ******************************************************************************
   */
+/* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32H7xx_IT_H

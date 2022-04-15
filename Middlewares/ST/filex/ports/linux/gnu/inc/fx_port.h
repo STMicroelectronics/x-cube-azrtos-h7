@@ -26,7 +26,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */ 
 /*                                                                        */ 
 /*    fx_port.h                                           Linux/GCC       */ 
-/*                                                           6.1.5        */
+/*                                                           6.1.8        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -48,6 +48,8 @@
 /*  03-02-2021     William E. Lamie         Modified comment(s), and      */
 /*                                            added standalone support,   */
 /*                                            resulting in version 6.1.5  */
+/*  08-02-2021     William E. Lamie         Modified comment(s),          */
+/*                                            resulting in version 6.1.8  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -338,7 +340,7 @@ extern VOID fault_tolerant_apply_log_callback(struct FX_MEDIA_STRUCT *media_ptr,
 
 #ifdef FX_SYSTEM_INIT
 CHAR                            _fx_version_id[] = 
-                                    "Copyright (c) Microsoft Corporation. All rights reserved.  *  FileX Linux/GCC Version 6.1.5 *";
+                                    "Copyright (c) Microsoft Corporation. All rights reserved.  *  FileX Linux/GCC Version 6.1.10 *";
 #else
 extern  CHAR                    _fx_version_id[];
 #endif

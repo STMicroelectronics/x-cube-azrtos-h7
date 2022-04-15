@@ -21,13 +21,12 @@
 *****************************************************************************
 ** @attention
 **
-** <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
-** All rights reserved.</center></h2>
+** Copyright (c) 2021 STMicroelectronics.
+** All rights reserved.
 **
-** This software component is licensed by ST under BSD 3-Clause license,
-** the "License"; You may not use this file except in compliance with the
-** License. You may obtain a copy of the License at:
-**                        opensource.org/licenses/BSD-3-Clause
+** This software is licensed under terms that can be found in the LICENSE file
+** in the root directory of this software component.
+** If no LICENSE file comes with this software, it is provided AS-IS.
 **
 ****************************************************************************
 */
@@ -36,7 +35,7 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-_estack = ORIGIN(RAM_D1) + LENGTH(RAM_D1);    /* end of RAM */
+_estack = ORIGIN(DTCMRAM) + LENGTH(DTCMRAM);    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x200 ;      /* required amount of heap  */
 _Min_Stack_Size = 0x400 ; /* required amount of stack */
@@ -134,7 +133,7 @@ SECTIONS
 
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
-  } >RAM_D1 AT> FLASH
+  } >DTCMRAM AT> FLASH
 
   /* Uninitialized data section */
   . = ALIGN(4);
@@ -150,7 +149,7 @@ SECTIONS
     . = ALIGN(4);
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
-  } >RAM_D1
+  } >DTCMRAM
 
   /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :
@@ -161,7 +160,7 @@ SECTIONS
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
-  } >RAM_D1
+  } >DTCMRAM
 
   /* Remove information from the standard libraries */
   /DISCARD/ :

@@ -36,7 +36,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_utility_exFAT_system_area_format                PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -76,6 +76,9 @@
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Bhupendra Naphade        Modified comment(s), replaced */
+/*                                            sector size constant,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_utility_exFAT_system_area_format(FX_MEDIA *media_ptr, ULONG boundary_unit,
@@ -91,7 +94,7 @@ UCHAR *system_area_buffer  = NULL;
 
 
     /* Is the memory size large enough?  */
-    if (memory_size < FX_BOOT_SECTOR_SIZE)
+    if (memory_size < media_ptr -> fx_media_bytes_per_sector)
     {
 
         /* No, return an error.  */
@@ -105,18 +108,18 @@ UCHAR *system_area_buffer  = NULL;
     boundary_unit = ALIGN_UP(boundary_unit, 128);
 
     /* Clear work buffer.  */
-    _fx_utility_memory_set(system_area_buffer, 0x00, FX_BOOT_SECTOR_SIZE);
+    _fx_utility_memory_set(system_area_buffer, 0x00, media_ptr -> fx_media_bytes_per_sector);
 
     /* Add signature to System area sectors without boot, OEM, reserved and checksum sector.  */
-    system_area_buffer[FX_SIG_OFFSET + 0] =  FX_SIG_BYTE_1;
-    system_area_buffer[FX_SIG_OFFSET + 1] =  FX_SIG_BYTE_2;
+    system_area_buffer[media_ptr -> fx_media_bytes_per_sector - 2] =  FX_SIG_BYTE_1;
+    system_area_buffer[media_ptr -> fx_media_bytes_per_sector - 1] =  FX_SIG_BYTE_2;
 
     /* Loop to write all the extended boot sectors.  */
     for (counter = 0; counter < (FX_EXFAT_FAT_OEM_PARAM_OFFSET - FX_EXFAT_FAT_EXT_BOOT_SECTOR_OFFSET); counter++)
     {
 
         /* Loop to calculate the checksum for System Area  */
-        for (i = 0; i < FX_BOOT_SECTOR_SIZE; i++)
+        for (i = 0; i < media_ptr -> fx_media_bytes_per_sector; i++)
         {
 
             /* Calculate the checksum using the algorithm specified in the specification.  */
@@ -150,8 +153,8 @@ UCHAR *system_area_buffer  = NULL;
     }
 
     /* Add OEM - Flash parameters.  */
-    system_area_buffer[FX_SIG_OFFSET + 0] = 0;
-    system_area_buffer[FX_SIG_OFFSET + 1] = 0;
+    system_area_buffer[media_ptr -> fx_media_bytes_per_sector - 2] = 0;
+    system_area_buffer[media_ptr -> fx_media_bytes_per_sector - 1] = 0;
 
     /* GUID 0A0C7E46-3399-4021-90C8-FA6D389C4BA2 */
     _fx_utility_32_unsigned_write(&(system_area_buffer[sector_offset]), 0x0A0C7E46);
@@ -188,7 +191,7 @@ UCHAR *system_area_buffer  = NULL;
     }
 
     /* Loop to calculate checksum for System Area.  */
-    for (counter = 0; counter < FX_BOOT_SECTOR_SIZE; counter++)
+    for (counter = 0; counter < media_ptr -> fx_media_bytes_per_sector; counter++)
     {
 
         /* Calculate the checksum using the algorithm specified in the specification.  */
@@ -198,10 +201,10 @@ UCHAR *system_area_buffer  = NULL;
     }
 
     /* Clear work buffer.  */
-    _fx_utility_memory_set(system_area_buffer, 0x00, FX_BOOT_SECTOR_SIZE);
+    _fx_utility_memory_set(system_area_buffer, 0x00, media_ptr -> fx_media_bytes_per_sector);
 
     /* Loop to calculate checksum for System Area.  */
-    for (counter = 0; counter < FX_BOOT_SECTOR_SIZE; counter++)
+    for (counter = 0; counter < media_ptr -> fx_media_bytes_per_sector; counter++)
     {
 
         /* Calculate the checksum using the algorithm specified in the specification.  */

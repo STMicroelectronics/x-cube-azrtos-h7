@@ -36,7 +36,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_media_boot_info_extract                         PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -110,6 +110,9 @@
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Bhupendra Naphade        Modified comment(s), added    */
+/*                                            check for bimap cache size, */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_media_boot_info_extract(FX_MEDIA *media_ptr)
@@ -137,6 +140,12 @@ UCHAR *boot_sector;
         }
 
         media_ptr -> fx_media_bytes_per_sector = (UINT)(1 << media_ptr -> fx_media_exfat_bytes_per_sector_shift);
+
+        /* Validate bytes per sector value: no more than bitmap cache size */
+        if (media_ptr -> fx_media_bytes_per_sector > sizeof(media_ptr -> fx_media_exfat_bitmap_cache))
+        {
+            return(FX_NOT_ENOUGH_MEMORY);
+        }
 
         media_ptr -> fx_media_total_sectors = _fx_utility_64_unsigned_read(&boot_sector[FX_EF_VOLUME_LENGTH]);
         if (media_ptr -> fx_media_total_sectors == 0)

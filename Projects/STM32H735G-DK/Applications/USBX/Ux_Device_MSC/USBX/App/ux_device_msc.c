@@ -37,7 +37,7 @@
 /* USER CODE BEGIN PD */
 #define SD_READ_FLAG                         0x01
 #define SD_WRITE_FLAG                        0x02
-#define SD_TIMEOUT                           100
+#define SD_TIMEOUT                           100U
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -52,7 +52,7 @@
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-static int32_t check_sd_status(uint32_t instance);
+static int32_t check_sd_status(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -90,7 +90,7 @@ UINT STORAGE_Read(VOID *storage, ULONG lun, UCHAR *data_pointer,
   if (BSP_SD_IsDetected(SD_INSTANCE) != SD_NOT_PRESENT)
   {
     /* Check id SD card is ready */
-    if(check_sd_status(SD_INSTANCE) != BSP_ERROR_NONE)
+    if(check_sd_status() != BSP_ERROR_NONE)
     {
       Error_Handler();
     }
@@ -135,7 +135,7 @@ UINT STORAGE_Write(VOID *storage, ULONG lun, UCHAR *data_pointer,
   if (BSP_SD_IsDetected(SD_INSTANCE) != SD_NOT_PRESENT)
   {
     /* Check id SD card is ready */
-    if(check_sd_status(SD_INSTANCE) != BSP_ERROR_NONE)
+    if(check_sd_status() != BSP_ERROR_NONE)
     {
       Error_Handler();
     }
@@ -192,13 +192,13 @@ void BSP_SD_ReadCpltCallback(uint32_t Instance)
   * @param Instance
   * @retval BSP_ERROR_NONE, BSP_ERROR_BUSY
   */
-static int32_t check_sd_status(uint32_t Instance)
+static int32_t check_sd_status(void)
 {
   uint32_t start = tx_time_get();
 
   while (tx_time_get() - start < SD_TIMEOUT)
   {
-    if (BSP_SD_GetCardState(Instance) == SD_TRANSFER_OK)
+    if (BSP_SD_GetCardState(SD_INSTANCE) == SD_TRANSFER_OK)
     {
       return BSP_ERROR_NONE;
     }

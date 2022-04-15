@@ -30,12 +30,17 @@
 #include "ux_dcd_stm32.h"
 #include "ux_device_stack.h"
 
+
+#if defined(UX_DEVICE_STANDALONE)
+extern VOID     _ux_dcd_stm32_setup_isr_pending(UX_DCD_STM32 *);
+#endif
+
 /**************************************************************************/
 /*                                                                        */
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_dcd_stm32_function                              PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -78,12 +83,15 @@
 /*                                            HAL library to drive the    */
 /*                                            controller,                 */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_dcd_stm32_function(UX_SLAVE_DCD *dcd, UINT function, VOID *parameter)
 {
 
-UINT            status = 0U;
+UINT             status;
 UX_DCD_STM32     *dcd_stm32;
 
 
@@ -114,7 +122,15 @@ UX_DCD_STM32     *dcd_stm32;
 
     case UX_DCD_TRANSFER_REQUEST:
 
+#if defined(UX_DEVICE_STANDALONE)
+        status =  _ux_dcd_stm32_transfer_run(dcd_stm32, (UX_SLAVE_TRANSFER *) parameter);
+#else
         status =  _ux_dcd_stm32_transfer_request(dcd_stm32, (UX_SLAVE_TRANSFER *) parameter);
+#endif /* defined(UX_DEVICE_STANDALONE) */
+        break;
+
+    case UX_DCD_TRANSFER_ABORT:
+        status = _ux_dcd_stm32_transfer_abort(dcd_stm32, parameter);
         break;
 
     case UX_DCD_CREATE_ENDPOINT:
@@ -149,6 +165,10 @@ UX_DCD_STM32     *dcd_stm32;
           /* Disconnect the USB device */
           status =  HAL_PCD_Stop(dcd_stm32 -> pcd_handle);
         }
+        else
+        {
+          status = UX_SUCCESS;
+        }
 
         break;
 
@@ -156,6 +176,14 @@ UX_DCD_STM32     *dcd_stm32;
 
         status =  _ux_dcd_stm32_endpoint_status(dcd_stm32, (ULONG) parameter);
         break;
+
+#if defined(UX_DEVICE_STANDALONE)
+    case UX_DCD_ISR_PENDING:
+
+        _ux_dcd_stm32_setup_isr_pending(dcd_stm32);
+        status = UX_SUCCESS;
+        break;
+#endif /* defined(UX_DEVICE_STANDALONE) */
 
     default:
 

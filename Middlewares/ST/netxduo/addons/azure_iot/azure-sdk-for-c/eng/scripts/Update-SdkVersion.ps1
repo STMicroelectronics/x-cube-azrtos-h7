@@ -3,7 +3,7 @@
 Bumps up sdk version after release
 
 .DESCRIPTION
-This script bumps up the sdk version found in az_version.h following conventions defined at https://github.com/Azure/azure-sdk/blob/master/docs/policies/releases.md#incrementing-after-release-c
+This script bumps up the sdk version found in az_version.h following conventions defined at https://github.com/Azure/azure-sdk/blob/main/docs/policies/releases.md#incrementing-after-release-c
 We use the version number defined in AZ_SDK_VERSION_STRING, and then overwrite other #defines
 
 .PARAMETER NewVersionString
@@ -29,7 +29,7 @@ Param (
 . ${PSScriptRoot}\SdkVersion-Common.ps1
 
 # Updated Version in version file and changelog using computed or set NewVersionString
-function Update-Version([AzureEngSemanticVersion]$SemVer, $Unreleased=$True, $ReplaceVersion=$False)
+function Update-Version([AzureEngSemanticVersion]$SemVer, $Unreleased=$True, $ReplaceLatestEntryTitle=$False)
 {
     Write-Output "New Version: $($SemVer)"
     # if ($SemVer.HasValidPrereleaseLabel() -ne $true){
@@ -53,7 +53,7 @@ function Update-Version([AzureEngSemanticVersion]$SemVer, $Unreleased=$True, $Re
      Set-Content -Path $SdkVersionPath -NoNewline
 
     # Increment Version in ChangeLog file
-    & "${PSScriptRoot}/../common/Update-Change-Log.ps1" -Version $SemVer.ToString() -ChangeLogPath $ChangelogPath -Unreleased $Unreleased -ReplaceVersion $ReplaceVersion
+    & "${PSScriptRoot}/../common/scripts/Update-ChangeLog.ps1" -Version $SemVer.ToString() -ChangeLogPath $ChangelogPath -Unreleased $Unreleased -ReplaceLatestEntryTitle $ReplaceLatestEntryTitle
 }
 
 
@@ -72,5 +72,5 @@ else
 {
     # Use specified VersionString
     $SemVer = [AzureEngSemanticVersion]::new($NewVersionString)
-    Update-Version -SemVer $SemVer -Unreleased $False -ReplaceVersion $True
+    Update-Version -SemVer $SemVer -Unreleased $False -ReplaceLatestEntryTitle $True
 }

@@ -39,17 +39,6 @@ target_link_libraries(az_iot_sample_common
     OpenSSL::Crypto
 )
 
-# Workaround for linker warning LNK4098: defaultlib 'LIBCMTD' conflicts with use of other libs
-if (MSVC)
-    set_target_properties(az_iot_sample_common
-        PROPERTIES
-        LINK_FLAGS
-        "/NODEFAULTLIB:libcmtd.lib"
-        LINK_FLAGS_RELEASE
-        "/NODEFAULTLIB:libcmt.lib"
-    )
-endif()
-
 add_library (az::iot::sample::common ALIAS az_iot_sample_common)
 
 # Azure IoT Samples Executables
@@ -64,6 +53,8 @@ target_link_libraries(paho_iot_hub_c2d_sample
     az::iot::sample::common
 )
 
+create_map_file(paho_iot_hub_c2d_sample paho_iot_hub_c2d_sample.map)
+
 # Methods Sample
 add_executable (paho_iot_hub_methods_sample
   ${CMAKE_CURRENT_LIST_DIR}/paho_iot_hub_methods_sample.c
@@ -74,35 +65,7 @@ target_link_libraries(paho_iot_hub_methods_sample
     az::iot::sample::common
 )
 
-# PnP Sample
-add_executable (paho_iot_hub_pnp_sample
-  ${CMAKE_CURRENT_LIST_DIR}/paho_iot_hub_pnp_sample.c
-)
-
-target_link_libraries(paho_iot_hub_pnp_sample
-  PRIVATE
-    az::iot::sample::common
-)
-
-# PnP Component Sample
-add_executable (paho_iot_hub_pnp_component_sample
-  ${CMAKE_CURRENT_LIST_DIR}/pnp/pnp_mqtt_message.c
-  ${CMAKE_CURRENT_LIST_DIR}/pnp/pnp_device_info_component.c
-  ${CMAKE_CURRENT_LIST_DIR}/pnp/pnp_protocol.c
-  ${CMAKE_CURRENT_LIST_DIR}/pnp/pnp_thermostat_component.c
-  ${CMAKE_CURRENT_LIST_DIR}/paho_iot_hub_pnp_component_sample.c
-)
-
-# SDK deps
-target_link_libraries(paho_iot_hub_pnp_component_sample
-  PRIVATE
-    az::iot::sample::common
-)
-
-target_include_directories(paho_iot_hub_pnp_component_sample
-  PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}
-)
+create_map_file(paho_iot_hub_methods_sample paho_iot_hub_methods_sample.map)
 
 # Telemetry (Certificates) Sample
 add_executable (paho_iot_hub_telemetry_sample
@@ -114,6 +77,8 @@ target_link_libraries(paho_iot_hub_telemetry_sample
     az::iot::sample::common
 )
 
+create_map_file(paho_iot_hub_telemetry_sample paho_iot_hub_telemetry_sample.map)
+
 # Telemetry (SAS) Sample
 add_executable (paho_iot_hub_sas_telemetry_sample
   ${CMAKE_CURRENT_LIST_DIR}/paho_iot_hub_sas_telemetry_sample.c
@@ -123,6 +88,8 @@ target_link_libraries(paho_iot_hub_sas_telemetry_sample
   PRIVATE
     az::iot::sample::common
 )
+
+create_map_file(paho_iot_hub_sas_telemetry_sample paho_iot_hub_sas_telemetry_sample.map)
 
 # Twin Sample
 add_executable (paho_iot_hub_twin_sample
@@ -134,6 +101,56 @@ target_link_libraries(paho_iot_hub_twin_sample
     az::iot::sample::common
 )
 
+create_map_file(paho_iot_hub_twin_sample paho_iot_hub_twin_sample.map)
+
+# PnP Component Sample
+add_executable (paho_iot_pnp_component_sample
+  ${CMAKE_CURRENT_LIST_DIR}/pnp/pnp_mqtt_message.c
+  ${CMAKE_CURRENT_LIST_DIR}/pnp/pnp_device_info_component.c
+  ${CMAKE_CURRENT_LIST_DIR}/pnp/pnp_thermostat_component.c
+  ${CMAKE_CURRENT_LIST_DIR}/pnp/pnp_temperature_controller_component.c
+  ${CMAKE_CURRENT_LIST_DIR}/paho_iot_pnp_component_sample.c
+)
+
+# SDK deps
+target_link_libraries(paho_iot_pnp_component_sample
+  PRIVATE
+    az::iot::sample::common
+)
+
+target_include_directories(paho_iot_pnp_component_sample
+  PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}
+)
+
+create_map_file(paho_iot_pnp_component_sample paho_iot_pnp_component_sample.map)
+
+# PnP Sample
+add_executable (paho_iot_pnp_sample
+  ${CMAKE_CURRENT_LIST_DIR}/paho_iot_pnp_sample.c
+  ${CMAKE_CURRENT_LIST_DIR}/paho_iot_pnp_sample_common.c
+)
+
+target_link_libraries(paho_iot_pnp_sample
+  PRIVATE
+    az::iot::sample::common
+)
+
+create_map_file(paho_iot_pnp_sample paho_iot_pnp_sample.map)
+
+# PnP Provisioning Sample
+add_executable (paho_iot_pnp_with_provisioning_sample
+  ${CMAKE_CURRENT_LIST_DIR}/paho_iot_pnp_with_provisioning_sample.c
+  ${CMAKE_CURRENT_LIST_DIR}/paho_iot_pnp_sample_common.c
+)
+
+target_link_libraries(paho_iot_pnp_with_provisioning_sample
+  PRIVATE
+    az::iot::sample::common
+)
+
+create_map_file(paho_iot_pnp_with_provisioning_sample paho_iot_pnp_with_provisioning_sample.map)
+
 # Provisioning (Certificates) Sample
 add_executable (paho_iot_provisioning_sample
   ${CMAKE_CURRENT_LIST_DIR}/paho_iot_provisioning_sample.c
@@ -143,6 +160,8 @@ target_link_libraries(paho_iot_provisioning_sample
   PRIVATE
     az::iot::sample::common
 )
+
+create_map_file(paho_iot_provisioning_sample paho_iot_provisioning_sample.map)
 
 # Provisioning (SAS) Sample
 add_executable (paho_iot_provisioning_sas_sample
@@ -154,24 +173,6 @@ target_link_libraries(paho_iot_provisioning_sas_sample
     az::iot::sample::common
 )
 
-# Workaround for linker warning LNK4098: defaultlib 'LIBCMTD' conflicts with use of other libs
-if (MSVC)
-    set_target_properties(
-        paho_iot_hub_c2d_sample
-        paho_iot_hub_methods_sample
-        paho_iot_hub_pnp_component_sample
-        paho_iot_hub_pnp_sample
-        paho_iot_hub_telemetry_sample
-        paho_iot_hub_sas_telemetry_sample
-        paho_iot_hub_twin_sample
-        paho_iot_provisioning_sample
-        paho_iot_provisioning_sas_sample
-        PROPERTIES
-        LINK_FLAGS
-        "/NODEFAULTLIB:libcmtd.lib"
-        LINK_FLAGS_RELEASE
-        "/NODEFAULTLIB:libcmt.lib"
-    )
-endif()
+create_map_file(paho_iot_provisioning_sas_sample paho_iot_provisioning_sas_sample.map)
 
 endif() # TRANSPORT_PAHO

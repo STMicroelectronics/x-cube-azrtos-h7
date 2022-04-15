@@ -22,13 +22,12 @@
 *****************************************************************************
 ** @attention
 **
-** <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
-** All rights reserved.</center></h2>
+** Copyright (c) 2021 STMicroelectronics.
+** All rights reserved.
 **
-** This software component is licensed by ST under BSD 3-Clause license,
-** the "License"; You may not use this file except in compliance with the
-** License. You may obtain a copy of the License at:
-**                        opensource.org/licenses/BSD-3-Clause
+** This software is licensed under terms that can be found in the LICENSE file
+** in the root directory of this software component.
+** If no LICENSE file comes with this software, it is provided AS-IS.
 **
 *****************************************************************************
 */
@@ -45,7 +44,7 @@ _Min_Stack_Size = 0x400 ; /* required amount of stack */
 /* Memories definition */
 MEMORY
 {
-  RAM_D1 (xrw)   : ORIGIN = 0x24000000, LENGTH =  512K    /* Memory is divided. Actual start is 0x24000000 and actual length is 512K */
+  RAM_D1 (xrw)   : ORIGIN = 0x24000000, LENGTH =  512K
   FLASH   (rx)   : ORIGIN = 0x08000000, LENGTH = 1024K    /* Memory is divided. Actual start is 0x08000000 and actual length is 2048K */
   DTCMRAM (xrw)  : ORIGIN = 0x20000000, LENGTH = 128K
   RAM_D2 (xrw)   : ORIGIN = 0x30000000, LENGTH = 288K

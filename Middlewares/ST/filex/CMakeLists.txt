@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
 
 # Set up the project
 project(filex
-    VERSION 6.0.0 
     LANGUAGES C ASM
 )
 
@@ -31,7 +30,11 @@ endif()
 set(CUSTOM_INC_DIR ${CMAKE_CURRENT_BINARY_DIR}/custom_inc)
 
 # Pick up the port specific stuff first
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/ports/${THREADX_ARCH}/${THREADX_TOOLCHAIN})
+if(DEFINED FILEX_CUSTOM_PORT)
+    add_subdirectory(${FILEX_CUSTOM_PORT} filex_port)
+else()
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/ports/${THREADX_ARCH}/${THREADX_TOOLCHAIN})
+endif()
 
 # Then the common files
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/common)

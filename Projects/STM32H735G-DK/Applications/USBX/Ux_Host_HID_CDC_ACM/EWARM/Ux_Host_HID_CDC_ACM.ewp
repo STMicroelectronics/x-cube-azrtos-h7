@@ -1103,7 +1103,7 @@
           <name>$PROJ_DIR$\..\Core\Src\main.c</name>
         </file>
         <file>
-          <name>$PROJ_DIR$\..\Core\Src\tx_initialize_low_level.s</name>
+          <name>$PROJ_DIR$\..\Core\Src\tx_initialize_low_level.S</name>
         </file>
         <file>
           <name>$PROJ_DIR$\..\Core\Src\gpio.c</name>
@@ -1919,6 +1919,9 @@
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_system_initialize.c</name>
         </file>
         <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_system_tasks_run.c</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_system_uninitialize.c</name>
         </file>
       </group>
@@ -1964,7 +1967,13 @@
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_cdc_acm_transfer_request_completed.c</name>
         </file>
         <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_cdc_acm_transmission_callback.c</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_cdc_acm_write.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_cdc_acm_write_with_callback.c</name>
         </file>
       </group>
       <group>
@@ -2001,6 +2010,9 @@
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_idle_set.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_idle_set_run.c</name>
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_instance_clean.c</name>
@@ -2051,7 +2063,13 @@
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_report_set.c</name>
         </file>
         <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_report_set_run.c</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_resources_free.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_tasks_run.c</name>
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_transfer_request_completed.c</name>
@@ -2076,6 +2094,9 @@
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_keyboard_key_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_keyboard_tasks_run.c</name>
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_keyboard_thread.c</name>
@@ -2360,10 +2381,16 @@
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_role_swap.c</name>
         </file>
         <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_tasks_run.c</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_transfer_request.c</name>
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_transfer_request_abort.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_transfer_run.c</name>
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_uninitialize.c</name>

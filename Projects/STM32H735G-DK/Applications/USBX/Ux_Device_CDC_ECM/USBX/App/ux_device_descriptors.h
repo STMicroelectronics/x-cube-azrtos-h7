@@ -329,7 +329,7 @@ uint8_t *USBD_Get_Language_Id_Framework(ULONG *Length);
 #define USBD_CDCECM_EPINCMD_HS_MPS                    16U
 #define USBD_CDCECM_EPINCMD_FS_BINTERVAL              16U
 #define USBD_CDCECM_EPINCMD_HS_BINTERVAL              16U
-#define USBD_CDCECM_EPIN_ADDR                         0x83U
+#define USBD_CDCECM_EPIN_ADDR                         0x81U
 #define USBD_CDCECM_EPOUT_ADDR                        0x01U
 #define USBD_CDCECM_EPIN_FS_MPS                       64U
 #define USBD_CDCECM_EPIN_HS_MPS                       512U

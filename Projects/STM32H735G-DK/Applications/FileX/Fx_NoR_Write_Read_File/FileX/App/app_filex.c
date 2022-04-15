@@ -56,7 +56,7 @@
 /* USER CODE BEGIN PV */
 
 /* Buffer for FileX FX_MEDIA sector cache. */
-UINT            *media_memory;
+ALIGN_32BYTES (uint32_t media_memory[DEFAULT_MEDIA_BUF_LENGTH / sizeof(uint32_t)]);
 
 /* Define FileX global data structures.  */
 FX_MEDIA        nor_flash_disk;
@@ -103,9 +103,6 @@ UINT MX_FileX_Init(VOID *memory_ptr)
   /* Create the main thread.  */
   tx_thread_create(&fx_thread, "thread 0", fx_thread_entry, 0, pointer, DEFAULT_STACK_SIZE, DEFAULT_THREAD_PRIO,
                    DEFAULT_PREEMPTION_THRESHOLD, TX_NO_TIME_SLICE, TX_AUTO_START);
-
-  /* Allocate memory for the media cache */
-  ret = tx_byte_allocate(byte_pool, (VOID**) &media_memory, DEFAULT_MEDIA_BUF_LENGTH, TX_NO_WAIT);
 
   if (ret != FX_SUCCESS)
   {

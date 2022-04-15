@@ -24,7 +24,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    tx_user.h                                           PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.9        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -43,6 +43,19 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
+/*  09-30-2020      Yuxin Zhou              Modified comment(s),          */
+/*                                            resulting in version 6.1    */
+/*  03-02-2021      Scott Larson            Modified comment(s),          */
+/*                                            added option to remove      */
+/*                                            FileX pointer,              */
+/*                                            resulting in version 6.1.5  */
+/*  06-02-2021      Scott Larson            Added options for multiple    */
+/*                                            block pool search & delay,  */
+/*                                            resulting in version 6.1.7  */
+/*  10-15-2021      Yuxin Zhou              Modified comment(s), added    */
+/*                                            user-configurable symbol    */
+/*                                            TX_TIMER_TICKS_PER_SECOND   */
+/*                                            resulting in version 6.1.9  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -71,6 +84,7 @@
         TX_DISABLE_PREEMPTION_THRESHOLD
         TX_DISABLE_REDUNDANT_CLEARING
         TX_DISABLE_NOTIFY_CALLBACKS
+        TX_NO_FILEX_POINTER
         TX_NOT_INTERRUPTABLE
         TX_TIMER_PROCESS_IN_ISR
 
@@ -225,6 +239,14 @@
 
 /*#define TX_TIMER_TICKS_PER_SECOND                100*/
 
+/* Determine if there is a FileX pointer in the thread control block.
+   By default, the pointer is there for legacy/backwards compatibility.
+   The pointer must also be there for applications using FileX.
+   Define this to save space in the thread control block.
+*/
+
+/*#define TX_NO_FILEX_POINTER*/
+
 /* Determinate if the basic alignment type is defined. */
 
 /*#define ALIGN_TYPE_DEFINED*/
@@ -237,7 +259,7 @@
 
 /*#define TX_MEMSET  memset((a),(b),(c))*/
 
-#ifdef __IAR_SYSTEMS_ASM__
+#ifdef __ICCARM__
 /* Define if the IAR library is supported. */
 /*#define TX_ENABLE_IAR_LIBRARY_SUPPORT*/
 #endif
@@ -245,19 +267,6 @@
 /* Define if the safety critical configuration is enabled. */
 
 /*#define TX_SAFETY_CRITICAL*/
-
-/* ARM Core speciic MPU configuration register settings */
-/* For the following 3 access control settings, change TEX and C, B, S (bits 21 through 16 of MPU_RASR)
- * to reflect your system memory attributes (cache, shareable, memory type).  */
-
-/* Code region access control: privileged read-only, outer & inner write-back, normal memory, not shareable.  */
-#define TXM_MODULE_MPU_CODE_ACCESS_CONTROL      0x06030000
-
-/* Data region access control: execute never, read/write, outer & inner write-back, normal memory, not shareable.  */
-#define TXM_MODULE_MPU_DATA_ACCESS_CONTROL      0x13030000
-
-/* Shared region access control: execute never, read-only, outer & inner write-back, normal memory, not shareable.  */
-#define TXM_MODULE_MPU_SHARED_ACCESS_CONTROL    0x12030000
 
 #endif
 

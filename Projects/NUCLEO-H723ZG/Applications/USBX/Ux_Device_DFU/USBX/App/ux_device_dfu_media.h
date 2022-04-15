@@ -35,7 +35,12 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+typedef struct
+{
+  ULONG wblock_num;
+  ULONG wlength;
+  UCHAR *data_ptr;
+} ux_dfu_downloadInfotypeDef;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -72,13 +77,6 @@ extern "C" {
 /* USER CODE END PD */
 
 /* USER CODE BEGIN 1 */
-
-typedef struct
-{
-  ULONG wblock_num;
-  ULONG wlength;
-  UCHAR *data_ptr;
-} ux_dfu_downloadInfotypeDef;
 
 /* USER CODE END 1 */
 

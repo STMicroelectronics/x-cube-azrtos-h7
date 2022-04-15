@@ -45,7 +45,7 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-#define APP_QUEUE_SIZE          1
+
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
@@ -57,7 +57,7 @@ void MX_USB_Device_Init(void);
 
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define APP_QUEUE_SIZE          1
 /* USER CODE END PD */
 
 /* USER CODE BEGIN 1 */

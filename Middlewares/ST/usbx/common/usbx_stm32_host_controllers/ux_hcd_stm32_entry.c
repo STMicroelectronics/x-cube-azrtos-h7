@@ -217,6 +217,18 @@ UX_INT_SAVE_AREA
         status =  UX_SUCCESS;
         break;
 
+    case UX_HCD_UNINITIALIZE:
+
+        /* free HCD resources */
+        if (hcd_stm32 != UX_NULL)
+        {
+          _ux_utility_memory_free(hcd_stm32 -> ux_hcd_stm32_ed_list);
+          _ux_utility_memory_free(hcd_stm32);
+        }
+
+        status =  UX_SUCCESS;
+        break;
+
     default:
 
         /* Error trap. */

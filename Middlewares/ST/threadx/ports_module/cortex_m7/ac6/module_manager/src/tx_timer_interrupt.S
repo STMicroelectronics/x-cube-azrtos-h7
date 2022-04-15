@@ -20,15 +20,15 @@
 /**************************************************************************/
 /**************************************************************************/
 
-    .global      _tx_timer_time_slice
-    .global      _tx_timer_system_clock
-    .global      _tx_timer_current_ptr
-    .global      _tx_timer_list_start
-    .global      _tx_timer_list_end
-    .global      _tx_timer_expired_time_slice
-    .global      _tx_timer_expired
-    .global      _tx_thread_time_slice
-    .global      _tx_timer_expiration_process
+    .global _tx_timer_time_slice
+    .global _tx_timer_system_clock
+    .global _tx_timer_current_ptr
+    .global _tx_timer_list_start
+    .global _tx_timer_list_end
+    .global _tx_timer_expired_time_slice
+    .global _tx_timer_expired
+    .global _tx_thread_time_slice
+    .global _tx_timer_expiration_process
 
     .text
     .align 4
@@ -37,11 +37,11 @@
 /*                                                                        */
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
-/*    _tx_timer_interrupt                               Cortex-M7/AC6     */
-/*                                                           6.1.2        */
+/*    _tx_timer_interrupt                              Cortex-M7/AC6      */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
-/*    William E. Lamie, Microsoft Corporation                             */
+/*    Scott Larson, Microsoft Corporation                                 */
 /*                                                                        */
 /*  DESCRIPTION                                                           */
 /*                                                                        */
@@ -71,13 +71,15 @@
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  09-30-2020     Scott Larson             Initial Version 6.1           */
-/*  11-09-2020     Scott Larson             Modified comment(s),          */
-/*                                            resulting in version 6.1.2  */
+/*  06-02-2021      Scott Larson            Initial Version 6.1.7         */
+/*  01-31-2022      Scott Larson            Modified comment(s), added    */
+/*                                            TX_NO_TIMER support,        */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 // VOID   _tx_timer_interrupt(VOID)
 // {
+#ifndef TX_NO_TIMER
     .global  _tx_timer_interrupt
     .thumb_func
 _tx_timer_interrupt:
@@ -112,6 +114,7 @@ _tx_timer_interrupt:
        // if (__tx_timer_time_slice == 0)
 
     CBNZ    r2, __tx_timer_no_time_slice            // Has it expired?
+                                                    // No, skip expiration processing
 
        /* Set the time-slice expired flag.  */
        // _tx_timer_expired_time_slice =  TX_TRUE;
@@ -248,5 +251,5 @@ __tx_timer_nothing_expired:
 
     DSB                                             // Complete all memory access
     BX      lr                                      // Return to caller
-
 // }
+#endif

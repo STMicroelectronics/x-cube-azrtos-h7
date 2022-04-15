@@ -2193,7 +2193,7 @@
                     <name>$PROJ_DIR$\..\CM7\Src\stm32h7xx_it.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\CM7\Src\tx_initialize_low_level.s</name>
+                    <name>$PROJ_DIR$\..\CM7\Src\tx_initialize_low_level.S</name>
                 </file>
             </group>
         </group>

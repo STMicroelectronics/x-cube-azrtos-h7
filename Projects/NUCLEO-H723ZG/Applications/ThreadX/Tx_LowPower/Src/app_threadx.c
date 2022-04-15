@@ -96,6 +96,36 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   return ret;
 }
 
+  /**
+  * @brief  MX_ThreadX_Init
+  * @param  None
+  * @retval None
+  */
+void MX_ThreadX_Init(void)
+{
+  /* USER CODE BEGIN  Before_Kernel_Start */
+
+  /* USER CODE END  Before_Kernel_Start */
+
+  tx_kernel_enter();
+
+  /* USER CODE BEGIN  Kernel_Start_Error */
+
+  /* USER CODE END  Kernel_Start_Error */
+}
+
+/**
+  * @brief  App_ThreadX_LowPower_Timer_Setup
+  * @param  count : TX timer count
+  * @retval None
+  */
+void App_ThreadX_LowPower_Timer_Setup(ULONG count)
+{
+  /* USER CODE BEGIN  App_ThreadX_LowPower_Timer_Setup */
+
+  /* USER CODE END  App_ThreadX_LowPower_Timer_Setup */
+}
+
 /**
   * @brief  App_ThreadX_LowPower_Enter
   * @param  None
@@ -125,21 +155,15 @@ void App_ThreadX_LowPower_Exit(void)
 }
 
 /**
-  * @brief  MX_ThreadX_Init
+  * @brief  App_ThreadX_LowPower_Timer_Adjust
   * @param  None
-  * @retval None
+  * @retval Amount of time (in ticks)
   */
-void MX_ThreadX_Init(void)
+ULONG App_ThreadX_LowPower_Timer_Adjust(void)
 {
-  /* USER CODE BEGIN  Before_Kernel_Start */
-
-  /* USER CODE END  Before_Kernel_Start */
-
-  tx_kernel_enter();
-
-  /* USER CODE BEGIN  Kernel_Start_Error */
-
-  /* USER CODE END  Kernel_Start_Error */
+  /* USER CODE BEGIN  App_ThreadX_LowPower_Timer_Adjust */
+  return 0;
+  /* USER CODE END  App_ThreadX_LowPower_Timer_Adjust */
 }
 
 /* USER CODE BEGIN 1 */

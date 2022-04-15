@@ -37,7 +37,6 @@
 #define EXTRA_BYTE_POSITION                 2           /*      2 is the extra bytes starting byte postion              */ 
 #define ECC_BYTE_POSITION                   40          /*      40 is the ECC starting byte position                    */ 
 
-
 /* Definition of the spare area is relative to the block size of the NAND part and perhaps manufactures of the NAND part. 
    Here are some common definitions:
    
@@ -169,8 +168,14 @@ UINT  _lx_nand_flash_simulator_write(ULONG block, ULONG page, ULONG *source, ULO
 {
 
 ULONG   *flash_address;
+UCHAR   *flash_spare_address;
+UINT    bytes_computed;
+UINT    ecc_bytes =0;
+UCHAR   new_ecc_buffer[24];
+UCHAR   *new_ecc_buffer_ptr = new_ecc_buffer;
+UCHAR   *ecc_buffer_ptr = new_ecc_buffer_ptr;
+ULONG   *page_ptr = &(nand_memory_area[block].physical_pages[page].memory[0]);
 
-  
     /* Increment the diag info.  */
     nand_block_diag[block].page_writes[page]++;
     if (nand_block_diag[block].page_writes[page] > nand_block_diag[block].max_page_writes[page])
@@ -192,6 +197,41 @@ ULONG   *flash_address;
         *flash_address++ =  *source++;
     }
 
+    /* Loop to compute the ECC over the entire NAND flash page.  */
+    bytes_computed =  0;
+    
+    while (bytes_computed < BYTES_PER_PHYSICAL_PAGE)
+    { 
+    
+        /* Compute the ECC for this 256 byte piece of the page.  */
+        _lx_nand_flash_256byte_ecc_compute((UCHAR *)page_ptr, (UCHAR *)new_ecc_buffer_ptr);
+        
+        /* Move to the next 256 byte portion of the page.  */
+        bytes_computed =  bytes_computed + 256;
+        
+        /* Move the page buffer forward.  */
+        page_ptr =  page_ptr + 256;
+    
+        ecc_bytes = ecc_bytes + 3;
+
+        /* Move the ECC buffer forward, note there are 3 bytes of ECC per page. */
+        new_ecc_buffer_ptr =   new_ecc_buffer_ptr + 3;
+    }
+    
+    /* Setup destination pointer in the spare area.  */
+    flash_spare_address =  (UCHAR *) &(nand_memory_area[block].physical_pages[page].spare[ECC_BYTE_POSITION]);
+    while(ecc_bytes--)
+    {
+
+        /* Can the word be written?  We can clear new bits, but just can't unclear
+           in a NAND device.  */
+        if ((*ecc_buffer_ptr & *flash_spare_address) != *ecc_buffer_ptr)
+           return(LX_INVALID_WRITE);
+
+        /* Set an ecc byte in the spare area.  */
+       *flash_spare_address++ =  *ecc_buffer_ptr++;
+
+    }
     return(LX_SUCCESS);
 }
 

@@ -419,9 +419,9 @@
               <FilePath>..\Src\stm32h7xx_it.c</FilePath>
             </File>
             <File>
-              <FileName>tx_initialize_low_level.s</FileName>
+              <FileName>tx_initialize_low_level.S</FileName>
               <FileType>2</FileType>
-              <FilePath>..\Src\tx_initialize_low_level.s</FilePath>
+              <FilePath>..\Src\tx_initialize_low_level.S</FilePath>
             </File>
           </Files>
         </Group>

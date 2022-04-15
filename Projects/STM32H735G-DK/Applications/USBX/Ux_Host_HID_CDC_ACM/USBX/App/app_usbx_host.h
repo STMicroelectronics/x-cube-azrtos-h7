@@ -38,6 +38,7 @@ extern "C" {
 #include "ux_host_class_hid_mouse.h"
 #include "ux_host_class_hid_keyboard.h"
 #include "ux_host_class_cdc_acm.h"
+#include "app_azure_rtos_config.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

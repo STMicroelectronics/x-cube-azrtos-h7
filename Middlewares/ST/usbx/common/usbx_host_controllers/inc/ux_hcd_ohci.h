@@ -26,7 +26,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */ 
 /*                                                                        */ 
 /*    ux_hcd_ohci.h                                       PORTABLE C      */ 
-/*                                                           6.1.2        */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -46,11 +46,28 @@
 /*  11-09-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            used unsigned defines,      */
 /*                                            resulting in version 6.1.2  */
+/*  08-02-2021     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added extern "C" keyword    */
+/*                                            for compatibility with C++, */
+/*                                            resulting in version 6.1.8  */
+/*  01-31-2022     Xiuwen Cai               Modified comment(s),          */
+/*                                            fixed HcPeriodicStart value,*/
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 
 #ifndef UX_HCD_OHCI_H
 #define UX_HCD_OHCI_H
+
+/* Determine if a C++ compiler is being used.  If so, ensure that standard 
+   C is used to process the API information.  */ 
+
+#ifdef   __cplusplus 
+
+/* Yes, C++ compiler is present.  Use standard C.  */ 
+extern   "C" { 
+
+#endif  
 
 
 /* Define generic OHCI constants.  */
@@ -174,6 +191,7 @@
 
 #define OHCI_HC_FM_INTERVAL_CLEAR                           0x8000ffffu
 #define OHCI_HC_FM_INTERVAL_SET                             0x27780000u
+#define OHCI_HC_FM_INTERVAL_FI_MASK                         0x00003fffu
 
 
 /* Define OHCI static definition.  */
@@ -190,7 +208,6 @@
 
 #define UX_OHCI_COMMAND_STATUS_RESET                        0
 #define UX_OHCI_INIT_RESET_DELAY                            10
-#define UX_OHCI_HC_PERIODIC_START_DEFAULT                   0x00003e67u
 
 /* Define OHCI completion code errors.  */
 
@@ -393,6 +410,12 @@ VOID    _ux_hcd_ohci_transfer_request_process(UX_TRANSFER *transfer_request);
 
 #define ux_hcd_ohci_initialize                      _ux_hcd_ohci_initialize
 #define ux_hcd_ohci_interrupt_handler               _ux_hcd_ohci_interrupt_handler
+
+/* Determine if a C++ compiler is being used.  If so, complete the standard 
+   C conditional started above.  */   
+#ifdef __cplusplus
+} 
+#endif 
 
 #endif
 

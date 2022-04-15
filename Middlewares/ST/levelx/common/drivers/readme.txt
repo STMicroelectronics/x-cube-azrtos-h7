@@ -7,6 +7,23 @@
   ******************************************************************************
   */
 
+### V2.1.3 / 28-January-2022 ###
+=================================
+- Remove checks on the LX_STM32_QSPI_INIT and LX_STM32_OSPI_INIT to make the low_level_init always called.
+  + lx_stm32_ospi_driver.c
+  + lx_stm32_qspi_driver.c
+
+### V2.1.2 / 05-November-2021 ###
+=================================
+-  Fix check_status() function to consider the timeout when checking the IP status
+- Add lowlevel deinit function for QuadSPI and OctoSPI drivers to let the application
+  deinitialize the IP.
+
+Dependencies:
+-------------
+- Azure RTOS LevelX V6.1.7 or higher
+- STM32Cube OCTOSPI and QuadSPI HAL drivers
+
 ### V2.1.1 / 13-September-2021 ###
 =================================
 Main changes

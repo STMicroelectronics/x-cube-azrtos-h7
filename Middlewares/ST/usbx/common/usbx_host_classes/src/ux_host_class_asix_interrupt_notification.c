@@ -35,7 +35,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_host_class_asix_interrupt_notification          PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -55,7 +55,7 @@
 /*                                                                        */ 
 /*  CALLS                                                                 */ 
 /*                                                                        */ 
-/*    _ux_utility_semaphore_put             Put semaphore                 */
+/*    _ux_host_semaphore_put                Put semaphore                 */
 /*    _ux_host_stack_transfer_request       Transfer request              */
 /*                                                                        */ 
 /*  CALLED BY                                                             */ 
@@ -69,6 +69,13 @@
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  10-15-2021     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            use pre-calculated value    */
+/*                                            instead of wMaxPacketSize,  */
+/*                                            resulting in version 6.1.9  */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            refined macros names,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 VOID  _ux_host_class_asix_interrupt_notification(UX_TRANSFER *transfer_request)
@@ -96,7 +103,7 @@ UX_HOST_CLASS_ASIX                      *asix;
 
     /* Ensure the length of our interrupt pipe data is correct.  */
     if (transfer_request -> ux_transfer_request_actual_length == 
-            asix -> ux_host_class_asix_interrupt_endpoint -> ux_endpoint_descriptor.wMaxPacketSize)
+            transfer_request -> ux_transfer_request_requested_length)
     {
 
         /* Check if the first byte is a interrupt packet signature.  */
@@ -118,7 +125,7 @@ UX_HOST_CLASS_ASIX                      *asix;
                     asix -> ux_host_class_asix_link_state = UX_HOST_CLASS_ASIX_LINK_STATE_PENDING_UP;                    
                     
                     /* We need to inform the asix thread of this change.  */
-                    _ux_utility_semaphore_put(&asix -> ux_host_class_asix_interrupt_notification_semaphore);
+                    _ux_host_semaphore_put(&asix -> ux_host_class_asix_interrupt_notification_semaphore);
 
                 }
             }                    
@@ -148,7 +155,7 @@ UX_HOST_CLASS_ASIX                      *asix;
                         UX_TRACE_IN_LINE_INSERT(UX_TRACE_ERROR, UX_TRANSFER_NO_ANSWER, transfer_request, 0, 0, UX_TRACE_ERRORS, 0, 0)
                 
                         /* Wake up the semaphore on which the transaction is waiting. */
-                        _ux_utility_semaphore_put(&transfer_request -> ux_transfer_request_semaphore);
+                        _ux_host_semaphore_put(&transfer_request -> ux_transfer_request_semaphore);
 
                     }
                     
@@ -167,13 +174,13 @@ UX_HOST_CLASS_ASIX                      *asix;
                         UX_TRACE_IN_LINE_INSERT(UX_TRACE_ERROR, UX_TRANSFER_NO_ANSWER, transfer_request, 0, 0, UX_TRACE_ERRORS, 0, 0)
                 
                         /* Wake up the semaphore on which the transaction is waiting. */
-                        _ux_utility_semaphore_put(&transfer_request -> ux_transfer_request_semaphore);
+                        _ux_host_semaphore_put(&transfer_request -> ux_transfer_request_semaphore);
 
                     }
                     
                     
                     /* We need to inform the asix thread of this change.  */
-                    _ux_utility_semaphore_put(&asix -> ux_host_class_asix_interrupt_notification_semaphore);
+                    _ux_host_semaphore_put(&asix -> ux_host_class_asix_interrupt_notification_semaphore);
                 }
             }           
         }        

@@ -12,8 +12,8 @@
 
 /**************************************************************************/
 /**************************************************************************/
-/**                                                                       */ 
-/** USBX Component                                                        */ 
+/**                                                                       */
+/** USBX Component                                                        */
 /**                                                                       */
 /**   STM32 Controller Driver                                             */
 /**                                                                       */
@@ -31,6 +31,8 @@
 #include "ux_utility.h"
 #include "ux_device_stack.h"
 
+
+#if !defined(UX_DEVICE_STANDALONE)
 /**************************************************************************/
 /*                                                                        */
 /*  FUNCTION                                               RELEASE        */
@@ -57,23 +59,23 @@
 /*                                                                        */
 /*  OUTPUT                                                                */
 /*                                                                        */
-/*    Completion Status                                                   */ 
+/*    Completion Status                                                   */
 /*                                                                        */
 /*                                                                        */
-/*  CALLS                                                                 */ 
-/*                                                                        */ 
+/*  CALLS                                                                 */
+/*                                                                        */
 /*    HAL_PCD_EP_Transmit                   Transmit data                 */
 /*    HAL_PCD_EP_Receive                    Receive data                  */
-/*    _ux_utility_semaphore_get             Get semaphore                 */ 
-/*                                                                        */ 
-/*  CALLED BY                                                             */ 
-/*                                                                        */ 
+/*    _ux_utility_semaphore_get             Get semaphore                 */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
 /*    STM32 Controller Driver                                             */
-/*                                                                        */ 
-/*  RELEASE HISTORY                                                       */ 
-/*                                                                        */ 
-/*    DATE              NAME                      DESCRIPTION             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s), used ST  */
 /*                                            HAL library to drive the    */
@@ -96,8 +98,8 @@ UINT                    status;
     {
 
         /* Transmit data.  */
-        HAL_PCD_EP_Transmit(dcd_stm32 -> pcd_handle, 
-                            endpoint->ux_slave_endpoint_descriptor.bEndpointAddress, 
+        HAL_PCD_EP_Transmit(dcd_stm32 -> pcd_handle,
+                            endpoint->ux_slave_endpoint_descriptor.bEndpointAddress,
                             transfer_request->ux_slave_transfer_request_data_pointer,
                             transfer_request->ux_slave_transfer_request_requested_length);
 
@@ -107,7 +109,8 @@ UINT                    status;
         {
 
             /* We should wait for the semaphore to wake us up.  */
-            status =  _ux_utility_semaphore_get(&transfer_request -> ux_slave_transfer_request_semaphore, UX_WAIT_FOREVER);
+            status =  _ux_utility_semaphore_get(&transfer_request -> ux_slave_transfer_request_semaphore,
+                                                (ULONG)transfer_request -> ux_slave_transfer_request_timeout);
 
             /* Check the completion code. */
             if (status != UX_SUCCESS)
@@ -129,8 +132,8 @@ UINT                    status;
 
         /* We have a request for a SETUP or OUT Endpoint.  */
         /* Receive data.  */
-        HAL_PCD_EP_Receive(dcd_stm32 -> pcd_handle, 
-                            endpoint->ux_slave_endpoint_descriptor.bEndpointAddress, 
+        HAL_PCD_EP_Receive(dcd_stm32 -> pcd_handle,
+                            endpoint->ux_slave_endpoint_descriptor.bEndpointAddress,
                             transfer_request->ux_slave_transfer_request_data_pointer,
                             transfer_request->ux_slave_transfer_request_requested_length);
 
@@ -140,7 +143,8 @@ UINT                    status;
         {
 
             /* We should wait for the semaphore to wake us up.  */
-            status =  _ux_utility_semaphore_get(&transfer_request -> ux_slave_transfer_request_semaphore, UX_WAIT_FOREVER);
+            status =  _ux_utility_semaphore_get(&transfer_request -> ux_slave_transfer_request_semaphore,
+                                                (ULONG)transfer_request -> ux_slave_transfer_request_timeout);
 
             /* Check the completion code. */
             if (status != UX_SUCCESS)
@@ -159,4 +163,4 @@ UINT                    status;
     /* Return to caller with success.  */
     return(UX_SUCCESS);
 }
-
+#endif

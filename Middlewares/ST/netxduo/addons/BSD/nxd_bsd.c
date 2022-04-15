@@ -93,7 +93,7 @@ TX_BLOCK_POOL           nx_bsd_socket_block_pool;
 
 /* Define the memory area for the socket block pool... use TCP socket size, since it is the larger.  */
 
-static UCHAR            nx_bsd_socket_pool_memory[NX_BSD_MAX_SOCKETS*(sizeof(NX_TCP_SOCKET)+sizeof(VOID *))];
+static ULONG            nx_bsd_socket_pool_memory[NX_BSD_MAX_SOCKETS * (sizeof(NX_TCP_SOCKET) + sizeof(VOID *)) / sizeof(ULONG)];
 
 /* Define the block pool that will be used to dynamically allocate addrinfo struct. */
 
@@ -104,8 +104,8 @@ TX_BLOCK_POOL           nx_bsd_addrinfo_block_pool;
  * Every address may be  mapped to 3 socktypes, SOCK_STREAM, SOCK_DGRAM and SOCK_RAW, 
  * 3 blocks for addrinfo) + 1 block for IP adddress = 4 blocks */
  
-static UCHAR            nx_bsd_addrinfo_pool_memory[(NX_BSD_IPV4_ADDR_MAX_NUM + NX_BSD_IPV6_ADDR_MAX_NUM)* 4 
-                                                    *(sizeof(struct addrinfo) + sizeof(VOID *))];
+static ULONG            nx_bsd_addrinfo_pool_memory[(NX_BSD_IPV4_ADDR_MAX_NUM + NX_BSD_IPV6_ADDR_MAX_NUM) * 4 
+                                                    *(sizeof(struct addrinfo) + sizeof(VOID *)) / sizeof(ULONG)];
 
 #ifdef NX_BSD_ENABLE_DNS
 
@@ -117,8 +117,8 @@ extern NX_DNS *_nx_dns_instance_ptr;
 TX_BLOCK_POOL           nx_bsd_cname_block_pool;
 
 /* Here we just support a CNAME per IP address. */                                                   
-static UCHAR            nx_bsd_cname_pool_memory[(NX_BSD_IPV4_ADDR_MAX_NUM + NX_BSD_IPV6_ADDR_MAX_NUM) * 
-                                                          (NX_DNS_NAME_MAX + 1)]; 
+static ULONG            nx_bsd_cname_pool_memory[(NX_BSD_IPV4_ADDR_MAX_NUM + NX_BSD_IPV6_ADDR_MAX_NUM) * 
+                                                          (NX_DNS_NAME_MAX + 1) / sizeof(ULONG)]; 
 #endif /* NX_DNS_ENABLE_EXTENDED_RR_TYPES */
 #endif /* NX_BSD_ENABLE_DNS */
 
@@ -8599,7 +8599,7 @@ INT     i;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    nx_bsd_raw_packet_filter                            PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.9        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -8639,6 +8639,10 @@ INT     i;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  10-15-2021     Yuxin Zhou               Modified comment(s),          */
+/*                                            fixed NULL pointer access   */
+/*                                            for raw socket,             */
+/*                                            resulting in version 6.1.9  */
 /*                                                                        */
 /**************************************************************************/
 static UINT  nx_bsd_raw_packet_filter(NX_IP *ip_ptr, ULONG protocol, NX_PACKET *packet_ptr)
@@ -8652,6 +8656,13 @@ NX_BSD_SOCKET * bsd_socket_ptr;
 
     /* Search the bound sockets in this index for particular protocol. */
     bsd_socket_ptr = nx_bsd_socket_raw_protocol_table[index];
+
+    /* Was a BSD socket with this protocol found? */
+    if (bsd_socket_ptr == NX_NULL)
+    {
+        /* No, let NetX Duo continue processing the packet. */
+        return 1;
+    }
 
     do
     {
@@ -8726,7 +8737,7 @@ NX_BSD_SOCKET * bsd_socket_ptr;
     /* Was a BSD socket with this protocol found? */
     if (bsd_socket_ptr == nx_bsd_socket_raw_protocol_table[index])
     {
-        /* No, let NetX Duo know it can discard the packet. */
+        /* No, let NetX Duo continue processing the packet. */
         return 1;
     }
     

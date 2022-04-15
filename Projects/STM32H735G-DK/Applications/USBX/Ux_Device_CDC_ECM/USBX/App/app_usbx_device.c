@@ -32,7 +32,7 @@
 #include "ux_device_descriptors.h"
 #include "ux_device_class_cdc_ecm.h"
 #include "ux_network_driver.h"
-
+#include "app_azure_rtos_config.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -93,6 +93,8 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
 
   /* USER CODE BEGIN MX_USBX_Device_Init */
 
+#if (USE_STATIC_ALLOCATION == 1)
+
   /* Device framework full speed length */
   ULONG device_framework_fs_length;
 
@@ -115,14 +117,11 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
   CHAR *ux_app_pointer;
 
   /* Allocate the USBX_MEMORY_SIZE. */
-  ret = tx_byte_allocate(byte_pool, (VOID **) &ux_app_pointer,
-                         USBX_MEMORY_SIZE, TX_NO_WAIT);
-
-  /* Check USBX_MEMORY_SIZE allocation */
-  if (ret != TX_SUCCESS)
+  if (tx_byte_allocate(byte_pool, (VOID **) &ux_app_pointer,
+                       USBX_MEMORY_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     printf("USBX_MEMORY_SIZE allocation failed: 0x%02x\n", ret);
-    Error_Handler();
+    return TX_POOL_ERROR;
   }
 
   /* Initialize USBX Memory */
@@ -140,19 +139,17 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
 
   /* The code below is required for installing the device portion of USBX.
      In this application */
-  ret =  _ux_device_stack_initialize(NULL,
-                                     0,
-                                     device_framework_full_speed,
-                                     device_framework_fs_length,
-                                     string_framework,
-                                     string_framework_length,
-                                     language_id_framework,
-                                     languge_id_framework_length, UX_NULL);
-  /* Check device stack init */
-  if (ret != UX_SUCCESS)
+  if (ux_device_stack_initialize(NULL,
+                                 0U,
+                                 device_framework_full_speed,
+                                 device_framework_fs_length,
+                                 string_framework,
+                                 string_framework_length,
+                                 language_id_framework,
+                                 languge_id_framework_length, UX_NULL) != UX_SUCCESS)
   {
     printf("Device stack init failed: 0x%02x\n", ret);
-    Error_Handler();
+    return UX_ERROR;
   }
 
   /* Set the parameters for callback when insertion/extraction of a CDC device. Set to NULL.*/
@@ -176,45 +173,38 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
   cdc_ecm_parameter.ux_slave_class_cdc_ecm_parameter_remote_node_id[5] = 0x00;
 
   /* Initialize the device cdc_ecm class. */
-  ret = ux_device_stack_class_register(_ux_system_slave_class_cdc_ecm_name,
+  if (ux_device_stack_class_register(_ux_system_slave_class_cdc_ecm_name,
                                        ux_device_class_cdc_ecm_entry, 1, 0,
-                                       &cdc_ecm_parameter);
-
-  /* Check device cdc_ecm class Init  */
-  if (ret != UX_SUCCESS)
+                                       &cdc_ecm_parameter) != UX_SUCCESS)
   {
     printf("Device cdc_ecm class Init failed: 0x%02x\n", ret);
-    Error_Handler();
+    return UX_ERROR;
   }
 
   /* Perform the initialization of the network driver. This will initialize the USBX network layer.*/
   ux_network_driver_init();
 
   /* Allocate the stack for main_usbx_app_thread_entry. */
-  ret = tx_byte_allocate(byte_pool, (VOID **) &ux_app_pointer,
-                         USBX_APP_STACK_SIZE, TX_NO_WAIT);
-
-  /* Check USBX_APP_STACK_SIZE allocation */
-  if (ret != TX_SUCCESS)
+  if (tx_byte_allocate(byte_pool, (VOID **) &ux_app_pointer,
+                       USBX_APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     printf("USBX_APP_STACK_SIZE allocation failed: 0x%02x\n", ret);
-    Error_Handler();
+    return TX_POOL_ERROR;
   }
 
   /* Create the usbx_app_thread_entry.  */
-  ret = tx_thread_create(&ux_app_thread, "main_usbx_app_thread_entry",
-                         usbx_app_thread_entry, 0,
-                         ux_app_pointer, USBX_APP_STACK_SIZE,
-                         DEFAULT_THREAD_PRIO, DEFAULT_PREEMPTION_THRESHOLD,
-                         TX_NO_TIME_SLICE, TX_AUTO_START);
-
-  /* Check ux_app_thread creation */
-  if (ret != TX_SUCCESS)
+  if (tx_thread_create(&ux_app_thread, "main_usbx_app_thread_entry",
+                       usbx_app_thread_entry, 0,
+                       ux_app_pointer, USBX_APP_STACK_SIZE,
+                       DEFAULT_THREAD_PRIO, DEFAULT_PREEMPTION_THRESHOLD,
+                       TX_NO_TIME_SLICE,
+                       TX_AUTO_START) != TX_SUCCESS)
   {
     printf("ux_app_thread creation failed: 0x%02x\n", ret);
-    Error_Handler();
+    return TX_THREAD_ERROR;
   }
 
+#endif
   /* USER CODE END MX_USBX_Device_Init */
 
   return ret;
@@ -252,8 +242,8 @@ void MX_USB_Device_Init(void)
   /* USER CODE BEGIN USB_Device_Init_PreTreatment_1 */
   HAL_PCDEx_SetRxFiFo(&hpcd_USB_OTG_HS, 0x200);
   HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 0, 0x10);
-  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 2, 0x10);
-  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 3, 0x20);
+  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 1, 0x10);
+  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 2, 0x20);
   /* USER CODE END USB_Device_Init_PreTreatment_1 */
 
   /* Initialize and link controller HAL driver to USBx */

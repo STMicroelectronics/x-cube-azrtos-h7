@@ -66,7 +66,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>8.50.6.28611</state>
+          <state>8.50.9.33458</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -493,7 +493,7 @@
       <name>AARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>10</version>
+        <version>11</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -648,6 +648,10 @@
         <option>
           <name>AsmNoLiteralPool</name>
           <state>0</state>
+        </option>
+        <option>
+          <name>PreInclude</name>
+          <state></state>
         </option>
       </data>
     </settings>
@@ -1102,7 +1106,7 @@
           <name>$PROJ_DIR$\..\Core\Src\main.c</name>
         </file>
         <file>
-          <name>$PROJ_DIR$\..\Core\Src\tx_initialize_low_level.s</name>
+          <name>$PROJ_DIR$\..\Core\Src\tx_initialize_low_level.S</name>
         </file>
         <file>
           <name>$PROJ_DIR$\..\Core\Src\gpio.c</name>
@@ -1912,6 +1916,9 @@
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_system_initialize.c</name>
         </file>
         <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_system_tasks_run.c</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_system_uninitialize.c</name>
         </file>
       </group>
@@ -1945,10 +1952,19 @@
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_read.c</name>
         </file>
         <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_read_run.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_tasks_run.c</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_unitialize.c</name>
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_write.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_write_run.c</name>
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_write_with_callback.c</name>
@@ -1990,7 +2006,13 @@
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_interrupt_handler.c</name>
         </file>
         <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_transfer_abort.c</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_transfer_request.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_transfer_run.c</name>
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_uninitialize.c</name>
@@ -2059,6 +2081,9 @@
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_set_feature.c</name>
         </file>
         <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_tasks_run.c</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_transfer_abort.c</name>
         </file>
         <file>
@@ -2066,6 +2091,9 @@
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_transfer_request.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_transfer_run.c</name>
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_uninitialize.c</name>

@@ -1,7 +1,7 @@
 
 ##  <b>Fx_Dual_Instance application description</b>
 
-This application provide user a working example of two storage media managed by two independent instances of FileX/LevelX running on STM32H747I-DISCO board (Dual core). 
+This application provide user a working example of two storage media managed by two independent instances of FileX/LevelX running on STM32H747I-DISCO board (Dual core).
 This is to demonstrate the coexistence capability of two FileX/Levelx stacks running independently on each core.
 
 Two independent media storage: µSD and QSPI NOR Flash will be used on STM32H747I-DISCO board(Dual core).
@@ -10,16 +10,16 @@ Each core will create his own file system using one instance:
 
   - Cortex-M7: will create file system on µSD using FileX stack.
   - Cortex-M4: will create file system on QSPI NOR Flash using FileX/LevelX stacks.
-  
+
 CM7 core:
 System Init, System clock config, voltage scaling and L1-Cache configuration are done by Cortex-M7.
 In the meantime Domain D2 is put in STOP mode (Cortex-M4 in deep sleep mode) to save power consumption.
 
-When system initialization is finished, Cortex-M7 will release Cortex-M4 when needed by means of HSEM notification but release could be also ensured 
+When system initialization is finished, Cortex-M7 will release Cortex-M4 when needed by means of HSEM notification but release could be also ensured
 by any Domain D2 wakeup source (SEV,EXTI..). This will guarantee that Cortex-M4 code execution starts after system initialization by Cortex-M7.
 
-After Domain D2 wakeup, if Cortex-M7 attempts to use any resource from such a domain, 
-the access will not be safe until “clock ready flag” of D2 domain is set (by hardware). 
+After Domain D2 wakeup, if Cortex-M7 attempts to use any resource from such a domain,
+the access will not be safe until “clock ready flag” of D2 domain is set (by hardware).
 The check could be done using this macro : __HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY).
 
 The main entry function, tx_application_define(), is called by ThreadX during kernel start. At this stage, all FileX resources are initialized, the SD card detection event is registered and drivers are initialized.
@@ -45,15 +45,17 @@ CM4 core:
 
 The application starts by calling the ThreadX's initialization routine which executes the main thread that handles file operations.
  At this stage, all FileX resources are created, the MT25TL01G driver is initialized and a single thread is created:
- 
+
   - fx_thread (Prio : 10; PreemptionPrio : 10) used for file operations.
 
 The fx_thread will start by formatting the NOR Flash using FileX services. The resulting file system is a FAT32 compatible, with 512 bytes per sector and 8 sectors per cluster.
-Optionally, the NOR flash can be erased prior to format, this allows LevelX and FileX to create a clean FAT FileSystem. Chip erase operation takes considerable time to finish whole flash reset, therefore it is disabled by default. 
-To enable it, please set the following flags in "lx_stm32_qspi_driver.h":
+The NOR flash should be erased prior to format either by the application or by the STM32CubeProgrammer, this allows LevelX and FileX to create a clean FAT FileSystem.
+Chip erase operation takes considerable time when done by the application, therefore it is disabled by default. 
+To enable it, please define  the flag  ``LX_STM32_QSPI_ERASE`` to <b> 1 </b> in "lx_stm32_ospi_driver.h":
+````
+#define LX_STM32_QSPI_ERASE                              1
+````
 
-  - LX_DRIVER_CALLS_QSPI_INIT
-  - LX_DRIVER_ERASES_QPSI_AFTER_INIT
 
 Upon successful opening of the flash media, FileX creates a file called "STM32.TXT" into the root directory, then writes into it some dummy data. Then file is re-opened in read only mode and its content is checked.
 
@@ -65,7 +67,7 @@ Through all the steps, FileX/LevelX services are called to print (using USRAT1) 
 
       - A file named STM32.TXT should be visible in the root directory of the SD card.
       - A blinking blue LED light marks the success of the file operations.
-	  
+
 - CM4 core:
 
       - Successful operation is marked by a toggeling green LED.
@@ -77,17 +79,17 @@ Through all the steps, FileX/LevelX services are called to print (using USRAT1) 
 
       - On failure, the red LED should start blinking and blue LED is off.
       - Error handler is called at the spot where the error occurred.
-	  
+
 - CM4 core:
 
       - On failure, the green LED is off.
 	  - an "Error" message will be printed to the serial port(USART1).
 
 #### <b>Assumptions if any</b>
-None
+- The SD card should be plugged prior to run the application.
 
 #### <b>Known limitations</b>
-None
+When regenerating application using STM32CubeMX, end user needs to add MDMA IRQ handler to stm32h7xx_it.c and configure MDMA interrupt in MX_MDMA_Init (main.c file)
 
 ### <b>Notes</b>
 
@@ -105,7 +107,7 @@ None
 #### <b>ThreadX usage hints</b>
 
  - ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.
- - ThreadX is configured with 100 ticks/sec by default, this should be taken into account when using delays or timeouts at application. It is always possible to reconfigure it in the "tx_user.h", the "TX_TIMER_TICKS_PER_SECOND" define,but this should be reflected in "tx_initialize_low_level.s" file too.
+ - ThreadX is configured with 100 ticks/sec by default, this should be taken into account when using delays or timeouts at application. It is always possible to reconfigure it in the "tx_user.h", the "TX_TIMER_TICKS_PER_SECOND" define,but this should be reflected in "tx_initialize_low_level.S" file too.
  - ThreadX is disabling all interrupts during kernel start-up to avoid any unexpected behavior, therefore all system related calls (HAL, BSP) should be done either at the beginning of the application or inside the thread entry functions.
  - ThreadX offers the "tx_application_define()" function, that is automatically called by the tx_kernel_enter() API.
    It is highly recommended to use it to create all applications ThreadX related resources (threads, semaphores, memory pools...)  but it should not in any way contain a system API call (HAL or BSP).
@@ -120,11 +122,11 @@ None
     + For MDK-ARM:
 	```
     either define the RW_IRAM1 region in the ".sct" file
-    or modify the line below in "tx_low_level_initilize.s to match the memory region being used
+    or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
 	```
     + For STM32CubeIDE add the following section into the .ld file:
-	``` 
+	```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -132,17 +134,17 @@ None
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	``` 
-	
+	```
+
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
-       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.	 
-       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).	 
+       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
        Read more in STM32CubeIDE User Guide, chapter: "Linker script".
-	  
-    + The "tx_initialize_low_level.s" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
-               
-               
+
+    + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
+
+
 #### <b>FileX/LevelX usage hints</b>
 
 - FileX sd driver is using SDMMC1 and the DMA, thus only D1 AXI-SRAM memoru (@ 0x24000000) is accessible by the sd driver.
@@ -174,8 +176,7 @@ In order to make the program work, you must do the following :
 
  - Open your preferred toolchain
  - For each target configuration (STM32H747_DISCO_CM7 and STM32H747_DISCO_CM4):
-      - Rebuild all files 
+      - Rebuild all files
 	  - Load your image into target memory.
- - After loading the two images, you have to reset the board in order to boot (Cortex-M7) and CPU2 (Cortex-M4) at once.	 
+ - After loading the two images, you have to reset the board in order to boot (Cortex-M7) and CPU2 (Cortex-M4) at once.
  - Run the application
- 

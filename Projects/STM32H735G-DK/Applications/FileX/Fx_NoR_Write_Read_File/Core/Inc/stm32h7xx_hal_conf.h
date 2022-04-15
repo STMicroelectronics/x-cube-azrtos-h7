@@ -1,12 +1,13 @@
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    app_filex.c
+  * @file    stm32h7xx_hal_conf.h
   * @author  MCD Application Team
-  * @brief   FileX applicative file
+  * @brief   HAL configuration file.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2020-2021 STMicroelectronics.
+  * Copyright (c) 2017 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -15,7 +16,7 @@
   *
   ******************************************************************************
   */
-
+/* USER CODE END Header */
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef STM32H7xx_HAL_CONF_H
 #define STM32H7xx_HAL_CONF_H
@@ -507,4 +508,3 @@
 #endif
 
 #endif /* STM32H7xx_HAL_CONF_H */
-

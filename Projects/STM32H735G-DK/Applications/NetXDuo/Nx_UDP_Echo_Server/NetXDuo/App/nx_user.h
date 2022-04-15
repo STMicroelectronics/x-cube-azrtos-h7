@@ -24,7 +24,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    nx_user.h                                           PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.8        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -43,11 +43,20 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
+/*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
+/*                                            resulting in version 6.1    */
+/*  08-02-2021     Yuxin Zhou               Modified comment(s), and      */
+/*                                            supported TCP/IP offload,   */
+/*                                            resulting in version 6.1.8  */
 /*                                                                        */
 /**************************************************************************/
 
 #ifndef NX_USER_H
 #define NX_USER_H
+
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
 
 /* Define various build options for the NetX Duo port. The application should
    either make changes here by commenting or un-commenting the conditional
@@ -170,11 +179,6 @@
 /* Defined, packet debug information is enabled.  */
 /*
 #define NX_ENABLE_PACKET_DEBUG_INFO
-*/
-
-/* If defined, the packet chain feature is removed. */
-/*
-#define NX_DISABLE_PACKET_CHAIN
 */
 
 /* Defined, disables packet pool information gathering. */
@@ -2541,5 +2545,19 @@
 /*
 #define NX_WEB_HTTP_SERVER_RETRY_MAX            10
 */
+
+/* Defined, the TCP/IP offload feature is enabled.
+   NX_ENABLE_INTERFACE_CAPABILITY must be defined to enable this feature.  */
+/* #define NX_ENABLE_TCPIP_OFFLOAD */
+
+#ifdef NX_DISABLE_IPV6
+#ifdef NX_DISABLE_IPV4
+#error "At least one of the IPv4 or IPv6 protocols must be enabled"
+#endif
+#endif
+
+/* USER CODE BEGIN 2 */
+
+/* USER CODE END 2 */
 
 #endif /* NX_USER_H */

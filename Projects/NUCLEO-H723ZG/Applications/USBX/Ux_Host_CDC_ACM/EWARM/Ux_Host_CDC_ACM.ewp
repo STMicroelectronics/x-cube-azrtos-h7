@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.50.6.28950</state>
+                    <state>8.50.6.28611</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -1118,7 +1118,7 @@
                     <name>$PROJ_DIR$\..\Core\Src\stm32h7xx_it.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\Core\Src\tx_initialize_low_level.s</name>
+                    <name>$PROJ_DIR$\..\Core\Src\tx_initialize_low_level.S</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\Core\Src\usart.c</name>
@@ -1751,6 +1751,9 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_system_initialize.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_system_tasks_run.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_system_uninitialize.c</name>
                 </file>
                 <file>
@@ -1958,7 +1961,13 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_cdc_acm_transfer_request_completed.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_cdc_acm_transmission_callback.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_cdc_acm_write.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_cdc_acm_write_with_callback.c</name>
                 </file>
             </group>
             <group>
@@ -2216,10 +2225,16 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_role_swap.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_tasks_run.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_transfer_request.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_transfer_request_abort.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_transfer_run.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_host_stack_uninitialize.c</name>

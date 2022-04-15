@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nor_flash_extended_cache_enable                 PORTABLE C      */ 
-/*                                                           6.1.7        */
+/*                                                           6.1.9        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -80,6 +80,10 @@
 /*  06-02-2021     Bhupendra Naphade        Modified comment(s), and      */
 /*                                            updated product constants   */
 /*                                            resulting in version 6.1.7  */
+/*  10-15-2021     Bhupendra Naphade        Modified comment(s), and      */
+/*                                            added check for out of      */
+/*                                            bound memory access,        */
+/*                                            resulting in version 6.1.9  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nor_flash_extended_cache_enable(LX_NOR_FLASH *nor_flash, VOID *memory, ULONG size)
@@ -135,7 +139,16 @@ ULONG   *cache_memory;
     }
     
     /* Save the number of cache entries.  */
-    nor_flash -> lx_nor_flash_extended_cache_entries =  i;
+    if(i > LX_NOR_EXTENDED_CACHE_SIZE)
+    {
+
+        nor_flash -> lx_nor_flash_extended_cache_entries =  LX_NOR_EXTENDED_CACHE_SIZE;
+    }
+    else
+    {
+
+        nor_flash -> lx_nor_flash_extended_cache_entries =  i;
+    }  
 
 #ifdef LX_THREAD_SAFE_ENABLE
 

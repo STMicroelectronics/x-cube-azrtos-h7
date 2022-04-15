@@ -69,8 +69,9 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr);
 /* Pirority IP creation */
 #define DEFAULT_MEMORY_SIZE              1024
 #define DEFAULT_MAIN_PRIORITY            10
-#define TOGGLE_LED_PRIORITY              15   
+#define TOGGLE_LED_PRIORITY              15
 #define DEFAULT_PRIORITY                 5
+#define LINK_PRIORITY                    11
  /*Packet payload size */
 #define PACKET_PAYLOAD_SIZE              1536
 /* Packet pool size */

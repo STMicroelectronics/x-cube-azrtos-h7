@@ -26,7 +26,7 @@
 /*  APPLICATION INTERFACE DEFINITION                       RELEASE        */
 /*                                                                        */
 /*    fx_api.h                                            PORTABLE C      */
-/*                                                           6.1.7        */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -63,6 +63,14 @@
 /*  06-02-2021     William E. Lamie         Modified comment(s), and      */
 /*                                            updated product constants,  */
 /*                                            resulting in version 6.1.7  */
+/*  08-02-2021     William E. Lamie         Modified comment(s), and      */
+/*                                            updated product constants,  */
+/*                                            resulting in version 6.1.8  */
+/*  01-31-2022     Bhupendra Naphade        Modified comment(s), and      */
+/*                                            removed fixed sector        */
+/*                                            size in exFAT, fixed        */
+/*                                            errors without cache,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 
@@ -112,7 +120,7 @@ extern   "C" {
 #define AZURE_RTOS_FILEX
 #define FILEX_MAJOR_VERSION     6
 #define FILEX_MINOR_VERSION     1
-#define FILEX_PATCH_VERSION     7
+#define FILEX_PATCH_VERSION     10
 
 /* Define the following symbols for backward compatibility */
 #define EL_PRODUCT_FILEX
@@ -178,6 +186,14 @@ extern   "C" {
 #endif
 #ifndef FX_FAULT_TOLERANT
 #define FX_FAULT_TOLERANT
+#endif
+#endif
+
+
+/* Determine if cache is disabled. If so, disable direct read sector cache.  */
+#ifdef FX_DISABLE_CACHE
+#ifndef FX_DISABLE_DIRECT_DATA_READ_CACHE_FILL
+#define FX_DISABLE_DIRECT_DATA_READ_CACHE_FILL
 #endif
 #endif
 
@@ -346,8 +362,6 @@ VOID _fx_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, ULONG
 #define FX_FILE_ID                             ((ULONG)0x46494C45)
 #define FX_FILE_CLOSED_ID                      ((ULONG)0x46494C43)
 #define FX_FILE_ABORTED_ID                     ((ULONG)0x46494C41)
-
-#define FX_BOOT_SECTOR_SIZE                    512
 
 
 /* The maximum path includes the entire path and the file name.  */
@@ -700,6 +714,10 @@ VOID _fx_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, ULONG
 #define FX_EXFAT_BITMAP_CLUSTER_FREE           0
 #define FX_EXFAT_BITMAP_CLUSTER_OCCUPIED       1
 
+#ifndef FX_EXFAT_MAX_CACHE_SIZE
+#define FX_EXFAT_MAX_CACHE_SIZE                512
+#endif
+#define FX_EXFAT_BITMAP_CACHE_SIZE             FX_EXFAT_MAX_CACHE_SIZE
 
 /* exFAT System Area Layout */
 
@@ -724,7 +742,6 @@ VOID _fx_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, ULONG
 #define  EXFAT_FAT_VOLUME_FLAG                 0x000
 #define  EXFAT_FAT_NUM_OF_FATS                 0x001
 #define  EXFAT_FAT_DRIVE_SELECT                0x080
-#define  EXFAT_FAT_BYTES_PER_SECTOR_SHIFT      0x009
 #define  EXFAT_FAT_VOLUME_NAME_FIELD_SIZE      11
 #define  EXFAT_BIT_MAP_FIRST_TABLE             0
 #define  EXFAT_LAST_CLUSTER_MASK               0xFFFFFFFF
@@ -929,7 +946,7 @@ typedef struct FX_MEDIA_STRUCT
 
     /* exFAT: Bitmap cache */
     /* Pointer to Bitmap cache */
-    UCHAR               fx_media_exfat_bitmap_cache[512];
+    UCHAR               fx_media_exfat_bitmap_cache[FX_EXFAT_BITMAP_CACHE_SIZE];
 
     /* Define beginning sector of Bitmap table.  */
     ULONG               fx_media_exfat_bitmap_start_sector;

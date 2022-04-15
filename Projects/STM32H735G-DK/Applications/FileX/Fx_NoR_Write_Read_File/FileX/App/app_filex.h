@@ -27,8 +27,8 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "fx_api.h"
-
 #include "fx_stm32_levelx_nor_driver.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"

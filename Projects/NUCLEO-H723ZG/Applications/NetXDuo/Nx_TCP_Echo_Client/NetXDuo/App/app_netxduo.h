@@ -84,10 +84,12 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr);
 #define DEFAULT_MEMORY_SIZE      1024
 #define DEFAULT_PRIORITY         10
 
+#define LINK_PRIORITY            11
+
 #define NULL_ADDRESS             0
 
 #define DEFAULT_PORT             6000
-#define TCP_SERVER_PORT          6001
+#define TCP_SERVER_PORT          DEFAULT_PORT
 #define TCP_SERVER_ADDRESS       IP_ADDRESS(192, 168, 1, 1)
 
 #define MAX_PACKET_COUNT         100

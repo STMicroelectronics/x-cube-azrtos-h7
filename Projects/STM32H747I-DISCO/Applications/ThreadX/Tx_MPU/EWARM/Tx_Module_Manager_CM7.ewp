@@ -229,6 +229,7 @@
                     <state>CORE_CM7</state>
                     <state>TXM_MODULE_INCLUDE_USER_DEFINE_FILE</state>
                     <state>TX_INCLUDE_USER_DEFINE_FILE</state>
+                    <state>TXM_MODULE_MANAGER_16_MPU</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -540,7 +541,7 @@
                 </option>
                 <option>
                     <name>ADefines</name>
-                    <state></state>
+                    <state>TXM_MODULE_MANAGER_16_MPU</state>
                 </option>
                 <option>
                     <name>AList</name>
@@ -1097,7 +1098,7 @@
                     <name>$PROJ_DIR$\..\Core\Src\stm32h7xx_it.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\Core\Src\tx_initialize_low_level.s</name>
+                    <name>$PROJ_DIR$\..\Core\Src\tx_initialize_low_level.S</name>
                 </file>
             </group>
         </group>

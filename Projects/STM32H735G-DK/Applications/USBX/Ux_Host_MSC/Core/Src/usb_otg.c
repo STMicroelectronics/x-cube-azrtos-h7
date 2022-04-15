@@ -1,3 +1,4 @@
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    usb_otg.c
@@ -6,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2020-2021 STMicroelectronics.
+  * Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -15,7 +16,7 @@
   *
   ******************************************************************************
   */
-
+/* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "usb_otg.h"
 
@@ -64,6 +65,7 @@ void HAL_HCD_MspInit(HCD_HandleTypeDef* hcdHandle)
   /* USER CODE BEGIN USB_OTG_HS_MspInit 0 */
 
   /* USER CODE END USB_OTG_HS_MspInit 0 */
+
   /** Initializes the peripherals clock
   */
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USB;
@@ -80,6 +82,7 @@ void HAL_HCD_MspInit(HCD_HandleTypeDef* hcdHandle)
     {
       Error_Handler();
     }
+
   /** Enable USB Voltage detector
   */
     HAL_PWREx_EnableUSBVoltageDetector();

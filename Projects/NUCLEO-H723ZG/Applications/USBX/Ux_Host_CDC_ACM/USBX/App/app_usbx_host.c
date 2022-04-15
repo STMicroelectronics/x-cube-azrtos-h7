@@ -80,6 +80,7 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
   /* USER CODE END MX_USBX_Host_MEM_POOL */
 
   /* USER CODE BEGIN MX_USBX_Host_Init */
+#if (USE_STATIC_ALLOCATION == 1)
   CHAR *pointer;
 
   /* Store byte_pool into ux_app_byte_bool */
@@ -165,7 +166,7 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
   {
     return TX_GROUP_ERROR;
   }
-
+#endif
   /* USER CODE END MX_USBX_Host_Init */
 
   return ret;
@@ -217,6 +218,7 @@ void  usbx_app_thread_entry(ULONG arg)
         ux_app_state = App_Idle;
       }
     }
+   tx_thread_sleep(MS_TO_TICK(10));
   }
 }
 

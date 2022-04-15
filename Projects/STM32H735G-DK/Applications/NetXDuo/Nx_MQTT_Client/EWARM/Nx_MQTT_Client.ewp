@@ -363,6 +363,7 @@
                     <state>$PROJ_DIR$/../../../../../../Drivers/BSP/Components/lan8742/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/addons/mqtt/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/addons/sntp/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/addons/dns/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/addons/dhcp/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/inc/</state>
@@ -371,6 +372,8 @@
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/nx_secure/ports/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/crypto_libraries/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/crypto_libraries/ports/cortex_m7/iar/inc/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/crypto_libraries/ports/cortex_m7/ac6/inc/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/crypto_libraries/ports/cortex_m4/ac6/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/BSP/STM32H735G-DK</state>
@@ -1122,7 +1125,7 @@
                     <name>$PROJ_DIR$\..\Core\Src\stm32h7xx_it.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\Core\Src\tx_initialize_low_level.s</name>
+                    <name>$PROJ_DIR$\..\Core\Src\tx_initialize_low_level.S</name>
                 </file>
             </group>
             <group>
@@ -1279,6 +1282,12 @@
                 <name>Network/NetXDuo/Addons MQTT</name>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\addons\mqtt\nxd_mqtt_client.c</name>
+                </file>
+            </group>
+            <group>
+                <name>Network/NetXDuo/Addons SNTP</name>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\addons\sntp\nxd_sntp_client.c</name>
                 </file>
             </group>
             <group>
@@ -1902,6 +1911,30 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_md5.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_nd_cache_add.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_nd_cache_add_entry.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_nd_cache_delete_internal.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_nd_cache_fast_periodic_update.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_nd_cache_find_entry.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_nd_cache_find_entry_by_mac_addr.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_nd_cache_interface_entries_delete.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_nd_cache_slow_periodic_update.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_packet_allocate.c</name>
                 </file>
                 <file>
@@ -2064,6 +2097,9 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_server_socket_accept.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_server_socket_driver_listen.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_server_socket_listen.c</name>
                 </file>
                 <file>
@@ -2095,6 +2131,12 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_socket_disconnect_complete_notify.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_socket_driver_establish.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_socket_driver_packet_receive.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_socket_establish_notify.c</name>
@@ -2236,6 +2278,9 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_udp_socket_delete.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_udp_socket_driver_packet_receive.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_udp_socket_info_get.c</name>
@@ -3010,6 +3055,12 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\nx_secure\src\nx_secure_dtls_session_send.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\nx_secure\src\nx_secure_dtls_session_sliding_window_check.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\nx_secure\src\nx_secure_dtls_session_sliding_window_update.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\nx_secure\src\nx_secure_dtls_session_start.c</name>

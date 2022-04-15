@@ -23,7 +23,7 @@
 
 //#define USE_DYNAMIC_MEMORY_ALLOCATION
 
-#ifdef __CC_ARM
+#if defined(__clang__)
 @/**************************************************************************/
 @/*                                                                        */
 @/*       Copyright (c) Microsoft Corporation. All rights reserved.        */
@@ -60,7 +60,9 @@
     .global     __tx_PendSVHandler                  @ PendSV
     .global     __tx_SysTickHandler                 @ SysTick
     .global     __tx_IntHandler                     @ Int 0
+#ifdef USE_DYNAMIC_MEMORY_ALLOCATION
     .global     Image$$RW_IRAM1$$ZI$$Limit
+#endif
     .global     __Vectors
 @
 @
@@ -205,8 +207,16 @@ __tx_IntHandler:
 @ VOID InterruptHandler (VOID)
 @ {
     PUSH    {r0, lr}
+#ifdef TX_EXECUTION_PROFILE_ENABLE
+    BL      _tx_execution_isr_enter             @ Call the ISR enter function
+#endif
+
 @    /* Do interrupt handler work here */
 @    /* BL <your C Function>.... */
+
+#ifdef TX_EXECUTION_PROFILE_ENABLE
+    BL      _tx_execution_isr_exit              @ Call the ISR exit function
+#endif
     POP     {r0, lr}
     BX      LR
 @ }
@@ -222,7 +232,13 @@ SysTick_Handler:
 @ {
 @
     PUSH    {r0, lr}
+#ifdef TX_EXECUTION_PROFILE_ENABLE
+    BL      _tx_execution_isr_enter             @ Call the ISR enter function
+#endif
     BL      _tx_timer_interrupt
+#ifdef TX_EXECUTION_PROFILE_ENABLE
+    BL      _tx_execution_isr_exit              @ Call the ISR exit function
+#endif
     POP     {r0, lr}
     BX      LR
 @ }
@@ -399,11 +415,11 @@ SysTick_Handler:
 ; {
 ;
     PUSH    {r0, lr}
-#ifdef TX_ENABLE_EXECUTION_CHANGE_NOTIFY
+#ifdef TX_EXECUTION_PROFILE_ENABLE
     BL      _tx_execution_isr_enter             ; Call the ISR enter function
 #endif
     BL      _tx_timer_interrupt
-#ifdef TX_ENABLE_EXECUTION_CHANGE_NOTIFY
+#ifdef TX_EXECUTION_PROFILE_ENABLE
     BL      _tx_execution_isr_exit              ; Call the ISR exit function
 #endif
     POP     {r0, lr}
@@ -412,7 +428,7 @@ SysTick_Handler:
     END
 #endif
 
-#ifdef __GNUC__
+#if defined (__GNUC__) && !defined(__clang__)
 @/**************************************************************************/
 @/*                                                                        */
 @/*       Copyright (c) Microsoft Corporation. All rights reserved.        */
@@ -599,14 +615,14 @@ __tx_IntHandler:
 @ VOID InterruptHandler (VOID)
 @ {
     PUSH    {r0, lr}
-#ifdef TX_ENABLE_EXECUTION_CHANGE_NOTIFY
+#ifdef TX_EXECUTION_PROFILE_ENABLE
     BL      _tx_execution_isr_enter             @ Call the ISR enter function
 #endif
 
 @    /* Do interrupt handler work here */
 @    /* BL <your C Function>.... */
 
-#ifdef TX_ENABLE_EXECUTION_CHANGE_NOTIFY
+#ifdef TX_EXECUTION_PROFILE_ENABLE
     BL      _tx_execution_isr_exit              @ Call the ISR exit function
 #endif
     POP     {r0, lr}
@@ -624,11 +640,11 @@ SysTick_Handler:
 @ {
 @
     PUSH    {r0, lr}
-#ifdef TX_ENABLE_EXECUTION_CHANGE_NOTIFY
+#ifdef TX_EXECUTION_PROFILE_ENABLE
     BL      _tx_execution_isr_enter             @ Call the ISR enter function
 #endif
     BL      _tx_timer_interrupt
-#ifdef TX_ENABLE_EXECUTION_CHANGE_NOTIFY
+#ifdef TX_EXECUTION_PROFILE_ENABLE
     BL      _tx_execution_isr_exit              @ Call the ISR exit function
 #endif
     POP     {r0, lr}

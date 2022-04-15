@@ -1116,7 +1116,7 @@
                     <name>$PROJ_DIR$\..\Core\Src\stm32h7xx_it.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\Core\Src\tx_initialize_low_level.s</name>
+                    <name>$PROJ_DIR$\..\Core\Src\tx_initialize_low_level.S</name>
                 </file>
             </group>
             <group>
@@ -1908,6 +1908,9 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_server_socket_accept.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_server_socket_driver_listen.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_server_socket_listen.c</name>
                 </file>
                 <file>
@@ -1939,6 +1942,12 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_socket_disconnect_complete_notify.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_socket_driver_establish.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_socket_driver_packet_receive.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_socket_establish_notify.c</name>
@@ -2080,6 +2089,9 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_udp_socket_delete.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_udp_socket_driver_packet_receive.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_udp_socket_info_get.c</name>

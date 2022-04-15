@@ -33,14 +33,17 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
-#define FILEX_DEFAULT_STACK_SIZE               (2 * 1024)
+#define DEFAULT_SECTOR_SIZE              512
+#define FILEX_DEFAULT_STACK_SIZE         (3 * 1024)
 
 /* Thread_0 priority */
 #define DEFAULT_THREAD_PRIO              10
 
 /* Thread_0 preemption priority */
 #define DEFAULT_PREEMPTION_THRESHOLD      DEFAULT_THREAD_PRIO
+
+/* fx media buffer of size equals a one sector */
+#define DEFAULT_MEDIA_BUF_LENGTH         DEFAULT_SECTOR_SIZE
 
 /* USER CODE END PD */
 
@@ -54,7 +57,7 @@
 
 /* Buffer for FileX FX_MEDIA sector cache. this should be 32-Bytes
 aligned to avoid cache maintenance issues */
-ALIGN_32BYTES (UCHAR media_memory[1024]);
+ALIGN_32BYTES (uint32_t media_memory[DEFAULT_MEDIA_BUF_LENGTH / sizeof(uint32_t)]);
 
 /* Define FileX global data structures.  */
 FX_MEDIA        nor_flash_disk;
@@ -132,31 +135,24 @@ void fx_thread_entry(ULONG thread_input)
   ULONG bytes_read;
   CHAR read_buffer[32];
   CHAR data[] = "This is FileX working on STM32";
-  BSP_QSPI_Info_t qspi_info;
 
   printf("[Cortex-M4]: FileX/LevelX NOR QUAD-SPI Application Start.\n");
 
-  /* Get NOR chip info */
-  if(BSP_QSPI_GetInfo(LX_STM32_QSPI_INSTANCE, &qspi_info) != BSP_ERROR_NONE)
-  {
-    Error_Handler();
-  }
-
   /* Print the absolute size of the NOR chip*/
-  printf("[Cortex-M4]: Total NOR Flash Chip size is: %lu bytes.\n", (unsigned long)qspi_info.FlashSize);
+  printf("[Cortex-M4]: Total NOR Flash Chip size is: %lu bytes.\n", (unsigned long)LX_STM32_QSPI_FLASH_SIZE);
 
   /* Format the NOR flash as FAT */
   status =  fx_media_format(&nor_flash_disk,
                             fx_stm32_levelx_nor_driver,   // Driver entry
                             (VOID*)LX_NOR_QSPI_DRIVER_ID, // Device info pointer
-                            media_memory,                 // Media buffer pointer
+                            (UCHAR *) media_memory,       // Media buffer pointer
                             sizeof(media_memory),         // Media buffer size
                             "NOR_FLASH_DISK",             // Volume Name
                             1,                            // Number of FATs
                             32,                           // Directory Entries
                             0,                            // Hidden sectors
-                            qspi_info.FlashSize/512,      // Total sectors
-                            512,                          // Sector size
+                            LX_STM32_QSPI_FLASH_SIZE / DEFAULT_SECTOR_SIZE,      // Total sectors
+                            DEFAULT_SECTOR_SIZE,          // Sector size
                             8,                            // Sectors per cluster
                             1,                            // Heads
                             1);                           // Sectors per track

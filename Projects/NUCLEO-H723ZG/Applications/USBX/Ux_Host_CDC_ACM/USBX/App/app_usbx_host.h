@@ -35,6 +35,7 @@ extern "C" {
 #include "ux_hcd_stm32.h"
 #include "stm32h7xx_nucleo.h"
 #include "ux_host_class_cdc_acm.h"
+#include "app_azure_rtos_config.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

@@ -4,7 +4,7 @@ This is an example Application to be used with the IAP_main. This example is mea
 that need to be used in order to successfully deploy an application with the IAP_main bootloader.
 
 Flash start address for this application is moved away from the IAP_main bootloader at the address 0x08020000.
-In order to configure the new start address, in IAR:
+In order to configure the new start address, in EWARM IDE:
 
 This application should be configured to start from an offset into the flash that does not overlap with the IAP_main application memory sections.
 Particularly, linker options should be changed to set the **Vector Table** and the **ROM START** both pointing to **APP_ADDRESS**.
@@ -21,7 +21,11 @@ IAP_binary_template should toggle both LEDs.
 ### <b>Error behaviour:</b>
 On failure, red LED should toggle.
 
+### <b>Keywords</b>
+
+IAP, binary, template
+
 ### <b>Note</b>
-This application can be debugged using IAR by going into **Project** menu and click **Attach to Running Target**.
+This application can be debugged using EWARM IDE by going into **Project** menu and click **Attach to Running Target**.
 
 A pre-built binary can be found under BIN directory.

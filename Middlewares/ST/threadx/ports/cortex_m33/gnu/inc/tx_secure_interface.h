@@ -25,8 +25,8 @@
 /*                                                                        */
 /*  COMPONENT DEFINITION                                   RELEASE        */
 /*                                                                        */
-/*    tx_secure_interface.h                               Cortex-M33      */
-/*                                                           6.1          */
+/*    tx_secure_interface.h                               PORTABLE C      */
+/*                                                            6.1         */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Scott Larson, Microsoft Corporation                                 */
@@ -42,7 +42,7 @@
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  09-30-2020     Scott Larson             Initial Version 6.1           */
+/*  09-30-2020      Scott Larson            Initial Version 6.1           */
 /*                                                                        */
 /**************************************************************************/
 
@@ -51,9 +51,10 @@
 
 /* Define internal secure thread stack function prototypes.  */
 
-extern void    _tx_thread_secure_stack_initialize(void);
+extern UINT    _tx_thread_secure_mode_stack_initialize(void);
 extern UINT    _tx_thread_secure_mode_stack_allocate(TX_THREAD *thread_ptr, ULONG stack_size);
 extern UINT    _tx_thread_secure_mode_stack_free(TX_THREAD *thread_ptr);
+extern void    _tx_thread_secure_stack_initialize(void);
 extern void    _tx_thread_secure_stack_context_save(TX_THREAD *thread_ptr);
 extern void    _tx_thread_secure_stack_context_restore(TX_THREAD *thread_ptr);
 

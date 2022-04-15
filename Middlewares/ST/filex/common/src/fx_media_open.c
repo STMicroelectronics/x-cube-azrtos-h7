@@ -36,7 +36,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_media_open                                      PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -129,6 +129,9 @@
 /*                                            disable force memset,       */
 /*                                            build options and cache,    */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     William E. Lamie         Modified comment(s), fixed    */
+/*                                            errors without cache,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_media_open(FX_MEDIA *media_ptr, CHAR *media_name,
@@ -163,10 +166,10 @@ FX_INT_SAVE_AREA
 
 #ifdef FX_DISABLE_FORCE_MEMORY_OPERATION
     _fx_utility_memory_set((UCHAR *)media_ptr, 0, sizeof(FX_MEDIA));
+#endif /* FX_DISABLE_FORCE_MEMORY_OPERATION */
 #ifdef FX_DISABLE_CACHE
     media_ptr -> fx_media_memory_buffer_sector = (ULONG64)-1;
 #endif /* FX_DISABLE_CACHE */
-#endif /* FX_DISABLE_FORCE_MEMORY_OPERATION */
 
     /* Save the basic information in the media control block.  */
     media_ptr -> fx_media_name =                        media_name;

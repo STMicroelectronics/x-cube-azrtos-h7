@@ -5,9 +5,9 @@
 #include "txm_module.h"
 
 /* Define constants. */
-#define DEFAULT_STACK_SIZE         1024
-#define DEFAULT_BYTE_POOL_SIZE     9120
-#define DEFAULT_BLOCK_POOL_SIZE    1024
+#define DEFAULT_STACK_SIZE         512
+#define DEFAULT_BYTE_POOL_SIZE     2048
+#define DEFAULT_BLOCK_POOL_SIZE    512
 
 #define READONLY_REGION            0x24040000
 #define READWRITE_REGION           0x24040100

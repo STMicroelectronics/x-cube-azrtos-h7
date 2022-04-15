@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nand_flash_block_obsoleted_check                PORTABLE C      */ 
-/*                                                           6.1.7        */
+/*                                                           6.1.9        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -86,6 +86,10 @@
 /*                                            resulting in version 6.1    */
 /*  06-02-2021     Bhupendra Naphade        Modified comment(s),          */
 /*                                            resulting in version 6.1.7  */
+/*  10-15-2021     Bhupendra Naphade        Modified comment(s),          */
+/*                                            removed multiple write      */
+/*                                            to page 0,                  */
+/*                                            resulting in version 6.1.9  */
 /*                                                                        */
 /**************************************************************************/
 VOID  _lx_nand_flash_block_obsoleted_check(LX_NAND_FLASH *nand_flash, ULONG block)
@@ -316,21 +320,10 @@ UINT                                status;
                 }
 
                 /* Now store the erase count.  */
-                page_word_ptr[0] =  (erase_count | LX_BLOCK_ERASED);
+                page_word_ptr[0] =  (erase_count);
         
                 /* Write the erase count for the block.  */
                 status =  _lx_nand_flash_driver_write(nand_flash, block, 0, page_word_ptr, LX_NAND_ERASE_COUNT_WRITE_SIZE);
-       
-                /* Check to see if the write was successful.  */
-                if (status == LX_SUCCESS)
-                {
-                
-                    /* Now store the erase count.  */
-                    page_word_ptr[0] =  erase_count;
-        
-                    /* Write the erase count for the block.  */
-                    status =  _lx_nand_flash_driver_write(nand_flash, block, 0, page_word_ptr, LX_NAND_ERASE_COUNT_WRITE_SIZE);
-                }
 
                 /* Check for an error from flash driver.   */
                 if (status)

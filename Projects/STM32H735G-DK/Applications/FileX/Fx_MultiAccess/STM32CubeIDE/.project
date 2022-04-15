@@ -177,14 +177,9 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/stm32h7xx_it.c</locationURI>
 		</link>
 		<link>
-			<name>Application/User/Core/tx_initialize_low_level.s</name>
+			<name>Application/User/Core/tx_initialize_low_level.S</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/tx_initialize_low_level.s</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/STM32H735G-DK/stm32h735g_discovery.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Drivers/BSP/STM32H735G-DK/stm32h735g_discovery.c</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/tx_initialize_low_level.S</locationURI>
 		</link>
 		<link>
 			<name>Application/User/AZURE_RTOS/App/app_azure_rtos.c</name>

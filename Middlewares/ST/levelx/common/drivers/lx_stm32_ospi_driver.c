@@ -38,10 +38,6 @@ static UINT check_status(void)
     {
       return LX_SUCCESS;
     }
-    else
-    {
-      return LX_ERROR;
-    }
   }
 
   return LX_ERROR;
@@ -62,8 +58,6 @@ UINT lx_stm32_ospi_initialize(LX_NOR_FLASH *nor_flash)
   if (is_initialized == LX_FALSE)
   {
 
-#if (LX_STM32_OSPI_INIT == 1)
-
     ret = lx_stm32_ospi_lowlevel_init(LX_STM32_OSPI_INSTANCE);
 
     if (ret != 0)
@@ -79,8 +73,6 @@ UINT lx_stm32_ospi_initialize(LX_NOR_FLASH *nor_flash)
     {
       return LX_ERROR;
     }
-#endif
-
 #endif
 
     if (check_status() != LX_SUCCESS)

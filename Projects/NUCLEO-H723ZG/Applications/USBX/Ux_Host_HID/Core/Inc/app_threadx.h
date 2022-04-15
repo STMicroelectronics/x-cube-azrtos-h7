@@ -30,7 +30,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "app_azure_rtos_config.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

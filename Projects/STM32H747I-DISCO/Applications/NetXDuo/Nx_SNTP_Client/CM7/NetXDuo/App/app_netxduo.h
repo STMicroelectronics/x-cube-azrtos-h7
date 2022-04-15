@@ -64,9 +64,12 @@ extern "C" {
 
 #define DEFAULT_MAIN_PRIORITY        10
 #define DEFAULT_PRIORITY             5
+#define LINK_PRIORITY                11
 
 #define NULL_ADDRESS                 0
-#define USER_DNS_ADDRESS             IP_ADDRESS(192, 168, 1, 1)
+
+/* USER_DNS_ADDRESS should be defined by user if necessary */
+#define USER_DNS_ADDRESS             IP_ADDRESS(1, 1, 1, 1)
 
 #define DEFAULT_TIMEOUT              10 * NX_IP_PERIODIC_RATE
 

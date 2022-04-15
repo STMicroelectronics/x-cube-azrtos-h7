@@ -31,7 +31,8 @@ extern "C" {
 
 /* USER CODE END ET */
 
-extern TX_SEMAPHORE transfer_semaphore;
+extern TX_SEMAPHORE sd_tx_semaphore;
+extern TX_SEMAPHORE sd_rx_semaphore;
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
@@ -75,16 +76,17 @@ extern TX_SEMAPHORE transfer_semaphore;
 
 /* Macro called before initializing the SD driver
  * e.g. create a semaphore used for transfer notification */
-/* USER CODE BEGIN FX_STM32_SD_PRE_INIT_TX */
+/* USER CODE BEGIN FX_STM32_SD_PRE_INIT */
 
 #define FX_STM32_SD_PRE_INIT(_media_ptr)                do { \
-                                                          if (tx_semaphore_create(&transfer_semaphore, "sd transfer semaphore", 1) != TX_SUCCESS) \
+                                                          if ((tx_semaphore_create(&sd_rx_semaphore, "sd rx transfer semaphore", 0) != TX_SUCCESS) || \
+                                                              (tx_semaphore_create(&sd_tx_semaphore, "sd tx transfer semaphore", 0) != TX_SUCCESS))  \
                                                           { \
                                                             _media_ptr->fx_media_driver_status = FX_IO_ERROR; \
                                                           } \
                                                         } while(0)
 
-/* USER CODE END FX_STM32_SD_PRE_INIT_TX */
+/* USER CODE END FX_STM32_SD_PRE_INIT */
 
 /* Macro called after initializing the SD driver */
 /* USER CODE BEGIN FX_STM32_SD_POST_INIT */
@@ -94,13 +96,14 @@ extern TX_SEMAPHORE transfer_semaphore;
 /* USER CODE END FX_STM32_SD_POST_INIT */
 
 /* Macro called after the SD deinit */
-/* USER CODE BEGIN FX_STM32_SD_POST_DEINIT_TX */
+/* USER CODE BEGIN FX_STM32_SD_POST_DEINIT */
 
 #define FX_STM32_SD_POST_DEINIT(_media_ptr)             do { \
-                                                          tx_semaphore_delete(&transfer_semaphore); \
+                                                          tx_semaphore_delete(&sd_rx_semaphore); \
+                                                          tx_semaphore_delete(&sd_tx_semaphore); \
                                                         } while(0)
 
-/* USER CODE END FX_STM32_SD_POST_DEINIT_TX */
+/* USER CODE END FX_STM32_SD_POST_DEINIT */
 
 /* Macro called after the abort request */
 /* USER CODE BEGIN FX_STM32_SD_POST_ABORT */
@@ -110,64 +113,57 @@ extern TX_SEMAPHORE transfer_semaphore;
 /* USER CODE END FX_STM32_SD_POST_ABORT */
 
 /* Macro called before performing read operation */
-/* USER CODE BEGIN FX_STM32_SD_PRE_READ_TRANSFER_DMA */
+/* USER CODE BEGIN FX_STM32_SD_PRE_READ_TRANSFER */
 
-#define FX_STM32_SD_PRE_READ_TRANSFER(_media_ptr)       do { \
-                                                          if(tx_semaphore_get(&transfer_semaphore, FX_STM32_SD_DEFAULT_TIMEOUT) != TX_SUCCESS) \
-                                                          { \
-                                                            return FX_IO_ERROR; \
-                                                          } \
-                                                        } while(0)
+#define FX_STM32_SD_PRE_READ_TRANSFER(_media_ptr)
 
-/* USER CODE END FX_STM32_SD_PRE_READ_TRANSFER_DMA */
+/* USER CODE END FX_STM32_SD_PRE_READ_TRANSFER */
 
 /* Macro called after performing read operation */
-/* USER CODE BEGIN FX_STM32_SD_POST_READ_TRANSFER_TX */
+/* USER CODE BEGIN FX_STM32_SD_POST_READ_TRANSFER */
 
-#define FX_STM32_SD_POST_READ_TRANSFER(_media_ptr)      do { \
-                                                          if(tx_semaphore_put(&transfer_semaphore) != TX_SUCCESS) \
-                                                          { \
-                                                            return FX_IO_ERROR; \
-                                                          } \
-                                                        } while(0)
+#define FX_STM32_SD_POST_READ_TRANSFER(_media_ptr)
 
-/* USER CODE END FX_STM32_SD_POST_READ_TRANSFER_TX */
+/* USER CODE END FX_STM32_SD_POST_READ_TRANSFER */
 
 /* Macro for read error handling */
-/* USER CODE BEGIN FX_STM32_SD_READ_TRANSFER_ERROR_TX */
+/* USER CODE BEGIN FX_STM32_SD_READ_TRANSFER_ERROR */
 
-#define FX_STM32_SD_READ_TRANSFER_ERROR(_status_)       do { \
-                                                          tx_semaphore_put(&transfer_semaphore); \
-                                                          _status_ = FX_IO_ERROR; \
-                                                        } while(0)
+#define FX_STM32_SD_READ_TRANSFER_ERROR(_status_)
 
-/* USER CODE END FX_STM32_SD_READ_TRANSFER_ERROR_TX */
+/* USER CODE END FX_STM32_SD_READ_TRANSFER_ERROR */
 
 /* Define how to notify about Read completion operation */
-/* USER CODE BEGIN FX_STM32_SD_READ_CPLT_NOTIFY_TX */
+
+/* USER CODE BEGIN FX_STM32_SD_READ_CPLT_NOTIFY */
 
 #define FX_STM32_SD_READ_CPLT_NOTIFY()                  do { \
-                                                          if(tx_semaphore_get(&transfer_semaphore, FX_STM32_SD_DEFAULT_TIMEOUT) != TX_SUCCESS) \
-                                                          { \
-                                                            return FX_IO_ERROR; \
-                                                          } \
+                                                          if(tx_semaphore_get(&sd_rx_semaphore, FX_STM32_SD_DEFAULT_TIMEOUT) != TX_SUCCESS) \
+                                                            { \
+                                                              return FX_IO_ERROR; \
+                                                            } \
                                                         } while(0)
 
-/* USER CODE END FX_STM32_SD_READ_CPLT_NOTIFY_TX */
+/* USER CODE END FX_STM32_SD_READ_CPLT_NOTIFY */
 
 /* Define how to notify about write completion operation */
-/* USER CODE BEGIN FX_STM32_SD_WRITE_CPLT_NOTIFY_TX */
+/* USER CODE BEGIN FX_STM32_SD_WRITE_CPLT_NOTIFY */
 
-#define FX_STM32_SD_WRITE_CPLT_NOTIFY                   FX_STM32_SD_READ_CPLT_NOTIFY
+#define FX_STM32_SD_WRITE_CPLT_NOTIFY()                 do { \
+                                                          if(tx_semaphore_get(&sd_tx_semaphore, FX_STM32_SD_DEFAULT_TIMEOUT) != TX_SUCCESS) \
+                                                            { \
+                                                              return FX_IO_ERROR; \
+                                                            } \
+                                                        } while(0)
 
-/* USER CODE END FX_STM32_SD_WRITE_CPLT_NOTIFY_TX */
+/* USER CODE END FX_STM32_SD_WRITE_CPLT_NOTIFY */
 
 /* Macro called before performing write operation */
-/* USER CODE BEGIN FX_STM32_SD_PRE_WRITE_TRANSFER_TX */
+/* USER CODE BEGIN FX_STM32_SD_PRE_WRITE_TRANSFER */
 
-#define FX_STM32_SD_PRE_WRITE_TRANSFER                  FX_STM32_SD_PRE_READ_TRANSFER
+#define FX_STM32_SD_PRE_WRITE_TRANSFER(_media_ptr)
 
-/* USER CODE END FX_STM32_SD_PRE_WRITE_TRANSFER_TX */
+/* USER CODE END FX_STM32_SD_PRE_WRITE_TRANSFER */
 
 /* Macro called after performing write operation */
 /* USER CODE BEGIN FX_STM32_SD_POST_WRITE_TRANSFER */
@@ -179,9 +175,9 @@ extern TX_SEMAPHORE transfer_semaphore;
 /* Macro for write error handling */
 /* USER CODE BEGIN FX_STM32_SD_WRITE_TRANSFER_ERROR */
 
-#define FX_STM32_SD_WRITE_TRANSFER_ERROR                FX_STM32_SD_READ_TRANSFER_ERROR
+#define FX_STM32_SD_WRITE_TRANSFER_ERROR(_status_)
 
-/* USER CODE END FX_STM32_SD_WRITE_TRANFSER_ERROR */
+/* USER CODE END FX_STM32_SD_WRITE_TRANSFER_ERROR */
 
 /* Exported functions prototypes ---------------------------------------------*/
 

@@ -1,4 +1,3 @@
-
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -39,7 +38,10 @@ extern "C" {
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
-/* define the size of static threadX byte memory pools */
+/* Using static memory allocation via threadX Byte memory pools */
+
+#define USE_STATIC_ALLOCATION                    1
+
 #define TX_APP_MEM_POOL_SIZE                     1024
 
 #define FX_APP_MEM_POOL_SIZE                     1024
@@ -47,7 +49,6 @@ extern "C" {
 #define NX_APP_MEM_POOL_SIZE                     110 * 1024
 
 #define UX_DEVICE_APP_MEM_POOL_SIZE              40 * 1024
-
 /* USER CODE BEGIN EC */
 
 /* USER CODE END EC */

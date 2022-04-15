@@ -30,7 +30,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_secure_dtls_process_helloverifyrequest          PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -66,6 +66,9 @@
 /*                                            buffer length verification, */
 /*                                            verified memcpy use cases,  */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Timothy Stapko           Modified comment(s),          */
+/*                                            updated cookie handling,    */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT _nx_secure_dtls_process_helloverifyrequest(NX_SECURE_DTLS_SESSION *dtls_session,
@@ -90,18 +93,20 @@ UINT length;
     dtls_session -> nx_secure_dtls_cookie_length = packet_buffer[length];
     length += 1;
 
-    if (dtls_session -> nx_secure_dtls_cookie_length > sizeof(dtls_session -> nx_secure_dtls_cookie))
+    if (dtls_session -> nx_secure_dtls_cookie_length > NX_SECURE_DTLS_MAX_COOKIE_LENGTH)
     {
+        dtls_session -> nx_secure_dtls_cookie_length = 0;
         return(NX_SECURE_TLS_INCORRECT_MESSAGE_LENGTH);
     }
 
     if ((3u + dtls_session -> nx_secure_dtls_cookie_length) > message_length)
     {
+        dtls_session -> nx_secure_dtls_cookie_length = 0;
         return(NX_SECURE_TLS_INCORRECT_MESSAGE_LENGTH);
     }
 
-    /* Save off the cookie. */
-    NX_SECURE_MEMCPY(dtls_session -> nx_secure_dtls_cookie, &packet_buffer[length], dtls_session -> nx_secure_dtls_cookie_length); /* Use case of memcpy is verified. */
+    /* Save off the cookie pointer. */
+    dtls_session -> nx_secure_dtls_client_cookie_ptr = &packet_buffer[length];
 
     /* Set our state to indicate we sucessfully parsed the HelloVerifyRequest. */
     dtls_session -> nx_secure_dtls_tls_session.nx_secure_tls_client_state = NX_SECURE_TLS_CLIENT_STATE_HELLO_VERIFY;

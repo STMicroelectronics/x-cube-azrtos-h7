@@ -46,6 +46,7 @@ static UINT        _nx_dhcp_extract_information(NX_DHCP *dhcp_ptr, NX_DHCP_INTER
 static UINT        _nx_dhcp_get_option_value(UCHAR *bootp_message, UINT option, ULONG *value, UINT length);
 static UINT        _nx_dhcp_add_option_value(UCHAR *bootp_message, UINT option, UINT size, ULONG value, UINT *index);
 static UINT        _nx_dhcp_add_option_string(UCHAR *bootp_message, UINT option, UINT size, UCHAR *value, UINT *index);
+static UINT        _nx_dhcp_add_option_parameter_request(NX_DHCP *dhcp_ptr, UCHAR *bootp_message, UINT *index);
 static ULONG       _nx_dhcp_update_timeout(ULONG timeout);
 static ULONG       _nx_dhcp_update_renewal_timeout(ULONG timeout);
 static UCHAR       *_nx_dhcp_search_buffer(UCHAR *option_message, UINT option, UINT length);
@@ -69,8 +70,8 @@ static VOID        _nx_dhcp_ip_conflict(NX_IP *ip_ptr, UINT interface_index, ULO
 
 
 /* Define the Request string that specifies which options are to be added
-   to the DHCP Client discover request to the server.  Additional options
-   (found in nx_dhcp.h) may be added after the last option.  */
+   to the DHCP Client discover request to the server. Additional options
+   (found in nx_dhcp.h) may be added by calling nx_dhcp_user_option_request().  */
 
 UCHAR _nx_dhcp_request_parameters[] = { NX_DHCP_OPTION_SUBNET_MASK,
                                         NX_DHCP_OPTION_GATEWAYS,
@@ -153,7 +154,7 @@ UINT    status;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_create                                     PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -203,10 +204,18 @@ UINT    status;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  08-02-2021     Yuxin Zhou               Modified comment(s), and      */
+/*                                            improved the code,          */
+/*                                            resulting in version 6.1.8  */
+/*  01-31-2022     Yuxin Zhou               Modified comment(s), supported*/
+/*                                            multiple client instances,  */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _nx_dhcp_create(NX_DHCP *dhcp_ptr, NX_IP *ip_ptr, CHAR *name_ptr)
 {
+
+TX_INTERRUPT_SAVE_AREA
 
 UINT    status;
 #ifdef NX_DHCP_CLIENT_ENABLE_HOST_NAME_CHECK
@@ -375,6 +384,8 @@ UINT    label_length = 0;
         nx_udp_socket_delete(&(dhcp_ptr -> nx_dhcp_socket));
     }
 
+    dhcp_ptr -> nx_dhcp_socket.nx_udp_socket_reserved_ptr = (VOID*)dhcp_ptr;
+
     /* Create the ThreadX activity timeout timer.  This will be used to periodically check to see if
        a client connection has gone silent and needs to be terminated.  */
     status =  tx_timer_create(&(dhcp_ptr -> nx_dhcp_timer), "DHCP Client Timer", _nx_dhcp_timeout_entry,
@@ -384,7 +395,7 @@ UINT    label_length = 0;
     NX_TIMER_EXTENSION_PTR_SET(&(dhcp_ptr -> nx_dhcp_timer), dhcp_ptr)
 
     /* Determine if the semaphore creation was successful.  */
-    if (status != NX_SUCCESS)
+    if (status != TX_SUCCESS)
     {
 
         /* Delete the UDP socket.  */
@@ -403,7 +414,7 @@ UINT    label_length = 0;
     status =  tx_mutex_create(&(dhcp_ptr -> nx_dhcp_mutex), "NetX DHCP Client", TX_NO_INHERIT);
 
     /* Determine if the semaphore creation was successful.  */
-    if (status != NX_SUCCESS)
+    if (status != TX_SUCCESS)
     {
 
         /* Delete the UDP socket.  */
@@ -429,7 +440,7 @@ UINT    label_length = 0;
     NX_THREAD_EXTENSION_PTR_SET(&(dhcp_ptr -> nx_dhcp_thread), dhcp_ptr)
 
     /* Determine if the thread creation was successful.  */
-    if (status != NX_SUCCESS)
+    if (status != TX_SUCCESS)
     {
 
         /* Delete the mutex.  */
@@ -478,11 +489,21 @@ UINT    label_length = 0;
         return(status);
     }
 
+    /* Otherwise, the DHCP initialization was successful.  Place the
+       DHCP control block on the list of created DHCP instances.  */
+    TX_DISABLE
+
     /* Update the dhcp structure ID.  */
     dhcp_ptr -> nx_dhcp_id =  NX_DHCP_ID;
 
-    /* Save the DHCP instance.  */
+    /* Setup this DHCP's created links.  */
+    dhcp_ptr -> nx_dhcp_created_next = _nx_dhcp_created_ptr;
+
+    /* Place the new DHCP control block on the head of created DHCPs.  */
     _nx_dhcp_created_ptr = dhcp_ptr;
+
+    /* Restore previous interrupt posture.  */
+    TX_RESTORE
 
     /* Default enable DHCP on the primary interface (0).  */
     _nx_dhcp_interface_enable(dhcp_ptr, 0);
@@ -1666,7 +1687,7 @@ UINT    status;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_delete                                     PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -1710,12 +1731,18 @@ UINT    status;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Yuxin Zhou               Modified comment(s), supported*/
+/*                                            multiple client instances,  */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _nx_dhcp_delete(NX_DHCP *dhcp_ptr)
 {
 
+TX_INTERRUPT_SAVE_AREA
+
 UINT    i;
+NX_DHCP *dhcp_previous;
 
     /* Get the DHCP mutex.  */
     tx_mutex_get(&(dhcp_ptr -> nx_dhcp_mutex), TX_WAIT_FOREVER);
@@ -1765,8 +1792,33 @@ UINT    i;
     /* Delete the DHCP mutex.  */
     tx_mutex_delete(&(dhcp_ptr -> nx_dhcp_mutex));
 
+    /* Disable interrupts.  */
+    TX_DISABLE
+
     /* Clear the dhcp structure ID. */
     dhcp_ptr -> nx_dhcp_id =  0;
+
+    /* Remove the DHCP instance from the created list.  */
+    if (_nx_dhcp_created_ptr == dhcp_ptr)
+    {
+        _nx_dhcp_created_ptr = _nx_dhcp_created_ptr -> nx_dhcp_created_next;
+    }
+    else
+    {
+        for (dhcp_previous = _nx_dhcp_created_ptr;
+             dhcp_previous -> nx_dhcp_created_next;
+             dhcp_previous = dhcp_previous -> nx_dhcp_created_next)
+        {
+            if (dhcp_previous -> nx_dhcp_created_next == dhcp_ptr)
+            {
+                dhcp_previous -> nx_dhcp_created_next  = dhcp_ptr -> nx_dhcp_created_next;
+                break;
+            }
+        }
+    }
+
+    /* Restore interrupts.  */
+    TX_RESTORE
 
     /* Return a successful status.  */
     return(NX_SUCCESS);
@@ -4317,6 +4369,153 @@ UINT    status;
 /*                                                                        */ 
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
+/*    _nxe_dhcp_user_option_request                       PORTABLE C      */ 
+/*                                                           6.1.8        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Yuxin Zhou, Microsoft Corporation                                   */
+/*                                                                        */
+/*  DESCRIPTION                                                           */ 
+/*                                                                        */ 
+/*    This function checks for errors in the DHCP user option function    */ 
+/*    call.                                                               */ 
+/*                                                                        */ 
+/*  INPUT                                                                 */ 
+/*                                                                        */ 
+/*    dhcp_ptr                              Pointer to DHCP instance      */ 
+/*    option_code                           Option code                   */ 
+/*                                                                        */ 
+/*  OUTPUT                                                                */ 
+/*                                                                        */ 
+/*    status                                Completion status             */
+/*    NX_PTR_ERROR                          Invalid pointer input         */
+/*                                                                        */ 
+/*  CALLS                                                                 */ 
+/*                                                                        */ 
+/*    _nx_dhcp_user_option_request          Actual DHCP user option       */ 
+/*                                            request function call       */ 
+/*                                                                        */ 
+/*  CALLED BY                                                             */ 
+/*                                                                        */ 
+/*    Application Code                                                    */ 
+/*                                                                        */ 
+/*  RELEASE HISTORY                                                       */ 
+/*                                                                        */ 
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  08-02-2021     Yuxin Zhou               Initial Version 6.1.8         */
+/*                                                                        */
+/**************************************************************************/
+UINT  _nxe_dhcp_user_option_request(NX_DHCP *dhcp_ptr, UINT option_code)
+{
+
+UINT    status;
+
+
+    /* Check for invalid input pointer.  */
+    if ((dhcp_ptr == NX_NULL) || (dhcp_ptr -> nx_dhcp_id != NX_DHCP_ID))
+        return(NX_PTR_ERROR);
+
+    /* Check for appropriate caller.  */
+    NX_THREADS_ONLY_CALLER_CHECKING
+
+    /* Call actual DHCP interface user option request service.  */
+    status =  _nx_dhcp_user_option_request(dhcp_ptr, option_code);
+
+    /* Return status.  */
+    return(status);
+}
+
+
+/**************************************************************************/ 
+/*                                                                        */ 
+/*  FUNCTION                                               RELEASE        */ 
+/*                                                                        */ 
+/*    _nx_dhcp_user_option_request                        PORTABLE C      */ 
+/*                                                           6.1.8        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Yuxin Zhou, Microsoft Corporation                                   */
+/*                                                                        */
+/*  DESCRIPTION                                                           */ 
+/*                                                                        */ 
+/*    This function requests the additional user option.                  */ 
+/*                                                                        */ 
+/*  INPUT                                                                 */ 
+/*                                                                        */ 
+/*    dhcp_ptr                              Pointer to DHCP instance      */ 
+/*    option_code                           Option code                   */ 
+/*                                                                        */ 
+/*  OUTPUT                                                                */ 
+/*                                                                        */ 
+/*    status                                Completion status             */ 
+/*                                                                        */ 
+/*  CALLS                                                                 */ 
+/*                                                                        */ 
+/*    tx_mutex_get                          Get the DHCP mutex            */ 
+/*    tx_mutex_put                          Release the DHCP mutex        */ 
+/*                                                                        */ 
+/*  CALLED BY                                                             */ 
+/*                                                                        */ 
+/*    Application Code                                                    */ 
+/*                                                                        */ 
+/*  RELEASE HISTORY                                                       */ 
+/*                                                                        */ 
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  08-02-2021     Yuxin Zhou               Initial Version 6.1.8         */
+/*                                                                        */
+/**************************************************************************/
+UINT  _nx_dhcp_user_option_request(NX_DHCP *dhcp_ptr, UINT option_code)
+{
+UINT i;
+
+
+    /* Obtain DHCP Client protection mutex. */
+    tx_mutex_get(&(dhcp_ptr -> nx_dhcp_mutex), TX_WAIT_FOREVER);
+
+    /* Check if the default option array already has it.  */
+    for (i = 0; i < NX_DHCP_REQUEST_PARAMETER_SIZE; i++)
+    {
+        if (_nx_dhcp_request_parameters[i] == option_code)
+        {
+            tx_mutex_put(&(dhcp_ptr -> nx_dhcp_mutex));
+            return(NX_DUPLICATED_ENTRY);
+        }
+    }
+
+    /* Check if the user option array already has it.  */
+    for (i = 0; i < dhcp_ptr -> nx_dhcp_user_request_parameter_size; i++)
+    {
+        if (dhcp_ptr -> nx_dhcp_user_request_parameter[i] == option_code)
+        {
+            tx_mutex_put(&(dhcp_ptr -> nx_dhcp_mutex));
+            return(NX_DUPLICATED_ENTRY);
+        }
+    }
+
+    /* Check if there is space to add option.  */
+    if (dhcp_ptr -> nx_dhcp_user_request_parameter_size >= NX_DHCP_CLIENT_MAX_USER_REQUEST_PARAMETER)
+    {
+        tx_mutex_put(&(dhcp_ptr -> nx_dhcp_mutex));
+        return(NX_NO_MORE_ENTRIES);
+    }
+
+    /* Add the option.  */
+    dhcp_ptr -> nx_dhcp_user_request_parameter[dhcp_ptr -> nx_dhcp_user_request_parameter_size++] = (UCHAR)option_code;
+
+    /* Release the DHCP mutex.  */
+    tx_mutex_put(&(dhcp_ptr -> nx_dhcp_mutex));
+
+    /* Return success.  */
+    return(NX_SUCCESS);
+}
+
+
+/**************************************************************************/ 
+/*                                                                        */ 
+/*  FUNCTION                                               RELEASE        */ 
+/*                                                                        */ 
 /*    _nxe_dhcp_interface_user_option_retrieve            PORTABLE C      */ 
 /*                                                           6.1          */
 /*  AUTHOR                                                                */
@@ -4810,7 +5009,7 @@ UINT  _nx_dhcp_user_option_add_callback_set(NX_DHCP *dhcp_ptr, UINT (*dhcp_user_
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_udp_receive_notify                         PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -4844,15 +5043,20 @@ UINT  _nx_dhcp_user_option_add_callback_set(NX_DHCP *dhcp_ptr, UINT (*dhcp_user_
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Yuxin Zhou               Modified comment(s), supported*/
+/*                                            multiple client instances,  */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 VOID _nx_dhcp_udp_receive_notify(NX_UDP_SOCKET *socket_ptr)
 {
 
-    NX_PARAMETER_NOT_USED(socket_ptr);
+NX_DHCP *dhcp_ptr;
+
+    dhcp_ptr = (NX_DHCP *)(socket_ptr -> nx_udp_socket_reserved_ptr);
 
     /* Set the data received event flag.  */
-    tx_event_flags_set(&(_nx_dhcp_created_ptr -> nx_dhcp_events), NX_DHCP_CLIENT_RECEIVE_EVENT, TX_OR);
+    tx_event_flags_set(&(dhcp_ptr -> nx_dhcp_events), NX_DHCP_CLIENT_RECEIVE_EVENT, TX_OR);
 }
 
 
@@ -6400,7 +6604,7 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_send_request_internal                      PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.8        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -6430,6 +6634,7 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
 /*    _nx_dhcp_add_option_value             Add an option to the request  */ 
 /*    _nx_dhcp_add_option_string            Add an option string to the   */ 
 /*                                            request                     */ 
+/*    _nx_dhcp_add_option_parameter_request Add a parameter request option*/ 
 /*    nx_udp_socket_interface_send          Send packet out on interface  */
 /*    _nx_dhcp_client_send_with_zero_source_address                       */
 /*                                          Send broadcast packet with    */ 
@@ -6455,6 +6660,10 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  08-02-2021     Yuxin Zhou               Modified comment(s), supported*/
+/*                                            adding additional request   */
+/*                                            option in parameter request,*/
+/*                                            resulting in version 6.1.8  */
 /*                                                                        */
 /**************************************************************************/
 static UINT  _nx_dhcp_send_request_internal(NX_DHCP *dhcp_ptr, NX_DHCP_INTERFACE_RECORD *interface_record, UINT dhcp_message_type)
@@ -6619,8 +6828,8 @@ UINT            name_length;
                                            (UCHAR *) dhcp_ptr -> nx_dhcp_name, &index);
             }
 
-            /* Add an option request for DHCP parameters (gateway, subnet mask, etc.).  */
-            _nx_dhcp_add_option_string(buffer, NX_DHCP_OPTION_DHCP_PARAMETERS, NX_DHCP_REQUEST_PARAMETER_SIZE, _nx_dhcp_request_parameters, &index);
+            /* Add parameter request option.  */
+            _nx_dhcp_add_option_parameter_request(dhcp_ptr, buffer, &index);
                              
 #ifdef NX_DHCP_CLIENT_SEND_MAX_DHCP_MESSAGE_OPTION
 
@@ -6690,9 +6899,9 @@ UINT            name_length;
                 _nx_dhcp_store_data(buffer + NX_BOOTP_OFFSET_CLIENT_IP, 4, interface_record -> nx_dhcp_ip_address);
             }
 
-            /* Add the request for the DHCP parameters (gateway, subnet mask, etc.) if not renewing.  */
-            _nx_dhcp_add_option_string(buffer, NX_DHCP_OPTION_DHCP_PARAMETERS, NX_DHCP_REQUEST_PARAMETER_SIZE, _nx_dhcp_request_parameters, &index);
-                                                                            
+            /* Add parameter request option.  */
+            _nx_dhcp_add_option_parameter_request(dhcp_ptr, buffer, &index);
+
 #ifdef NX_DHCP_CLIENT_SEND_MAX_DHCP_MESSAGE_OPTION
 
             /* Add an option to specify the maximum length DHCP message that DHCP Client is willing to accept.  
@@ -6751,8 +6960,8 @@ UINT            name_length;
                 _nx_dhcp_add_option_string(buffer, NX_DHCP_OPTION_HOST_NAME, name_length, (UCHAR *) dhcp_ptr -> nx_dhcp_name, &index);
             }
 
-            /* Add an option request for DHCP parameters (gateway, subnet mask, etc.).  */
-            _nx_dhcp_add_option_string(buffer, NX_DHCP_OPTION_DHCP_PARAMETERS, 1, &(interface_record -> nx_dhcp_user_option), &index);
+            /* Add parameter request option.  */
+            _nx_dhcp_add_option_parameter_request(dhcp_ptr, buffer, &index);
 
             /* Increment the number of Inform messages sent.  */
             interface_record -> nx_dhcp_informs_sent++;
@@ -6858,7 +7067,7 @@ UINT            name_length;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_client_send_with_zero_source_address       PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.8        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -6893,6 +7102,9 @@ UINT            name_length;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  08-02-2021     Yuxin Zhou               Modified comment(s), and      */
+/*                                            supported new ip filter,    */
+/*                                            resulting in version 6.1.8  */
 /*                                                                        */
 /**************************************************************************/
 static UINT  _nx_dhcp_client_send_with_zero_source_address(NX_DHCP *dhcp_ptr, UINT iface_index, NX_PACKET *packet_ptr)
@@ -7088,6 +7300,22 @@ NX_IP_DRIVER    driver_request;
 
         /* Yes, call the IP packet filter routine.  */
         if ((ip_ptr -> nx_ip_packet_filter((VOID *)(ip_header_ptr), NX_IP_PACKET_OUT)) != NX_SUCCESS)
+        {
+
+            /* Release mutex protection.  */
+            tx_mutex_put(&(ip_ptr -> nx_ip_protection));
+
+            /* Return a not successful status.  */
+            return(NX_NOT_SUCCESSFUL);
+        }
+    }
+
+    /* Check if the IP packet filter extended is set. */
+    if (ip_ptr -> nx_ip_packet_filter_extended)
+    {
+
+        /* Yes, call the IP packet filter extended routine. */
+        if (ip_ptr -> nx_ip_packet_filter_extended(ip_ptr, packet_ptr, NX_IP_PACKET_OUT) != NX_SUCCESS)
         {
 
             /* Release mutex protection.  */
@@ -7680,6 +7908,74 @@ static UINT  _nx_dhcp_add_option_string(UCHAR *bootp_message, UINT option, UINT 
     /* Store the option value.  */
     _nx_dhcp_move_string(bootp_message + (*index), value, size);
     (*index) += size;    
+
+    /* Return a successful completion.  */
+    return(NX_SUCCESS);      
+}
+
+
+/**************************************************************************/ 
+/*                                                                        */ 
+/*  FUNCTION                                               RELEASE        */ 
+/*                                                                        */ 
+/*    _nx_dhcp_add_option_parameter_request               PORTABLE C      */ 
+/*                                                           6.1.8        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Yuxin Zhou, Microsoft Corporation                                   */
+/*                                                                        */
+/*  DESCRIPTION                                                           */ 
+/*                                                                        */ 
+/*    This routine adds a DHCP parameter request option to the BootP      */ 
+/*    message in supplied buffer. Adding the option includes adding the   */ 
+/*    option code, length and option value.                               */ 
+/*                                                                        */ 
+/*  INPUT                                                                 */ 
+/*                                                                        */ 
+/*    dhcp_ptr                              Pointer to DHCP instance      */
+/*    bootp_message                         Pointer to message buffer     */ 
+/*    index                                 Index to write data           */
+/*                                                                        */ 
+/*  OUTPUT                                                                */ 
+/*                                                                        */ 
+/*    status                                Completion status             */ 
+/*                                                                        */ 
+/*  CALLS                                                                 */ 
+/*                                                                        */ 
+/*    _nx_dhcp_move_string                  Store option string           */ 
+/*                                                                        */ 
+/*  CALLED BY                                                             */ 
+/*                                                                        */ 
+/*    _nx_dhcp_send_request_internal       Internal DHCP message send     */ 
+/*                                                                        */ 
+/*  RELEASE HISTORY                                                       */ 
+/*                                                                        */ 
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  08-02-2021     Yuxin Zhou               Initial Version 6.1.8         */
+/*                                                                        */
+/**************************************************************************/
+static UINT  _nx_dhcp_add_option_parameter_request(NX_DHCP *dhcp_ptr, UCHAR *bootp_message, UINT *index)
+{                                              
+                    
+    /* Store the option.  */
+    *(bootp_message + (*index)) = NX_DHCP_OPTION_DHCP_PARAMETERS;
+    (*index) ++;
+
+    /* Store the option size.  */
+    *(bootp_message + (*index)) = (UCHAR)(NX_DHCP_REQUEST_PARAMETER_SIZE + dhcp_ptr -> nx_dhcp_user_request_parameter_size); 
+    (*index) ++;
+
+    /* Store the option value.  */
+    _nx_dhcp_move_string(bootp_message + (*index), _nx_dhcp_request_parameters, NX_DHCP_REQUEST_PARAMETER_SIZE);
+    (*index) += (UINT)NX_DHCP_REQUEST_PARAMETER_SIZE;
+
+    /* Check if there are additional user options.  */
+    if (dhcp_ptr -> nx_dhcp_user_request_parameter_size)
+    {
+        _nx_dhcp_move_string(bootp_message + (*index), dhcp_ptr -> nx_dhcp_user_request_parameter, dhcp_ptr -> nx_dhcp_user_request_parameter_size);
+        (*index) += (UCHAR)dhcp_ptr -> nx_dhcp_user_request_parameter_size;
+    }
 
     /* Return a successful completion.  */
     return(NX_SUCCESS);      
@@ -8515,7 +8811,7 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_ip_conflict                                PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -8552,21 +8848,44 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Yuxin Zhou               Modified comment(s), supported*/
+/*                                            multiple client instances,  */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 VOID  _nx_dhcp_ip_conflict(NX_IP *ip_ptr, UINT iface_index, ULONG ip_address, ULONG physical_msw, ULONG physical_lsw)
 {
 
-    NX_PARAMETER_NOT_USED(ip_ptr);
+TX_INTERRUPT_SAVE_AREA
+
+NX_DHCP *dhcp_ptr;
+
     NX_PARAMETER_NOT_USED(ip_address);
     NX_PARAMETER_NOT_USED(physical_msw);
     NX_PARAMETER_NOT_USED(physical_lsw);
 
-    /* Set the interface index.  */
-    _nx_dhcp_created_ptr -> nx_dhcp_interface_conflict_flag |= (UINT)(1 << iface_index);
+    /* Disable interrupts.  */
+    TX_DISABLE
 
-    /* Set the address conflict event flag.  */
-    tx_event_flags_set(&(_nx_dhcp_created_ptr -> nx_dhcp_events), NX_DHCP_CLIENT_CONFLICT_EVENT, TX_OR);
+    /* Find the DHCP client.  */
+    for (dhcp_ptr = _nx_dhcp_created_ptr; dhcp_ptr; dhcp_ptr = dhcp_ptr -> nx_dhcp_created_next)
+    {
+        if (dhcp_ptr -> nx_dhcp_ip_ptr == ip_ptr)
+        {
+
+            /* Set the interface index.  */
+            dhcp_ptr -> nx_dhcp_interface_conflict_flag |= (UINT)(1 << iface_index);
+
+            /* Set the address conflict event flag.  */
+            tx_event_flags_set(&(_nx_dhcp_created_ptr -> nx_dhcp_events), NX_DHCP_CLIENT_CONFLICT_EVENT, TX_OR);
+
+            break;
+        }
+    }
+
+    /* Restore interrupts.  */
+    TX_RESTORE
+
 }
 #endif
 

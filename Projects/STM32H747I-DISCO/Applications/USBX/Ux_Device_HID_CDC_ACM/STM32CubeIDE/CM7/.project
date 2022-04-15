@@ -191,9 +191,9 @@
 			<locationURI>PARENT-2-PROJECT_LOC/CM7/Core/Src/stm32h7xx_it.c</locationURI>
 		</link>
 		<link>
-			<name>Application/User/Core/tx_initialize_low_level.s</name>
+			<name>Application/User/Core/tx_initialize_low_level.S</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/CM7/Core/Src/tx_initialize_low_level.s</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/CM7/Core/Src/tx_initialize_low_level.S</locationURI>
 		</link>
 		<link>
 			<name>Application/User/Core/usart.c</name>
@@ -1061,6 +1061,11 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_system_initialize.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/USBX/USB/USBX/CoreSystem/ux_system_tasks_run.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_system_tasks_run.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/USBX/USB/USBX/CoreSystem/ux_system_uninitialize.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_system_uninitialize.c</locationURI>
@@ -1381,6 +1386,16 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_read.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Device Class CDC ACM/ux_device_class_cdc_acm_read_run.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_read_run.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Device Class CDC ACM/ux_device_class_cdc_acm_tasks_run.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_tasks_run.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Device Class CDC ACM/ux_device_class_cdc_acm_unitialize.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_unitialize.c</locationURI>
@@ -1389,6 +1404,11 @@
 			<name>Middlewares/USBX/USB/USBX/UX Device Class CDC ACM/ux_device_class_cdc_acm_write.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_write.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Device Class CDC ACM/ux_device_class_cdc_acm_write_run.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_cdc_acm_write_run.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Device Class CDC ACM/ux_device_class_cdc_acm_write_with_callback.c</name>
@@ -1441,6 +1461,36 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_interrupt_thread.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Device Class HID/ux_device_class_hid_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Device Class HID/ux_device_class_hid_receiver_event_free.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_receiver_event_free.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Device Class HID/ux_device_class_hid_receiver_event_get.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_receiver_event_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Device Class HID/ux_device_class_hid_receiver_initialize.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_receiver_initialize.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Device Class HID/ux_device_class_hid_receiver_thread.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_receiver_thread.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Device Class HID/ux_device_class_hid_receiver_uninitialize.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_receiver_uninitialize.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Device Class HID/ux_device_class_hid_report_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_report_get.c</locationURI>
@@ -1449,6 +1499,11 @@
 			<name>Middlewares/USBX/USB/USBX/UX Device Class HID/ux_device_class_hid_report_set.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_report_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Device Class HID/ux_device_class_hid_tasks_run.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_hid_tasks_run.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Device Class HID/ux_device_class_hid_uninitialize.c</name>
@@ -1511,9 +1566,19 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_interrupt_handler.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Device Controllers/ux_dcd_stm32_transfer_abort.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_transfer_abort.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Device Controllers/ux_dcd_stm32_transfer_request.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_transfer_request.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Device Controllers/ux_dcd_stm32_transfer_run.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_transfer_run.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Device Controllers/ux_dcd_stm32_uninitialize.c</name>
@@ -1621,6 +1686,11 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_device_stack_set_feature.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Device CoreStack/ux_device_stack_tasks_run.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_device_stack_tasks_run.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Device CoreStack/ux_device_stack_transfer_abort.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_device_stack_transfer_abort.c</locationURI>
@@ -1634,6 +1704,11 @@
 			<name>Middlewares/USBX/USB/USBX/UX Device CoreStack/ux_device_stack_transfer_request.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_device_stack_transfer_request.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Device CoreStack/ux_device_stack_transfer_run.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_device_stack_transfer_run.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Device CoreStack/ux_device_stack_uninitialize.c</name>

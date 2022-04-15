@@ -26,7 +26,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _tx_thread_schedule                               Cortex-M33/GNU    */
-/*                                                           6.1.6        */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Scott Larson, Microsoft Corporation                                 */
@@ -65,6 +65,8 @@
 /*  06-02-2021      Scott Larson            Added secure stack initialize */
 /*                                            in SVC handler,             */
 /*                                            resulting in version 6.1.7  */
+/*  01-31-2022      Scott Larson            Fixed predefined macro name,  */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 // VOID   _tx_thread_schedule(VOID)
@@ -86,7 +88,7 @@ _tx_thread_schedule:
     LDR     r2, =_tx_thread_preempt_disable         // Build address of preempt disable flag
     STR     r0, [r2, #0]                            // Clear preempt disable flag
 
-#ifdef __ARM_PCS_VFP
+#ifdef __ARM_FP
     /* Clear CONTROL.FPCA bit so VFP registers aren't unnecessarily stacked.  */
     MRS     r0, CONTROL                             // Pickup current CONTROL register
     BIC     r0, r0, #4                              // Clear the FPCA bit
@@ -97,7 +99,6 @@ _tx_thread_schedule:
     CPSIE   i
 
     /* Enter the scheduler for the first time.  */
-
     MOV     r0, #0x10000000                         // Load PENDSVSET bit
     MOV     r1, #0xE000E000                         // Load NVIC base
     STR     r0, [r1, #0xD04]                        // Set PENDSVBIT in ICSR
@@ -123,7 +124,7 @@ __tx_wait_here:
 PendSV_Handler:
 __tx_ts_handler:
 
-#if (defined(TX_ENABLE_EXECUTION_CHANGE_NOTIFY) || defined(TX_EXECUTION_PROFILE_ENABLE))        
+#if (defined(TX_ENABLE_EXECUTION_CHANGE_NOTIFY) || defined(TX_EXECUTION_PROFILE_ENABLE))
     /* Call the thread exit function to indicate the thread is no longer executing.  */
     CPSID   i                                       // Disable interrupts
     PUSH    {r0, lr}                                // Save LR (and r0 just for alignment)
@@ -131,6 +132,7 @@ __tx_ts_handler:
     POP     {r0, lr}                                // Recover LR
     CPSIE   i                                       // Enable interrupts
 #endif
+
     LDR     r0, =_tx_thread_current_ptr             // Build current thread pointer address
     LDR     r2, =_tx_thread_execute_ptr             // Build execute thread pointer address
     MOV     r3, #0                                  // Build NULL value
@@ -145,7 +147,7 @@ __tx_ts_handler:
     STR     r3, [r0]                                // Set _tx_thread_current_ptr to NULL
     MRS     r12, PSP                                // Pickup PSP pointer (thread's stack pointer)
     STMDB   r12!, {r4-r11}                          // Save its remaining registers
-#ifdef __ARM_PCS_VFP
+#ifdef __ARM_FP
     TST     LR, #0x10                               // Determine if the VFP extended frame is present
     BNE     _skip_vfp_save
     VSTMDB  r12!,{s16-s31}                          // Yes, save additional VFP registers
@@ -207,7 +209,7 @@ __tx_ts_restore:
 
     STR     r5, [r4]                                // Setup global time-slice
 
-#if (defined(TX_ENABLE_EXECUTION_CHANGE_NOTIFY) || defined(TX_EXECUTION_PROFILE_ENABLE))        
+#if (defined(TX_ENABLE_EXECUTION_CHANGE_NOTIFY) || defined(TX_EXECUTION_PROFILE_ENABLE))
     /* Call the thread entry function to indicate the thread is executing.  */
     PUSH    {r0, r1}                                // Save r0 and r1
     BL      _tx_execution_thread_enter              // Call the thread execution enter function
@@ -230,7 +232,7 @@ _skip_secure_restore:
     MSR     PSPLIM, r12                             // Set stack limit
     LDR     r12, [r1, #8]                           // Pickup thread's stack pointer
     LDMIA   r12!, {LR}                              // Pickup LR
-#ifdef __ARM_PCS_VFP
+#ifdef __ARM_FP
     TST     LR, #0x10                               // Determine if the VFP extended frame is present
     BNE     _skip_vfp_restore                       // If not, skip VFP restore
     VLDMIA  r12!, {s16-s31}                         // Yes, restore additional VFP registers
@@ -239,7 +241,6 @@ _skip_vfp_restore:
     LDMIA   r12!, {r4-r11}                          // Recover thread's registers
     MSR     PSP, r12                                // Setup the thread's stack pointer
 
-    /* Return to thread.  */
     BX      lr                                      // Return to thread!
 
     /* The following is the idle wait processing... in this case, no threads are ready for execution and the
@@ -283,6 +284,7 @@ __tx_ts_ready:
     /* Re-enable interrupts and restore new thread.  */
     CPSIE   i                                       // Enable interrupts
     B       __tx_ts_restore                         // Restore the thread
+// }
 
 
 #if (!defined(TX_SINGLE_MODE_SECURE) && !defined(TX_SINGLE_MODE_NON_SECURE))
@@ -295,44 +297,44 @@ __tx_ts_ready:
     .thumb_func
 .type SVC_Handler, function
 SVC_Handler:
-    TST     lr, #0x04               // Determine return stack from EXC_RETURN bit 2
+    TST     lr, #0x04                               // Determine return stack from EXC_RETURN bit 2
     ITE     EQ
-    MRSEQ   r0, MSP                 // Get MSP if return stack is MSP
-    MRSNE   r0, PSP                 // Get PSP if return stack is PSP
+    MRSEQ   r0, MSP                                 // Get MSP if return stack is MSP
+    MRSNE   r0, PSP                                 // Get PSP if return stack is PSP
 
-    LDR     r1, [r0,#24]            // Load saved PC from stack
-    LDRB    r1, [r1,#-2]            // Load SVC number
+    LDR     r1, [r0,#24]                            // Load saved PC from stack
+    LDRB    r1, [r1,#-2]                            // Load SVC number
 
-    CMP     r1, #1                  // Is it a secure stack allocate request?
-    BEQ     _tx_svc_secure_alloc    // Yes, go there
+    CMP     r1, #1                                  // Is it a secure stack allocate request?
+    BEQ     _tx_svc_secure_alloc                    // Yes, go there
 
-    CMP     r1, #2                  // Is it a secure stack free request?
-    BEQ     _tx_svc_secure_free     // Yes, go there
+    CMP     r1, #2                                  // Is it a secure stack free request?
+    BEQ     _tx_svc_secure_free                     // Yes, go there
     
-    CMP     r1, #3                  // Is it a secure stack init request?
-    BEQ     _tx_svc_secure_init     // Yes, go there
+    CMP     r1, #3                                  // Is it a secure stack init request?
+    BEQ     _tx_svc_secure_init                     // Yes, go there
 
     // Unknown SVC argument - just return
     BX      lr
 
 _tx_svc_secure_alloc:
-    PUSH    {r0,lr}                 // Save SP and EXC_RETURN
-    LDM     r0, {r0-r3}             // Load function parameters from stack
+    PUSH    {r0,lr}                                 // Save SP and EXC_RETURN
+    LDM     r0, {r0-r3}                             // Load function parameters from stack
     BL      _tx_thread_secure_mode_stack_allocate
-    POP     {r12,lr}                // Restore SP and EXC_RETURN
-    STR     r0,[r12]                // Store function return value
+    POP     {r12,lr}                                // Restore SP and EXC_RETURN
+    STR     r0,[r12]                                // Store function return value
     BX      lr
 _tx_svc_secure_free:
-    PUSH    {r0,lr}                 // Save SP and EXC_RETURN
-    LDM     r0, {r0-r3}             // Load function parameters from stack
+    PUSH    {r0,lr}                                 // Save SP and EXC_RETURN
+    LDM     r0, {r0-r3}                             // Load function parameters from stack
     BL      _tx_thread_secure_mode_stack_free
-    POP     {r12,lr}                // Restore SP and EXC_RETURN
-    STR     r0,[r12]                // Store function return value
+    POP     {r12,lr}                                // Restore SP and EXC_RETURN
+    STR     r0,[r12]                                // Store function return value
     BX      lr
 _tx_svc_secure_init:
-    PUSH    {r0,lr}                 // Save SP and EXC_RETURN
+    PUSH    {r0,lr}                                 // Save SP and EXC_RETURN
     BL      _tx_thread_secure_mode_stack_initialize
-    POP     {r12,lr}                // Restore SP and EXC_RETURN
+    POP     {r12,lr}                                // Restore SP and EXC_RETURN
     BX      lr
 #endif  // End of ifndef TX_SINGLE_MODE_SECURE, TX_SINGLE_MODE_NON_SECURE
 
@@ -345,6 +347,8 @@ _tx_svc_secure_init:
     .thumb_func
 .type _tx_vfp_access, function
 _tx_vfp_access:
+#if TX_ENABLE_FPU_SUPPORT
     VMOV.F32 s0, s0                                 // Simply access the VFP
+#endif
     BX       lr                                     // Return to caller
 .end

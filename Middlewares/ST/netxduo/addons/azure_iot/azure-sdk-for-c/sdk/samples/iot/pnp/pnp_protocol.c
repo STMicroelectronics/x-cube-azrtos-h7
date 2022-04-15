@@ -1,18 +1,22 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // SPDX-License-Identifier: MIT
 
-#include "pnp_protocol.h"
-
-#include <iot_sample_common.h>
+// DEPRECATED: This sample helper file has been deprecated.
+// This file has *sample* helper functions for building and
+// parsing IoT Plug and Play payloads.  Applications instead should use
+// the officially supported APIs (see az_iot_hub_client.h and
+// az_iot_hub_client_properties.h).
 
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
-#include <azure/core/az_json.h>
-#include <azure/core/az_result.h>
-#include <azure/core/az_span.h>
-#include <azure/iot/az_iot_hub_client.h>
+#include <azure/az_core.h>
+#include <azure/az_iot.h>
+
+#include <iot_sample_common.h>
+
+#include "pnp_protocol.h"
 
 // Property values
 static char pnp_properties_buffer[64];
@@ -222,9 +226,9 @@ void pnp_build_reported_property_with_status(
     az_span property_name,
     pnp_append_property_callback append_callback,
     void* context,
-    int32_t ack_code,
-    int32_t ack_version,
-    az_span ack_description,
+    int32_t code,
+    int32_t version,
+    az_span description,
     az_span* out_span)
 {
   char const* const log = "Failed to build `%.*s` reported property with status";
@@ -254,19 +258,19 @@ void pnp_build_reported_property_with_status(
   IOT_SAMPLE_EXIT_IF_AZ_FAILED(append_callback(&jw, context), log, property_name);
   IOT_SAMPLE_EXIT_IF_AZ_FAILED(
       az_json_writer_append_property_name(&jw, desired_temp_ack_code_name), log, property_name);
-  IOT_SAMPLE_EXIT_IF_AZ_FAILED(az_json_writer_append_int32(&jw, ack_code), log, property_name);
+  IOT_SAMPLE_EXIT_IF_AZ_FAILED(az_json_writer_append_int32(&jw, code), log, property_name);
   IOT_SAMPLE_EXIT_IF_AZ_FAILED(
       az_json_writer_append_property_name(&jw, desired_temp_ack_version_name), log, property_name);
-  IOT_SAMPLE_EXIT_IF_AZ_FAILED(az_json_writer_append_int32(&jw, ack_version), log, property_name);
+  IOT_SAMPLE_EXIT_IF_AZ_FAILED(az_json_writer_append_int32(&jw, version), log, property_name);
 
-  if (az_span_size(ack_description) != 0)
+  if (az_span_size(description) != 0)
   {
     IOT_SAMPLE_EXIT_IF_AZ_FAILED(
         az_json_writer_append_property_name(&jw, desired_temp_ack_description_name),
         log,
         property_name);
     IOT_SAMPLE_EXIT_IF_AZ_FAILED(
-        az_json_writer_append_string(&jw, ack_description), log, property_name);
+        az_json_writer_append_string(&jw, description), log, property_name);
   }
 
   IOT_SAMPLE_EXIT_IF_AZ_FAILED(az_json_writer_append_end_object(&jw), log, property_name);

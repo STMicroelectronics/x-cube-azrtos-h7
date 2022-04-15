@@ -100,9 +100,6 @@ VOID  fx_stm32_sd_driver(FX_MEDIA *media_ptr)
         if (status == 0)
         {
           is_initialized = 1;
-#endif
-
-#if (FX_STM32_SD_INIT == 1)
         }
         else
         {
@@ -117,20 +114,23 @@ VOID  fx_stm32_sd_driver(FX_MEDIA *media_ptr)
 
   case FX_DRIVER_UNINIT:
     {
+      media_ptr->fx_media_driver_status = FX_SUCCESS;
+
 #if (FX_STM32_SD_INIT == 1)
-      if (fx_stm32_sd_deinit(FX_STM32_SD_INSTANCE) != 0)
+      status = fx_stm32_sd_deinit(FX_STM32_SD_INSTANCE);
+
+      if (status != 0)
       {
         media_ptr->fx_media_driver_status = FX_IO_ERROR;
       }
       else
       {
-        media_ptr->fx_media_driver_status = FX_SUCCESS;
+        is_initialized = 0;
       }
-
-      is_initialized = 0;
 #endif
       /* call post deinit processing  */
       FX_STM32_SD_POST_DEINIT(media_ptr);
+
       break;
     }
 

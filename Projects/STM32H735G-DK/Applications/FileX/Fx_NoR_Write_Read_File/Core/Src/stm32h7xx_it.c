@@ -55,6 +55,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern MDMA_HandleTypeDef hmdma_octospi1_fifo_th;
 extern OSPI_HandleTypeDef hospi1;
 extern TIM_HandleTypeDef htim6;
 
@@ -199,6 +200,20 @@ void OCTOSPI1_IRQHandler(void)
   /* USER CODE BEGIN OCTOSPI1_IRQn 1 */
 
   /* USER CODE END OCTOSPI1_IRQn 1 */
+}
+
+/**
+  * @brief This function handles MDMA global interrupt.
+  */
+void MDMA_IRQHandler(void)
+{
+  /* USER CODE BEGIN MDMA_IRQn 0 */
+
+  /* USER CODE END MDMA_IRQn 0 */
+  HAL_MDMA_IRQHandler(&hmdma_octospi1_fifo_th);
+  /* USER CODE BEGIN MDMA_IRQn 1 */
+
+  /* USER CODE END MDMA_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

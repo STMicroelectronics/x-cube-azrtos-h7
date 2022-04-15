@@ -39,7 +39,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_utility_exFAT_size_calculate                    PORTABLE C      */
-/*                                                           6.1.5        */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -80,9 +80,13 @@
 /*  03-02-2021     William E. Lamie         Modified comment(s), fixed    */
 /*                                            FAT size calculation issue, */
 /*                                            resulting in version 6.1.5  */
+/*  01-31-2022     Bhupendra Naphade        Modified comment(s), and      */
+/*                                            replaced sector size        */
+/*                                            constant,                   */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
-VOID  _fx_utility_exFAT_size_calculate(ULONG boundary_unit, ULONG64 size_in_sectors, ULONG sectors_per_cluster,
+VOID  _fx_utility_exFAT_size_calculate(UINT bytes_per_sector, ULONG boundary_unit, ULONG64 size_in_sectors, ULONG sectors_per_cluster,
                                        ULONG *sectors_per_fat_ptr, ULONG *fat_offset_ptr, ULONG *cluster_heap_offset_ptr)
 {
 
@@ -111,7 +115,7 @@ ULONG64 total_cluster_heap_sectors;
 
     /* Calculate required number of FAT sectors.  */
     *sectors_per_fat_ptr = (ULONG)DIVIDE_TO_CEILING(((total_cluster_heap_sectors / sectors_per_cluster) * EXFAT_FAT_BITS),
-                                                    (FX_BOOT_SECTOR_SIZE * BITS_PER_BYTE));
+                                                    (bytes_per_sector * BITS_PER_BYTE));
 
     *sectors_per_fat_ptr = ALIGN_UP(*sectors_per_fat_ptr, boundary_unit >> 1);
 
@@ -137,7 +141,7 @@ ULONG64 total_cluster_heap_sectors;
 
             /* Re-calculate number of sectors per FAT.  */
             *sectors_per_fat_ptr = (ULONG)DIVIDE_TO_CEILING(((total_cluster_heap_sectors / sectors_per_cluster) * EXFAT_FAT_BITS),
-                                                            (FX_BOOT_SECTOR_SIZE * BITS_PER_BYTE));
+                                                            (bytes_per_sector * BITS_PER_BYTE));
 
             *sectors_per_fat_ptr = ALIGN_UP(*sectors_per_fat_ptr, boundary_unit >> 1);
 
@@ -145,7 +149,7 @@ ULONG64 total_cluster_heap_sectors;
             *cluster_heap_offset_ptr = *fat_offset_ptr + *sectors_per_fat_ptr;
 
         /* Loop until we find a FAT size that can hold all the clusters.  */
-        }while (*sectors_per_fat_ptr * FX_BOOT_SECTOR_SIZE * BITS_PER_BYTE / EXFAT_FAT_BITS < ((size_in_sectors - *cluster_heap_offset_ptr) / sectors_per_cluster));
+        }while (*sectors_per_fat_ptr * bytes_per_sector * BITS_PER_BYTE / EXFAT_FAT_BITS < ((size_in_sectors - *cluster_heap_offset_ptr) / sectors_per_cluster));
     }
 }
 

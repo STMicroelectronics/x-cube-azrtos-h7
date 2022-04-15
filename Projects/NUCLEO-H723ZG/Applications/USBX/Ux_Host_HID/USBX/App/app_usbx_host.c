@@ -63,6 +63,11 @@ __ALIGN_BEGIN ux_app_devInfotypeDef       ux_dev_info  __ALIGN_END;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
+UINT  MX_USB_Host_Init(void);
+static void  USBH_DriverVBUS(uint8_t state);
+void  usbx_app_thread_entry(ULONG arg);
+VOID  ux_host_error_callback(UINT system_level, UINT system_context, UINT error_code);
+UINT  ux_host_event_callback(ULONG event, UX_HOST_CLASS *p_host_class, VOID *p_instance);
 extern void MX_USB_OTG_HS_HCD_Init(void);
 extern void Error_Handler(void);
 /* USER CODE END PFP */
@@ -80,6 +85,7 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
   /* USER CODE END MX_USBX_Host_MEM_POOL */
 
   /* USER CODE BEGIN MX_USBX_Host_Init */
+#if (USE_STATIC_ALLOCATION == 1)  
   CHAR *pointer;
 
   /* Allocate the stack for thread 0. */
@@ -158,6 +164,7 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
     return TX_QUEUE_ERROR;
   }
 
+#endif
   /* USER CODE END MX_USBX_Host_Init */
 
   return ret;
@@ -373,34 +380,35 @@ VOID ux_host_error_callback(UINT system_level, UINT system_context, UINT error_c
 UINT MX_USB_Host_Init(void)
 {
   UINT ret = UX_SUCCESS;
+
   /* USER CODE BEGIN USB_Host_Init_PreTreatment_0 */
   /* USER CODE END USB_Host_Init_PreTreatment_0 */
 
   /* The code below is required for installing the host portion of USBX. */
   if (ux_host_stack_initialize(ux_host_event_callback) != UX_SUCCESS)
   {
-    ret = UX_ERROR;
+    return UX_ERROR;
   }
 
   /* Register hid class. */
   if (ux_host_stack_class_register(_ux_system_host_class_hid_name,
                                    _ux_host_class_hid_entry) != UX_SUCCESS)
   {
-    ret = UX_ERROR;
+    return UX_ERROR;
   }
 
   /* Register HID Mouse client */
   if (ux_host_class_hid_client_register(_ux_system_host_class_hid_client_mouse_name,
                                         ux_host_class_hid_mouse_entry) != UX_SUCCESS)
   {
-    ret = UX_ERROR;
+    return UX_ERROR;
   }
 
   /* Register HID Mouse client */
   if (ux_host_class_hid_client_register(_ux_system_host_class_hid_client_keyboard_name,
                                         ux_host_class_hid_keyboard_entry) != UX_SUCCESS)
   {
-    ret = UX_ERROR;
+    return UX_ERROR;
   }
 
   /* Initialize the LL driver */
@@ -411,7 +419,7 @@ UINT MX_USB_Host_Init(void)
                                  _ux_hcd_stm32_initialize, USB_OTG_HS_PERIPH_BASE,
                                  (ULONG)&hhcd_USB_OTG_HS) != UX_SUCCESS)
   {
-    ret = UX_ERROR;
+    return UX_ERROR;
   }
 
   /* Drive vbus */
@@ -437,7 +445,7 @@ UINT MX_USB_Host_Init(void)
 *           0 : VBUS Inactive
 * @retval Status
 */
-void USBH_DriverVBUS(uint8_t state)
+static void USBH_DriverVBUS(uint8_t state)
 {
   /* USER CODE BEGIN 0 */
 

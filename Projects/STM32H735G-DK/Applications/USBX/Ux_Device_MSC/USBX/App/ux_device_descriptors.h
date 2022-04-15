@@ -247,11 +247,8 @@ uint8_t *USBD_Get_Language_Id_Framework(ULONG *Length);
 #define USBD_STRING_FRAMEWORK_MAX_LENGTH               256U
 
 /* Device Storage Class */
-#define USBD_MSC_EPOUT_ADDR                            0x02U
+#define USBD_MSC_EPOUT_ADDR                            0x01U
 #define USBD_MSC_EPIN_ADDR                             0x81U
-#if (USBD_MSC_EPOUT_ADDR == (USBD_MSC_EPIN_ADDR & 0x0FU))
-#error Address endpoint IN shall be different form endpoint OUT.
-#endif
 #define USBD_MSC_EPOUT_FS_MPS                          64U
 #define USBD_MSC_EPOUT_HS_MPS                          512U
 #define USBD_MSC_EPIN_FS_MPS                           64U

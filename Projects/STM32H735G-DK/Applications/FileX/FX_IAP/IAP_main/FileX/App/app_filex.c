@@ -256,7 +256,7 @@ VOID fx_thread_entry(ULONG thread_input)
   /* Toggle green LED to indicate programming finish OK */
   while(1)
   {
-    BSP_LED_Toggle(LED_GREEN);
+    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
     os_delay(40);
   }
 }

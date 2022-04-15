@@ -1,6 +1,12 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // SPDX-License-Identifier: MIT
 
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
 #ifdef _MSC_VER
 #pragma warning(push)
 // warning C4201: nonstandard extension used: nameless struct/union
@@ -11,18 +17,10 @@
 #pragma warning(pop)
 #endif
 
+#include <azure/az_core.h>
+#include <azure/az_iot.h>
+
 #include "iot_sample_common.h"
-
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <azure/core/az_json.h>
-#include <azure/core/az_result.h>
-#include <azure/core/az_span.h>
-#include <azure/iot/az_iot_hub_client.h>
 
 #define SAMPLE_TYPE PAHO_IOT_HUB
 #define SAMPLE_NAME PAHO_IOT_HUB_TWIN_SAMPLE
@@ -163,6 +161,8 @@ static void connect_mqtt_client_to_iot_hub(void)
     exit(rc);
   }
 
+  IOT_SAMPLE_LOG("MQTT client username: %s\n", mqtt_client_username_buffer);
+
   // Set MQTT connection options.
   MQTTClient_connectOptions mqtt_connect_options = MQTTClient_connectOptions_initializer;
   mqtt_connect_options.username = mqtt_client_username_buffer;
@@ -171,6 +171,8 @@ static void connect_mqtt_client_to_iot_hub(void)
   mqtt_connect_options.keepAliveInterval = AZ_IOT_DEFAULT_MQTT_CONNECT_KEEPALIVE_SECONDS;
 
   MQTTClient_SSLOptions mqtt_ssl_options = MQTTClient_SSLOptions_initializer;
+  mqtt_ssl_options.verify = 1;
+  mqtt_ssl_options.enableServerCertAuth = 1;
   mqtt_ssl_options.keyStore = (char*)az_span_ptr(env_vars.x509_cert_pem_file_path);
   if (az_span_size(env_vars.x509_trust_pem_file_path) != 0) // Is only set if required by OS.
   {
@@ -424,6 +426,10 @@ static void handle_device_twin_message(
         (void)receive_device_twin_message();
       }
       break;
+
+    case AZ_IOT_HUB_CLIENT_TWIN_RESPONSE_TYPE_REQUEST_ERROR:
+      IOT_SAMPLE_LOG_ERROR("Message Type: Request Error");
+      break;
   }
 }
 
@@ -444,7 +450,7 @@ static bool parse_desired_device_count_property(
   if (jr.token.kind != AZ_JSON_TOKEN_BEGIN_OBJECT)
   {
     IOT_SAMPLE_LOG(
-        "`%.*s` property was not found in desired property response.",
+        "`%.*s` property was not found in desired property message.",
         az_span_size(property),
         az_span_ptr(property));
     return false;

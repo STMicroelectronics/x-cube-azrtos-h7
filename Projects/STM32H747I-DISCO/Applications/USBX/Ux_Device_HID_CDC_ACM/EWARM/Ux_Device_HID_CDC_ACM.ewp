@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.50.6.28611</state>
+                    <state>8.50.9.33458</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -483,7 +483,7 @@
             <name>AARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>10</version>
+                <version>11</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -638,6 +638,10 @@
                 <option>
                     <name>AsmNoLiteralPool</name>
                     <state>0</state>
+                </option>
+                <option>
+                    <name>PreInclude</name>
+                    <state></state>
                 </option>
             </data>
         </settings>
@@ -1132,7 +1136,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.50.6.28611</state>
+                    <state>8.50.9.33458</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -1291,10 +1295,10 @@
                 <option>
                     <name>CCDefines</name>
                     <state>CORE_CM7</state>
-                    <state>TX_INCLUDE_USER_DEFINE_FILE</state>
-                    <state>UX_INCLUDE_USER_DEFINE_FILE</state>
                     <state>USE_HAL_DRIVER</state>
                     <state>STM32H747xx</state>
+                    <state>TX_INCLUDE_USER_DEFINE_FILE</state>
+                    <state>UX_INCLUDE_USER_DEFINE_FILE</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -1561,7 +1565,7 @@
             <name>AARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>10</version>
+                <version>11</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -1716,6 +1720,10 @@
                 <option>
                     <name>AsmNoLiteralPool</name>
                     <state>0</state>
+                </option>
+                <option>
+                    <name>PreInclude</name>
+                    <state></state>
                 </option>
             </data>
         </settings>
@@ -2232,7 +2240,7 @@
                         <name>$PROJ_DIR$\..\CM7\Core\Src\stm32h7xx_it.c</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\CM7\Core\Src\tx_initialize_low_level.s</name>
+                        <name>$PROJ_DIR$\..\CM7\Core\Src\tx_initialize_low_level.S</name>
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\CM7\Core\Src\usart.c</name>
@@ -3418,6 +3426,12 @@
                     </excluded>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_system_tasks_run.c</name>
+                    <excluded>
+                        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_system_uninitialize.c</name>
                     <excluded>
                         <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
@@ -3808,6 +3822,18 @@
                     </excluded>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_read_run.c</name>
+                    <excluded>
+                        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_tasks_run.c</name>
+                    <excluded>
+                        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_unitialize.c</name>
                     <excluded>
                         <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
@@ -3815,6 +3841,12 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_write.c</name>
+                    <excluded>
+                        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_cdc_acm_write_run.c</name>
                     <excluded>
                         <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
                     </excluded>
@@ -3886,6 +3918,42 @@
                     </excluded>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_read.c</name>
+                    <excluded>
+                        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_receiver_event_free.c</name>
+                    <excluded>
+                        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_receiver_event_get.c</name>
+                    <excluded>
+                        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_receiver_initialize.c</name>
+                    <excluded>
+                        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_receiver_thread.c</name>
+                    <excluded>
+                        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_receiver_uninitialize.c</name>
+                    <excluded>
+                        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_report_get.c</name>
                     <excluded>
                         <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
@@ -3893,6 +3961,12 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_report_set.c</name>
+                    <excluded>
+                        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_hid_tasks_run.c</name>
                     <excluded>
                         <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
                     </excluded>
@@ -3976,7 +4050,19 @@
                     </excluded>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_transfer_abort.c</name>
+                    <excluded>
+                        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_transfer_request.c</name>
+                    <excluded>
+                        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_device_controllers\ux_dcd_stm32_transfer_run.c</name>
                     <excluded>
                         <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
                     </excluded>
@@ -4114,6 +4200,12 @@
                     </excluded>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_tasks_run.c</name>
+                    <excluded>
+                        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_transfer_abort.c</name>
                     <excluded>
                         <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
@@ -4127,6 +4219,12 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_transfer_request.c</name>
+                    <excluded>
+                        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_device_stack_transfer_run.c</name>
                     <excluded>
                         <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
                     </excluded>

@@ -293,8 +293,10 @@ void usbx_cdc_acm_read_thread_entry(ULONG arg)
       {
         cdc_acm =  data_interface->ux_slave_interface_class_instance;
 
+#ifndef UX_DEVICE_CLASS_CDC_ACM_TRANSMISSION_DISABLE
         /* Set transmission_status to UX_FALSE for the first time */
         cdc_acm -> ux_slave_class_cdc_acm_transmission_status = UX_FALSE;
+#endif /* UX_DEVICE_CLASS_CDC_ACM_TRANSMISSION_DISABLE */
 
         /* Read the received data in blocking mode */
         ux_device_class_cdc_acm_read(cdc_acm, (UCHAR *)UserRxBufferFS, 64,
@@ -320,7 +322,7 @@ void usbx_cdc_acm_read_thread_entry(ULONG arg)
     }
     else
     {
-      tx_thread_sleep(1);
+      tx_thread_sleep(MS_TO_TICK(10));
     }
   }
 }
@@ -359,7 +361,9 @@ void usbx_cdc_acm_write_thread_entry(ULONG arg)
     /* Get the cdc Instance */
     cdc_acm = data_interface->ux_slave_interface_class_instance;
 
+#ifndef UX_DEVICE_CLASS_CDC_ACM_TRANSMISSION_DISABLE
     cdc_acm -> ux_slave_class_cdc_acm_transmission_status = UX_FALSE;
+#endif
 
     /* Check if there is a new data to send */
     if (UserTxBufPtrOut != UserTxBufPtrIn)

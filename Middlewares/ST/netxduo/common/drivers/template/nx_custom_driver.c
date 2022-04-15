@@ -1,4 +1,3 @@
-[#ftl]
 /**************************************************************************/
 /*                                                                        */
 /*       Copyright (c) Microsoft Corporation. All rights reserved.        */
@@ -155,6 +154,6 @@ VOID  nx_stm32_custom_driver(NX_IP_DRIVER *driver_req_ptr)
     }
 }
 
-    /* USER CODE BEGIN 2 */
+/* USER CODE BEGIN 2 */
 
-    /* USER CODE END 2 */
+/* USER CODE END 2 */

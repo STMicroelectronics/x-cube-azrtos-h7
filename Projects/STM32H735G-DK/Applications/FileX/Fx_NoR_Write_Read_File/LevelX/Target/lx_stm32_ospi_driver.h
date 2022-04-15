@@ -30,25 +30,29 @@ extern "C" {
 
 /* USER CODE END ET */
 
+/* The following semaphore is being to notify about RX/TX completion. It needs to be released in the transfer callbacks */
+extern TX_SEMAPHORE ospi_rx_semaphore;
+extern TX_SEMAPHORE ospi_tx_semaphore;
+
 /* Exported constants --------------------------------------------------------*/
 
 /* the OctoSPI instance, default value set to 0 */
 #define LX_STM32_OSPI_INSTANCE                           0
+
 #define LX_STM32_OSPI_DEFAULT_TIMEOUT                    10 * TX_TIMER_TICKS_PER_SECOND
+
 #define LX_STM32_DEFAULT_SECTOR_SIZE                     LX_STM32_OSPI_SECTOR_SIZE
+#define LX_STM32_OSPI_DMA_API                            1
 
 /* when set to 1 LevelX is initializing the OctoSPI memory,
  * otherwise it is the up to the application to perform it.
  */
-#define LX_STM32_OSPI_INIT                               1
-
-#if (LX_STM32_OSPI_INIT == 1)
+#define LX_STM32_OSPI_INIT                               0
 
 /* allow the driver to fully erase the OctoSPI chip. This should be used carefully.
  * the call is blocking and takes a while. by default it is set to 0.
  */
 #define LX_STM32_OSPI_ERASE                              0
-#endif
 
 /* USER CODE BEGIN EC */
 
@@ -57,30 +61,101 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 
+/* USER CODE END EM */
 #define LX_STM32_OSPI_CURRENT_TIME                              tx_time_get
 
-#define LX_STM32_OSPI_POST_INIT()
+/* Macro called after initializing the OSPI driver
+ * e.g. create a semaphore used for transfer notification */
+ /* USER CODE BEGIN LX_STM32_OSPI_POST_INIT */
+
+#define LX_STM32_OSPI_POST_INIT()                        do { \
+                                                         if (tx_semaphore_create(&ospi_rx_semaphore, "ospi rx transfer semaphore", 0) != TX_SUCCESS) \
+                                                         { \
+                                                           return LX_ERROR; \
+                                                         } \
+                                                         if (tx_semaphore_create(&ospi_tx_semaphore, "ospi tx transfer semaphore", 0) != TX_SUCCESS) \
+                                                         { \
+                                                           return LX_ERROR; \
+                                                         } \
+                                                        } while(0)
+/* USER CODE END LX_STM32_OSPI_POST_INIT */
+
+/* Macro called before performing read operation */
+
+/* USER CODE BEGIN LX_STM32_OSPI_PRE_READ_TRANSFER */
 
 #define LX_STM32_OSPI_PRE_READ_TRANSFER(__status__)
 
-#define LX_STM32_OSPI_READ_CPLT_NOTIFY(__status__)
+/* USER CODE END LX_STM32_OSPI_PRE_READ_TRANSFER */
+
+/* Define how to notify about Read completion operation */
+
+/* USER CODE BEGIN LX_STM32_OSPI_READ_CPLT_NOTIFY */
+
+#define LX_STM32_OSPI_READ_CPLT_NOTIFY(__status__)      do { \
+                                                          if(tx_semaphore_get(&ospi_rx_semaphore, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != TX_SUCCESS) \
+                                                          { \
+                                                            __status__ = LX_ERROR; \
+                                                          } \
+                                                        } while(0)
+
+/* USER CODE END LX_STM32_OSPI_READ_CPLT_NOTIFY */
+
+/* Macro called after performing read operation */
+
+/* USER CODE BEGIN LX_STM32_OSPI_POST_READ_TRANSFER */
 
 #define LX_STM32_OSPI_POST_READ_TRANSFER(__status__)
 
+/* USER CODE END LX_STM32_OSPI_POST_READ_TRANSFER */
+
+/* Macro for read error handling */
+/* USER CODE BEGIN LX_STM32_OSPI_READ_TRANSFER_ERROR */
+
 #define LX_STM32_OSPI_READ_TRANSFER_ERROR(__status__)
+
+/* USER CODE END LX_STM32_OSPI_READ_TRANSFER_ERROR */
+
+/* Macro called before performing write operation */
+
+/* USER CODE BEGIN LX_STM32_OSPI_PRE_WRITE_TRANSFER */
 
 #define LX_STM32_OSPI_PRE_WRITE_TRANSFER(__status__)
 
-#define LX_STM32_OSPI_WRITE_CPLT_NOTIFY(__status__)
+/* USER CODE END LX_STM32_OSPI_PRE_WRITE_TRANSFER */
+
+/* Define how to notify about write completion operation */
+
+/* USER CODE BEGIN LX_STM32_OSPI_WRITE_CPLT_NOTIFY */
+
+#define LX_STM32_OSPI_WRITE_CPLT_NOTIFY(__status__)     do { \
+                                                          if(tx_semaphore_get(&ospi_tx_semaphore, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != TX_SUCCESS) \
+                                                          { \
+                                                            __status__ = LX_ERROR; \
+                                                          } \
+                                                        } while(0)
+
+/* USER CODE END LX_STM32_OSPI_WRITE_CPLT_NOTIFY */
+
+/* Macro called after performing write operation */
+
+/* USER CODE BEGIN LX_STM32_OSPI_POST_WRITE_TRANSFER */
 
 #define LX_STM32_OSPI_POST_WRITE_TRANSFER(__status__)
 
+/* USER CODE END LX_STM32_OSPI_POST_WRITE_TRANSFER */
+
+/* Macro for write error handling */
+
+/* USER CODE BEGIN LX_STM32_OSPI_WRITE_TRANSFER_ERROR */
+
 #define LX_STM32_OSPI_WRITE_TRANSFER_ERROR(__status__)
 
-/* USER CODE END EM */
+/* USER CODE END LX_STM32_OSPI_WRITE_TRANSFER_ERROR */
 
 /* Exported functions prototypes ---------------------------------------------*/
 INT lx_stm32_ospi_lowlevel_init(UINT instance);
+INT lx_stm32_ospi_lowlevel_deinit(UINT instance);
 
 INT lx_stm32_ospi_get_status(UINT instance);
 INT lx_stm32_ospi_get_info(UINT instance, ULONG *block_size, ULONG *total_blocks);

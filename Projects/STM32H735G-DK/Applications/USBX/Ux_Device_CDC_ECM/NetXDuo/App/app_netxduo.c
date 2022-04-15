@@ -352,7 +352,7 @@ UINT webserver_request_notify_callback(NX_WEB_HTTP_SERVER *server_ptr,
     /* Check if requested data equal TOGGLE_GREEN_LED */
     if (strncmp((char const *)request_data, TOGGLE_GREEN_LED, sizeof(TOGGLE_GREEN_LED)) == 0)
     {
-      BSP_LED_Toggle(LED_GREEN);
+      HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_3);
     }
   }
 

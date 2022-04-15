@@ -33,7 +33,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_device_class_cdc_ecm_activate                   PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -69,6 +69,12 @@
 /*                                            refer to TX symbols instead */
 /*                                            of using them directly,     */
 /*                                            resulting in version 6.1    */
+/*  08-02-2021     Wen Wang                 Modified comment(s),          */
+/*                                            fixed spelling error,       */
+/*                                            resulting in version 6.1.8  */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            refined macros names,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_device_class_cdc_ecm_activate(UX_SLAVE_CLASS_COMMAND *command)
@@ -123,7 +129,7 @@ ULONG                       physical_address_lsw;
                                         ux_slave_transfer_request_data_pointer, 0, UX_SLAVE_REQUEST_DATA_MAX_LENGTH); /* Use case of memset is verified. */
 
                     /* Resume the interrupt endpoint threads.  */
-                    _ux_utility_thread_resume(&cdc_ecm -> ux_slave_class_cdc_ecm_interrupt_thread); 
+                    _ux_device_thread_resume(&cdc_ecm -> ux_slave_class_cdc_ecm_interrupt_thread); 
 
                 }
                 
@@ -193,7 +199,7 @@ ULONG                       physical_address_lsw;
                 /* Not all endpoints have been found. Major error, do not proceed.  */
                 return(UX_ERROR);
 
-            /* Declare the link to be up. That may need to change later to make it dependant on the
+            /* Declare the link to be up. That may need to change later to make it dependent on the
                WAN/Wireless modem.  */
             cdc_ecm -> ux_slave_class_cdc_ecm_link_state = UX_DEVICE_CLASS_CDC_ECM_LINK_STATE_UP;
             
@@ -207,8 +213,8 @@ ULONG                       physical_address_lsw;
                                             ux_slave_transfer_request_data_pointer, 0, UX_SLAVE_REQUEST_DATA_MAX_LENGTH); /* Use case of memset is verified. */
 
             /* Resume the endpoint threads.  */
-            _ux_utility_thread_resume(&cdc_ecm -> ux_slave_class_cdc_ecm_bulkout_thread); 
-            _ux_utility_thread_resume(&cdc_ecm -> ux_slave_class_cdc_ecm_bulkin_thread); 
+            _ux_device_thread_resume(&cdc_ecm -> ux_slave_class_cdc_ecm_bulkout_thread); 
+            _ux_device_thread_resume(&cdc_ecm -> ux_slave_class_cdc_ecm_bulkin_thread); 
 
         }
         

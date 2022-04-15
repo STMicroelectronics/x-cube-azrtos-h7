@@ -26,7 +26,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */
 /*                                                                        */
 /*    fx_utility.h                                        PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -44,6 +44,11 @@
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Bhupendra Naphade        Modified comment(s), and      */
+/*                                            changed prototype for       */
+/*                                            exFAT size calculate        */
+/*                                            utility function,           */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 
@@ -85,7 +90,7 @@ UINT _fx_utility_exFAT_geometry_check(FX_MEDIA *media_ptr, UCHAR *sector_buffer)
 UINT _fx_utility_exFAT_system_area_checksum_verify(FX_MEDIA_PTR media_ptr,
                                                    UCHAR *sector_buffer, ULONG boot_sector_offset,
                                                    ULONG *calculated_checksum);
-VOID _fx_utility_exFAT_size_calculate(ULONG boundary_unit, ULONG64 size_in_sectors, ULONG sectors_per_cluster,
+VOID _fx_utility_exFAT_size_calculate(UINT bytes_per_sector, ULONG boundary_unit, ULONG64 size_in_sectors, ULONG sectors_per_cluster,
                                       ULONG *sectors_per_fat_ptr, ULONG *fat_offset_ptr, ULONG *cluster_heap_offset_ptr);
 UINT _fx_utility_exFAT_system_area_format(FX_MEDIA *media_ptr, ULONG boundary_unit,
                                           ULONG *system_area_checksum_ptr, UCHAR *memory_ptr, UINT memory_size);

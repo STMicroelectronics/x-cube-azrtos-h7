@@ -72,6 +72,24 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   return ret;
 }
 
+  /**
+  * @brief  MX_ThreadX_Init
+  * @param  None
+  * @retval None
+  */
+void MX_ThreadX_Init(void)
+{
+  /* USER CODE BEGIN  Before_Kernel_Start */
+
+  /* USER CODE END  Before_Kernel_Start */
+
+  tx_kernel_enter();
+
+  /* USER CODE BEGIN  Kernel_Start_Error */
+
+  /* USER CODE END  Kernel_Start_Error */
+}
+
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */

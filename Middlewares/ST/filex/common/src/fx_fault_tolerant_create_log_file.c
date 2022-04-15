@@ -34,7 +34,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_fault_tolerant_create_log_file                  PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -78,6 +78,9 @@
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Bhupendra Naphade        Modified comment(s), replaced */
+/*                                            sector size constant,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT _fx_fault_tolerant_create_log_file(FX_MEDIA *media_ptr)
@@ -352,7 +355,7 @@ UCHAR  cluster_state;
         byte_ptr = media_ptr -> fx_media_fault_tolerant_memory_buffer;
 
         /* Calculate Boot Sector Check Sum.  */
-        for (i = 0; i < FX_BOOT_SECTOR_SIZE; i++)
+        for (i = 0; i < media_ptr -> fx_media_bytes_per_sector; i++)
         {
             if ((FX_EF_VOLUME_FLAGS     == i) ||
                 (FX_EF_VOLUME_FLAGS + 1 == i) ||
@@ -380,7 +383,7 @@ UCHAR  cluster_state;
             }
 
             /* Calculate Check Sum for System Area  */
-            for (i = 0; i < FX_BOOT_SECTOR_SIZE; i++)
+            for (i = 0; i < media_ptr -> fx_media_bytes_per_sector; i++)
             {
                 checksum = ((checksum >> 1) | (checksum << 31)) + (ULONG)byte_ptr[i];
             }

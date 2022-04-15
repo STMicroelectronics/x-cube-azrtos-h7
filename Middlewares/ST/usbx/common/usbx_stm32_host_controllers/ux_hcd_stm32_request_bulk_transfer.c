@@ -95,7 +95,11 @@ UINT                length;
     direction = (transfer_request -> ux_transfer_request_type & UX_REQUEST_DIRECTION) == UX_REQUEST_IN ? 1 : 0;
 
     /* If the direction is OUT, request size is larger than MPS, and DMA is not used, we need to set transfer length to MPS.  */
-    if ((direction == 0) && (transfer_request -> ux_transfer_request_requested_length > endpoint -> ux_endpoint_descriptor.wMaxPacketSize) && (hcd_stm32 -> hcd_handle -> Init.dma_enable == 0))
+    if ((direction == 0) && (transfer_request -> ux_transfer_request_requested_length > endpoint -> ux_endpoint_descriptor.wMaxPacketSize)
+#ifndef USB_DRD_FS
+        && (hcd_stm32 -> hcd_handle -> Init.dma_enable == 0)
+#endif /* USB_DRD_FS */
+          )
     {
 
         /* Set transfer length to MPS.  */

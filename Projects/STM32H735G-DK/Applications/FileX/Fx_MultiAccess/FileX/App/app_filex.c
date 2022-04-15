@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "stm32h735g_discovery.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -144,7 +144,6 @@ UINT MX_FileX_Init(VOID *memory_ptr)
   fx_system_initialize();
 
   /* USER CODE END MX_FileX_Init */
-
   return ret;
 }
 
@@ -205,7 +204,7 @@ VOID fx_thread_main_entry(ULONG thread_input)
   /* Toggle green LED to indicate processing finish OK */
   while(1)
   {
-  	BSP_LED_Toggle(LED_GREEN);
+  	HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
   	os_delay(40);
   }
 }

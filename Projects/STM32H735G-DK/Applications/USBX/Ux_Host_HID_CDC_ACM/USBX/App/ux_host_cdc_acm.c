@@ -48,7 +48,7 @@ extern UX_HOST_CLASS_CDC_ACM         *app_cdc_acm;
 extern TX_EVENT_FLAGS_GROUP          ux_app_EventFlag;
 extern ux_app_stateTypeDef           ux_app_state;
 extern TX_BYTE_POOL                  *ux_app_byte_pool;
-extern ux_app_devInfotypeDef          ux_dev_info;
+extern ux_app_devInfotypeDef         ux_dev_info;
 UX_HOST_CLASS_CDC_ACM_RECEPTION      app_cdc_acm_reception;
 ULONG                                tx_actual_length;
 ULONG                                command_received_count;
@@ -115,18 +115,18 @@ void cdc_acm_recieve_app_thread_entry(ULONG arg)
   uint16_t       count = 0;
   uint16_t       print_count = 0;
 
+  /* allocate memory from usb_pool for user reception buffer*/
+  if (tx_byte_allocate(ux_app_byte_pool, (VOID **) &UserRxBuffer,
+                       APP_RX_DATA_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+  {
+    Error_Handler();
+  }
+
   while (1)
   {
     switch (ux_app_state)
     {
       case App_Ready:
-
-        /* allocate memory from usb_pool for user reception buffer*/
-        if (tx_byte_allocate(ux_app_byte_pool, (VOID **) &UserRxBuffer,
-                             APP_RX_DATA_SIZE, TX_NO_WAIT) != TX_SUCCESS)
-        {
-          Error_Handler();
-        }
 
         /* pointer to USB User buffer reception*/
         ptr_read = UserRxBuffer;
@@ -213,7 +213,7 @@ void cdc_acm_recieve_app_thread_entry(ULONG arg)
 
       case App_Idle:
       default:
-        tx_thread_sleep(1);
+        tx_thread_sleep(MS_TO_TICK(10));
         break;
     }
   }

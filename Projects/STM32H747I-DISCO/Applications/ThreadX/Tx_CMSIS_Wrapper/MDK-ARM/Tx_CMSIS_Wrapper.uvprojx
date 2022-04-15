@@ -10,7 +10,7 @@
       <TargetName>Tx_CMSIS_Wrapper_CM4</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6150000::V6.15::ARMCLANG</pCCUsed>
+      <pCCUsed>6140000::V6.14::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -516,11 +516,6 @@
               <FilePath>../CM7/Src/main.c</FilePath>
             </File>
             <File>
-              <FileName>tx_initialize_low_level.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>../CM7/Src/tx_initialize_low_level.s</FilePath>
-            </File>
-            <File>
               <FileName>stm32h7xx_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>../CM7/Src/stm32h7xx_it.c</FilePath>
@@ -534,6 +529,11 @@
               <FileName>stm32h7xx_hal_timebase_tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>../CM7/Src/stm32h7xx_hal_timebase_tim.c</FilePath>
+            </File>
+            <File>
+              <FileName>tx_initialize_low_level.S</FileName>
+              <FileType>2</FileType>
+              <FilePath>../CM7/Src/tx_initialize_low_level.S</FilePath>
             </File>
           </Files>
         </Group>
@@ -10148,7 +10148,7 @@
       <TargetName>Tx_CMSIS_Wrapper_CM7</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6150000::V6.15::ARMCLANG</pCCUsed>
+      <pCCUsed>6140000::V6.14::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -10585,11 +10585,6 @@
               <FilePath>../CM7/Src/main.c</FilePath>
             </File>
             <File>
-              <FileName>tx_initialize_low_level.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>../CM7/Src/tx_initialize_low_level.s</FilePath>
-            </File>
-            <File>
               <FileName>stm32h7xx_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>../CM7/Src/stm32h7xx_it.c</FilePath>
@@ -10603,6 +10598,11 @@
               <FileName>stm32h7xx_hal_timebase_tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>../CM7/Src/stm32h7xx_hal_timebase_tim.c</FilePath>
+            </File>
+            <File>
+              <FileName>tx_initialize_low_level.S</FileName>
+              <FileType>2</FileType>
+              <FilePath>../CM7/Src/tx_initialize_low_level.S</FilePath>
             </File>
           </Files>
         </Group>

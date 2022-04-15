@@ -34,7 +34,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_host_stack_device_descriptor_read               PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -69,6 +69,13 @@
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  10-15-2021     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added bMaxPacketSize0 check,*/
+/*                                            resulting in version 6.1.9  */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            added class code checking,  */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_host_stack_device_descriptor_read(UX_DEVICE *device)
@@ -101,6 +108,12 @@ UX_ENDPOINT     *control_endpoint;
     transfer_request -> ux_transfer_request_value =             UX_DEVICE_DESCRIPTOR_ITEM << 8;
     transfer_request -> ux_transfer_request_index =             0;
 
+#if defined(UX_HOST_STANDALONE)
+    device -> ux_device_enum_trans = transfer_request;
+    status = UX_SUCCESS;
+    return(status);
+#else
+
     /* Send request to HCD layer.  */
     status =  _ux_host_stack_transfer_request(transfer_request);
 
@@ -122,8 +135,39 @@ UX_ENDPOINT     *control_endpoint;
         return(status);             
     }
 
+    /* Validate the bMaxPacketSize0.  */
+    if (device -> ux_device_descriptor.bMaxPacketSize0 != 8 &&
+        device -> ux_device_descriptor.bMaxPacketSize0 != 16 &&
+        device -> ux_device_descriptor.bMaxPacketSize0 != 32 &&
+        device -> ux_device_descriptor.bMaxPacketSize0 != 64)
+    {
+        _ux_utility_memory_free(descriptor);
+        return(UX_DESCRIPTOR_CORRUPTED);
+    }
+
+#if defined(UX_HOST_DEVICE_CLASS_CODE_VALIDATION_ENABLE)
+
+    /* Validate the USB-IF bDeviceClass class code.  */
+    switch(device -> ux_device_descriptor.bDeviceClass)
+    {
+    case 0x00: /* Fall through.  */
+    case 0x02: /* Fall through.  */
+    case 0x09: /* Fall through.  */
+    case 0x11: /* Fall through.  */
+    case 0xDC: /* Fall through.  */
+    case 0xEF: /* Fall through.  */
+    case 0xFF:
+        break;
+    default:
+
+        /* Invalid device class code.  */
+        _ux_utility_memory_free(descriptor);
+        return(UX_DESCRIPTOR_CORRUPTED);
+    }
+#endif
+
     /* Update the max packet size value for the endpoint.  */
-    control_endpoint -> ux_endpoint_descriptor.wMaxPacketSize =  device -> ux_device_descriptor.bMaxPacketSize0;
+    control_endpoint -> ux_endpoint_descriptor.wMaxPacketSize = device -> ux_device_descriptor.bMaxPacketSize0;
 
     /* Create a transfer_request for the GET_DESCRIPTOR request. This time, we have the complete length */
     transfer_request -> ux_transfer_request_data_pointer =      descriptor;
@@ -132,6 +176,7 @@ UX_ENDPOINT     *control_endpoint;
     transfer_request -> ux_transfer_request_type =              UX_REQUEST_IN | UX_REQUEST_TYPE_STANDARD | UX_REQUEST_TARGET_DEVICE;
     transfer_request -> ux_transfer_request_value =             UX_DEVICE_DESCRIPTOR_ITEM << 8;
     transfer_request -> ux_transfer_request_index =             0;
+    transfer_request -> ux_transfer_request_packet_length =     device -> ux_device_descriptor.bMaxPacketSize0;
 
     /* Send request to HCD layer.  */
     status =  _ux_host_stack_transfer_request(transfer_request);
@@ -162,5 +207,6 @@ UX_ENDPOINT     *control_endpoint;
 
     /* Return completion status.  */
     return(status);             
+#endif
 }
 

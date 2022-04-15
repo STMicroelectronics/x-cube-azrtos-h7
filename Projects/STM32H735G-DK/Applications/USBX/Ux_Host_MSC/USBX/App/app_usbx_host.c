@@ -82,6 +82,7 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
   /* USER CODE END MX_USBX_Host_MEM_POOL */
 
   /* USER CODE BEGIN MX_USBX_Host_Init */
+#if (USE_STATIC_ALLOCATION == 1)  
   CHAR *pointer;
 
   /* Allocate the stack for thread 0.  */
@@ -157,6 +158,7 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
     return TX_QUEUE_ERROR;
   }
 
+#endif
   /* USER CODE END MX_USBX_Host_Init */
 
   return ret;

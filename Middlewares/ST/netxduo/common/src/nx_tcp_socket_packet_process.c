@@ -35,7 +35,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_tcp_socket_packet_process                       PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -83,6 +83,13 @@
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  08-02-2021     Yuxin Zhou               Modified comment(s), and      */
+/*                                            supported TCP/IP offload,   */
+/*                                            resulting in version 6.1.8  */
+/*  01-31-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            fixed unsigned integers     */
+/*                                            comparison,                 */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 VOID  _nx_tcp_socket_packet_process(NX_TCP_SOCKET *socket_ptr, NX_PACKET *packet_ptr)
@@ -98,6 +105,12 @@ ULONG         rx_sequence;
 ULONG         rx_window;
 UINT          outside_of_window;
 ULONG         mss = 0;
+#ifdef NX_ENABLE_TCPIP_OFFLOAD
+ULONG         tcpip_offload; 
+
+    tcpip_offload = socket_ptr -> nx_tcp_socket_connect_interface -> nx_interface_capability_flag &
+                    NX_INTERFACE_CAPABILITY_TCPIP_OFFLOAD;
+#endif /* NX_ENABLE_TCPIP_OFFLOAD */
 
     /* Add debug information. */
     NX_PACKET_DEBUG(__FILE__, __LINE__, packet_ptr);
@@ -112,7 +125,11 @@ ULONG         mss = 0;
     header_length =  (tcp_header_copy.nx_tcp_header_word_3 >> NX_TCP_HEADER_SHIFT) * (ULONG)sizeof(ULONG);
 
     /* Process the segment if socket state is equal or greater than NX_TCP_SYN_RECEIVED. According to RFC 793, Section 3.9, Page 69.  */
-    if (socket_ptr -> nx_tcp_socket_state >= NX_TCP_SYN_RECEIVED)
+    if ((socket_ptr -> nx_tcp_socket_state >= NX_TCP_SYN_RECEIVED)
+#ifdef NX_ENABLE_TCPIP_OFFLOAD
+        && (!tcpip_offload)
+#endif /* NX_ENABLE_TCPIP_OFFLOAD */
+       )
     {
 
         /* Step1: Check sequence number. According to RFC 793, Section 3.9, Page 69.  */
@@ -165,8 +182,8 @@ ULONG         mss = 0;
                     outside_of_window = NX_FALSE;
                 }
             }
-            else if (((INT)packet_sequence - (INT)rx_sequence >= 0) &&
-                     ((INT)rx_sequence + (INT)rx_window - (INT)packet_sequence > 0))
+            else if (((INT)(packet_sequence - rx_sequence) >= 0) &&
+                     ((INT)(rx_sequence + rx_window - packet_sequence) > 0))
             {
                 outside_of_window = NX_FALSE;
             }
@@ -174,10 +191,10 @@ ULONG         mss = 0;
         else
         {
             if ((rx_window > 0) &&
-                ((((INT)packet_sequence - (INT)rx_sequence >= 0) &&
-                  ((INT)rx_sequence + (INT)rx_window - (INT)packet_sequence > 0)) ||
-                 (((INT)packet_sequence + ((INT)packet_data_length - 1) - (INT)rx_sequence >= 0) &&
-                  ((INT)rx_sequence + 1 + ((INT)rx_window - (INT)packet_sequence) - (INT)packet_data_length > 0))))
+                ((((INT)(packet_sequence - rx_sequence) >= 0) &&
+                  ((INT)(rx_sequence + rx_window - packet_sequence) > 0)) ||
+                 (((INT)(packet_sequence + (packet_data_length - 1) - rx_sequence) >= 0) &&
+                  ((INT)(rx_sequence + 1 + (rx_window - packet_sequence) - packet_data_length) > 0))))
             {
                 outside_of_window = NX_FALSE;
             }
@@ -366,12 +383,18 @@ ULONG         mss = 0;
         /* Check for data in the current packet.  */
         packet_queued =  _nx_tcp_socket_state_data_check(socket_ptr, packet_ptr);
 
-        /* Call the ESTABLISHED state handling function to process any state
-           changes caused by this new packet.  */
-        _nx_tcp_socket_state_established(socket_ptr);
+#ifdef NX_ENABLE_TCPIP_OFFLOAD
+        if (!tcpip_offload)
+#endif /* NX_ENABLE_TCPIP_OFFLOAD */
+        {
 
-        /* Determine if any transmit suspension can be lifted.  */
-        _nx_tcp_socket_state_transmit_check(socket_ptr);
+            /* Call the ESTABLISHED state handling function to process any state
+            changes caused by this new packet.  */
+            _nx_tcp_socket_state_established(socket_ptr);
+
+            /* Determine if any transmit suspension can be lifted.  */
+            _nx_tcp_socket_state_transmit_check(socket_ptr);
+        }
 
         /* State processing is complete.  */
         break;

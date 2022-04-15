@@ -133,7 +133,7 @@ UINT DFU_Read(VOID *dfu, ULONG block_number, UCHAR * data_pointer,
 {
   UINT   Status      = UX_SUCCESS;
   UCHAR* Src_ptr     = NULL;
-  UINT   Bloc_index  = 0;
+  UINT   Block_index  = 0;
   ULONG  Address_src = 0;
 
   if (block_number == 0)
@@ -153,10 +153,10 @@ UINT DFU_Read(VOID *dfu, ULONG block_number, UCHAR * data_pointer,
     Src_ptr = (uint8_t*)Address_src;
 
     /* Perform the Read operation */
-    for (Bloc_index = 0; Bloc_index < length; Bloc_index++)
+    for (Block_index = 0; Block_index < length; Block_index++)
     {
       /* Copy data from Source pointer  to data_pointer buffer*/
-      *(data_pointer + Bloc_index) = *Src_ptr ++;
+      *(data_pointer + Block_index) = *Src_ptr ++;
     }
 
     *media_status = length;
@@ -274,7 +274,7 @@ void usbx_dfu_download_thread_entry(ULONG arg)
 {
   UINT                  status;
   UINT                  Command;
-  ULONG                 Bloc_index;
+  ULONG                 Block_index;
   ULONG                 Data_address;
   ULONG                 Address_dest;
   ULONG                 Media_address;
@@ -356,13 +356,13 @@ void usbx_dfu_download_thread_entry(ULONG arg)
         Address_dest = ((ux_dfu_download.wblock_num - 2U) * UX_SLAVE_REQUEST_CONTROL_MAX_LENGTH) +  Address_ptr;
 
         /* Perform the write operation */
-        for (Bloc_index = 0; Bloc_index < ux_dfu_download.wlength; Bloc_index += 32)
+        for (Block_index = 0; Block_index < ux_dfu_download.wlength; Block_index += 32)
         {
           /* Get address of destination buffer  */
-          Media_address = (uint32_t) (Address_dest + Bloc_index);
+          Media_address = (uint32_t) (Address_dest + Block_index);
 
           /* Get Pointer to the source buffer */
-          Data_address  = (uint32_t) (ux_dfu_download.data_ptr + Bloc_index);
+          Data_address  = (uint32_t) (ux_dfu_download.data_ptr + Block_index);
 
           /* Program flash word at a Address_dest address */
           if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_FLASHWORD,

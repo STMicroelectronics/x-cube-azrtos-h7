@@ -54,7 +54,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>0</BrowseInformation>
+          <BrowseInformation>1</BrowseInformation>
           <ListingPath></ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -211,7 +211,7 @@
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
             <Im1Chk>1</Im1Chk>
-            <Im2Chk>1</Im2Chk>
+            <Im2Chk>0</Im2Chk>
             <OnChipMemories>
               <Ocm1>
                 <Type>0</Type>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>TX_INCLUDE_USER_DEFINE_FILE,FX_INCLUDE_USER_DEFINE_FILE,LX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H735xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;  ../AZURE_RTOS/App;  ../FileX/App;  ../LevelX/App;  ../FileX/Target;  ../LevelX/Target;  ../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;  ../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;  ../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;  ../../../../../../Drivers/CMSIS/Include;  ../../../../../../Middlewares/ST/filex/common/inc/;  ../../../../../../Middlewares/ST/filex/ports/generic/inc/;  ../../../../../../Drivers/BSP/Components/mx25lm51245g/;  ../../../../../../Middlewares/ST/levelx/common/inc/;  ../../../../../../Middlewares/ST/threadx/common/inc/;  ../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/</IncludePath>
+              <IncludePath>../Core/Inc;../AZURE_RTOS/App;../FileX/App;../LevelX/App;../FileX/Target;../LevelX/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Middlewares/ST/filex/common/inc/;../../../../../../Middlewares/ST/filex/ports/generic/inc/;../../../../../../Drivers/BSP/Components/mx25lm51245g/;../../../../../../Middlewares/ST/levelx/common/inc/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -399,9 +399,9 @@
               <FilePath>../Core/Src/main.c</FilePath>
             </File>
             <File>
-              <FileName>tx_initialize_low_level.s</FileName>
+              <FileName>tx_initialize_low_level.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../Core/Src/tx_initialize_low_level.s</FilePath>
+              <FilePath>../Core/Src/tx_initialize_low_level.S</FilePath>
             </File>
             <File>
               <FileName>app_threadx.c</FileName>
@@ -2715,8 +2715,8 @@
   <RTE>
     <apis/>
     <components>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.4.0" condition="ARMv6_7_8-M Device">
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.7.0"/>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="4.3.0" condition="CMSIS Core">
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="4.5.0"/>
         <targetInfos>
           <targetInfo name="Fx_NoR_Write_Read_File"/>
         </targetInfos>

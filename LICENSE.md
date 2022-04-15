@@ -1,22 +1,23 @@
-﻿| Component                       | License                                               | Copyright |
+﻿| Component                       | Copyright                                             | License |
 |:---------                       |:-------                                               |:----------|
-| Cortex-M CMSIS                  | Apache License 2.0                                    | ARM Limited|
-| STM32H7xx CMSIS                 | Apache License 2.0                                    | ARM Limited - STMicroelectronics |
-| STM32H7xx HAL                   | BSD-3-Clause                                          | STMicroelectronics |
-| BSP STM32H7xx_Nucleo            | BSD-3-Clause                                          | STMicroelectronics |
-| BSP STM32H735G-DK               | BSD-3-Clause                                          | STMicroelectronics |
-| BSP BSP STM32H743I-EVAL         | BSD-3-Clause                                          | STMicroelectronics |
-| BSP STM32H747I-DISCO            | BSD-3-Clause                                          | STMicroelectronics |
-| BSP STM32H7B3I-DK               | BSD-3-Clause                                          | STMicroelectronics |
-| BSP STM32H7B3I-EVAL             | BSD-3-Clause                                          | STMicroelectronics |
-| BSP STM32H745I-DISCO            | BSD-3-Clause                                          | STMicroelectronics |
-| BSP STM32H747I-EVAL             | BSD-3-Clause                                          | STMicroelectronics |
-| BSP STM32H750B-DK               | BSD-3-Clause                                          | STMicroelectronics |
-| BSP Components                  | BSD-3-Clause                                          | STMicroelectronics |
-| Application Projects            | Proprietary                                           | STMicroelectronics |
-| CMSIS RTOS Threadx wrapper      | Proprietary                                           | STMicroelectronics |
-| Aure RTOS ThreadX               | Microsoft Software License for Azure RTOS             | Microsoft Corporation|
-| Aure RTOS NetXDuo               | Microsoft Software License for Azure RTOS             | Microsoft Corporation|
-| Aure RTOS FileX                 | Microsoft Software License for Azure RTOS             | Microsoft Corporation|
-| Aure RTOS LeveLX                | Microsoft Software License for Azure RTOS             | Microsoft Corporation|
-| Aure RTOS USBX                  | Microsoft Software License for Azure RTOS             | Microsoft Corporation|
+| Cortex-M CMSIS                  | ARM Limited                                           | Apache-2.0 |
+| STM32H7xx CMSIS                 | ARM Limited - STMicroelectronics                      | Apache-2.0 |
+| STM32H7xx HAL                   | STMicroelectronics                                    | BSD-3-Clause |
+| BSP STM32H7xx_Nucleo            | STMicroelectronics                                    | BSD-3-Clause |
+| BSP STM32H735G-DK               | STMicroelectronics                                    | BSD-3-Clause |
+| BSP BSP STM32H743I-EVAL         | STMicroelectronics                                    | BSD-3-Clause |
+| BSP STM32H747I-DISCO            | STMicroelectronics                                    | BSD-3-Clause |
+| BSP STM32H7B3I-DK               | STMicroelectronics                                    | BSD-3-Clause |
+| BSP STM32H7B3I-EVAL             | STMicroelectronics                                    | BSD-3-Clause |
+| BSP STM32H745I-DISCO            | STMicroelectronics                                    | BSD-3-Clause |
+| BSP STM32H747I-EVAL             | STMicroelectronics                                    | BSD-3-Clause |
+| BSP STM32H750B-DK               | STMicroelectronics                                    | BSD-3-Clause |
+| BSP Components                  | STMicroelectronics                                    | BSD-3-Clause |
+| Application Projects            | STMicroelectronics                                    | Proprietary  |
+| CMSIS RTOS Threadx wrapper      | STMicroelectronics                                    | Proprietary  |
+| Aure RTOS ThreadX               | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
+| Aure RTOS NetXDuo               | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
+| Aure RTOS FileX                 | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
+| Aure RTOS LeveLX                | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
+| Aure RTOS USBX                  | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
+| Cypress-WHD                     | Cypress Semiconductor Corporation                     | Apache-2.0 for sources and PBL-1.0 for binaries |

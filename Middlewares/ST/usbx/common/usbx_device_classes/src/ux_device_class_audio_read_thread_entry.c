@@ -34,7 +34,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_device_class_audio_read_thread_entry            PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -42,6 +42,8 @@
 /*  DESCRIPTION                                                           */
 /*                                                                        */
 /*    This function is thread of ISO OUT from the Audio class.            */
+/*                                                                        */
+/*    It's for RTOS mode.                                                 */
 /*                                                                        */
 /*  INPUT                                                                 */
 /*                                                                        */
@@ -55,7 +57,7 @@
 /*  CALLS                                                                 */
 /*                                                                        */
 /*    _ux_system_error_handler              System error trap             */
-/*    _ux_utility_thread_suspend            Suspend thread used           */
+/*    _ux_device_thread_suspend             Suspend thread used           */
 /*    _ux_device_stack_transfer_request     Issue transfer request        */
 /*    _ux_utility_memory_copy               Copy data                     */
 /*                                                                        */
@@ -72,6 +74,13 @@
 /*                                            verified memset and memcpy  */
 /*                                            cases,                      */
 /*                                            resulting in version 6.1    */
+/*  10-15-2021     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            replaced wMaxPacketSize by  */
+/*                                            calculated payload size,    */
+/*                                            resulting in version 6.1.9  */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            refined macros names,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 VOID _ux_device_class_audio_read_thread_entry(ULONG audio_stream)
@@ -85,7 +94,6 @@ UX_SLAVE_TRANSFER               *transfer;
 UCHAR                           *next_pos;
 UX_DEVICE_CLASS_AUDIO_FRAME     *next_frame;
 ULONG                           max_packet_size;
-ULONG                           transactions;
 ULONG                           actual_length;
 
 
@@ -111,12 +119,7 @@ ULONG                           actual_length;
 
             /* Calculate transfer size based on packet size and number transactions once endpoint is available.  */
             if (max_packet_size == 0)
-            {
-                max_packet_size = endpoint -> ux_slave_endpoint_descriptor.wMaxPacketSize & 0x7FF;
-                transactions = (endpoint -> ux_slave_endpoint_descriptor.wMaxPacketSize >> 11) & 0x3;
-                if (transactions)
-                    max_packet_size *= (transactions + 1);
-            }
+                max_packet_size = endpoint -> ux_slave_endpoint_transfer_request.ux_slave_transfer_request_transfer_length;
 
             /* Get transfer instance.  */
             transfer = &endpoint -> ux_slave_endpoint_transfer_request;
@@ -168,7 +171,7 @@ ULONG                           actual_length;
         }
 
         /* We need to suspend ourselves. We will be resumed by the device enumeration module or when a change of alternate setting happens.  */
-        _ux_utility_thread_suspend(&stream -> ux_device_class_audio_stream_thread);
+        _ux_device_thread_suspend(&stream -> ux_device_class_audio_stream_thread);
     }
 }
 

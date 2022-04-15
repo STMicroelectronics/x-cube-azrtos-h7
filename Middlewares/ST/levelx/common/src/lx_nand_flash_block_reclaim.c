@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nand_flash_block_reclaim                        PORTABLE C      */ 
-/*                                                           6.1.7        */
+/*                                                           6.1.9        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -88,6 +88,13 @@
 /*                                            resulting in version 6.1    */
 /*  06-02-2021     Bhupendra Naphade        Modified comment(s),          */
 /*                                            resulting in version 6.1.7  */
+/*  08-02-2021     Bhupendra Naphade        Modified comment(s), updated  */
+/*                                            obselete page count check,  */
+/*                                            resulting in version 6.1.8  */
+/*  10-15-2021     Bhupendra Naphade        Modified comment(s),          */
+/*                                            removed multiple write      */
+/*                                            to page 0,                  */
+/*                                            resulting in version 6.1.9  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nand_flash_block_reclaim(LX_NAND_FLASH *nand_flash)
@@ -131,7 +138,7 @@ UINT                    status;
     }
 
     /* Determine if this block is completely obsolete.  */
-    if (obsolete_pages == nand_flash -> lx_nand_flash_pages_per_block)
+    if (obsolete_pages == nand_flash -> lx_nand_flash_pages_per_block - 1)
     {
 
         /* Read page 0 of the block, which has the erase count in the first 4 bytes. */
@@ -215,21 +222,10 @@ UINT                    status;
             }
 
             /* Now store the erase count.  */
-            page_word_ptr[0] =  (erase_count | LX_BLOCK_ERASED);
+            page_word_ptr[0] =  (erase_count);
         
             /* Write the erase count for the block.  */
             status =  _lx_nand_flash_driver_write(nand_flash, erase_block, 0, page_word_ptr, LX_NAND_ERASE_COUNT_WRITE_SIZE);
-
-            /* Check the status.  */
-            if (status == LX_SUCCESS)
-            {
-            
-                /* Now store the erase count.  */
-                page_word_ptr[0] =  erase_count;
-        
-                /* Write the erase count for the block.  */
-                status =  _lx_nand_flash_driver_write(nand_flash, erase_block, 0, page_word_ptr, LX_NAND_ERASE_COUNT_WRITE_SIZE);
-            }
 
             /* Check for an error from flash driver.   */
             if (status)
@@ -575,21 +571,10 @@ UINT                    status;
                 }
 
                 /* Now store the erase count.  */
-                page_word_ptr[0] =  (erase_count | LX_BLOCK_ERASED);
+                page_word_ptr[0] =  (erase_count);
         
                 /* Write the erase count for the block.  */
                 status =  _lx_nand_flash_driver_write(nand_flash, erase_block, 0, page_word_ptr, LX_NAND_ERASE_COUNT_WRITE_SIZE);
-       
-                /* Determine if the write was successful.  */
-                if (status == LX_SUCCESS)
-                {
-
-                    /* Now store the erase count.  */
-                    page_word_ptr[0] =  erase_count;
-        
-                    /* Write the erase count for the block.  */
-                    status =  _lx_nand_flash_driver_write(nand_flash, erase_block, 0, page_word_ptr, LX_NAND_ERASE_COUNT_WRITE_SIZE);
-                }
 
                 /* Check for an error from flash driver.   */
                 if (status)

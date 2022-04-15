@@ -84,7 +84,7 @@ void  hid_keyboard_thread_entry(ULONG arg)
     }
     else
     {
-      tx_thread_sleep(10);
+      tx_thread_sleep(MS_TO_TICK(10));
     }
   }
 }

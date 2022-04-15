@@ -26,7 +26,7 @@ AZ_NODISCARD az_result az_iot_message_properties_init(
 {
   _az_PRECONDITION_NOT_NULL(properties);
   _az_PRECONDITION_VALID_SPAN(buffer, 0, true);
-  _az_PRECONDITION(written_length >= 0);
+  _az_PRECONDITION_RANGE(0, written_length, az_span_size(buffer));
 
   properties->_internal.properties_buffer = buffer;
   properties->_internal.properties_written = written_length;
@@ -132,8 +132,7 @@ AZ_NODISCARD az_result az_iot_message_properties_next(
   }
   else
   {
-    properties->_internal.current_property_index
-        = (uint32_t)(_az_span_diff(remainder, properties->_internal.properties_buffer));
+    properties->_internal.current_property_index += (uint32_t)(_az_span_diff(remainder, prop_span));
   }
 
   return AZ_OK;

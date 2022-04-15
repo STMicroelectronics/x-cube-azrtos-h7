@@ -291,11 +291,8 @@ uint8_t *USBD_Get_Language_Id_Framework(ULONG *Length);
 #define USBD_CDCACM_EPINCMD_ADDR                      0x82U
 #define USBD_CDCACM_EPINCMD_FS_MPS                    8U
 #define USBD_CDCACM_EPINCMD_HS_MPS                    8U
-#define USBD_CDCACM_EPIN_ADDR                         0x83U
+#define USBD_CDCACM_EPIN_ADDR                         0x81U
 #define USBD_CDCACM_EPOUT_ADDR                        0x01U
-#if (USBD_CDCACM_EPIN_ADDR == (USBD_CDCACM_EPOUT_ADDR & 0x0FU))
-#error Address endpoint IN shall be different form endpoint OUT.
-#endif
 #define USBD_CDCACM_EPIN_FS_MPS                       64U
 #define USBD_CDCACM_EPIN_HS_MPS                       512U
 #define USBD_CDCACM_EPOUT_FS_MPS                      64U

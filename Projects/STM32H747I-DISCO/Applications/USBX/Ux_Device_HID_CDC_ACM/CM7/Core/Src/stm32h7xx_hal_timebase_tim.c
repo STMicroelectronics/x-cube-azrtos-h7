@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2020-2021 STMicroelectronics.
+  * Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -127,3 +127,4 @@ void HAL_ResumeTick(void)
   /* Enable TIM6 Update interrupt */
   __HAL_TIM_ENABLE_IT(&htim6, TIM_IT_UPDATE);
 }
+

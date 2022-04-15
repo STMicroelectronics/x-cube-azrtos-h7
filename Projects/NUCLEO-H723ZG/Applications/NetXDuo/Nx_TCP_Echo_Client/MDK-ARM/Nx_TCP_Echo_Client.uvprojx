@@ -399,9 +399,9 @@
               <FilePath>../Core/Src/main.c</FilePath>
             </File>
             <File>
-              <FileName>tx_initialize_low_level.s</FileName>
+              <FileName>tx_initialize_low_level.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../Core/Src/tx_initialize_low_level.s</FilePath>
+              <FilePath>../Core/Src/tx_initialize_low_level.S</FilePath>
             </File>
             <File>
               <FileName>app_threadx.c</FileName>
@@ -3047,6 +3047,66 @@
               <FileName>nxd_nd_cache_ip_address_find.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nxd_nd_cache_ip_address_find.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_tcp_server_socket_driver_listen.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_tcp_server_socket_driver_listen.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_tcp_socket_driver_establish.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_tcp_socket_driver_establish.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_tcp_socket_driver_packet_receive.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_tcp_socket_driver_packet_receive.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_udp_socket_driver_packet_receive.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_udp_socket_driver_packet_receive.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_nd_cache_add.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_nd_cache_add.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_nd_cache_add_entry.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_nd_cache_add_entry.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_nd_cache_delete_internal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_nd_cache_delete_internal.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_nd_cache_fast_periodic_update.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_nd_cache_fast_periodic_update.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_nd_cache_find_entry.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_nd_cache_find_entry.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_nd_cache_find_entry_by_mac_addr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_nd_cache_find_entry_by_mac_addr.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_nd_cache_interface_entries_delete.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_nd_cache_interface_entries_delete.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_nd_cache_slow_periodic_update.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_nd_cache_slow_periodic_update.c</FilePath>
             </File>
           </Files>
         </Group>

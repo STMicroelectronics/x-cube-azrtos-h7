@@ -32,11 +32,12 @@
 
 /* Exported constants --------------------------------------------------------*/
 
-#define eth_handle heth
-#define nx_eth_init MX_ETH_Init
+/* This define enables the call of nx_eth_init() from the interface layer.*/
+/* #define NX_DRIVER_ETH_HW_IP_INIT */
 
 /* USER CODE BEGIN EC */
-
+/* This define defines the period of checking the connection of network cable.*/
+#define NX_ETH_CABLE_CONNECTION_CHECK_PERIOD 600
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -47,7 +48,13 @@
 /* Exported functions prototypes ---------------------------------------------*/
 
 extern ETH_HandleTypeDef heth;
+
+#define eth_handle  heth
+
+#ifdef NX_DRIVER_ETH_HW_IP_INIT
 extern void MX_ETH_Init(void);
+#define nx_eth_init MX_ETH_Init
+#endif /* #define NX_DRIVER_ETH_HW_IP_INIT */
 
 /* USER CODE BEGIN EFP */
 
@@ -58,9 +65,9 @@ extern void MX_ETH_Init(void);
 
 /* USER CODE END PD */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 0 */
 
-/* USER CODE END 1 */
+/* USER CODE END 0 */
 
 #ifdef __cplusplus
 }

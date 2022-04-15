@@ -66,7 +66,6 @@ typedef struct
   * @{
   */
 #define BSP_NAND_MANUFACTURER_CODE  0x2C
-#define BSP_NAND_DEVICE_CODE        0xCA
 #define BSP_NAND_THIRD_ID           0x90
 #define BSP_NAND_FOURTH_ID          0xD5
   

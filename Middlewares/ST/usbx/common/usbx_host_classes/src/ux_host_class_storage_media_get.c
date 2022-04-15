@@ -36,7 +36,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_host_class_storage_media_get                    PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -48,7 +48,7 @@
 /*  INPUT                                                                 */
 /*                                                                        */
 /*    storage                               Pointer to storage class      */
-/*    media_index                           Finding media index           */
+/*    media_lun                             Media logical unit No. (LUN)  */
 /*    storage_media                         Holds returned storage media  */
 /*                                          pointer                       */
 /*                                                                        */
@@ -68,10 +68,16 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  09-30-2020     Chaoqiong Xiao           Initial Version 6.1           */
+/*  08-02-2021     Wen Wang                 Modified comment(s),          */
+/*                                            fixed spelling error,       */
+/*                                            resulting in version 6.1.8  */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            refined media to search,    */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT    _ux_host_class_storage_media_get(UX_HOST_CLASS_STORAGE *storage,
-                                         ULONG media_index,
+                                         ULONG media_lun,
                                          UX_HOST_CLASS_STORAGE_MEDIA **storage_media)
 {
 #if !defined(UX_HOST_CLASS_STORAGE_NO_FILEX)
@@ -83,35 +89,39 @@ UINT    _ux_host_class_storage_media_get(UX_HOST_CLASS_STORAGE *storage,
 
 UX_HOST_CLASS_STORAGE_MEDIA     *storage_medias;
 UX_HOST_CLASS                   *class_inst;
-UINT                            scan_index, found_index;
+UINT                            scan_index;
 
+
+    /* If storage is not live, media is not ready.  */
+    if (storage -> ux_host_class_storage_state != UX_HOST_CLASS_INSTANCE_LIVE)
+        return(UX_ERROR);
 
     /* Get storage class instance.  */
     class_inst = storage -> ux_host_class_storage_class;
 
-    /* Get shared storage medias array.  */
+    /* Get shared storage media array.  */
     storage_medias = (UX_HOST_CLASS_STORAGE_MEDIA *)class_inst -> ux_host_class_media;
 
-    /* Search medias to find the right one.  */
-    for(scan_index = 0, found_index = 0;
-        scan_index < UX_HOST_CLASS_STORAGE_MAX_MEDIA;
-        scan_index ++)
+    /* Search media to find the right one.  */
+    for(scan_index = 0; scan_index < UX_HOST_CLASS_STORAGE_MAX_MEDIA; scan_index ++)
     {
+
+        /* Skip storage media not used.  */
+        if (storage_medias[scan_index].ux_host_class_storage_media_status != UX_USED)
+            continue;
 
         /* Skip storage media not belong to the storage.  */
         if (storage_medias[scan_index].ux_host_class_storage_media_storage != storage)
             continue;
 
-        /* Check expected index.  */
-        if (found_index == media_index)
-        {
+        /* Skip storage media with different LUN.  */
+        if (storage_medias[scan_index].ux_host_class_storage_media_lun != media_lun)
+            continue;
+
+        /* Store the media instance.  */
             *storage_media = &storage_medias[scan_index];
             return(UX_SUCCESS);
         }
-
-        /* Find next related media.  */
-        found_index ++;
-    }
 
     /* Media not found.  */
     return(UX_ERROR);

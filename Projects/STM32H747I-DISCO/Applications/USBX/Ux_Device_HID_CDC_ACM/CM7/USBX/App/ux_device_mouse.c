@@ -87,7 +87,7 @@ void usbx_hid_thread_entry(ULONG arg)
       hid = interface->ux_slave_interface_class_instance;
 
       /* sleep for 10ms */
-      tx_thread_sleep(0.01 * TX_TIMER_TICKS_PER_SECOND);
+      tx_thread_sleep(MS_TO_TICK(10));
 
       /* Check if user button is pressed */
       if (User_Button_State)
@@ -105,7 +105,7 @@ void usbx_hid_thread_entry(ULONG arg)
     else
     {
       /* sleep for 10ms */
-      tx_thread_sleep(0.01 * TX_TIMER_TICKS_PER_SECOND);
+      tx_thread_sleep(MS_TO_TICK(10));
     }
   }
 }

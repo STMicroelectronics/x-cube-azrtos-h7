@@ -319,7 +319,7 @@
 #define NX_SECURE_TLS_MINIMUM_MESSAGE_BUFFER_SIZE         4000
 */
 
-/* This option defines the sie of pre-master secret.
+/* This option defines the size of pre-master secret.
    The pre-master secret should be at least 66 bytes for ECDH/ECDHE with
    secp521r1.
    The pre-master secret is 48 bytes, except for PSK ciphersuites for which
@@ -395,7 +395,9 @@
 */
 
 /* Defined, this option enables TLS 1.2 .*/
+/*
 #define NX_SECURE_TLS_TLS_1_2_ENABLED
+*/
 
 /* Defined, this option enables TLS 1.3 .*/
 /*

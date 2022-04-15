@@ -26,7 +26,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */
 /*                                                                        */
 /*    nx_secure_tls.h                                     PORTABLE C      */
-/*                                                           6.1.7        */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -70,6 +70,18 @@
 /*  06-02-2021     Yuxin Zhou               Modified comment(s), and      */
 /*                                            updated product constants,  */
 /*                                            resulting in version 6.1.7  */
+/*  08-02-2021     Timothy Stapko           Modified comment(s), added    */
+/*                                            hash clone and cleanup,     */
+/*                                            added state to cleanup      */
+/*                                            session cipher,             */
+/*                                            resulting in version 6.1.8  */
+/*  10-15-2021     Timothy Stapko           Modified comment(s), added    */
+/*                                            support to disable client   */
+/*                                            initiated renegotiation,    */
+/*                                            resulting in version 6.1.9  */
+/*  01-31-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            updated product constants,  */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 
@@ -130,7 +142,7 @@ extern   "C" {
 #define AZURE_RTOS_NETX_SECURE
 #define NETX_SECURE_MAJOR_VERSION                       6
 #define NETX_SECURE_MINOR_VERSION                       1
-#define NETX_SECURE_PATCH_VERSION                       7
+#define NETX_SECURE_PATCH_VERSION                       10
 
 /* The following symbols are defined for backward compatibility reasons. */
 #define EL_PRODUCT_NETX_SECURE
@@ -156,6 +168,14 @@ extern   "C" {
 #ifndef NX_SECURE_MEMMOVE
 #define NX_SECURE_MEMMOVE                               memmove
 #endif /* NX_SECURE_MEMMOVE */
+
+#ifndef NX_SECURE_HASH_METADATA_CLONE
+#define NX_SECURE_HASH_METADATA_CLONE                   NX_SECURE_MEMCPY
+#endif /* NX_SECURE_HASH_METADATA_CLONE */
+
+#ifndef NX_SECURE_HASH_CLONE_CLEANUP
+#define NX_SECURE_HASH_CLONE_CLEANUP(x, y)
+#endif /* NX_SECURE_HASH_CLONE_CLEANUP  */
 
 /* Map NX_SECURE_CALLER_CHECKING_EXTERNS to NX_CALLER_CHECKING_EXTERNS, which is defined
    in nx_port.h.*/
@@ -319,8 +339,8 @@ extern   "C" {
 #define NX_SECURE_TLS_CLIENT_STATE_ENCRYPTED_EXTENSIONS 12 /* Client received and processed an encrypted extensions handshake message. */
 #define NX_SECURE_TLS_CLIENT_STATE_HELLO_RETRY          13 /* A HelloRetryRequest has been received. We need to resend ClientHello. */
 
-#define NX_SECURE_TLS_HANDSHAKE_NO_FRAGMENT				0  /* There is no fragmented handshake message. */
-#define NX_SECURE_TLS_HANDSHAKE_RECEIVED_FRAGMENT		1  /* Received a fragmented handshake message. */
+#define NX_SECURE_TLS_HANDSHAKE_NO_FRAGMENT             0  /* There is no fragmented handshake message. */
+#define NX_SECURE_TLS_HANDSHAKE_RECEIVED_FRAGMENT       1  /* Received a fragmented handshake message. */
 
 /* TLS Alert message numbers from RFC 5246. */
 #define NX_SECURE_TLS_ALERT_CLOSE_NOTIFY                0
@@ -1096,9 +1116,9 @@ typedef struct NX_SECURE_TLS_SESSION_STRUCT
     ULONG  nx_secure_tls_packet_buffer_original_size;
 
     /* The number of bytes copied into packet/message buffer. */
-	ULONG  nx_secure_tls_packet_buffer_bytes_copied;
+    ULONG  nx_secure_tls_packet_buffer_bytes_copied;
 
-	/* The exepected number of bytes for an incoming handshake record. */
+    /* The exepected number of bytes for an incoming handshake record. */
     ULONG  nx_secure_tls_handshake_record_expected_length;
 
     /* Whether a handshake message is fragmented across several records. */
@@ -1107,7 +1127,7 @@ typedef struct NX_SECURE_TLS_SESSION_STRUCT
     /* The offset of current record to be processed. */
     ULONG  nx_secure_tls_record_offset;
 
-	/* The prcessed number of bytes in current tls record. */
+    /* The prcessed number of bytes in current tls record. */
     ULONG  nx_secure_tls_bytes_processed;
 
     /* What type of socket is this? Client or server? */
@@ -1130,11 +1150,15 @@ typedef struct NX_SECURE_TLS_SESSION_STRUCT
     USHORT nx_secure_tls_protocol_version_override;
 
     /* The highest supported protocol version obtained through negotiation. */
-	USHORT nx_secure_tls_negotiated_highest_protocol_version;
+    USHORT nx_secure_tls_negotiated_highest_protocol_version;
 
     /* State of local and remote encryption - post ChangeCipherSpec. */
     UCHAR nx_secure_tls_remote_session_active;
     UCHAR nx_secure_tls_local_session_active;
+
+    /* State of whether the client and server session cipher is initialized. */
+    UCHAR nx_secure_tls_session_cipher_client_initialized;
+    UCHAR nx_secure_tls_session_cipher_server_initialized;
 
     /* Chosen ciphersuite. */
     const NX_SECURE_TLS_CIPHERSUITE_INFO *nx_secure_tls_session_ciphersuite;
@@ -1160,6 +1184,10 @@ typedef struct NX_SECURE_TLS_SESSION_STRUCT
     /* This flag indicates whether the renegotiation_info extension is present and
        the data in the extension is verified during secure renegotiation. */
     USHORT nx_secure_tls_secure_renegotiation_verified;
+
+    /* This flag indicates that a server instance has requested a renegotiation
+       so we can differentiate between client initiated and server initiated. */
+    USHORT nx_secure_tls_server_renegotiation_requested;
 
     /* The verify data is named "remote" and "local" since it can be used by
        both TLS Client and TLS Server instances. */

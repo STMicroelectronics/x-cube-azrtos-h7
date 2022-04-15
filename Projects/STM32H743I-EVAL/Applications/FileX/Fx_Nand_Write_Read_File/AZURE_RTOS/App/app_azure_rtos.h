@@ -32,7 +32,6 @@ extern "C" {
 #include "app_threadx.h"
 
 #include "app_filex.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -54,7 +53,6 @@ extern "C" {
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
-void MX_AZURE_RTOS_Init(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

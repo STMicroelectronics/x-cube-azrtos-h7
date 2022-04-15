@@ -1,4 +1,4 @@
-;/******************** (C) COPYRIGHT 2019 STMicroelectronics ********************
+;********************************************************************************
 ;* File Name          : startup_stm32h723xx.s
 ;* Author             : MCD Application Team
 ;* Description        : STM32H723xx devices vector table for EWARM toolchain.
@@ -14,13 +14,12 @@
 ;*******************************************************************************
 ;* @attention
 ;*
-;* <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-;* All rights reserved.</center></h2>
+;* Copyright (c) 2019 STMicroelectronics.
+;* All rights reserved.
 ;*
-;* This software component is licensed by ST under BSD 3-Clause license,
-;* the "License"; You may not use this file except in compliance with the
-;* License. You may obtain a copy of the License at:
-;*                        opensource.org/licenses/BSD-3-Clause
+;* This software is licensed under terms that can be found in the LICENSE file
+;* in the root directory of this software component.
+;* If no LICENSE file comes with this software, it is provided AS-IS.
 ;*
 ;*******************************************************************************
 ;
@@ -233,8 +232,8 @@ __vector_table
         DCD     I2C5_ER_IRQHandler                ; I2C5 Error Interrupt
         DCD     FDCAN3_IT0_IRQHandler             ; FDCAN3 interrupt line 0
         DCD     FDCAN3_IT1_IRQHandler             ; FDCAN3 interrupt line 1
-        DCD     TIM23_IRQHandler                  ; TIM23 global interrup
-        DCD     TIM24_IRQHandler                  ; TIM24 global interrup
+        DCD     TIM23_IRQHandler                  ; TIM23 global interrupt
+        DCD     TIM24_IRQHandler                  ; TIM24 global interrupt
 		
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -981,4 +980,3 @@ TIM24_IRQHandler
         B TIM24_IRQHandler			
 		
         END
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

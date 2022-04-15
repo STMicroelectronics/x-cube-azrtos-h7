@@ -53,7 +53,7 @@ extern "C" {
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
-UINT App_FileX_Init(VOID *memory_ptr);
+UINT MX_FileX_Init(VOID *memory_ptr);
 
 /* USER CODE BEGIN EFP */
 

@@ -106,7 +106,7 @@ static VOID os_delay(ULONG delay);
   * @param memory_ptr: memory pointer
   * @retval int
   */
-UINT App_FileX_Init(VOID *memory_ptr)
+UINT MX_FileX_Init(VOID *memory_ptr)
 {
   UINT ret = FX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
@@ -115,10 +115,10 @@ UINT App_FileX_Init(VOID *memory_ptr)
   /* USER CODE END App_FileX_MEM_POOL */
 
   /* USER CODE BEGIN App_FileX_Init */
-  CHAR *pointer;
+  VOID *pointer;
 
   /*Allocate memory for fx_thread_entry*/
-  ret = tx_byte_allocate(byte_pool, (VOID **) &pointer, FILEX_DEFAULT_STACK_SIZE, TX_NO_WAIT);
+  ret = tx_byte_allocate(byte_pool, &pointer, FILEX_DEFAULT_STACK_SIZE, TX_NO_WAIT);
 
   /* Check FILEX_DEFAULT_STACK_SIZE allocation*/
   if (ret != FX_SUCCESS)

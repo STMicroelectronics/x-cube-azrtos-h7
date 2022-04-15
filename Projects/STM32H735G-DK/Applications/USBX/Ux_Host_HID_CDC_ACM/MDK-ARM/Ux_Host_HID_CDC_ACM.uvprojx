@@ -399,9 +399,9 @@
               <FilePath>../Core/Src/main.c</FilePath>
             </File>
             <File>
-              <FileName>tx_initialize_low_level.s</FileName>
+              <FileName>tx_initialize_low_level.S</FileName>
               <FileType>2</FileType>
-              <FilePath>../Core/Src/tx_initialize_low_level.s</FilePath>
+              <FilePath>../Core/Src/tx_initialize_low_level.S</FilePath>
             </File>
             <File>
               <FileName>gpio.c</FileName>
@@ -607,57 +607,6 @@
               <FileName>stm32h7xx_ll_usb.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usb.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>1</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
             </File>
           </Files>
         </Group>
@@ -780,9 +729,19 @@
               <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_transfer_request_completed.c</FilePath>
             </File>
             <File>
+              <FileName>ux_host_class_cdc_acm_transmission_callback.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_transmission_callback.c</FilePath>
+            </File>
+            <File>
               <FileName>ux_host_class_cdc_acm_write.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_write.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_class_cdc_acm_write_with_callback.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_cdc_acm_write_with_callback.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1080,6 +1039,11 @@
               <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_host_stack_role_swap.c</FilePath>
             </File>
             <File>
+              <FileName>ux_host_stack_tasks_run.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_host_stack_tasks_run.c</FilePath>
+            </File>
+            <File>
               <FileName>ux_host_stack_transfer_request.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_host_stack_transfer_request.c</FilePath>
@@ -1088,6 +1052,11 @@
               <FileName>ux_host_stack_transfer_request_abort.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_host_stack_transfer_request_abort.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_stack_transfer_run.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_host_stack_transfer_run.c</FilePath>
             </File>
             <File>
               <FileName>ux_host_stack_uninitialize.c</FileName>
@@ -1153,6 +1122,11 @@
               <FileName>ux_host_class_hid_idle_set.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_hid_idle_set.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_class_hid_idle_set_run.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_hid_idle_set_run.c</FilePath>
             </File>
             <File>
               <FileName>ux_host_class_hid_instance_clean.c</FileName>
@@ -1235,9 +1209,19 @@
               <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_hid_report_set.c</FilePath>
             </File>
             <File>
+              <FileName>ux_host_class_hid_report_set_run.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_hid_report_set_run.c</FilePath>
+            </File>
+            <File>
               <FileName>ux_host_class_hid_resources_free.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_hid_resources_free.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_class_hid_tasks_run.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_hid_tasks_run.c</FilePath>
             </File>
             <File>
               <FileName>ux_host_class_hid_transfer_request_completed.c</FileName>
@@ -1530,6 +1514,11 @@
               <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_system_initialize.c</FilePath>
             </File>
             <File>
+              <FileName>ux_system_tasks_run.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_system_tasks_run.c</FilePath>
+            </File>
+            <File>
               <FileName>ux_system_uninitialize.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_system_uninitialize.c</FilePath>
@@ -1568,6 +1557,11 @@
               <FileName>ux_host_class_hid_keyboard_key_get.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_hid_keyboard_key_get.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_host_class_hid_keyboard_tasks_run.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_hid_keyboard_tasks_run.c</FilePath>
             </File>
             <File>
               <FileName>ux_host_class_hid_keyboard_thread.c</FileName>

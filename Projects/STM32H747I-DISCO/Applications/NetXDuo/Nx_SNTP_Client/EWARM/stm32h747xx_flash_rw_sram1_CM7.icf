@@ -16,7 +16,7 @@ define symbol __ICFEDIT_region_NXDATA_start__  = 0x30000200;
 define symbol __ICFEDIT_region_NXDATA_end__    = 0x3001FFFF;
 /*-Sizes-*/
 define symbol __ICFEDIT_size_cstack__ = 0x400;
-define symbol __ICFEDIT_size_heap__ = 0x200;
+define symbol __ICFEDIT_size_heap__   = 0x200;
 /**** End of ICF editor section. ###ICF###*/
 
 

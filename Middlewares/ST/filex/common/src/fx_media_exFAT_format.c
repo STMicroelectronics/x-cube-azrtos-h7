@@ -449,7 +449,7 @@ const ULONG UpCaseTableCheckSum = 0xE619D30D;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_media_exFAT_format                              PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -513,6 +513,9 @@ const ULONG UpCaseTableCheckSum = 0xE619D30D;
 /*  09-30-2020     William E. Lamie         Modified comment(s), verified */
 /*                                            memcpy usage,               */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Bhupendra Naphade        Modified comment(s), removed  */
+/*                                            fixed sector size in exFAT, */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_media_exFAT_format(FX_MEDIA *media_ptr,
@@ -542,6 +545,7 @@ ULONG  cluster_heap_offset;
 ULONG  cluster_count;
 ULONG  root_dir_entry_first_sector;
 ULONG  root_dir_entry_first_cluster;
+CHAR   bytes_per_sector_shift;
 CHAR   sector_per_cluster_shift;
 ULONG  bitmap_size_in_bytes;
 ULONG  bitmap_size_in_clusters;
@@ -563,6 +567,12 @@ UINT   status;
     /* Validate bytes per cluster value: no more than 32MB */
     if((bytes_per_sector * sectors_per_cluster) > (1 << 25))
         return(FX_SECTOR_INVALID);
+
+   /* Validate bytes per sector value: no more than bitmap cache size */
+    if (bytes_per_sector > sizeof(media_ptr -> fx_media_exfat_bitmap_cache))
+    {
+        return(FX_NOT_ENOUGH_MEMORY);
+    }
 
     /* Create & write bootrecord from drive geometry information.  */
 
@@ -619,7 +629,8 @@ UINT   status;
     }
 
     /* Recalculate FAT size/cluster heap offset according Incoming values.  */
-    _fx_utility_exFAT_size_calculate(boundary_unit,
+    _fx_utility_exFAT_size_calculate(bytes_per_sector,
+                                     boundary_unit,
                                      total_sectors,
                                      sectors_per_cluster,
                                      &sectors_per_fat,
@@ -629,7 +640,7 @@ UINT   status;
     /* Fill Boot Sector fields.  */
 
     /* Clear work buffer.  */
-    _fx_utility_memory_set(byte_ptr, 0x00, FX_BOOT_SECTOR_SIZE);
+    _fx_utility_memory_set(byte_ptr, 0x00, media_ptr -> fx_media_bytes_per_sector);
 
     _fx_utility_memory_copy((UCHAR *)jump_boot, /* Use case of memcpy is verified. */
                             &byte_ptr[FX_JUMP_INSTR],
@@ -670,7 +681,22 @@ UINT   status;
     _fx_utility_16_unsigned_write(&byte_ptr[FX_EF_VOLUME_FLAGS],
                                   (USHORT)EXFAT_FAT_VOLUME_FLAG);
 
-    byte_ptr[FX_EF_BYTE_PER_SECTOR_SHIFT] = EXFAT_FAT_BYTES_PER_SECTOR_SHIFT;
+    /* Calculate Bytes Per Sector Shift value.  */
+    i = bytes_per_sector;
+    bytes_per_sector_shift = 0;
+
+    /* Loop to count the shift value. If the LSB is set, we got the shift value.  */
+    while (0 == (i & 0x01))
+    {
+
+        /* Add the shift value.  */
+        bytes_per_sector_shift++;
+
+        /* Right shift by 1 position.  */
+        i >>= 1;
+    }
+
+    byte_ptr[FX_EF_BYTE_PER_SECTOR_SHIFT] = (UCHAR)bytes_per_sector_shift;
 
     /* Calculate Sector Per Cluster Shift value.  */
     i = sectors_per_cluster;
@@ -702,7 +728,7 @@ UINT   status;
     bitmap_size_in_bytes = DIVIDE_TO_CEILING(cluster_count, BITS_PER_BYTE);
 
     /* Calculate Bit Map Size in sectors.  */
-    bitmap_size_in_clusters = DIVIDE_TO_CEILING(bitmap_size_in_bytes, FX_BOOT_SECTOR_SIZE);
+    bitmap_size_in_clusters = DIVIDE_TO_CEILING(bitmap_size_in_bytes, media_ptr -> fx_media_bytes_per_sector);
 
     /* Calculate Bit Map size in clusters.  */
     bitmap_size_in_clusters = DIVIDE_TO_CEILING(bitmap_size_in_clusters, sectors_per_cluster);
@@ -711,7 +737,7 @@ UINT   status;
     upcase_table_size_in_bytes = sizeof(_fx_utility_exFAT_upcase_table_compressed);
 
     /* Calculate UpCase Table size sectors.  */
-    upcase_table_size_in_clusters = DIVIDE_TO_CEILING(upcase_table_size_in_bytes, FX_BOOT_SECTOR_SIZE);
+    upcase_table_size_in_clusters = DIVIDE_TO_CEILING(upcase_table_size_in_bytes, media_ptr -> fx_media_bytes_per_sector);
 
     /* Calculate UpCase size in clusters.  */
     upcase_table_size_in_clusters = DIVIDE_TO_CEILING(upcase_table_size_in_clusters, sectors_per_cluster);
@@ -731,7 +757,7 @@ UINT   status;
                                   root_dir_entry_first_cluster);
 
     /* Calculate Boot Sector checksum.  */
-    for (i = 0; i < FX_BOOT_SECTOR_SIZE; i++)
+    for (i = 0; i < media_ptr -> fx_media_bytes_per_sector; i++)
     {
 
         /* Skip VolumeFlags and PercentInUse fields.  */
@@ -797,7 +823,7 @@ UINT   status;
     }
 
     /* Format FAT table  */
-    _fx_utility_memory_set(byte_ptr, 0x00, FX_BOOT_SECTOR_SIZE);
+    _fx_utility_memory_set(byte_ptr, 0x00, media_ptr -> fx_media_bytes_per_sector);
 
     /* Get the offset for the next available FAT entry after the initialized FAT entries.  */
     offset = sizeof(fat_init_mask);
@@ -970,7 +996,7 @@ UINT   status;
     {
 
         /* Fill the buffer with one.  */
-        _fx_utility_memory_set(byte_ptr, 0xFF, FX_BOOT_SECTOR_SIZE);
+        _fx_utility_memory_set(byte_ptr, 0xFF, media_ptr -> fx_media_bytes_per_sector);
 
         /* Loop to write all the secotrs with all set bits.  */
         for (i = ((root_dir_entry_first_cluster - 1) / 8) % bytes_per_sector; i; i--)
@@ -1003,7 +1029,7 @@ UINT   status;
     }
 
     /* Clear all the remaining bytes.  */
-    _fx_utility_memory_set(byte_ptr + offset, 0x00, FX_BOOT_SECTOR_SIZE - offset);
+    _fx_utility_memory_set(byte_ptr + offset, 0x00, media_ptr -> fx_media_bytes_per_sector - offset);
 
     /* Loop to set the remaining bits.  */
     for (i = (root_dir_entry_first_cluster - 1) % 8; i; i--)
@@ -1033,7 +1059,7 @@ UINT   status;
     {
 
         /* Fill the sector buffer with zero.  */
-        _fx_utility_memory_set(byte_ptr, 0x00, FX_BOOT_SECTOR_SIZE);
+        _fx_utility_memory_set(byte_ptr, 0x00, media_ptr -> fx_media_bytes_per_sector);
 
         /* Loop to write all the remaining bitmap sectors.  */
         for (i = (bitmap_size_in_clusters << sector_per_cluster_shift) - sector_offset; i; i--)
@@ -1098,7 +1124,7 @@ UINT   status;
     /* Format Dir Entry.  */
 
     /* Clear work buffer.  */
-    _fx_utility_memory_set(byte_ptr, 0x00, FX_BOOT_SECTOR_SIZE);
+    _fx_utility_memory_set(byte_ptr, 0x00, media_ptr -> fx_media_bytes_per_sector);
 
     /* Create Volume Label Dir Entry. This is a first entry.  */
     byte_ptr[FX_EXFAT_DIR_ENTRY_SIZE * 0 + FX_EXFAT_ENTRY_TYPE] = FX_EXFAT_DIR_ENTRY_TYPE_VOLUME_LABEL;
@@ -1168,7 +1194,7 @@ UINT   status;
     }
 
     /* Clear the secotr buffer.  */
-    _fx_utility_memory_set(byte_ptr, 0x00, FX_BOOT_SECTOR_SIZE);
+    _fx_utility_memory_set(byte_ptr, 0x00, media_ptr -> fx_media_bytes_per_sector);
 
     /* Loop to clear the remaining root directory sectors.  */
     for (i = 1; i < sectors_per_cluster; i++)

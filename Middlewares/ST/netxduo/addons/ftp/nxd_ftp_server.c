@@ -80,7 +80,7 @@ NX_CALLER_CHECKING_EXTERNS
 #define NX_FTP_CODE_NO_SPACE         "552"  /* Requested file action aborted, no space.  */
 #define NX_FTP_CODE_BAD_NAME         "553"  /* Requested action not taken, File name not allowed.  */
 
-static VOID _nx_ftp_server_number_to_ascii(UCHAR *buffer_ptr, UINT buffer_size, UINT number);
+static VOID _nx_ftp_server_number_to_ascii(UCHAR *buffer_ptr, UINT buffer_size, UINT number, UCHAR pad);
                                    
 /**************************************************************************/
 /*                                                                        */
@@ -660,7 +660,7 @@ UINT    status;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_ftp_server_delete                               PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.9        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -682,7 +682,6 @@ UINT    status;
 /*  CALLS                                                                 */
 /*                                                                        */
 /*    fx_file_close                         Close file                    */
-/*    nx_tcp_client_socket_unbind           Unbind client socket          */
 /*    nx_tcp_server_socket_unaccept         Unaccept server socket        */
 /*    nx_tcp_server_socket_unlisten         Unlisten on server            */
 /*    nx_tcp_socket_delete                  Delete socket                 */
@@ -693,6 +692,7 @@ UINT    status;
 /*    tx_thread_terminate                   Terminate thread              */
 /*    tx_timer_deactivate                   Deactivate timer              */
 /*    tx_timer_delete                       Delete timer                  */
+/*    _nx_ftp_server_data_socket_cleanup    Clean up data socket          */
 /*                                                                        */
 /*  CALLED BY                                                             */
 /*                                                                        */
@@ -705,6 +705,10 @@ UINT    status;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  10-15-2021     Yuxin Zhou               Modified comment(s),          */
+/*                                            fixed the issue of clearing */
+/*                                            data socket,                */
+/*                                            resulting in version 6.1.9  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _nx_ftp_server_delete(NX_FTP_SERVER *ftp_server_ptr)
@@ -744,29 +748,9 @@ NX_FTP_CLIENT_REQUEST      *client_request_ptr;
         if (client_request_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_id)
         {
 
-            /* Disconnect data socket.  */
-            nx_tcp_socket_disconnect(&(client_request_ptr -> nx_ftp_client_request_data_socket), NX_NO_WAIT);
-
-            /* Unbind/unaccept the data socket.  */
-            if (client_request_ptr -> nx_ftp_client_request_passive_transfer_enabled == NX_TRUE)
-            {
-                nx_tcp_server_socket_unaccept(&(client_request_ptr -> nx_ftp_client_request_data_socket));
-                nx_tcp_server_socket_unlisten(ftp_server_ptr -> nx_ftp_server_ip_ptr, client_request_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_port);
-            }
-            else
-            {
-                nx_tcp_client_socket_unbind(&(client_request_ptr -> nx_ftp_client_request_data_socket));
-            }
-
-            /* Delete data socket.  */
-            nx_tcp_socket_delete(&(client_request_ptr -> nx_ftp_client_request_data_socket));
-
-            /* Close file.  */
-            fx_file_close(&(client_request_ptr -> nx_ftp_client_request_file));
+            /* Clean up the data socket.  */
+            _nx_ftp_server_data_socket_cleanup(ftp_server_ptr, client_request_ptr);
         }
-
-        /* Clear the passive transfer enabled flag.  */
-        client_request_ptr -> nx_ftp_client_request_passive_transfer_enabled = NX_FALSE;
 
         /* Reset the transfer mode as stream mode.  */
         client_request_ptr -> nx_ftp_client_request_transfer_mode = NX_FTP_TRANSFER_MODE_STREAM;
@@ -1523,7 +1507,7 @@ ULONG                   events;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_ftp_server_command_process                      PORTABLE C      */
-/*                                                           6.1.3        */
+/*                                                           6.1.9        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -1576,11 +1560,10 @@ ULONG                   events;
 /*    nx_tcp_socket_disconnect              Disconnect socket             */
 /*    nx_tcp_socket_receive                 Receive from command socket   */
 /*    nx_tcp_socket_send                    Send packet                   */
-/*    nx_tcp_client_socket_unbind           Unbind client socket          */
-/*    nx_tcp_socket_delete                  Delete socket                 */
-/*    nx_tcp_socket_receive                 Receive packet                */
 /*    nx_tcp_socket_receive_notify          Register notification routine */
 /*    nx_tcp_socket_transmit_configure      Configure data transer socket */
+/*    _nx_utility_uint_to_string            Convert number to string      */
+/*    _nx_ftp_server_data_socket_cleanup    Clean up data socket          */
 /*                                                                        */
 /*  CALLED BY                                                             */
 /*                                                                        */
@@ -1598,6 +1581,19 @@ ULONG                   events;
 /*  12-31-2020     Yuxin Zhou               Modified comment(s), improved */
 /*                                            packet length verification, */
 /*                                            resulting in version 6.1.3  */
+/*  08-02-2021     Yuxin Zhou               Modified comment(s),          */
+/*                                            corrected the pad character,*/
+/*                                            resulting in version 6.1.8  */
+/*  10-15-2021     Yuxin Zhou               Modified comment(s),          */
+/*                                            fixed the issue of clearing */
+/*                                            data socket and processing  */
+/*                                            disconnection event,        */
+/*                                            improved the PASV response, */
+/*                                            fixed the bug of processing */
+/*                                            STOR in passive mode,       */
+/*                                            reset the packet prepend    */
+/*                                            pointer for alignment,      */
+/*                                            resulting in version 6.1.9  */
 /*                                                                        */
 /**************************************************************************/
 VOID  _nx_ftp_server_command_process(NX_FTP_SERVER *ftp_server_ptr)
@@ -1906,6 +1902,14 @@ ULONG                   block_size;
                 _nx_ftp_server_response(&(client_req_ptr -> nx_ftp_client_request_control_socket), packet_ptr,
                             NX_FTP_CODE_CLOSE, "Logging Off");
 
+                /* If create, cleanup the associated data socket.  */
+                if (client_req_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_id)
+                {
+
+                    /* Clean up the client socket.  */
+                    _nx_ftp_server_data_socket_cleanup(ftp_server_ptr, client_req_ptr);
+                }
+
                 /* Now disconnect the command socket.  */
                 nx_tcp_socket_disconnect(&(client_req_ptr -> nx_ftp_client_request_control_socket), NX_FTP_SERVER_TIMEOUT);
 
@@ -2004,16 +2008,6 @@ ULONG                   block_size;
                             nx_tcp_server_socket_unlisten(ftp_server_ptr -> nx_ftp_server_ip_ptr, client_req_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_port);
                             nx_tcp_socket_delete(&(client_req_ptr -> nx_ftp_client_request_data_socket));
                             fx_file_close(&(client_req_ptr -> nx_ftp_client_request_file));
-                        }
-                        else
-                        {
-
-                            /* Setup the data port with a specific packet transmit retry logic.  */
-                            nx_tcp_socket_transmit_configure(&(client_req_ptr -> nx_ftp_client_request_data_socket), 
-                                                                NX_FTP_SERVER_TRANSMIT_QUEUE_DEPTH,
-                                                                NX_FTP_SERVER_RETRY_SECONDS*NX_IP_PERIODIC_RATE,
-                                                                NX_FTP_SERVER_RETRY_MAX, 
-                                                                NX_FTP_SERVER_RETRY_SHIFT);
                         }
                     }
                     else
@@ -2167,27 +2161,11 @@ ULONG                   block_size;
                         _nx_ftp_server_block_header_send(ftp_server_ptr -> nx_ftp_server_packet_pool_ptr, client_req_ptr, 0);
                     }
 
-                    /* Disconnect the data socket.  */
-                    nx_tcp_socket_disconnect(&(client_req_ptr -> nx_ftp_client_request_data_socket), NX_FTP_SERVER_TIMEOUT);
-
-                    /* Tear down the client data socket.  */
-                    if (client_req_ptr -> nx_ftp_client_request_passive_transfer_enabled == NX_TRUE)
-                    {
-                        nx_tcp_server_socket_unaccept(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-                        nx_tcp_server_socket_unlisten(ftp_server_ptr -> nx_ftp_server_ip_ptr, client_req_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_port);
-                    }
-                    else
-                    {
-                        nx_tcp_client_socket_unbind(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-                    }
-                    nx_tcp_socket_delete(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-                    fx_file_close(&(client_req_ptr -> nx_ftp_client_request_file));
+                    /* Clean up the data socket.  */
+                    _nx_ftp_server_data_socket_cleanup(ftp_server_ptr, client_req_ptr);
 
                     /* Clear the open type in the client request structure.  */
                     client_req_ptr -> nx_ftp_client_request_open_type = 0;
-
-                    /* Clear the passive transfer enabled flag.  */
-                    client_req_ptr -> nx_ftp_client_request_passive_transfer_enabled = NX_FALSE;
 
                     /* Allocate a new packet.  */
                     _nx_ftp_packet_allocate(ftp_server_ptr -> nx_ftp_server_packet_pool_ptr, client_req_ptr, &packet_ptr, NX_TCP_PACKET, NX_WAIT_FOREVER);
@@ -2299,45 +2277,7 @@ ULONG                   block_size;
                 {
 
                     /* Check if passive transfer enabled.  */
-                    if (client_req_ptr -> nx_ftp_client_request_passive_transfer_enabled == NX_TRUE)
-                    {
-
-                        /* Set the disconnect callback.  */
-                        client_req_ptr -> nx_ftp_client_request_data_socket.nx_tcp_disconnect_callback = _nx_ftp_server_data_disconnect;
-
-                        /* Register the receive function.  */
-                        nx_tcp_socket_receive_notify(&(client_req_ptr -> nx_ftp_client_request_data_socket), _nx_ftp_server_data_present);
-
-                        /* Now wait for the data connection to connect.  */
-                        status = nx_tcp_socket_state_wait(&(client_req_ptr -> nx_ftp_client_request_data_socket), NX_TCP_ESTABLISHED, NX_FTP_SERVER_TIMEOUT);
-
-                        /* Check for connect error.  */
-                        if (status)
-                        {
-
-                            /* Yes, a connect error is present. Tear everything down.  */
-                            nx_tcp_server_socket_unaccept(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-                            nx_tcp_server_socket_unlisten(ftp_server_ptr -> nx_ftp_server_ip_ptr, client_req_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_port);
-                            nx_tcp_socket_delete(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-                            fx_file_close(&(client_req_ptr -> nx_ftp_client_request_file));
-#ifdef NX_FTP_FAULT_TOLERANT
-
-                            /* Flush the media.  */
-                            fx_media_flush(ftp_server_ptr -> nx_ftp_server_media_ptr);
-#endif
-                        }
-                        else
-                        {
-
-                            /* Setup the data port with a specific packet transmit retry logic.  */
-                            nx_tcp_socket_transmit_configure(&(client_req_ptr -> nx_ftp_client_request_data_socket), 
-                                                                NX_FTP_SERVER_TRANSMIT_QUEUE_DEPTH,
-                                                                NX_FTP_SERVER_RETRY_SECONDS*NX_IP_PERIODIC_RATE,
-                                                                NX_FTP_SERVER_RETRY_MAX, 
-                                                                NX_FTP_SERVER_RETRY_SHIFT);
-                        }
-                    }
-                    else
+                    if (client_req_ptr -> nx_ftp_client_request_passive_transfer_enabled == NX_FALSE)
                     {
 
                         /* Create an FTP client data socket.  */
@@ -2927,16 +2867,6 @@ ULONG                   block_size;
                             nx_tcp_socket_delete(&(client_req_ptr -> nx_ftp_client_request_data_socket));
                             fx_file_close(&(client_req_ptr -> nx_ftp_client_request_file)); 
                         }
-                        else
-                        {
-
-                            /* Setup the data port with a specific packet transmit retry logic.  */
-                            nx_tcp_socket_transmit_configure(&(client_req_ptr -> nx_ftp_client_request_data_socket), 
-                                                                NX_FTP_SERVER_TRANSMIT_QUEUE_DEPTH,
-                                                                NX_FTP_SERVER_RETRY_SECONDS*NX_IP_PERIODIC_RATE,
-                                                                NX_FTP_SERVER_RETRY_MAX, 
-                                                                NX_FTP_SERVER_RETRY_SHIFT);
-                        }
                     }
                     else
                     {
@@ -3164,24 +3094,8 @@ ULONG                   block_size;
                         _nx_ftp_server_block_header_send(ftp_server_ptr -> nx_ftp_server_packet_pool_ptr, client_req_ptr, 0);
                     }
 
-                    /* Disconnect the data socket.  */
-                    nx_tcp_socket_disconnect(&(client_req_ptr -> nx_ftp_client_request_data_socket), NX_FTP_SERVER_TIMEOUT);
-
-                    /* Tear down the client data socket.  */
-                    if (client_req_ptr -> nx_ftp_client_request_passive_transfer_enabled == NX_TRUE)
-                    {
-                        nx_tcp_server_socket_unaccept(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-                        nx_tcp_server_socket_unlisten(ftp_server_ptr -> nx_ftp_server_ip_ptr, client_req_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_port);
-                    }
-                    else
-                    {
-                        nx_tcp_client_socket_unbind(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-                    }
-                    nx_tcp_socket_delete(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-                    fx_file_close(&(client_req_ptr -> nx_ftp_client_request_file));
-
-                    /* Clear the passive transfer enabled flag.  */
-                    client_req_ptr -> nx_ftp_client_request_passive_transfer_enabled = NX_FALSE;
+                    /* Clean up the data socket.  */
+                    _nx_ftp_server_data_socket_cleanup(ftp_server_ptr, client_req_ptr);
 
                     /* Allocate a new packet.  */
                     _nx_ftp_packet_allocate(ftp_server_ptr -> nx_ftp_server_packet_pool_ptr, client_req_ptr, &packet_ptr, NX_TCP_PACKET, NX_WAIT_FOREVER);
@@ -3356,16 +3270,6 @@ ULONG                   block_size;
                             nx_tcp_server_socket_unlisten(ftp_server_ptr -> nx_ftp_server_ip_ptr, client_req_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_port);
                             nx_tcp_socket_delete(&(client_req_ptr -> nx_ftp_client_request_data_socket));
                             fx_file_close(&(client_req_ptr -> nx_ftp_client_request_file));
-                        }
-                        else
-                        {
-
-                            /* Setup the data port with a specific packet transmit retry logic.  */
-                            nx_tcp_socket_transmit_configure(&(client_req_ptr -> nx_ftp_client_request_data_socket), 
-                                                                NX_FTP_SERVER_TRANSMIT_QUEUE_DEPTH,
-                                                                NX_FTP_SERVER_RETRY_SECONDS*NX_IP_PERIODIC_RATE,
-                                                                NX_FTP_SERVER_RETRY_MAX, 
-                                                                NX_FTP_SERVER_RETRY_SHIFT);
                         }
                     }
                     else
@@ -3582,17 +3486,17 @@ ULONG                   block_size;
                                 memcpy(&buffer_ptr[1], "rw-rw-rw-", 9); /* Use case of memcpy is verified. */
                             }
                             memcpy(&buffer_ptr[10], "  1 owner group ", 16); /* Use case of memcpy is verified. */
-                            _nx_ftp_server_number_to_ascii(&buffer_ptr[26], 10, size);
+                            _nx_ftp_server_number_to_ascii(&buffer_ptr[26], 10, size, ' ');
                             buffer_ptr[36] = ' ';
                             buffer_ptr[37] = (UCHAR)months[month - 1][0];
                             buffer_ptr[38] = (UCHAR)months[month - 1][1];
                             buffer_ptr[39] = (UCHAR)months[month - 1][2];
                             buffer_ptr[40] = ' ';
-                            _nx_ftp_server_number_to_ascii(&buffer_ptr[41], 2, day);
+                            _nx_ftp_server_number_to_ascii(&buffer_ptr[41], 2, day, '0');
                             buffer_ptr[43] = ' ';
-                            _nx_ftp_server_number_to_ascii(&buffer_ptr[44], 2, hour);
+                            _nx_ftp_server_number_to_ascii(&buffer_ptr[44], 2, hour, '0');
                             buffer_ptr[46] = ':';
-                            _nx_ftp_server_number_to_ascii(&buffer_ptr[47], 2, minute);
+                            _nx_ftp_server_number_to_ascii(&buffer_ptr[47], 2, minute, '0');
                             buffer_ptr[49] = ' ';
                             memcpy(&buffer_ptr[50], filename, length); /* Use case of memcpy is verified. */
                             length += 50;
@@ -3648,24 +3552,8 @@ ULONG                   block_size;
                         _nx_ftp_server_block_header_send(ftp_server_ptr -> nx_ftp_server_packet_pool_ptr, client_req_ptr, 0);
                     }
 
-                    /* Disconnect the data socket.  */
-                    nx_tcp_socket_disconnect(&(client_req_ptr -> nx_ftp_client_request_data_socket), NX_FTP_SERVER_TIMEOUT);
-
-                    /* Tear down the client data socket.  */
-                    if (client_req_ptr -> nx_ftp_client_request_passive_transfer_enabled == NX_TRUE)
-                    {
-                        nx_tcp_server_socket_unaccept(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-                        nx_tcp_server_socket_unlisten(ftp_server_ptr -> nx_ftp_server_ip_ptr, client_req_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_port);
-                    }
-                    else
-                    {
-                        nx_tcp_client_socket_unbind(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-                    }
-                    nx_tcp_socket_delete(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-                    fx_file_close(&(client_req_ptr -> nx_ftp_client_request_file));
-
-                    /* Clear the passive transfer enabled flag.  */
-                    client_req_ptr -> nx_ftp_client_request_passive_transfer_enabled = NX_FALSE;
+                    /* Clean up the data socket.  */
+                    _nx_ftp_server_data_socket_cleanup(ftp_server_ptr, client_req_ptr);
 
                     /* Allocate a new packet.  */
                     _nx_ftp_packet_allocate(ftp_server_ptr -> nx_ftp_server_packet_pool_ptr, client_req_ptr, &packet_ptr, NX_TCP_PACKET, NX_WAIT_FOREVER);
@@ -3862,6 +3750,14 @@ ULONG                   block_size;
             case NX_FTP_PASV:
             { 
 
+                /* If create, cleanup the data socket.  */
+                if (client_req_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_id)
+                {
+
+                    /* Clean up the data socket.  */
+                    _nx_ftp_server_data_socket_cleanup(ftp_server_ptr, client_req_ptr);
+                }
+
                 /* Try to find the data port. */
                 status = nx_tcp_free_port_find(ftp_server_ptr -> nx_ftp_server_ip_ptr,
                                                ftp_server_ptr -> nx_ftp_server_data_port++, &port);
@@ -3882,7 +3778,7 @@ ULONG                   block_size;
 
                 /* Create an FTP client data socket.  */
                 status = nx_tcp_socket_create(ftp_server_ptr -> nx_ftp_server_ip_ptr, &(client_req_ptr -> nx_ftp_client_request_data_socket), "FTP Server Data Socket",
-                                    NX_FTP_DATA_TOS, NX_FTP_FRAGMENT_OPTION, NX_FTP_TIME_TO_LIVE, NX_FTP_DATA_WINDOW_SIZE, NX_NULL, NX_NULL);
+                                    NX_FTP_DATA_TOS, NX_FTP_FRAGMENT_OPTION, NX_FTP_TIME_TO_LIVE, NX_FTP_DATA_WINDOW_SIZE, NX_NULL, _nx_ftp_server_data_disconnect);
 
                 /* Determine if the listen is successful.  */
                 if (status != NX_SUCCESS)
@@ -3897,6 +3793,16 @@ ULONG                   block_size;
                     /* And we are done processing.  */
                     break;
                 }
+
+                /* Register the receive function.  */
+                nx_tcp_socket_receive_notify(&(client_req_ptr -> nx_ftp_client_request_data_socket), _nx_ftp_server_data_present);
+
+                /* Setup the data port with a specific packet transmit retry logic.  */
+                nx_tcp_socket_transmit_configure(&(client_req_ptr -> nx_ftp_client_request_data_socket), 
+                                                    NX_FTP_SERVER_TRANSMIT_QUEUE_DEPTH,
+                                                    NX_FTP_SERVER_RETRY_SECONDS*NX_IP_PERIODIC_RATE,
+                                                    NX_FTP_SERVER_RETRY_MAX, 
+                                                    NX_FTP_SERVER_RETRY_SHIFT);
 
                 /* Make sure each socket points to the corresponding FTP server.  */
                 client_req_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_reserved_ptr =  ftp_server_ptr;
@@ -3927,12 +3833,15 @@ ULONG                   block_size;
                 /* Pickup the IPv4 address of this IP instance.  */
                 ip_address =  client_req_ptr -> nx_ftp_client_request_control_socket.nx_tcp_socket_connect_interface -> nx_interface_ip_address;
 
+                /* Reset the packet prepend pointer for alignment.  */
+                packet_ptr -> nx_packet_prepend_ptr = packet_ptr -> nx_packet_data_start + NX_TCP_PACKET;
+
                 /* Setup pointer to packet buffer area.  */
                 buffer_ptr =  packet_ptr -> nx_packet_prepend_ptr;
 
                 /* Now build PASV response. "227 Entering Passive Mode (h1,h2,h3,h4,p1,p2)."  */
                 
-                /* Verify packet payload.  */
+                /* Verify packet payload. The max size of this message is 54. */
                 if ((packet_ptr -> nx_packet_data_end - packet_ptr -> nx_packet_prepend_ptr) < 54)
                 {
 
@@ -3949,46 +3858,28 @@ ULONG                   block_size;
                 memcpy(buffer_ptr, "227 Entering Passive Mode ", 26); /* Use case of memcpy is verified. */
 
                 /* Build the IP address and port.  */
-                buffer_ptr[26] = '(';
-
-                buffer_ptr[27] = (UCHAR)('0' + (ip_address >> 24)/100);
-                buffer_ptr[28] = (UCHAR)('0' + ((ip_address >> 24)/10)%10);
-                buffer_ptr[29] = (UCHAR)('0' + (ip_address >> 24)%10);
-                buffer_ptr[30] = ',';
-    
-                buffer_ptr[31] = (UCHAR)('0' + ((ip_address >> 16) & 0xFF)/100);
-                buffer_ptr[32] = (UCHAR)('0' + (((ip_address >> 16) & 0xFF)/10)%10);
-                buffer_ptr[33] = (UCHAR)('0' + ((ip_address >> 16) & 0xFF)%10);
-                buffer_ptr[34] = ',';
-    
-                buffer_ptr[35] = (UCHAR)('0' + ((ip_address >> 8) & 0xFF)/100);
-                buffer_ptr[36] = (UCHAR)('0' + (((ip_address >> 8) & 0xFF)/10)%10);
-                buffer_ptr[37] = (UCHAR)('0' + ((ip_address >> 8) & 0xFF)%10);
-                buffer_ptr[38] = ',';
-    
-                buffer_ptr[39] = (UCHAR)('0' + (ip_address & 0xFF)/100);
-                buffer_ptr[40] = (UCHAR)('0' + ((ip_address & 0xFF)/10)%10);
-                buffer_ptr[41] = (UCHAR)('0' + (ip_address & 0xFF)%10);
-                buffer_ptr[42] = ',';
-    
-                buffer_ptr[43] = (UCHAR)('0' + (port >> 8)/100);
-                buffer_ptr[44] = (UCHAR)('0' + ((port >> 8)/10)%10);
-                buffer_ptr[45] = (UCHAR)('0' + ((port >> 8)%10));
-                buffer_ptr[46] = ',';
-    
-                buffer_ptr[47] = (UCHAR)('0' + (port & 255)/100);
-                buffer_ptr[48] = (UCHAR)('0' + ((port & 255)/10)%10);
-                buffer_ptr[49] = (UCHAR)('0' + ((port & 255)%10));
-
-                buffer_ptr[50] = ')';
-                buffer_ptr[51] = '.';
+                j = 26;
+                buffer_ptr[j++] = '(';
+                j += _nx_utility_uint_to_string((ip_address >> 24), 10, (CHAR *)(buffer_ptr + j), 54 - j);
+                buffer_ptr[j++] = ',';
+                j += _nx_utility_uint_to_string(((ip_address >> 16) & 0xFF), 10, (CHAR *)(buffer_ptr + j), 54 - j);
+                buffer_ptr[j++] = ',';
+                j += _nx_utility_uint_to_string(((ip_address >> 8) & 0xFF), 10, (CHAR *)(buffer_ptr + j), 54 - j);
+                buffer_ptr[j++] = ',';
+                j += _nx_utility_uint_to_string((ip_address & 0xFF), 10, (CHAR *)(buffer_ptr + j), 54 - j);
+                buffer_ptr[j++] = ',';
+                j += _nx_utility_uint_to_string((port >> 8), 10, (CHAR *)(buffer_ptr + j), 54 - j);
+                buffer_ptr[j++] = ',';
+                j += _nx_utility_uint_to_string((port & 0XFF), 10, (CHAR *)(buffer_ptr + j), 54 - j);
+                buffer_ptr[j++] = ')';
+                buffer_ptr[j++] = '.';
 
                 /* Set the CR/LF.  */
-                buffer_ptr[52] = 13;
-                buffer_ptr[53] = 10;
+                buffer_ptr[j++] = 13;
+                buffer_ptr[j++] = 10;
 
                 /* Set the packet length.  */
-                packet_ptr -> nx_packet_length = 54;
+                packet_ptr -> nx_packet_length = j;
 
                 /* Setup the packet append pointer.  */
                 packet_ptr -> nx_packet_append_ptr = packet_ptr -> nx_packet_prepend_ptr + packet_ptr -> nx_packet_length;
@@ -4081,6 +3972,14 @@ ULONG                   block_size;
             case NX_FTP_EPSV:
             { 
 
+                /* If create, cleanup the data socket.  */
+                if (client_req_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_id)
+                {
+
+                    /* Clean up the client socket.  */
+                    _nx_ftp_server_data_socket_cleanup(ftp_server_ptr, client_req_ptr);
+                }
+
                 /* Try to find the data port. */
                 status = nx_tcp_free_port_find(ftp_server_ptr -> nx_ftp_server_ip_ptr,
                                                ftp_server_ptr -> nx_ftp_server_data_port++, &port);
@@ -4101,7 +4000,7 @@ ULONG                   block_size;
 
                 /* Create an FTP client data socket.  */
                 status = nx_tcp_socket_create(ftp_server_ptr -> nx_ftp_server_ip_ptr, &(client_req_ptr -> nx_ftp_client_request_data_socket), "FTP Server Data Socket",
-                                    NX_FTP_DATA_TOS, NX_FTP_FRAGMENT_OPTION, NX_FTP_TIME_TO_LIVE, NX_FTP_DATA_WINDOW_SIZE, NX_NULL, NX_NULL);
+                                    NX_FTP_DATA_TOS, NX_FTP_FRAGMENT_OPTION, NX_FTP_TIME_TO_LIVE, NX_FTP_DATA_WINDOW_SIZE, NX_NULL, _nx_ftp_server_data_disconnect);
 
                 /* Determine if the listen is successful.  */
                 if (status != NX_SUCCESS)
@@ -4142,6 +4041,9 @@ ULONG                   block_size;
 
                 /* Wait for the data connection to connect.  */
                 nx_tcp_server_socket_accept(&(client_req_ptr -> nx_ftp_client_request_data_socket), NX_NO_WAIT);
+
+                /* Reset the packet prepend pointer for alignment.  */
+                packet_ptr -> nx_packet_prepend_ptr = packet_ptr -> nx_packet_data_start + NX_TCP_PACKET;
 
                 /* Setup pointer to packet buffer area.  */
                 buffer_ptr =  packet_ptr -> nx_packet_prepend_ptr;
@@ -4759,7 +4661,7 @@ NX_FTP_SERVER   *server_ptr;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_ftp_server_data_disconnect_process              PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.9        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -4782,9 +4684,7 @@ NX_FTP_SERVER   *server_ptr;
 /*                                                                        */
 /*    fx_file_close                         Close file                    */
 /*    nx_ftp_packet_allocate                Allocate a packet             */
-/*    nx_tcp_client_socket_unbind           Unbind client socket          */
-/*    nx_tcp_socket_delete                  Delete socket                 */
-/*    nx_tcp_socket_disconnect              Disconnect socket             */
+/*    _nx_ftp_server_data_socket_cleanup    Clean up data socket          */
 /*                                                                        */
 /*  CALLED BY                                                             */
 /*                                                                        */
@@ -4797,13 +4697,16 @@ NX_FTP_SERVER   *server_ptr;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  10-15-2021     Yuxin Zhou               Modified comment(s), fixed    */
+/*                                            the issue of processing     */
+/*                                            disconnection event,        */
+/*                                            resulting in version 6.1.9  */
 /*                                                                        */
 /**************************************************************************/
 VOID  _nx_ftp_server_data_disconnect_process(NX_FTP_SERVER *ftp_server_ptr)
 {
 
 UINT                    i;
-UINT                    status;
 UINT                    block_status;
 ULONG                   length;
 NX_PACKET               *packet_ptr;
@@ -4826,25 +4729,8 @@ NX_FTP_CLIENT_REQUEST   *client_req_ptr;
 
             /* Yes, a disconnect is present, which signals an end of file of a client FTP write request.  */
 
-            /* First, cleanup this data socket.  */
-            nx_tcp_socket_disconnect(&(client_req_ptr -> nx_ftp_client_request_data_socket), NX_FTP_SERVER_TIMEOUT);
-
-            /* Unbind/unaccept the data socket.  */
-            if (client_req_ptr -> nx_ftp_client_request_passive_transfer_enabled == NX_TRUE)
-            {
-                nx_tcp_server_socket_unaccept(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-                nx_tcp_server_socket_unlisten(ftp_server_ptr -> nx_ftp_server_ip_ptr, client_req_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_port);
-            }
-            else
-            {
-                nx_tcp_client_socket_unbind(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-            }
-
-            /* And finally delete the data socket.  */
-            nx_tcp_socket_delete(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-
-            /* Clear the passive transfer enabled flag.  */
-            client_req_ptr -> nx_ftp_client_request_passive_transfer_enabled = NX_FALSE;
+            /* Cleanup this data socket.  */
+            _nx_ftp_server_data_socket_cleanup(ftp_server_ptr, client_req_ptr);
 
             /* Determine if the block mode is enabled.  */
             if (client_req_ptr -> nx_ftp_client_request_transfer_mode == NX_FTP_TRANSFER_MODE_BLOCK)
@@ -4864,43 +4750,39 @@ NX_FTP_CLIENT_REQUEST   *client_req_ptr;
             /* Reset the client request activity timeout.  */
             client_req_ptr -> nx_ftp_client_request_activity_timeout =  NX_FTP_ACTIVITY_TIMEOUT;
 
-            /* Pickup the file length.  */
-            length =  (ULONG)client_req_ptr -> nx_ftp_client_request_file.fx_file_current_file_size;
-
-            /* Close the file.  */
-            status =  fx_file_close(&(client_req_ptr -> nx_ftp_client_request_file));
-
-#ifdef NX_FTP_FAULT_TOLERANT
-
-            /* Flush the media.  */
-            fx_media_flush(ftp_server_ptr -> nx_ftp_server_media_ptr);
-#endif
-
-            /* Allocate a packet for sending the file write response.  */
-            _nx_ftp_packet_allocate(ftp_server_ptr -> nx_ftp_server_packet_pool_ptr, client_req_ptr, &packet_ptr, NX_TCP_PACKET, NX_WAIT_FOREVER);
-
-            /* Now determine if the operation was successful.  */
-            if ((status == FX_SUCCESS) && (length == client_req_ptr -> nx_ftp_client_request_total_bytes) && (block_status == NX_TRUE))
+            /* Check if file is open.  */
+            if (client_req_ptr -> nx_ftp_client_request_open_type == NX_FTP_OPEN_FOR_WRITE)
             {
 
-                /* Successful client file write.  */
+                /* Pickup the file length.  */
+                length =  (ULONG)client_req_ptr -> nx_ftp_client_request_file.fx_file_current_file_size;
 
-                /* Now send "250" message to indicate successful file write.  */
-                _nx_ftp_server_response(&(client_req_ptr -> nx_ftp_client_request_control_socket), packet_ptr,
-                            NX_FTP_CODE_COMPLETED, "File Written");
+                /* Allocate a packet for sending the file write response.  */
+                _nx_ftp_packet_allocate(ftp_server_ptr -> nx_ftp_server_packet_pool_ptr, client_req_ptr, &packet_ptr, NX_TCP_PACKET, NX_WAIT_FOREVER);
+
+                /* Now determine if the operation was successful.  */
+                if ((length == client_req_ptr -> nx_ftp_client_request_total_bytes) && (block_status == NX_TRUE))
+                {
+
+                    /* Successful client file write.  */
+
+                    /* Now send "250" message to indicate successful file write.  */
+                    _nx_ftp_server_response(&(client_req_ptr -> nx_ftp_client_request_control_socket), packet_ptr,
+                                NX_FTP_CODE_COMPLETED, "File Written");
+                }
+                else
+                {
+
+                    /* Unsuccessful client file write.  */
+
+                    /* Now send "550" message to indicate unsuccessful file write.  */
+                    _nx_ftp_server_response(&(client_req_ptr -> nx_ftp_client_request_control_socket), packet_ptr,
+                                NX_FTP_CODE_BAD_FILE, "File Write Failed");
+                }
+
+                /* Clear the open type.  */
+                client_req_ptr -> nx_ftp_client_request_open_type =  0;
             }
-            else
-            {
-
-                /* Unsuccessful client file write.  */
-
-                /* Now send "550" message to indicate unsuccessful file write.  */
-                _nx_ftp_server_response(&(client_req_ptr -> nx_ftp_client_request_control_socket), packet_ptr,
-                            NX_FTP_CODE_BAD_FILE, "File Write Failed");
-            }
-
-            /* Clear the open type.  */
-            client_req_ptr -> nx_ftp_client_request_open_type =  0;
         }
     }
 }
@@ -5400,7 +5282,7 @@ NX_FTP_SERVER   *server_ptr;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_ftp_server_timeout_processing                   PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.9        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -5426,10 +5308,9 @@ NX_FTP_SERVER   *server_ptr;
 /*    fx_file_close                         Close file                    */
 /*    nx_packet_release                     Release saved packet          */
 /*    nx_tcp_server_socket_relisten         Relisten for another connect  */
-/*    nx_tcp_client_socket_unbind           Unbind data socket            */
 /*    nx_tcp_server_socket_unaccept         Unaccept server connection    */
-/*    nx_tcp_socket_delete                  Delete data socket            */
 /*    nx_tcp_socket_disconnect              Disconnect socket             */
+/*    _nx_ftp_server_data_socket_cleanup    Clean up data socket          */
 /*                                                                        */
 /*  CALLED BY                                                             */
 /*                                                                        */
@@ -5442,6 +5323,10 @@ NX_FTP_SERVER   *server_ptr;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  10-15-2021     Yuxin Zhou               Modified comment(s),          */
+/*                                            fixed the issue of clearing */
+/*                                            data socket,                */
+/*                                            resulting in version 6.1.9  */
 /*                                                                        */
 /**************************************************************************/
 VOID  _nx_ftp_server_timeout_processing(NX_FTP_SERVER *ftp_server_ptr)
@@ -5482,35 +5367,9 @@ NX_FTP_CLIENT_REQUEST   *client_req_ptr;
                 if (client_req_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_id)
                 {
 
-                    /* Disconnect client socket.  */
-                    nx_tcp_socket_disconnect(&(client_req_ptr -> nx_ftp_client_request_data_socket), NX_NO_WAIT);
-
-                    /* Unbind/unaccept the data socket.  */
-                    if (client_req_ptr -> nx_ftp_client_request_passive_transfer_enabled == NX_TRUE)
-                    {
-                        nx_tcp_server_socket_unaccept(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-                        nx_tcp_server_socket_unlisten(ftp_server_ptr -> nx_ftp_server_ip_ptr, client_req_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_port);
-                    }
-                    else
-                    {
-                        nx_tcp_client_socket_unbind(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-                    }
-
-                    /* Delete the data socket.  */
-                    nx_tcp_socket_delete(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-
-                    /* Ensure the file is closed.  */
-                    fx_file_close(&(client_req_ptr -> nx_ftp_client_request_file));
-
-#ifdef NX_FTP_FAULT_TOLERANT
-
-                    /* Flush the media.  */
-                    fx_media_flush(ftp_server_ptr -> nx_ftp_server_media_ptr);
-#endif
+                    /* Clean up the client socket.  */
+                    _nx_ftp_server_data_socket_cleanup(ftp_server_ptr, client_req_ptr);
                 }
-
-                /* Clear the passive transfer enabled flag.  */
-                client_req_ptr -> nx_ftp_client_request_passive_transfer_enabled = NX_FALSE;
 
                 /* Reset the transfer mode as stream mode.  */
                 client_req_ptr -> nx_ftp_client_request_transfer_mode = NX_FTP_TRANSFER_MODE_STREAM; 
@@ -5602,7 +5461,7 @@ NX_FTP_SERVER   *server_ptr;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_ftp_server_control_disconnect_processing         PORTABLE C     */
-/*                                                           6.1          */
+/*                                                           6.1.9        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -5627,10 +5486,9 @@ NX_FTP_SERVER   *server_ptr;
 /*    fx_file_close                         Close file                    */
 /*    nx_packet_release                     Release saved packet          */
 /*    nx_tcp_server_socket_relisten         Relisten for another connect  */
-/*    nx_tcp_client_socket_unbind           Unbind data socket            */
 /*    nx_tcp_server_socket_unaccept         Unaccept server connection    */
-/*    nx_tcp_socket_delete                  Delete data socket            */
 /*    nx_tcp_socket_disconnect              Disconnect socket             */
+/*    _nx_ftp_server_data_socket_cleanup    Clean up data socket          */
 /*                                                                        */
 /*  CALLED BY                                                             */
 /*                                                                        */
@@ -5643,6 +5501,10 @@ NX_FTP_SERVER   *server_ptr;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  10-15-2021     Yuxin Zhou               Modified comment(s),          */
+/*                                            fixed the issue of clearing */
+/*                                            data socket,                */
+/*                                            resulting in version 6.1.9  */
 /*                                                                        */
 /**************************************************************************/
 VOID  _nx_ftp_server_control_disconnect_processing(NX_FTP_SERVER *ftp_server_ptr)
@@ -5681,35 +5543,9 @@ NX_FTP_CLIENT_REQUEST   *client_req_ptr;
             if (client_req_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_id)
             {
 
-                /* Disconnect client socket.  */
-                nx_tcp_socket_disconnect(&(client_req_ptr -> nx_ftp_client_request_data_socket), NX_NO_WAIT);
-
-                /* Unbind/unaccept the data socket.  */
-                if (client_req_ptr -> nx_ftp_client_request_passive_transfer_enabled == NX_TRUE)
-                {
-                    nx_tcp_server_socket_unaccept(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-                    nx_tcp_server_socket_unlisten(ftp_server_ptr -> nx_ftp_server_ip_ptr, client_req_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_port);
-                }
-                else
-                {
-                    nx_tcp_client_socket_unbind(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-                }
-
-                /* Delete the data socket.  */
-                nx_tcp_socket_delete(&(client_req_ptr -> nx_ftp_client_request_data_socket));
-
-                /* Ensure the file is closed.  */
-                fx_file_close(&(client_req_ptr -> nx_ftp_client_request_file));
-
-#ifdef NX_FTP_FAULT_TOLERANT
-
-                /* Flush the media.  */
-                fx_media_flush(ftp_server_ptr -> nx_ftp_server_media_ptr);
-#endif
+                /* Clean up the client socket.  */
+                _nx_ftp_server_data_socket_cleanup(ftp_server_ptr, client_req_ptr);
             }
-
-            /* Clear the passive transfer enabled flag.  */
-            client_req_ptr -> nx_ftp_client_request_passive_transfer_enabled = NX_FALSE;
 
             /* Reset the transfer mode as stream mode.  */
             client_req_ptr -> nx_ftp_client_request_transfer_mode = NX_FTP_TRANSFER_MODE_STREAM;
@@ -6866,7 +6702,7 @@ NX_PACKET   *last_packet;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_ftp_server_number_to_ascii                      PORTABLE C      */ 
-/*                                                           6.1.7        */
+/*                                                           6.1.8        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -6905,9 +6741,12 @@ NX_PACKET   *last_packet;
 /*  06-02-2021     Yuxin Zhou               Modified comment(s), and      */
 /*                                            corrected the size check,   */
 /*                                            resulting in version 6.1.7  */
+/*  08-02-2021     Yuxin Zhou               Modified comment(s),          */
+/*                                            corrected the pad character,*/
+/*                                            resulting in version 6.1.8  */
 /*                                                                        */
 /**************************************************************************/
-static VOID _nx_ftp_server_number_to_ascii(UCHAR *buffer_ptr, UINT buffer_size, UINT number)
+static VOID _nx_ftp_server_number_to_ascii(UCHAR *buffer_ptr, UINT buffer_size, UINT number, UCHAR pad)
 {
 UINT    digit;
 UINT    size;
@@ -6915,8 +6754,8 @@ UINT    size;
     /* Initialize counters.  */
     size = 1;
 
-    /* Initialize buffer with spaces. */
-    memset(buffer_ptr, ' ', buffer_size);
+    /* Initialize buffer with pad character. */
+    memset(buffer_ptr, pad, buffer_size);
 
     /* Loop to convert the number to ASCII.  */
     while (size <= buffer_size)
@@ -6938,4 +6777,82 @@ UINT    size;
         if (number == 0)
             break;
     }
+}
+
+
+/**************************************************************************/ 
+/*                                                                        */ 
+/*  FUNCTION                                               RELEASE        */ 
+/*                                                                        */ 
+/*    _nx_ftp_server_data_socket_cleanup                  PORTABLE C      */ 
+/*                                                           6.1.9        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Yuxin Zhou, Microsoft Corporation                                   */
+/*                                                                        */
+/*  DESCRIPTION                                                           */ 
+/*                                                                        */ 
+/*   This function cleans up the data socket.                             */
+/*                                                                        */ 
+/*  INPUT                                                                 */ 
+/*                                                                        */ 
+/*    ftp_server_ptr                        Pointer to FTP server         */
+/*    client_req_ptr                        Pointer to client request     */
+/*                                                                        */
+/*  OUTPUT                                                                */ 
+/*                                                                        */ 
+/*    None                                                                */ 
+/*                                                                        */ 
+/*  CALLS                                                                 */ 
+/*                                                                        */ 
+/*    fx_file_close                         Close file                    */
+/*    nx_tcp_socket_disconnect              Disconnect a socket           */ 
+/*    nx_tcp_client_socket_unbind           Release the data socket port  */
+/*    nx_tcp_server_socket_unaccept         Unaccept server connection    */ 
+/*    nx_tcp_server_socket_unlisten         Unlisten on server socket     */
+/*    nx_tcp_socket_delete                  Delete socket                 */ 
+/*                                                                        */ 
+/*  CALLED BY                                                             */ 
+/*                                                                        */ 
+/*    _nx_ftp_server_command_process        Process command               */
+/*    _nx_ftp_server_data_disconnect_process                              */
+/*                                          Disconnect data socket        */
+/*                                                                        */ 
+/*  RELEASE HISTORY                                                       */ 
+/*                                                                        */ 
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  10-15-2021     Yuxin Zhou               Initial Version 6.1.9         */
+/*                                                                        */
+/**************************************************************************/
+VOID _nx_ftp_server_data_socket_cleanup(NX_FTP_SERVER *ftp_server_ptr, NX_FTP_CLIENT_REQUEST *client_req_ptr)
+{
+
+    /* First, cleanup this data socket.  */
+    nx_tcp_socket_disconnect(&(client_req_ptr -> nx_ftp_client_request_data_socket), NX_FTP_SERVER_TIMEOUT);
+
+    /* Unbind/unaccept the data socket.  */
+    if (client_req_ptr -> nx_ftp_client_request_passive_transfer_enabled == NX_TRUE)
+    {
+        nx_tcp_server_socket_unaccept(&(client_req_ptr -> nx_ftp_client_request_data_socket));
+        nx_tcp_server_socket_unlisten(ftp_server_ptr -> nx_ftp_server_ip_ptr, client_req_ptr -> nx_ftp_client_request_data_socket.nx_tcp_socket_port);
+    }
+    else
+    {
+        nx_tcp_client_socket_unbind(&(client_req_ptr -> nx_ftp_client_request_data_socket));
+    }
+
+    /* And finally delete the data socket.  */
+    nx_tcp_socket_delete(&(client_req_ptr -> nx_ftp_client_request_data_socket));
+
+    fx_file_close(&(client_req_ptr -> nx_ftp_client_request_file));
+
+#ifdef NX_FTP_FAULT_TOLERANT
+
+    /* Flush the media.  */
+    fx_media_flush(ftp_server_ptr -> nx_ftp_server_media_ptr);
+#endif
+
+    /* Clear the passive transfer enabled flag.  */
+    client_req_ptr -> nx_ftp_client_request_passive_transfer_enabled = NX_FALSE;
 }

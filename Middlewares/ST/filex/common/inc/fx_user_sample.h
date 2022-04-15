@@ -26,7 +26,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    fx_user.h                                           PORTABLE C      */
-/*                                                           6.1.5        */
+/*                                                           6.1.10       */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -53,6 +53,11 @@
 /*  03-02-2021     William E. Lamie         Modified comment(s), and      */
 /*                                            added standalone support,   */
 /*                                            resulting in version 6.1.5  */
+/*  01-31-2022     Bhupendra Naphade        Modified comment(s), and      */
+/*                                            added product constant to   */
+/*                                            support variable sector     */
+/*                                            size in exFAT,              */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 
@@ -156,6 +161,14 @@
 */
 
 /* #define FX_ENABLE_EXFAT */
+
+
+/* Define bitmap cache size for exFAT. Size should be minimum one sector size and maximum 4096. 
+   For applications using muliple media devices with varing sector size, the value should be set to the 
+   size of largest sector size */
+
+/* #define FX_EXFAT_MAX_CACHE_SIZE      512 */
+
 
 /* Define FileX internal protection macros.  If FX_SINGLE_THREAD is defined,
    these protection macros are effectively disabled.  However, for multi-thread

@@ -55,8 +55,6 @@ UINT  _lx_nand_flash_initialize_driver(LX_NAND_FLASH *nand_flash)
     /* Test the NAND ID correctness */
     if(pNAND_ID.Maker_Id  != BSP_NAND_MANUFACTURER_CODE)
       return(LX_ERROR);
-    else if (pNAND_ID.Device_Id != BSP_NAND_DEVICE_CODE)
-      return(LX_ERROR);
     else if (pNAND_ID.Third_Id != BSP_NAND_THIRD_ID)
       return(LX_ERROR);
     else if (pNAND_ID.Fourth_Id != BSP_NAND_FOURTH_ID)

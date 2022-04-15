@@ -25,9 +25,6 @@
 #define NX_AZURE_IOT_WAIT_OPTION NX_WAIT_FOREVER
 #endif /* NX_AZURE_IOT_WAIT_OPTION */
 
-/* Define offset of MQTT telemetry packet.  */
-#define NX_AZURE_IOT_PUBLISH_PACKET_START_OFFSET   7
-
 /* Convert number to upper hex.  */
 #define NX_AZURE_IOT_NUMBER_TO_UPPER_HEX(number)    (CHAR)(number + (number < 10 ? '0' : 'A' - 10))
 
@@ -167,14 +164,6 @@ static VOID nx_azure_iot_log_listener(az_log_classification classification, az_s
 
 VOID nx_azure_iot_log_init(VOID(*log_callback)(az_log_classification classification, UCHAR *msg, UINT msg_len))
 {
-static az_log_classification const classifications[] = {AZ_LOG_IOT_AZURERTOS,
-                                                        AZ_LOG_MQTT_RECEIVED_TOPIC,
-                                                        AZ_LOG_MQTT_RECEIVED_PAYLOAD,
-                                                        AZ_LOG_IOT_RETRY,
-                                                        AZ_LOG_IOT_SAS_TOKEN,
-                                                        _az_LOG_END_OF_LIST};
-
-    _az_log_set_classifications(classifications);
     _nx_azure_iot_log_callback = log_callback;
     az_log_set_message_callback(nx_azure_iot_log_listener);
 }

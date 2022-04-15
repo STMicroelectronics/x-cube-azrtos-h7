@@ -77,15 +77,15 @@ UINT nx_azure_iot_log(UCHAR *type_ptr, UINT type_len, UCHAR *msg_ptr, UINT msg_l
 
 #if NX_AZURE_IOT_LOG_LEVEL > 0
 #undef LogError
-#define LogError(...) nx_azure_iot_log(LogLiteralArgs("[ERROR] "), ##__VA_ARGS__)
+#define LogError(...) nx_azure_iot_log(LogLiteralArgs("[ERROR] "), __VA_ARGS__)
 #endif /* NX_AZURE_IOT_LOG_LEVEL > 0 */
 #if NX_AZURE_IOT_LOG_LEVEL > 1
 #undef LogInfo
-#define LogInfo(...) nx_azure_iot_log(LogLiteralArgs("[INFO] "), ##__VA_ARGS__)
+#define LogInfo(...) nx_azure_iot_log(LogLiteralArgs("[INFO] "), __VA_ARGS__)
 #endif /* NX_AZURE_IOT_LOG_LEVEL > 1 */
 #if NX_AZURE_IOT_LOG_LEVEL > 2
 #undef LogDebug
-#define LogDebug(...) nx_azure_iot_log(LogLiteralArgs("[DEBUG] "), ##__VA_ARGS__)
+#define LogDebug(...) nx_azure_iot_log(LogLiteralArgs("[DEBUG] "), __VA_ARGS__)
 #endif /* NX_AZURE_IOT_LOG_LEVEL > 2 */
 
 #define NX_AZURE_IOT_MQTT_QOS_0                           0
@@ -140,6 +140,9 @@ UINT nx_azure_iot_log(UCHAR *type_ptr, UINT type_len, UCHAR *msg_ptr, UINT msg_l
 #define NX_AZURE_IOT_NO_SUBSCRIBE_ACK                     0x20014
 #define NX_AZURE_IOT_THROTTLED                            0x20015
 
+#define NX_AZURE_IOT_EMPTY_JSON                           0x20016
+#define NX_AZURE_IOT_SAS_TOKEN_EXPIRED                    0x20017
+
 /* Resource type managed by AZ_IOT.  */
 #define NX_AZURE_IOT_RESOURCE_IOT_HUB                     0x1
 #define NX_AZURE_IOT_RESOURCE_IOT_PROVISIONING            0x2
@@ -157,6 +160,9 @@ UINT nx_azure_iot_log(UCHAR *type_ptr, UINT type_len, UCHAR *msg_ptr, UINT msg_l
 
 /* MQTT Subscribe topic offset.  */
 #define NX_AZURE_IOT_MQTT_SUBSCRIBE_TOPIC_OFFSET          6
+
+/* MQTT Publish offset.  */
+#define NX_AZURE_IOT_PUBLISH_PACKET_START_OFFSET          7
 
 /**
  * @brief Resource struct
@@ -209,6 +215,15 @@ typedef struct NX_AZURE_IOT_STRUCT
     struct NX_AZURE_IOT_RESOURCE_STRUCT   *nx_azure_iot_resource_list_header;
     UINT                                 (*nx_azure_iot_unix_time_get)(ULONG *unix_time);
 } NX_AZURE_IOT;
+
+typedef struct NX_AZURE_IOT_THREAD_STRUCT
+{
+    TX_THREAD                           *thread_ptr;
+    struct NX_AZURE_IOT_THREAD_STRUCT   *thread_next;
+    UINT                                 thread_message_type;
+    UINT                                 thread_expected_id;     /* Used by device twin. */
+    NX_PACKET                           *thread_received_message;
+} NX_AZURE_IOT_THREAD;
 
 /**
  * @brief Create the Azure IoT subsystem
@@ -309,7 +324,6 @@ UINT nx_azure_iot_base64_hmac_sha256_calculate(NX_AZURE_IOT_RESOURCE *resource_p
                                                const UCHAR *message_ptr, UINT message_size,
                                                UCHAR *buffer_ptr, UINT buffer_len,
                                                UCHAR **output_ptr, UINT *output_len_ptr);
-
 
 #ifdef __cplusplus
 }

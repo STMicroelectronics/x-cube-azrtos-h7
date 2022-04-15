@@ -2056,15 +2056,4 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/threadx/common/src/txe_timer_info_get.c</locationURI>
 		</link>
 	</linkedResources>
-	<filteredResources>
-		<filter>
-			<id>1631773752951</id>
-			<name></name>
-			<type>22</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-*.launch</arguments>
-			</matcher>
-		</filter>
-	</filteredResources>
 </projectDescription>

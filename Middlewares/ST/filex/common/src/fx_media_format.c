@@ -58,7 +58,7 @@ ULONG _fx_media_format_volume_id =  1;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_media_format                                    PORTABLE C      */
-/*                                                           6.1.5        */
+/*                                                           6.1.8        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -117,6 +117,9 @@ ULONG _fx_media_format_volume_id =  1;
 /*                                            resulting in version 6.1    */
 /*  03-02-2021     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1.5  */
+/*  08-02-2021     Bhupendra Naphade        Modified comment(s), and      */
+/*                                            updated boot write logic,   */
+/*                                            resulting in version 6.1.8  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_media_format(FX_MEDIA *media_ptr, VOID (*driver)(FX_MEDIA *media), VOID *driver_info_ptr, UCHAR *memory_ptr, UINT memory_size,
@@ -453,6 +456,7 @@ UINT   sectors_per_fat, f, s;
     /* Select the boot record write command.  */
     media_ptr -> fx_media_driver_request =       FX_DRIVER_BOOT_WRITE;
     media_ptr -> fx_media_driver_system_write =  FX_TRUE;
+    media_ptr -> fx_media_driver_sectors =       1;
     media_ptr -> fx_media_driver_sector_type =   FX_BOOT_SECTOR;
 
     /* If trace is enabled, insert this event into the trace buffer.  */

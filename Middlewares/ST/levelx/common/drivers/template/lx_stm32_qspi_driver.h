@@ -81,6 +81,7 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 INT lx_stm32_qspi_lowlevel_init(UINT instance);
+INT lx_stm32_qspi_lowlevel_deinit(UINT instance);
 
 INT lx_stm32_qspi_get_status(UINT instance);
 INT lx_stm32_qspi_get_info(UINT instance, ULONG *block_size, ULONG *total_blocks);

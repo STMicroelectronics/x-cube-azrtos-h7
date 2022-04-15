@@ -11,10 +11,13 @@
 
 #include "fx_stm32_sd_driver.h"
 
-TX_SEMAPHORE transfer_semaphore;
+TX_SEMAPHORE sd_tx_semaphore;
+TX_SEMAPHORE sd_rx_semaphore;
 
 extern SD_HandleTypeDef hsd1;
+#if (FX_STM32_SD_INIT == 1)
 extern void MX_SDMMC1_SD_Init(void);
+#endif
 
 /* USER CODE BEGIN 0 */
 
@@ -56,12 +59,12 @@ INT fx_stm32_sd_deinit(UINT instance)
   /* USER CODE BEGIN PRE_FX_SD_DEINIT */
   UNUSED(instance);
   /* USER CODE END PRE_FX_SD_DEINIT */
-
+#if (FX_STM32_SD_INIT == 1)
   if(HAL_SD_DeInit(&hsd1) != HAL_OK)
   {
     ret = 1;
   }
-
+#endif
   /* USER CODE BEGIN POST_FX_SD_DEINIT */
 
   /* USER CODE END POST_FX_SD_DEINIT */
@@ -161,7 +164,7 @@ void HAL_SD_TxCpltCallback(SD_HandleTypeDef *hsd)
 
   /* USER CODE END PRE_TX_CMPLT */
 
-  tx_semaphore_put(&transfer_semaphore);
+  tx_semaphore_put(&sd_tx_semaphore);
 
   /* USER CODE BEGIN POST_TX_CMPLT */
 
@@ -179,7 +182,7 @@ void HAL_SD_RxCpltCallback(SD_HandleTypeDef *hsd)
 
   /* USER CODE END PRE_RX_CMPLT */
 
-  tx_semaphore_put(&transfer_semaphore);
+  tx_semaphore_put(&sd_rx_semaphore);
 
   /* USER CODE BEGIN POST_RX_CMPLT */
 

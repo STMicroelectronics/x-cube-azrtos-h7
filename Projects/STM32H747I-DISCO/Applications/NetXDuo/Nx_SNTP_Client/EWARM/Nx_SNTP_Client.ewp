@@ -1291,10 +1291,10 @@
                 <option>
                     <name>CCDefines</name>
                     <state>CORE_CM7</state>
-                    <state>TX_INCLUDE_USER_DEFINE_FILE</state>
-                    <state>NX_INCLUDE_USER_DEFINE_FILE</state>
                     <state>USE_HAL_DRIVER</state>
                     <state>STM32H747xx</state>
+                    <state>TX_INCLUDE_USER_DEFINE_FILE</state>
+                    <state>NX_INCLUDE_USER_DEFINE_FILE</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -2229,7 +2229,7 @@
                         <name>$PROJ_DIR$\..\CM7\Core\Src\stm32h7xx_it.c</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\CM7\Core\Src\tx_initialize_low_level.s</name>
+                        <name>$PROJ_DIR$\..\CM7\Core\Src\tx_initialize_low_level.S</name>
                     </file>
                 </group>
                 <group>
@@ -3439,6 +3439,54 @@
                     </excluded>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_nd_cache_add.c</name>
+                    <excluded>
+                        <configuration>Nx_SNTP_Client_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_nd_cache_add_entry.c</name>
+                    <excluded>
+                        <configuration>Nx_SNTP_Client_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_nd_cache_delete_internal.c</name>
+                    <excluded>
+                        <configuration>Nx_SNTP_Client_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_nd_cache_fast_periodic_update.c</name>
+                    <excluded>
+                        <configuration>Nx_SNTP_Client_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_nd_cache_find_entry.c</name>
+                    <excluded>
+                        <configuration>Nx_SNTP_Client_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_nd_cache_find_entry_by_mac_addr.c</name>
+                    <excluded>
+                        <configuration>Nx_SNTP_Client_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_nd_cache_interface_entries_delete.c</name>
+                    <excluded>
+                        <configuration>Nx_SNTP_Client_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_nd_cache_slow_periodic_update.c</name>
+                    <excluded>
+                        <configuration>Nx_SNTP_Client_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_packet_allocate.c</name>
                     <excluded>
                         <configuration>Nx_SNTP_Client_CM4</configuration>
@@ -3763,6 +3811,12 @@
                     </excluded>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_server_socket_driver_listen.c</name>
+                    <excluded>
+                        <configuration>Nx_SNTP_Client_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_server_socket_listen.c</name>
                     <excluded>
                         <configuration>Nx_SNTP_Client_CM4</configuration>
@@ -3824,6 +3878,18 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_socket_disconnect_complete_notify.c</name>
+                    <excluded>
+                        <configuration>Nx_SNTP_Client_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_socket_driver_establish.c</name>
+                    <excluded>
+                        <configuration>Nx_SNTP_Client_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_socket_driver_packet_receive.c</name>
                     <excluded>
                         <configuration>Nx_SNTP_Client_CM4</configuration>
                     </excluded>
@@ -4106,6 +4172,12 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_udp_socket_delete.c</name>
+                    <excluded>
+                        <configuration>Nx_SNTP_Client_CM4</configuration>
+                    </excluded>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_udp_socket_driver_packet_receive.c</name>
                     <excluded>
                         <configuration>Nx_SNTP_Client_CM4</configuration>
                     </excluded>

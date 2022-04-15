@@ -135,13 +135,13 @@ void  hid_mouse_thread_entry(ULONG arg)
 
           /* Re-initialize mouse buttons Value */
           value = 0x0U;
-          tx_thread_sleep(10);
+          tx_thread_sleep(MS_TO_TICK(10));
         }
       }
     }
     else
     {
-      tx_thread_sleep(10);
+      tx_thread_sleep(MS_TO_TICK(10));
     }
   }
 }

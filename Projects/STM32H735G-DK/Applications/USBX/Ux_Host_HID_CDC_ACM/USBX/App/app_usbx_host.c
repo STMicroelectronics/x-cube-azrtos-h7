@@ -91,6 +91,7 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
   /* USER CODE END MX_USBX_Host_MEM_POOL */
 
   /* USER CODE BEGIN MX_USBX_Host_Init */
+#if (USE_STATIC_ALLOCATION == 1)  
   CHAR *pointer;
 
   /* Store byte_pool into ux_app_byte_bool */
@@ -100,14 +101,14 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        USBX_MEMORY_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Initialize USBX memory. */
   if (ux_system_initialize(pointer, USBX_MEMORY_SIZE, UX_NULL, 0) != UX_SUCCESS)
 
   {
-    ret = UX_ERROR;
+    return UX_ERROR;
   }
 
   /* register a callback error function */
@@ -117,7 +118,7 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        USBX_APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Create the main App thread. */
@@ -125,14 +126,14 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
                        usbx_app_thread_entry, 0, pointer, USBX_APP_STACK_SIZE,
                        25, 25, 1, TX_AUTO_START) != TX_SUCCESS)
   {
-    ret = TX_THREAD_ERROR;
+    return TX_THREAD_ERROR;
   }
 
   /* Allocate the stack for mouse thread . */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        USBX_APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Create the HID mouse App thread. */
@@ -140,30 +141,30 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
                        0, pointer, USBX_APP_STACK_SIZE, 26, 26, 1,
                        TX_AUTO_START) != TX_SUCCESS)
   {
-    ret = TX_THREAD_ERROR;
+    return TX_THREAD_ERROR;
   }
 
   /* Allocate the stack for thread 2. */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        USBX_APP_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Create the HID Keyboard App thread. */
-  if (tx_thread_create(&keyboard_app_thread, "Keyborad thread ",
+  if (tx_thread_create(&keyboard_app_thread, "Keyboard thread ",
                        hid_keyboard_thread_entry, 0, pointer,
                        USBX_APP_STACK_SIZE, 30, 30, 1,
                        TX_AUTO_START) != TX_SUCCESS)
   {
-    ret = TX_THREAD_ERROR;
+    return TX_THREAD_ERROR;
   }
 
   /* Allocate the stack for thread.  */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        (USBX_APP_STACK_SIZE * 3), TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Create the cdc_acm_recieve thread.  */
@@ -172,14 +173,14 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
                        pointer, (USBX_APP_STACK_SIZE * 3), 30, 30, 0,
                        TX_AUTO_START) != TX_SUCCESS)
   {
-    ret = TX_THREAD_ERROR;
+    return TX_THREAD_ERROR;
   }
 
   /* Allocate the stack for thread .  */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        (USBX_APP_STACK_SIZE * 2), TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Create the cdc_acm_send thread.  */
@@ -188,29 +189,29 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
                        (USBX_APP_STACK_SIZE * 2), 30, 30, 0,
                        TX_AUTO_START) != TX_SUCCESS)
   {
-    ret = TX_THREAD_ERROR;
+    return TX_THREAD_ERROR;
   }
 
   /* Allocate Memory for the Queue */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        APP_QUEUE_SIZE * sizeof(ULONG), TX_NO_WAIT) != TX_SUCCESS)
   {
-    ret = TX_POOL_ERROR;
+    return TX_POOL_ERROR;
   }
 
   /* Create the MsgQueue */
   if (tx_queue_create(&ux_app_MsgQueue, "Message Queue app", TX_1_ULONG, 
                       pointer, APP_QUEUE_SIZE * sizeof(ULONG)) != TX_SUCCESS)
   {
-    ret = TX_QUEUE_ERROR;
+    return TX_QUEUE_ERROR;
   }
 
   /* Create the event flags group. */
   if (tx_event_flags_create(&ux_app_EventFlag, "Event Flag") != TX_SUCCESS)
   {
-    ret = TX_GROUP_ERROR;
+    return TX_GROUP_ERROR;
   }
-
+#endif
   /* USER CODE END MX_USBX_Host_Init */
 
   return ret;
@@ -228,7 +229,7 @@ void  usbx_app_thread_entry(ULONG arg)
   MX_USB_Host_Init();
 
   /* Start Application Message */
-  USBH_UsrLog(" **** USB OTG FS composite Host **** \n");
+  USBH_UsrLog(" **** USB OTG HS composite Host **** \n");
 
   USBH_UsrLog("USB Host library started.\n");
 
@@ -601,35 +602,35 @@ static UINT MX_USB_Host_Init(void)
   /* The code below is required for installing the host portion of USBX. */
   if (ux_host_stack_initialize(ux_host_event_callback) != UX_SUCCESS)
   {
-    ret = UX_ERROR;
+    return UX_ERROR;
   }
 
   /* Register hid class. */
   if (ux_host_stack_class_register(_ux_system_host_class_hid_name,
                                    _ux_host_class_hid_entry) != UX_SUCCESS)
   {
-    ret = UX_ERROR;
+    return UX_ERROR;
   }
 
   /* Register HID Mouse client */
   if (ux_host_class_hid_client_register(_ux_system_host_class_hid_client_mouse_name,
                                         ux_host_class_hid_mouse_entry) != UX_SUCCESS)
   {
-    ret = UX_ERROR;
+    return UX_ERROR;
   }
 
   /* Register HID Mouse client */
   if (ux_host_class_hid_client_register(_ux_system_host_class_hid_client_keyboard_name,
                                         ux_host_class_hid_keyboard_entry) != UX_SUCCESS)
   {
-    ret = UX_ERROR;
+    return UX_ERROR;
   }
 
   /* Register cdc_acm class. */
   if ((ux_host_stack_class_register(_ux_system_host_class_cdc_acm_name,
                                     _ux_host_class_cdc_acm_entry)) != UX_SUCCESS)
   {
-    ret = UX_ERROR;
+    return UX_ERROR;
   }
 
   /* Initialize the LL driver */
@@ -640,7 +641,7 @@ static UINT MX_USB_Host_Init(void)
                                  _ux_hcd_stm32_initialize, USB_OTG_HS_PERIPH_BASE,
                                  (ULONG)&hhcd_USB_OTG_HS) != UX_SUCCESS)
   {
-    ret = UX_ERROR;
+    return UX_ERROR;
   }
 
   /* Drive vbus */
@@ -677,7 +678,7 @@ static void USBH_DriverVBUS(uint8_t state)
     /* Drive high Charge pump */
     /* Add IOE driver control */
     /* USER CODE BEGIN DRIVE_HIGH_CHARGE_FOR_HS */
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOH, GPIO_PIN_5, GPIO_PIN_SET);
     /* USER CODE END DRIVE_HIGH_CHARGE_FOR_HS */
   }
   else
@@ -685,7 +686,7 @@ static void USBH_DriverVBUS(uint8_t state)
     /* Drive low Charge pump */
     /* Add IOE driver control */
     /* USER CODE BEGIN DRIVE_LOW_CHARGE_FOR_HS */
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOH, GPIO_PIN_5, GPIO_PIN_RESET);
     /* USER CODE END DRIVE_LOW_CHARGE_FOR_HS */
   }
 

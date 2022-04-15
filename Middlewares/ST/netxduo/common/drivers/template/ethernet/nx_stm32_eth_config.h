@@ -1,4 +1,3 @@
-
 /**************************************************************************/
 /*                                                                        */
 /*       Copyright (c) Microsoft Corporation. All rights reserved.        */
@@ -31,6 +30,8 @@
 
 /* Exported constants --------------------------------------------------------*/
 
+/* This define enables the call of nx_eth_init() from the interface layer.*/
+/* #define NX_DRIVER_ETH_HW_IP_INIT */
 
 /* USER CODE BEGIN EC */
 
@@ -45,11 +46,15 @@
 
 extern ETH_HandleTypeDef heth;
 
+#ifdef NX_DRIVER_ETH_HW_IP_INIT
 extern void MX_ETH_Init(void);
+#endif /* #define NX_DRIVER_ETH_HW_IP_INIT */
 
 #define eth_handle  heth
 
+#ifdef NX_DRIVER_ETH_HW_IP_INIT
 #define nx_eth_init MX_ETH_Init
+#endif /* #define NX_DRIVER_ETH_HW_IP_INIT */
 
 /* Add Phy Ethernet specific defines */
 

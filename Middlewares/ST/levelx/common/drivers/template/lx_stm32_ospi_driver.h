@@ -81,6 +81,7 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 INT lx_stm32_ospi_lowlevel_init(UINT instance);
+INT lx_stm32_ospi_lowlevel_deinit(UINT instance);
 
 INT lx_stm32_ospi_get_status(UINT instance);
 INT lx_stm32_ospi_get_info(UINT instance, ULONG *block_size, ULONG *total_blocks);
@@ -94,7 +95,6 @@ INT lx_stm32_ospi_is_block_erased(UINT instance, ULONG block);
 UINT lx_ospi_driver_system_error(UINT error_code);
 
 UINT lx_stm32_ospi_initialize(LX_NOR_FLASH *nor_flash);
-
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

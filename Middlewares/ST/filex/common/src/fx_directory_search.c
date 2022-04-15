@@ -43,7 +43,7 @@ FX_LOCAL_PATH_SETUP
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_directory_search                                PORTABLE C      */
-/*                                                           6.1.7        */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -94,6 +94,9 @@ FX_LOCAL_PATH_SETUP
 /*                                            added check for             */
 /*                                            volume label,               */
 /*                                            resulting in version 6.1.7  */
+/*  01-31-2022     William E. Lamie         Modified comment(s), and      */
+/*                                            fixed path compare,         */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_directory_search(FX_MEDIA *media_ptr, CHAR *name_ptr, FX_DIR_ENTRY *entry_ptr,
@@ -299,9 +302,6 @@ USHORT        hash = 0;
                         beta =  '/';
                     }
 
-                    /* Move to next character.  */
-                    v++;
-
                     /* Is the name the same?  */
                     if (alpha != beta)
                     {
@@ -309,6 +309,9 @@ USHORT        hash = 0;
                         /* Break out of loop!  */
                         break;
                     }
+
+                    /* Move to next character.  */
+                    v++;
                 }
 
                 /* Determine if we don't have a match...  The relative path must be exhausted. */

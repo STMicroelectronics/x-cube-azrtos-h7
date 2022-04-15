@@ -24,7 +24,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    ux_user.h                                           PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.9.       */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -43,7 +43,29 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
-/*                                                                        */
+/*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            resulting in version 6.1    */
+/*  02-02-2021     Xiuwen Cai               Modified comment(s), added    */
+/*                                            compile option for using    */
+/*                                            packet pool from NetX,      */
+/*                                            resulting in version 6.1.4  */
+/*  04-02-2021     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added DFU_UPLOAD option,    */
+/*                                            added macro to enable       */
+/*                                            device bi-dir-endpoints,    */
+/*                                            added macro to disable CDC- */
+/*                                            ACM transmission support,   */
+/*                                            resulting in version 6.1.6  */
+/*  06-02-2021     Xiuwen Cai               Modified comment(s), added    */
+/*                                            transfer timeout value      */
+/*                                            options,                    */
+/*                                            resulting in version 6.1.7  */
+/*  08-02-2021     Wen Wang                 Modified comment(s),          */
+/*                                            fixed spelling error,       */
+/*                                            resulting in version 6.1.8  */
+/*  10-15-2021     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added option for assert,    */
+/*                                            resulting in version 6.1.9  */
 /**************************************************************************/
 
 #ifndef UX_USER_H
@@ -89,6 +111,7 @@
 
 /* Defined, this value is the maximum number of classes in the device stack that can be loaded by
    USBX.  */
+
 #define UX_MAX_SLAVE_CLASS_DRIVER                         1
 
 /* Defined, this value is the maximum number of interfaces in the device framework.  */
@@ -344,5 +367,12 @@
 
 /*#define UX_TRACE_INSERT_MACROS*/
 
+/* Defined, this macro enables device bi-directional endpoint support. */
+
+#define UX_DEVICE_BIDIRECTIONAL_ENDPOINT_SUPPORT
+
+/* Defined, this macro disables CDC ACM non-blocking transmission support. */
+
+#define UX_DEVICE_CLASS_CDC_ACM_TRANSMISSION_DISABLE
 #endif
 

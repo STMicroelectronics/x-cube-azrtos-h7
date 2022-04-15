@@ -1,3 +1,14 @@
+/**************************************************************************/
+/*                                                                        */
+/*       Copyright (c) Microsoft Corporation. All rights reserved.        */
+/*                                                                        */
+/*       This software is licensed under the Microsoft Software License   */
+/*       Terms for Microsoft Azure RTOS. Full text of the license can be  */
+/*       found in the LICENSE file at https://aka.ms/AzureRTOS_EULA       */
+/*       and in the root directory of this software.                      */
+/*                                                                        */
+/**************************************************************************/
+
 #include "fx_stm32_mmc_driver.h"
 
 /* USER CODE BEGIN  0 */
@@ -6,7 +17,7 @@
 
 /**
 * @brief Initializes the MMC IP instance
-* @param uINT Instance MMC instance to initialize
+* @param UINT Instance MMC instance to initialize
 * @retval 0 on success error value otherwise
 */
 INT fx_stm32_mmc_init(UINT instance)
@@ -21,7 +32,7 @@ INT fx_stm32_mmc_init(UINT instance)
 
 /**
 * @brief Deinitializes the MMC IP instance
-* @param uINT Instance MMC instance to deinitialize
+* @param UINT Instance MMC instance to deinitialize
 * @retval 0 on success error value otherwise
 */
 INT fx_stm32_mmc_deinit(UINT instance)
@@ -36,24 +47,23 @@ INT fx_stm32_mmc_deinit(UINT instance)
 
 /**
 * @brief Check the MMC IP status.
-* @param uINT Instance MMC instance to check
+* @param UINT Instance MMC instance to check
 * @retval 0 when ready 1 when busy
 */
 INT fx_stm32_mmc_get_status(UINT instance)
 {
   INT ret = 0;
 /* USER CODE BEGIN  GET_STATUS */
-  
+
 /* USER CODE END  GET_STATUS */
   return ret;
 }
 
 /**
 * @brief Read Data from the MMC device into a buffer.
-* @param uINT *Buffer buffer into which the data is to be read.
-* @param uINT StartBlock the first block to start reading from.
-* @param uINT NbrOfBlocks total number of blocks to read.
-* @retval 0 on success error code otherwise
+* @param UINT *Buffer buffer into which the data is to be read.
+* @param UINT StartBlock the first block to start reading from.
+* @param UINT NbrOfBlocks total number of blocks to read.
 */
 INT fx_stm32_mmc_read_blocks(UINT instance, UINT *buffer, UINT start_block, UINT total_blocks)
 {
@@ -65,9 +75,9 @@ INT fx_stm32_mmc_read_blocks(UINT instance, UINT *buffer, UINT start_block, UINT
 }
 /**
 * @brief Write data buffer into the MMC device.
-* @param uINT *Buffer buffer .to write into the MMC device.
-* @param uINT StartBlock the first block to start writing from.
-* @param uINT NbrOfBlocks total number of blocks to write.
+* @param UINT *Buffer buffer .to write into the MMC device.
+* @param UINT StartBlock the first block to start writing from.
+* @param UINT NbrOfBlocks total number of blocks to write.
 * @retval 0 on success error code otherwise
 */
 
@@ -78,8 +88,8 @@ INT fx_stm32_mmc_write_blocks(UINT instance, UINT *buffer, UINT start_block, UIN
 
 /* USER CODE END  WRITE_BLOCKS */
   return ret;
-}
 
+}
 
 /* USER CODE BEGIN  1 */
 

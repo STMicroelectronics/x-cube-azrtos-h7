@@ -37,6 +37,7 @@ extern "C" {
 #include "ux_host_class_hid.h"
 #include "ux_host_class_hid_mouse.h"
 #include "ux_host_class_hid_keyboard.h"
+#include "app_azure_rtos_config.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -63,13 +64,8 @@ extern "C" {
 UINT MX_USBX_Host_Init(VOID *memory_ptr);
 
 /* USER CODE BEGIN EFP */
-UINT  MX_USB_Host_Init(void);
-void  USBH_DriverVBUS(uint8_t state);
-void  usbx_app_thread_entry(ULONG arg);
 void  hid_mouse_thread_entry(ULONG arg);
 void  hid_keyboard_thread_entry(ULONG arg);
-VOID  ux_host_error_callback(UINT system_level, UINT system_context, UINT error_code);
-UINT  ux_host_event_callback(ULONG event, UX_HOST_CLASS *p_host_class, VOID *p_instance);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

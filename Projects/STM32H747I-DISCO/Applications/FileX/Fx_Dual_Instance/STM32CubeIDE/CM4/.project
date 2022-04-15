@@ -171,9 +171,9 @@
 			<locationURI>PARENT-2-PROJECT_LOC/CM4/Core/Src/stm32h7xx_it.c</locationURI>
 		</link>
 		<link>
-			<name>Application/User/Core/tx_initialize_low_level.s</name>
+			<name>Application/User/Core/tx_initialize_low_level.S</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/CM4/Core/Src/tx_initialize_low_level.s</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/CM4/Core/Src/tx_initialize_low_level.S</locationURI>
 		</link>
 		<link>
 			<name>Drivers/BSP/Components/mt25tl01g.c</name>
@@ -184,11 +184,6 @@
 			<name>Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery_qspi.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery_qspi.c</locationURI>
 		</link>
 		<link>
 			<name>Application/User/AZURE_RTOS/App/app_azure_rtos.c</name>

@@ -187,9 +187,9 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/stm32h7xx_it.c</locationURI>
 		</link>
 		<link>
-			<name>Application/User/Core/tx_initialize_low_level.s</name>
+			<name>Application/User/Core/tx_initialize_low_level.S</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/tx_initialize_low_level.s</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/tx_initialize_low_level.S</locationURI>
 		</link>
 		<link>
 			<name>Drivers/BSP/Components/mfxstm32l152.c</name>

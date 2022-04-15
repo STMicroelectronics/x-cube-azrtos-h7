@@ -55,6 +55,7 @@ void DebugMon_Handler(void);
 void TIM6_DAC_IRQHandler(void);
 void FPU_IRQHandler(void);
 void OCTOSPI1_IRQHandler(void);
+void MDMA_IRQHandler(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
@@ -64,4 +65,3 @@ void OCTOSPI1_IRQHandler(void);
 #endif
 
 #endif /* __STM32H7xx_IT_H */
-

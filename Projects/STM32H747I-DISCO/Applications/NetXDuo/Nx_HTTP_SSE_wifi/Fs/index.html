@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SSE Example with STM32</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    :root {
+        --dark-blue: #03234b;
+        --yellow: #ffd200;
+        --light-blue: #3cb4e6;
+        --background-margin: 6vw;
+        --spin-border: 0.25em; }
+    body {
+        color: var(--dark-blue);
+        font-family: arial, helvetica, sans-serif;
+        font-size:2vw;
+        background: #ffffff linear-gradient(var(--yellow), var(--yellow)) repeat-y left top;
+        background-size: var(--background-margin);
+        margin: 0;
+        min-height: 100vh; }
+    div {
+        margin-left: calc(var(--background-margin) + 2vw); }
+    header, footer {
+        background: var(--dark-blue);
+        color: #ffffff;
+        margin: 0; }
+    header {
+        height: 8vh;
+        white-space: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden; }
+    #header_logo {
+        height: 8vh; }
+    footer {
+        height: 4vh;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: 1vh; }
+    a:link {
+        color: var(--light-blue);
+        text-decoration: none; }
+    a:visited {
+        color: var(--pink); }
+    a:hover, a:focus {
+        text-decoration: underline; }
+  @keyframes spinner-donut-anim {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); } }
+  .spinner {
+    display: inline-block;
+    margin: 0.25em;
+    border: var(--spin-border) solid #dddddd;
+    border-left: var(--spin-border) solid var(--dark-blue);
+    border-radius: 50%;
+    width: 1em;
+    height: 1em;
+    animation: spinner-donut-anim 1.4s linear infinite; }
+</style>
+</head>
+<body>
+<header><img src="ST_logo_2020_white_no_tagline.png" id="header_logo"></header>
+<div>
+<h1><div class="spinner" id="spin"></div>Live thread list</h1>
+<pre id="eventString"></pre>
+</div>
+<footer></footer>
+</body>
+<script>
+    if(typeof(EventSource)!=="undefined"){
+      var source=new EventSource("/");
+      source.onmessage=function(event){
+      document.getElementById("eventString").innerHTML=event.data + "";
+      document.getElementById('spin').style.borderLeft="var(--spin-border) solid var(--light-blue)";
+      setTimeout(function(){document.getElementById('spin').style.borderLeft="var(--spin-border) solid var(--dark-blue)";},500);
+      };
+    }else{
+      document.getElementById("eventString").innerHTML="Sorry, your browser does not support server-sent events...";
+      /*window.location = "date-event.php";*/
+    }
+</script>
+</html>

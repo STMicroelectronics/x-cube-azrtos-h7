@@ -53,13 +53,6 @@ int32_t nx_eth_phy_init(void)
         ret = ETH_PHY_STATUS_OK;
     }
 
-#ifdef STM32_ETH_HAL_LEGACY
-    if(eth_handle.Init.AutoNegotiation == ETH_AUTONEGOTIATION_ENABLE)
-    {
-      LAN8742_StartAutoNego(&LAN8742);
-    }
-#endif
-
     return ret;
 }
 

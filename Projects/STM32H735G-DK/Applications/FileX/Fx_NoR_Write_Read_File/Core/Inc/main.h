@@ -57,7 +57,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-void   MX_OCTOSPI1_Init(void);
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
@@ -67,4 +66,3 @@ void   MX_OCTOSPI1_Init(void);
 #endif
 
 #endif /* __MAIN_H */
-

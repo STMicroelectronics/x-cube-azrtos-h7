@@ -182,9 +182,9 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/stm32h7xx_it.c</locationURI>
 		</link>
 		<link>
-			<name>Application/User/Core/tx_initialize_low_level.s</name>
+			<name>Application/User/Core/tx_initialize_low_level.S</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/tx_initialize_low_level.s</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/tx_initialize_low_level.S</locationURI>
 		</link>
 		<link>
 			<name>Application/User/Core/usart.c</name>
@@ -2207,6 +2207,11 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_system_initialize.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/USBX/USB/USBX/CoreSystem/ux_system_tasks_run.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_system_tasks_run.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/USBX/USB/USBX/CoreSystem/ux_system_uninitialize.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_system_uninitialize.c</locationURI>
@@ -2492,6 +2497,11 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_cbw_initialize.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_check_run.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_check_run.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_configure.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_configure.c</locationURI>
@@ -2532,6 +2542,11 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_entry.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_lock.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_lock.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_max_lun_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_max_lun_get.c</locationURI>
@@ -2545,6 +2560,11 @@
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_media_characteristics_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_media_characteristics_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_media_check.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_media_check.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_media_format_capacity_get.c</name>
@@ -2587,6 +2607,11 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_partition_read.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_read_write_run.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_read_write_run.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_request_sense.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_request_sense.c</locationURI>
@@ -2600,6 +2625,11 @@
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_start_stop.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_start_stop.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_tasks_run.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_tasks_run.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_thread_entry.c</name>
@@ -2625,6 +2655,11 @@
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_transport_cbi.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_transport_cbi.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_transport_run.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_transport_run.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_unit_ready_test.c</name>
@@ -3047,6 +3082,11 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_role_swap.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_tasks_run.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_tasks_run.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_transfer_request.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_transfer_request.c</locationURI>
@@ -3055,6 +3095,11 @@
 			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_transfer_request_abort.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_transfer_request_abort.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_transfer_run.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_host_stack_transfer_run.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host CoreStack/ux_host_stack_uninitialize.c</name>

@@ -39,7 +39,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_utility_exFAT_system_area_checksum_verify       PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -74,6 +74,9 @@
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Bhupendra Naphade        Modified comment(s), replaced */
+/*                                            sector size constant,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_utility_exFAT_system_area_checksum_verify(FX_MEDIA *media_ptr, UCHAR *sector_buffer,
@@ -106,7 +109,7 @@ ULONG counter;
     }
 
     /* Loop to calculate Boot Sector checksum.  */
-    for (temp = 0; temp < FX_BOOT_SECTOR_SIZE; temp++)
+    for (temp = 0; temp < media_ptr -> fx_media_bytes_per_sector; temp++)
     {
 
         /* Check if it is VolumeFlags or PercentInUse.  */
@@ -153,8 +156,8 @@ ULONG counter;
         media_ptr -> fx_media_driver_logical_sector++;
 
         /* Check Sector Signature.  */
-        if (((sector_buffer[FX_SIG_OFFSET + 0] != FX_SIG_BYTE_1) ||
-             (sector_buffer[FX_SIG_OFFSET + 1] != FX_SIG_BYTE_2)) &&
+        if (((sector_buffer[media_ptr -> fx_media_bytes_per_sector - 2] != FX_SIG_BYTE_1) ||
+             (sector_buffer[media_ptr -> fx_media_bytes_per_sector - 1] != FX_SIG_BYTE_2)) &&
             (FX_EXFAT_FAT_OEM_PARAM_OFFSET > temp))
         {
 
@@ -166,7 +169,7 @@ ULONG counter;
         }
 
         /* Loop to calculate the checksum.  */
-        for (counter = 0; counter < FX_BOOT_SECTOR_SIZE; counter++)
+        for (counter = 0; counter < media_ptr -> fx_media_bytes_per_sector; counter++)
         {
 
             /* Calculate the checksum using the algorithm specified in the specification.  */
@@ -190,7 +193,7 @@ ULONG counter;
     }
 
     /* Loop to check sector content.  */
-    for (counter = 0; counter < FX_BOOT_SECTOR_SIZE; counter += sizeof(ULONG))
+    for (counter = 0; counter < media_ptr -> fx_media_bytes_per_sector; counter += sizeof(ULONG))
     {
 
         /* Read a 32 bit value from sector buffer.  */

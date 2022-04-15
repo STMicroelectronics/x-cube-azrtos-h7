@@ -1,12 +1,13 @@
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    MMC/MMC_ReadWrite_DMA/CM7/Inc/stm32h7xx_hal_conf.h
+  * @file    stm32h7xx_hal_conf.h
   * @author  MCD Application Team
   * @brief   HAL configuration file for Cortex-M7. 
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2019-2021 STMicroelectronics.
+  * Copyright (c) 2017 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -15,7 +16,7 @@
   *
   ******************************************************************************
   */
-
+/* USER CODE END Header */
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32H7xx_HAL_CONF_H
 #define __STM32H7xx_HAL_CONF_H

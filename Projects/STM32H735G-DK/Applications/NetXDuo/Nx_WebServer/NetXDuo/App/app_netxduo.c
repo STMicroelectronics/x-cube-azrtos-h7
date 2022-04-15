@@ -28,6 +28,7 @@
 #include   "nx_web_http_server.h"
 #include   "app_filex.h"
 #include   "tx_thread.h"
+#include   "nx_stm32_eth_config.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -53,11 +54,11 @@
 TX_THREAD AppMainThread;
 TX_THREAD AppServerThread;
 TX_THREAD LedThread;
+TX_THREAD AppLinkThread;
 
 void LedThread_Entry(ULONG thread_input);
 
 TX_SEMAPHORE Semaphore;
-TX_QUEUE  MsgQueueOne;
 
 /* Define NetX global data structures. */
 
@@ -103,6 +104,7 @@ ALIGN_32BYTES (uint32_t DataBuffer[512]);
 /* HTTP server thread entry */
 static void  App_Main_Thread_Entry(ULONG thread_input);
 static void  nx_server_thread_entry(ULONG thread_input);
+static VOID App_Link_Thread_Entry(ULONG thread_input);
 
 /* DHCP state change notify callback */
 static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr);
@@ -309,6 +311,21 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
     return NX_NOT_ENABLED;
   }
 
+  /* Allocate the memory for Link thread   */
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,2 *  DEFAULT_MEMORY_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+  {
+    return TX_POOL_ERROR;
+  }
+
+  /* create the Link thread */
+  ret = tx_thread_create(&AppLinkThread, "App Link Thread", App_Link_Thread_Entry, 0, pointer, 2 * DEFAULT_MEMORY_SIZE,
+                         LINK_PRIORITY, LINK_PRIORITY, TX_NO_TIME_SLICE, TX_AUTO_START);
+
+  if (ret != TX_SUCCESS)
+  {
+    return NX_NOT_ENABLED;
+  }
+
   /* Create the DHCP instance. */
   ret = nx_dhcp_create(&DHCPClient, &IpInstance, "dhcp_client");
   if (ret != NX_SUCCESS)
@@ -321,19 +338,6 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
   {
     Error_Handler();
   }
-
-    /* Allocate the MsgQueueOne.  */
-  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, DEFAULT_MEMORY_SIZE, TX_NO_WAIT) != TX_SUCCESS)
-  {
-    ret = TX_POOL_ERROR;
-  }
-  
-  /* Create the MsgQueueOne */
-  if (tx_queue_create(&MsgQueueOne, "Message Queue One", TX_1_ULONG, pointer, DEFAULT_MEMORY_SIZE) != TX_SUCCESS)
-  {
-    ret = TX_QUEUE_ERROR;
-  }
-  
   
   ret = tx_semaphore_create(&Semaphore, "App Semaphore", 0);
   if (ret != TX_SUCCESS)
@@ -574,4 +578,60 @@ void LedThread_Entry(ULONG thread_input)
   }
 }
 
+/**
+* @brief  Link thread entry
+* @param thread_input: ULONG thread parameter
+* @retval none
+*/
+static VOID App_Link_Thread_Entry(ULONG thread_input)
+{
+  ULONG actual_status;
+  UINT linkdown = 0, status;
+
+  while(1)
+  {
+    /* Get Physical Link stackavailtus. */
+    status = nx_ip_interface_status_check(&IpInstance, 0, NX_IP_LINK_ENABLED,
+                                      &actual_status, 10);
+
+    if(status == NX_SUCCESS)
+    {
+      if(linkdown == 1)
+      {
+        linkdown = 0;
+        status = nx_ip_interface_status_check(&IpInstance, 0, NX_IP_ADDRESS_RESOLVED,
+                                      &actual_status, 10);
+        if(status == NX_SUCCESS)
+        {
+          /* The network cable is connected again. */
+          printf("The network cable is connected again.\n");
+          /* Print Webserver Client is available again. */
+          printf("Webserver Client is available again.\n");
+        }
+        else
+        {
+          /* The network cable is connected. */
+          printf("The network cable is connected.\n");
+          /* Send command to Enable Nx driver. */
+          nx_ip_driver_direct_command(&IpInstance, NX_LINK_ENABLE,
+                                      &actual_status);
+          /* Restart DHCP Client. */
+          nx_dhcp_stop(&DHCPClient);
+          nx_dhcp_start(&DHCPClient);
+        }
+      }
+    }
+    else
+    {
+      if(0 == linkdown)
+      {
+        linkdown = 1;
+        /* The network cable is not connected. */
+        printf("The network cable is not connected.\n");
+      }
+    }
+
+    tx_thread_sleep(NX_ETH_CABLE_CONNECTION_CHECK_PERIOD);
+  }
+}
 /* USER CODE END 1 */

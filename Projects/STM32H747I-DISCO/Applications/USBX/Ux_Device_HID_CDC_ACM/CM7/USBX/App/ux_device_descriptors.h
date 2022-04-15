@@ -309,7 +309,7 @@ uint8_t *USBD_Get_Device_HID_MOUSE_ReportDesc(void);
 #define USBD_STRING_FRAMEWORK_MAX_LENGTH               256U
 
 /* Device HID Class */
-#define USBD_HID_EPIN_ADDR                            0x84U
+#define USBD_HID_EPIN_ADDR                            0x83U
 #define USBD_HID_EPIN_FS_MPS                          4U
 #define USBD_HID_EPIN_HS_MPS                          4U
 #define USBD_HID_EPIN_FS_BINTERVAL                    5U
@@ -319,11 +319,8 @@ uint8_t *USBD_Get_Device_HID_MOUSE_ReportDesc(void);
 #define USBD_CDCACM_EPINCMD_ADDR                      0x82U
 #define USBD_CDCACM_EPINCMD_FS_MPS                    8U
 #define USBD_CDCACM_EPINCMD_HS_MPS                    8U
-#define USBD_CDCACM_EPIN_ADDR                         0x83U
+#define USBD_CDCACM_EPIN_ADDR                         0x81U
 #define USBD_CDCACM_EPOUT_ADDR                        0x01U
-#if (USBD_CDCACM_EPIN_ADDR == (USBD_CDCACM_EPOUT_ADDR & 0x0FU))
-#error Address endpoint IN shall be different form endpoint OUT.
-#endif
 #define USBD_CDCACM_EPIN_FS_MPS                       64U
 #define USBD_CDCACM_EPIN_HS_MPS                       512U
 #define USBD_CDCACM_EPOUT_FS_MPS                      64U

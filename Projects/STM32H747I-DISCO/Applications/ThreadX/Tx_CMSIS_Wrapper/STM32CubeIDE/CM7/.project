@@ -55,9 +55,9 @@
 			<locationURI>PARENT-2-PROJECT_LOC/CM7/Src/stm32h7xx_it.c</locationURI>
 		</link>
 		<link>
-			<name>Application/User/tx_initialize_low_level.s</name>
+			<name>Application/User/tx_initialize_low_level.S</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/CM7/Src/tx_initialize_low_level.s</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/CM7/Src/tx_initialize_low_level.S</locationURI>
 		</link>
 		<link>
 			<name>Drivers/CMSIS/system_stm32h7xx_dualcore_boot_cm4_cm7.c</name>

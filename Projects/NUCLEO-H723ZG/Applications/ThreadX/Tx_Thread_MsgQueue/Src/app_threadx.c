@@ -153,7 +153,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   return ret;
 }
 
-/**
+  /**
   * @brief  MX_ThreadX_Init
   * @param  None
   * @retval None

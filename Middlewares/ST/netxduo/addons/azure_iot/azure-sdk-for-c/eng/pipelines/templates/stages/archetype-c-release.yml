@@ -11,13 +11,15 @@ stages:
         environment: github
 
         pool:
-          vmImage: windows-2019
+          name: azsdk-pool-mms-win-2019-general
+          vmImage: MMS2019
 
         strategy:
           runOnce:
             deploy:
               steps:
                 - checkout: self
+                - template: /eng/common/pipelines/templates/steps/retain-run.yml
                 - task: Powershell@2
                   inputs:
                     filePath: $(Build.SourcesDirectory)/eng/common/scripts/Verify-ChangeLog.ps1
@@ -35,14 +37,15 @@ stages:
                     RepoId: $(Build.Repository.Name)
                     WorkingDirectory: $(Build.SourcesDirectory)
                     ScriptDirectory: $(Build.SourcesDirectory)/eng/common/scripts/
-
+                
       - deployment: PublishDocs
         displayName: Publish Docs to GitHub pages
         condition: ne(variables['Skip.PublishDocs'], 'true')
         environment: githubio
 
         pool:
-          vmImage: windows-2019
+          name: azsdk-pool-mms-win-2019-general
+          vmImage: MMS2019
 
         strategy:
           runOnce:
@@ -67,7 +70,8 @@ stages:
         environment: github
 
         pool:
-          vmImage: windows-2019
+          name: azsdk-pool-mms-win-2019-general
+          vmImage: MMS2019
 
         strategy:
           runOnce:
@@ -83,3 +87,4 @@ stages:
                     PRBranchName: increment-sdk-version-$(Build.BuildId)
                     CommitMsg: "Increment sdk version after release of C SDK"
                     PRTitle: "Increment version for C SDK releases"
+                    PRLabels: "auto-merge"

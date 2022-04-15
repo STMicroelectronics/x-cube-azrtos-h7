@@ -35,7 +35,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_host_class_video_frame_parameters_set           PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -64,8 +64,8 @@
 /*    _ux_utility_descriptor_parse          Parse descriptor              */ 
 /*    _ux_utility_memory_allocate           Allocate memory block         */
 /*    _ux_utility_memory_free               Release memory block          */
-/*    _ux_utility_semaphore_get             Get semaphore                 */
-/*    _ux_utility_semaphore_put             Put semaphore                 */
+/*    _ux_host_semaphore_get                Get semaphore                 */
+/*    _ux_host_semaphore_put                Put semaphore                 */
 /*    _ux_utility_long_get                  Read 32-bit value             */
 /*                                                                        */ 
 /*  CALLED BY                                                             */ 
@@ -79,6 +79,12 @@
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  10-15-2021     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            validated max payload size, */
+/*                                            resulting in version 6.1.9  */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            refined macros names,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_host_class_video_frame_parameters_set(UX_HOST_CLASS_VIDEO *video, ULONG frame_format, ULONG width, ULONG height, ULONG frame_interval)
@@ -211,7 +217,7 @@ ULONG                                           max_payload_size;
         return(UX_HOST_CLASS_VIDEO_PARAMETER_ERROR);
 
     /* Protect thread reentry to this instance.  */
-    status =  _ux_utility_semaphore_get(&video -> ux_host_class_video_semaphore, UX_WAIT_FOREVER);
+    status =  _ux_host_semaphore_get(&video -> ux_host_class_video_semaphore, UX_WAIT_FOREVER);
 
     /* We need to get the default control endpoint transfer request pointer.  */
     control_endpoint =  &video -> ux_host_class_video_device -> ux_device_control_endpoint;
@@ -226,7 +232,7 @@ ULONG                                           max_payload_size;
     {
 
         /* Unprotect thread reentry to this instance.  */
-        status =  _ux_utility_semaphore_put(&video -> ux_host_class_video_semaphore);
+        status =  _ux_host_semaphore_put(&video -> ux_host_class_video_semaphore);
 
         /* Return error.  */
         return(UX_MEMORY_INSUFFICIENT);
@@ -268,11 +274,28 @@ ULONG                                           max_payload_size;
     /* Get the max payload transfer size returned from video device.  */
     max_payload_size = _ux_utility_long_get(control_buffer + UX_HOST_CLASS_VIDEO_PROBE_COMMIT_MAX_PAYLOAD_TRANSFER_SIZE);
 
+    /* Validate if the payload size is inside isochronouse packet payload.  */
+    if (max_payload_size == 0)
+        status = UX_HOST_CLASS_VIDEO_PARAMETER_ERROR;
+    else
+    {
+        if (video -> ux_host_class_video_device -> ux_device_speed != UX_HIGH_SPEED_DEVICE)
+        {
+            if (max_payload_size > 1023)
+                status = UX_HOST_CLASS_VIDEO_PARAMETER_ERROR;
+        }
+        else
+        {
+            if (max_payload_size > (1024 * 3))
+                status = UX_HOST_CLASS_VIDEO_PARAMETER_ERROR;
+        }
+    }
+
     /* Free all used resources.  */
     _ux_utility_memory_free(control_buffer);
 
     /* Unprotect thread reentry to this instance.  */
-    _ux_utility_semaphore_put(&video -> ux_host_class_video_semaphore);
+    _ux_host_semaphore_put(&video -> ux_host_class_video_semaphore);
 
     /* Check the transfer status.  */
     if (status == UX_SUCCESS)

@@ -24,7 +24,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    fx_user.h                                           PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.5        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -43,6 +43,14 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
+/*  09-30-2020     William E. Lamie         Modified comment(s), and      */
+/*                                            added product constants     */
+/*                                            to enable code              */
+/*                                            size optimization,          */
+/*                                            resulting in version 6.1    */
+/*  03-02-2021     William E. Lamie         Modified comment(s), and      */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.5  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -163,5 +171,37 @@
    so the default value for this constant is 1000.  */
 
 /* #define FX_UPDATE_RATE_IN_TICKS         1000 */
+
+/* If defined, cache is disabled.  */
+
+/*#define FX_DISABLE_CACHE   */
+
+/* If defined, file close is disabled.  */
+
+/* #define FX_DISABLE_FILE_CLOSE */
+
+/* If defined, fast open is disabled.  */
+
+/* #define FX_DISABLE_FAST_OPEN */
+
+/* If defined, force memory operations are disabled.  */
+
+/* #define FX_DISABLE_FORCE_MEMORY_OPERATION */
+
+/* If defined, build options is disabled.  */
+
+/* #define FX_DISABLE_BUILD_OPTIONS */
+
+/* If defined, one line function is disabled.  */
+
+/* #define FX_DISABLE_ONE_LINE_FUNCTION */
+
+/* If defined, FAT entry refresh is disabled.  */
+
+/* #define FX_DISABLE_FAT_ENTRY_REFRESH */
+
+/* If defined, consecutive detect is disabled.  */
+
+/* #define FX_DISABLE_CONSECUTIVE_DETECT */
 
 #endif
