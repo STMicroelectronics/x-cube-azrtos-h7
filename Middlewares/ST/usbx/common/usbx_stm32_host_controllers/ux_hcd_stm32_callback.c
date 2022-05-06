@@ -219,8 +219,6 @@ UX_TRANSFER         *transfer_request;
         if (ed == UX_NULL)
         {
 
-            /* Disable channel.  */
-            HAL_HCD_HC_Halt(hhcd, chnum);
             return;
         }
 
@@ -231,8 +229,6 @@ UX_TRANSFER         *transfer_request;
         if (transfer_request == UX_NULL)
         {
 
-            /* Disable channel.  */
-            HAL_HCD_HC_Halt(hhcd, chnum);
             return;
         }
 

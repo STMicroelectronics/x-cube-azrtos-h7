@@ -94,8 +94,6 @@ UINT                   endpoint_type;
 
     }
 
-    /* Halt the host channel.  */
-    HAL_HCD_HC_Halt(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel);
 
     /* Wait for the controller to finish the current frame processing.  */
     _ux_utility_delay_ms(1);
