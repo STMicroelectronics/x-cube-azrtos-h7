@@ -3,7 +3,7 @@
   ******************************************************************************
   * @file    ux_device_msc.h
   * @author  MCD Application Team
-  * @brief   USBX Device MSC header file
+  * @brief   USBX Device MSC applicative header file
   ******************************************************************************
   * @attention
   *
@@ -27,10 +27,11 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "ux_api.h"
+#include "ux_device_class_storage.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "stm32h735g_discovery_sd.h"
+#include "main.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -49,16 +50,23 @@ extern "C" {
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
+VOID USBD_STORAGE_Activate(VOID *storage_instance);
+VOID USBD_STORAGE_Deactivate(VOID *storage_instance);
+UINT USBD_STORAGE_Read(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
+                       ULONG number_blocks, ULONG lba, ULONG *media_status);
+UINT USBD_STORAGE_Write(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
+                        ULONG number_blocks, ULONG lba, ULONG *media_status);
+UINT USBD_STORAGE_Flush(VOID *storage_instance, ULONG lun, ULONG number_blocks,
+                        ULONG lba, ULONG *media_status);
+UINT USBD_STORAGE_Status(VOID *storage_instance, ULONG lun, ULONG media_id,
+                         ULONG *media_status);
+UINT USBD_STORAGE_Notification(VOID *storage_instance, ULONG lun, ULONG media_id,
+                               ULONG notification_class, UCHAR **media_notification,
+                               ULONG *media_notification_length);
+ULONG USBD_STORAGE_GetMediaLastLba(VOID);
+ULONG USBD_STORAGE_GetMediaBlocklength(VOID);
 
 /* USER CODE BEGIN EFP */
-
-UINT  STORAGE_Status(VOID *storage, ULONG lun, ULONG media_id, ULONG *media_status);
-
-UINT  STORAGE_Read(VOID *storage, ULONG lun, UCHAR *data_pointer,
-                   ULONG number_blocks, ULONG lba, ULONG *media_status);
-
-UINT  STORAGE_Write(VOID *storage, ULONG lun, UCHAR *data_pointer,
-                    ULONG number_blocks, ULONG lba, ULONG *media_status);
 
 /* USER CODE END EFP */
 
@@ -67,6 +75,17 @@ UINT  STORAGE_Write(VOID *storage, ULONG lun, UCHAR *data_pointer,
 
 /* USER CODE END PD */
 
+#ifndef STORAGE_NUMBER_LUN
+#define STORAGE_NUMBER_LUN   1
+#endif
+
+#ifndef STORAGE_REMOVABLE_FLAG
+#define STORAGE_REMOVABLE_FLAG   0x80U
+#endif
+
+#ifndef STORAGE_READ_ONLY
+#define STORAGE_READ_ONLY    UX_FALSE
+#endif
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */

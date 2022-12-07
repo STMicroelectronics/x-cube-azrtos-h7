@@ -11,27 +11,45 @@
 
 #include "lx_stm32_nand_custom_driver.h"
 
-static UINT  _lx_nand_flash_read_driver(ULONG block, ULONG page, ULONG *destination, ULONG words);
-static UINT  _lx_nand_flash_write_driver(ULONG block, ULONG page, ULONG *source, ULONG words);
-static UINT  _lx_nand_flash_block_erase_driver(ULONG block, ULONG erase_count);
-static UINT  _lx_nand_flash_block_erased_verify_driver(ULONG block);
-static UINT  _lx_nand_flash_page_erased_verify_driver(ULONG block, ULONG page);
-static UINT  _lx_nand_flash_block_status_get_driver(ULONG block, UCHAR *bad_block_byte);
-static UINT  _lx_nand_flash_block_status_set_driver(ULONG block, UCHAR bad_block_byte);
-static UINT  _lx_nand_flash_extra_bytes_get_driver(ULONG block, ULONG page, UCHAR *destination, UINT size);
-static UINT  _lx_nand_flash_extra_bytes_set_driver(ULONG block, ULONG page, UCHAR *source, UINT size);
-static UINT  _lx_nand_flash_system_error_driver(UINT error_code, ULONG block, ULONG page);
+static UINT  lx_nand_driver_read(ULONG block, ULONG page, ULONG *destination, ULONG words);
+static UINT  lx_nand_driver_write(ULONG block, ULONG page, ULONG *source, ULONG words);
 
-/* Define NAND flash buffers for LevelX.  */
-ULONG  nand_flash_driver_buffer[WORDS_PER_PHYSICAL_PAGE] = {0};
-ULONG  nand_flash_rw_buffer[WORDS_PER_PHYSICAL_PAGE] = {0};
-UCHAR  Buffer_Spare_Area[SPARE_BYTES_PER_PAGE] = {0};
+static UINT  lx_nand_driver_block_erase(ULONG block, ULONG erase_count);
+static UINT  lx_nand_driver_block_erased_verify(ULONG block);
+static UINT  lx_nand_driver_page_erased_verify(ULONG block, ULONG page);
 
-uint8_t flash_is_initialized = 0;
+static UINT  lx_nand_driver_block_status_get(ULONG block, UCHAR *bad_block_byte);
+static UINT  lx_nand_driver_block_status_set(ULONG block, UCHAR bad_block_byte);
 
-/* Initialize nand flash function*/
-UINT  _lx_nand_flash_initialize_driver(LX_NAND_FLASH *nand_flash)
+static UINT  lx_nand_driver_extra_bytes_get(ULONG block, ULONG page, UCHAR *destination, UINT size);
+static UINT  lx_nand_driver_extra_bytes_set(ULONG block, ULONG page, UCHAR *source, UINT size);
+
+static UINT  lx_nand_driver_system_error(UINT error_code, ULONG block, ULONG page);
+
+/* USER CODE BEGIN 0 */
+UINT  _lx_nand_flash_erase_all_driver(VOID);
+
+static uint8_t flash_is_initialized = 0;
+static ULONG  nand_flash_rw_buffer[WORDS_PER_PHYSICAL_PAGE] = {0};
+static UCHAR  Buffer_Spare_Area[SPARE_BYTES_PER_PAGE] = {0};
+
+/* USER CODE END 0 */
+
+#ifndef WORDS_PER_PHYSICAL_PAGE
+#define WORDS_PER_PHYSICAL_PAGE 512
+#endif
+
+ULONG  nand_flash_buffer[WORDS_PER_PHYSICAL_PAGE];
+
+UINT lx_stm32_nand_custom_driver_initialize(LX_NAND_FLASH *nand_flash)
 {
+  UINT ret = LX_SUCCESS;
+
+  ULONG total_blocks = 0;
+  ULONG pages_per_block = 0;
+  ULONG bytes_per_page = 0;
+
+  /* USER CODE BEGIN Init_Section_0 */
   NAND_IDTypeDef pNAND_ID;
 
   if (!flash_is_initialized)
@@ -39,7 +57,7 @@ UINT  _lx_nand_flash_initialize_driver(LX_NAND_FLASH *nand_flash)
     /* Initialize FMC interface */
     if (BSP_FMC_NAND_Init(NAND_INSTANCE) != BSP_ERROR_NONE)
     {
-      return(LX_ERROR);
+      return (LX_ERROR);
     }
 
     /*Read & check the NAND device IDs*/
@@ -53,67 +71,95 @@ UINT  _lx_nand_flash_initialize_driver(LX_NAND_FLASH *nand_flash)
     BSP_FMC_NAND_ReadID(NAND_INSTANCE, &pNAND_ID);
 
     /* Test the NAND ID correctness */
-    if(pNAND_ID.Maker_Id  != BSP_NAND_MANUFACTURER_CODE)
-      return(LX_ERROR);
+    if (pNAND_ID.Maker_Id  != BSP_NAND_MANUFACTURER_CODE)
+    {
+      return (LX_ERROR);
+    }
     else if (pNAND_ID.Third_Id != BSP_NAND_THIRD_ID)
-      return(LX_ERROR);
+    {
+      return (LX_ERROR);
+    }
     else if (pNAND_ID.Fourth_Id != BSP_NAND_FOURTH_ID)
-      return(LX_ERROR);
+    {
+      return (LX_ERROR);
+    }
 
     /* If ERASE_CHIP enabled erase the NAND device */
     if (LX_DRIVER_ERASES_FLASH_AFTER_INIT)
     {
       if (_lx_nand_flash_erase_all_driver() != LX_SUCCESS)
       {
-        return(LX_ERROR);
+        return (LX_ERROR);
       }
     }
-
     flash_is_initialized = 1;
   }
-  /* Setup geometry of the NAND flash.  */
-  nand_flash -> lx_nand_flash_total_blocks =                  TOTAL_BLOCKS;
-  nand_flash -> lx_nand_flash_pages_per_block =               PHYSICAL_PAGES_PER_BLOCK;
-  nand_flash -> lx_nand_flash_bytes_per_page =                BYTES_PER_PHYSICAL_PAGE;
 
-  /* Setup function pointers for the NAND flash services.  */
-  nand_flash -> lx_nand_flash_driver_read =                   _lx_nand_flash_read_driver;
-  nand_flash -> lx_nand_flash_driver_write =                  _lx_nand_flash_write_driver;
-  nand_flash -> lx_nand_flash_driver_block_erase =            _lx_nand_flash_block_erase_driver;
-  nand_flash -> lx_nand_flash_driver_block_erased_verify =    _lx_nand_flash_block_erased_verify_driver;
-  nand_flash -> lx_nand_flash_driver_page_erased_verify =     _lx_nand_flash_page_erased_verify_driver;
-  nand_flash -> lx_nand_flash_driver_block_status_get =       _lx_nand_flash_block_status_get_driver;
-  nand_flash -> lx_nand_flash_driver_block_status_set =       _lx_nand_flash_block_status_set_driver;
-  nand_flash -> lx_nand_flash_driver_extra_bytes_get =        _lx_nand_flash_extra_bytes_get_driver;
-  nand_flash -> lx_nand_flash_driver_extra_bytes_set =        _lx_nand_flash_extra_bytes_set_driver;
-  nand_flash -> lx_nand_flash_driver_system_error =           _lx_nand_flash_system_error_driver;
+  total_blocks = TOTAL_BLOCKS;
+  pages_per_block = PHYSICAL_PAGES_PER_BLOCK;
+  bytes_per_page = BYTES_PER_PHYSICAL_PAGE;
+  /*USER CODE END Init_Section_0 */
 
-  /* Setup local buffer for NAND flash operation. This buffer must be the page size of the NAND flash memory.  */
-  nand_flash -> lx_nand_flash_page_buffer =  &nand_flash_driver_buffer[0];
+  nand_flash->lx_nand_flash_total_blocks =    total_blocks;
+  nand_flash->lx_nand_flash_pages_per_block = pages_per_block;
+  nand_flash->lx_nand_flash_bytes_per_page =  bytes_per_page;
 
-  /* Return success.  */
-  return(LX_SUCCESS);
+  /* USER CODE BEGIN Init_Section_1 */
+
+  /*USER CODE END Init_Section_1 */
+
+  nand_flash->lx_nand_flash_driver_read =                   lx_nand_driver_read;
+  nand_flash->lx_nand_flash_driver_write =                  lx_nand_driver_write;
+
+  nand_flash->lx_nand_flash_driver_block_erase =            lx_nand_driver_block_erase;
+  nand_flash->lx_nand_flash_driver_block_erased_verify =    lx_nand_driver_block_erased_verify;
+  nand_flash->lx_nand_flash_driver_page_erased_verify =     lx_nand_driver_page_erased_verify;
+
+  nand_flash->lx_nand_flash_driver_block_status_get =       lx_nand_driver_block_status_get;
+  nand_flash->lx_nand_flash_driver_block_status_set =       lx_nand_driver_block_status_set;
+
+  nand_flash->lx_nand_flash_driver_extra_bytes_get =        lx_nand_driver_extra_bytes_get;
+  nand_flash->lx_nand_flash_driver_extra_bytes_set =        lx_nand_driver_extra_bytes_set;
+
+  nand_flash->lx_nand_flash_driver_system_error =           lx_nand_driver_system_error;
+
+  /* USER CODE BEGIN Init_Section_2 */
+
+  /*USER CODE END Init_Section_2 */
+
+  nand_flash->lx_nand_flash_page_buffer =  &nand_flash_buffer[0];
+
+  /* USER CODE BEGIN Init_Section_3 */
+
+  /*USER CODE END Init_Section_3 */
+  return ret;
+
 }
 
-/* Read from nand flash memory function*/
-static UINT  _lx_nand_flash_read_driver(ULONG block, ULONG page, ULONG *destination, ULONG words)
+static UINT  lx_nand_driver_read(ULONG block, ULONG page, ULONG *destination, ULONG words)
 {
-  BSP_NAND_AddressTypeDef_t Bsp_Address = {0};
 
+  UINT ret = LX_SUCCESS;
+
+ /* USER CODE BEGIN driver_read */
+  BSP_NAND_AddressTypeDef_t Bsp_Address = {0};
   Bsp_Address.Block = (uint16_t) block;
   Bsp_Address.Page = (uint16_t) page;
 
-  if (BSP_FMC_NAND_Read(NAND_INSTANCE, &Bsp_Address, (uint16_t *) destination, 1)!= BSP_ERROR_NONE)
+  if (BSP_FMC_NAND_Read(NAND_INSTANCE, &Bsp_Address, (uint16_t *) destination, 1) != BSP_ERROR_NONE)
   {
-    return(LX_ERROR);
+    return (LX_ERROR);
   }
+ /* USER CODE END driver_read */
 
-  return(LX_SUCCESS);
+  return ret;
 }
 
-/* Write to nand flash memory function*/
-static UINT  _lx_nand_flash_write_driver(ULONG block, ULONG page, ULONG *source, ULONG words)
+static UINT  lx_nand_driver_write(ULONG block, ULONG page, ULONG *source, ULONG words)
 {
+  UINT ret = LX_SUCCESS;
+
+ /* USER CODE BEGIN driver_write */
   BSP_NAND_AddressTypeDef_t Bsp_Address = {0};
 
   Bsp_Address.Block = (uint16_t) block;
@@ -121,43 +167,37 @@ static UINT  _lx_nand_flash_write_driver(ULONG block, ULONG page, ULONG *source,
 
   if (BSP_FMC_NAND_Write(NAND_INSTANCE, &Bsp_Address, (uint16_t *) source, 1) != BSP_ERROR_NONE)
   {
-    return(LX_ERROR);
+    return (LX_ERROR);
   }
+ /* USER CODE END driver_write */
 
-  return(LX_SUCCESS);
+  return ret;
 }
 
-/* Erase block function*/
-static UINT  _lx_nand_flash_block_erase_driver(ULONG block, ULONG erase_count)
+static UINT  lx_nand_driver_block_erase(ULONG block, ULONG erase_count)
 {
-  LX_PARAMETER_NOT_USED(erase_count);
+  UINT ret = LX_SUCCESS;
 
+ /* USER CODE BEGIN block_erase */
+  LX_PARAMETER_NOT_USED(erase_count);
   BSP_NAND_AddressTypeDef_t BspAddress = {0};
 
   BspAddress.Block = (uint16_t) block;
 
   if (BSP_FMC_NAND_Erase_Block(NAND_INSTANCE, &BspAddress) != BSP_ERROR_NONE)
   {
-    return(LX_ERROR);
+    return (LX_ERROR);
   }
+ /* USER CODE END block_erase */
 
-  return(LX_SUCCESS);
+  return ret;
 }
 
-/* Erase chip function*/
-UINT  _lx_nand_flash_erase_all_driver(VOID)
+static UINT  lx_nand_driver_block_erased_verify(ULONG block)
 {
-  if (BSP_FMC_NAND_EraseChip(NAND_INSTANCE) != BSP_ERROR_NONE)
-  {
-    return(LX_ERROR);
-  }
+  UINT ret = LX_SUCCESS;
 
-  return(LX_SUCCESS);
-}
-
-/* Verify block erased function*/
-static UINT  _lx_nand_flash_block_erased_verify_driver(ULONG block)
-{
+ /* USER CODE BEGIN block_erase_verify */
   uint32_t index1 = 0;
   BSP_NAND_AddressTypeDef_t Bsp_Address = {0};
 
@@ -166,19 +206,23 @@ static UINT  _lx_nand_flash_block_erased_verify_driver(ULONG block)
 
   for (index1 = 0; index1 < PHYSICAL_PAGES_PER_BLOCK ; index1++)
   {
-    if (_lx_nand_flash_page_erased_verify_driver(Bsp_Address.Block, Bsp_Address.Page) != LX_SUCCESS)
-      return(LX_ERROR);
+    if (lx_nand_driver_page_erased_verify(Bsp_Address.Block, Bsp_Address.Page) != LX_SUCCESS)
+    {
+      return (LX_ERROR);
+    }
 
     Bsp_Address.Page++;
   }
+ /* USER CODE END block_erase_verify */
 
-  /* Return success.  */
-  return(LX_SUCCESS);
+  return ret;
 }
 
-/* Verify page erased function*/
-static UINT  _lx_nand_flash_page_erased_verify_driver(ULONG block, ULONG page)
+static UINT  lx_nand_driver_page_erased_verify(ULONG block, ULONG page)
 {
+  UINT ret = LX_SUCCESS;
+
+ /* USER CODE BEGIN page_erased_verify */
   ULONG   *word_ptr;
   ULONG   words;
   BSP_NAND_AddressTypeDef_t Bsp_Address = {0};
@@ -188,12 +232,12 @@ static UINT  _lx_nand_flash_page_erased_verify_driver(ULONG block, ULONG page)
   Bsp_Address.Block = (uint16_t) block;
   Bsp_Address.Page = (uint16_t) page;
 
-  if (BSP_FMC_NAND_Read(NAND_INSTANCE, &Bsp_Address, (uint16_t *) nand_flash_rw_buffer, 1)!= BSP_ERROR_NONE)
+  if (BSP_FMC_NAND_Read(NAND_INSTANCE, &Bsp_Address, (uint16_t *) nand_flash_rw_buffer, 1) != BSP_ERROR_NONE)
   {
-    return(LX_ERROR);
+    return (LX_ERROR);
   }
 
-  word_ptr = (ULONG *) &(nand_flash_rw_buffer[0]);
+  word_ptr = (ULONG *) & (nand_flash_rw_buffer[0]);
 
   /* Calculate the number of words in a page.  */
   words =  WORDS_PER_PHYSICAL_PAGE;
@@ -203,57 +247,65 @@ static UINT  _lx_nand_flash_page_erased_verify_driver(ULONG block, ULONG page)
   {
     /* Is this word erased?  */
     if (*word_ptr++ != 0xFFFFFFFF)
-      return(LX_ERROR);
+    {
+      return (LX_ERROR);
+    }
   }
+ /* USER CODE END page_erased_verify */
 
-  /* Return success.  */
-  return(LX_SUCCESS);
+  return ret;
 }
 
-/* Get block status function*/
-static UINT  _lx_nand_flash_block_status_get_driver(ULONG block, UCHAR *bad_block_byte)
+static UINT  lx_nand_driver_block_status_get(ULONG block, UCHAR *bad_block_byte)
 {
+  UINT ret = LX_SUCCESS;
+
+ /* USER CODE BEGIN block_status_get */
   BSP_NAND_AddressTypeDef_t Bsp_Address = {0};
 
   Bsp_Address.Block = (uint16_t) block;
 
   if (BSP_FMC_NAND_Read_SpareArea(NAND_INSTANCE, &Bsp_Address, (uint16_t *) Buffer_Spare_Area, 1) != BSP_ERROR_NONE)
   {
-    return(LX_ERROR);
+    return (LX_ERROR);
   }
 
   *bad_block_byte = (UCHAR) Buffer_Spare_Area[BAD_BLOCK_POSITION];
+ /* USER CODE END block_status_get*/
 
-  /* Return success.  */
-  return(LX_SUCCESS);
+  return ret;
 }
 
-/* Set block status function*/
-static UINT  _lx_nand_flash_block_status_set_driver(ULONG block, UCHAR bad_block_byte)
+static UINT  lx_nand_driver_block_status_set(ULONG block, UCHAR bad_block_byte)
 {
+  UINT ret = LX_SUCCESS;
+
+ /* USER CODE BEGIN block_status_set */
   BSP_NAND_AddressTypeDef_t Bsp_Address = {0};
 
   Bsp_Address.Block = (uint16_t) block;
 
   if (BSP_FMC_NAND_Read_SpareArea(NAND_INSTANCE, &Bsp_Address, (uint16_t *) Buffer_Spare_Area, 1) != BSP_ERROR_NONE)
   {
-    return(LX_ERROR);
+    return (LX_ERROR);
   }
 
   Buffer_Spare_Area[BAD_BLOCK_POSITION] = bad_block_byte;
 
   if (BSP_FMC_NAND_Write_SpareArea(NAND_INSTANCE, &Bsp_Address, (uint16_t *) Buffer_Spare_Area, 1) != BSP_ERROR_NONE)
   {
-    return(LX_ERROR);
+    return (LX_ERROR);
   }
+ /* USER CODE END block_status_set */
 
-  /* Return success.  */
-  return(LX_SUCCESS);
+  return ret;
 }
 
-/* Get extra byte function*/
-static UINT  _lx_nand_flash_extra_bytes_get_driver(ULONG block, ULONG page, UCHAR *destination, UINT size)
+static UINT  lx_nand_driver_extra_bytes_get(ULONG block, ULONG page, UCHAR *destination, UINT size)
 {
+  UINT ret = LX_SUCCESS;
+
+ /* USER CODE BEGIN extra_bytes_get */
   UCHAR   *source;
 
   BSP_NAND_AddressTypeDef_t Bsp_Address = {0};
@@ -263,10 +315,10 @@ static UINT  _lx_nand_flash_extra_bytes_get_driver(ULONG block, ULONG page, UCHA
 
   if (BSP_FMC_NAND_Read_SpareArea(NAND_INSTANCE, &Bsp_Address, (uint16_t *) Buffer_Spare_Area, 1) != BSP_ERROR_NONE)
   {
-    return(LX_ERROR);
+    return (LX_ERROR);
   }
 
-  source = (UCHAR *) &(Buffer_Spare_Area[EXTRA_BYTE_POSITION]);
+  source = (UCHAR *) & (Buffer_Spare_Area[EXTRA_BYTE_POSITION]);
 
   while (size--)
   {
@@ -274,14 +326,16 @@ static UINT  _lx_nand_flash_extra_bytes_get_driver(ULONG block, ULONG page, UCHA
     /* Retrieve an extra byte from the spare area.  */
     *destination++ =  *source++;
   }
+ /* USER CODE END extra_bytes_get */
 
-  /* Return success.  */
-  return(LX_SUCCESS);
+  return ret;
 }
 
-/* Set extra byte function*/
-static UINT  _lx_nand_flash_extra_bytes_set_driver(ULONG block, ULONG page, UCHAR *source, UINT size)
+static UINT  lx_nand_driver_extra_bytes_set(ULONG block, ULONG page, UCHAR *source, UINT size)
 {
+  UINT ret = LX_SUCCESS;
+
+ /* USER CODE BEGIN extra_bytes_set */
   UCHAR   *destination;
 
   BSP_NAND_AddressTypeDef_t Bsp_Address = {0};
@@ -291,10 +345,10 @@ static UINT  _lx_nand_flash_extra_bytes_set_driver(ULONG block, ULONG page, UCHA
 
   if (BSP_FMC_NAND_Read_SpareArea(NAND_INSTANCE, &Bsp_Address, (uint16_t *) Buffer_Spare_Area, 1) != BSP_ERROR_NONE)
   {
-    return(LX_ERROR);
+    return (LX_ERROR);
   }
 
-  destination = (UCHAR *) &(Buffer_Spare_Area[EXTRA_BYTE_POSITION]);
+  destination = (UCHAR *) & (Buffer_Spare_Area[EXTRA_BYTE_POSITION]);
 
   while (size--)
   {
@@ -305,23 +359,38 @@ static UINT  _lx_nand_flash_extra_bytes_set_driver(ULONG block, ULONG page, UCHA
 
   if (BSP_FMC_NAND_Write_SpareArea(NAND_INSTANCE, &Bsp_Address, (uint16_t *) Buffer_Spare_Area, 1) != BSP_ERROR_NONE)
   {
-    return(LX_ERROR);
+    return (LX_ERROR);
   }
+ /* USER CODE END extra_bytes_set */
 
-  /* Return success.  */
-  return(LX_SUCCESS);
+  return ret;
 }
 
-/* System error function */
-static UINT  _lx_nand_flash_system_error_driver(UINT error_code, ULONG block, ULONG page)
+static UINT  lx_nand_driver_system_error(UINT error_code, ULONG block, ULONG page)
 {
+  UINT ret = LX_SUCCESS;
+
+ /* USER CODE BEGIN system_error */
   LX_PARAMETER_NOT_USED(error_code);
   LX_PARAMETER_NOT_USED(block);
   LX_PARAMETER_NOT_USED(page);
 
   /* Custom processing goes here...  all errors except for LX_NAND_ERROR_CORRECTED are fatal.  */
-  return(LX_ERROR);
+  ret = LX_ERROR;
+ /* USER CODE END system_error */
+
+  return ret;
 }
 
+/* USER CODE BEGIN 1 */
+/* Erase chip function*/
+UINT  _lx_nand_flash_erase_all_driver(VOID)
+{
+  if (BSP_FMC_NAND_EraseChip(NAND_INSTANCE) != BSP_ERROR_NONE)
+  {
+    return (LX_ERROR);
+  }
 
-
+  return (LX_SUCCESS);
+}
+/* USER CODE END 1 */

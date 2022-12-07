@@ -58,7 +58,7 @@ ULONG _fx_media_format_volume_id =  1;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_media_format                                    PORTABLE C      */
-/*                                                           6.1.8        */
+/*                                                           6.1.11       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -120,6 +120,10 @@ ULONG _fx_media_format_volume_id =  1;
 /*  08-02-2021     Bhupendra Naphade        Modified comment(s), and      */
 /*                                            updated boot write logic,   */
 /*                                            resulting in version 6.1.8  */
+/*  04-25-2022     Bhupendra Naphade        Modified comment(s), and      */
+/*                                            updated reserved FAT entry  */
+/*                                            value,                      */
+/*                                            resulting in version 6.1.11 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_media_format(FX_MEDIA *media_ptr, VOID (*driver)(FX_MEDIA *media), VOID *driver_info_ptr, UCHAR *memory_ptr, UINT memory_size,
@@ -557,8 +561,8 @@ UINT   sectors_per_fat, f, s;
                 {
 
                     /* Reserve the first two FAT-12 entries.  */
-                    byte_ptr[0] =  (UCHAR)0x0F;
-                    byte_ptr[1] =  (UCHAR)0x0F;
+                    byte_ptr[0] =  _fx_media_format_media_type;
+                    byte_ptr[1] =  (UCHAR)0xFF;
                     byte_ptr[2] =  (UCHAR)0xFF;
 
                     /* Start clearing at FAT entry 3.  */
@@ -568,8 +572,8 @@ UINT   sectors_per_fat, f, s;
                 {
 
                     /* Reserve the first two FAT-16 entries.  */
-                    byte_ptr[0] =  (UCHAR)0xF0;
-                    byte_ptr[1] =  (UCHAR)0x00;
+                    byte_ptr[0] =  _fx_media_format_media_type;
+                    byte_ptr[1] =  (UCHAR)0xFF;
                     byte_ptr[2] =  (UCHAR)0xFF;
                     byte_ptr[3] =  (UCHAR)0xFF;
 
@@ -580,14 +584,14 @@ UINT   sectors_per_fat, f, s;
                 {
 
                     /* Reserve the first two FAT-32 entries.   */
-                    byte_ptr[0] =  (UCHAR)0xF0;
-                    byte_ptr[1] =  (UCHAR)0x00;
-                    byte_ptr[2] =  (UCHAR)0x00;
-                    byte_ptr[3] =  (UCHAR)0x00;
+                    byte_ptr[0] =  _fx_media_format_media_type;
+                    byte_ptr[1] =  (UCHAR)0xFF;
+                    byte_ptr[2] =  (UCHAR)0xFF;
+                    byte_ptr[3] =  (UCHAR)0x0F;
                     byte_ptr[4] =  (UCHAR)0xFF;
                     byte_ptr[5] =  (UCHAR)0xFF;
                     byte_ptr[6] =  (UCHAR)0xFF;
-                    byte_ptr[7] =  (UCHAR)0xFF;
+                    byte_ptr[7] =  (UCHAR)0x0F;
 
                     /* Preallocate the first cluster for the root directory.  */
                     byte_ptr[8] =   (UCHAR)0xFF;

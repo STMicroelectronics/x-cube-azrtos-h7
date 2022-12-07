@@ -16,8 +16,8 @@
         <TargetCommonOption>
           <Device>STM32H735IGKx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32H7xx_DFP.2.4.3</PackID>
-          <PackURL>https://www.keil.com/pack/</PackURL>
+          <PackID>Keil.STM32H7xx_DFP.3.0.0</PackID>
+          <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000-0x2001FFFF) IRAM2(0x24000000-0x2404FFFF) IROM(0x8000000-0x80FFFFF) CLOCK(12000000) FPU3(DFPU) CPUTYPE("Cortex-M7") ELITTLE TZ</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -186,6 +186,7 @@
             <RvdsVP>3</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -337,7 +338,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>TX_INCLUDE_USER_DEFINE_FILE,NX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H735xx</Define>
+              <Define>TX_INCLUDE_USER_DEFINE_FILE,NX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H735xx,NX_SECURE_INCLUDE_USER_DEFINE_FILE</Define>
               <Undefine></Undefine>
               <IncludePath>../Core/Inc;../AZURE_RTOS/App;../NetXDuo/App;../NetXDuo/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Drivers/BSP/Components/lan8742/;../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/;../../../../../../Middlewares/ST/netxduo/addons/mqtt/;../../../../../../Middlewares/ST/netxduo/addons/sntp/;../../../../../../Middlewares/ST/netxduo/addons/dns/;../../../../../../Middlewares/ST/netxduo/addons/dhcp/;../../../../../../Middlewares/ST/netxduo/common/inc/;../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/ac5/inc/;../../../../../../Middlewares/ST/netxduo/nx_secure/inc/;../../../../../../Middlewares/ST/netxduo/nx_secure/ports/;../../../../../../Middlewares/ST/netxduo/crypto_libraries/inc/;../../../../../../Middlewares/ST/netxduo/crypto_libraries/ports/cortex_m7/ac6/inc/;../../../../../../Middlewares/ST/netxduo/crypto_libraries/ports/cortex_m4/ac6/inc/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H735G-DK</IncludePath>
             </VariousControls>
@@ -452,16 +453,6 @@
               <FileName>README.md</FileName>
               <FileType>5</FileType>
               <FilePath>../README.md</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Drivers/BSP/STM32H735G-DK</GroupName>
-          <Files>
-            <File>
-              <FileName>stm32h735g_discovery.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Drivers/BSP/STM32H735G-DK/stm32h735g_discovery.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -678,6 +669,11 @@
         <Group>
           <GroupName>Middlewares/NetXDuo/Network/NetXDuo/NX Core</GroupName>
           <Files>
+            <File>
+              <FileName>nx_ram_network_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_ram_network_driver.c</FilePath>
+            </File>
             <File>
               <FileName>nx_arp_announce_send.c</FileName>
               <FileType>1</FileType>
@@ -1382,11 +1378,6 @@
               <FileName>nx_packet_transmit_release.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_packet_transmit_release.c</FilePath>
-            </File>
-            <File>
-              <FileName>nx_ram_network_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_ram_network_driver.c</FilePath>
             </File>
             <File>
               <FileName>nx_rarp_disable.c</FileName>
@@ -4712,11 +4703,6 @@
               <FileName>nx_crypto_methods.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/netxduo/crypto_libraries/src/nx_crypto_methods.c</FilePath>
-            </File>
-            <File>
-              <FileName>nx_crypto_module_start.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/crypto_libraries/src/nx_crypto_module_start.c</FilePath>
             </File>
             <File>
               <FileName>nx_crypto_null_cipher.c</FileName>

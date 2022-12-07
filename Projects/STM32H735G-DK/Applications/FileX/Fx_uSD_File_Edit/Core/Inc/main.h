@@ -51,15 +51,21 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
+void   MX_SDMMC1_SD_Init(void);
 
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define LED_GREEN LED1
-#define LED_RED LED2
-void   MX_SDMMC1_SD_Init(void);
+#define SD_DETECT_Pin GPIO_PIN_5
+#define SD_DETECT_GPIO_Port GPIOF
+#define SD_DETECT_EXTI_IRQn EXTI9_5_IRQn
+#define LED2_Pin GPIO_PIN_2
+#define LED2_GPIO_Port GPIOC
+#define LED1_Pin GPIO_PIN_3
+#define LED1_GPIO_Port GPIOC
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

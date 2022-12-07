@@ -45,14 +45,14 @@ static void NAND_MspDeInit(NAND_HandleTypeDef *hnand);
 
 /**
 * @brief  Initializes the NAND device.
-* @param  Instance  NAND Instance      
+* @param  Instance  NAND Instance
 * @retval BSP status
 */
 int32_t BSP_FMC_NAND_Init(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
-  
-  if(Instance >= NAND_INSTANCES_NBR)
+
+  if (Instance >= NAND_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
@@ -62,16 +62,16 @@ int32_t BSP_FMC_NAND_Init(uint32_t Instance)
     /* Msp NAND initialization */
     NAND_MspInit(&hnand[Instance]);
 #endif /* USE_HAL_NAND_REGISTER_CALLBACKS */
-    
+
     hnand[Instance].Instance  = FMC_NAND_DEVICE;
-    
+
     /* __weak function can be rewritten by the application */
-    if(MX_NAND_Init(&hnand[Instance]) != HAL_OK)
+    if (MX_NAND_Init(&hnand[Instance]) != HAL_OK)
     {
       ret = BSP_ERROR_NO_INIT;
     }
   }
-  
+
   return ret;
 }
 
@@ -82,8 +82,8 @@ int32_t BSP_FMC_NAND_Init(uint32_t Instance)
 int32_t BSP_FMC_NAND_DeInit(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;;
-  
-  if(Instance >= NAND_INSTANCES_NBR)
+
+  if (Instance >= NAND_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
@@ -91,8 +91,8 @@ int32_t BSP_FMC_NAND_DeInit(uint32_t Instance)
   {
     /* NAND memory de-initialization */
     hnand[Instance].Instance = FMC_NAND_DEVICE;
-    
-    if(HAL_NAND_DeInit(&hnand[Instance]) != HAL_OK)
+
+    if (HAL_NAND_DeInit(&hnand[Instance]) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -102,10 +102,10 @@ int32_t BSP_FMC_NAND_DeInit(uint32_t Instance)
       /* NAND controller de-initialization */
       NAND_MspDeInit(&hnand[Instance]);
 #endif /* (USE_HAL_NAND_REGISTER_CALLBACKS == 0) */
-      
+
     }
   }
-  
+
   return ret;
 }
 
@@ -118,19 +118,19 @@ int32_t BSP_FMC_NAND_DeInit(uint32_t Instance)
 int32_t BSP_FMC_NAND_ReadID(uint32_t Instance, NAND_IDTypeDef *pNAND_ID)
 {
   int32_t ret = BSP_ERROR_NONE;
-  
-  if(Instance >= NAND_INSTANCES_NBR)
+
+  if (Instance >= NAND_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(HAL_NAND_Read_ID(&hnand[Instance], pNAND_ID) != HAL_OK)
+    if (HAL_NAND_Read_ID(&hnand[Instance], pNAND_ID) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
   }
-  
+
   return ret;
 }
 
@@ -143,31 +143,31 @@ int32_t BSP_FMC_NAND_GetStatus(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
   uint32_t status;
-  
-  if(Instance >= NAND_INSTANCES_NBR)
+
+  if (Instance >= NAND_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     status = HAL_NAND_Read_Status(&hnand[Instance]);
-    
+
     switch (status)
     {
-    case NAND_BUSY:
-      ret = BSP_ERROR_BUSY;
-      break;
-      
-    case NAND_ERROR:
-      ret = BSP_ERROR_PERIPH_FAILURE;
-      break;
-      
-    case NAND_READY:
-      ret = BSP_ERROR_NONE;
-      break;
+      case NAND_BUSY:
+        ret = BSP_ERROR_BUSY;
+        break;
+
+      case NAND_ERROR:
+        ret = BSP_ERROR_PERIPH_FAILURE;
+        break;
+
+      case NAND_READY:
+        ret = BSP_ERROR_NONE;
+        break;
     }
   }
-  
+
   return ret;
 }
 
@@ -181,8 +181,8 @@ int32_t BSP_FMC_NAND_EraseChip(uint32_t Instance)
   int32_t ret = BSP_ERROR_NONE;
   uint32_t i;
   NAND_AddressTypeDef Address = {0};
-  
-  if(Instance >= NAND_INSTANCES_NBR)
+
+  if (Instance >= NAND_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
@@ -191,14 +191,14 @@ int32_t BSP_FMC_NAND_EraseChip(uint32_t Instance)
     for (i = 0; i < hnand[Instance].Config.BlockNbr; i++)
     {
       Address.Block = i;
-      
+
       if (HAL_NAND_Erase_Block(&hnand[Instance], &Address) != HAL_OK)
       {
         ret = BSP_ERROR_PERIPH_FAILURE;
       }
     }
   }
-  
+
   return ret;
 }
 
@@ -212,24 +212,24 @@ int32_t BSP_FMC_NAND_EraseChip(uint32_t Instance)
 int32_t BSP_FMC_NAND_Erase_Block(uint32_t Instance, BSP_NAND_AddressTypeDef_t *pAddress)
 {
   int32_t ret = BSP_ERROR_NONE;
-  
+
   NAND_AddressTypeDef Address = {0};
-  
-  if(Instance >= NAND_INSTANCES_NBR)
+
+  if (Instance >= NAND_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
   else
-  {  
+  {
     Address.Block = pAddress->Block;
     Address.Page = pAddress->Page;
-    
+
     if (HAL_NAND_Erase_Block(&hnand[Instance], &Address) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
   }
-  
+
   return ret;
 }
 
@@ -245,8 +245,8 @@ int32_t BSP_FMC_NAND_Read(uint32_t Instance, BSP_NAND_AddressTypeDef_t *pAddress
 {
   int32_t ret = BSP_ERROR_NONE;
   NAND_AddressTypeDef Address = {0};
-  
-  if(Instance >= NAND_INSTANCES_NBR)
+
+  if (Instance >= NAND_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
@@ -254,13 +254,13 @@ int32_t BSP_FMC_NAND_Read(uint32_t Instance, BSP_NAND_AddressTypeDef_t *pAddress
   {
     Address.Block = pAddress->Block;
     Address.Page = pAddress->Page;
-    
+
     if (HAL_NAND_Read_Page_16b(&hnand[Instance], &Address, pBuffer, NumPageToRead) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
   }
-  
+
   return ret;
 }
 
@@ -276,8 +276,8 @@ int32_t BSP_FMC_NAND_Write(uint32_t Instance, BSP_NAND_AddressTypeDef_t *pAddres
 {
   int32_t ret = BSP_ERROR_NONE;
   NAND_AddressTypeDef Address = {0};
-  
-  if(Instance >= NAND_INSTANCES_NBR)
+
+  if (Instance >= NAND_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
@@ -285,13 +285,13 @@ int32_t BSP_FMC_NAND_Write(uint32_t Instance, BSP_NAND_AddressTypeDef_t *pAddres
   {
     Address.Block = pAddress->Block;
     Address.Page = pAddress->Page;
-    
+
     if (HAL_NAND_Write_Page_16b(&hnand[Instance], &Address, pBuffer, NumPageToWrite) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
   }
-  
+
   return ret;
 }
 
@@ -307,8 +307,8 @@ int32_t  BSP_FMC_NAND_Read_SpareArea(uint32_t Instance, BSP_NAND_AddressTypeDef_
 {
   int32_t ret = BSP_ERROR_NONE;
   NAND_AddressTypeDef Address = {0};
-  
-  if(Instance >= NAND_INSTANCES_NBR)
+
+  if (Instance >= NAND_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
@@ -316,13 +316,13 @@ int32_t  BSP_FMC_NAND_Read_SpareArea(uint32_t Instance, BSP_NAND_AddressTypeDef_
   {
     Address.Block = pAddress->Block;
     Address.Page = pAddress->Page;
-    
+
     if (HAL_NAND_Read_SpareArea_16b(&hnand[Instance], &Address, pBuffer, NumSpareAreaToRead) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
   }
-  
+
   return ret;
 }
 
@@ -338,8 +338,8 @@ int32_t  BSP_FMC_NAND_Write_SpareArea(uint32_t Instance, BSP_NAND_AddressTypeDef
 {
   int32_t ret = BSP_ERROR_NONE;
   NAND_AddressTypeDef Address = {0};
-  
-  if(Instance >= NAND_INSTANCES_NBR)
+
+  if (Instance >= NAND_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
@@ -347,13 +347,13 @@ int32_t  BSP_FMC_NAND_Write_SpareArea(uint32_t Instance, BSP_NAND_AddressTypeDef
   {
     Address.Block = pAddress->Block;
     Address.Page = pAddress->Page;
-    
+
     if (HAL_NAND_Write_SpareArea_16b(&hnand[Instance], &Address, pBuffer, NumSpareAreaTowrite) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
   }
-  
+
   return ret;
 }
 
@@ -366,7 +366,7 @@ __weak HAL_StatusTypeDef MX_NAND_Init(NAND_HandleTypeDef *hNand)
 {
   FMC_NAND_PCC_TimingTypeDef ComSpaceTiming = {0};
   FMC_NAND_PCC_TimingTypeDef AttSpaceTiming = {0};
-  
+
   /* hNand Init */
   hNand->Init.NandBank        = FMC_NAND_BANK3;
   hNand->Init.Waitfeature     = FMC_NAND_WAIT_FEATURE_ENABLE;
@@ -375,7 +375,7 @@ __weak HAL_StatusTypeDef MX_NAND_Init(NAND_HandleTypeDef *hNand)
   hNand->Init.ECCPageSize     = FMC_NAND_ECC_PAGE_SIZE_2048BYTE;
   hNand->Init.TCLRSetupTime   = 2;
   hNand->Init.TARSetupTime    = 2;
-  
+
   /* hNand Config */
   hNand->Config.PageSize = 1024; /*1024 words*/
   hNand->Config.SpareAreaSize = 32; /*32 words */
@@ -384,29 +384,29 @@ __weak HAL_StatusTypeDef MX_NAND_Init(NAND_HandleTypeDef *hNand)
   hNand->Config.PlaneSize = 2048; /*NAND memory plane size measured in number of blocks */
   hNand->Config.PlaneNbr = 1;
   hNand->Config.ExtraCommandEnable = DISABLE;
-  
+
   /* ComSpaceTiming */
   ComSpaceTiming.SetupTime = 1; /*according to AN4761 page 33*/
   ComSpaceTiming.WaitSetupTime = 7;
   ComSpaceTiming.HoldSetupTime = 2;
   ComSpaceTiming.HiZSetupTime = 8;
-  
+
   /* AttSpaceTiming */
   AttSpaceTiming.SetupTime = 1; /*according to AN4761 page 33*/
   AttSpaceTiming.WaitSetupTime = 7;
   AttSpaceTiming.HoldSetupTime = 2;
   AttSpaceTiming.HiZSetupTime = 8;
-  
+
   if (HAL_NAND_Init(hNand, &ComSpaceTiming, &AttSpaceTiming) != HAL_OK)
   {
     return  HAL_ERROR;
   }
-  
+
   if (HAL_NAND_Reset(hNand) != HAL_OK)
   {
     return  HAL_ERROR;
   }
-  
+
   return HAL_OK;
 }
 /** @defgroup STM32H743I_EVAL_NAND_Private_Functions NAND Private Functions
@@ -422,15 +422,15 @@ static void NAND_MspInit(NAND_HandleTypeDef *hnand)
   GPIO_InitTypeDef GPIO_Init_Structure;
   /* Prevent unused argument(s) compilation warning */
   UNUSED(hnand);
-  
+
   /* Enable FMC clock */
   __HAL_RCC_FMC_CLK_ENABLE();
-  
+
   /* Enable GPIOs clock */
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOG_CLK_ENABLE();
-  
+
   /** FMC GPIO Configuration
   PG9   ------> FMC_NCE
   PD0   ------> FMC_D2
@@ -446,7 +446,7 @@ static void NAND_MspInit(NAND_HandleTypeDef *hnand)
   PD13   ------> FMC_A18
   PD14   ------> FMC_D0
   PD15   ------> FMC_D1
-  
+
   PE7   ------> FMC_D4
   PE8   ------> FMC_D5
   PE9   ------> FMC_D6
@@ -457,24 +457,24 @@ static void NAND_MspInit(NAND_HandleTypeDef *hnand)
   PE14   ------> FMC_D11
   PE15   ------> FMC_D12
   */
-  
+
   /* Common GPIO configuration */
   GPIO_Init_Structure.Mode      = GPIO_MODE_AF_PP;
   GPIO_Init_Structure.Pull      = GPIO_PULLUP;
   GPIO_Init_Structure.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_Init_Structure.Alternate = GPIO_AF12_FMC;
-  
+
   /* GPIOD configuration */
-  GPIO_Init_Structure.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5 |\
-    GPIO_PIN_6 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 |\
-      GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_14 | GPIO_PIN_15;
+  GPIO_Init_Structure.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5 | \
+                            GPIO_PIN_6 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | \
+                            GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_14 | GPIO_PIN_15;
   HAL_GPIO_Init(GPIOD, &GPIO_Init_Structure);
-  
+
   /* GPIOE configuration */
-  GPIO_Init_Structure.Pin = GPIO_PIN_7  | GPIO_PIN_8  | GPIO_PIN_9  | GPIO_PIN_10 | GPIO_PIN_11 |\
-    GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
+  GPIO_Init_Structure.Pin = GPIO_PIN_7  | GPIO_PIN_8  | GPIO_PIN_9  | GPIO_PIN_10 | GPIO_PIN_11 | \
+                            GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
   HAL_GPIO_Init(GPIOE, &GPIO_Init_Structure);
-  
+
   /* GPIOG configuration */
   GPIO_Init_Structure.Pin = GPIO_PIN_9 ;
   HAL_GPIO_Init(GPIOG, &GPIO_Init_Structure);
@@ -490,22 +490,22 @@ static void NAND_MspDeInit(NAND_HandleTypeDef *hnand)
   GPIO_InitTypeDef GPIO_Init_Structure;
   /* Prevent unused argument(s) compilation warning */
   UNUSED(hnand);
-  
+
   /* GPIOD configuration */
-  GPIO_Init_Structure.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5 |\
-    GPIO_PIN_6 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 |\
-      GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_14 | GPIO_PIN_15;
+  GPIO_Init_Structure.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5 | \
+                            GPIO_PIN_6 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | \
+                            GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_14 | GPIO_PIN_15;
   HAL_GPIO_DeInit(GPIOD, GPIO_Init_Structure.Pin);
-  
+
   /* GPIOE configuration */
-  GPIO_Init_Structure.Pin = GPIO_PIN_7  | GPIO_PIN_8  | GPIO_PIN_9  | GPIO_PIN_10 | GPIO_PIN_11 |\
-    GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
+  GPIO_Init_Structure.Pin = GPIO_PIN_7  | GPIO_PIN_8  | GPIO_PIN_9  | GPIO_PIN_10 | GPIO_PIN_11 | \
+                            GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
   HAL_GPIO_DeInit(GPIOE, GPIO_Init_Structure.Pin);
-  
+
   /* GPIOG configuration */
   GPIO_Init_Structure.Pin = GPIO_PIN_9 ;
   HAL_GPIO_DeInit(GPIOG, GPIO_Init_Structure.Pin);
-  
+
   /* Disable FMC clock */
   __HAL_RCC_FMC_CLK_DISABLE();
 }

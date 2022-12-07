@@ -33,7 +33,7 @@ extern "C" {
 #include "app_usbx_host.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "main.h"
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

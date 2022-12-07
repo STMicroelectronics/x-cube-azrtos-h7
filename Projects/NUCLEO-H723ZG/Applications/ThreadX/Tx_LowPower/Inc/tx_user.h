@@ -24,7 +24,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    tx_user.h                                           PORTABLE C      */
-/*                                                           6.1.9        */
+/*                                                           6.1.11       */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -56,11 +56,19 @@
 /*                                            user-configurable symbol    */
 /*                                            TX_TIMER_TICKS_PER_SECOND   */
 /*                                            resulting in version 6.1.9  */
+/*  04-25-2022      Wenhui Xie              Modified comment(s),          */
+/*                                            optimized the definition of */
+/*                                            TX_TIMER_TICKS_PER_SECOND,  */
+/*                                            resulting in version 6.1.11 */
 /*                                                                        */
 /**************************************************************************/
 
 #ifndef TX_USER_H
 #define TX_USER_H
+
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
 
 /* Define various build options for the ThreadX port.  The application should either make changes
    here by commenting or un-commenting the conditional compilation defined OR supply the defines
@@ -77,6 +85,7 @@
         TX_REACTIVATE_INLINE
         TX_DISABLE_STACK_FILLING
         TX_INLINE_THREAD_RESUME_SUSPEND
+        TX_DISABLE_ERROR_CHECKING
 
    For minimum size, the following should be defined:
 
@@ -165,6 +174,10 @@
 
 #define TX_DISABLE_NOTIFY_CALLBACKS
 
+/*Defined, the basic parameter error checking is disabled.*/
+
+/*#define TX_DISABLE_ERROR_CHECKING*/
+
 /* Determine if the tx_thread_resume and tx_thread_suspend services should have their internal
    code in-line. This results in a larger image, but improves the performance of the thread
    resume and suspend services.  */
@@ -222,19 +235,6 @@
 
 /*#define TX_TIMER_ENABLE_PERFORMANCE_INFO*/
 
-/* Define if the execution change notify is enabled. */
-
-/*#define TX_ENABLE_EXECUTION_CHANGE_NOTIFY*/
-
-/* Define the get system state macro. */
-
-/*#define TX_THREAD_GET_SYSTEM_STATE() _tx_thread_system_state */
-
-/* Define the check for whether or not to call the
-    _tx_thread_system_return function (TX_THREAD_SYSTEM_RETURN_CHECK(c)). */
-
-/*#define TX_THREAD_SYSTEM_RETURN_CHECK (c)  ((ULONG) _tx_thread_preempt_disable)*/
-
 /* Define the common timer tick reference for use by other middleware components. */
 
 /*#define TX_TIMER_TICKS_PER_SECOND                100*/
@@ -271,8 +271,7 @@
 /* Define the LowPower macros and flags */
 
 /* Define a macro that sets up a low power clock and keep track of time */
-void App_ThreadX_LowPower_Timer_Setup(unsigned long count);
-#define TX_LOW_POWER_TIMER_SETUP(_count) App_ThreadX_LowPower_Timer_Setup(_count)
+/*#define TX_LOW_POWER_TIMER_SETUP */
 
 /* Define the TX_LOW_POWER_TICKLESS to disable the internal ticks */
 #define TX_LOW_POWER_TICKLESS
@@ -286,8 +285,11 @@ void App_ThreadX_LowPower_Exit(void);
 #define TX_LOW_POWER_USER_EXIT App_ThreadX_LowPower_Exit()
 
 /* User's low-power macro to obtain the amount of time (in ticks) the system has been in low power mode */
-unsigned long App_ThreadX_LowPower_Timer_Adjust(void);
-#define TX_LOW_POWER_USER_TIMER_ADJUST App_ThreadX_LowPower_Timer_Adjust()
+/*#define TX_LOW_POWER_USER_TIMER_ADJUST */
+
+/* USER CODE BEGIN 2 */
+
+/* USER CODE END 2 */
 
 #endif
 

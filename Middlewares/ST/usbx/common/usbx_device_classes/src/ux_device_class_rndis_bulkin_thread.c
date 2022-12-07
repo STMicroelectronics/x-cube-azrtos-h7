@@ -29,12 +29,13 @@
 #include "ux_device_stack.h"
 
 
+#if !defined(UX_DEVICE_STANDALONE)
 /**************************************************************************/ 
 /*                                                                        */ 
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_device_class_rndis_bulkin_thread                PORTABLE C      */ 
-/*                                                           6.1.10       */
+/*                                                           6.1.11       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -58,8 +59,8 @@
 /*                                                                        */ 
 /*    _ux_device_stack_transfer_request     Request transfer              */ 
 /*    _ux_utility_event_flags_get           Get event flags               */
-/*    _ux_utility_mutex_on                  Take mutex                    */
-/*    _ux_utility_mutex_off                 Release mutex                 */
+/*    _ux_device_mutex_on                   Take mutex                    */
+/*    _ux_device_mutex_off                  Release mutex                 */
 /*    _ux_utility_long_put                  Put 32-bit value              */
 /*    nx_packet_transmit_release            Release NetX packet           */
 /*                                                                        */ 
@@ -81,12 +82,15 @@
 /*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            refined macros names,       */
 /*                                            resulting in version 6.1.10 */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed standalone compile,   */
+/*                                            resulting in version 6.1.11 */
 /*                                                                        */
 /**************************************************************************/
 VOID  _ux_device_class_rndis_bulkin_thread(ULONG rndis_class)
 {
 
-UX_SLAVE_CLASS                  *class;
+UX_SLAVE_CLASS                  *class_ptr;
 UX_SLAVE_CLASS_RNDIS            *rndis;
 UX_SLAVE_DEVICE                 *device;
 UX_SLAVE_TRANSFER               *transfer_request;
@@ -97,10 +101,10 @@ UCHAR                           *packet_header;
 ULONG                           transfer_length;
 
     /* Cast properly the rndis instance.  */
-    UX_THREAD_EXTENSION_PTR_GET(class, UX_SLAVE_CLASS, rndis_class)
+    UX_THREAD_EXTENSION_PTR_GET(class_ptr, UX_SLAVE_CLASS, rndis_class)
     
     /* Get the rndis instance from this class container.  */
-    rndis =  (UX_SLAVE_CLASS_RNDIS *) class -> ux_slave_class_instance;
+    rndis =  (UX_SLAVE_CLASS_RNDIS *) class_ptr -> ux_slave_class_instance;
     
     /* Get the pointer to the device.  */
     device =  &_ux_system_slave -> ux_system_slave_device;
@@ -131,7 +135,7 @@ ULONG                           transfer_length;
                 {
 
                     /* Protect this thread.  */
-                    _ux_utility_mutex_on(&rndis -> ux_slave_class_rndis_mutex);
+                    _ux_device_mutex_on(&rndis -> ux_slave_class_rndis_mutex);
                 
                     /* Get the current packet in the list.  */
                     current_packet =  rndis -> ux_slave_class_rndis_xmit_queue;
@@ -140,7 +144,7 @@ ULONG                           transfer_length;
                     rndis -> ux_slave_class_rndis_xmit_queue =  current_packet -> nx_packet_queue_next;
                     
                     /* Free Mutex resource.  */
-                    _ux_utility_mutex_off(&rndis -> ux_slave_class_rndis_mutex);
+                    _ux_device_mutex_off(&rndis -> ux_slave_class_rndis_mutex);
                         
                     /* If the link is down no need to rearm a packet. */
                     if (rndis -> ux_slave_class_rndis_link_state == UX_DEVICE_CLASS_RNDIS_LINK_STATE_UP)
@@ -204,7 +208,7 @@ ULONG                           transfer_length;
                 {
 
                     /* Protect the chain of packets.  */
-                    _ux_utility_mutex_on(&rndis -> ux_slave_class_rndis_mutex);
+                    _ux_device_mutex_on(&rndis -> ux_slave_class_rndis_mutex);
                 
                     /* Get the current packet in the list.  */
                     current_packet =  rndis -> ux_slave_class_rndis_xmit_queue;
@@ -213,7 +217,7 @@ ULONG                           transfer_length;
                     rndis -> ux_slave_class_rndis_xmit_queue =  current_packet -> nx_packet_queue_next;
                     
                     /* Free Mutex resource.  */
-                    _ux_utility_mutex_off(&rndis -> ux_slave_class_rndis_mutex);
+                    _ux_device_mutex_off(&rndis -> ux_slave_class_rndis_mutex);
                     
                     /* Free the packet */
                     current_packet -> nx_packet_prepend_ptr =  current_packet -> nx_packet_prepend_ptr + UX_DEVICE_CLASS_RNDIS_ETHERNET_SIZE; 
@@ -229,4 +233,4 @@ ULONG                           transfer_length;
         _ux_device_thread_suspend(&rndis -> ux_slave_class_rndis_bulkin_thread);
     }
 }
-
+#endif

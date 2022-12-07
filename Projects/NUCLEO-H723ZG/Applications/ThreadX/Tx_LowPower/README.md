@@ -59,11 +59,15 @@ For keeping track of time while in low power mode, there are two possibilities:
 
        1.2.2. The application still needs to keep the ThreadX tick up-to-date. In this case a low power clock needs to be set up.
 
-2. Entering Low-power mode through WFI will be executed only if no interrupt is pending.
+2. Under [AzureRTOS Application/ThreadX App Init] in STM32CubeMX, thread entry function name, thread name, priority and stack size, semaphore name and semaphore init count are defined.
 
-3. The Debug Module must be stopped during STOP mode, otherwise, It will generate interrupts that cause the Wake-up of the system immediately after entering the Stop mode.
+3. Entering Low-power mode through WFI will be executed only if no interrupt is pending.
 
-4. The user push-button interrupt priority must be set to the highest possible value, otherwise, after Exit Stop mode the processor will not execute the interrupt handler.
+4. The Debug Module must be stopped during STOP mode, otherwise, It will generate interrupts that cause the Wake-up of the system immediately after entering the Stop mode.
+
+5. The user push-button interrupt priority must be set to the highest possible value, otherwise, after Exit Stop mode the processor will not execute the interrupt handler.
+
+6. To measure the current consumption remove JP4 jumper and connect an amperemeter to JP4 to measure IDD current.
 
 #### <b>ThreadX usage hints</b>
 

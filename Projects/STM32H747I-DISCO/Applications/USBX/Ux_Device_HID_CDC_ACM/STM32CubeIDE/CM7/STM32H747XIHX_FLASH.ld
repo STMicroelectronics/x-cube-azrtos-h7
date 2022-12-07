@@ -22,7 +22,7 @@
 *****************************************************************************
 ** @attention
 **
-** Copyright (c) 2021 STMicroelectronics.
+** Copyright (c) 2022 STMicroelectronics.
 ** All rights reserved.
 **
 ** This software is licensed under terms that can be found in the LICENSE file
@@ -38,8 +38,8 @@ ENTRY(Reset_Handler)
 /* Highest address of the user mode stack */
 _estack = ORIGIN(RAM_D1) + LENGTH(RAM_D1); /* end of "RAM_D1" Ram type memory */
 
-_Min_Heap_Size = 0x200 ; /* required amount of heap  */
-_Min_Stack_Size = 0x400 ; /* required amount of stack */
+_Min_Heap_Size = 0x200; /* required amount of heap  */
+_Min_Stack_Size = 0x400; /* required amount of stack */
 
 /* Memories definition */
 MEMORY
@@ -176,22 +176,22 @@ SECTIONS
     . = ALIGN(8);
   } >RAM_D1
 
-  .usbx_data 0x24027000 (NOLOAD): 
-  {  
+  .usbx_data 0x24027000 (NOLOAD):
+  {
     *(.UsbHpcdSection)
-    
+
   } >RAM_D1
-  
-  .uart_bss 0x24028000 (NOLOAD): 
-  { 
+
+  .uart_bss 0x24028000 (NOLOAD):
+  {
     *(.UsbxAppSection)
-    
+
   } >RAM_D1
-  
-  .usbx_bss 0x24029000 (NOLOAD): 
-  { 
+
+  .usbx_bss 0x24029000 (NOLOAD):
+  {
     *(.UsbxPoolSection)
-    
+
   } >RAM_D1
 
   /* Remove information from the standard libraries */

@@ -64,7 +64,7 @@ static TX_BYTE_POOL fx_app_byte_pool;
 /* USER CODE BEGIN NX_Pool_Buffer */
 #if defined ( __ICCARM__ ) /* IAR Compiler */
 #pragma location = ".NetXPoolSection"
-#elif defined ( __CC_ARM ) /* MDK ARM Compiler */
+#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(".NetXPoolSection")))
 #elif defined ( __GNUC__ ) /* GNU Compiler */
 __attribute__((section(".NetXPoolSection")))
@@ -191,7 +191,7 @@ VOID tx_application_define(VOID *first_unused_memory)
        place in RAM_region    { last section FREE_MEM };
    * For MDK-ARM
        - either define the RW_IRAM1 region in the ".sct" file
-       - or modify the line below in "tx_low_level_initilize.s to match the memory region being used
+       - or modify the line below in "tx_initialize_low_level.S to match the memory region being used
           LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
 
    * For STM32CubeIDE add the following section into the .ld file:
@@ -208,7 +208,7 @@ VOID tx_application_define(VOID *first_unused_memory)
       * Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
       * Read more in STM32CubeIDE User Guide, chapter: "Linker script".
 
-   * The "tx_initialize_low_level.s" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
+   * The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
    */
 
   /* USER CODE BEGIN DYNAMIC_MEM_ALLOC */

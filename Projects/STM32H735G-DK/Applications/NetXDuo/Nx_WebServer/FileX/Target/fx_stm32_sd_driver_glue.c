@@ -108,7 +108,6 @@ INT fx_stm32_sd_get_status(UINT instance)
 INT fx_stm32_sd_read_blocks(UINT instance, UINT *buffer, UINT start_block, UINT total_blocks)
 {
   INT ret = 0;
-
   /* USER CODE BEGIN PRE_READ_BLOCKS */
   UNUSED(instance);
   /* USER CODE END PRE_READ_BLOCKS */
@@ -136,7 +135,6 @@ INT fx_stm32_sd_read_blocks(UINT instance, UINT *buffer, UINT start_block, UINT 
 INT fx_stm32_sd_write_blocks(UINT instance, UINT *buffer, UINT start_block, UINT total_blocks)
 {
   INT ret = 0;
-
   /* USER CODE BEGIN PRE_WRITE_BLOCKS */
   UNUSED(instance);
   /* USER CODE END PRE_WRITE_BLOCKS */

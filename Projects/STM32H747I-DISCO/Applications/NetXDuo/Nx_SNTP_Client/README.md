@@ -19,11 +19,11 @@ The main entry function tx_application_define() is called by ThreadX during kern
  
 The application then creates 2 threads with the same priorities:
 
- + **AppMainThread** (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.
+ + **NxAppThread** (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.
  
  + **AppSNTPThread** (priority 5, PreemtionThreashold 5) : created with the TX_DONT_START flag to be started later.
  
-The **AppMainThread** starts and perform the following actions:
+The **NxAppThread** starts and perform the following actions:
   + starts the DHCP client
   
   + waits for the IP address resolution
@@ -45,8 +45,8 @@ The **AppSNTPThread**, once started:
 #### <b>Expected success behavior</b>
 
  + The board IP address is printed on the HyperTerminal
- + The time update sent by the sntp server is printed on the HyerTerminal
- + Each second, time from RTC is printed on the HyerTerminal and the green LED is toggling.
+ + The time update sent by the sntp server is printed on the HyperTerminal
+ + Each second, time from RTC is printed on the HyperTerminal and the green LED is toggling.
 
 #### <b>Error behaviors</b>
 
@@ -164,7 +164,7 @@ default NX_SNTP_CLIENT_MAX_ROOT_DISPERSION and NX_SNTP_CLIENT_MIN_SERVER_STRATUM
      } >RAM_D1
    ```
 
-  this section is then used in the <code> app_azure_rtos.c</code> file to force the <code>nx_byte_pool_buffer</code> allocation.
+  This section is then used in the <code> app_azure_rtos.c</code> file to force the <code>nx_byte_pool_buffer</code> allocation.
 
 ```
 /* USER CODE BEGIN NX_Pool_Buffer */
@@ -172,7 +172,7 @@ default NX_SNTP_CLIENT_MAX_ROOT_DISPERSION and NX_SNTP_CLIENT_MIN_SERVER_STRATUM
 #if defined ( __ICCARM__ ) /* IAR Compiler */
 #pragma location = ".NetXPoolSection"
 
-#elif defined ( __CC_ARM ) /* MDK ARM Compiler */
+#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(".NetXPoolSection")))
 
 #elif defined ( __GNUC__ ) /* GNU Compiler */

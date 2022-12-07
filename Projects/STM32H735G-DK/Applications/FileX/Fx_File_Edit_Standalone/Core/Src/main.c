@@ -99,7 +99,10 @@ int main(void)
   MX_GPIO_Init();
   MX_SDMMC1_SD_Init();
   /* USER CODE BEGIN 2 */
-  MX_FileX_Init();
+  if(MX_FileX_Init() != FX_SUCCESS)
+  {
+    Error_Handler();
+  }
   MX_FileX_Process();
   /* USER CODE END 2 */
 

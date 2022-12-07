@@ -161,17 +161,19 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >RAM_D1
-  
-  .usbx_data 0x24027000 (NOLOAD): 
-  {  
+
+  .usbx_data 0x24027000 (NOLOAD):
+  {
     *(.UsbHpcdSection)
+
   } >RAM_D1
-  
-  .usbx_bss 0x24028000 (NOLOAD): 
-  { 
+
+  .usbx_bss 0x24028000 (NOLOAD):
+  {
     *(.UsbxPoolSection)
+
   } >RAM_D1
-  
+
   /* Remove information from the standard libraries */
   /DISCARD/ :
   {

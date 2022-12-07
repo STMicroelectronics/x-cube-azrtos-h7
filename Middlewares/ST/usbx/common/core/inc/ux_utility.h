@@ -26,7 +26,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */ 
 /*                                                                        */ 
 /*    ux_utility.h                                        PORTABLE C      */ 
-/*                                                           6.1.10       */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -50,6 +50,13 @@
 /*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            added standalone support,   */
 /*                                            resulting in version 6.1.10 */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed standalone compile,   */
+/*                                            resulting in version 6.1.11 */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added macros for RTOS calls,*/
+/*                                            fixed OHCI PRSC issue,      */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 
@@ -165,27 +172,56 @@ extern  ALIGN_TYPE  _ux_utility_time_elapsed(ALIGN_TYPE, ALIGN_TYPE);
 
 #if !defined(UX_STANDALONE)
 #define _ux_system_semaphore_create                             _ux_utility_semaphore_create
-#define _ux_system_semaphore_create_rc                          _ux_utility_semaphore_create
+#define _ux_system_semaphore_create_norc                        _ux_utility_semaphore_create
+#define _ux_system_semaphore_created(sem)                       ((sem)->tx_semaphore_id != UX_EMPTY)
+#define _ux_system_semaphore_get                                _ux_utility_semaphore_get
+#define _ux_system_semaphore_get_norc                           _ux_utility_semaphore_get
+#define _ux_system_semaphore_waiting(sem)                       ((sem)->tx_semaphore_count != 0)
 #define _ux_system_semaphore_delete                             _ux_utility_semaphore_delete
-#define _ux_system_thread_create_rc                             _ux_utility_thread_create
+#define _ux_system_semaphore_put                                _ux_utility_semaphore_put
+#define _ux_system_thread_create                                _ux_utility_thread_create
+#define _ux_system_thread_create_norc                           _ux_utility_thread_create
+#define _ux_system_thread_created(t)                            ((t)->tx_thread_id != UX_EMPTY)
+#define _ux_system_thread_delete                                _ux_utility_thread_delete
 #define _ux_system_mutex_create                                 _ux_utility_mutex_create
 #define _ux_system_mutex_delete                                 _ux_utility_mutex_delete
 #define _ux_system_mutex_off                                    _ux_utility_mutex_off
 #define _ux_system_mutex_on                                     _ux_utility_mutex_on
+#define _ux_system_event_flags_create                           _ux_utility_event_flags_create
+#define _ux_system_event_flags_created(e)                       ((e)->tx_event_flags_group_id != UX_EMPTY)
+#define _ux_system_event_flags_delete                           _ux_utility_event_flags_delete
+#define _ux_system_event_flags_get                              _ux_utility_event_flags_get
+#define _ux_system_event_flags_set                              _ux_utility_event_flags_set
+#define _ux_system_event_flags_set_rc                           _ux_utility_event_flags_set
 #else
-#define _ux_system_semaphore_create(sem,name,cnt)               do{}while(0)
-#define _ux_system_semaphore_create_rc(sem,name,cnt)            (UX_SUCCESS)
-#define _ux_system_semaphore_delete                             _ux_utility_semaphore_delete
-#define _ux_system_thread_create_rc(t,name,entry,entry_param,stack,stack_size,priority,preempt_threshold,time_slice,auto_start) (UX_SUCCESS)
+#define _ux_system_semaphore_create(sem,name,cnt)               (UX_SUCCESS)
+#define _ux_system_semaphore_create_norc(sem,name,cnt)          do{}while(0)
+#define _ux_system_semaphore_created(sem)                       (UX_FALSE)
+#define _ux_system_semaphore_get(sem,opt)                       (UX_SUCCESS)
+#define _ux_system_semaphore_get_norc(sem,opt)                  do{}while(0)
+#define _ux_system_semaphore_waiting(sem)                       (UX_FALSE)
+#define _ux_system_semaphore_delete(sem)                        do{}while(0)
+#define _ux_system_semaphore_put(sem)                           do{}while(0)
+#define _ux_system_thread_create(t,name,entry,entry_param,stack,stack_size,priority,preempt_threshold,time_slice,auto_start) (UX_SUCCESS)
+#define _ux_system_thread_create_norc(t,name,entry,entry_param,stack,stack_size,priority,preempt_threshold,time_slice,auto_start) do{}while(0)
+#define _ux_system_thread_created(t)                            (UX_FALSE)
+#define _ux_system_thread_delete(t)                             do{}while(0)
 #define _ux_system_mutex_create(mutex,name)                     do{}while(0)
 #define _ux_system_mutex_delete(mutex)                          do{}while(0)
 #define _ux_system_mutex_off(mutex)                             do{}while(0)
 #define _ux_system_mutex_on(mutex)                              do{}while(0)
+#define _ux_system_event_flags_create(g,name)                   (UX_SUCCESS)
+#define _ux_system_event_flags_created(e)                       (UX_FALSE)
+#define _ux_system_event_flags_delete(g)                        do{}while(0)
+#define _ux_system_event_flags_get(g,req,gopt,actual,wopt)      (*actual = 0)
+#define _ux_system_event_flags_set(g,flags,option)              do{(void)flags;}while(0)
+#define _ux_system_event_flags_set_rc(g,flags,option)           (UX_SUCCESS)
 #endif
 
 #if !defined(UX_DEVICE_STANDALONE)
 #define _ux_device_thread_create                                _ux_utility_thread_create
 #define _ux_device_thread_delete                                _ux_utility_thread_delete
+#define _ux_device_thread_entry(t)                              ((t)->tx_thread_entry)
 #define _ux_device_thread_suspend                               _ux_utility_thread_suspend
 #define _ux_device_thread_resume                                _ux_utility_thread_resume
 #define _ux_device_thread_relinquish                            _ux_utility_thread_relinquish
@@ -206,6 +242,7 @@ extern  ALIGN_TYPE  _ux_utility_time_elapsed(ALIGN_TYPE, ALIGN_TYPE);
 #else
 #define _ux_device_thread_create(t,name,entry,entry_param,stack,stack_size,priority,preempt_threshold,time_slice,auto_start) (UX_SUCCESS)
 #define _ux_device_thread_delete(t)                             do{}while(0)
+#define _ux_device_thread_entry(t)                              ((UX_THREAD_ENTRY)t)
 #define _ux_device_thread_suspend(t)                            do{}while(0)
 #define _ux_device_thread_resume(t)                             do{}while(0)
 #define _ux_device_thread_relinquish(t)                         do{}while(0)
@@ -230,6 +267,7 @@ extern  ALIGN_TYPE  _ux_utility_time_elapsed(ALIGN_TYPE, ALIGN_TYPE);
 #define _ux_host_thread_create                                  _ux_utility_thread_create
 #define _ux_host_thread_created(thr)                            ((thr)->tx_thread_id != 0)
 #define _ux_host_thread_delete                                  _ux_utility_thread_delete
+#define _ux_host_thread_entry(thr)                              ((thr)->tx_thread_entry)
 #define _ux_host_thread_resume                                  _ux_utility_thread_resume
 #define _ux_host_thread_sleep                                   _ux_utility_thread_sleep
 #define _ux_host_thread_schedule_other                          _ux_utility_thread_schedule_other
@@ -255,6 +293,7 @@ extern  ALIGN_TYPE  _ux_utility_time_elapsed(ALIGN_TYPE, ALIGN_TYPE);
 #define _ux_host_thread_create(t,name,entry,entry_param,stack,stack_size,priority,preempt_threshold,time_slice,auto_start) (UX_SUCCESS)
 #define _ux_host_thread_created(t)                              (UX_FALSE)
 #define _ux_host_thread_delete(t)                               do{}while(0)
+#define _ux_host_thread_entry(thr)                              (UX_NULL)
 #define _ux_host_thread_resume(t)                               do{}while(0)
 #define _ux_host_thread_sleep(t)                                do{}while(0)
 #define _ux_host_thread_schedule_other(t)                       do{}while(0)
@@ -266,13 +305,13 @@ extern  ALIGN_TYPE  _ux_utility_time_elapsed(ALIGN_TYPE, ALIGN_TYPE);
 #define _ux_host_semaphore_get_norc(sem,t)                      do{}while(0)
 #define _ux_host_semaphore_put(sem)                             do{}while(0)
 #define _ux_host_semaphore_put_rc(sem)                          (UX_SUCCESS)
-#define _ux_host_mutex_create(mutex,name)                       do{}while(0)
+#define _ux_host_mutex_create(mutex,name)                       (UX_SUCCESS)
 #define _ux_host_mutex_delete(mutex)                            do{}while(0)
 #define _ux_host_mutex_off(mutex)                               do{}while(0)
 #define _ux_host_mutex_on(mutex)                                do{}while(0)
-#define _ux_host_event_flags_create(g,name)                     do{}while(0)
-#define _ux_host_event_flags_delete(g)                          do{}while(0)
-#define _ux_host_event_flags_get(g,req,gopt,actual,wopt)        do{}while(0)
+#define _ux_host_event_flags_create(g,name)                     (UX_SUCCESS)
+#define _ux_host_event_flags_delete(g)                          (UX_SUCCESS)
+#define _ux_host_event_flags_get(g,req,gopt,actual,wopt)        (UX_SUCCESS)
 #define _ux_host_event_flags_set(g,flags,option)                do{}while(0)
 #define _ux_host_timer_create(t,name,func,arg,tick0,tick1,flag) (UX_SUCCESS)
 #define _ux_host_timer_delete(t)                                do{}while(0)

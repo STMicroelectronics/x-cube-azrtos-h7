@@ -26,7 +26,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */
 /*                                                                        */
 /*    ux_hcd_stm32.h                                      PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -41,6 +41,9 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 
@@ -79,6 +82,8 @@
 #define UX_HCD_STM32_ED_STATUS_BULK_IN                          0x08
 #define UX_HCD_STM32_ED_STATUS_BULK_OUT                         0x09
 #define UX_HCD_STM32_ED_STATUS_PERIODIC_TRANSFER                0x0A
+#define UX_HCD_STM32_ED_STATUS_PENDING_MASK                     0x0F
+#define UX_HCD_STM32_ED_STATUS_TRANSFER_DONE                    0x10u
 
 
 /* Define STM32 static definition.  */
@@ -111,10 +116,18 @@ typedef struct UX_HCD_STM32_ED_STRUCT
     struct UX_HCD_STM32_ED_STRUCT       *ux_stm32_ed_next_ed;
     struct UX_ENDPOINT_STRUCT           *ux_stm32_ed_endpoint;
     struct UX_TRANSFER_STRUCT           *ux_stm32_ed_transfer_request;
+    UCHAR                               *ux_stm32_ed_setup;
+    UCHAR                               *ux_stm32_ed_data;
+    USHORT                              ux_stm32_ed_saved_length;
+    USHORT                              ux_stm32_ed_saved_actual_length;
     UCHAR                               ux_stm32_ed_status;
     UCHAR                               ux_stm32_ed_channel;
     UCHAR                               ux_stm32_ed_interval_mask;
     UCHAR                               ux_stm32_ed_interval_position;
+    UCHAR                               ux_stm32_ed_dir;
+    UCHAR                               ux_stm32_ed_speed;
+    UCHAR                               ux_stm32_ed_type;
+    UCHAR                               reserved;
 } UX_HCD_STM32_ED;
 
 

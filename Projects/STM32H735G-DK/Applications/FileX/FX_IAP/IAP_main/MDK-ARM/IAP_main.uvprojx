@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>STM32H735IGKx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32H7xx_DFP.2.7.0</PackID>
+          <PackID>Keil.STM32H7xx_DFP.3.0.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000-0x2001FFFF) IRAM2(0x24000000-0x2404FFFF) IROM(0x8000000-0x80FFFFF) CLOCK(12000000) FPU3(DFPU) CPUTYPE("Cortex-M7") ELITTLE TZ</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -210,7 +210,7 @@
             <Ra1Chk>0</Ra1Chk>
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
-            <Im1Chk>1</Im1Chk>
+            <Im1Chk>0</Im1Chk>
             <Im2Chk>1</Im2Chk>
             <OnChipMemories>
               <Ocm1>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>TX_INCLUDE_USER_DEFINE_FILE,FX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H735xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../AZURE_RTOS/App;../FileX/App;../FileX/Target;../../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../../Drivers/CMSIS/Include;../../../../../../../Middlewares/ST/filex/common/inc/;../../../../../../../Middlewares/ST/filex/ports/generic/inc/;../../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../../Drivers/BSP/STM32H735G-DK</IncludePath>
+              <IncludePath>../Core/Inc;../AZURE_RTOS/App;../FileX/App;../FileX/Target;../../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../../Drivers/CMSIS/Include;../../../../../../../Middlewares/ST/filex/common/inc/;../../../../../../../Middlewares/ST/filex/ports/generic/inc/;../../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -462,16 +462,6 @@
               <FileName>README.md</FileName>
               <FileType>5</FileType>
               <FilePath>../README.md</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Drivers/BSP/STM32H735G-DK</GroupName>
-          <Files>
-            <File>
-              <FileName>stm32h735g_discovery.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../../Drivers/BSP/STM32H735G-DK/stm32h735g_discovery.c</FilePath>
             </File>
           </Files>
         </Group>

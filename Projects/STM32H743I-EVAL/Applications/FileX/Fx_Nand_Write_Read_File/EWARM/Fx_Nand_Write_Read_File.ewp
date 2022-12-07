@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.50.6.28611</state>
+                    <state>8.50.9.33458</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -353,8 +353,8 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state>$PROJ_DIR$/../AZURE_RTOS/App</state>
                     <state>$PROJ_DIR$/../Core/Inc</state>
+                    <state>$PROJ_DIR$/../AZURE_RTOS/App</state>
                     <state>$PROJ_DIR$/../FileX/App</state>
                     <state>$PROJ_DIR$/../LevelX/App</state>
                     <state>$PROJ_DIR$/../FileX/Target</state>
@@ -369,7 +369,6 @@
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/BSP/STM32H743I-EVAL</state>
-                    <state>$PROJ_DIR$/../../../../../../Drivers/BSP/Components/Common</state>
                     <state>$PROJ_DIR$/../../../../../../Drivers/BSP/Components/mfxstm32l152</state>
                 </option>
                 <option>
@@ -498,7 +497,7 @@
             <name>AARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>10</version>
+                <version>11</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -653,6 +652,10 @@
                 <option>
                     <name>AsmNoLiteralPool</name>
                     <state>0</state>
+                </option>
+                <option>
+                    <name>PreInclude</name>
+                    <state></state>
                 </option>
             </data>
         </settings>
@@ -1026,7 +1029,7 @@
                 </option>
                 <option>
                     <name>IlinkTrustzoneImportLibraryOut</name>
-                    <state>Fx_Nand_Write_Read_File_import_lib.o</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>OILinkExtraOption</name>
@@ -1189,12 +1192,6 @@
                 <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_adc.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_adc_ex.c</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_cortex.c</name>
             </file>
             <file>
@@ -1264,7 +1261,7 @@
         <group>
             <name>FileX</name>
             <group>
-                <name>File System/FileX/Core/RTOS_MODE</name>
+                <name>File System/FileX/Core</name>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\filex\common\src\fx_directory_attributes_read.c</name>
                 </file>

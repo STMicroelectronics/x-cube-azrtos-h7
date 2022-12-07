@@ -109,7 +109,7 @@ void LEDThread_Entry(void *argument)
   /* Infinite loop */
   while(1)
   {
-    BSP_LED_Toggle(LED_GREEN);
+    HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
     /* Delay for 500ms */
     vTaskDelay(500);
   }

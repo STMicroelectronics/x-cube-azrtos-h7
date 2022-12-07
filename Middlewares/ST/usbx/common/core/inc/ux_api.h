@@ -26,7 +26,7 @@
 /*  APPLICATION INTERFACE DEFINITION                       RELEASE        */ 
 /*                                                                        */ 
 /*    ux_api.h                                            PORTABLE C      */ 
-/*                                                           6.1.10       */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -110,6 +110,18 @@
 /*                                            added some general errors,  */
 /*                                            added printer trace IDs,    */
 /*                                            resulting in version 6.1.10 */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            assumed OS types to avoid   */
+/*                                            standalone compiling error, */
+/*                                            added CCID trace IDs,       */
+/*                                            resulting in version 6.1.11 */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed parameter/variable    */
+/*                                            names conflict C++ keyword, */
+/*                                            added feedback size defs,   */
+/*                                            added shared device config  */
+/*                                            descriptor for enum scan,   */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 
@@ -277,7 +289,7 @@ typedef signed char               SCHAR;
 #define AZURE_RTOS_USBX
 #define USBX_MAJOR_VERSION            6
 #define USBX_MINOR_VERSION            1
-#define USBX_PATCH_VERSION            10
+#define USBX_PATCH_VERSION            12
 
 /* Macros for concatenating tokens, where UX_CONCATn concatenates n tokens.  */
 
@@ -764,6 +776,32 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_TRACE_DEVICE_CLASS_PRINTER_READ                              (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 102)           /* I1 = class instance  , I2 = buffer          , I3 = requested_length                              */
 #define UX_TRACE_DEVICE_CLASS_PRINTER_WRITE                             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 103)           /* I1 = class instance  , I2 = buffer          , I3 = requested_length                              */
 
+#define UX_TRACE_DEVICE_CLASS_CCID_ACTIVATE                             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 110)           /* I1 = class instance                                                                              */       
+#define UX_TRACE_DEVICE_CLASS_CCID_DEACTIVATE                           (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 111)           /* I1 = class instance                                                                              */       
+#define UX_TRACE_DEVICE_CLASS_CCID_REQ_ABORT                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 112)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_PC_TO_RDR_ICC_POWER_ON               (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 113)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_PC_TO_RDR_ICC_POWER_OFF              (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 114)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_PC_TO_RDR_GET_SLOT_STATUS            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 115)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_PC_TO_RDR_XFR_BLOCK                  (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 116)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_PC_TO_RDR_GET_PARAMETERS             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 117)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_PC_TO_RDR_RESET_PARAMETERS           (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 118)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_PC_TO_RDR_SET_PARAMETERS             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 119)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_PC_TO_RDR_ESCAPE                     (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 120)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_PC_TO_RDR_ICC_CLOCK                  (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 121)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_PC_TO_RDR_T0_APDU                    (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 122)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_PC_TO_RDR_SECURE                     (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 123)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_PC_TO_RDR_MECHANICAL                 (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 124)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_PC_TO_RDR_ABORT                      (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 125)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_PC_TO_RDR_SET_RATE_CLOCK             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 126)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_RDR_TO_PC_RESPONSE                   (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 127)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_ICC_INSERT                           (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 128)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_ICC_REMOVE                           (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 129)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_AUTO_SEQ_START                       (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 130)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_AUTO_SEQ_STOP                        (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 131)           /* I1 = class instance  , I2 = slot                                                                 */
+#define UX_TRACE_DEVICE_CLASS_CCID_TIME_EXTENSION                       (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 132)           /* I1 = class instance  , I2 = slot            , I3 = time                                          */
+#define UX_TRACE_DEVICE_CLASS_CCID_HARDWARE_ERROR                       (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 133)           /* I1 = class instance  , I2 = slot                                                                 */
+
+
 /* Define the USBX Error Event.  */
 
 #define UX_TRACE_ERROR                                                  999
@@ -858,12 +896,16 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #ifndef UX_TIMER
 #ifdef  TX_API_H
 #define UX_TIMER                                                        TX_TIMER
+#else
+#define UX_TIMER                                                        VOID* /* Dummy type for standalone compile.  */
 #endif
 #endif
 
 #ifndef UX_THREAD
 #ifdef  TX_API_H
 #define UX_THREAD                                                       TX_THREAD
+#else
+#define UX_THREAD                                                       VOID* /* Dummy type for standalone compile.  */
 #endif
 #endif
 
@@ -933,6 +975,8 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #ifndef UX_SEMAPHORE
 #ifdef  TX_API_H
 #define UX_SEMAPHORE                                                    TX_SEMAPHORE
+#else
+#define UX_SEMAPHORE                                                    VOID* /* Dummy type for standalone compile.  */
 #endif
 #endif
 
@@ -942,6 +986,8 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #ifndef UX_MUTEX
 #ifdef  TX_API_H
 #define UX_MUTEX                                                        TX_MUTEX
+#else
+#define UX_MUTEX                                                        VOID* /* Dummy type for standalone compile.  */
 #endif
 #endif
 
@@ -951,6 +997,8 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #ifndef UX_EVENT_FLAGS_GROUP
 #ifdef  TX_API_H
 #define UX_EVENT_FLAGS_GROUP                                            TX_EVENT_FLAGS_GROUP
+#else
+#define UX_EVENT_FLAGS_GROUP                                            VOID* /* Dummy type for standalone compile.  */
 #endif
 #endif
 
@@ -1089,6 +1137,9 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_MAX_NUMBER_OF_TRANSACTIONS_MASK                              0x1800u
 #define UX_MAX_NUMBER_OF_TRANSACTIONS_SHIFT                             11
 
+#define UX_FEEDBACK_SIZE_FULL_SPEED                                     3   /* 10.10 format fits into 3 bytes.  */
+#define UX_FEEDBACK_SIZE_HIGH_SPEED                                     4   /* 12.13 format fits into 4 bytes.  */
+
 #define UX_REQUEST_DIRECTION                                            0x80u
 #define UX_REQUEST_IN                                                   0x80u
 #define UX_REQUEST_OUT                                                  0x00u
@@ -1220,9 +1271,9 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 
 #define UX_DEVICE_CONNECTION                                            0x81u
 #define UX_DEVICE_DISCONNECTION                                         0x82u
-                                                                        
+
 /* Host change callback events : _callback(event, NULL, NULL)  */
-                                                                        
+
 #define UX_STANDALONE_WAIT_BACKGROUND_TASK                              0x00u
 
 
@@ -1357,6 +1408,7 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_INVALID_STATE                                                0xfb
 #define UX_INVALID_PARAMETER                                            0xfa
 #define UX_ABORTED                                                      0xf9
+#define UX_MATH_OVERFLOW                                                0xf8
 
 #define UX_TOO_MANY_DEVICES                                             0x11
 #define UX_MEMORY_INSUFFICIENT                                          0x12
@@ -1428,6 +1480,7 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
                                                                         
 #define UX_HOST_CLASS_AUDIO_WRONG_TYPE                                  0x80
 #define UX_HOST_CLASS_AUDIO_WRONG_INTERFACE                             0x81
+#define UX_HOST_CLASS_AUDIO_WRONG_FREQUENCY                             0x82
 
 #define UX_CLASS_CDC_ECM_LINK_STATE_DOWN_ERROR                          0x90
                                                                         
@@ -1857,6 +1910,8 @@ typedef struct UX_DEVICE_STRUCT
     ULONG           ux_device_power_source;
     struct UX_CONFIGURATION_STRUCT
                     *ux_device_current_configuration;
+    UCHAR           *ux_device_packed_configuration;
+    ULONG           ux_device_packed_configuration_keep_count;
 #if !defined(UX_HOST_STANDALONE)
     UX_SEMAPHORE    ux_device_protection_semaphore;
 #endif
@@ -2668,7 +2723,7 @@ UINT    ux_host_stack_class_instance_get(UX_HOST_CLASS *host_class, UINT class_i
 UINT    ux_host_stack_class_register(UCHAR *class_name, UINT (*class_entry_function)(struct UX_HOST_CLASS_COMMAND_STRUCT *));
 UINT    ux_host_stack_class_unregister(UINT (*class_entry_function)(struct UX_HOST_CLASS_COMMAND_STRUCT *));
 UINT    ux_host_stack_configuration_interface_get(UX_CONFIGURATION *configuration, UINT interface_index,
-                                    UINT alternate_setting_index, UX_INTERFACE **interface);
+                                    UINT alternate_setting_index, UX_INTERFACE **ux_interface);
 UINT    ux_host_stack_device_configuration_activate(UX_CONFIGURATION *configuration);
 UINT    ux_host_stack_device_configuration_deactivate(UX_DEVICE *device);
 UINT    ux_host_stack_device_configuration_get(UX_DEVICE *device, UINT configuration_index, UX_CONFIGURATION **configuration);
@@ -2680,8 +2735,8 @@ UINT    ux_host_stack_hcd_register(UCHAR *hcd_name, UINT (*hcd_initialize_functi
 UINT    ux_host_stack_hcd_unregister(UCHAR *hcd_name, ULONG hcd_param1, ULONG hcd_param2);
 UINT    ux_host_stack_initialize(UINT (*ux_system_host_change_function)(ULONG, UX_HOST_CLASS *, VOID *));
 UINT    ux_host_stack_uninitialize(VOID);
-UINT    ux_host_stack_interface_endpoint_get(UX_INTERFACE *interface, UINT endpoint_index, UX_ENDPOINT **endpoint);
-UINT    ux_host_stack_interface_setting_select(UX_INTERFACE *interface);
+UINT    ux_host_stack_interface_endpoint_get(UX_INTERFACE *ux_interface, UINT endpoint_index, UX_ENDPOINT **endpoint);
+UINT    ux_host_stack_interface_setting_select(UX_INTERFACE *ux_interface);
 UINT    ux_host_stack_transfer_request(UX_TRANSFER *transfer_request);
 UINT    ux_host_stack_transfer_request_abort(UX_TRANSFER *transfer_request);
 VOID    ux_host_stack_hnp_polling_thread_entry(ULONG id);
@@ -2721,11 +2776,11 @@ UINT    ux_device_stack_initialize(UCHAR * device_framework_high_speed, ULONG de
                                     UCHAR * language_id_framework, ULONG language_id_framework_length,
                                     UINT (*ux_system_slave_change_function)(ULONG));
 UINT    ux_device_stack_uninitialize(VOID);
-UINT    ux_device_stack_interface_delete(UX_SLAVE_INTERFACE *interface);
+UINT    ux_device_stack_interface_delete(UX_SLAVE_INTERFACE *ux_interface);
 UINT    ux_device_stack_interface_get(UINT interface_value);
 UINT    ux_device_stack_interface_set(UCHAR * device_framework, ULONG device_framework_length,
                                     ULONG alternate_setting_value);
-UINT    ux_device_stack_interface_start(UX_SLAVE_INTERFACE *interface);
+UINT    ux_device_stack_interface_start(UX_SLAVE_INTERFACE *ux_interface);
 UINT    ux_device_stack_transfer_request(UX_SLAVE_TRANSFER *transfer_request, ULONG slave_length, ULONG host_length);
 UINT    ux_device_stack_transfer_request_abort(UX_SLAVE_TRANSFER *transfer_request, ULONG completion_code);
 

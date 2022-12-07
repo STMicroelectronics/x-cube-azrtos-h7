@@ -26,9 +26,12 @@
 <p>At the beginning ThreadX calls the entry function tx_application_define(), at this stage, all USBx resources are initialized, the mass storage Class driver is</p>
 <p>registered and the application creates one thread:</p>
 <ul>
-<li><p>usbx_app_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device. In addition two callback functions are needed for the USBX mass storage class device:</p></li>
-<li>app_usb_device_thread_media_read used to read data through DMA from the mass storage device.</li>
-<li><p>app_usb_device_thread_media_write used to write data through DMA into the mass storage device.</p></li>
+<li>app_ux_device_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device.</li>
+</ul>
+<p>In addition two callback functions are needed for the USBX mass storage class device:</p>
+<ul>
+<li>USBD_STORAGE_Read used to read data through DMA from the mass storage device.</li>
+<li>USBD_STORAGE_Write used to write data through DMA into the mass storage device.</li>
 </ul>
 <h4 id="expected-success-behavior"><b>Expected success behavior</b></h4>
 <p>When plugged to PC host, the STM32H735G-DK should enumerate as an USB MSC device. During the enumeration phase, device must provide host with the requested</p>
@@ -45,7 +48,6 @@
 </ul>
 <h4 id="known-limitations"><b>Known limitations</b></h4>
 <p>The Eject operation is not supported yet by MSC class.</p>
-<p>When creating an USBX based application with MDK-ARM AC6 compiler make sure to disable the optimization for stm32h7xx_ll_usb.c file, otherwise application might not work correctly. This limitation will be fixed in future release.</p>
 <h3 id="notes"><b>Notes</b></h3>
 <ol type="1">
 <li>Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from Flash memory. This feature can be activated using ‘#pragma location = “.itcmram”’ to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.</li>
@@ -91,8 +93,8 @@ or modify the line below in &quot;tx_initialize_low_level.S to match the memory 
    } &gt;RAM_D1 AT&gt; RAM_D1</code></pre>
 <pre><code>The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
 In the example above the ThreadX heap size is set to 64KBytes.
-The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.  
-Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).  
+The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
 Read more in STM32CubeIDE User Guide, chapter: &quot;Linker script&quot;.</code></pre>
 <ul>
 <li>The “tx_initialize_low_level.S” should be also modified to enable the “USE_DYNAMIC_MEMORY_ALLOCATION” flag.</li>

@@ -58,6 +58,7 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+
 /* USER CODE BEGIN Private defines */
 #define USBD_DFU_APP_DEFAULT_ADDR       0x08020000
 #define USBD_DFU_APP_START_ADDR         0x20000000

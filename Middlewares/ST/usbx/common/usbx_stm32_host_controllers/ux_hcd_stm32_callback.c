@@ -36,7 +36,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    HAL_HCD_Connect_Callback                            PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -66,6 +66,9 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            refined macros names,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 void HAL_HCD_Connect_Callback(HCD_HandleTypeDef *hhcd)
@@ -87,7 +90,7 @@ UX_HCD_STM32        *hcd_stm32;
     hcd_stm32 -> ux_hcd_stm32_controller_flag &= ~UX_HCD_STM32_CONTROLLER_FLAG_DEVICE_DETACHED;
 
     /* Wake up the root hub thread.  */
-    _ux_utility_semaphore_put(&_ux_system_host -> ux_system_host_enum_semaphore);
+    _ux_host_semaphore_put(&_ux_system_host -> ux_system_host_enum_semaphore);
 }
 
 
@@ -96,7 +99,7 @@ UX_HCD_STM32        *hcd_stm32;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    HAL_HCD_Disconnect_Callback                         PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -126,6 +129,9 @@ UX_HCD_STM32        *hcd_stm32;
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            refined macros names,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 void HAL_HCD_Disconnect_Callback(HCD_HandleTypeDef *hhcd)
@@ -147,7 +153,7 @@ UX_HCD_STM32        *hcd_stm32;
     hcd_stm32 -> ux_hcd_stm32_controller_flag &= ~UX_HCD_STM32_CONTROLLER_FLAG_DEVICE_ATTACHED;
 
     /* Wake up the root hub thread.  */
-    _ux_utility_semaphore_put(&_ux_system_host -> ux_system_host_enum_semaphore);
+    _ux_host_semaphore_put(&_ux_system_host -> ux_system_host_enum_semaphore);
 }
 
 
@@ -156,7 +162,7 @@ UX_HCD_STM32        *hcd_stm32;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    HAL_HCD_Disconnect_Callback                         PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -189,6 +195,10 @@ UX_HCD_STM32        *hcd_stm32;
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            refined macros names,       */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 void HAL_HCD_HC_NotifyURBChange_Callback(HCD_HandleTypeDef *hhcd, uint8_t chnum, HCD_URBStateTypeDef urb_state)
@@ -225,7 +235,7 @@ UX_TRANSFER         *transfer_request;
         /* Get transfer request.  */
         transfer_request = ed -> ux_stm32_ed_transfer_request;
 
-        /* Check if ED is still valid.  */
+        /* Check if request is still valid.  */
         if (transfer_request == UX_NULL)
         {
 
@@ -248,7 +258,7 @@ UX_TRANSFER         *transfer_request;
 
                 /* Check the request direction.  */
                 if ((((ed->ux_stm32_ed_endpoint -> ux_endpoint_descriptor.bmAttributes) & UX_MASK_ENDPOINT_TYPE) != UX_CONTROL_ENDPOINT) &&
-                    (transfer_request -> ux_transfer_request_type & UX_REQUEST_DIRECTION) == UX_REQUEST_IN)
+                    (ed -> ux_stm32_ed_dir == 1))
                 {
 
                     /* Get transfer size for receiving direction.  */
@@ -258,7 +268,7 @@ UX_TRANSFER         *transfer_request;
                 /* Check if the request is for bulk OUT or control OUT.  */
                 if ((((ed -> ux_stm32_ed_endpoint -> ux_endpoint_descriptor.bmAttributes) & UX_MASK_ENDPOINT_TYPE) == UX_BULK_ENDPOINT ||
                      ((ed -> ux_stm32_ed_endpoint -> ux_endpoint_descriptor.bmAttributes) & UX_MASK_ENDPOINT_TYPE) == UX_CONTROL_ENDPOINT) &&
-                     (transfer_request -> ux_transfer_request_type & UX_REQUEST_DIRECTION) == UX_REQUEST_OUT)
+                     (ed -> ux_stm32_ed_dir == 0))
                 {
 
                     /* Update actual transfer length.  */
@@ -292,12 +302,17 @@ UX_TRANSFER         *transfer_request;
             /* Move to next transfer.  */
             ed -> ux_stm32_ed_transfer_request = transfer_request -> ux_transfer_request_next_transfer_request;
 
+#if defined(UX_HOST_STANDALONE)
+            transfer_request -> ux_transfer_request_status = UX_TRANSFER_STATUS_COMPLETED;
+            ed -> ux_stm32_ed_status |= UX_HCD_STM32_ED_STATUS_TRANSFER_DONE;
+#endif /* defined(UX_HOST_STANDALONE) */
+
             /* Invoke callback function.  */
             if (transfer_request -> ux_transfer_request_completion_function)
                 transfer_request -> ux_transfer_request_completion_function(transfer_request);
 
             /* Wake up the transfer request thread.  */
-            _ux_utility_semaphore_put(&transfer_request -> ux_transfer_request_semaphore);
+            _ux_host_semaphore_put(&transfer_request -> ux_transfer_request_semaphore);
 
         }
         else
@@ -329,7 +344,7 @@ UX_TRANSFER         *transfer_request;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    HAL_HCD_SOF_Callback                                PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -359,6 +374,9 @@ UX_TRANSFER         *transfer_request;
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            refined macros names,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 void HAL_HCD_SOF_Callback(HCD_HandleTypeDef *hhcd)
@@ -378,6 +396,6 @@ UX_HCD_STM32        *hcd_stm32;
         hcd -> ux_hcd_thread_signal++;
 
         /* Wake up the scheduler.  */
-        _ux_utility_semaphore_put(&_ux_system_host -> ux_system_host_hcd_semaphore);
+        _ux_host_semaphore_put(&_ux_system_host -> ux_system_host_hcd_semaphore);
     }
 }

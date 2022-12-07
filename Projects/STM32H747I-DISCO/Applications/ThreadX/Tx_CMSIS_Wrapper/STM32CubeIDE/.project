@@ -145,11 +145,6 @@
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/CM7/Src/app_tx_cmsisrtos.c</locationURI>
 		</link>
-		<link>
-			<name>Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery.c</locationURI>
-		</link>
 	</linkedResources>
 	<filteredResources>
 		<filter>

@@ -1,3 +1,4 @@
+
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -32,6 +33,7 @@
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
+
 /* USER CODE BEGIN PD */
 
 /* USER CODE END PD */
@@ -42,6 +44,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+
 /* USER CODE BEGIN PV */
 /* Define FileX global data structures.  */
 FX_MEDIA        sdio_disk;
@@ -49,40 +52,37 @@ FX_FILE         fx_file;
 
 /* Buffer for FileX FX_MEDIA sector cache. this should be 32-Bytes
 aligned to avoid cache maintenance issues */
-ALIGN_32BYTES (uint32_t media_memory[FX_STM32_SD_DEFAULT_SECTOR_SIZE / sizeof(uint32_t)]);
+ALIGN_32BYTES(uint32_t media_memory[FX_STM32_SD_DEFAULT_SECTOR_SIZE / sizeof(uint32_t)]);
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
+
 /* USER CODE BEGIN PFP */
-void Error_Handler(void);
+
 /* USER CODE END PFP */
 
 /**
   * @brief  Application FileX Initialization.
-  * @param memory_ptr: memory pointer
   * @retval int
   */
-UINT MX_FileX_Init(void)
+UINT MX_FileX_Init(VOID)
 {
   UINT ret = FX_SUCCESS;
   /* USER CODE BEGIN MX_FileX_Init */
-  UINT status;
+
+  /* USER CODE END MX_FileX_Init */
 
   /* Initialize FileX.  */
   fx_system_initialize();
 
-  /* Start application */
+  /* USER CODE BEGIN MX_FileX_Init 1*/
+
   /* Open the sdio_disk driver. */
-  status =  fx_media_open(&sdio_disk, "STM32_SDIO_DISK", fx_stm32_sd_driver, 0, (VOID *) media_memory, sizeof(media_memory));
+  ret =  fx_media_open(&sdio_disk, "STM32_SDIO_DISK", fx_stm32_sd_driver, 0, (VOID *) media_memory, sizeof(media_memory));
 
-  /* Check the media open status. */
-  if (status != FX_SUCCESS)
-  {
-    Error_Handler();
-  }
+  /* USER CODE END MX_FileX_Init 1*/
 
-  /* USER CODE END MX_FileX_Init */
   return ret;
 }
 

@@ -33,7 +33,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_device_class_cdc_ecm_activate                   PORTABLE C      */ 
-/*                                                           6.1.10       */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -75,39 +75,50 @@
 /*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            refined macros names,       */
 /*                                            resulting in version 6.1.10 */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed standalone compile,   */
+/*                                            resulting in version 6.1.11 */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed parameter/variable    */
+/*                                            names conflict C++ keyword, */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_device_class_cdc_ecm_activate(UX_SLAVE_CLASS_COMMAND *command)
 {
-                                          
-UX_SLAVE_INTERFACE          *interface;            
+#if defined(UX_DEVICE_STANDALONE)
+    UX_PARAMETER_NOT_USED(command);
+    return(UX_FUNCTION_NOT_SUPPORTED);
+#else
+
+UX_SLAVE_INTERFACE          *interface_ptr;            
+UX_SLAVE_CLASS              *class_ptr;
 UX_SLAVE_CLASS_CDC_ECM      *cdc_ecm;
-UX_SLAVE_CLASS              *class;
 UX_SLAVE_ENDPOINT           *endpoint;
 ULONG                       physical_address_msw;
 ULONG                       physical_address_lsw;
 
     /* Get the class container.  */
-    class =  command -> ux_slave_class_command_class_ptr;
+    class_ptr =  command -> ux_slave_class_command_class_ptr;
 
     /* Get the class instance in the container.  */
-    cdc_ecm = (UX_SLAVE_CLASS_CDC_ECM *) class -> ux_slave_class_instance;
+    cdc_ecm = (UX_SLAVE_CLASS_CDC_ECM *) class_ptr -> ux_slave_class_instance;
 
     /* Get the interface that owns this instance.  */
-    interface =  (UX_SLAVE_INTERFACE  *) command -> ux_slave_class_command_interface;
+    interface_ptr =  (UX_SLAVE_INTERFACE  *) command -> ux_slave_class_command_interface;
     
     /* Check if this is the Control or Data interface.  */
     if (command -> ux_slave_class_command_class == UX_DEVICE_CLASS_CDC_ECM_CLASS_COMMUNICATION_CONTROL)
     {
 
         /* Store the class instance into the interface.  */
-        interface -> ux_slave_interface_class_instance =  (VOID *)cdc_ecm;
+        interface_ptr -> ux_slave_interface_class_instance =  (VOID *)cdc_ecm;
          
         /* Now the opposite, store the interface in the class instance.  */
-        cdc_ecm -> ux_slave_class_cdc_ecm_interface =  interface;
+        cdc_ecm -> ux_slave_class_cdc_ecm_interface =  interface_ptr;
         
         /* Locate the interrupt endpoint. */
-        endpoint =  interface -> ux_slave_interface_first_endpoint;
+        endpoint =  interface_ptr -> ux_slave_interface_first_endpoint;
     
         /* Parse all endpoints.  */
         while (endpoint != UX_NULL)
@@ -143,7 +154,7 @@ ULONG                       physical_address_lsw;
     else
 
         /* This is the DATA Class, only store the cdc_ecm instance in the interface.  */
-        interface -> ux_slave_interface_class_instance =  (VOID *)cdc_ecm;
+        interface_ptr -> ux_slave_interface_class_instance =  (VOID *)cdc_ecm;
 
     /* Reset the CDC ECM alternate setting to 0.  */
     cdc_ecm -> ux_slave_class_cdc_ecm_current_alternate_setting =  0;
@@ -158,11 +169,11 @@ ULONG                       physical_address_lsw;
 
         /* Does the data class have bulk endpoint declared ? If yes we need to start link.
            If not, the host will change the alternate setting at a later stage.  */
-        if (interface -> ux_slave_interface_descriptor.bNumEndpoints != 0)
+        if (interface_ptr -> ux_slave_interface_descriptor.bNumEndpoints != 0)
         {   
 
             /* Locate the endpoints.  Control and Bulk in/out for Data Interface.  */
-            endpoint =  interface -> ux_slave_interface_first_endpoint;
+            endpoint =  interface_ptr -> ux_slave_interface_first_endpoint;
         
             /* Parse all endpoints.  */
             while (endpoint != UX_NULL)
@@ -204,7 +215,7 @@ ULONG                       physical_address_lsw;
             cdc_ecm -> ux_slave_class_cdc_ecm_link_state = UX_DEVICE_CLASS_CDC_ECM_LINK_STATE_UP;
             
             /* Wake up the Interrupt thread and send a network notification to the host.  */
-            _ux_utility_event_flags_set(&cdc_ecm -> ux_slave_class_cdc_ecm_event_flags_group, UX_DEVICE_CLASS_CDC_ECM_NETWORK_NOTIFICATION_EVENT, UX_OR);                
+            _ux_device_event_flags_set(&cdc_ecm -> ux_slave_class_cdc_ecm_event_flags_group, UX_DEVICE_CLASS_CDC_ECM_NETWORK_NOTIFICATION_EVENT, UX_OR);                
 
             /* Reset the endpoint buffers.  */
             _ux_utility_memory_set(cdc_ecm -> ux_slave_class_cdc_ecm_bulkout_endpoint -> ux_slave_endpoint_transfer_request. 
@@ -252,5 +263,5 @@ ULONG                       physical_address_lsw;
 
     /* Return completion status.  */
     return(UX_SUCCESS);
+#endif
 }
-

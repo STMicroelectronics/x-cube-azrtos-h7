@@ -15,19 +15,19 @@ the SD card detection event is registered and drivers are initialized.
 
 A single thread is created:
 
-  - fx_thread (Prio : 10; PreemptionPrio : 10) used to initialize the SD driver and starting FileX's file operations.
+  - fx_app_thread (Prio : 10; PreemptionPrio : 10) used to initialize the SD driver and starting FileX's file operations.
 
-A message queue is used to signal the SD card detection event to the fx_thread thread:
+A message queue is used to signal the SD card detection event to the fx_app_thread thread:
 
-  - tx_msg_queue (Msg size : 1 (UINT); total messages : 16) used to notify the fx_thread about the SD card insertion status.
+  - tx_msg_queue (Msg size : 1 (UINT); total messages : 16) used to notify the fx_app_thread about the SD card insertion status.
 
-The fx_thread starts by checking whether the SD card is initially inserted or not. In the true case, it sends a message to the queue to ensure
+The fx_app_thread starts by checking whether the SD card is initially inserted or not. In the true case, it sends a message to the queue to ensure
 
 that the first iteration starts properly. The wait on the message queue blocks till it receives a new message about whether the SD card is inserted
 
 or removed. Interrupt callback for SD detection is registered and it is used to send the event information to the message queue.
 
-The fx_thread uses FileX services to open the SD media for file operations and attempt to create file STM32.TXT. If the file exists already,
+The fx_app_thread uses FileX services to open the SD media for file operations and attempt to create file STM32.TXT. If the file exists already,
 
 it will be overwritten. Dummy content is then written into the file and it is closed. The file is opened once again in read mode and content
 

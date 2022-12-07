@@ -370,7 +370,6 @@
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_host_controllers/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/inc/</state>
-                    <state>$PROJ_DIR$/../../../../../../Drivers/BSP/STM32H735G-DK</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -1172,15 +1171,6 @@
     </group>
     <group>
         <name>Drivers</name>
-        <group>
-            <name>BSP</name>
-            <group>
-                <name>STM32H735G-DK</name>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.c</name>
-                </file>
-            </group>
-        </group>
         <group>
             <name>CMSIS</name>
             <file>
@@ -2476,9 +2466,6 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_system_initialize.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_system_tasks_run.c</name>
-                </file>
-                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_system_uninitialize.c</name>
                 </file>
                 <file>
@@ -2638,6 +2625,9 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_timer_create.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_timer_delete.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\core\src\ux_utility_unicode_to_string.c</name>
                 </file>
                 <file>
@@ -2678,9 +2668,6 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_idle_set.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_idle_set_run.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_instance_clean.c</name>
@@ -2731,13 +2718,7 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_report_set.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_report_set_run.c</name>
-                </file>
-                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_resources_free.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_tasks_run.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_transfer_request_completed.c</name>
@@ -2762,9 +2743,6 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_keyboard_key_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_keyboard_tasks_run.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_hid_keyboard_thread.c</name>
@@ -2803,9 +2781,6 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_cbw_initialize.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_check_run.c</name>
-                </file>
-                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_configure.c</name>
                 </file>
                 <file>
@@ -2830,9 +2805,6 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_entry.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_lock.c</name>
-                </file>
-                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_max_lun_get.c</name>
                 </file>
                 <file>
@@ -2840,9 +2812,6 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_media_characteristics_get.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_media_check.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_media_format_capacity_get.c</name>
@@ -2869,9 +2838,6 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_partition_read.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_read_write_run.c</name>
-                </file>
-                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_request_sense.c</name>
                 </file>
                 <file>
@@ -2879,9 +2845,6 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_start_stop.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_tasks_run.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_thread_entry.c</name>
@@ -2897,9 +2860,6 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_transport_cbi.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_transport_run.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_host_classes\src\ux_host_class_storage_unit_ready_test.c</name>

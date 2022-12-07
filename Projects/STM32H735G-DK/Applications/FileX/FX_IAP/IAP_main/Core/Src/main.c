@@ -106,29 +106,28 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
-  MX_GPIO_Init();
-  MX_USART3_UART_Init();
-
-  /* Application behavior changes depending from the state of the USER_BUTTON:
-     USER_BUTTON pressed : enter the IAP mode
-     USER_BUTTON released: run the user application already programmed
-  */
-  if(BSP_PB_GetState(BUTTON_USER) == BUTTON_RELEASED)
-  {
-    CallUserApp((uint32_t)APP_ADDRESS);
-  }
 
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  MX_SDMMC1_SD_Init();
+  MX_GPIO_Init();
   MX_USART3_UART_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
 
+  /* Application behavior changes depending from the state of the USER_BUTTON:
+     USER_BUTTON pressed : enter the IAP mode
+     USER_BUTTON released: run the user application already programmed
+  */
+  if (HAL_GPIO_ReadPin(BUTTON_USER_GPIO_Port, BUTTON_USER_Pin) == GPIO_PIN_RESET)
+  {
+    CallUserApp((uint32_t)APP_ADDRESS);
+  }
+
+  /* Enter IAP mode. Initialize SDMMC */
+  MX_SDMMC1_SD_Init();
   /* USER CODE END 2 */
 
   MX_ThreadX_Init();
@@ -310,6 +309,12 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, LED2_Pin|LED1_Pin, GPIO_PIN_SET);
 
+  /*Configure GPIO pin : BUTTON_USER_Pin */
+  GPIO_InitStruct.Pin = BUTTON_USER_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(BUTTON_USER_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pins : LED2_Pin LED1_Pin */
   GPIO_InitStruct.Pin = LED2_Pin|LED1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -327,22 +332,23 @@ static void CallUserApp(uint32_t Address)
   printf("********** In Application Programming ************\n");
   printf("**************************************************\n");
   printf("Loading app from 0x%08X (SP:0x%08X PC:0x%08X)\n",
-         (unsigned int)Address, *(unsigned int*)Address, *(unsigned int*)(Address+4));
+         (unsigned int)Address, *(unsigned int *)Address, *(unsigned int *)(Address + 4));
   printf("**************************************************\n");
 
   /* Check App signature from loading address, the SP must point to the area 0x20xxxxxx */
   /* Please note that this assumes that the RAM region starts at RAM_START_ADDRESS, otherwise change it accordingly. */
-  if(((*(__IO uint32_t*)Address) & RAM_RANGE_MASK ) != RAM_START_ADDRESS)
+  if (((*(__IO uint32_t *)Address) & RAM_RANGE_MASK) != RAM_START_ADDRESS)
   {
     printf("Invalid signature (SP)");
     Error_Handler();
   }
 
   /* De-init all init'ed peripherals */
+  HAL_SD_DeInit(&hsd1);
   HAL_UART_DeInit(&huart3);
-  BSP_LED_DeInit(LED_GREEN);
-  BSP_LED_DeInit(LED_RED);
-  BSP_PB_DeInit(BUTTON_USER);
+  HAL_GPIO_DeInit(LED1_GPIO_Port, LED1_Pin);
+  HAL_GPIO_DeInit(LED2_GPIO_Port, LED2_Pin);
+  HAL_GPIO_DeInit(BUTTON_USER_GPIO_Port, BUTTON_USER_Pin);
 
   /* Disable MPU */
   HAL_MPU_Disable();
@@ -361,9 +367,9 @@ static void CallUserApp(uint32_t Address)
   HAL_NVIC_ClearPendingIRQ(TIM6_DAC_IRQn);
 
   /* Set SP and jump to PC */
-  JumpAddress = *(__IO uint32_t*) (Address + 4);
+  JumpAddress = *(__IO uint32_t *)(Address + 4);
   UserApp = (pFunction) JumpAddress;
-  __set_MSP(*(__IO uint32_t*) Address);
+  __set_MSP(*(__IO uint32_t *) Address);
   UserApp();
 }
 

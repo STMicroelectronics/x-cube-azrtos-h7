@@ -162,22 +162,22 @@ SECTIONS
     . = ALIGN(8);
   } >RAM_D1
 
-  .usbx_data 0x24027000 (NOLOAD): 
-  {  
+  .usbx_data 0x24027000 (NOLOAD):
+  {
     *(.UsbHpcdSection)
-    
+
   } >RAM_D1
-  
-  .uart_bss 0x24028000 (NOLOAD): 
-  { 
+
+  .uart_bss 0x24028000 (NOLOAD):
+  {
     *(.UsbxAppSection)
-    
+
   } >RAM_D1
-  
-  .usbx_bss 0x24029000 (NOLOAD): 
-  { 
+
+  .usbx_bss 0x24029000 (NOLOAD):
+  {
     *(.UsbxPoolSection)
-    
+
   } >RAM_D1
 
   /* Remove information from the standard libraries */

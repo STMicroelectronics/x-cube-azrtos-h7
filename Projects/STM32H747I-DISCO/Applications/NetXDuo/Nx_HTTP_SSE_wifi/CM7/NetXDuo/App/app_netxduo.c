@@ -82,6 +82,7 @@ static VOID App_Main_Thread_Entry(ULONG thread_input);
 
 static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr);
 /* USER CODE END PFP */
+
 /**
   * @brief  Application NetXDuo Initialization.
   * @param memory_ptr: memory pointer
@@ -95,6 +96,10 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
   /* USER CODE BEGIN MX_NetXDuo_MEM_POOL */
   (void)byte_pool;
   /* USER CODE END MX_NetXDuo_MEM_POOL */
+
+  /* USER CODE BEGIN 0 */
+
+  /* USER CODE END 0 */
 
   /* USER CODE BEGIN MX_NetXDuo_Init */
 

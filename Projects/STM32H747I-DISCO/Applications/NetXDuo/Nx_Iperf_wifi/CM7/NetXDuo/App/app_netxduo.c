@@ -75,6 +75,7 @@ void nx_iperf_entry(NX_PACKET_POOL *pool_ptr, NX_IP *ip_ptr,
                     UCHAR *http_stack, ULONG http_stack_size,
                     UCHAR *iperf_stack, ULONG iperf_stack_size);
 /* USER CODE END PFP */
+
 /**
   * @brief  Application NetXDuo Initialization.
   * @param memory_ptr: memory pointer
@@ -88,6 +89,10 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
   /* USER CODE BEGIN MX_NetXDuo_MEM_POOL */
   (void)byte_pool;
   /* USER CODE END MX_NetXDuo_MEM_POOL */
+
+  /* USER CODE BEGIN 0 */
+
+  /* USER CODE END 0 */
 
   /* USER CODE BEGIN MX_NetXDuo_Init */
 

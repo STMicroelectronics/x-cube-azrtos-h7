@@ -1,7 +1,7 @@
 
 ## <b>IAP_main application description</b>
 
-This application provides an example of Azure RTOS FileX stack usage on STM32H735G-DK board, it implements an In-Application programming (IAP) demonstrating FileX's SD file access capabilities. 
+This application provides an example of Azure RTOS FileX stack usage on STM32H735G-DK board, it implements an In-Application programming (IAP) demonstrating FileX's SD file access capabilities.
 The application is designed to erase and write to on-chip flash memory, it provides all required software code for handling SD card and flash memory I/O operations.
 
 This is a typical application on how to use the STM32H735 SD card peripheral for firmware upgrade application or IAP, allowing user to erase and write to on-chip flash memory.
@@ -11,10 +11,10 @@ The application starts by checking the state of the user button (BUTTON_USER), a
 
 #### <b>Programming new software sequence</b>
 
-If the user button is pressed at application start-up, the program try to flash a new software, loaded from the SD card, to the flash memory using **fx_thread** (Priority : 10; Preemption Priority : 10) as below:
+If the user button is pressed at application start-up, the program try to flash a new software, loaded from the SD card, to the flash memory using **fx_app_thread** (Priority : 10; Preemption Priority : 10) as below:
 
   - initialize the SD card driver
-  - open the SD card media and look for the executable to be loaded which should be named as defined by **FW_NAME_STRING** located in "FileX/FX_IAP/IAP_main/FileX/App/app_filex.h" 
+  - open the SD card media and look for the executable to be loaded which should be named as defined by **FW_NAME_STRING** located in "FileX/FX_IAP/IAP_main/Core/Inc/main.h"
   - go over the file and program it into flash, 32 bytes a time
   - upon completion, the Application will enter an infinite loop toggling the green LED, marking the success of the flashing operation.
 
@@ -26,7 +26,7 @@ If the user button is pressed at application start-up, the program try to flash 
 
 #### <b>Loading the new software sequence</b>
 
-If the user button is found to be not pressed at application start-up, the program will try to load the previously programmed application from the address defined by **APP_ADDRESS**.
+If the user button is not pressed at application start-up, the program will try to load the previously programmed application from the address defined by **APP_ADDRESS**.
 
 For that the steps below will be followed:
 
@@ -53,7 +53,7 @@ In the loading new software sequence, the loaded application should start and ru
 
 ### <b>Error behaviors</b>
 
-On failure, the red LED starts toggeling while the green LED is switched OFF.
+On failure, the red LED starts toggling while the green LED is switched OFF.
 
 
 ### <b>Assumptions if any</b>
@@ -71,11 +71,11 @@ None
 The loaded-App should be configured to start from an offset into the flash that does not overlap with the IAP application memory sections.
 Particularly, linker options should be changed to set the **Vector Table** and the **ROM START** both pointing to **APP_ADDRESS**.
 
-Upon startup, the loaded-App will set the VTOR register with its Interrupt Vector Table starting address, so offset should be taken into account. 
+Upon startup, the loaded-App will set the VTOR register with its Interrupt Vector Table starting address, so offset should be taken into account.
 This can be achieved by setting the offset to the defined name **VECT_TABLE_OFFSET** located in file **system_stm32h7xx.c**.
 
 The Loaded-App must be generated as raw binary, this can be achieved by setting the output format of the IDE to **Raw binary**.
-The name for the binary should also be specified there as defined by **FW_NAME_STRING** located in "FileX/FX_IAP/IAP_main/FileX/App/app_filex.h".
+The name for the binary should also be specified there as defined by **FW_NAME_STRING** located in "FileX/FX_IAP/IAP_main/Core/Inc/main.h".
 
 ### <b>Notes</b>
 
@@ -88,7 +88,7 @@ The name for the binary should also be specified there as defined by **FW_NAME_S
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
       - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
-  
+
 #### <b>ThreadX usage hints</b>
 
  - ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.
@@ -111,7 +111,7 @@ The name for the binary should also be specified there as defined by **FW_NAME_S
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
 	```
     + For STM32CubeIDE add the following section into the .ld file:
-	``` 
+	```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -119,17 +119,17 @@ The name for the binary should also be specified there as defined by **FW_NAME_S
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	``` 
-	
+	```
+
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
-       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.	 
-       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).	 
+       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
        Read more in STM32CubeIDE User Guide, chapter: "Linker script".
-	  
+
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
-               
-               
+
+
 #### <b>FileX/LevelX usage hints</b>
 
 - FileX SD driver is using the DMA, thus the DTCM (0x20000000) memory should not be used by the application, as it is not accessible by the SD DMA.

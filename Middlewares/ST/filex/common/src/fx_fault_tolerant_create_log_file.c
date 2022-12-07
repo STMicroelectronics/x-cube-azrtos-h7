@@ -34,7 +34,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_fault_tolerant_create_log_file                  PORTABLE C      */
-/*                                                           6.1.10       */
+/*                                                           6.1.11       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -81,6 +81,8 @@
 /*  01-31-2022     Bhupendra Naphade        Modified comment(s), replaced */
 /*                                            sector size constant,       */
 /*                                            resulting in version 6.1.10 */
+/*  04-25-2022     William E. Lamie         Modified comment(s),          */
+/*                                            resulting in version 6.1.11 */
 /*                                                                        */
 /**************************************************************************/
 UINT _fx_fault_tolerant_create_log_file(FX_MEDIA *media_ptr)
@@ -307,7 +309,7 @@ UCHAR  cluster_state;
         _fx_utility_exFAT_bitmap_flush(media_ptr);
     }
 #endif /* FX_ENABLE_EXFAT */
-#endif
+#endif /* FX_FAULT_TOLERANT */
 
     /* Write start cluster for the file tolerant log file into the boot sector. */
     _fx_utility_32_unsigned_write(media_ptr -> fx_media_fault_tolerant_memory_buffer + FX_FAULT_TOLERANT_BOOT_INDEX, FAT_index);

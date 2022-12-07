@@ -27,15 +27,10 @@
  * Different configuration can be used but need to be reflected in
  * the implementation guarded with QSPI_HAL_CFG_xxx user tags.
  */
+
 /* The following semaphores are being to notify about RX/TX completion. It needs to be released in the transfer callbacks */
 TX_SEMAPHORE qspi_tx_semaphore;
 TX_SEMAPHORE qspi_rx_semaphore;
-
-extern QSPI_HandleTypeDef hqspi;
-
-#if (LX_STM32_QSPI_INIT == 1)
-extern void MX_QUADSPI_Init(void);
-#endif
 
 /* USER CODE BEGIN DUAL_BANK_FLAG */
 
@@ -75,12 +70,18 @@ INT lx_stm32_qspi_lowlevel_init(UINT instance)
   /* USER CODE END PRE_QSPI_Init */
 
 #if (LX_STM32_QSPI_INIT == 1)
+  qspi_handle.Instance = QUADSPI;
+  if (HAL_QSPI_DeInit(&qspi_handle) != HAL_OK)
+  {
+    return 1;
+  }
+
   /* Init the QSPI */
-  MX_QUADSPI_Init();
+  qspi_driver_init();
 #endif
 
   /* QSPI memory reset */
-  if (qspi_memory_reset(&hqspi) != 0)
+  if (qspi_memory_reset(&qspi_handle) != 0)
   {
     return 1;
   }
@@ -126,7 +127,7 @@ INT lx_stm32_qspi_lowlevel_deinit(UINT instance)
 
 #if (LX_STM32_QSPI_INIT == 1)
   /* Call the DeInit function to reset the driver */
-  if (HAL_QSPI_DeInit(&hqspi) != HAL_OK)
+  if (HAL_QSPI_DeInit(&qspi_handle) != HAL_OK)
   {
     return 1;
   }
@@ -167,13 +168,13 @@ INT lx_stm32_qspi_get_status(UINT instance)
   /* USER CODE END QSPI_HAL_CFG_GetStatus */
 
   /* Configure the command */
-  if (HAL_QSPI_Command(&hqspi, &s_command, HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_QSPI_Command(&qspi_handle, &s_command, HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
 
   /* Receive the data */
-  if (HAL_QSPI_Receive(&hqspi, &reg, HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_QSPI_Receive(&qspi_handle, &reg, HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
@@ -225,6 +226,7 @@ INT lx_stm32_qspi_get_info(UINT instance, ULONG *block_size, ULONG *total_blocks
 */
 INT lx_stm32_qspi_read(UINT instance, ULONG *address, ULONG *buffer, ULONG words)
 {
+  INT status = 0;
   /* USER CODE BEGIN PRE_QSPI_Read */
   UNUSED(instance);
   /* USER CODE END PRE_QSPI_Read */
@@ -248,13 +250,13 @@ INT lx_stm32_qspi_read(UINT instance, ULONG *address, ULONG *buffer, ULONG words
   /* USER CODE END QSPI_HAL_CFG_READ_1 */
 
   /* Configure the command */
-  if (HAL_QSPI_Command(&hqspi, &s_command, HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_QSPI_Command(&qspi_handle, &s_command, HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
 
   /* Reception of the data */
-  if (HAL_QSPI_Receive_DMA(&hqspi, (uint8_t *)buffer) != HAL_OK)
+  if (HAL_QSPI_Receive_DMA(&qspi_handle, (uint8_t *)buffer) != HAL_OK)
   {
     return 1;
   }
@@ -263,7 +265,7 @@ INT lx_stm32_qspi_read(UINT instance, ULONG *address, ULONG *buffer, ULONG words
 
   /* USER CODE END POST_QSPI_Read */
 
-  return 0;
+  return status;
 }
 
 /**
@@ -276,6 +278,7 @@ INT lx_stm32_qspi_read(UINT instance, ULONG *address, ULONG *buffer, ULONG words
 */
 INT lx_stm32_qspi_write(UINT instance, ULONG *address, ULONG *buffer, ULONG words)
 {
+  INT status = 0;
   /* USER CODE BEGIN PRE_QSPI_Write */
   UNUSED(instance);
   /* USER CODE END PRE_QSPI_Write */
@@ -318,19 +321,19 @@ INT lx_stm32_qspi_write(UINT instance, ULONG *address, ULONG *buffer, ULONG word
     s_command.NbData  = current_size;
 
     /* Enable write operations */
-    if (qspi_set_write_enable(&hqspi, QSPI_WRITE_ENABLE_QPI_MODE) != 0)
+    if (qspi_set_write_enable(&qspi_handle, QSPI_WRITE_ENABLE_QPI_MODE) != 0)
     {
       return 1;
     }
 
     /* Configure the command */
-    if (HAL_QSPI_Command(&hqspi, &s_command, HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Command(&qspi_handle, &s_command, HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
       return 1;
     }
 
     /* Transmission of the data */
-    if (HAL_QSPI_Transmit_DMA(&hqspi, (uint8_t*)data_buffer) != HAL_OK)
+    if (HAL_QSPI_Transmit_DMA(&qspi_handle, (uint8_t*)data_buffer) != HAL_OK)
     {
       return 1;
     }
@@ -342,7 +345,7 @@ INT lx_stm32_qspi_write(UINT instance, ULONG *address, ULONG *buffer, ULONG word
     }
 
     /* Configure automatic polling mode to wait for end of program */
-    if (qspi_auto_polling_ready(&hqspi, HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != 0)
+    if (qspi_auto_polling_ready(&qspi_handle, HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != 0)
     {
       return 1;
     }
@@ -363,7 +366,7 @@ INT lx_stm32_qspi_write(UINT instance, ULONG *address, ULONG *buffer, ULONG word
 
   /* USER CODE END POST_QSPI_Write */
 
-  return 0;
+  return status;
 }
 
 /**
@@ -410,19 +413,19 @@ INT lx_stm32_qspi_erase(UINT instance, ULONG block, ULONG erase_count, UINT full
   /* USER CODE END QSPI_HAL_CFG_ERASE */
 
   /* Enable write operations */
-  if (qspi_set_write_enable(&hqspi, QSPI_WRITE_ENABLE_QPI_MODE) != 0)
+  if (qspi_set_write_enable(&qspi_handle, QSPI_WRITE_ENABLE_QPI_MODE) != 0)
   {
     return 1;
   }
 
   /* Send the command */
-  if (HAL_QSPI_Command(&hqspi, &s_command, HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_QSPI_Command(&qspi_handle, &s_command, HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
 
   /* Configure automatic polling mode to wait for end of erase */
-  if (qspi_auto_polling_ready(&hqspi, erase_timeout) != 0)
+  if (qspi_auto_polling_ready(&qspi_handle, erase_timeout) != 0)
   {
     return 1;
   }

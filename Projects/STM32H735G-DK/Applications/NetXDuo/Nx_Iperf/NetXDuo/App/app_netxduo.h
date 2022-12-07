@@ -34,7 +34,6 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include "main.h"
-#include "nxd_dhcp_client.h"
 #include "nx_web_http_server.h"
 /* USER CODE END Includes */
 
@@ -47,6 +46,14 @@ extern "C" {
 /* USER CODE BEGIN EC */
 
 /* USER CODE END EC */
+/* The DEFAULT_PAYLOAD_SIZE should match with RxBuffLen configured via MX_ETH_Init */
+#ifndef DEFAULT_PAYLOAD_SIZE
+#define DEFAULT_PAYLOAD_SIZE      1536
+#endif
+
+#ifndef DEFAULT_ARP_CACHE_SIZE
+#define DEFAULT_ARP_CACHE_SIZE    1024
+#endif
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
@@ -100,7 +107,28 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr);
 /* Server pool size */
 #define SERVER_POOL_SIZE                          (SERVER_PACKET_SIZE * 8)
 
+#define NX_APP_INSTANCE_PRIORITY                  1
+
+#define NX_APP_CABLE_CONNECTION_CHECK_PERIOD      (6 * NX_IP_PERIODIC_RATE)
 /* USER CODE END PD */
+
+#define NX_APP_DEFAULT_TIMEOUT               (10 * NX_IP_PERIODIC_RATE)
+
+#define NX_APP_PACKET_POOL_SIZE              ((DEFAULT_PAYLOAD_SIZE + sizeof(NX_PACKET)) * 40)
+
+#define NX_APP_THREAD_STACK_SIZE             2 * 1024
+
+#define Nx_IP_INSTANCE_THREAD_SIZE           2 * 1024
+
+#define NX_APP_THREAD_PRIORITY               4
+
+#ifndef NX_APP_INSTANCE_PRIORITY
+#define NX_APP_INSTANCE_PRIORITY             NX_APP_THREAD_PRIORITY
+#endif
+
+#define NX_APP_DEFAULT_IP_ADDRESS                   0
+
+#define NX_APP_DEFAULT_NET_MASK                     0
 
 /* USER CODE BEGIN 1 */
 

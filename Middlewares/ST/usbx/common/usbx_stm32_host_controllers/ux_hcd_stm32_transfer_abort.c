@@ -36,7 +36,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_hcd_stm32_transfer_abort                        PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -72,6 +72,9 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_hcd_stm32_transfer_abort(UX_HCD_STM32 *hcd_stm32, UX_TRANSFER *transfer_request)
@@ -106,8 +109,16 @@ UX_HCD_STM32_ED     *ed;
     /* Halt the host channel.  */
     HAL_HCD_HC_Halt(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel);
 
+#if !defined(UX_HOST_STANDALONE)
+
     /* Wait for the controller to finish the current frame processing.  */
     _ux_utility_delay_ms(1);
+#else
+
+    /* If setup memory is not freed correct, free it.  */
+    if (ed -> ux_stm32_ed_setup)
+        _ux_utility_memory_free(ed -> ux_stm32_ed_setup);
+#endif /* !defined(UX_HOST_STANDALONE) */
 
     /* Return successful completion.  */
     return(UX_SUCCESS);

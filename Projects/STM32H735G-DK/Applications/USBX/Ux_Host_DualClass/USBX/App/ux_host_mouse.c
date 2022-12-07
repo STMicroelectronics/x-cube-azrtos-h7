@@ -3,7 +3,7 @@
   ******************************************************************************
   * @file    ux_host_mouse.c
   * @author  MCD Application Team
-  * @brief   USBX host applicative file
+  * @brief   USBX Host HID Mouse applicative source file
   ******************************************************************************
   * @attention
   *
@@ -19,11 +19,11 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include "app_usbx_host.h"
+#include "ux_host_mouse.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "app_usbx_host.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,13 +43,12 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-extern ux_app_devInfotypeDef        ux_dev_info;
-extern UX_HOST_CLASS_HID_MOUSE      *mouse;
+extern UX_HOST_CLASS_HID_MOUSE *mouse;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-void  hid_mouse_thread_entry(ULONG arg);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -60,84 +59,90 @@ void  hid_mouse_thread_entry(ULONG arg);
 /* USER CODE BEGIN 1 */
 
 /**
-  * @brief  hid_mouse_thread_entry .
-  * @param  ULONG arg
-  * @retval Void
+  * @brief  Function implementing hid_mouse_thread_entry.
+  * @param  thread_input: Not used
+  * @retval none
   */
-void  hid_mouse_thread_entry(ULONG arg)
+VOID hid_mouse_thread_entry(ULONG thread_input)
 {
-  UINT status;
-  ULONG value;
   LONG  old_Pos_x = 0;
   LONG  old_Pos_y = 0;
-  LONG  Pos_x = 0;
-  LONG  Pos_y = 0;
-  SLONG mouse_wheel_movement = 0;
-  SLONG old_mouse_wheel_movement = 0;
+  LONG  actual_Pos_x = 0;
+  LONG  actual_Pos_y = 0;
+  ULONG actual_mouse_buttons = 0;
+  ULONG old_mouse_buttons = 0;
+  SLONG actual_mouse_wheel = 0;
+  SLONG old_mouse_wheel = 0;
 
   while (1)
   {
-    /* start if the hid client is a mouse and connected */
-    if ((ux_dev_info.HID_Type == Mouse_Device) && (ux_dev_info.Dev_state == Device_connected))
+    /* Start if the hid client is a mouse and connected */
+    if ((mouse != NULL) &&
+        (mouse -> ux_host_class_hid_mouse_state == (ULONG) UX_HOST_CLASS_INSTANCE_LIVE))
     {
-      Pos_x = mouse ->ux_host_class_hid_mouse_x_position;
-      Pos_y = mouse ->ux_host_class_hid_mouse_y_position;
 
-      /* get Mouse position */
-      status = ux_host_class_hid_mouse_position_get(mouse, &Pos_x, &Pos_y);
-
-      if (status == UX_SUCCESS)
+      /* Get Mouse position */
+      if (ux_host_class_hid_mouse_position_get(mouse, &actual_Pos_x, &actual_Pos_y) == UX_SUCCESS)
       {
-        if ((Pos_x != old_Pos_x) || (Pos_y != old_Pos_y))
+        if (((actual_Pos_x != old_Pos_x) || (actual_Pos_y != old_Pos_y)) &&
+            (actual_Pos_x != 0) && (actual_Pos_y != 0))
         {
-          USBH_UsrLog("Pos_x = %ld Pos_y= %ld", Pos_x, Pos_y);
+          USBH_UsrLog("Pos_x = %ld Pos_y= %ld", actual_Pos_x, actual_Pos_y);
 
-          /* update (x,y)old position */
-          old_Pos_x = Pos_x;
-          old_Pos_y = Pos_y;
+          /* Update (x,y) old position */
+          old_Pos_x = actual_Pos_x;
+          old_Pos_y = actual_Pos_y;
         }
+      }
+      else
+      {
+        tx_thread_sleep(MS_TO_TICK(10));
+      }
 
-        /* get Mouse buttons value */
-        value = mouse->ux_host_class_hid_mouse_buttons;
-        status = _ux_host_class_hid_mouse_buttons_get(mouse, &value);
-
-        if (status == UX_SUCCESS)
+      /* Get Mouse buttons value */
+      if (ux_host_class_hid_mouse_buttons_get(mouse, &actual_mouse_buttons) == UX_SUCCESS)
+      {
+        if (actual_mouse_buttons != old_mouse_buttons)
         {
-          /* check which button is pressed */
-          if (value & UX_HOST_CLASS_HID_MOUSE_BUTTON_1_PRESSED)
+          /* Check which button is pressed */
+          if (actual_mouse_buttons & UX_HOST_CLASS_HID_MOUSE_BUTTON_1_PRESSED)
           {
             USBH_UsrLog("Left Button Pressed");
           }
 
-          if (value & UX_HOST_CLASS_HID_MOUSE_BUTTON_2_PRESSED)
+          if (actual_mouse_buttons & UX_HOST_CLASS_HID_MOUSE_BUTTON_2_PRESSED)
           {
             USBH_UsrLog("Right Button Pressed");
           }
 
-          if (value & UX_HOST_CLASS_HID_MOUSE_BUTTON_3_PRESSED)
+          if (actual_mouse_buttons & UX_HOST_CLASS_HID_MOUSE_BUTTON_3_PRESSED)
           {
             USBH_UsrLog("Middle Button Pressed");
           }
 
-          /* get hid wheel mouse position */
-          mouse_wheel_movement = mouse-> ux_host_class_hid_mouse_wheel;
-          status = _ux_host_class_hid_mouse_wheel_get(mouse, &mouse_wheel_movement);
-
-          if (status == UX_SUCCESS)
-          {
-            if (mouse_wheel_movement != old_mouse_wheel_movement)
-            {
-              USBH_UsrLog("Pos_weel = %ld", mouse_wheel_movement);
-
-              /* update wheel mouse movement value */
-              old_mouse_wheel_movement = mouse_wheel_movement;
-            }
-          }
-
-          /* Re-initialize mouse buttons Value */
-          value = 0x0U;
-          tx_thread_sleep(MS_TO_TICK(10));
+          /* Update button old value */
+          old_mouse_buttons = actual_mouse_buttons;
         }
+      }
+      else
+      {
+        tx_thread_sleep(MS_TO_TICK(10));
+      }
+
+      /* Get hid wheel mouse position */
+      if (ux_host_class_hid_mouse_wheel_get(mouse, &actual_mouse_wheel) == UX_SUCCESS)
+      {
+        if ((actual_mouse_wheel != old_mouse_wheel) && (actual_mouse_wheel != 0))
+        {
+          USBH_UsrLog("Pos_weel = %ld", actual_mouse_wheel);
+
+          /* Update wheel mouse movement value */
+          old_mouse_wheel = actual_mouse_wheel;
+        }
+      }
+      else
+      {
+        tx_thread_sleep(MS_TO_TICK(10));
       }
     }
     else

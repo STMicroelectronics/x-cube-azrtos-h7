@@ -22,8 +22,8 @@
 <h2 id="nx_webserver-application-description"><b>Nx_WebServer application description</b></h2>
 <p>This application provides an example of Azure RTOS NetX Duo stack usage on STM32H735G-DK board, it shows how to develop Web HTTP server based application. The application is designed to load files and dyncamic web pages stored in SD card using a Web HTTP server, the code provides all required features to build a compliant Web HTTP Server. The main entry function tx_application_define() is called by ThreadX during kernel start, at this stage, all NetX and FileX resources are created.</p>
 <ul>
-<li><p>A NX_PACKET_POOL <strong>EthPool</strong> is allocated</p></li>
-<li><p>A NX_IP instance <strong>IpInstance</strong> using that pool is initialized</p></li>
+<li><p>A NX_PACKET_POOL <strong>NxAppPool</strong> is allocated</p></li>
+<li><p>A NX_IP instance <strong>NetXDuoEthIpInstance</strong> using that pool is initialized</p></li>
 <li><p>A NX_PACKET_POOL <strong>WebServerPool</strong> is allocated</p></li>
 <li><p>A NX_WEB_HTTP_SERVER <strong>HTTPServer</strong> instance using that pool is initialized</p></li>
 <li><p>The ARP, ICMP and protocols (TCP and UDP) are enabled for the NX_IP instance</p></li>
@@ -31,11 +31,11 @@
 </ul>
 <p>The application then creates 2 threads with different priorities:</p>
 <ul>
-<li><p><strong>AppMainThread</strong> (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.</p></li>
+<li><p><strong>NxAppThread</strong> (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.</p></li>
 <li><p><strong>AppServerThread</strong> (priority 5, PreemtionThreashold 5) : created with the TX_DONT_START flag to be started later.</p></li>
 <li><p><strong>LedThread</strong> (priority 15, PreemtionThreashold 15) : created with the TX_DONT_START flag to be started later.</p></li>
 </ul>
-<p>The <strong>AppMainThread</strong> starts and perform the following actions:</p>
+<p>The <strong>NxAppThread</strong> starts and perform the following actions:</p>
 <ul>
 <li><p>Starts the DHCP client</p></li>
 <li><p>Waits for the IP address resolution</p></li>
@@ -157,7 +157,7 @@ RW_NXDriverSection 0x24032100 0x1F000  {
 #if defined ( __ICCARM__ ) /* IAR Compiler */
 #pragma location = &quot;.NetXPoolSection&quot;
 
-#elif defined ( __CC_ARM ) /* MDK ARM Compiler */
+#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(&quot;.NetXPoolSection&quot;)))
 
 #elif defined ( __GNUC__ ) /* GNU Compiler */

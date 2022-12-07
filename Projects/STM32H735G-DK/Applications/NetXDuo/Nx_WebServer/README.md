@@ -5,9 +5,9 @@ This application provides an example of Azure RTOS NetX Duo stack usage on STM32
 The application is designed to load files and dyncamic web pages stored in SD card using a Web HTTP server, the code provides all required features to build a compliant Web HTTP Server.
 The main entry function tx_application_define() is called by ThreadX during kernel start, at this stage, all NetX and FileX resources are created.
 
- + A NX_PACKET_POOL **EthPool** is allocated
+ + A NX_PACKET_POOL **NxAppPool** is allocated
 
- + A NX_IP instance **IpInstance** using that pool is initialized
+ + A NX_IP instance **NetXDuoEthIpInstance** using that pool is initialized
 
  + A NX_PACKET_POOL **WebServerPool** is allocated
 
@@ -19,13 +19,13 @@ The main entry function tx_application_define() is called by ThreadX during kern
 
  The application then creates 2 threads with different priorities:
 
- + **AppMainThread** (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.
+ + **NxAppThread** (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.
 
  + **AppServerThread** (priority 5, PreemtionThreashold 5) : created with the TX_DONT_START flag to be started later.
 
  + **LedThread** (priority 15, PreemtionThreashold 15) : created with the TX_DONT_START flag to be started later.
 
-The **AppMainThread** starts and perform the following actions:
+The **NxAppThread** starts and perform the following actions:
 
   + Starts the DHCP client
 
@@ -153,14 +153,14 @@ Hotplug is not implemented for this example, that is, the SD card is expected to
   }
    ```
    + For STM32CubeIDE ".ld" file
-   ``` 
+   ```
 .nx_data 0x24030100 (NOLOAD):
  {
     . = ABSOLUTE(0x24030100);
     *(.NxServerPoolSection)
-    
+
     . = ABSOLUTE(0x24032100);
-    *(.NetXPoolSection) 
+    *(.NetXPoolSection)
 
  } >RAM_D1 AT >FLASH
    ```
@@ -173,7 +173,7 @@ Hotplug is not implemented for this example, that is, the SD card is expected to
 #if defined ( __ICCARM__ ) /* IAR Compiler */
 #pragma location = ".NetXPoolSection"
 
-#elif defined ( __CC_ARM ) /* MDK ARM Compiler */
+#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(".NetXPoolSection")))
 
 #elif defined ( __GNUC__ ) /* GNU Compiler */
@@ -188,7 +188,7 @@ For more details about the MPU configuration please refer to the [AN4838](https:
 
 ### <b>Keywords</b>
 
-RTOS, ThreadX, Network, NetxDuo, Web HTPP Server, FileX, File ,SDMMC, UART
+RTOS, ThreadX, Network, NetxDuo, Web HTTP Server, FileX, File ,SDMMC, UART
 
 
 ### <b>Hardware and Software environment</b>

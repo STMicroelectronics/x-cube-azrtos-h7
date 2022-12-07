@@ -38,7 +38,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_utility_logical_sector_read                     PORTABLE C      */
-/*                                                           6.1.6        */
+/*                                                           6.1.12a      */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -96,6 +96,10 @@
 /*                                            updated check for logical   */
 /*                                            sector value,               */
 /*                                            resulting in version 6.1.6  */
+/*  08-25-2022     Tiejun Zhou              Modified comment(s),          */
+/*                                            fixed memory buffer when    */
+/*                                            cache is disabled,          */
+/*                                            resulting in version 6.1.12a*/
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_utility_logical_sector_read(FX_MEDIA *media_ptr, ULONG64 logical_sector,
@@ -342,6 +346,24 @@ UINT              status;
 #else
     if ((logical_sector == media_ptr -> fx_media_memory_buffer_sector) && (sectors == 1) && (buffer_ptr == media_ptr -> fx_media_memory_buffer))
     {
+#ifdef FX_ENABLE_FAULT_TOLERANT
+        if (media_ptr -> fx_media_fault_tolerant_enabled &&
+            (media_ptr -> fx_media_fault_tolerant_state & FX_FAULT_TOLERANT_STATE_STARTED) &&
+            (sector_type == FX_DIRECTORY_SECTOR))
+        {
+
+            /* Read sector from log file. */
+            status = _fx_fault_tolerant_read_directory_sector(media_ptr, logical_sector, buffer_ptr, 1);
+
+            /* Check for successful completion.  */
+            if (status)
+            {
+
+                /* Return the error status. */
+                return(status);
+            }
+        }
+#endif /* FX_ENABLE_FAULT_TOLERANT */
         return(FX_SUCCESS);
     }
 #endif
@@ -456,6 +478,24 @@ UINT              status;
         if ((media_ptr -> fx_media_driver_status == FX_SUCCESS) && (sectors == 1) && (buffer_ptr == media_ptr -> fx_media_memory_buffer))
         {
             media_ptr -> fx_media_memory_buffer_sector = logical_sector;
+#ifdef FX_ENABLE_FAULT_TOLERANT
+            if (media_ptr -> fx_media_fault_tolerant_enabled &&
+                (media_ptr -> fx_media_fault_tolerant_state & FX_FAULT_TOLERANT_STATE_STARTED) &&
+                (sector_type == FX_DIRECTORY_SECTOR))
+            {
+
+                /* Read sector from log file. */
+                status = _fx_fault_tolerant_read_directory_sector(media_ptr, logical_sector, buffer_ptr, 1);
+
+                /* Check for successful completion.  */
+                if (status)
+                {
+
+                    /* Return the error status. */
+                    return(status);
+                }
+            }
+#endif /* FX_ENABLE_FAULT_TOLERANT */
             return(FX_SUCCESS);
         }
 #endif /* FX_DISABLE_CACHE */

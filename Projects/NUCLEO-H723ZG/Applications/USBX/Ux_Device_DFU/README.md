@@ -1,4 +1,3 @@
-
 ## <b>Ux_Device_DFU application description</b>
 
 This application provides an example of Azure RTOS USBX stack usage on STM32H723ZG board,
@@ -10,8 +9,8 @@ and associated Class descriptor report to build a compliant USB DFU device.
 At the beginning ThreadX calls the entry function tx_application_define(), at this stage, all USBx resources
 are initialized, the DFU Class driver is registered and the application creates 2 threads with the same priorities :
 
-  - usbx_app_thread_entry    (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device.
-  - usbx_dfu_download_thread (Prio : 20; PreemptionPrio : 20) used to execute download command.
+  - app_ux_device_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device.
+  - usbx_dfu_download_thread_entry (Prio : 20; PreemptionPrio : 20) used to execute download command.
 
 The DFU transactions are based on Endpoint 0 (control endpoint) transfer. All requests and status
 control are sent/received through this endpoint.
@@ -57,7 +56,7 @@ In case of composite device, we shall :
   1.  Uninstall device composite driver.
   2.  Activate the install of unsigned drives in windows.
   3. Updated STtube.inf driver by replacing this line in all sections from
-    %USB\VID_0483&PID_DF11_DeviceDesc%=STTub30.Device, USB\VID_0483 to 
+    %USB\VID_0483&PID_DF11_DeviceDesc%=STTub30.Device, USB\VID_0483 to
     %USB\VID_0483&PID_DF11_DeviceDesc%=STTub30.Device, USB\VID_0483&PID_DF11&MI_00
   4. Reinstall driver.
 
@@ -79,10 +78,7 @@ User is familiar with USB 2.0 "Universal Serial BUS" Specification and DFU class
 
 #### <b>Known limitations</b>
 
-Only Dfuse is supported. CubeProgrammer is not yet supported.
-
-When creating an USBX based application with MDK-ARM AC6 compiler make sure to disable the optimization for stm32h7xx_ll_usb.c file, otherwise application might not work correctly.
-This limitation will be fixed in future release.
+None
 
 ### <b>Notes</b>
 
@@ -109,16 +105,16 @@ This limitation will be fixed in future release.
    This require changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+     place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	```
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);

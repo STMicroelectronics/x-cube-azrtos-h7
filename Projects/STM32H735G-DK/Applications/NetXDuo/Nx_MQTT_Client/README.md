@@ -6,7 +6,7 @@ It shows how to exchange data between client and server using MQTT protocol in a
 
 The main entry function tx_application_define() is called by ThreadX during kernel start, at this stage, all NetX resources are created.
 
-+ A <i>NX_PACKET_POOL</i>is allocated
++ A <i>NX_PACKET_POOL</i> is allocated
 
 + A <i>NX_IP</i> instance using that pool is initialized
 
@@ -16,14 +16,14 @@ The main entry function tx_application_define() is called by ThreadX during kern
 
 The application then creates 3 threads with the different priorities:
 
-**AppMainThread** (priority 10, PreemtionThreashold 10) : created with the <i>TX_AUTO_START</i> flag to start automatically.
+**NxAppThread** (priority 10, PreemtionThreashold 10) : created with the <i>TX_AUTO_START</i> flag to start automatically.
 
 **AppMQTTClientThread** (priority 3, PreemtionThreashold 3) : created with the <i>TX_DONT_START</i> flag to be started later.
 
 **AppSNTPThread** (priority 5, PreemtionThreashold 5) : created with the <i>TX_DONT_START</i> flag to be started later.
 
 
-The **AppMainThread** starts and perform the following actions:
+The **NxAppThread** starts and perform the following actions:
 
   + creates a dns_client with USER_DNS_ADDRESS (default value defined IP_ADDRESS(1, 1, 1, 1) on app_netxduo.h.
 
@@ -43,7 +43,7 @@ The **AppMQTTClientThread**, once started:
 
   + creates an mqtt_client
 
-  + connects mqtt_client to the online MQTT broker; connection with server will be secure and a **tls_setup_callback** will set TLS parametres.
+  + connects mqtt_client to the online MQTT broker; connection with server will be secure and a **tls_setup_callback** will set TLS parameters.
   By default MQTT_PORT for encrypted mode is 8883.
 
           refer to note 4 below, to know how to setup an x509 certificate.
@@ -204,7 +204,7 @@ void MX_ETH_Init(void)
 #if defined ( __ICCARM__ ) /* IAR Compiler */
 #pragma location = ".NetXPoolSection"
 
-#elif defined ( __CC_ARM ) /* MDK ARM Compiler */
+#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(".NetXPoolSection")))
 
 #elif defined ( __GNUC__ ) /* GNU Compiler */

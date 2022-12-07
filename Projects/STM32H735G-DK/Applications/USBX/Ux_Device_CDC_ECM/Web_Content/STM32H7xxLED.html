@@ -61,10 +61,10 @@ control</span></a></span></i></b><b><i><span style="font-family: Verdana;"><o:p>
 <p style="color: rgb(0, 0, 0);  font-size: 12pt; font-family: Verdana; font-style: normal; font-weight: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255);">
 This page allows you to control LED1 located
 in the STM32H735G-DK Discovery board.
-To toggle green led you have to check/uncheck corresponding checkbox.
+To turn on/off green led you have to check corresponding radio button.
 Then you have to click on
 "Send" button to submit the new LED
-configuration. 
+configuration.
 Finally check in the&nbsp; STM32H735G-DK-Discovery board that you get the
 green LED is putted on/off.
 </p>
@@ -86,7 +86,8 @@ Webserver LED Control</span></strong><span style="font-family: Verdana; color: w
 </table>
 <br>
 <form method="post" action="/STM32H7xxLED.html">
-<input value="ToggleGreen" name="led" type="checkbox">LED1<br>
+<input value="LED_ON" name="led" type="radio">LED ON<br>
+<input value="LED_OFF" name="led" type="radio">LED OFF<br>
 <br>
 <br>
 <input value="Send" type="submit"> </form>

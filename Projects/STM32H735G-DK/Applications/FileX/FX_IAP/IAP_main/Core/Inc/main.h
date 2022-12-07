@@ -32,8 +32,6 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
-#include "stm32h735g_discovery.h"
-#include "app_filex.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -59,12 +57,17 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define BUTTON_USER_Pin GPIO_PIN_13
+#define BUTTON_USER_GPIO_Port GPIOC
 #define LED2_Pin GPIO_PIN_2
 #define LED2_GPIO_Port GPIOC
 #define LED1_Pin GPIO_PIN_3
 #define LED1_GPIO_Port GPIOC
-/* USER CODE BEGIN Private defines */
 
+/* USER CODE BEGIN Private defines */
+/* Flash address to load APP from */
+#define APP_ADDRESS      0x08020000
+#define FW_NAME_STRING   "STM32_FW_UPGRADE.BIN"
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

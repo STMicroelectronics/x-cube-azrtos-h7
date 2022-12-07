@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.50.6.28611</state>
+                    <state>8.50.9.33458</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -354,12 +354,10 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state>$PROJ_DIR$\..\Common\Inc</state>
-                    <state>$PROJ_DIR$\..\Core\Inc</state>
+                    <state>$PROJ_DIR$\..\Inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\..\Drivers\CMSIS\Include</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\..\Drivers\CMSIS\Device\ST\STM32H7xx\Include</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Inc</state>
-                    <state>$PROJ_DIR$\..\..\..\..\..\..\Drivers\BSP\STM32H747I-DISCO</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common_modules\module_manager\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common_modules\inc</state>
@@ -491,7 +489,7 @@
             <name>AARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>10</version>
+                <version>11</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -646,6 +644,10 @@
                 <option>
                     <name>AsmNoLiteralPool</name>
                     <state>0</state>
+                </option>
+                <option>
+                    <name>PreInclude</name>
+                    <state></state>
                 </option>
             </data>
         </settings>
@@ -1083,22 +1085,22 @@
             <group>
                 <name>Application</name>
                 <file>
-                    <name>$PROJ_DIR$\..\Core\Src\app_threadx.c</name>
+                    <name>$PROJ_DIR$\..\Src\app_threadx.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\Core\Src\main.c</name>
+                    <name>$PROJ_DIR$\..\Src\main.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\Core\Src\stm32h7xx_hal_msp.c</name>
+                    <name>$PROJ_DIR$\..\Src\stm32h7xx_hal_msp.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\Core\Src\stm32h7xx_hal_timebase_tim.c</name>
+                    <name>$PROJ_DIR$\..\Src\stm32h7xx_hal_timebase_tim.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\Core\Src\stm32h7xx_it.c</name>
+                    <name>$PROJ_DIR$\..\Src\stm32h7xx_it.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\Core\Src\tx_initialize_low_level.S</name>
+                    <name>$PROJ_DIR$\..\Src\tx_initialize_low_level.S</name>
                 </file>
             </group>
         </group>
@@ -1112,18 +1114,9 @@
     <group>
         <name>Drivers</name>
         <group>
-            <name>BSP</name>
-            <group>
-                <name>STM32H747I_DISCO</name>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\BSP\STM32H747I-DISCO\stm32h747i_discovery.c</name>
-                </file>
-            </group>
-        </group>
-        <group>
             <name>CMSIS</name>
             <file>
-                <name>$PROJ_DIR$\..\Common\Src\system_stm32h7xx_dualcore_boot_cm4_cm7.c</name>
+                <name>$PROJ_DIR$\..\Src\system_stm32h7xx_dualcore_boot_cm4_cm7.c</name>
             </file>
         </group>
         <group>

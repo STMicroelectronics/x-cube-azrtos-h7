@@ -35,7 +35,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_host_class_dpump_activate                       PORTABLE C      */ 
-/*                                                           6.1.10       */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -75,19 +75,26 @@
 /*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            added standalone support,   */
 /*                                            resulting in version 6.1.10 */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            internal clean up,          */
+/*                                            resulting in version 6.1.11 */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed parameter/variable    */
+/*                                            names conflict C++ keyword, */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_host_class_dpump_activate(UX_HOST_CLASS_COMMAND *command)
 {
 
-UX_INTERFACE                *interface;
+UX_INTERFACE                *interface_ptr;
 UX_HOST_CLASS_DPUMP         *dpump;
 UINT                        status;
     
 
     /* The data pump is always activated by the interface descriptor and not the
        device descriptor.  */
-    interface =  (UX_INTERFACE *) command -> ux_host_class_command_container;
+    interface_ptr =  (UX_INTERFACE *) command -> ux_host_class_command_container;
 
     /* Obtain memory for this class instance.  */
     dpump =  _ux_utility_memory_allocate(UX_NO_ALIGN, UX_REGULAR_MEMORY, sizeof(UX_HOST_CLASS_DPUMP));
@@ -98,16 +105,16 @@ UINT                        status;
     dpump -> ux_host_class_dpump_class =  command -> ux_host_class_command_class_ptr;
 
     /* Store the interface container into the dpump class instance.  */
-    dpump -> ux_host_class_dpump_interface =  interface;
+    dpump -> ux_host_class_dpump_interface =  interface_ptr;
 
     /* Store the device container into the dpump class instance.  */
-    dpump -> ux_host_class_dpump_device =  interface -> ux_interface_configuration -> ux_configuration_device;
+    dpump -> ux_host_class_dpump_device =  interface_ptr -> ux_interface_configuration -> ux_configuration_device;
 
     /* This instance of the device must also be stored in the interface container.  */
-    interface -> ux_interface_class_instance =  (VOID *) dpump;
+    interface_ptr -> ux_interface_class_instance =  (VOID *) dpump;
 
     /* Create this class instance.  */
-    status =  _ux_host_stack_class_instance_create(dpump -> ux_host_class_dpump_class, (VOID *) dpump);
+    _ux_host_stack_class_instance_create(dpump -> ux_host_class_dpump_class, (VOID *) dpump);
 
     /* Configure the dpump.  */
     status =  _ux_host_class_dpump_configure(dpump);     
@@ -120,7 +127,7 @@ UINT                        status;
 
     /* Get the dpump endpoint(s). We will need to search for Bulk Out and Bulk In endpoints.  Do not check for errors
        here as the alternate setting for this interface may be 0 which has no endpoints.  */
-    status =  _ux_host_class_dpump_endpoints_get(dpump);
+    _ux_host_class_dpump_endpoints_get(dpump);
 
     /* Create the semaphore to protect 2 threads from accessing the same dpump instance.  */
     status =  _ux_host_semaphore_create(&dpump -> ux_host_class_dpump_semaphore, "ux_dpump_semaphore", 1);

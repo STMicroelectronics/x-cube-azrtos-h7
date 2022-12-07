@@ -36,7 +36,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_hcd_stm32_request_periodic_transfer             PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -71,6 +71,10 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            refined macros names,       */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_hcd_stm32_request_periodic_transfer(UX_HCD_STM32 *hcd_stm32, UX_TRANSFER *transfer_request)
@@ -78,7 +82,7 @@ UINT  _ux_hcd_stm32_request_periodic_transfer(UX_HCD_STM32 *hcd_stm32, UX_TRANSF
 
 UX_ENDPOINT             *endpoint;
 UX_HCD_STM32_ED         *ed;
-UX_INT_SAVE_AREA
+UX_INTERRUPT_SAVE_AREA
 
 
     /* Get the pointer to the Endpoint.  */
@@ -87,21 +91,60 @@ UX_INT_SAVE_AREA
     /* Now get the physical ED attached to this endpoint.  */
     ed =  endpoint -> ux_endpoint_ed;
 
+#if defined(UX_HOST_STANDALONE)
+    UX_DISABLE
+
+    /* Check if transfer is still in progress.  */
+    if ((ed -> ux_stm32_ed_status & UX_HCD_STM32_ED_STATUS_PENDING_MASK) >
+        UX_HCD_STM32_ED_STATUS_ABORTED)
+    {
+
+        /* Check done bit.  */
+        if ((ed -> ux_stm32_ed_status & UX_HCD_STM32_ED_STATUS_TRANSFER_DONE) == 0)
+        {
+            UX_RESTORE
+            return(UX_STATE_WAIT);
+        }
+
+        /* Check status to see if it's first initialize.  */
+        if (transfer_request -> ux_transfer_request_status !=
+            UX_TRANSFER_STATUS_NOT_PENDING)
+        {
+
+            /* Done, modify status and notify state change.  */
+            ed -> ux_stm32_ed_status = UX_HCD_STM32_ED_STATUS_ALLOCATED;
+            UX_RESTORE
+            return(UX_STATE_NEXT);
+        }
+
+        /* Maybe transfer completed but state not reported yet.  */
+    }
+    transfer_request -> ux_transfer_request_status = UX_TRANSFER_STATUS_PENDING;
+
+#else
+    UX_DISABLE
+#endif /* defined(UX_HOST_STANDALONE) */
+
     /* Save the transfer status in the ED.  */
     ed -> ux_stm32_ed_status = UX_HCD_STM32_ED_STATUS_PERIODIC_TRANSFER;
-
-    /* Disable interrupt.  */
-    UX_DISABLE_INTS
 
     /* Save the pending transfer in the ED.  */
     ed -> ux_stm32_ed_transfer_request = transfer_request;
 
     /* Restore interrupt.  */
-    UX_RESTORE_INTS
+    UX_RESTORE
+
+#if defined(UX_HOST_STANDALONE)
+
+    /* Background transfer started but not done yet.  */
+    return(UX_STATE_WAIT);
+#else
 
     /* There is no need to wake up the stm32 controller on this transfer
        since periodic transactions will be picked up when the interrupt
        tree is scanned.  */
     return(UX_SUCCESS);
+#endif /* defined(UX_HOST_STANDALONE) */
+
 }
 

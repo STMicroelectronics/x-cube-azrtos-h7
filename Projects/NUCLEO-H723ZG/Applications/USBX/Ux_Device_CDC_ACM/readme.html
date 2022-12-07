@@ -22,15 +22,15 @@
 <h2 id="ux_device_cdc_acm-application-description"><b>Ux_Device_CDC_ACM application description </b></h2>
 <p>This application provides an example of Azure RTOS USBX stack usage on STM32H723ZG board, it shows how to develop USB Device communication Class “CDC_ACM” based application. The application is designed to emulate an USB-to-UART bridge following the Virtual COM Port (VCP) implementation, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB CDC_ACM device. At the beginning ThreadX call the entry function tx_application_define(), at this stage, all USBx resources are initialized, the CDC_ACM Class driver is registered and the application creates 3 threads with the same priorities :</p>
 <ul>
-<li>usbx_app_thread_entry (Prio : 20; PreemptionPrio : 20) used to initialize USB OTG HAL PCD driver and start the device.</li>
+<li>app_ux_device_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device.</li>
 <li>usbx_cdc_acm_read_thread_entry (Prio : 20; PreemptionPrio : 20) used to Read the received data from Virtual COM Port.</li>
 <li>usbx_cdc_acm_write_thread_entry (Prio : 20; PreemptionPrio : 20) used to send the received data over UART.</li>
 </ul>
 <p>During enumeration phase, three communication pipes “endpoints” are declared in the CDC class implementation :</p>
 <ul>
 <li><p>1 x Bulk IN endpoint for receiving data from STM32 device to PC host: When data are received over UART they are saved in the buffer “UserTxBufferFS”. Periodically, in a usbx_cdc_acm_write_thread_entry the state of the buffer “UserTxBufferFS” is checked. If there are available data, they are transmitted in response to IN token otherwise it is NAKed.</p></li>
-<li>1 x Bulk OUT endpoint for transmitting data from PC host to STM32 device: When data are received through this endpoint they are saved in the buffer “UserRxBufferFS” then they are transmitted over UART using DMA mode and in meanwhile the OUT endpoint is NAKed. Once the transmission is over, the OUT endpoint is prepared to receive next packet in HAL_UART_RxCpltCallback().</li>
-<li><p>1 x Interrupt IN endpoint for setting and getting serial-port parameters: When control setup is received, the corresponding request is executed in ux_app_parameters_change().</p></li>
+<li><p>1 x Bulk OUT endpoint for transmitting data from PC host to STM32 device: When data are received through this endpoint they are saved in the buffer “UserRxBufferFS” then they are transmitted over UART using DMA mode and in meanwhile the OUT endpoint is NAKed. Once the transmission is over, the OUT endpoint is prepared to receive next packet in HAL_UART_RxCpltCallback().</p></li>
+<li><p>1 x Interrupt IN endpoint for setting and getting serial-port parameters: When control setup is received, the corresponding request is executed in USBD_CDC_ACM_ParameterChange.</p></li>
 </ul>
 <p>In this application, two requests are implemented:</p>
 <pre><code>- Set line: Set the bit rate, number of Stop bits, parity, and number of data bits
@@ -48,7 +48,7 @@
 <h4 id="assumptions-if-any"><b>Assumptions if any</b></h4>
 <p>User is familiar with USB 2.0 “Universal Serial BUS” Specification and CDC_ACM class Specification.</p>
 <h4 id="known-limitations"><b> Known limitations</b></h4>
-<p>When creating an USBX based application with MDK-ARM AC6 compiler make sure to disable the optimization for stm32h7xx_ll_usb.c file, otherwise application might not work correctly. This limitation will be fixed in future release.</p>
+<p>None</p>
 <h3 id="notes"><b>Notes</b></h3>
 <ol type="1">
 <li>Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from Flash memory. This feature can be activated using ‘#pragma location = “.itcmram”’ to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.</li>

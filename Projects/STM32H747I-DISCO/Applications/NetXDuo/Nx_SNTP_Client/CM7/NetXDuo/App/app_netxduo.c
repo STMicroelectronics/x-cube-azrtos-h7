@@ -16,18 +16,19 @@
   *
   ******************************************************************************
   */
+
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
 #include "app_netxduo.h"
 
 /* Private includes ----------------------------------------------------------*/
+#include "nxd_dhcp_client.h"
 /* USER CODE BEGIN Includes */
 #include "nx_ip.h"
-#include "stm32h747i_discovery.h"
 #include "stm32h7xx_hal_rtc.h"
 #include <time.h>
-#include "nx_stm32_eth_config.h"
+#include "main.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,17 +48,15 @@ static void rtc_time_update(NX_SNTP_CLIENT *client_ptr);
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+TX_THREAD      NxAppThread;
+NX_PACKET_POOL NxAppPool;
+NX_IP          NetXDuoEthIpInstance;
+TX_SEMAPHORE   DHCPSemaphore;
+NX_DHCP        DHCPClient;
 /* USER CODE BEGIN PV */
-TX_THREAD AppMainThread;
 TX_THREAD AppSNTPThread;
 TX_THREAD AppLinkThread;
 
-TX_SEMAPHORE Semaphore;
-
-NX_PACKET_POOL           AppPool;
-
-NX_IP                    IpInstance;
-NX_DHCP                  DhcpClient;
 NX_DNS                   DnsClient;
 NX_SNTP_CLIENT           SntpClient;
 
@@ -68,26 +67,24 @@ ULONG                    NetMask;
 
 CHAR                     buffer[64];
 
-CHAR                    *pointer;
-
 struct tm timeInfos;
 /* RTC handler declaration */
 RTC_HandleTypeDef RtcHandle;
 
 /* set the SNTP network interface to the primary interface. */
 UINT  iface_index =0;
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
+static VOID nx_app_thread_entry (ULONG thread_input);
+static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr);
 /* USER CODE BEGIN PFP */
-static VOID App_Main_Thread_Entry(ULONG thread_input);
 static VOID App_SNTP_Thread_Entry(ULONG thread_input);
 static VOID App_Link_Thread_Entry(ULONG thread_input);
 
-static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr);
 static VOID time_update_callback(NX_SNTP_TIME_MESSAGE *time_update_ptr, NX_SNTP_TIME *local_time);
 /* USER CODE END PFP */
+
 /**
   * @brief  Application NetXDuo Initialization.
   * @param memory_ptr: memory pointer
@@ -97,103 +94,140 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
 {
   UINT ret = NX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+  CHAR *pointer;
 
   /* USER CODE BEGIN MX_NetXDuo_MEM_POOL */
+  (void)byte_pool;
   /* USER CODE END MX_NetXDuo_MEM_POOL */
 
-  /* USER CODE BEGIN MX_NetXDuo_Init */
+  /* USER CODE BEGIN 0 */
   printf("Nx_SNTP_Client application started..\n");
+  /* USER CODE END 0 */
 
-  /* Allocate the memory for packet_pool.  */
-  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,  NX_PACKET_POOL_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+  /* Initialize the NetXDuo system. */
+  nx_system_initialize();
+
+    /* Allocate the memory for packet_pool.  */
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, NX_APP_PACKET_POOL_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     return TX_POOL_ERROR;
   }
 
-  /* Create the Packet pool to be used for packet allocation */
-  ret = nx_packet_pool_create(&AppPool, "Main Packet Pool", PAYLOAD_SIZE, pointer, NX_PACKET_POOL_SIZE);
+  /* Create the Packet pool to be used for packet allocation,
+   * If extra NX_PACKET are to be used the NX_APP_PACKET_POOL_SIZE should be increased
+   */
+  ret = nx_packet_pool_create(&NxAppPool, "NetXDuo App Pool", DEFAULT_PAYLOAD_SIZE, pointer, NX_APP_PACKET_POOL_SIZE);
 
   if (ret != NX_SUCCESS)
   {
-    return NX_NOT_ENABLED;
+    return NX_POOL_ERROR;
   }
 
-  /* Allocate the memory for Ip_Instance */
-  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, 4 * DEFAULT_MEMORY_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+    /* Allocate the memory for Ip_Instance */
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, Nx_IP_INSTANCE_THREAD_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     return TX_POOL_ERROR;
   }
 
-  /* Create the main NX_IP instance */
-  ret = nx_ip_create(&IpInstance, "Main Ip instance", NULL_ADDRESS, NULL_ADDRESS, &AppPool, nx_stm32_eth_driver,
-                     pointer, 4 * DEFAULT_MEMORY_SIZE, DEFAULT_MAIN_PRIORITY);
+   /* Create the main NX_IP instance */
+  ret = nx_ip_create(&NetXDuoEthIpInstance, "NetX Ip instance", NX_APP_DEFAULT_IP_ADDRESS, NX_APP_DEFAULT_NET_MASK, &NxAppPool, nx_stm32_eth_driver,
+                     pointer, Nx_IP_INSTANCE_THREAD_SIZE, NX_APP_INSTANCE_PRIORITY);
 
   if (ret != NX_SUCCESS)
   {
-    return NX_NOT_ENABLED;
+    return NX_NOT_SUCCESSFUL;
   }
 
-  /* create the DHCP client */
-  ret = nx_dhcp_create(&DhcpClient, &IpInstance, "DHCP Client");
-
-  if (ret != NX_SUCCESS)
-  {
-    return NX_NOT_ENABLED;
-  }
-
-  /* Allocate the memory for ARP */
-  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, ARP_MEMORY_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+    /* Allocate the memory for ARP */
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, DEFAULT_ARP_CACHE_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     return TX_POOL_ERROR;
   }
 
   /* Enable the ARP protocol and provide the ARP cache size for the IP instance */
-  ret = nx_arp_enable(&IpInstance, (VOID *)pointer, ARP_MEMORY_SIZE);
+
+  /* USER CODE BEGIN ARP_Protocol_Initialization */
+
+  /* USER CODE END ARP_Protocol_Initialization */
+
+  ret = nx_arp_enable(&NetXDuoEthIpInstance, (VOID *)pointer, DEFAULT_ARP_CACHE_SIZE);
 
   if (ret != NX_SUCCESS)
   {
-    return NX_NOT_ENABLED;
+    return NX_NOT_SUCCESSFUL;
   }
 
   /* Enable the ICMP */
-  ret = nx_icmp_enable(&IpInstance);
+
+  /* USER CODE BEGIN ICMP_Protocol_Initialization */
+
+  /* USER CODE END ICMP_Protocol_Initialization */
+
+  ret = nx_icmp_enable(&NetXDuoEthIpInstance);
 
   if (ret != NX_SUCCESS)
   {
-    return NX_NOT_ENABLED;
+    return NX_NOT_SUCCESSFUL;
+  }
+
+  /* Enable TCP Protocol */
+
+  /* USER CODE BEGIN TCP_Protocol_Initialization */
+
+  /* USER CODE END TCP_Protocol_Initialization */
+
+  ret = nx_tcp_enable(&NetXDuoEthIpInstance);
+
+  if (ret != NX_SUCCESS)
+  {
+    return NX_NOT_SUCCESSFUL;
   }
 
   /* Enable the UDP protocol required for  DHCP communication */
-  ret = nx_udp_enable(&IpInstance);
+
+  /* USER CODE BEGIN UDP_Protocol_Initialization */
+
+  /* USER CODE END UDP_Protocol_Initialization */
+
+  ret = nx_udp_enable(&NetXDuoEthIpInstance);
 
   if (ret != NX_SUCCESS)
   {
-    return NX_NOT_ENABLED;
+    return NX_NOT_SUCCESSFUL;
   }
 
-    /* Enable the TCP protocol */
-  ret = nx_tcp_enable(&IpInstance);
-
-  if (ret != NX_SUCCESS)
-  {
-    return NX_NOT_ENABLED;
-  }
-
-  /* Allocate the memory for main thread   */
-  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, MAIN_THREAD_MEMORY, TX_NO_WAIT) != TX_SUCCESS)
+   /* Allocate the memory for main thread   */
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, NX_APP_THREAD_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     return TX_POOL_ERROR;
   }
 
   /* Create the main thread */
-  ret = tx_thread_create(&AppMainThread, "App Main thread", App_Main_Thread_Entry, 0, pointer, MAIN_THREAD_MEMORY,
-                         DEFAULT_MAIN_PRIORITY, DEFAULT_MAIN_PRIORITY, TX_NO_TIME_SLICE, TX_AUTO_START);
+  ret = tx_thread_create(&NxAppThread, "NetXDuo App thread", nx_app_thread_entry , 0, pointer, NX_APP_THREAD_STACK_SIZE,
+                         NX_APP_THREAD_PRIORITY, NX_APP_THREAD_PRIORITY, TX_NO_TIME_SLICE, TX_AUTO_START);
 
   if (ret != TX_SUCCESS)
   {
-    return NX_NOT_ENABLED;
+    return TX_THREAD_ERROR;
   }
 
+  /* Create the DHCP client */
+
+  /* USER CODE BEGIN DHCP_Protocol_Initialization */
+
+  /* USER CODE END DHCP_Protocol_Initialization */
+
+  ret = nx_dhcp_create(&DHCPClient, &NetXDuoEthIpInstance, "DHCP Client");
+
+  if (ret != NX_SUCCESS)
+  {
+    return NX_DHCP_ERROR;
+  }
+
+  /* set DHCP notification callback  */
+  tx_semaphore_create(&DHCPSemaphore, "DHCP Semaphore", 0);
+
+  /* USER CODE BEGIN MX_NetXDuo_Init */
   /* Allocate the memory for SNTP client thread   */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer, SNTP_CLIENT_THREAD_MEMORY, TX_NO_WAIT) != TX_SUCCESS)
   {
@@ -202,7 +236,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
 
   /* create the SNTP client thread */
   ret = tx_thread_create(&AppSNTPThread, "App SNTP Thread", App_SNTP_Thread_Entry, 0, pointer, SNTP_CLIENT_THREAD_MEMORY,
-                         DEFAULT_PRIORITY, DEFAULT_PRIORITY, TX_NO_TIME_SLICE, TX_DONT_START);
+                         NX_APP_INSTANCE_PRIORITY, NX_APP_INSTANCE_PRIORITY, TX_NO_TIME_SLICE, TX_DONT_START);
 
   if (ret != TX_SUCCESS)
   {
@@ -210,20 +244,20 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
   }
 
   /* Allocate the memory for Link thread   */
-  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,2 *  DEFAULT_MEMORY_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, NX_APP_THREAD_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     return TX_POOL_ERROR;
   }
 
   /* create the Link thread */
-  ret = tx_thread_create(&AppLinkThread, "App Link Thread", App_Link_Thread_Entry, 0, pointer, 2 * DEFAULT_MEMORY_SIZE,
+  ret = tx_thread_create(&AppLinkThread, "App Link Thread", App_Link_Thread_Entry, 0, pointer, NX_APP_THREAD_STACK_SIZE,
                          LINK_PRIORITY, LINK_PRIORITY, TX_NO_TIME_SLICE, TX_AUTO_START);
 
   if (ret != TX_SUCCESS)
   {
     return NX_NOT_ENABLED;
   }
-  
+
   /* Create the event flags. */
   ret = tx_event_flags_create(&SntpFlags, "SNTP event flags");
 
@@ -233,14 +267,10 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
     return NX_NOT_ENABLED;
   }
 
-  /* set DHCP notification callback  */
-  tx_semaphore_create(&Semaphore, "DHCP Semaphore", 0);
   /* USER CODE END MX_NetXDuo_Init */
 
   return ret;
 }
-
-/* USER CODE BEGIN 1 */
 
 /**
 * @brief  ip address change callback.
@@ -250,8 +280,12 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
 */
 static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr)
 {
+  /* USER CODE BEGIN ip_address_change_notify_callback */
+
+  /* USER CODE END ip_address_change_notify_callback */
+
   /* release the semaphore as soon as an IP address is available */
-  tx_semaphore_put(&Semaphore);
+  tx_semaphore_put(&DHCPSemaphore);
 }
 
 /**
@@ -259,30 +293,46 @@ static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr)
 * @param thread_input: ULONG user argument used by the thread entry
 * @retval none
 */
-static VOID App_Main_Thread_Entry(ULONG thread_input)
+static VOID nx_app_thread_entry (ULONG thread_input)
 {
-  UINT ret;
+  /* USER CODE BEGIN Nx_App_Thread_Entry 0 */
 
-  ret = nx_ip_address_change_notify(&IpInstance, ip_address_change_notify_callback, NULL);
+  /* USER CODE END Nx_App_Thread_Entry 0 */
+
+  UINT ret = NX_SUCCESS;
+
+  /* USER CODE BEGIN Nx_App_Thread_Entry 1 */
+
+  /* USER CODE END Nx_App_Thread_Entry 1 */
+
+  /* register the IP address change callback */
+  ret = nx_ip_address_change_notify(&NetXDuoEthIpInstance, ip_address_change_notify_callback, NULL);
   if (ret != NX_SUCCESS)
   {
+    /* USER CODE BEGIN IP address change callback error */
     Error_Handler();
+    /* USER CODE END IP address change callback error */
   }
 
-  ret = nx_dhcp_start(&DhcpClient);
-
+  /* start the DHCP client */
+  ret = nx_dhcp_start(&DHCPClient);
   if (ret != NX_SUCCESS)
   {
+    /* USER CODE BEGIN DHCP client start error */
     Error_Handler();
+    /* USER CODE END DHCP client start error */
   }
 
   /* wait until an IP address is ready */
-  if(tx_semaphore_get(&Semaphore, TX_WAIT_FOREVER) != TX_SUCCESS)
+  if(tx_semaphore_get(&DHCPSemaphore, NX_APP_DEFAULT_TIMEOUT) != TX_SUCCESS)
   {
+    /* USER CODE BEGIN DHCPSemaphore get error */
     Error_Handler();
+    /* USER CODE END DHCPSemaphore get error */
   }
 
-  ret = nx_ip_address_get(&IpInstance, &IpAddress, &NetMask);
+  /* USER CODE BEGIN Nx_App_Thread_Entry 2 */
+  ret = nx_ip_address_get(&NetXDuoEthIpInstance, &IpAddress, &NetMask);
 
   if (ret != TX_SUCCESS)
   {
@@ -298,8 +348,10 @@ static VOID App_Main_Thread_Entry(ULONG thread_input)
   tx_thread_relinquish();
 
   return;
-}
+  /* USER CODE END Nx_App_Thread_Entry 2 */
 
+}
+/* USER CODE BEGIN 1 */
 /**
 * @brief  DNS Create Function.
 * @param dns_ptr
@@ -310,16 +362,16 @@ UINT dns_create(NX_DNS *dns_ptr)
   UINT ret = NX_SUCCESS;
 
   /* Create a DNS instance for the Client */
-  ret = nx_dns_create(dns_ptr, &IpInstance, (UCHAR *)"DNS Client");
+  ret = nx_dns_create(dns_ptr, &NetXDuoEthIpInstance, (UCHAR *)"DNS Client");
 
-  if (ret)
+  if (ret != NX_SUCCESS)
   {
     Error_Handler();
   }
 
   /* Initialize DNS instance with the DNS server Address */
   ret = nx_dns_server_add(dns_ptr, USER_DNS_ADDRESS);
-  if (ret)
+  if (ret != NX_SUCCESS)
   {
     Error_Handler();
   }
@@ -355,7 +407,7 @@ static void App_SNTP_Thread_Entry(ULONG info)
 
   /* Look up SNTP Server address. */
   ret = nx_dns_host_by_name_get(&DnsClient, (UCHAR *)SNTP_SERVER_NAME,
-                                &sntp_server_ip.nxd_ip_address.v4, DEFAULT_TIMEOUT);
+                                &sntp_server_ip.nxd_ip_address.v4, NX_APP_DEFAULT_TIMEOUT);
 
     /* Check for error. */
   if (ret != NX_SUCCESS)
@@ -364,7 +416,7 @@ static void App_SNTP_Thread_Entry(ULONG info)
   }
 
    /* Create the SNTP Client */
-  ret =  nx_sntp_client_create(&SntpClient, &IpInstance, iface_index, &AppPool, NULL, kiss_of_death_handler, NULL);
+  ret =  nx_sntp_client_create(&SntpClient, &NetXDuoEthIpInstance, iface_index, &NxAppPool, NULL, kiss_of_death_handler, NULL);
 
   /* Check for error. */
   if (ret != NX_SUCCESS)
@@ -451,7 +503,7 @@ static void App_SNTP_Thread_Entry(ULONG info)
   {
     /* Display RTC time each second  */
     display_rtc_time(&RtcHandle);
-    BSP_LED_Toggle(LED1);
+    HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port,LED_GREEN_Pin);
     /* Delay for 1s */
     tx_thread_sleep(100);
   }
@@ -533,18 +585,18 @@ static void rtc_time_update(NX_SNTP_CLIENT *client_ptr)
   RTC_TimeTypeDef stimestructure ={0};
   struct tm ts;
   CHAR  temp[32] = {0};
-  
+
   /* convert SNTP time (seconds since 01-01-1900 to 01-01-1970)
-  
+
   EPOCH_TIME_DIFF is equivalent to 70 years in sec
   calculated with www.epochconverter.com/date-difference
   This constant is used to delete difference between :
   Epoch converter (referenced to 1970) and SNTP (referenced to 1900) */
   time_t timestamp = client_ptr->nx_sntp_current_server_time_message.receive_time.seconds - EPOCH_TIME_DIFF;
-  
+
   /* convert time in yy/mm/dd hh:mm:sec */
   ts = *localtime(&timestamp);
-  
+
   /* convert date composants to hex format */
   sprintf(temp, "%d", (ts.tm_year - 100));
   sdatestructure.Year = strtol(temp, NULL, 16);
@@ -600,7 +652,7 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
   while(1)
   {
     /* Get Physical Link stackavailtus. */
-    status = nx_ip_interface_status_check(&IpInstance, 0, NX_IP_LINK_ENABLED,
+    status = nx_ip_interface_status_check(&NetXDuoEthIpInstance, 0, NX_IP_LINK_ENABLED,
                                       &actual_status, 10);
 
     if(status == NX_SUCCESS)
@@ -608,7 +660,7 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
       if(linkdown == 1)
       {
         linkdown = 0;
-        status = nx_ip_interface_status_check(&IpInstance, 0, NX_IP_ADDRESS_RESOLVED,
+        status = nx_ip_interface_status_check(&NetXDuoEthIpInstance, 0, NX_IP_ADDRESS_RESOLVED,
                                       &actual_status, 10);
         if(status == NX_SUCCESS)
         {
@@ -622,11 +674,11 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
           /* The network cable is connected. */
           printf("The network cable is connected.\n");
           /* Send command to Enable Nx driver. */
-          nx_ip_driver_direct_command(&IpInstance, NX_LINK_ENABLE,
+          nx_ip_driver_direct_command(&NetXDuoEthIpInstance, NX_LINK_ENABLE,
                                       &actual_status);
           /* Restart DHCP Client. */
-          nx_dhcp_stop(&DhcpClient);
-          nx_dhcp_start(&DhcpClient);
+          nx_dhcp_stop(&DHCPClient);
+          nx_dhcp_start(&DHCPClient);
         }
       }
     }
@@ -640,7 +692,7 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
       }
     }
 
-    tx_thread_sleep(NX_ETH_CABLE_CONNECTION_CHECK_PERIOD);
+    tx_thread_sleep(NX_APP_CABLE_CONNECTION_CHECK_PERIOD);
   }
 }
 /* USER CODE END 1 */

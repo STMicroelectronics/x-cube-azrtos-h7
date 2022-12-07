@@ -3,7 +3,7 @@
   ******************************************************************************
   * @file    ux_host_msc.c
   * @author  MCD Application Team
-  * @brief   USBX host applicative file
+  * @brief   USBX Host MSC applicative source file
   ******************************************************************************
   * @attention
   *
@@ -19,11 +19,11 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include "app_usbx_host.h"
+#include "ux_host_msc.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "app_filex.h"
+#include "app_usbx_host.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,15 +43,13 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-extern UX_HOST_CLASS_STORAGE        *storage;
-extern FX_MEDIA                     *media;
-extern TX_QUEUE                     ux_app_MsgQueue_msc;
+extern FX_MEDIA *media;
+extern TX_EVENT_FLAGS_GROUP ux_app_EventFlag;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-void  msc_process_thread_entry(ULONG arg);
-extern void  Error_Handler(void);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -62,68 +60,68 @@ extern void  Error_Handler(void);
 /* USER CODE BEGIN 1 */
 
 /**
-  * @brief  msc_process_thread_entry .
-  * @param  ULONG arg
-  * @retval Void
+  * @brief  Function implementing msc_process_thread_entry.
+  * @param  thread_input: Not used
+  * @retval none
   */
-void  msc_process_thread_entry(ULONG arg)
+VOID msc_process_thread_entry(ULONG thread_input)
 {
-  UINT        status ;
+  ULONG storage_media_flag = 0;
 
-  while (1)
+  while(1)
   {
-    if (tx_queue_receive(&ux_app_MsgQueue_msc, &media, TX_WAIT_FOREVER) != TX_SUCCESS)
+    /* Wait until the requested flag STORAGE_MEDIA is received */
+    if (tx_event_flags_get(&ux_app_EventFlag, STORAGE_MEDIA, TX_OR_CLEAR,
+                           &storage_media_flag, TX_WAIT_FOREVER) != TX_SUCCESS)
     {
       Error_Handler();
     }
 
-    if ((storage != NULL) && (media != NULL))
+    /* Start file operations once the media is connected */
+    if (media != NULL)
     {
-      /* Create a file */
-      status = App_File_Create(media);
+      /* Start File operations */
+      USBH_UsrLog("\n*** Start Files operations ***\n");
 
-      /* check status */
-      if (status == UX_SUCCESS)
+      /* Create a file and check status */
+      if (App_File_Create(media) == UX_SUCCESS)
       {
         USBH_UsrLog("File TEST.TXT Created \n");
+
+        /* Start write File Operation */
+        USBH_UsrLog("Write Process ...... \n");
+
+        /* Check status */
+        if (App_File_Write(media) == UX_SUCCESS)
+        {
+          USBH_UsrLog("Write Process Success \n");
+
+          /* Start Read File Operation and comparison operation */
+          USBH_UsrLog("Read Process  ...... \n");
+
+          /* Check Read Operation */
+          if (App_File_Read(media) == UX_SUCCESS)
+          {
+            USBH_UsrLog("Read Process Success  \n");
+            USBH_UsrLog("File Closed \n");
+            USBH_UsrLog("*** End Files operations ***\n")
+          }
+          else
+          {
+            USBH_ErrLog("!! Read Process Fail !! \n");
+          }
+        }
+        else
+        {
+          USBH_ErrLog("!! Write Process Fail !! ");
+        }
+
       }
       else
       {
         USBH_ErrLog(" !! Could Not Create TEST.TXT File !! ");
-        break;
       }
 
-      /* Start write File Operation */
-      USBH_UsrLog("Write Process ...... \n");
-      status = App_File_Write(media);
-
-      /* check status */
-      if (status == UX_SUCCESS)
-      {
-        USBH_UsrLog("Write Process Success \n");
-      }
-      else
-      {
-        USBH_ErrLog("!! Write Process Fail !! ");
-        break;
-      }
-
-      /* Start Read File Operation and comparison operation */
-      USBH_UsrLog("Read Process  ...... \n");
-      status = App_File_Read(media);
-
-      /* check status */
-      if (status == UX_SUCCESS)
-      {
-        USBH_UsrLog("Read Process Success  \n");
-        USBH_UsrLog("File Closed \n");
-        USBH_UsrLog("*** End Files operations ***\n");
-      }
-      else
-      {
-        USBH_ErrLog("!! Read Process Fail !! \n");
-        break;
-      }
     }
     else
     {

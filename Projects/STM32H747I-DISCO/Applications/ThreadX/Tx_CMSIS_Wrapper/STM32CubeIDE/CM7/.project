@@ -180,11 +180,6 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/cmsis_rtos_threadx/cmsis_os2.c</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery.c</locationURI>
-		</link>
-		<link>
 			<name>Middlewares/ThreadX/RTOS/ThreadX/Core/tx_block_allocate.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_block_allocate.c</locationURI>

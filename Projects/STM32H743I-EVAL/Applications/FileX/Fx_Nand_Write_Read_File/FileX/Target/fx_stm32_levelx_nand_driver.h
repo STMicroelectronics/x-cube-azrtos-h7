@@ -22,7 +22,8 @@ extern "C" {
 #include "lx_api.h"
 
 /* enable the driver to be used */
-#define   LX_NAND_CUSTOM_DRIVER
+
+#define  LX_NAND_CUSTOM_DRIVER
 
 #ifdef  LX_NAND_SIMULATOR_DRIVER
 #include "lx_stm32_nand_simulator_driver.h"
@@ -41,17 +42,29 @@ extern "C" {
 /* Exported constants --------------------------------------------------------*/
 
 #ifdef  LX_NAND_CUSTOM_DRIVER
-
-#define NAND_FMC_DRIVER_ID         0xABCDEF
+/*
+ * define the Custom levelx nand drivers to be supported by the filex
+ *  for example:
+*/
+#define CUSTOM_DRIVER_ID           0xDDDD
 #define NAND_CUSTOM_DRIVER_NAME    "NAND CUSTOM DRIVER"
 #include "lx_stm32_nand_custom_driver.h"
-#define LX_NAND_CUSTOM_DRIVERS   {.name = NAND_CUSTOM_DRIVER_NAME,  .id = NAND_FMC_DRIVER_ID, .nand_driver_initialize = _lx_nand_flash_initialize_driver}
+#define LX_NAND_CUSTOM_DRIVERS   {.name = NAND_CUSTOM_DRIVER_NAME,  .id = CUSTOM_DRIVER_ID, .nand_driver_initialize = lx_stm32_nand_custom_driver_initialize}
 
+/* USER CODE BEGIN CUSTOM_DRIVER */
+
+/* USER CODE END CUSTOM_DRIVER */
 
 #endif
 
 #define MAX_LX_NAND_DRIVERS     8
 #define UNKNOWN_DRIVER_ID        0xFFFFFFFF
+
+/* to enable a default NAND driver:
+  - define the flags LX_NAND_DEFAULT_DRIVER
+  - Provide the driver ID in the NOR_DEFAULT_DRIVER for example
+  #define NAND_DEFAULT_DRIVER LX_NAND_SIMULATOR_DRIVER_ID
+*/
 
 /* USER CODE BEGIN DEFAULT_DRIVER */
 
@@ -63,6 +76,19 @@ extern "C" {
 #endif
 /* USER CODE END DEFAULT_DRIVER */
 
+#ifdef LX_NAND_DEFAULT_DRIVER
+
+/* USER CODE BEGIN DEFAULT_DRIVER */
+
+/* uncomment the define below to enabled the default driver usage */
+/* #define USE_LX_NAND_DEFAULT_DRIVER */
+
+#ifdef USE_LX_NAND_DEFAULT_DRIVER
+#define NAND_DEFAULT_DRIVER    /* add Driver ID from the defines above (for example LX_NAND_SIMULATOR_DRIVER_ID) */
+#endif
+/* USER CODE END DEFAULT_DRIVER */
+#endif
+
 /* USER CODE BEGIN EC */
 
 /* USER CODE END EC */
@@ -71,8 +97,8 @@ extern "C" {
 /* USER CODE BEGIN EM */
 
 /* USER CODE END EM */
-#if !defined(LX_NAND_DEFAULT_DRIVER) && !defined (LX_NAND_CUSTOM_DRIVER) && !defined(LX_NAND_SIMULATOR_DRIVER)
-#error "[This error was thrown on purpose] : No NAND low-level driver defined"
+#if !defined(LX_NAND_DEFAULT_DRIVER) && !defined (LX_NAND_CUSTOM_DRIVERS) && !defined(LX_NAND_SIMULATOR_DRIVER)
+#error "[This error was thrown on purpose] : No NAND lowlevel driver defined"
 #endif
 /* Exported functions prototypes ---------------------------------------------*/
 VOID  fx_stm32_levelx_nand_driver(FX_MEDIA *media_ptr);

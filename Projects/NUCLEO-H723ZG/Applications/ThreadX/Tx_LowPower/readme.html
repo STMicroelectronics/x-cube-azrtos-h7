@@ -60,9 +60,11 @@ tick count updated (define **TX_LOW_POWER_TICKLESS**), therefore there is no nee
 to set up a low power clock.
 
 1.2.2. The application still needs to keep the ThreadX tick up-to-date. In this case a low power clock needs to be set up.</code></pre></li>
+<li><p>Under [AzureRTOS Application/ThreadX App Init] in STM32CubeMX, thread entry function name, thread name, priority and stack size, semaphore name and semaphore init count are defined.</p></li>
 <li><p>Entering Low-power mode through WFI will be executed only if no interrupt is pending.</p></li>
 <li><p>The Debug Module must be stopped during STOP mode, otherwise, It will generate interrupts that cause the Wake-up of the system immediately after entering the Stop mode.</p></li>
 <li><p>The user push-button interrupt priority must be set to the highest possible value, otherwise, after Exit Stop mode the processor will not execute the interrupt handler.</p></li>
+<li><p>To measure the current consumption remove JP4 jumper and connect an amperemeter to JP4 to measure IDD current.</p></li>
 </ol>
 <h4 id="threadx-usage-hints"><b>ThreadX usage hints</b></h4>
 <ul>

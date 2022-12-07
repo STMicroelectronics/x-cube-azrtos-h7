@@ -64,7 +64,7 @@ static osThreadAttr_t attr = {
 /* USER CODE BEGIN PFP */
 static void ThreadOne_Entry(void *argument);
 static void ThreadTwo_Entry(void *argument);
-static void Led_Toggle(Led_TypeDef led, uint32_t iter);
+static void Led_Toggle(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32_t iter);
 /* USER CODE END PFP */
 
 /* Global user code ---------------------------------------------------------*/
@@ -81,21 +81,29 @@ uint32_t App_TX_CmsisRTOS_Init(void)
   osStatus_t ret = osOK;
   /* USER CODE BEGIN  App_TX_CmsisRTOS_Init */
   ret = osKernelInitialize();
-  
+
   if (ret == osOK)
   {
     /* Create the thread(s) */
     /* definition and creation of ThreadOne */
     attr.name = "ThreadOne";
     ThreadOne = osThreadNew(ThreadOne_Entry, NULL, (const osThreadAttr_t *)&attr);
-    /* definition and creation of ThreadOne */
+    if(ThreadOne == NULL)
+    {
+      return ((uint32_t)osError);
+    }
+    /* definition and creation of ThreadTwo */
     attr.name = "ThreadTwo";
-    ThreadOne = osThreadNew(ThreadTwo_Entry, NULL, (const osThreadAttr_t *)&attr);
-    
+    ThreadTwo = osThreadNew(ThreadTwo_Entry, NULL, (const osThreadAttr_t *)&attr);
+    if(ThreadTwo == NULL)
+    {
+      return ((uint32_t)osError);
+    }
+
     SyncObject = APP_SYNC_CREATE();
     /* Start scheduler */
     ret = osKernelStart();
-  } 
+  }
   /* USER CODE END  App_TX_CmsisRTOS_Init */
   return ((uint32_t)ret);
 }
@@ -108,7 +116,7 @@ uint32_t App_TX_CmsisRTOS_Init(void)
 /* USER CODE BEGIN 1 */
 /**
   * @brief  Function implementing the ThreadOne thread.
-  * @param  argument: Not used 
+  * @param  argument: Not used
   * @retval None
   */
 static void ThreadOne_Entry(void *argument)
@@ -123,14 +131,14 @@ static void ThreadOne_Entry(void *argument)
     if (APP_SYNC_GET(SyncObject, DEFAULT_WAIT_TIME) == osOK)
     {
       printf("** ThreadOne : SyncObject acquired ** \n");
-      
+
       /*sync object acquired, toggle the LED_GREEN each 500ms for 5s */
-      Led_Toggle(LED_GREEN, 10);
-      
+      Led_Toggle(LED_GREEN_GPIO_Port, LED_GREEN_Pin, 10);
+
 
       /*release the sync object */
       APP_SYNC_PUT(SyncObject);
-      
+
       printf("** ThreadOne : SyncObject released ** \n");
 
       osDelay(1);
@@ -164,13 +172,13 @@ static void ThreadTwo_Entry(void *argument)
     if (APP_SYNC_GET(SyncObject, DEFAULT_WAIT_TIME) == osOK)
     {
       printf("** ThreadTwo : SyncObject acquired ** \n");
-      
+
       /*Sync object acquired toggle the LED_RED each 500ms for 5s*/
-      Led_Toggle(LED_RED, 10);
-      
+      Led_Toggle(LED_RED_GPIO_Port, LED_RED_Pin, 10);
+
       /*release the sync object*/
       APP_SYNC_PUT(SyncObject);
-      
+
       printf("** ThreadTwo : SyncObject released ** \n");
 
       osDelay(1);
@@ -193,19 +201,19 @@ static void ThreadTwo_Entry(void *argument)
   * @param  iter: Number of iterations
   * @retval None
   */
-static void Led_Toggle(Led_TypeDef led, uint32_t iter)
+static void Led_Toggle(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32_t iter)
 {
   uint32_t i;
 
-  BSP_LED_Off(led);
+  HAL_GPIO_WritePin(GPIOx, GPIO_Pin, GPIO_PIN_SET);
 
   for (i =0; i < iter; i++)
   {
-    BSP_LED_Toggle(led);
+    HAL_GPIO_TogglePin(GPIOx, GPIO_Pin);
     osDelay(50);
   }
 
-  BSP_LED_Off(led);
+  HAL_GPIO_WritePin(GPIOx, GPIO_Pin, GPIO_PIN_SET);
 }
 
 /**

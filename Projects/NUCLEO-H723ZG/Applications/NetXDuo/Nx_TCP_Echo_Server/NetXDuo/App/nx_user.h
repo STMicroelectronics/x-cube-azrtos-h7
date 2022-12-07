@@ -24,7 +24,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    nx_user.h                                           PORTABLE C      */
-/*                                                           6.1.8        */
+/*                                                           6.1.11       */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -48,6 +48,8 @@
 /*  08-02-2021     Yuxin Zhou               Modified comment(s), and      */
 /*                                            supported TCP/IP offload,   */
 /*                                            resulting in version 6.1.8  */
+/*  04-25-2022     Yuxin Zhou               Modified comment(s),          */
+/*                                            resulting in version 6.1.11 */
 /*                                                                        */
 /**************************************************************************/
 
@@ -153,8 +155,8 @@
 #define NX_ENABLE_EXTENDED_NOTIFY_SUPPORT
 */
 
-/* Defined, NetX Duo is built with NAT process. By default this option is not
-   defined. */
+/* Defined, NetX Duo is built with NAT process. This option is defined when the
+   component Addons NAT is selected and NX_DISABLE_IPV4 is not selected. */
 /*
 #define NX_NAT_ENABLE
 */
@@ -1128,6 +1130,16 @@
 #define NX_DHCP_CLIENT_HOSTNAME_MAX             32
 */
 
+/* Define the DHCP server thread stack size. */
+/*
+#define NX_DHCP_SERVER_THREAD_STACK_SIZE           1024
+*/
+
+/* Define name of DHCP server. */
+/*
+#define NX_DHCP_SERVER_NAME       "NetX DHCP Server"
+*/
+
 /*****************************************************************************/
 /****************** Configuration options for DHCP IPV6 **********************/
 /*****************************************************************************/
@@ -1996,6 +2008,11 @@
 #define NX_MDNS_RR_DELETE_DELAY_TIMER_COUNT        (NX_IP_PERIODIC_RATE)
 */
 
+/* Disable the mDNS Client functionality.  By default, mDNS client function is enabled. */
+/*
+#define NX_MDNS_DISABLE_CLIENT
+*/
+
 /*****************************************************************************/
 /******************** Configuration options for PPP **************************/
 /*****************************************************************************/
@@ -2178,6 +2195,11 @@
    The default value is (NX_PPP_PACKET + 128).*/
 /*
 #define NX_PPP_MIN_PACKET_PAYLOAD        (NX_PPP_PACKET + 128)
+*/
+
+/* Size of the NAK list.*/
+/*
+#define NX_PPP_OPTION_MESSAGE_LENGTH        64
 */
 
 /*****************************************************************************/

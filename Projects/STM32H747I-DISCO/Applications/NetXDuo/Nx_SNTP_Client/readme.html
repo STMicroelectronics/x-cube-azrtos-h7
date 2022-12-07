@@ -32,10 +32,10 @@
 </ul>
 <p>The application then creates 2 threads with the same priorities:</p>
 <ul>
-<li><p><strong>AppMainThread</strong> (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.</p></li>
+<li><p><strong>NxAppThread</strong> (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.</p></li>
 <li><p><strong>AppSNTPThread</strong> (priority 5, PreemtionThreashold 5) : created with the TX_DONT_START flag to be started later.</p></li>
 </ul>
-<p>The <strong>AppMainThread</strong> starts and perform the following actions: + starts the DHCP client</p>
+<p>The <strong>NxAppThread</strong> starts and perform the following actions: + starts the DHCP client</p>
 <ul>
 <li><p>waits for the IP address resolution</p></li>
 <li><p>resumes the <strong>AppSNTPThread</strong></p></li>
@@ -51,8 +51,8 @@
 <h4 id="expected-success-behavior"><b>Expected success behavior</b></h4>
 <ul>
 <li>The board IP address is printed on the HyperTerminal</li>
-<li>The time update sent by the sntp server is printed on the HyerTerminal</li>
-<li>Each second, time from RTC is printed on the HyerTerminal and the green LED is toggling.</li>
+<li>The time update sent by the sntp server is printed on the HyperTerminal</li>
+<li>Each second, time from RTC is printed on the HyperTerminal and the green LED is toggling.</li>
 </ul>
 <h4 id="error-behaviors"><b>Error behaviors</b></h4>
 <ul>
@@ -162,14 +162,14 @@ place in NXApp_region { section .NetXPoolSection};</code></pre>
 <pre><code>.nx_section 0x30000200 (NOLOAD): {
   *(.NetXPoolSection)
   } &gt;RAM_D1</code></pre>
-this section is then used in the <code> app_azure_rtos.c</code> file to force the <code>nx_byte_pool_buffer</code> allocation.</li>
+This section is then used in the <code> app_azure_rtos.c</code> file to force the <code>nx_byte_pool_buffer</code> allocation.</li>
 </ul>
 <pre><code>/* USER CODE BEGIN NX_Pool_Buffer */
 
 #if defined ( __ICCARM__ ) /* IAR Compiler */
 #pragma location = &quot;.NetXPoolSection&quot;
 
-#elif defined ( __CC_ARM ) /* MDK ARM Compiler */
+#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(&quot;.NetXPoolSection&quot;)))
 
 #elif defined ( __GNUC__ ) /* GNU Compiler */

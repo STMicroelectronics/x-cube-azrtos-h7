@@ -95,6 +95,7 @@ static void NetXDuo_DeInit(void);
 
 static UINT dns_create(NX_DNS *dns_ptr);
 /* USER CODE END PFP */
+
 /**
   * @brief  Application NetXDuo Initialization.
   * @param memory_ptr: memory pointer
@@ -108,6 +109,10 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
   /* USER CODE BEGIN MX_NetXDuo_MEM_POOL */
   (void)byte_pool;
   /* USER CODE END MX_NetXDuo_MEM_POOL */
+
+  /* USER CODE BEGIN 0 */
+
+  /* USER CODE END 0 */
 
   /* USER CODE BEGIN MX_NetXDuo_Init */
 

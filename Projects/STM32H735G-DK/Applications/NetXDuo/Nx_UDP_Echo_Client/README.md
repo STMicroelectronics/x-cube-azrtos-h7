@@ -14,10 +14,10 @@ The main entry function tx_application_define() is called by ThreadX during kern
  
 The application then creates 2 threads with the same priorities:
 
- + **AppMainThread** (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically. 
+ + **NxAppThread** (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically. 
  + **AppUDPThread** (priority 10, PreemtionThreashold 10) : created with the TX_DONT_START flag to be started later.
  
-The **AppMainThread** starts and perform the following actions:
+The **NxAppThread** starts and perform the following actions:
 
   + starts the DHCP client  
   + waits for the IP address resolution  
@@ -160,7 +160,7 @@ None
 #if defined ( __ICCARM__ ) /* IAR Compiler */
 #pragma location = ".NetXPoolSection"
 
-#elif defined ( __CC_ARM ) /* MDK ARM Compiler */
+#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(".NetXPoolSection")))
 
 #elif defined ( __GNUC__ ) /* GNU Compiler */

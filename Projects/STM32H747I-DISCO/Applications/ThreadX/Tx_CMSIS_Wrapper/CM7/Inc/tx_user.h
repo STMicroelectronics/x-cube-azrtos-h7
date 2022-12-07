@@ -62,6 +62,10 @@
 #ifndef TX_USER_H
 #define TX_USER_H
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Define various build options for the ThreadX port.  The application should either make changes
    here by commenting or un-commenting the conditional compilation defined OR supply the defines
    though the compiler's equivalent of the -D option.
@@ -77,6 +81,7 @@
         TX_REACTIVATE_INLINE
         TX_DISABLE_STACK_FILLING
         TX_INLINE_THREAD_RESUME_SUSPEND
+        TX_DISABLE_ERROR_CHECKING
 
    For minimum size, the following should be defined:
 
@@ -163,6 +168,10 @@
    code size and improve performance.  */
 
 #define TX_DISABLE_NOTIFY_CALLBACKS
+
+/*Defined, the basic parameter error checking is disabled.*/
+
+/*#define TX_DISABLE_ERROR_CHECKING*/
 
 /* Determine if the tx_thread_resume and tx_thread_suspend services should have their internal
    code in-line. This results in a larger image, but improves the performance of the thread
@@ -274,6 +283,13 @@
 /* define the CMSIS RTOS2 heap size */
 
 #define RTOS2_BYTE_POOL_HEAP_SIZE               4 * 1024
+
+/* USER CODE BEGIN 2 */
+/* This define defines the type of memory allocation. */
+#define USE_DYNAMIC_MEMORY_ALLOCATION
+
+/*#define USE_MEMORY_POOL_ALLOCATION*/
+/* USER CODE END 2 */
 
 #endif
 

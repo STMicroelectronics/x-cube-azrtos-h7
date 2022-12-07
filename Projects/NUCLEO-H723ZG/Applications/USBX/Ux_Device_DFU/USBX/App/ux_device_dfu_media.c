@@ -3,7 +3,7 @@
   ******************************************************************************
   * @file    ux_device_dfu_media.c
   * @author  MCD Application Team
-  * @brief   USBX Device applicative file
+  * @brief   USBX Device DFU applicative source file
   ******************************************************************************
   * @attention
   *
@@ -19,14 +19,11 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-
 #include "ux_device_dfu_media.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "main.h"
-#include "tx_api.h"
-#include "app_usbx_device.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -40,106 +37,132 @@
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
-
 #define DFU_MEDIA_ERASE_TIME    (uint16_t)5U
 #define DFU_MEDIA_PROGRAM_TIME  (uint16_t)5U
 
 /* USER CODE BEGIN PM */
-#define LEAVE_DFU_ENABLED             1
-#define LEAVE_DFU_DISABLED            0
+
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-extern TX_QUEUE                         ux_app_MsgQueue;
-extern ux_dfu_downloadInfotypeDef       ux_dfu_download;
-extern PCD_HandleTypeDef                hpcd_USB_OTG_HS;
 
-ULONG   dfu_status = 0U;
-ULONG   Address_ptr;
-UCHAR   RX_Data[1024];
-UINT    Leave_DFU_State = LEAVE_DFU_DISABLED;
+UX_SLAVE_CLASS_DFU *dfu;
+
+extern TX_QUEUE ux_app_MsgQueue;
+extern ux_dfu_downloadInfotypeDef ux_dfu_download;
+extern PCD_HandleTypeDef hpcd_USB_OTG_HS;
+
+ULONG dfu_status = 0U;
+ULONG Address_ptr;
+UCHAR RX_Data[1024];
+UINT Leave_DFU_State = LEAVE_DFU_DISABLED;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
 static uint16_t DFU_Erase(uint32_t Address);
 static uint32_t GetSector(uint32_t Address);
-
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+/* USER CODE END 0 */
+
 /**
-  * @brief  Initializes Memory routine, Unlock the internal flash.
-  * @param  dfu Instance.
-  * @retval none.
+  * @brief  USBD_DFU_Activate
+  *         This function is called when insertion of a DFU device.
+  * @param  dfu_instance: Pointer to the dfu class instance.
+  * @retval none
   */
-void DFU_Init(void *dfu)
+VOID USBD_DFU_Activate(VOID *dfu_instance)
 {
+  /* USER CODE BEGIN USBD_DFU_Activate */
+
+  /* Save the DFU instance */
+  dfu = (UX_SLAVE_CLASS_DFU*) dfu_instance;
+
   /* Unlock the internal flash */
   HAL_FLASH_Unlock();
+
+  /* USER CODE END USBD_DFU_Activate */
+
+  return;
 }
 
 /**
-  * @brief  DeInitializes Memory routine, Lock the internal flash.
-  * @param  dfu: dfu Instance.
-  * @retval none.
+  * @brief  USBD_DFU_Deactivate
+  *         This function is called when extraction of a DFU device.
+  * @param  dfu_instance: Pointer to the dfu class instance.
+  * @retval none
   */
-void DFU_DeInit(void *dfu)
+VOID USBD_DFU_Deactivate(VOID *dfu_instance)
 {
+  /* USER CODE BEGIN USBD_DFU_Deactivate */
+  UX_PARAMETER_NOT_USED(dfu_instance);
+
+  /* Reset the DFU instance */
+  dfu = UX_NULL;
+
   /* Lock the internal flash */
   HAL_FLASH_Lock();
+
+  /* USER CODE END USBD_DFU_Deactivate */
+
+  return;
 }
 
 /**
-  * @brief  Get status routine.
-  * @param  dfu: dfu Instance.
-  * @param  media_status : dfu media status.
-  * @retval UX_SUCCESS.
+  * @brief  USBD_DFU_GetStatus
+  *         This function is invoked to get media status.
+  * @param  dfu_instance: Pointer to the dfu class instance.
+  * @param  media_status: dfu media status.
+  * @retval status
   */
-UINT DFU_GetStatus(void *dfu, ULONG *media_status)
+UINT USBD_DFU_GetStatus(VOID *dfu_instance, ULONG *media_status)
 {
+  UINT status = UX_SUCCESS;
+
+  /* USER CODE BEGIN USBD_DFU_GetStatus */
+  UX_PARAMETER_NOT_USED(dfu_instance);
+
+  /* Store DFU status */
   *media_status = dfu_status;
 
-  return (UX_SUCCESS);
+  /* USER CODE END USBD_DFU_GetStatus */
+
+  return status;
 }
 
 /**
-  * @brief  Inform application when a begin and end of transfer of the firmware
-            occur.
-  * @param  dfu: dfu Instance.
-  * @param  notification: unused.
-  * @retval UX_SUCCESS.
-  */
-UINT DFU_Notify(void *dfu, ULONG notification)
-{
-  UNUSED(notification);
-
-  return (UX_SUCCESS);
-}
-
-/**
-  * @brief  Memory read routine.
-  * @param  dfu: dfu Instance
+  * @brief  USBD_DFU_Read
+  *         This function is invoked when host is requesting to read from media.
+  * @param  dfu_instance: Pointer to the dfu class instance.
   * @param  block_number: block number.
   * @param  data_pointer: Pointer to the Source buffer.
   * @param  length: Number of data to be read (in bytes).
-  * @retval Status.
+  * @param  actual_length: length of data to be written.
+  * @retval status
   */
-UINT DFU_Read(VOID *dfu, ULONG block_number, UCHAR * data_pointer,
-              ULONG length, ULONG *media_status)
+UINT USBD_DFU_Read(VOID *dfu_instance, ULONG block_number, UCHAR *data_pointer,
+                   ULONG length, ULONG *actual_length)
 {
-  UINT   Status      = UX_SUCCESS;
-  UCHAR* Src_ptr     = NULL;
-  UINT   Block_index  = 0;
-  ULONG  Address_src = 0;
+  UINT status = UX_SUCCESS;
 
-  if (block_number == 0)
+  /* USER CODE BEGIN USBD_DFU_Read */
+  UX_PARAMETER_NOT_USED(dfu_instance);
+
+  UCHAR *Src_ptr = NULL;
+  UINT Block_index = 0U;
+  ULONG Address_src = 0U;
+
+  /* Check if block number is NULL */
+  if (block_number == 0U)
   {
     /* Store the values of all supported commands */
-    *data_pointer       = DFU_CMD_GETCOMMANDS;
+    *data_pointer = DFU_CMD_GETCOMMANDS;
     *(data_pointer + 1) = DFU_CMD_SETADDRESSPOINTER;
     *(data_pointer + 2) = DFU_CMD_ERASE ;
     *(data_pointer + 3) = 0;
@@ -155,36 +178,45 @@ UINT DFU_Read(VOID *dfu, ULONG block_number, UCHAR * data_pointer,
     /* Perform the Read operation */
     for (Block_index = 0; Block_index < length; Block_index++)
     {
-      /* Copy data from Source pointer  to data_pointer buffer*/
+      /* Copy data from Source pointer to data_pointer buffer */
       *(data_pointer + Block_index) = *Src_ptr ++;
     }
 
-    *media_status = length;
+    /* Store data length */
+    *actual_length = length;
   }
   else
   {
-    Status = UX_ERROR;
+    status = UX_ERROR;
   }
 
-  return (Status);
+  /* USER CODE END USBD_DFU_Read */
+
+  return status;
 }
 
 /**
-  * @brief  Memory write routine.
-  * @param  dfu: dfu Instance.
-  * @param  block_number: block number
+  * @brief  USBD_DFU_Write
+  *         This function is invoked when host is requesting to write in media.
+  * @param  dfu_instance: Pointer to the dfu class instance.
+  * @param  block_number: block number.
   * @param  data_pointer: Pointer to the Source buffer.
   * @param  length: Number of data to be read (in bytes).
-  * @param  media_status: Not used.
-  * @retval status.
+  * @param  media_status: dfu media status.
+  * @retval status
   */
-UINT DFU_Write(VOID *dfu, ULONG block_number, UCHAR * data_pointer,
-               ULONG length, ULONG *media_status)
+UINT USBD_DFU_Write(VOID *dfu_instance, ULONG block_number, UCHAR *data_pointer,
+                    ULONG length, ULONG *media_status)
 {
-  UINT  status  = 0U;
+  UINT status = UX_SUCCESS;
+
+  /* USER CODE BEGIN USBD_DFU_Write */
+  UX_PARAMETER_NOT_USED(dfu_instance);
+  UX_PARAMETER_NOT_USED(media_status);
+
   ULONG dfu_polltimeout = 0U;
 
-  /* store ux_dfu_download info*/
+  /* Store ux_dfu_download info */
   ux_dfu_download.wlength = length;
   ux_dfu_download.data_ptr = RX_Data;
   ux_dfu_download.wblock_num = block_number;
@@ -193,51 +225,81 @@ UINT DFU_Write(VOID *dfu, ULONG block_number, UCHAR * data_pointer,
 
   if((block_number == 0) && (*data_pointer == DFU_CMD_ERASE))
   {
-    /* set the time necessary for an erase operation*/
+    /* Set the time necessary for an erase operation */
     dfu_polltimeout = DFU_MEDIA_ERASE_TIME;
 
     /* Set DFU media status Busy, dfu polltimeout in erase phase */
-    dfu_status =  UX_SLAVE_CLASS_DFU_MEDIA_STATUS_BUSY;
+    dfu_status = UX_SLAVE_CLASS_DFU_MEDIA_STATUS_BUSY;
     dfu_status += UX_SLAVE_CLASS_DFU_STATUS_OK << 4;
     dfu_status += (uint8_t)(dfu_polltimeout)<< 8;
   }
   else
   {
-    /* set the time necessary for a program operation*/
+    /* Set the time necessary for a program operation */
     dfu_polltimeout = DFU_MEDIA_PROGRAM_TIME;
 
     /* Set DFU media status Busy, dfu polltimeout in program phase */
-    dfu_status =  UX_SLAVE_CLASS_DFU_MEDIA_STATUS_BUSY;
+    dfu_status = UX_SLAVE_CLASS_DFU_MEDIA_STATUS_BUSY;
     dfu_status += UX_SLAVE_CLASS_DFU_STATUS_OK << 4;
     dfu_status += (uint8_t)(dfu_polltimeout)<< 8;
   }
 
-  /* put a message queue to usbx_dfu_download_thread_entry */
+  /* Put a message queue to usbx_dfu_download_thread_entry */
   if (tx_queue_send(&ux_app_MsgQueue, &ux_dfu_download, TX_NO_WAIT) != TX_SUCCESS)
   {
     Error_Handler();
   }
 
-  return (status);
+  /* USER CODE END USBD_DFU_Write */
+
+  return status;
 }
 
 /**
-  * @brief  Handles the sub-protocol DFU leave DFU mode request (leaves DFU mode
-  *         and resets device to jump to user loaded code).
-  * @param  dfu: dfu Instance.
-  * @param  transfer: transfer request.
-  * @retval None.
+  * @brief  USBD_DFU_Notify
+  *         This function is invoked to application when a begin and end
+  *         of transfer of the firmware occur.
+  * @param  dfu_instance: Pointer to the dfu class instance.
+  * @param  notification: unused.
+  * @retval status
   */
-UINT DFU_Leave(VOID *dfu, UX_SLAVE_TRANSFER *transfer)
+UINT USBD_DFU_Notify(VOID *dfu_instance, ULONG notification)
 {
+  UINT status = UX_SUCCESS;
+
+  /* USER CODE BEGIN USBD_DFU_Notify */
+  UX_PARAMETER_NOT_USED(dfu_instance);
+  UX_PARAMETER_NOT_USED(notification);
+  /* USER CODE END USBD_DFU_Notify */
+
+  return status;
+}
+
+#ifdef UX_DEVICE_CLASS_DFU_CUSTOM_REQUEST_ENABLE
+
+/**
+  * @brief  USBD_DFU_CustomRequest
+  *         This function is invoked to Handles DFU sub-protocol request.
+  * @param  dfu_instance: Pointer to the dfu class instance.
+  * @param  transfer: transfer request.
+  * @retval status
+  */
+UINT USBD_DFU_CustomRequest(VOID *dfu_instance, UX_SLAVE_TRANSFER *transfer)
+{
+  UINT status = UX_SUCCESS;
+
+  /* USER CODE BEGIN USBD_DFU_CustomRequest */
+  UX_PARAMETER_NOT_USED(dfu_instance);
+
   UCHAR *setup;
   UCHAR dfu_state;
-  UINT  status = UX_ERROR;
+
+  status = UX_ERROR;
 
   /* Get DFU state */
-  dfu_state = _ux_device_class_dfu_state_get((UX_SLAVE_CLASS_DFU*)dfu);
+  dfu_state = ux_device_class_dfu_state_get((UX_SLAVE_CLASS_DFU*)dfu);
 
-  setup  = transfer->ux_slave_transfer_request_setup;
+  setup = transfer->ux_slave_transfer_request_setup;
 
   if((dfu_state == UX_SYSTEM_DFU_STATE_DFU_IDLE) ||
      (dfu_state == UX_SYSTEM_DFU_STATE_DFU_DNLOAD_IDLE))
@@ -262,31 +324,34 @@ UINT DFU_Leave(VOID *dfu, UX_SLAVE_TRANSFER *transfer)
     }
   }
 
-  return (status);
+  /* USER CODE END USBD_DFU_CustomRequest */
+
+  return status;
 }
+
+#endif /* UX_DEVICE_CLASS_DFU_CUSTOM_REQUEST_ENABLE */
+
+/* USER CODE BEGIN 1 */
 
 /**
   * @brief  Function implementing usbx_dfu_download_thread_entry.
-  * @param  arg: Not used.
-  * @retval None.
+  * @param  thread_input: Not used.
+  * @retval none
   */
-void usbx_dfu_download_thread_entry(ULONG arg)
+VOID usbx_dfu_download_thread_entry(ULONG thread_input)
 {
-  UINT                  status;
-  UINT                  Command;
-  ULONG                 Block_index;
-  ULONG                 Data_address;
-  ULONG                 Address_dest;
-  ULONG                 Media_address;
-  UX_SLAVE_CLASS_DFU*   dfu = NULL;
+  UINT status, Command;
+  ULONG Block_index, Data_address, Address_dest, Media_address;
+
+  UX_PARAMETER_NOT_USED(thread_input);
 
   while (1)
   {
 
-    /* receive a message queue from DFU_Write callback*/
+    /* Receive a message queue from DFU_Write callback */
     status = tx_queue_receive(&ux_app_MsgQueue, &ux_dfu_download, TX_WAIT_FOREVER);
 
-    /* Check the completion code and the actual flags returned. */
+    /* Check the completion code and the actual flags returned */
     if (status == TX_SUCCESS)
     {
 
@@ -295,21 +360,21 @@ void usbx_dfu_download_thread_entry(ULONG arg)
 
         Command = *(ux_dfu_download.data_ptr);
 
-        /* Decode the Special Command*/
+        /* Decode the Special Command */
         switch ( Command )
         {
 
           case DFU_CMD_SETADDRESSPOINTER:
 
             /* Get address pointer value used for computing the start address
-              for Read and Write memory operations */
+               for Read and Write memory operations */
             Address_ptr =  *(ux_dfu_download.data_ptr + 1) ;
             Address_ptr += *(ux_dfu_download.data_ptr + 2) << 8 ;
             Address_ptr += *(ux_dfu_download.data_ptr + 3) << 16 ;
             Address_ptr += *(ux_dfu_download.data_ptr + 4) << 24 ;
 
             /* Set DFU Status OK */
-            dfu_status =  UX_SLAVE_CLASS_DFU_MEDIA_STATUS_OK;
+            dfu_status = UX_SLAVE_CLASS_DFU_MEDIA_STATUS_OK;
             dfu_status += UX_SLAVE_CLASS_DFU_STATUS_OK << 4;
 
             /* Update USB DFU state machine */
@@ -320,7 +385,7 @@ void usbx_dfu_download_thread_entry(ULONG arg)
           case DFU_CMD_ERASE:
 
             /* Get address pointer value to erase one page of the internal
-               media memory. */
+               media memory */
             Address_ptr =  *(ux_dfu_download.data_ptr + 1);
             Address_ptr += *(ux_dfu_download.data_ptr + 2) << 8;
             Address_ptr += *(ux_dfu_download.data_ptr + 3) << 16;
@@ -401,51 +466,53 @@ void usbx_dfu_download_thread_entry(ULONG arg)
     }
     else
     {
+      /* Sleep thread for 10ms */
       tx_thread_sleep(MS_TO_TICK(10));
     }
   }
 }
 
-
-
 /**
-  * @brief  Erase sector.
+  * @brief  DFU_Erase
+  *         Erase flash sector.
   * @param  Address: Address of sector to be erased.
   * @retval UX_SUCCESS if operation is successful.
   */
 static uint16_t DFU_Erase(uint32_t Address)
 {
   FLASH_EraseInitTypeDef EraseInitStruct;
-  uint32_t flash_ret    = UX_SUCCESS;
+  uint16_t status = UX_SUCCESS;
   uint32_t SECTORError  = 0;
+
   TX_INTERRUPT_SAVE_AREA
 
-  /* Fill EraseInit structure*/
-  EraseInitStruct.TypeErase     = FLASH_TYPEERASE_SECTORS;
-  EraseInitStruct.Banks         = FLASH_BANK_1;
-  EraseInitStruct.VoltageRange  = FLASH_VOLTAGE_RANGE_3;
-  EraseInitStruct.Sector        = GetSector(Address);
-  EraseInitStruct.NbSectors     = 1;
+  /* Fill EraseInit structure */
+  EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+  EraseInitStruct.Banks = FLASH_BANK_1;
+  EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+  EraseInitStruct.Sector = GetSector(Address);
+  EraseInitStruct.NbSectors = 1;
 
   TX_DISABLE
 
   /* Execute erase operation */
-  flash_ret = HAL_FLASHEx_Erase(&EraseInitStruct, &SECTORError);
+  status = HAL_FLASHEx_Erase(&EraseInitStruct, &SECTORError);
 
   TX_RESTORE
 
-  if (flash_ret != HAL_OK)
+  if (status != HAL_OK)
   {
-    flash_ret = UX_ERROR;
+    status = UX_ERROR;
   }
 
-  return (flash_ret);
+  return (status);
 }
 
 /**
-  * @brief  Get the sector of a given address
-  * @param  Address Address of the FLASH Memory
-  * @retval The sector of a given address
+  * @brief  GetSector
+  *         Get the sector of a given address.
+  * @param  Address: Address of the FLASH Memory.
+  * @retval sector: The sector of a given address.
   */
 static uint32_t GetSector(uint32_t Address)
 {
@@ -462,29 +529,5 @@ static uint32_t GetSector(uint32_t Address)
 
   return (sector);
 }
-
-/**
-  * @brief DFU device connection callback.
-  * @param  Device_State: dfu Instance.
-  * @retval status.
-  */
-UINT DFU_Device_ConnectionCallback(ULONG Device_State)
-{
-  if(Device_State == UX_DEVICE_REMOVED)
-  {
-    if (_ux_system_slave -> ux_system_slave_device_dfu_mode ==  UX_DEVICE_CLASS_DFU_MODE_DFU)
-    {
-      if (Leave_DFU_State != LEAVE_DFU_DISABLED)
-      {
-        /* Generate system reset to allow jumping to the user code */
-        NVIC_SystemReset();
-      }
-    }
-  }
-  return UX_SUCCESS;
-}
-/* USER CODE END 0 */
-
-/* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */

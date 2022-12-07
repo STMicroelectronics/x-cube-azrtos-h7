@@ -13,7 +13,7 @@ Upon startup, this application will set the VTOR register with its Interrupt Vec
 This can be achieved by setting the offset to the defined name **VECT_TABLE_OFFSET** located in file **system_stm32h7xx.c**.
 
 This application must be generated as raw binary, this can be achieved by setting the output format of the IDE to **Raw binary**.
-The name for the binary should also be specified there as defined by **FW_NAME_STRING** located in "FileX/FX_IAP/IAP_main/FileX/App/app_filex.h".
+The name for the binary should also be specified there as defined by **FW_NAME_STRING** located in "FileX/FX_IAP/IAP_main/Core/Inc/main.h".
 
 ### <b>Expacted behaviour:</b>
 IAP_binary_template should toggle both LEDs.

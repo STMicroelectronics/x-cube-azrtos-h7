@@ -7,7 +7,7 @@ the code provides all required device descriptors framework and associated to bo
 At the beginning ThreadX call the entry function tx_application_define(), at this stage, all USBx resources are initialized, the CDC_ACM and HID Class driver is
 registered and the application creates 4 threads with the same priorities :
 
-  - usbx_app_thread_entry (Prio : 20; PreemptionPrio : 20) used to initialize USB OTG HAL PCD driver and start the device.
+  - app_ux_device_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device.
   - usbx_cdc_acm_read_thread_entry (Prio : 20; PreemptionPrio : 20) used to Read the received data from Virtual COM Port.
   - usbx_cdc_acm_write_thread_entry (Prio : 20; PreemptionPrio : 20) used to send the received data over UART .
   - usbx_hid_thread_entry (Prio : 20; PreemptionPrio : 20) used to send HID reports to move automatically the PC host machine cursor.
@@ -24,16 +24,17 @@ During enumeration phase, four communication pipes "endpoints" are declared in t
    Once the transmission is over, the OUT endpoint is prepared to receive next packet in HAL_UART_RxCpltCallback().
 
  - 1 x Interrupt IN endpoint for setting and getting serial-port parameters:
-   When control setup is received, the corresponding request is executed in ux_app_parameters_change().
+   When control setup is received, the corresponding request is executed in USBD_CDC_ACM_ParameterChange.
 
 In CDC_ACM application, two requests are implemented:
+
     - Set line: Set the bit rate, number of Stop bits, parity, and number of data bits
     - Get line: Get the bit rate, number of Stop bits, parity, and number of data bits
-   The other requests (send break, control line state) are not implemented.
+    The other requests (send break, control line state) are not implemented.
 
 - 1 x Interrupt IN endpoint for setting the HID position:
    When the User Button is pressed the application calls the GetPointerData() API to update the mouse position (x, y) and send
-the report buffer through the ux_device_class_hid_event_set() API.
+   the report buffer through the ux_device_class_hid_event_set() API.
 
 <b>Note</b>
 
@@ -60,8 +61,7 @@ User is familiar with USB 2.0 "Universal Serial BUS" Specification and CDC_ACM c
 
 #### <b>Known limitations</b>
 
-When creating an USBX based application with MDK-ARM AC6 compiler make sure to disable the optimization for stm32h7xx_ll_usb.c file, otherwise application might not work correctly.
-This limitation will be fixed in future release.
+None.
 
 ### <b>Notes</b>
 
@@ -122,7 +122,7 @@ This limitation will be fixed in future release.
 
 ### <b>Keywords</b>
 
-RTOS, ThreadX, USBX, USBXDevice, USB_OTG, Full Speed, CDC, HID, VCP, USART, DMA, Mouse.
+RTOS, ThreadX, USBX, USBXDevice, USB_OTG, High Speed, CDC, HID, VCP, USART, DMA, Mouse.
 
 
 ### <b>Hardware and Software environment</b>
@@ -157,8 +157,8 @@ RTOS, ThreadX, USBX, USBXDevice, USB_OTG, Full Speed, CDC, HID, VCP, USART, DMA,
 In order to make the program work, you must do the following :
 
  - Open your preferred toolchain
- - For each target configuration (Ux_Device_HID_CDC_ACM_CM4 first then Ux_Device_HID_CDC_ACM_CM7) : 
-     - Rebuild all files 
+ - For each target configuration (Ux_Device_HID_CDC_ACM_CM4 first then Ux_Device_HID_CDC_ACM_CM7) :
+     - Rebuild all files
      - Load images into target memory
  - After loading the two images, you have to reset the board in order to boot (Cortex-M7) and CPU2 (Cortex-M4) at once.
  - In the workspace toolbar select the project configuration:

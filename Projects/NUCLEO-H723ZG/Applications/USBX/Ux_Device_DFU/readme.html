@@ -24,8 +24,8 @@
 <p>The application is designed to emulate an USB DFU device, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB DFU device.</p>
 <p>At the beginning ThreadX calls the entry function tx_application_define(), at this stage, all USBx resources are initialized, the DFU Class driver is registered and the application creates 2 threads with the same priorities :</p>
 <ul>
-<li>usbx_app_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device.</li>
-<li>usbx_dfu_download_thread (Prio : 20; PreemptionPrio : 20) used to execute download command.</li>
+<li>app_ux_device_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device.</li>
+<li>usbx_dfu_download_thread_entry (Prio : 20; PreemptionPrio : 20) used to execute download command.</li>
 </ul>
 <p>The DFU transactions are based on Endpoint 0 (control endpoint) transfer. All requests and status control are sent/received through this endpoint.</p>
 <p>The Internal flash memory is split as follows: - DFU area located in [0x08000000 : USBD_DFU_APP_DEFAULT_ADD-1]: Only read access - Application area located in [USBD_DFU_APP_DEFAULT_ADD : Device’s end address]: Read, Write, and Erase access</p>
@@ -59,8 +59,7 @@
 <h4 id="assumptions-if-any"><b>Assumptions if any</b></h4>
 <p>User is familiar with USB 2.0 “Universal Serial BUS” Specification and DFU class Specification.</p>
 <h4 id="known-limitations"><b>Known limitations</b></h4>
-<p>Only Dfuse is supported. CubeProgrammer is not yet supported.</p>
-<p>When creating an USBX based application with MDK-ARM AC6 compiler make sure to disable the optimization for stm32h7xx_ll_usb.c file, otherwise application might not work correctly. This limitation will be fixed in future release.</p>
+<p>None</p>
 <h3 id="notes"><b>Notes</b></h3>
 <ol type="1">
 <li>Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from Flash memory. This feature can be activated using ‘#pragma location = “.itcmram”’ to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.</li>

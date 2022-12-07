@@ -52,8 +52,8 @@ int  main(void)
     tx_kernel_enter();
 #else
 
-    /* Initialize NAND flash.  */
-    lx_nand_flash_initialize();    
+    /* Initialize NOR flash.  */
+    lx_nor_flash_initialize();    
     
     /* Initialize FileX.  */
     fx_system_initialize();

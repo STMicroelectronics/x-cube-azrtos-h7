@@ -36,7 +36,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_hcd_stm32_endpoint_create                       PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -68,6 +68,9 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_hcd_stm32_endpoint_create(UX_HCD_STM32 *hcd_stm32, UX_ENDPOINT *endpoint)
@@ -193,6 +196,9 @@ UINT                    endpoint_type;
 
     /* Now do the opposite, attach the ED container to the physical ED.  */
     ed -> ux_stm32_ed_endpoint =  endpoint;
+    ed -> ux_stm32_ed_type = (UCHAR)endpoint_type;
+    ed -> ux_stm32_ed_speed = (UCHAR)device_speed;
+    ed -> ux_stm32_ed_dir = (endpoint -> ux_endpoint_descriptor.bEndpointAddress & 0x80) ? 1 : 0;
 
     /* Call HAL to initialize the host channel.  */
     HAL_HCD_HC_Init(hcd_stm32->hcd_handle,

@@ -97,7 +97,17 @@ extern "C" {
 #define USER_DNS_ADDRESS            IP_ADDRESS(1, 1, 1, 1)   /* User should configure it with his DNS address */
 
 #define DEFAULT_TIMEOUT             5 * NX_IP_PERIODIC_RATE
+
+#define NX_APP_CABLE_CONNECTION_CHECK_PERIOD      (6 * NX_IP_PERIODIC_RATE)
 /* USER CODE END EC */
+/* The DEFAULT_PAYLOAD_SIZE should match with RxBuffLen configured via MX_ETH_Init */
+#ifndef DEFAULT_PAYLOAD_SIZE
+#define DEFAULT_PAYLOAD_SIZE      1536
+#endif
+
+#ifndef DEFAULT_ARP_CACHE_SIZE
+#define DEFAULT_ARP_CACHE_SIZE    1024
+#endif
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
@@ -125,6 +135,24 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr);
 /* USER CODE BEGIN PD */
 
 /* USER CODE END PD */
+
+#define NX_APP_DEFAULT_TIMEOUT               (10 * NX_IP_PERIODIC_RATE)
+
+#define NX_APP_PACKET_POOL_SIZE              ((DEFAULT_PAYLOAD_SIZE + sizeof(NX_PACKET)) * 10)
+
+#define NX_APP_THREAD_STACK_SIZE             4 * 1024
+
+#define Nx_IP_INSTANCE_THREAD_SIZE           2 * 1024
+
+#define NX_APP_THREAD_PRIORITY               10
+
+#ifndef NX_APP_INSTANCE_PRIORITY
+#define NX_APP_INSTANCE_PRIORITY             NX_APP_THREAD_PRIORITY
+#endif
+
+#define NX_APP_DEFAULT_IP_ADDRESS                   0
+
+#define NX_APP_DEFAULT_NET_MASK                     0
 
 /* USER CODE BEGIN 1 */
 

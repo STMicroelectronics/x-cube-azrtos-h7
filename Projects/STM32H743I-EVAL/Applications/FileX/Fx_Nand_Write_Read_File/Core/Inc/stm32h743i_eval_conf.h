@@ -21,7 +21,7 @@
 #define STM32h743I_EVAL_CONF_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -33,7 +33,7 @@
 #define USE_BSP_COM_FEATURE                 0U
 
 /* POT define */
-#define USE_BSP_POT_FEATURE                 1U
+#define USE_BSP_POT_FEATURE                 0U
 
 /* IO CLASS define */
 #define USE_BSP_IO_CLASS                     1U
@@ -44,14 +44,14 @@
 #define LCD_LAYER_1_ADDRESS                 0xD0200000U
 
 /* Audio codecs defines */
-#define USE_AUDIO_CODEC_WM8994              1U
+#define USE_AUDIO_CODEC_WM8994              0U
 
 /* Default Audio IN internal buffer size */
 #define DEFAULT_AUDIO_IN_BUFFER_SIZE        2048U
 #define USE_BSP_CPU_CACHE_MAINTENANCE       1U
 
 /* TS supported features defines */
-#define USE_TS_GESTURE                      1U
+#define USE_TS_GESTURE                      0U
 
 /* Default TS touch number */
 #define TS_TOUCH_NBR                        2U

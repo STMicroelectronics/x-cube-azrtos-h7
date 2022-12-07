@@ -33,7 +33,6 @@ extern "C" {
 
 /* USER CODE BEGIN Includes */
 #include "main.h"
-#include "nxd_dhcp_client.h"
 #include "nxd_sntp_client.h"
 #include "nxd_dns.h"
 /* USER CODE END Includes */
@@ -45,42 +44,16 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-#define SNTP_SERVER_NAME             "0.fr.pool.ntp.org"
-
-#define SNTP_UPDATE_EVENT            1
-
-/* Define how often the demo checks for SNTP updates. */
-#define PERIODIC_CHECK_INTERVAL      (60 * NX_IP_PERIODIC_RATE)
-
-/* Define how often we check on SNTP server status. */
-#define CHECK_SNTP_UPDATES_TIMEOUT   (180 * NX_IP_PERIODIC_RATE)
-
-#define PAYLOAD_SIZE                 1536
-#define NX_PACKET_POOL_SIZE          (( PAYLOAD_SIZE + sizeof(NX_PACKET)) * 10)
-#define DEFAULT_MEMORY_SIZE          1024
-#define ARP_MEMORY_SIZE              DEFAULT_MEMORY_SIZE
-#define SNTP_CLIENT_THREAD_MEMORY    6 * DEFAULT_MEMORY_SIZE
-#define MAIN_THREAD_MEMORY           2 * DEFAULT_MEMORY_SIZE
-
-#define DEFAULT_MAIN_PRIORITY        10
-#define DEFAULT_PRIORITY             5
-#define LINK_PRIORITY                11
-
-#define NULL_ADDRESS                 0
-
-/* USER_DNS_ADDRESS should be defined by user if necessary */
-#define USER_DNS_ADDRESS             IP_ADDRESS(1, 1, 1, 1)
-
-#define DEFAULT_TIMEOUT              10 * NX_IP_PERIODIC_RATE
-
-/* EPOCH_TIME_DIFF is equivalent to 70 years in sec
-   calculated with www.epochconverter.com/date-difference
-   This constant is used to delete difference between :
-   Epoch converter (referenced to 1970) and SNTP (referenced to 1900) */
-#define EPOCH_TIME_DIFF             2208988800
-
 
 /* USER CODE END EC */
+/* The DEFAULT_PAYLOAD_SIZE should match with RxBuffLen configured via MX_ETH_Init */
+#ifndef DEFAULT_PAYLOAD_SIZE
+#define DEFAULT_PAYLOAD_SIZE      1536
+#endif
+
+#ifndef DEFAULT_ARP_CACHE_SIZE
+#define DEFAULT_ARP_CACHE_SIZE    1024
+#endif
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
@@ -103,7 +76,6 @@ extern "C" {
 #define PRINT_CNX_SUCC()          do { \
                                         printf("SNTP client connected to NTP server : < %s > \n", SNTP_SERVER_NAME);\
                                      } while(0)
-
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
@@ -115,8 +87,50 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr);
 
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define SNTP_SERVER_NAME             "0.fr.pool.ntp.org"
+
+#define SNTP_UPDATE_EVENT            1
+
+#define SNTP_CLIENT_THREAD_MEMORY    6 * 1024
+#define MAIN_THREAD_MEMORY           2 * 1024
+
+#define LINK_PRIORITY                11
+/* Define how often the demo checks for SNTP updates. */
+#define PERIODIC_CHECK_INTERVAL      (60 * NX_IP_PERIODIC_RATE)
+
+/* Define how often we check on SNTP server status. */
+#define CHECK_SNTP_UPDATES_TIMEOUT   (180 * NX_IP_PERIODIC_RATE)
+
+/* USER_DNS_ADDRESS should be defined by user if necessary */
+#define USER_DNS_ADDRESS             IP_ADDRESS(1, 1, 1, 1)
+
+/* EPOCH_TIME_DIFF is equivalent to 70 years in sec
+   calculated with www.epochconverter.com/date-difference
+   This constant is used to delete difference between :
+   Epoch converter (referenced to 1970) and SNTP (referenced to 1900) */
+#define EPOCH_TIME_DIFF             2208988800
+
+#define NX_APP_CABLE_CONNECTION_CHECK_PERIOD      (6 * NX_IP_PERIODIC_RATE)
 
 /* USER CODE END PD */
+
+#define NX_APP_DEFAULT_TIMEOUT               (10 * NX_IP_PERIODIC_RATE)
+
+#define NX_APP_PACKET_POOL_SIZE              ((DEFAULT_PAYLOAD_SIZE + sizeof(NX_PACKET)) * 10)
+
+#define NX_APP_THREAD_STACK_SIZE             2 * 1024
+
+#define Nx_IP_INSTANCE_THREAD_SIZE           4 * 1024
+
+#define NX_APP_THREAD_PRIORITY               5
+
+#ifndef NX_APP_INSTANCE_PRIORITY
+#define NX_APP_INSTANCE_PRIORITY             NX_APP_THREAD_PRIORITY
+#endif
+
+#define NX_APP_DEFAULT_IP_ADDRESS                   0
+
+#define NX_APP_DEFAULT_NET_MASK                     0
 
 /* USER CODE BEGIN 1 */
 

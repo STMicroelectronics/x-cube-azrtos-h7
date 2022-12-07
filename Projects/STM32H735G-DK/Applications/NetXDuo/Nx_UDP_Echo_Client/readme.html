@@ -30,10 +30,10 @@
 </ul>
 <p>The application then creates 2 threads with the same priorities:</p>
 <ul>
-<li><strong>AppMainThread</strong> (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.</li>
+<li><strong>NxAppThread</strong> (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.</li>
 <li><strong>AppUDPThread</strong> (priority 10, PreemtionThreashold 10) : created with the TX_DONT_START flag to be started later.</li>
 </ul>
-<p>The <strong>AppMainThread</strong> starts and perform the following actions:</p>
+<p>The <strong>NxAppThread</strong> starts and perform the following actions:</p>
 <ul>
 <li>starts the DHCP client<br />
 </li>
@@ -173,7 +173,7 @@ this section is then used in the <code> app_azure_rtos.c</code> file to force th
 #if defined ( __ICCARM__ ) /* IAR Compiler */
 #pragma location = &quot;.NetXPoolSection&quot;
 
-#elif defined ( __CC_ARM ) /* MDK ARM Compiler */
+#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(&quot;.NetXPoolSection&quot;)))
 
 #elif defined ( __GNUC__ ) /* GNU Compiler */

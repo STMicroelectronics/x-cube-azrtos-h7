@@ -30,9 +30,13 @@ extern "C" {
 
 /* USER CODE END ET */
 
+extern OSPI_HandleTypeDef hospi1;
+
 /* The following semaphore is being to notify about RX/TX completion. It needs to be released in the transfer callbacks */
 extern TX_SEMAPHORE ospi_rx_semaphore;
 extern TX_SEMAPHORE ospi_tx_semaphore;
+
+#define ospi_handle        hospi1
 
 /* Exported constants --------------------------------------------------------*/
 
@@ -169,6 +173,14 @@ INT lx_stm32_ospi_is_block_erased(UINT instance, ULONG block);
 UINT lx_ospi_driver_system_error(UINT error_code);
 
 UINT lx_stm32_ospi_initialize(LX_NOR_FLASH *nor_flash);
+
+#if (LX_STM32_OSPI_INIT == 1)
+extern void MX_OCTOSPI1_Init(void);
+#endif
+
+#if (LX_STM32_OSPI_INIT == 1)
+#define ospi_driver_init() MX_OCTOSPI1_Init()
+#endif
 
 /* USER CODE BEGIN EFP */
 

@@ -1,3 +1,4 @@
+
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -32,6 +33,11 @@
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
+/* Main thread stack size */
+#define FX_APP_THREAD_STACK_SIZE         1024
+/* Main thread priority */
+#define FX_APP_THREAD_PRIO               10
+
 /* USER CODE BEGIN PD */
 
 #define FILEX_DEFAULT_STACK_SIZE               (2 * 1024)
@@ -58,26 +64,30 @@ typedef enum {
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-/* USER CODE BEGIN PV */
+/* Main thread global data structures.  */
+TX_THREAD       fx_app_thread;
 
-/* Buffer for FileX FX_MEDIA sector cache. this should be 32-Bytes
-aligned to avoid cache maintenance issues */
-ALIGN_32BYTES (uint32_t media_memory[512]);
-
+/* Buffer for FileX FX_MEDIA sector cache. */
+ALIGN_32BYTES (uint32_t fx_sd_media_memory[FX_STM32_SD_DEFAULT_SECTOR_SIZE / sizeof(uint32_t)]);
 /* Define FileX global data structures.  */
 FX_MEDIA        sdio_disk;
+
+/* USER CODE BEGIN PV */
+
+/* Define FileX global data structures.  */
 FX_FILE         fx_file;
 
 /* Define ThreadX global data structures.  */
-TX_THREAD       fx_thread;
 TX_QUEUE        tx_msg_queue;
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
+/* Main thread entry function.  */
+void fx_app_thread_entry(ULONG thread_input);
+
 /* USER CODE BEGIN PFP */
 static int32_t SD_IsDetected(uint32_t Instance);
-void fx_thread_entry(ULONG thread_input);
 void Error_Handler(void);
 
 /* USER CODE END PFP */
@@ -90,32 +100,36 @@ void Error_Handler(void);
 UINT MX_FileX_Init(VOID *memory_ptr)
 {
   UINT ret = FX_SUCCESS;
+
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+  VOID *pointer;
 
   /* USER CODE BEGIN MX_FileX_MEM_POOL */
   /* USER CODE END MX_FileX_MEM_POOL */
 
-  /* USER CODE BEGIN MX_FileX_Init */
- CHAR *pointer;
+  /* USER CODE BEGIN 0 */
 
-  /*Allocate memory for fx_thread_entry*/
-  ret = tx_byte_allocate(byte_pool, (VOID **) &pointer, FILEX_DEFAULT_STACK_SIZE, TX_NO_WAIT);
+  /* USER CODE END 0 */
 
-  /* Check FILEX_DEFAULT_STACK_SIZE allocation*/
+  /*Allocate memory for the main thread's stack*/
+  ret = tx_byte_allocate(byte_pool, &pointer, FX_APP_THREAD_STACK_SIZE, TX_NO_WAIT);
+
+  /* Check FX_APP_THREAD_STACK_SIZE allocation*/
   if (ret != FX_SUCCESS)
   {
-    Error_Handler();
+    return TX_POOL_ERROR;
   }
 
   /* Create the main thread.  */
-  ret = tx_thread_create(&fx_thread, "fx_sd_thread", fx_thread_entry, 0, pointer, FILEX_DEFAULT_STACK_SIZE, DEFAULT_THREAD_PRIO,
-                         DEFAULT_PREEMPTION_THRESHOLD, TX_NO_TIME_SLICE, TX_AUTO_START);
+  ret = tx_thread_create(&fx_app_thread, FX_APP_THREAD_NAME, fx_app_thread_entry, 0, pointer, FX_APP_THREAD_STACK_SIZE,
+                         FX_APP_THREAD_PRIO, FX_APP_PREEMPTION_THRESHOLD, FX_APP_THREAD_TIME_SLICE, FX_APP_THREAD_AUTO_START);
 
   /* Check main thread creation */
   if (ret != FX_SUCCESS)
   {
-    Error_Handler();
+    return TX_THREAD_ERROR;
   }
+  /* USER CODE BEGIN MX_FileX_Init */
 
   /* Allocate Memory for the Queue */
   ret = tx_byte_allocate(byte_pool, (VOID **) &pointer, APP_QUEUE_SIZE * sizeof(ULONG), TX_NO_WAIT);
@@ -135,17 +149,27 @@ UINT MX_FileX_Init(VOID *memory_ptr)
     Error_Handler();
   }
 
+  /* USER CODE END MX_FileX_Init */
+
   /* Initialize FileX.  */
   fx_system_initialize();
-  /* USER CODE END MX_FileX_Init */
+
+  /* USER CODE BEGIN MX_FileX_Init 1*/
+
+  /* USER CODE END MX_FileX_Init 1*/
+
   return ret;
 }
 
-/* USER CODE BEGIN 1 */
-
-void fx_thread_entry(ULONG thread_input)
+ /**
+ * @brief  Main thread entry.
+ * @param thread_input: ULONG user argument used by the thread entry
+ * @retval none
+ */
+void fx_app_thread_entry(ULONG thread_input)
 {
-
+  UINT sd_status = FX_SUCCESS;
+  /* USER CODE BEGIN fx_app_thread_entry 0 */
   UINT status;
   ULONG r_msg;
   ULONG s_msg = CARD_STATUS_CHANGED;
@@ -162,7 +186,7 @@ void fx_thread_entry(ULONG thread_input)
   else
   {
     /* Indicate that SD card is not inserted from start */
-    HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+    HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
   }
 
   /* Infinite Loop */
@@ -178,7 +202,7 @@ void fx_thread_entry(ULONG thread_input)
         /* Toggle Blue LED to indicate idle state after a successful operation */
         if(last_status == CARD_STATUS_CONNECTED)
         {
-          HAL_GPIO_TogglePin(LED4_GPIO_Port, LED4_Pin);
+          HAL_GPIO_TogglePin(LED_BLUE_GPIO_Port, LED_BLUE_Pin);
         }
       }
 
@@ -196,7 +220,7 @@ void fx_thread_entry(ULONG thread_input)
           /* We have a valid SD insertion event, start processing.. */
           /* Update last known status */
           last_status = CARD_STATUS_CONNECTED;
-          HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_SET);
+          HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
 
 
           break;
@@ -206,23 +230,27 @@ void fx_thread_entry(ULONG thread_input)
           /* Update last known status */
           last_status = CARD_STATUS_DISCONNECTED;
           /* Switch on the Red LED and switch off the Blue LED */
-          HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET);
-          HAL_GPIO_WritePin(LED4_GPIO_Port, LED4_Pin, GPIO_PIN_SET);
+          HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
+          HAL_GPIO_WritePin(LED_BLUE_GPIO_Port, LED_BLUE_Pin, GPIO_PIN_SET);
         }
       }
 
     }
+  /* USER CODE END fx_app_thread_entry 0 */
 
-    /* Open the SD disk driver.  */
-    status =  fx_media_open(&sdio_disk, "STM32_SDIO_DISK", fx_stm32_sd_driver, 0, media_memory, sizeof(media_memory));
+  /* Open the SD disk driver */
+  sd_status =  fx_media_open(&sdio_disk, FX_SD_VOLUME_NAME, fx_stm32_sd_driver, (VOID *)FX_NULL, (VOID *) fx_sd_media_memory, sizeof(fx_sd_media_memory));
 
-    /* Check the media open status.  */
-    if (status != FX_SUCCESS)
-    {
-      Error_Handler();
-    }
+  /* Check the media open sd_status */
+  if (sd_status != FX_SUCCESS)
+  {
+    /* USER CODE BEGIN SD open error */
+    while(1);
+    /* USER CODE END SD open error */
+  }
 
-    /* Create a file called STM32.TXT in the root directory.  */
+  /* USER CODE BEGIN fx_app_thread_entry 1 */
+/* Create a file called STM32.TXT in the root directory.  */
     status =  fx_file_create(&sdio_disk, "STM32.TXT");
 
     /* Check the create status.  */
@@ -337,7 +365,10 @@ void fx_thread_entry(ULONG thread_input)
     }
 
   }
+  /* USER CODE END fx_app_thread_entry 1 */
 }
+
+/* USER CODE BEGIN 1 */
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {

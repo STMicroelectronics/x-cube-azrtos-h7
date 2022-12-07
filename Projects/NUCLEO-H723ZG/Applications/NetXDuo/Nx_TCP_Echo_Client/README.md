@@ -1,34 +1,34 @@
 
 ##  <b>Nx_TCP_Echo_Client application description</b>
 
-This application provides an example of Azure RTOS NetX/NetXDuo stack usage . 
+This application provides an example of Azure RTOS NetX/NetXDuo stack usage .
 It shows how to develop a NetX TCP client to communicate with a remote sever using the NetX TCP socket API.
 
 The main entry function tx_application_define() is then called by ThreadX during kernel start, at this stage, all NetX resources are created.
 
- + A <i> NX_PACKET_POOL </i> is allocated 
- + A <i>NX_IP</i> instance using that pool is initialized 
- + The <i>ARP</i>, <i>ICMP</i>, <i>UDP</i> and <i>TCP</i> protocols are enabled for the <i>NX_IP</i> instance 
+ + A <i> NX_PACKET_POOL </i> is allocated
+ + A <i>NX_IP</i> instance using that pool is initialized
+ + The <i>ARP</i>, <i>ICMP</i>, <i>UDP</i> and <i>TCP</i> protocols are enabled for the <i>NX_IP</i> instance
  + A <i>DHCP</i> client is created.
- 
+
 The application then creates 2 threads with the same priorities:
 
- + **AppMainThread** (priority 10, PreemtionThreashold 10) : created with the <i>TX_AUTO_START</i> flag to start automatically. 
+ + **NxAppThread** (priority 10, PreemtionThreashold 10) : created with the <i>TX_AUTO_START</i> flag to start automatically.
  + **AppTCPThread** (priority 10, PreemtionThreashold 10) : created with the <i>TX_DONT_START</i> flag to be started later.
- 
-The **AppMainThread** starts and perform the following actions:
 
-  + Starts the DHCP client  
-  + Waits for the IP address resolution 
+The **NxAppThread** starts and perform the following actions:
+
+  + Starts the DHCP client
+  + Waits for the IP address resolution
   + Resumes the **AppTCPThread**
 
 The **AppTCPThread**, once started:
 
-  + Creates a <i>TCP</i> socket  
-  + Connects to the remote <i>TCP</i> server on the predefined port   
-  + On connection success, the <i>TCP</i> client sends a <i>MAX_PACKET_COUNT</i> messages to the server.  
+  + Creates a <i>TCP</i> socket
+  + Connects to the remote <i>TCP</i> server on the predefined port
+  + On connection success, the <i>TCP</i> client sends a <i>MAX_PACKET_COUNT</i> messages to the server.
   + At each message sent, the <i>TCP</i> client reads the sever response and prints it on the hyper-terminal and the green led is toggled.
-  
+
 ####  <b>Expected success behavior</b>
 
  + The board IP address is printed on the HyperTerminal
@@ -41,7 +41,7 @@ The **AppTCPThread**, once started:
 
 #### <b>Error behaviors</b>
 
-+ The Red LED is toggling to indicate any error that have occurred.
++ The Yellow LED is toggling to indicate any error that have occurred.
 + In case the message exchange is not completed a failure message is printed on the HyperTerminal showing the actual sent message compared to the expected ones.
 
 #### <b>Assumptions if any</b>
@@ -83,7 +83,7 @@ None
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
       - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
-  
+
 #### <b>ThreadX usage hints</b>
 
  - ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.
@@ -106,7 +106,7 @@ None
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
 	```
     + For STM32CubeIDE add the following section into the .ld file:
-	``` 
+	```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -114,16 +114,16 @@ None
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	``` 
-	
+	```
+
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
-       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.	 
-       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).	 
+       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
        Read more in STM32CubeIDE User Guide, chapter: "Linker script".
-	  
+
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
-         
+
 #### <b>NetX Duo usage hints</b>
 
 - The ETH TX And RX descriptors are accessed by the CPU and the ETH DMA IP, thus they should not be allocated into the DTCM RAM "0x20000000".
@@ -144,7 +144,7 @@ None
   }
    ```
    + For STM32CubeIDE ".ld" file
-   ``` 
+   ```
    .nx_section 0x24048200 (NOLOAD): {
      *(.NetXPoolSection)
      } >RAM_D1
@@ -158,7 +158,7 @@ None
 #if defined ( __ICCARM__ ) /* IAR Compiler */
 #pragma location = ".NetXPoolSection"
 
-#elif defined ( __CC_ARM ) /* MDK ARM Compiler */
+#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(".NetXPoolSection")))
 
 #elif defined ( __GNUC__ ) /* GNU Compiler */
@@ -170,7 +170,7 @@ static UCHAR  nx_byte_pool_buffer[NX_APP_MEM_POOL_SIZE];
 static TX_BYTE_POOL nx_app_byte_pool;
 ```
 For more details about the MPU configuration please refer to the [AN4838](https://www.st.com/resource/en/application_note/dm00272912-managing-memory-protection-unit-in-stm32-mcus-stmicroelectronics.pdf)
-   
+
 
 ### <b>Keywords</b>
 
@@ -196,10 +196,10 @@ In order to make the program work, you must do the following :
  - Open your preferred toolchain
  - Edit the file <code> NetXDuo/App/app_netxduo.h</code> and correctly define the <TCP_SERVER_ADDRESS> and <TCP_SERVER_PORT> to connect on.
  - Run the [echotool](https://github.com/PavelBansky/EchoTool/releases/tag/v1.5.0.0) utility on a windows console as following:
-   
-       c:\> .\echotool.exe /p tcp /s <TCP_SERVER_PORT> 
-       
-       Example : c:\> .\echotool.exe /p tcp /s 6001
-   
+
+       c:\> .\echotool.exe /p tcp /s <TCP_SERVER_PORT>
+
+       Example : c:\> .\echotool.exe /p tcp /s 6000
+
  - Rebuild all files and load your image into target memory
  - Run the application

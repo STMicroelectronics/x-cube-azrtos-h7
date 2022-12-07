@@ -34,7 +34,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_host_stack_new_endpoint_create                  PORTABLE C      */ 
-/*                                                           6.1.9        */
+/*                                                           6.1.11       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -77,9 +77,13 @@
 /*  10-15-2021     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            added descriptor validate,  */
 /*                                            resulting in version 6.1.9  */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            internal clean up,          */
+/*                                            fixed size calculation,     */
+/*                                            resulting in version 6.1.11 */
 /*                                                                        */
 /**************************************************************************/
-UINT  _ux_host_stack_new_endpoint_create(UX_INTERFACE *interface,
+UINT  _ux_host_stack_new_endpoint_create(UX_INTERFACE *interface_ptr,
                                                  UCHAR * interface_endpoint)
 {
 
@@ -95,7 +99,7 @@ ULONG           n_tran;
         return(UX_MEMORY_INSUFFICIENT);
 
     /* If trace is enabled, insert this event into the trace buffer.  */
-    UX_TRACE_IN_LINE_INSERT(UX_TRACE_HOST_STACK_NEW_ENDPOINT_CREATE, interface, endpoint, 0, 0, UX_TRACE_HOST_STACK_EVENTS, 0, 0)
+    UX_TRACE_IN_LINE_INSERT(UX_TRACE_HOST_STACK_NEW_ENDPOINT_CREATE, interface_ptr, endpoint, 0, 0, UX_TRACE_HOST_STACK_EVENTS, 0, 0)
 
     /* Save the endpoint handle in the container, this is for ensuring the
        endpoint container is not corrupted.  */
@@ -106,7 +110,7 @@ ULONG           n_tran;
     endpoint -> ux_endpoint_transfer_request.ux_transfer_request_endpoint =  endpoint;
 
     /* Save the pointer to the device. This is useful for the HCD layer.  */
-    endpoint -> ux_endpoint_device =  interface -> ux_interface_configuration -> ux_configuration_device;
+    endpoint -> ux_endpoint_device =  interface_ptr -> ux_interface_configuration -> ux_configuration_device;
 
     /* Parse the interface descriptor and make it machine independent.  */
     _ux_utility_descriptor_parse(interface_endpoint,
@@ -143,7 +147,7 @@ ULONG           n_tran;
     }
 
     /* Interrupt/isochronous endpoint, max 1024 and 3 transactions can be accepted.  */
-    if (endpoint_type == UX_INTERRUPT_ENDPOINT || endpoint_type == UX_ISOCHRONOUS_ENDPOINT)
+    else
     {
 
         /* Max size over 1024 is not allowed.  */
@@ -169,7 +173,7 @@ ULONG           n_tran;
             return(UX_DESCRIPTOR_CORRUPTED);
         }
         if ((endpoint_type == UX_ISOCHRONOUS_ENDPOINT) ||
-            (interface -> ux_interface_configuration -> ux_configuration_device
+            (interface_ptr -> ux_interface_configuration -> ux_configuration_device
                                     -> ux_device_speed == UX_HIGH_SPEED_DEVICE)
             )
         {
@@ -181,6 +185,7 @@ ULONG           n_tran;
         }
 
         /* Save final packet size.  */
+        n_tran >>= UX_MAX_NUMBER_OF_TRANSACTIONS_SHIFT;
         packet_size *= (n_tran + 1);
     }
 
@@ -189,22 +194,22 @@ ULONG           n_tran;
 
     /* The interface that owns this endpoint is memorized in the 
        endpoint container itself, easier for back chaining.  */
-    endpoint -> ux_endpoint_interface =  interface;
+    endpoint -> ux_endpoint_interface =  interface_ptr;
 
     /* There is 2 cases for the creation of the endpoint descriptor 
        if this is the first one, the endpoint descriptor is hooked
        to the interface. 
        If it is not the first one, the endpoint is hooked to the
        end of the chain of endpoints.  */
-    if (interface -> ux_interface_first_endpoint == UX_NULL)
+    if (interface_ptr -> ux_interface_first_endpoint == UX_NULL)
     {
 
-        interface -> ux_interface_first_endpoint =  endpoint;
+        interface_ptr -> ux_interface_first_endpoint =  endpoint;
     }
     else
     {
 
-        list_endpoint =  interface -> ux_interface_first_endpoint;
+        list_endpoint =  interface_ptr -> ux_interface_first_endpoint;
         
         /* Traverse the list until the end.  */
         while (list_endpoint -> ux_endpoint_next_endpoint != UX_NULL)

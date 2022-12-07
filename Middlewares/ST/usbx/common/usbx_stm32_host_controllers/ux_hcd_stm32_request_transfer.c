@@ -36,7 +36,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_hcd_stm32_request_transfer                      PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -75,6 +75,10 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            internal clean up,          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_hcd_stm32_request_transfer(UX_HCD_STM32 *hcd_stm32, UX_TRANSFER *transfer_request)
@@ -90,8 +94,11 @@ UINT            status;
         /* Get the pointer to the Endpoint.  */
         endpoint =  (UX_ENDPOINT *) transfer_request -> ux_transfer_request_endpoint;
 
+#if !defined(UX_HOST_STANDALONE)
+
         /* We reset the actual length field of the transfer request as a safety measure.  */
         transfer_request -> ux_transfer_request_actual_length =  0;
+#endif /* !defined(UX_HOST_STANDALONE) */
 
         /* Isolate the endpoint type and route the transfer request.  */
         switch ((endpoint -> ux_endpoint_descriptor.bmAttributes) & UX_MASK_ENDPOINT_TYPE)
@@ -99,31 +106,40 @@ UINT            status;
 
         case UX_CONTROL_ENDPOINT:
 
-            status =  _ux_hcd_stm32_request_control_transfer(hcd_stm32, transfer_request);
+            status = _ux_hcd_stm32_request_control_transfer(hcd_stm32, transfer_request);
             break;
-
 
         case UX_BULK_ENDPOINT:
 
-            status =  _ux_hcd_stm32_request_bulk_transfer(hcd_stm32, transfer_request);
+            status = _ux_hcd_stm32_request_bulk_transfer(hcd_stm32, transfer_request);
             break;
 
         case UX_INTERRUPT_ENDPOINT:
         case UX_ISOCHRONOUS_ENDPOINT:
 
-            status =  _ux_hcd_stm32_request_periodic_transfer(hcd_stm32, transfer_request);
+            status = _ux_hcd_stm32_request_periodic_transfer(hcd_stm32, transfer_request);
             break;
 
         default:
 
+#if defined(UX_HOST_STANDALONE)
             status =  UX_ERROR;
+#else
+            transfer_request -> ux_transfer_request_completion_code = UX_ERROR;
+            return(UX_STATE_EXIT);
+#endif /* defined(UX_HOST_STANDALONE) */
         }
     }
     else
     {
 
         /* Error, no device attached.  */
+#if defined(UX_HOST_STANDALONE)
         status = UX_NO_DEVICE_CONNECTED;
+#else
+        transfer_request -> ux_transfer_request_completion_code = UX_NO_DEVICE_CONNECTED;
+        status = UX_STATE_EXIT;
+#endif /* defined(UX_HOST_STANDALONE) */
 
     }
 

@@ -52,7 +52,7 @@
 /* #define configUSE_PORT_OPTIMISED_TASK_SELECTION  0 */
 
 /* #define configMESSAGE_BUFFER_LENGTH_TYPE         size_t */
-#define configSTACK_DEPTH_TYPE                     uint16_t
+#define configSTACK_DEPTH_TYPE                      uint32_t
 
 /* #define configUSE_CO_ROUTINES                    0   */
 /* #define configMAX_CO_ROUTINE_PRIORITIES          (2) */

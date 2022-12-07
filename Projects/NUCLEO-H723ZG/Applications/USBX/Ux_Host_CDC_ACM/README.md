@@ -10,7 +10,7 @@ The main entry function tx_application_define() is then called by ThreadX during
 are initialized.
 The application creates 3 threads with different priorities :
 
-  - usbx_app_thread_entry            (Priority : 25; Preemption threshold : 25) used to initialize USB OTG HAL HCD driver and start the Host.
+  - usbx_app_thread_entry            (Priority : 10; Preemption threshold : 10) used to initialize USB OTG HAL HCD driver and start the Host.
   - cdc_acm_send_app_thread_entry    (Priority : 30; Preemption threshold : 30) used to send data from host to device.
   - cdc_acm_recieve_app_thread_entry (Priority : 30; Preemption threshold : 30) used to receive data from the device.
 
@@ -32,8 +32,7 @@ User is familiar with USB 2.0 "Universal Serial BUS" Specification and CDC_ACM c
 
 #### <b>Known limitations</b>
 
-When creating an USBX based application with MDK-ARM AC6 compiler make sure to disable the optimization for stm32h7xx_ll_usb.c file, otherwise application might not work correctly.
-This limitation will be fixed in future release.
+None
 
 ### <b>Notes</b>
 
@@ -60,16 +59,16 @@ This limitation will be fixed in future release.
    This require changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+     place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	```
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -77,7 +76,7 @@ This limitation will be fixed in future release.
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	```
+    ```
 
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
@@ -116,13 +115,16 @@ Connectivity, USBX Host, ThreadX, USB, CDC_ACM, UART, USART,
        - BaudRate = 115200 baud
        - Flow control: None
 
-	A second virtual COM port will then appear in the HyperTerminal when plugging the device:
+    A second virtual COM port will then appear in the HyperTerminal when plugging the device:
      - Hyperterminal configuration
        - Data Length = 8 Bits
        - One Stop Bit
        - No parity
        - BaudRate = 9600 baud
        - Flow control: None
+
+     - To send data from the USB CDC_ACM Host use the user push-button and data will be received
+     and displayed in the hyperterminal connected to the CDC ACM Device.
 
 ### <b>How to use it ?</b>
 

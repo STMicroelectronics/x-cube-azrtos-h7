@@ -22,7 +22,7 @@
 #define STM32H743I_EVAL_FMC_NAND_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -40,7 +40,7 @@
 /** @addtogroup STM32H743I_EVAL_FMC
   * @{
   */
-   
+
 /* Exported types ------------------------------------------------------------*/
 /** @defgroup STM32H743I_EVAL_NOR_Exported_Constants NOR Exported Constants
   * @{
@@ -50,7 +50,7 @@
 /** @defgroup STM32H743I_EVAL_FMC_NAND_Exported_Types Exported Types
   * @{
   */
-   
+
 typedef struct
 {
   uint16_t Page;   /*!< NAND memory Page address  */
@@ -68,7 +68,7 @@ typedef struct
 #define BSP_NAND_MANUFACTURER_CODE  0x2C
 #define BSP_NAND_THIRD_ID           0x90
 #define BSP_NAND_FOURTH_ID          0xD5
-  
+
 /* Exported functions --------------------------------------------------------*/
 /** @defgroup STM32H743I_EVAL_FMC_NAND_Exported_Functions NAND Exported Functions
   * @{

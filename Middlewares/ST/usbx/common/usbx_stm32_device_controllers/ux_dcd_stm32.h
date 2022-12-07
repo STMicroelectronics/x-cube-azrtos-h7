@@ -93,6 +93,14 @@
 #define UX_DCD_STM32_ED_STATE_STATUS_TX                          3
 #define UX_DCD_STM32_ED_STATE_STATUS_RX                          4
 
+/* Define USB STM32 device callback notification state definition.  */
+
+#define UX_DCD_STM32_SOF_RECEIVED                                0xF0U
+#define UX_DCD_STM32_DEVICE_CONNECTED                            0xF1U
+#define UX_DCD_STM32_DEVICE_DISCONNECTED                         0xF2U
+#define UX_DCD_STM32_DEVICE_RESUMED                              0xF3U
+#define UX_DCD_STM32_DEVICE_SUSPENDED                            0xF4U
+
 /* Define USB STM32 endpoint transfer status definition.  */
 
 #define UX_DCD_STM32_ED_TRANSFER_STATUS_IDLE                     0

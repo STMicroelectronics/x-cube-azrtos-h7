@@ -1,3 +1,4 @@
+
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -50,12 +51,12 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 UINT MX_FileX_Init(VOID *memory_ptr);
-
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+
 /* USER CODE BEGIN PD */
 
 /* USER CODE END PD */

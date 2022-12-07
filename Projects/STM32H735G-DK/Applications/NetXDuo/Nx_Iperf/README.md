@@ -5,17 +5,17 @@ This application provides an example of Azure RTOS NetXDuo stack usage .
 It shows performance when using different modes : TCP_server, UDP_server, TCP_client and UDP_client.
 The main entry function tx_application_define() is then called by ThreadX during kernel start, at this stage, all NetXDuo resources are created.
 
- + A NX_PACKET_POOL **AppPool** is allocated
- + A NX_IP instance **IpInstance** using that pool is initialized
+ + A NX_PACKET_POOL **NxAppPool** is allocated
+ + A NX_IP instance **NetXDuoEthIpInstance** using that pool is initialized
  + A NX_PACKET_POOL **WebServerPool** is allocated
  + The ARP, ICMP and protocols (TCP and UDP) are enabled for the NX_IP instance
  + A DHCP client is created.
 
 The application creates 1 thread :
 
- + **AppMainThread** (priority 4, PreemtionThreashold 4) : created with the <i>TX_AUTO_START</i> flag to start automatically.
+ + **NxAppThread** (priority 4, PreemtionThreashold 4) : created with the <i>TX_AUTO_START</i> flag to start automatically.
 
-The **AppMainThread** starts and perform the following actions:
+The **NxAppThread** starts and perform the following actions:
 
   + Starts the DHCP client
   + Waits for the IP address resolution
@@ -149,7 +149,7 @@ void MX_ETH_Init(void)
 #if defined ( __ICCARM__ ) /* IAR Compiler */
 #pragma location = ".NetXPoolSection"
 
-#elif defined ( __CC_ARM ) /* MDK ARM Compiler */
+#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(".NetXPoolSection")))
 
 #elif defined ( __GNUC__ ) /* GNU Compiler */
@@ -168,7 +168,7 @@ RTOS, Network, ThreadX, NetXDuo, Iperf, UART
 
 ### <b>Hardware and Software environment</b>
 
-  - This application runs on STM32F767ZIxx devices
+  - This application runs on STM32H735xx devices
   - This application has been tested with STMicroelectronics STM32H735G-DK boards Revision: MB1520-H735I-B02
     and can be easily tailored to any other supported device and development board.
 

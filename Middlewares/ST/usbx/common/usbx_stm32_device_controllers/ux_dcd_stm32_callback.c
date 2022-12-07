@@ -348,7 +348,7 @@ UX_SLAVE_ENDPOINT       *endpoint;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    HAL_PCD_DataInStageCallback                         PORTABLE C      */
-/*                                                           6.1.10       */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -385,6 +385,9 @@ UX_SLAVE_ENDPOINT       *endpoint;
 /*                                            added standalone support,   */
 /*                                            added bi-dir EP support,    */
 /*                                            resulting in version 6.1.10 */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed transmit ZLP issue,   */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 void HAL_PCD_DataInStageCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
@@ -502,13 +505,29 @@ UX_SLAVE_ENDPOINT       *endpoint;
     else
     {
 
-        /* Set the completion code to no error.  */
-        transfer_request -> ux_slave_transfer_request_completion_code =  UX_SUCCESS;
+        /* Check if a ZLP should be armed.  */
+        if (transfer_request -> ux_slave_transfer_request_force_zlp &&
+            transfer_request -> ux_slave_transfer_request_requested_length)
+        {
 
-        /* The transfer is completed.  */
-        transfer_request -> ux_slave_transfer_request_status =  UX_TRANSFER_STATUS_COMPLETED;
-        transfer_request -> ux_slave_transfer_request_actual_length =
-            transfer_request -> ux_slave_transfer_request_requested_length;
+            /* Reset the ZLP condition.  */
+            transfer_request -> ux_slave_transfer_request_force_zlp =  UX_FALSE;
+            transfer_request -> ux_slave_transfer_request_in_transfer_length = 0;
+
+            /* Arm a ZLP packet on IN.  */
+            HAL_PCD_EP_Transmit(hpcd, epnum, 0, 0);
+
+        }
+        else
+        {
+
+            /* Set the completion code to no error.  */
+            transfer_request -> ux_slave_transfer_request_completion_code =  UX_SUCCESS;
+
+            /* The transfer is completed.  */
+            transfer_request -> ux_slave_transfer_request_status =  UX_TRANSFER_STATUS_COMPLETED;
+            transfer_request -> ux_slave_transfer_request_actual_length =
+                transfer_request -> ux_slave_transfer_request_requested_length;
 
 #if defined(UX_DEVICE_STANDALONE)
         ed -> ux_dcd_stm32_ed_status |= UX_DCD_STM32_ED_STATUS_DONE;
@@ -517,6 +536,7 @@ UX_SLAVE_ENDPOINT       *endpoint;
         /* Non control endpoint operation, use semaphore.  */
         _ux_utility_semaphore_put(&transfer_request -> ux_slave_transfer_request_semaphore);
 #endif /* defined(UX_DEVICE_STANDALONE) */
+        }
     }
 }
 
@@ -765,8 +785,58 @@ void HAL_PCD_ResetCallback(PCD_HandleTypeDef *hpcd)
 /*                                                                        */
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
+/*    HAL_PCD_ConnectCallback                             PORTABLE C      */
+/*                                                           6.1.12       */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function handles callback from HAL driver.                     */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    hpcd                                  Pointer to PCD handle         */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    None                                                                */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*                                                                        */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    STM32 HAL Driver                                                    */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            resulting in version 6.1.12 */
+/**************************************************************************/
+void HAL_PCD_ConnectCallback(PCD_HandleTypeDef *hpcd)
+{
+
+    /* Check the status change callback.  */
+    if (_ux_system_slave -> ux_system_slave_change_function != UX_NULL)
+    {
+
+       /* Inform the application if a callback function was programmed.  */
+        _ux_system_slave -> ux_system_slave_change_function(UX_DCD_STM32_DEVICE_CONNECTED);
+    }
+}
+
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
 /*    HAL_PCD_DisconnectCallback                          PORTABLE C      */
-/*                                                           6.1.10       */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -798,10 +868,20 @@ void HAL_PCD_ResetCallback(PCD_HandleTypeDef *hpcd)
 /*  09-30-2020     Chaoqiong Xiao           Initial Version 6.1           */
 /*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.1.10 */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef *hpcd)
 {
+
+    /* Check the status change callback.  */
+    if (_ux_system_slave -> ux_system_slave_change_function != UX_NULL)
+    {
+
+       /* Inform the application if a callback function was programmed.  */
+        _ux_system_slave -> ux_system_slave_change_function(UX_DCD_STM32_DEVICE_DISCONNECTED);
+    }
 
     /* Check if the device is attached or configured.  */
     if (_ux_system_slave -> ux_system_slave_device.ux_slave_device_state !=  UX_DEVICE_RESET)
@@ -811,6 +891,160 @@ void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef *hpcd)
         _ux_device_stack_disconnect();
     }
 }
+
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    HAL_PCD_SuspendCallback                             PORTABLE C      */
+/*                                                           6.1.12       */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function handles callback from HAL driver.                     */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    hpcd                                  Pointer to PCD handle         */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    None                                                                */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*                                                                        */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    STM32 HAL Driver                                                    */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            resulting in version 6.1.12 */
+/*                                                                        */
+/**************************************************************************/
+void HAL_PCD_SuspendCallback(PCD_HandleTypeDef *hpcd)
+{
+
+    /* Check the status change callback.  */
+    if (_ux_system_slave -> ux_system_slave_change_function != UX_NULL)
+    {
+
+       /* Inform the application if a callback function was programmed.  */
+        _ux_system_slave -> ux_system_slave_change_function(UX_DCD_STM32_DEVICE_SUSPENDED);
+    }
+}
+
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    HAL_PCD_ResumeCallback                              PORTABLE C      */
+/*                                                           6.1.12       */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function handles callback from HAL driver.                     */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    hpcd                                  Pointer to PCD handle         */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    None                                                                */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*                                                                        */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    STM32 HAL Driver                                                    */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            resulting in version 6.1.12 */
+/*                                                                        */
+/**************************************************************************/
+void HAL_PCD_ResumeCallback(PCD_HandleTypeDef *hpcd)
+{
+
+    /* Check the status change callback.  */
+    if (_ux_system_slave -> ux_system_slave_change_function != UX_NULL)
+    {
+
+       /* Inform the application if a callback function was programmed.  */
+        _ux_system_slave -> ux_system_slave_change_function(UX_DCD_STM32_DEVICE_RESUMED);
+    }
+}
+
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    HAL_PCD_SOFCallback                                 PORTABLE C      */
+/*                                                           6.1.12       */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function handles callback from HAL driver.                     */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    hpcd                                  Pointer to PCD handle         */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    None                                                                */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*                                                                        */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    STM32 HAL Driver                                                    */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            resulting in version 6.1.12 */
+/*                                                                        */
+/**************************************************************************/
+void HAL_PCD_SOFCallback(PCD_HandleTypeDef *hpcd)
+{
+
+    /* Check the status change callback.  */
+    if (_ux_system_slave -> ux_system_slave_change_function != UX_NULL)
+    {
+
+       /* Inform the application if a callback function was programmed.  */
+        _ux_system_slave -> ux_system_slave_change_function(UX_DCD_STM32_SOF_RECEIVED);
+    }
+}
+
 
 #if defined(USBD_HAL_ISOINCOMPLETE_CALLBACK)
 /**************************************************************************/

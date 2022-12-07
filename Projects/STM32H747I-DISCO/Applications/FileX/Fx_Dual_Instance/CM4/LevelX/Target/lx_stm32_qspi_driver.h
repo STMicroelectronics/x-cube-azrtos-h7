@@ -30,9 +30,13 @@ extern "C" {
 
 /* USER CODE END ET */
 
+extern QSPI_HandleTypeDef hqspi;
+
 /* The following semaphore is being to notify about RX/TX completion. It needs to be released in the transfer callbacks */
 extern TX_SEMAPHORE qspi_tx_semaphore;
 extern TX_SEMAPHORE qspi_rx_semaphore;
+
+#define qspi_handle        hqspi
 
 /* Exported constants --------------------------------------------------------*/
 
@@ -160,6 +164,14 @@ INT lx_stm32_qspi_is_block_erased(UINT instance, ULONG block);
 UINT lx_qspi_driver_system_error(UINT error_code);
 
 UINT lx_stm32_qspi_initialize(LX_NOR_FLASH *nor_flash);
+
+#if (LX_STM32_QSPI_INIT == 1)
+extern void MX_QUADSPI_Init(void);
+#endif
+
+#if (LX_STM32_QSPI_INIT == 1)
+#define qspi_driver_init() MX_QUADSPI_Init()
+#endif
 
 /* USER CODE BEGIN EFP */
 

@@ -8,7 +8,7 @@ The application is designed to behave as an USB MSC Host able to operate with an
 The main entry function tx_application_define() is then called by ThreadX during kernel start, at this stage, all USBx resources are initialized, the MSC Class driver is registered.
 The application creates two threads :
 
-  - usbx_app_thread_entry    (Priority : 25; Preemption threshold : 25) used to initialize USB OTG HAL HCD driver and start the Host.
+  - usbx_app_thread_entry    (Priority : 10; Preemption threshold : 10) used to initialize USB OTG HAL HCD driver and start the Host.
   - msc_process_thread_entry (Priority : 30; Preemption threshold : 30) used to proceed to file operations once the device is properly enumerated.
 
 ####  <b>Expected success behavior</b>
@@ -34,8 +34,7 @@ User is familiar with USB 2.0 "Universal Serial BUS" Specification and Mass stor
 
 #### <b>Known limitations</b>
 
-When creating an USBX based application with MDK-ARM AC6 compiler make sure to disable the optimization for stm32h7xx_ll_usb.c file, otherwise application might not work correctly.
-This limitation will be fixed in future release.
+None
 
 ### <b>Notes</b>
 
@@ -62,16 +61,16 @@ This limitation will be fixed in future release.
    This require changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+     place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	``` 
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -79,14 +78,14 @@ This limitation will be fixed in future release.
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	``` 
-	
+    ```
+
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
-       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.	 
-       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).	 
+       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
        Read more in STM32CubeIDE User Guide, chapter: "Linker script".
-	  
+
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
 
 #### <b>USBX usage hints</b>
@@ -112,7 +111,7 @@ Connectivity, USBXHost, FILEX, ThreadX, MSC, Mass Storage, BOT, SCSI, Removable 
     - Connect ST-Link cable to the PC USB port to display data on the HyperTerminal.
 
     A virtual COM port will then appear in the HyperTerminal:
-	
+
      - Hyperterminal configuration
        - Data Length = 8 Bits
        - One Stop Bit

@@ -24,7 +24,7 @@
 <p>Flash start address for this application is moved away from the IAP_main bootloader at the address 0x08020000. In order to configure the new start address, in EWARM IDE:</p>
 <p>This application should be configured to start from an offset into the flash that does not overlap with the IAP_main application memory sections. Particularly, linker options should be changed to set the <strong>Vector Table</strong> and the <strong>ROM START</strong> both pointing to <strong>APP_ADDRESS</strong>.</p>
 <p>Upon startup, this application will set the VTOR register with its Interrupt Vector Table starting address, so offset should be taken into account. This can be achieved by setting the offset to the defined name <strong>VECT_TABLE_OFFSET</strong> located in file <strong>system_stm32h7xx.c</strong>.</p>
-<p>This application must be generated as raw binary, this can be achieved by setting the output format of the IDE to <strong>Raw binary</strong>. The name for the binary should also be specified there as defined by <strong>FW_NAME_STRING</strong> located in “FileX/FX_IAP/IAP_main/FileX/App/app_filex.h”.</p>
+<p>This application must be generated as raw binary, this can be achieved by setting the output format of the IDE to <strong>Raw binary</strong>. The name for the binary should also be specified there as defined by <strong>FW_NAME_STRING</strong> located in “FileX/FX_IAP/IAP_main/Core/Inc/main.h”.</p>
 <h3 id="expacted-behaviour"><b>Expacted behaviour:</b></h3>
 <p>IAP_binary_template should toggle both LEDs.</p>
 <h3 id="error-behaviour"><b>Error behaviour:</b></h3>

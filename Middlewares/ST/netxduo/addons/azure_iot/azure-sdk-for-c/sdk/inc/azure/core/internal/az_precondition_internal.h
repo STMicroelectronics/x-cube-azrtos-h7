@@ -27,6 +27,11 @@
  *        code (or adding option -DPRECONDITIONS=OFF with cmake), all of the Azure SDK
  *        precondition checking will be excluding making the binary code smaller and faster. We
  *        recommend doing this before you ship your code.
+ *
+ * @note You MUST NOT use any symbols (macros, functions, structures, enums, etc.)
+ *       prefixed with an underscore ('_') directly in your application code. These symbols
+ *       are part of Azure SDK's internal implementation; we do not document these symbols
+ *       and they are subject to change in future versions of the SDK which would break your code.
  */
 
 #ifndef _az_PRECONDITION_INTERNAL_H
@@ -51,7 +56,7 @@ az_precondition_failed_fn az_precondition_failed_get_callback();
 // earlier without verifying, because if __analysis_assume() is not available on earlier compiler
 // version, there will be a compilation error.
 // For more info, see
-// https://docs.microsoft.com/en-us/windows-hardware/drivers/devtest/using-the--analysis-assume-function-to-suppress-false-defects
+// https://docs.microsoft.com/windows-hardware/drivers/devtest/using-the--analysis-assume-function-to-suppress-false-defects
 #if _MSC_VER >= 1920
 #define _az_ANALYSIS_ASSUME(statement) __analysis_assume(statement)
 #else

@@ -52,6 +52,10 @@
 #ifndef LX_USER_H
 #define LX_USER_H
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Defined, this option bypasses the NOR flash driver read routine in favor or reading
    the NOR memory directly, resulting in a significant performance increase.
 */
@@ -91,5 +95,13 @@
 */
 
 /* #define LX_THREAD_SAFE_ENABLE */
+
+/* Defined, LevelX will be used in standalone mode (without Azure RTOS ThreadX) */
+
+/* #define LX_STANDALONE_ENABLE */
+
+/* USER CODE BEGIN 2 */
+
+/* USER CODE END 2 */
 
 #endif

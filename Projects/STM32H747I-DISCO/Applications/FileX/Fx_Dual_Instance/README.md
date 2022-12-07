@@ -26,19 +26,19 @@ The main entry function, tx_application_define(), is called by ThreadX during ke
 
 A single thread is created:
 
-  - fx_thread (Prio : 10; PreemptionPrio : 10) used to initialize the SD driver and starting FileX's file operations.
+  - fx_app_thread (Prio : 10; PreemptionPrio : 10) used to initialize the SD driver and starting FileX's file operations.
 
-A message queue is used to signal the SD card detection event to the fx_thread thread:
+A message queue is used to signal the SD card detection event to the fx_app_thread thread:
 
-  - tx_msg_queue (Msg size : 1 (UINT); total messages : 16) used to notify the fx_thread about the SD card insertion status.
+  - tx_msg_queue (Msg size : 1 (UINT); total messages : 16) used to notify the fx_app_thread about the SD card insertion status.
 
 User should format the µSD before using it in the application otherwise an error will occur.
 
-The fx_thread starts by checking whether the SD card is initially inserted or not. In the true case, it sends a message to the queue to ensure that the first iteration starts properly.
+The fx_app_thread starts by checking whether the SD card is initially inserted or not. In the true case, it sends a message to the queue to ensure that the first iteration starts properly.
 The wait on the message queue blocks till it receives a new message about whether the SD card is inserted or removed. Interrupt callback for SD detection is registered and it is used
 to send the event information to the message queue.
 
-The fx_thread uses FileX services to open the SD media for file operations and attempt to create file STM32.TXT. If the file exists already, it will be overwritten.
+The fx_app_thread uses FileX services to open the SD media for file operations and attempt to create file STM32.TXT. If the file exists already, it will be overwritten.
 Dummy content is then written into the file and it is closed. The file is opened once again in read mode and content is checked if matches what was previously written.
 
 CM4 core:
@@ -46,9 +46,9 @@ CM4 core:
 The application starts by calling the ThreadX's initialization routine which executes the main thread that handles file operations.
  At this stage, all FileX resources are created, the MT25TL01G driver is initialized and a single thread is created:
 
-  - fx_thread (Prio : 10; PreemptionPrio : 10) used for file operations.
+  - fx_app_thread (Prio : 10; PreemptionPrio : 10) used for file operations.
 
-The fx_thread will start by formatting the NOR Flash using FileX services. The resulting file system is a FAT32 compatible, with 512 bytes per sector and 8 sectors per cluster.
+The fx_app_thread will start by formatting the NOR Flash using FileX services. The resulting file system is a FAT32 compatible, with 512 bytes per sector and 8 sectors per cluster.
 The NOR flash should be erased prior to format either by the application or by the STM32CubeProgrammer, this allows LevelX and FileX to create a clean FAT FileSystem.
 Chip erase operation takes considerable time when done by the application, therefore it is disabled by default. 
 To enable it, please define  the flag  ``LX_STM32_QSPI_ERASE`` to <b> 1 </b> in "lx_stm32_ospi_driver.h":
@@ -70,7 +70,7 @@ Through all the steps, FileX/LevelX services are called to print (using USRAT1) 
 
 - CM4 core:
 
-      - Successful operation is marked by a toggeling green LED.
+      - Successful operation is marked by a toggling green LED.
       - Information regarding the total and available size of the flash media is printed to the serial port(USART1).
 
 #### <b> Error behaviors</b>
@@ -89,7 +89,7 @@ Through all the steps, FileX/LevelX services are called to print (using USRAT1) 
 - The SD card should be plugged prior to run the application.
 
 #### <b>Known limitations</b>
-When regenerating application using STM32CubeMX, end user needs to add MDMA IRQ handler to stm32h7xx_it.c and configure MDMA interrupt in MX_MDMA_Init (main.c file)
+None
 
 ### <b>Notes</b>
 

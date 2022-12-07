@@ -1,3 +1,4 @@
+
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -23,7 +24,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "main.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -32,6 +33,11 @@
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
+/* Main thread stack size */
+#define FX_APP_THREAD_STACK_SIZE         (2 * 1024)
+/* Main thread priority */
+#define FX_APP_THREAD_PRIO               1
+
 /* USER CODE BEGIN PD */
 /* Sample Applications thread's stack size */
 #define FILEX_DEFAULT_STACK_SIZE                        (2 * 1024)
@@ -77,11 +83,14 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+/* Main thread global data structures.  */
+TX_THREAD       fx_app_thread;
+
 /* USER CODE BEGIN PV */
 
 /* Buffer for FileX FX_MEDIA sector cache. this should be 32-Bytes
 aligned to avoid cache maintenance issues */
-ALIGN_32BYTES (UCHAR media_memory[2048]);
+ALIGN_32BYTES(UCHAR media_memory[2048]);
 
 /* Define FileX global data structures.  */
 FX_MEDIA        nand_flash_disk;
@@ -93,11 +102,13 @@ TX_THREAD       fx_thread;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
+/* Main thread entry function.  */
+void fx_app_thread_entry(ULONG thread_input);
+
 /* USER CODE BEGIN PFP */
 
 void fx_thread_entry(ULONG thread_input);
 void Error_Handler(void);
-static VOID os_delay(ULONG delay);
 
 /* USER CODE END PFP */
 
@@ -109,52 +120,58 @@ static VOID os_delay(ULONG delay);
 UINT MX_FileX_Init(VOID *memory_ptr)
 {
   UINT ret = FX_SUCCESS;
+
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
-
-  /* USER CODE BEGIN App_FileX_MEM_POOL */
-  /* USER CODE END App_FileX_MEM_POOL */
-
-  /* USER CODE BEGIN App_FileX_Init */
   VOID *pointer;
 
-  /*Allocate memory for fx_thread_entry*/
-  ret = tx_byte_allocate(byte_pool, &pointer, FILEX_DEFAULT_STACK_SIZE, TX_NO_WAIT);
+  /* USER CODE BEGIN MX_FileX_MEM_POOL */
 
-  /* Check FILEX_DEFAULT_STACK_SIZE allocation*/
+  /* USER CODE END MX_FileX_MEM_POOL */
+
+  /* USER CODE BEGIN 0 */
+
+  /* USER CODE END 0 */
+
+  /*Allocate memory for the main thread's stack*/
+  ret = tx_byte_allocate(byte_pool, &pointer, FX_APP_THREAD_STACK_SIZE, TX_NO_WAIT);
+
+  /* Check FX_APP_THREAD_STACK_SIZE allocation*/
   if (ret != FX_SUCCESS)
   {
-    Error_Handler();
+    return TX_POOL_ERROR;
   }
 
   /* Create the main thread.  */
-  ret = tx_thread_create(&fx_thread, "thread 0", fx_thread_entry, 0, pointer, FILEX_DEFAULT_STACK_SIZE,
-                         DEFAULT_THREAD_PRIO, DEFAULT_PREEMPTION_THRESHOLD, TX_NO_TIME_SLICE, TX_AUTO_START);
+  ret = tx_thread_create(&fx_app_thread, FX_APP_THREAD_NAME, fx_app_thread_entry, 0, pointer, FX_APP_THREAD_STACK_SIZE,
+                         FX_APP_THREAD_PRIO, FX_APP_PREEMPTION_THRESHOLD, FX_APP_THREAD_TIME_SLICE, FX_APP_THREAD_AUTO_START);
 
   /* Check main thread creation */
   if (ret != FX_SUCCESS)
   {
-    Error_Handler();
+    return TX_THREAD_ERROR;
   }
+  /* USER CODE BEGIN MX_FileX_Init */
+
+  /* USER CODE END MX_FileX_Init */
 
   /* Initialize FileX.  */
   fx_system_initialize();
 
-  /* USER CODE END App_FileX_Init */
+  /* USER CODE BEGIN MX_FileX_Init 1*/
+
+  /* USER CODE END MX_FileX_Init 1*/
 
   return ret;
 }
 
-/* USER CODE BEGIN 1 */
-
-static VOID os_delay(ULONG delay)
+ /**
+ * @brief  Main thread entry.
+ * @param thread_input: ULONG user argument used by the thread entry
+ * @retval none
+ */
+void fx_app_thread_entry(ULONG thread_input)
 {
-  ULONG start = tx_time_get();
-  while ((tx_time_get() - start) < delay) {}
-}
-
-void fx_thread_entry(ULONG thread_input)
-{
-
+  /* USER CODE BEGIN fx_app_thread_entry 0 */
   UINT status;
   ULONG bytes_read;
   ULONG available_space_pre;
@@ -170,7 +187,7 @@ void fx_thread_entry(ULONG thread_input)
   /* Format the NAND flash as FAT */
   status =  fx_media_format(&nand_flash_disk,
                             fx_stm32_levelx_nand_driver,         /* Driver entry */
-                            (VOID*)NAND_FMC_DRIVER_ID,           /* NAND disk memory pointer */
+                            (VOID *)CUSTOM_DRIVER_ID,          /* NAND disk memory pointer */
                             media_memory,                        /* Media buffer pointer */
                             sizeof(media_memory),                /* Media buffer size */
                             "NAND_FLASH_DISK",                   /* Volume Name */
@@ -190,7 +207,7 @@ void fx_thread_entry(ULONG thread_input)
   }
 
   /* Open the FMC NAND Flash disk driver.  */
-  status =  fx_media_open(&nand_flash_disk, "FX_LX_NAND_DISK", fx_stm32_levelx_nand_driver, (VOID*)NAND_FMC_DRIVER_ID, media_memory, sizeof(media_memory));
+  status =  fx_media_open(&nand_flash_disk, "FX_LX_NAND_DISK", fx_stm32_levelx_nand_driver, (VOID *)CUSTOM_DRIVER_ID, media_memory, sizeof(media_memory));
 
   /* Check the media open status.  */
   if (status != FX_SUCCESS)
@@ -335,12 +352,18 @@ void fx_thread_entry(ULONG thread_input)
     Error_Handler();
   }
 
-  while(1)
+  while (1)
   {
-    BSP_LED_Toggle(LED1);
-    os_delay(40);
+    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+    tx_thread_sleep(40);
   }
+  /* USER CODE END fx_app_thread_entry 0 */
 
+  /* USER CODE BEGIN fx_app_thread_entry 1 */
+
+  /* USER CODE END fx_app_thread_entry 1 */
 }
+
+/* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */

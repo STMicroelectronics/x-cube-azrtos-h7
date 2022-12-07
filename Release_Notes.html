@@ -5,11 +5,14 @@
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Release Notes for X-CUBE-AZRTOS-H7 Component or Package</title>
-  <style type="text/css">
-      code{white-space: pre-wrap;}
-      span.smallcaps{font-variant: small-caps;}
-      span.underline{text-decoration: underline;}
-      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="_htmresc/mini-st_2020.css" />
   <!--[if lt IE 9]>
@@ -57,14 +60,448 @@
 <h1 id="documentation">Documentation</h1>
 <p>More comprehensive documentation is available on STM32 <a href="https://wiki.st.com/stm32mcu/wiki/STM32CoreMW_overview">MCU Wiki</a>.</p>
 </div>
-<div class="col-sm-12 col-lg-8">
-<h1 id="update-history">Update history</h1>
+<section id="update-history" class="col-sm-12 col-lg-8">
+<h1>Update history</h1>
 <div class="collapse">
-<input type="checkbox" id="collapse-section6" checked aria-hidden="true"> <label for="collapse-section6" aria-hidden="true"><strong>V2.1.0 / 15-April-2022</strong></label>
+<input type="checkbox" id="collapse-section7" checked aria-hidden="true"> <label for="collapse-section7" aria-hidden="true"><strong>V3.0.0 / 02-December-2022</strong></label>
 <div>
 <h2 id="main-changes">Main changes</h2>
 <ul>
-<li>Maintenance release of <strong>X-CUBE-ARROS-H7</strong> package</li>
+<li>Maintenance release of <strong>X-CUBE-AZRTOS-H7</strong> package</li>
+<li>Azure RTOS update to V6.1.12</li>
+<li>Add Azure RTOS MW initialization support to ThreadX, NetX, FileX/LevelX and USBX:
+<ul>
+<li>The Azure RTOS MW integration in STM32CubeMX generates stacks initialization before starting applicative code.​</li>
+</ul></li>
+<li>Add Standalone support to FileX/LevelX and USBX</li>
+<li>Add <strong>9 new USBX</strong> Applications:
+<ul>
+<li>Ux_Device_Video</li>
+<li>Ux_Device_DualHID</li>
+<li>Ux_Device_CustomHID</li>
+<li>Ux_Device_RNDIS</li>
+<li>Ux_Device_PIMA_MTP</li>
+<li>Ux_Device_CCID</li>
+<li>Ux_Device_Printer</li>
+<li>Ux_Device_HID_Standalone</li>
+<li>Ux_Host_HID_Standalone</li>
+</ul></li>
+<li>General updates to fix known defects and implement enhancements:
+<ul>
+<li>STM32CubeMX configuration files (PDSC/IPmode/IPconfig):
+<ul>
+<li>Add new config flags brought by Azure RTOS release 6.1.12</li>
+<li>Add Azure RTOS MW initialization support to ThreadX, NetX, FileX/LevelX and USBX</li>
+<li>Add Standalone support to FileX/LevelX and USBX</li>
+<li>Add new USBX classes: MTP, RNDIS, CCID, PRINTER, VIDEO and CustomHID</li>
+</ul></li>
+<li>Rework all applications to use HAL GPIO APIs and remove BSP for handling GPIOs.</li>
+<li>Fx_File_Edit_Standalone application generated using STM32CubeMX.</li>
+<li>All Azure RTOS applications files regenerated using STM32CubeMX V6.7.0 and new Azure RTOS pack v3.0.0</li>
+</ul></li>
+</ul>
+<h2 id="contents">Contents</h2>
+<h3 id="applications">Applications</h3>
+<p>Provides ready-to-run applicative examples for Azure RTOS on the supported boards. For detailed list refer to <a href="Projects/X-CUBE-AZRTOS-H7_ProjectsList.html">applications list</a></p>
+<h3 id="drivers">Drivers</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Cortex-M CMSIS</td>
+<td style="text-align: center;">v5.6.0</td>
+<td style="text-align: center;"><a href="Drivers/CMSIS/README.md">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32H7xx CMSIS</td>
+<td style="text-align: center;"><strong>v1.10.3</strong></td>
+<td style="text-align: center;"><a href="Drivers/CMSIS/Device/ST/STM32H7xx/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32H7xx HAL</td>
+<td style="text-align: center;"><strong>v1.11.1</strong></td>
+<td style="text-align: center;"><a href="Drivers/STM32H7xx_HAL_Driver/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32H7xx_Nucleo</td>
+<td style="text-align: center;">v1.3.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H7xx_Nucleo/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32H735G-DK</td>
+<td style="text-align: center;">v1.2.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H735G-DK/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32H7B3I-EVAL</td>
+<td style="text-align: center;">v2.3.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H7B3I-EVAL/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32H7B3I-DK</td>
+<td style="text-align: center;">v2.3.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H7B3I-DK/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32H743I-EVAL</td>
+<td style="text-align: center;">v3.3.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H743I-EVAL/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32H745I-DISCO</td>
+<td style="text-align: center;">v3.3.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H745I-DISCO/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32H747I-EVAL</td>
+<td style="text-align: center;">v3.3.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H747I-EVAL/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32H747I-DISCO</td>
+<td style="text-align: center;">v3.5.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H747I-DISCO/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32H750B-DK</td>
+<td style="text-align: center;">v3.3.2</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H750B-DK/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP Common</td>
+<td style="text-align: center;">v7.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/common/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP adv7533</td>
+<td style="text-align: center;">v2.0.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/adv7533/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP ampire480272</td>
+<td style="text-align: center;">v1.0.3</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/ampire480272/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP ampire640480</td>
+<td style="text-align: center;">v1.0.3</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/ampire640480/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP cs42l51</td>
+<td style="text-align: center;">v2.0.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/cs42l51/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP exc7200</td>
+<td style="text-align: center;">v2.0.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/exc7200/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP ft5336</td>
+<td style="text-align: center;">v2.0.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/ft5336/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP ft6x06</td>
+<td style="text-align: center;">v2.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/ft6x06/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP lan8742</td>
+<td style="text-align: center;">v1.0.2</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/lan8742/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP mfxstm32l152</td>
+<td style="text-align: center;">v3.0.2</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/mfxstm32l152/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP m24lr64</td>
+<td style="text-align: center;">v1.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/m24lr64/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP mt25tl01g</td>
+<td style="text-align: center;">v2.3.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/mt25tl01g/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP mx25lm51245g</td>
+<td style="text-align: center;">v2.0.2</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/mx25lm51245g/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP mt48lc4m32b2</td>
+<td style="text-align: center;">v1.0.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/mt48lc4m32b2/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP is42s32800j</td>
+<td style="text-align: center;">v1.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/is42s32800j/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP is42s32800g</td>
+<td style="text-align: center;">v1.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/is42s32800g/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP is42s16800j</td>
+<td style="text-align: center;">v1.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/is42s16800j/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP otm8009a</td>
+<td style="text-align: center;">v2.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/otm8009a/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP ov9655</td>
+<td style="text-align: center;">v2.2.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/ov9655/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP ov5640</td>
+<td style="text-align: center;">v3.2.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/ov5640/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP rk043fn48h</td>
+<td style="text-align: center;">v1.0.3</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/rk043fn48h/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP rk070er9427</td>
+<td style="text-align: center;">v1.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/rk070er9427/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP s5k5cag</td>
+<td style="text-align: center;">v2.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/s5k5cag/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP s70kl1281</td>
+<td style="text-align: center;">v1.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/s70kl1281/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP st7735</td>
+<td style="text-align: center;">v2.0.2</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/st7735/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP stmpe811</td>
+<td style="text-align: center;">v3.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/stmpe811/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP ts3510</td>
+<td style="text-align: center;">v2.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/ts3510/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP wm8994</td>
+<td style="text-align: center;">v3.0.2</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/wm8994/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP es_wifi</td>
+<td style="text-align: center;">v1.6.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/es_wifi/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP mx_wifi</td>
+<td style="text-align: center;">v1.0.4</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/mx_wifi/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="middlewares">Middlewares</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ThreadX</td>
+<td style="text-align: left;"><strong>6.1.12</strong></td>
+<td style="text-align: left;"><a href="https://github.com/azure-rtos/threadx/releases/tag/v6.1.12_rel">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NetXduo</td>
+<td style="text-align: left;"><strong>6.1.12</strong></td>
+<td style="text-align: left;"><a href="https://github.com/azure-rtos/netxduo/releases/tag/v6.1.12_rel">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">USBX</td>
+<td style="text-align: left;"><strong>6.1.12</strong></td>
+<td style="text-align: left;"><a href="https://github.com/azure-rtos/usbx/releases/tag/v6.1.12_rel">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FileX</td>
+<td style="text-align: left;"><strong>6.1.12</strong></td>
+<td style="text-align: left;"><a href="https://github.com/azure-rtos/filex/releases/tag/v6.1.12_rel">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LevelX</td>
+<td style="text-align: left;"><strong>6.1.12</strong></td>
+<td style="text-align: left;"><a href="https://github.com/azure-rtos/levelx/releases/tag/v6.1.12_rel">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cypress-WHD</td>
+<td style="text-align: left;"><strong>1.70.0</strong></td>
+<td style="text-align: left;"><a href="Middlewares/Third_Party/Cypress-WHD/RELEASE.md">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cmsis-rtos-wrapper-for-azure-rtos-threadx">CMSIS-RTOS wrapper for Azure RTOS ThreadX</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">cmsis_rtos_threadx</td>
+<td style="text-align: left;"><strong>1.1.0</strong></td>
+<td style="text-align: left;"><a href="Middlewares/ST/cmsis_rtos_threadx/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 9%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>CMSIS-RTOS API group</th>
+<th>Supported</th>
+<th>Short Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Kernel Information and Control</td>
+<td>Y</td>
+<td>It provides version/system information and starts/controls the RTOS Kernel. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__KernelCtrl.html">More…</a></td>
+</tr>
+<tr class="even">
+<td>Thread Management</td>
+<td>Y</td>
+<td>It defines, create, and control thread functions.. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__ThreadMgmt.html">More…</a></td>
+</tr>
+<tr class="odd">
+<td>Thread Flags</td>
+<td>N</td>
+<td>It synchronizes threads using flags. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__ThreadFlagsMgmt.html">More…</a></td>
+</tr>
+<tr class="even">
+<td>Event Flags</td>
+<td>Y</td>
+<td>It synchronizes threads using flags. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__EventFlags.html">More…</a></td>
+</tr>
+<tr class="odd">
+<td>Generic Wait Functions</td>
+<td>Y</td>
+<td>It waits for a certain period of time.. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__Wait.html">More…</a></td>
+</tr>
+<tr class="even">
+<td>Timer Management</td>
+<td>Y</td>
+<td>It creates and controls timer and timer callback functions. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__TimerMgmt.html">More…</a></td>
+</tr>
+<tr class="odd">
+<td>Mutex Management</td>
+<td>Y</td>
+<td>It synchronizes resource access using Mutual Exclusion (Mutex). <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__MutexMgmt.html">More…</a></td>
+</tr>
+<tr class="even">
+<td>Semaphores</td>
+<td>Y</td>
+<td>It access shared resources simultaneously from different threads. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__SemaphoreMgmt.html">More…</a></td>
+</tr>
+<tr class="odd">
+<td>Memory Pool</td>
+<td>N</td>
+<td>It manages thread-safe fixed-size blocks of dynamic memory. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html">More…</a></td>
+</tr>
+<tr class="even">
+<td>Message Queue</td>
+<td>Y</td>
+<td>It exchanges messages between threads in a FIFO-like operation. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__Message.html">More…</a></td>
+</tr>
+</tbody>
+</table>
+<p>The CMSIS-RTOS provides generic RTOS interfaces for Arm® Cortex® processor-based devices. It provides a standardized API for software components that require RTOS functionality.</p>
+<p>For more information about CMSIS-RTOS APIs, please refer to the ARM manual: <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS.html">CMSIS-RTOS API</a></p>
+<p>For more information about CMSIS-RTOS wrapper for Azure RTOS ThreadX, please refer to <a href="./Middlewares/ST/cmsis_rtos_threadx/README.md">readme</a></p>
+<h2 id="known-limitations">Known limitations</h2>
+<ul>
+<li>USBX composite device descriptors
+<ul>
+<li>A maximum of 3 different class drivers can be selected (restriction due to limited EP numbers)</li>
+<li>A list of USB device Applications supporting auto generation of USB Device framework descriptors provided for these USB class drivers :MSC, HID mouse, CDC ACM, CDC ECM, DFU, MTP, RNDIS, CCID, PRINTER, VIDEO and CustomHID. For the other device class drivers, user needs first to disable the device framework builder (refer to : USBX wiki section 2.2 How to customize) and provide the full set of required device descriptors.</li>
+</ul></li>
+<li>When using the Pack in STM32CubeMX
+<ul>
+<li>FileX/LevelX: multi instance is not supported, a low level interface driver can be instantiated only once</li>
+<li>USB Host Vbus is not managed by the Pack, user needs to configure the Vbus GPIO using STM32CubeMX “Pinout &amp; Configuration” panel</li>
+<li>USB multi instance is not supported, a class drivers can be instantiated only once</li>
+<li>The component “USBX/CoreSystem” must be selected alongside either “USBX/UX Host CoreStack” or “USBX/UX Device CoreStack”</li>
+<li>The FileX/LevelX glue files should be removed before applying any change in STM32CubeMX FileX SD configuration UI</li>
+<li>X-CUBE-AZRTOS-H7 is no longer compatible with the MDK-ARM AC5 compiler: when generating a project for the MDK-ARM toolchain, the AC6 compiler is used by default</li>
+</ul></li>
+<li>ThreadX
+<ul>
+<li>ThreadX MPU regions management is not working correctly for AC6 and GNU compilers. So, the Tx_MPU application project is provided for IAR EWARM only. And MDK-ARM and STM32CubeIDE projects are removed due to this limitation. It will be fixed in next release and MDK-ARM and STM32CubeIDE projects will be recovered.</li>
+<li>Due to a current limitation, one MPU region may have a size of 4MB. If the module is modified, the ”Module Data Size” field in the preamble file should be modified as well. Some data size values might be not working. And this limitation will be fixed in next release.</li>
+</ul></li>
+</ul>
+<h2 id="development-toolchains-and-compilers">Development toolchains and compilers</h2>
+<ul>
+<li>IAR Embedded Workbench for ARM (EWARM)toolchain 8.50.9 + ST-LINKV3.</li>
+<li><a href="https://www.st.com/en/development-tools/stm32cubeide.html">STM32CubeIDE V1.11.0</a> + ST-LINKV3</li>
+<li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.37 + ST-LINKV3</li>
+</ul>
+<h2 id="supported-devices-and-boards-by-applications">Supported devices and boards by applications</h2>
+<ul>
+<li><a href="https://www.st.com/en/evaluation-tools/nucleo-h723zg.html">NUCLEO-H723ZG</a> <em>(MB1364-E01)</em></li>
+<li><a href="https://www.st.com/en/evaluation-tools/stm32h735g-dk.html">STM32H735G-DK</a> <em>(MB1520-B02)</em></li>
+<li><a href="https://www.st.com/en/evaluation-tools/stm32h747i-disco.html">STM32H747I-DK</a> <em>(MB1248-D01)</em></li>
+<li><a href="https://www.st.com/en/evaluation-tools/stm32h743i-eval.html">STM32H743I-EVAL</a> <em>(MB1246-B03)</em></li>
+</ul>
+<h2 id="dependencies">Dependencies</h2>
+<p>This software release is compatible with:</p>
+<ul>
+<li><a href="https://www.st.com/en/development-tools/stm32cubemx.html">STM32CubeMX V6.7.0</a></li>
+<li>STM32PackCreator 3.4.1</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section6" aria-hidden="true"> <label for="collapse-section6" aria-hidden="true"><strong>V2.1.0 / 15-April-2022</strong></label>
+<div>
+<h2 id="main-changes-1">Main changes</h2>
+<ul>
+<li>Maintenance release of <strong>X-CUBE-AZRTOS-H7</strong> package</li>
 <li>Azure RTOS update to V6.1.10</li>
 <li>Add new Azure RTOS application <strong>Nx_Iperf</strong> on STM32H735G-DK board.</li>
 <li>Add <strong>6 new WiFi</strong> NetXDuo Applications on Cypress module and STM32H747I-DISCO board:
@@ -80,7 +517,7 @@
 <li>Update all Azure RTOS applications by adding dedicated MPU configuration to avoid Cortex-M7 speculative access on external memories.
 <ul>
 <li>Refer to ARM recommendation regarding Cortex-M7 speculative access: <a href="https://developer.arm.com/documentation/ddi0489/f/memory-system/speculative-accesses/considerations-for-system-design">Link</a></li>
-<li>"Arm recommends that you set those regions to have all of the following attributes with the MPU:
+<li>“Arm recommends that you set those regions to have all of the following attributes with the MPU:
 <ul>
 <li>Device or Strongly-ordered.</li>
 <li>Execute Never.</li>
@@ -105,10 +542,10 @@
 <li>All Azure RTOS applications files regenerated using STM32CubeMX V6.5.0 and new Azure RTOS pack v2.1.0</li>
 </ul></li>
 </ul>
-<h2 id="contents">Contents</h2>
-<h3 id="applications">Applications</h3>
+<h2 id="contents-1">Contents</h2>
+<h3 id="applications-1">Applications</h3>
 <p>Provides ready-to-run applicative examples for Azure RTOS on the supported boards. For detailed list refer to <a href="Projects/X-CUBE-AZRTOS-H7_ProjectsList.html">applications list</a></p>
-<h3 id="drivers">Drivers</h3>
+<h3 id="drivers-1">Drivers</h3>
 <table>
 <thead>
 <tr class="header">
@@ -335,7 +772,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="middlewares">Middlewares</h3>
+<h3 id="middlewares-1">Middlewares</h3>
 <table>
 <thead>
 <tr class="header">
@@ -377,7 +814,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="cmsis-rtos-wrapper-for-azure-rtos-threadx">CMSIS-RTOS wrapper for Azure RTOS ThreadX</h3>
+<h3 id="cmsis-rtos-wrapper-for-azure-rtos-threadx-1">CMSIS-RTOS wrapper for Azure RTOS ThreadX</h3>
 <table>
 <thead>
 <tr class="header">
@@ -463,7 +900,7 @@
 <p>The CMSIS-RTOS provides generic RTOS interfaces for Arm® Cortex® processor-based devices. It provides a standardized API for software components that require RTOS functionality.</p>
 <p>For more information about CMSIS-RTOS APIs, please refer to the ARM manual: <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS.html">CMSIS-RTOS API</a></p>
 <p>For more information about CMSIS-RTOS wrapper for Azure RTOS ThreadX, please refer to <a href="./Middlewares/ST/cmsis_rtos_threadx/README.md">readme</a></p>
-<h2 id="known-limitations">Known limitations</h2>
+<h2 id="known-limitations-1">Known limitations</h2>
 <ul>
 <li>STM32CubeMX configuration files (PDSC/IPmode/IPconfig)
 <ul>
@@ -471,36 +908,36 @@
 </ul></li>
 <li>USBX composite device descriptors
 <ul>
-<li>A maximum of 3 different class driver can be selected (restriction due to limited EP numbers)</li>
+<li>A maximum of 3 different class drivers can be selected (restriction due to limited EP numbers)</li>
 <li>A list of USB device Applications supporting auto generation of USB Device framework descriptors provided for these USB class drivers :MSC, HID mouse, CDC ACM, CDC ECM, DFU. For the other device class drivers, user needs first to disable the device framework builder (refer to : USBX wiki section 2.2 How to customize) and provide the full set of required device descriptors.</li>
 </ul></li>
 <li>When using the Pack in STM32CubeMX
 <ul>
-<li>FileX/LevelX: multi instance is not supported, a low level interface driver can be instanced only once</li>
+<li>FileX/LevelX: multi instance is not supported, a low level interface driver can be instantiated only once</li>
 <li>USB Host Vbus is not managed by the Pack, user needs to configure the Vbus GPIO using STM32CubeMX “Pinout &amp; Configuration” panel</li>
-<li>USB multi instance is not supported, a class driver can be instanced only once</li>
+<li>USB multi instance is not supported, a class drivers can be instantiated only once</li>
 <li>The component “USBX/CoreSystem” must be selected alongside either “USBX/UX Host CoreStack” or “USBX/UX Device CoreStack”</li>
 <li>The FileX/LevelX glue files should be removed before applying any change in STM32CubeMX FileX SD configuration UI</li>
 <li>The FileX standalone mode is not yet supported</li>
 <li>The USBX standalone mode is not yet supported</li>
 <li>The new Azure RTOS config flags and USBX device class(Printer,MTP,CCID ) brought by Azure RTOS 6.1.10 not yet supported and they will be added in future release.</li>
-<li>X-CUBE-ARROS-H7 is no longer compatible with the MDK-ARM AC5 compiler: when generating a project for the MDK-ARM toolchain, the AC6 compiler is used by default</li>
+<li>X-CUBE-AZRTOS-H7 is no longer compatible with the MDK-ARM AC5 compiler: when generating a project for the MDK-ARM toolchain, the AC6 compiler is used by default</li>
 </ul></li>
 </ul>
-<h2 id="development-toolchains-and-compilers">Development toolchains and compilers</h2>
+<h2 id="development-toolchains-and-compilers-1">Development toolchains and compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM)toolchain 8.50.9 + ST-LINKV3.</li>
 <li><a href="https://www.st.com/en/development-tools/stm32cubeide.html">STM32CubeIDE V1.9.0</a> + ST-LINKV3</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.32 + ST-LINKV3</li>
 </ul>
-<h2 id="supported-devices-and-boards-by-applications">Supported devices and boards by applications</h2>
+<h2 id="supported-devices-and-boards-by-applications-1">Supported devices and boards by applications</h2>
 <ul>
 <li><a href="https://www.st.com/en/evaluation-tools/nucleo-h723zg.html">NUCLEO-H723ZG</a> <em>(MB1364-E01)</em></li>
 <li><a href="https://www.st.com/en/evaluation-tools/stm32h735g-dk.html">STM32H735G-DK</a> <em>(MB1520-B02)</em></li>
 <li><a href="https://www.st.com/en/evaluation-tools/stm32h747i-disco.html">STM32H747I-DK</a> <em>(MB1248-D01)</em></li>
 <li><a href="https://www.st.com/en/evaluation-tools/stm32h743i-eval.html">STM32H743I-EVAL</a> <em>(MB1246-B03)</em></li>
 </ul>
-<h2 id="dependencies">Dependencies</h2>
+<h2 id="dependencies-1">Dependencies</h2>
 <p>This software release is compatible with:</p>
 <ul>
 <li><a href="https://www.st.com/en/development-tools/stm32cubemx.html">STM32CubeMX V6.5.0</a></li>
@@ -511,7 +948,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section5" aria-hidden="true"> <label for="collapse-section5" aria-hidden="true"><strong>V2.0.1 / 08-November-2021</strong></label>
 <div>
-<h2 id="main-changes-1">Main changes</h2>
+<h2 id="main-changes-2">Main changes</h2>
 <ul>
 <li>Patch release</li>
 <li>Azure RTOS applications:
@@ -525,8 +962,8 @@
 <li>Fix osThreadNew() API to support time-slice scheduling</li>
 </ul></li>
 </ul>
-<h2 id="contents-1">Contents</h2>
-<h3 id="cmsis-rtos-wrapper-for-azure-rtos-threadx-1">CMSIS-RTOS wrapper for Azure RTOS ThreadX</h3>
+<h2 id="contents-2">Contents</h2>
+<h3 id="cmsis-rtos-wrapper-for-azure-rtos-threadx-2">CMSIS-RTOS wrapper for Azure RTOS ThreadX</h3>
 <table>
 <thead>
 <tr class="header">
@@ -548,7 +985,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section4" aria-hidden="true"> <label for="collapse-section4" aria-hidden="true"><strong>V2.0.0 / 16-September-2021</strong></label>
 <div>
-<h2 id="main-changes-2">Main changes</h2>
+<h2 id="main-changes-3">Main changes</h2>
 <ul>
 <li>Maintenance release</li>
 <li>Add new Azure RTOS applications:
@@ -573,453 +1010,6 @@
 <li>Rework Ux_Device_CDC_ECM application to use the “NetXDuo Addons Web” instead of “NetXDuo Addons HTTP”</li>
 <li>Rework the FileX applications to use HAL SD APIs.</li>
 <li>All Azure RTOS applications files regenerated using STM32CubeMX V6.3.0 and new Azure RTOS pack v2.0.0</li>
-</ul></li>
-</ul>
-<h2 id="contents-2">Contents</h2>
-<h3 id="applications-1">Applications</h3>
-<p>Provides ready-to-run applicative examples for Azure RTOS on the supported boards. For detailed list refer to <a href="Projects/X-CUBE-AZRTOS-H7_ProjectsList.html">applications list</a></p>
-<h3 id="drivers-1">Drivers</h3>
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Name</th>
-<th style="text-align: center;">Version</th>
-<th style="text-align: center;">Release note</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Cortex-M CMSIS</td>
-<td style="text-align: center;">v5.6.0</td>
-<td style="text-align: center;"><a href="Drivers/CMSIS/docs/General/html/index.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">STM32H7xx CMSIS</td>
-<td style="text-align: center;">v1.10.0</td>
-<td style="text-align: center;"><a href="Drivers/CMSIS/Device/ST/STM32H7xx/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">STM32H7xx HAL</td>
-<td style="text-align: center;">v1.10.0</td>
-<td style="text-align: center;"><a href="Drivers/STM32H7xx_HAL_Driver/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP STM32H7xx_Nucleo</td>
-<td style="text-align: center;">v1.3.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/STM32H7xx_Nucleo/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP STM32H735G-DK</td>
-<td style="text-align: center;">v1.2.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/STM32H735G-DK/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP STM32H7B3I-EVAL</td>
-<td style="text-align: center;">v2.3.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/STM32H7B3I-EVAL/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP STM32H7B3I-DK</td>
-<td style="text-align: center;">v2.3.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/STM32H7B3I-DK/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP STM32H743I-EVAL</td>
-<td style="text-align: center;">v3.3.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/STM32H743I-EVAL/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP STM32H745I-DISCO</td>
-<td style="text-align: center;">v3.3.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/STM32H745I-DISCO/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP STM32H747I-EVAL</td>
-<td style="text-align: center;">v3.3.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/STM32H747I-EVAL/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP STM32H747I-DISCO</td>
-<td style="text-align: center;">v3.5.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/STM32H747I-DISCO/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP STM32H750B-DK</td>
-<td style="text-align: center;">v3.3.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/STM32H750B-DK/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP Adafruit_Shield</td>
-<td style="text-align: center;">v5.0.1</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Adafruit_Shield/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP Common</td>
-<td style="text-align: center;">v7.0.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/common/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP adv7533</td>
-<td style="text-align: center;">v2.0.1</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/adv7533/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP ampire480272</td>
-<td style="text-align: center;">v1.0.3</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/ampire480272/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP ampire640480</td>
-<td style="text-align: center;">v1.0.3</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/ampire640480/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP cs42l51</td>
-<td style="text-align: center;">v2.0.1</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/cs42l51/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP exc7200</td>
-<td style="text-align: center;">v2.0.1</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/exc7200/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP ft5336</td>
-<td style="text-align: center;">v2.0.1</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/ft5336/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP ft6x06</td>
-<td style="text-align: center;">v2.0.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/ft6x06/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP lan8742</td>
-<td style="text-align: center;">v1.0.1</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/lan8742/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP mfxstm32l152</td>
-<td style="text-align: center;">v3.0.2</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/mfxstm32l152/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP m24lr64</td>
-<td style="text-align: center;">v1.0.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/m24lr64/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP mt25tl01g</td>
-<td style="text-align: center;">v2.3.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/mt25tl01g/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP mx25lm51245g</td>
-<td style="text-align: center;">v2.0.2</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/mx25lm51245g/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP mt48lc4m32b2</td>
-<td style="text-align: center;">v1.0.1</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/mt48lc4m32b2/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP is42s32800j</td>
-<td style="text-align: center;">v1.0.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/is42s32800j/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP is42s32800g</td>
-<td style="text-align: center;">v1.0.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/is42s32800g/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP is42s16800j</td>
-<td style="text-align: center;">v1.0.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/is42s16800j/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP otm8009a</td>
-<td style="text-align: center;">v2.0.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/otm8009a/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP ov9655</td>
-<td style="text-align: center;">v2.2.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/ov9655/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP ov5640</td>
-<td style="text-align: center;">v3.2.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/ov5640/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP rk043fn48h</td>
-<td style="text-align: center;">v1.0.3</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/rk043fn48h/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP rk070er9427</td>
-<td style="text-align: center;">v1.0.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/rk070er9427/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP s5k5cag</td>
-<td style="text-align: center;">v2.0.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/s5k5cag/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP s70kl1281</td>
-<td style="text-align: center;">v1.0.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/s70kl1281/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP st7735</td>
-<td style="text-align: center;">v2.0.2</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/st7735/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP stmpe811</td>
-<td style="text-align: center;">v3.0.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/stmpe811/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP ts3510</td>
-<td style="text-align: center;">v2.0.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/ts3510/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP wm8994</td>
-<td style="text-align: center;">v3.0.2</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/wm8994/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">BSP es_wifi</td>
-<td style="text-align: center;">v1.6.0</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/es_wifi/Release_Notes.html">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">BSP mx_wifi</td>
-<td style="text-align: center;">v1.0.4</td>
-<td style="text-align: center;"><a href="Drivers/BSP/Components/mx_wifi/Release_Notes.html">release notes</a></td>
-</tr>
-</tbody>
-</table>
-<h3 id="middlewares-1">Middlewares</h3>
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Name</th>
-<th style="text-align: left;">Version</th>
-<th style="text-align: left;">Release note</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;"><strong>ThreadX</strong></td>
-<td style="text-align: left;">6.1.7</td>
-<td style="text-align: left;"><a href="https://github.com/azure-rtos/threadx/releases/tag/v6.1.7_rel">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><strong>NetXduo</strong></td>
-<td style="text-align: left;">6.1.7</td>
-<td style="text-align: left;"><a href="https://github.com/azure-rtos/netxduo/releases/tag/v6.1.7_rel">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><strong>USBX</strong></td>
-<td style="text-align: left;">6.1.7</td>
-<td style="text-align: left;"><a href="https://github.com/azure-rtos/usbx/releases/tag/v6.1.7_rel">release notes</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><strong>FileX</strong></td>
-<td style="text-align: left;">6.1.7</td>
-<td style="text-align: left;"><a href="https://github.com/azure-rtos/filex/releases/tag/v6.1.7_rel">release notes</a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><strong>LevelX</strong></td>
-<td style="text-align: left;">6.1.7</td>
-<td style="text-align: left;"><a href="https://github.com/azure-rtos/levelx/releases/tag/v6.1.7_rel">release notes</a></td>
-</tr>
-</tbody>
-</table>
-<h3 id="cmsis-rtos-wrapper-for-azure-rtos-threadx-2">CMSIS-RTOS wrapper for Azure RTOS ThreadX</h3>
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Name</th>
-<th style="text-align: left;">Version</th>
-<th style="text-align: left;">Release note</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;"><strong>cmsis_rtos_threadx</strong></td>
-<td style="text-align: left;">1.0.2</td>
-<td style="text-align: left;"><a href="Middlewares/ST/cmsis_rtos_threadx/Release_Notes.html">release notes</a></td>
-</tr>
-</tbody>
-</table>
-<table>
-<colgroup>
-<col style="width: 23%" />
-<col style="width: 9%" />
-<col style="width: 66%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>CMSIS-RTOS API group</th>
-<th>Supported</th>
-<th>Short Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Kernel Information and Control</td>
-<td>Y</td>
-<td>It provides version/system information and starts/controls the RTOS Kernel. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__KernelCtrl.html">More…</a></td>
-</tr>
-<tr class="even">
-<td>Thread Management</td>
-<td>Y</td>
-<td>It defines, create, and control thread functions.. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__ThreadMgmt.html">More…</a></td>
-</tr>
-<tr class="odd">
-<td>Thread Flags</td>
-<td>N</td>
-<td>It synchronizes threads using flags. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__ThreadFlagsMgmt.html">More…</a></td>
-</tr>
-<tr class="even">
-<td>Event Flags</td>
-<td>Y</td>
-<td>It synchronizes threads using flags. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__EventFlags.html">More…</a></td>
-</tr>
-<tr class="odd">
-<td>Generic Wait Functions</td>
-<td>Y</td>
-<td>It waits for a certain period of time.. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__Wait.html">More…</a></td>
-</tr>
-<tr class="even">
-<td>Timer Management</td>
-<td>Y</td>
-<td>It creates and controls timer and timer callback functions. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__TimerMgmt.html">More…</a></td>
-</tr>
-<tr class="odd">
-<td>Mutex Management</td>
-<td>Y</td>
-<td>It synchronizes resource access using Mutual Exclusion (Mutex). <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__MutexMgmt.html">More…</a></td>
-</tr>
-<tr class="even">
-<td>Semaphores</td>
-<td>Y</td>
-<td>It access shared resources simultaneously from different threads. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__SemaphoreMgmt.html">More…</a></td>
-</tr>
-<tr class="odd">
-<td>Memory Pool</td>
-<td>N</td>
-<td>It manages thread-safe fixed-size blocks of dynamic memory. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html">More…</a></td>
-</tr>
-<tr class="even">
-<td>Message Queue</td>
-<td>Y</td>
-<td>It exchanges messages between threads in a FIFO-like operation. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__Message.html">More…</a></td>
-</tr>
-</tbody>
-</table>
-<p>The CMSIS-RTOS provides generic RTOS interfaces for Arm® Cortex® processor-based devices. It provides a standardized API for software components that require RTOS functionality.</p>
-<p>For more information about CMSIS-RTOS APIs, please refer to the ARM manual: <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS.html">CMSIS-RTOS API</a></p>
-<p>For more information about CMSIS-RTOS wrapper for Azure RTOS ThreadX, please refer to <a href="./Middlewares/ST/cmsis_rtos_threadx/README.md">readme</a></p>
-<h2 id="known-limitations-1">Known limitations</h2>
-<ul>
-<li>STM32CubeMX configuration files (PDSC/IPmode/IPconfig)
-<ul>
-<li>Some component inter-dependencies are missing and they will be added in future release</li>
-</ul></li>
-<li>USBX composite device descriptors
-<ul>
-<li>A maximum of 3 different class driver can be selected (restriction due to limited EP numbers)</li>
-<li>A list of USB device Applications supporting auto generation of USB Device framework descriptors provided for these USB class drivers :MSC, HID mouse, CDC ACM, CDC ECM, DFU. For the other device class drivers, user needs first to disable the device framework builder (refer to : USBX wiki section 2.2 How to customize) and provide the full set of required device descriptors.</li>
-</ul></li>
-<li>ThreadX
-<ul>
-<li>Tx_MPU application is not provided for MDK-ARM AC6</li>
-</ul></li>
-<li>NetXDuo
-<ul>
-<li>Ethernet cable hot-plug detection not supported</li>
-</ul></li>
-<li>USBX
-<ul>
-<li>When creating an USBX based application with MDK-ARM AC6 compiler make sure to disable the optimization for stm32h7xx_ll_usb.c file, otherwise application might not work correctly. This limitation will be fixed in future release.</li>
-</ul></li>
-<li>When using the Pack in STM32CubeMX
-<ul>
-<li>FileX/LevelX: multi instance is not supported, a low level interface driver can be instanced only once</li>
-<li>USB Host Vbus is not managed by the Pack, user needs to configure the Vbus GPIO using STM32CubeMX “Pinout &amp; Configuration” panel</li>
-<li>USB multi instance is not supported, a class driver can be instanced only once</li>
-<li>The component “USBX/CoreSystem” must be selected alongside either “USBX/UX Host CoreStack” or “USBX/UX Device CoreStack”</li>
-<li>When enabling “Network Ethernet Interface”, “FileX SD Interface”, “LevelX QuadSPI/OctoSPI” components, the STM32CubeMX “Project Manager –&gt; Advanced settings” respective to <strong>MX_&lt;IP&gt;_Init()</strong> should be tuned as following :
-<ul>
-<li>“Do Not Generate function call” –&gt; checked</li>
-<li>“Visibility Static” –&gt; unchecked</li>
-</ul></li>
-<li>The QSPI configuration panel does not support HAL QSPI APIs generation for LevelX glue functions</li>
-<li>The fx_stm32_sd_driver.h should be removed before applying any change in STM32CubeMX FileX SD configuration UI</li>
-<li>The FileX standalone mode is not yet supported</li>
-<li>X-CUBE-ARROS-H7 is no longer compatible with the MDK-ARM AC5 compiler: when generating a project for the MDK-ARM toolchain, the AC6 compiler is used by default</li>
-</ul></li>
-</ul>
-<h2 id="development-toolchains-and-compilers-1">Development toolchains and compilers</h2>
-<ul>
-<li>IAR Embedded Workbench for ARM (EWARM)toolchain 8.50.6 + ST-LINKV3.</li>
-<li><a href="https://www.st.com/en/development-tools/stm32cubeide.html">STM32CubeIDE V1.7.0</a> + ST-LINKV3</li>
-<li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.32 + ST-LINKV3</li>
-</ul>
-<h2 id="supported-devices-and-boards-by-applications-1">Supported devices and boards by applications</h2>
-<ul>
-<li><a href="https://www.st.com/en/evaluation-tools/nucleo-h723zg.html">NUCLEO-H723ZG</a> <em>(MB1364-E01)</em></li>
-<li><a href="https://www.st.com/en/evaluation-tools/stm32h735g-dk.html">STM32H735G-DK</a> <em>(MB1520-B02)</em></li>
-<li><a href="https://www.st.com/en/evaluation-tools/stm32h747i-disco.html">STM32H747I-DK</a> <em>(MB1248-D01)</em></li>
-<li><a href="https://www.st.com/en/evaluation-tools/stm32h743i-eval.html">STM32H743I-EVAL</a> <em>(MB1246-B03)</em></li>
-</ul>
-<h2 id="dependencies-1">Dependencies</h2>
-<p>This software release is compatible with:</p>
-<ul>
-<li>STM32CubeMX V6.3.0</li>
-<li>STM32PackCreator 3.3.0</li>
-</ul>
-</div>
-</div>
-<div class="collapse">
-<input type="checkbox" id="collapse-section3" aria-hidden="true"> <label for="collapse-section3" aria-hidden="true"><strong>V1.1.0 / 16-July-2021</strong></label>
-<div>
-<h2 id="main-changes-3">Main changes</h2>
-<ul>
-<li>Maintenance release</li>
-<li>Azure RTOS update to V6.1.7</li>
-<li>Add new Azure RTOS applications:
-<ul>
-<li>Tx_MPU</li>
-<li>Tx_Lowpower</li>
-<li>Ux_Device_DFU</li>
-</ul></li>
-<li>Migrate to MDK-ARM AC6 compiler</li>
-<li>General updates to fix known defects and implement enhancements:
-<ul>
-<li>STM32CubeMX configuration files (PDSC/IPmode/IPconfig):
-<ul>
-<li>Update against Azure RTOS release 6.1.7</li>
-<li>Add New “ThreadX/Low Power Support” component</li>
-<li>Add New “NetXDuo/Addons/cloud” component</li>
-<li>Restore the dependency between Web/http server components and FileX Core.</li>
-<li>Add missing description for some config flags</li>
-<li>Fix wrong conditions between some parameters</li>
-<li>Restore the generation by default of the “app_threadx.c/.h” files</li>
-<li>Update templates to support ThreadX Low Power feature</li>
-<li>Update USBX device descriptor builder (template) to support DFU class</li>
-<li>Update nx_stm32_eth_config_h.ftl generated content to be aligned with the selected component.</li>
-</ul></li>
-<li>Fix device enumeration on Linux host for CDC ACM applications</li>
-<li>All applications files regenerated using STM32CubeMX V6.3.0 and new Azure RTOS pack v1.1.0</li>
 </ul></li>
 </ul>
 <h2 id="contents-3">Contents</h2>
@@ -1290,11 +1280,27 @@
 </tbody>
 </table>
 <h3 id="cmsis-rtos-wrapper-for-azure-rtos-threadx-3">CMSIS-RTOS wrapper for Azure RTOS ThreadX</h3>
-<table style="width:100%;">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>cmsis_rtos_threadx</strong></td>
+<td style="text-align: left;">1.0.2</td>
+<td style="text-align: left;"><a href="Middlewares/ST/cmsis_rtos_threadx/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<table>
 <colgroup>
-<col style="width: 42%" />
-<col style="width: 16%" />
-<col style="width: 41%" />
+<col style="width: 23%" />
+<col style="width: 9%" />
+<col style="width: 66%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -1363,35 +1369,40 @@
 <ul>
 <li>STM32CubeMX configuration files (PDSC/IPmode/IPconfig)
 <ul>
-<li>Some low-level interfaces require BSP APIs that are not managed by the Pack and should be manually added to the project</li>
 <li>Some component inter-dependencies are missing and they will be added in future release</li>
 </ul></li>
 <li>USBX composite device descriptors
 <ul>
-<li>A maximum of 3 different class driver can be selected (restriction due to limited EP numbers)</li>
-<li>When using the Pack in STM32CubeMX: multi instance is not supported, a class driver can be instanced only once</li>
+<li>A maximum of 3 different class drivers can be selected (restriction due to limited EP numbers)</li>
+<li>A list of USB device Applications supporting auto generation of USB Device framework descriptors provided for these USB class drivers :MSC, HID mouse, CDC ACM, CDC ECM, DFU. For the other device class drivers, user needs first to disable the device framework builder (refer to : USBX wiki section 2.2 How to customize) and provide the full set of required device descriptors.</li>
 </ul></li>
 <li>ThreadX
 <ul>
-<li>Tx_MPU application is built with MDK-ARM AC5 compiler and requires manual changes when migrating it to MDK-ARM AC6</li>
+<li>Tx_MPU application is not provided for MDK-ARM AC6</li>
 </ul></li>
 <li>NetXDuo
 <ul>
 <li>Ethernet cable hot-plug detection not supported</li>
 </ul></li>
+<li>USBX
+<ul>
+<li>When creating an USBX based application with MDK-ARM AC6 compiler make sure to disable the optimization for stm32h7xx_ll_usb.c file, otherwise application might not work correctly. This limitation will be fixed in future release.</li>
+</ul></li>
 <li>When using the Pack in STM32CubeMX
 <ul>
-<li>FileX/LevelX: multi instance is not supported, a low level interface driver can be instanced only once</li>
+<li>FileX/LevelX: multi instance is not supported, a low level interface driver can be instantiated only once</li>
 <li>USB Host Vbus is not managed by the Pack, user needs to configure the Vbus GPIO using STM32CubeMX “Pinout &amp; Configuration” panel</li>
-<li>USB multi instance is not supported, a class driver can be instanced only once</li>
+<li>USB multi instance is not supported, a class drivers can be instantiated only once</li>
 <li>The component “USBX/CoreSystem” must be selected alongside either “USBX/UX Host CoreStack” or “USBX/UX Device CoreStack”</li>
-<li>The component “Device/AZURE_RTOS_Applications/Application” must be selected when generating Azure RTOS based application</li>
-<li>When enabling “Network Ethernet Interface” component, the MX_ETH_Init() should be generated by STM32CubeMX with following settings in “Project Manager –&gt; Advanced settings” panel :
+<li>When enabling “Network Ethernet Interface”, “FileX SD Interface”, “LevelX QuadSPI/OctoSPI” components, the STM32CubeMX “Project Manager –&gt; Advanced settings” respective to <strong>MX_&lt;IP&gt;_Init()</strong> should be tuned as following :
 <ul>
-<li>“Do Not Generate function call” should be checked</li>
-<li>“Visibility Static” should be unchecked</li>
+<li>“Do Not Generate function call” –&gt; checked</li>
+<li>“Visibility Static” –&gt; unchecked</li>
 </ul></li>
-<li>X-CUBE-ARROS-H7 is no longer compatible with the MDK-ARM AC5 compiler: when generating a project for the MDK-ARM toolchain, the AC6 compiler is used by default</li>
+<li>The QSPI configuration panel does not support HAL QSPI APIs generation for LevelX glue functions</li>
+<li>The fx_stm32_sd_driver.h should be removed before applying any change in STM32CubeMX FileX SD configuration UI</li>
+<li>The FileX standalone mode is not yet supported</li>
+<li>X-CUBE-AZRTOS-H7 is no longer compatible with the MDK-ARM AC5 compiler: when generating a project for the MDK-ARM toolchain, the AC6 compiler is used by default</li>
 </ul></li>
 </ul>
 <h2 id="development-toolchains-and-compilers-2">Development toolchains and compilers</h2>
@@ -1400,7 +1411,7 @@
 <li><a href="https://www.st.com/en/development-tools/stm32cubeide.html">STM32CubeIDE V1.7.0</a> + ST-LINKV3</li>
 <li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.32 + ST-LINKV3</li>
 </ul>
-<h2 id="supported-devices-and-boards">Supported devices and boards</h2>
+<h2 id="supported-devices-and-boards-by-applications-2">Supported devices and boards by applications</h2>
 <ul>
 <li><a href="https://www.st.com/en/evaluation-tools/nucleo-h723zg.html">NUCLEO-H723ZG</a> <em>(MB1364-E01)</em></li>
 <li><a href="https://www.st.com/en/evaluation-tools/stm32h735g-dk.html">STM32H735G-DK</a> <em>(MB1520-B02)</em></li>
@@ -1411,23 +1422,42 @@
 <p>This software release is compatible with:</p>
 <ul>
 <li>STM32CubeMX V6.3.0</li>
-<li>STM32PackCreator 3.2.0</li>
+<li>STM32PackCreator 3.3.0</li>
 </ul>
 </div>
 </div>
 <div class="collapse">
-<input type="checkbox" id="collapse-section2" aria-hidden="true"> <label for="collapse-section2" aria-hidden="true"><strong>V1.0.0 / 25-February-2021</strong></label>
+<input type="checkbox" id="collapse-section3" aria-hidden="true"> <label for="collapse-section3" aria-hidden="true"><strong>V1.1.0 / 16-July-2021</strong></label>
 <div>
 <h2 id="main-changes-4">Main changes</h2>
 <ul>
-<li>First official release of STM32Cube Azure RTOS software expansion for STM32H7 MCU series</li>
-<li>Azure RTOS update to v6.1.3</li>
-<li>Add Azure RTOS STM32CubeMX configuration files (*ioc, PDSC, IPModes/IPConfigs and ftl files)</li>
-<li>Add ThreadX CMSIS-RTOS v2 APIs wrapper</li>
-<li>Rework all Azure RTOS applications to use static memory pool allocation</li>
-<li>Add 10 Azure RTOS applications including STM32H7 Dual Core support</li>
-<li>Add support of two boards STM32H747I-DISCO and STM32H743I-EVAL</li>
-<li>Add support of MDK-ARM toolchain</li>
+<li>Maintenance release</li>
+<li>Azure RTOS update to V6.1.7</li>
+<li>Add new Azure RTOS applications:
+<ul>
+<li>Tx_MPU</li>
+<li>Tx_Lowpower</li>
+<li>Ux_Device_DFU</li>
+</ul></li>
+<li>Migrate to MDK-ARM AC6 compiler</li>
+<li>General updates to fix known defects and implement enhancements:
+<ul>
+<li>STM32CubeMX configuration files (PDSC/IPmode/IPconfig):
+<ul>
+<li>Update against Azure RTOS release 6.1.7</li>
+<li>Add New “ThreadX/Low Power Support” component</li>
+<li>Add New “NetXDuo/Addons/cloud” component</li>
+<li>Restore the dependency between Web/http server components and FileX Core.</li>
+<li>Add missing description for some config flags</li>
+<li>Fix wrong conditions between some parameters</li>
+<li>Restore the generation by default of the “app_threadx.c/.h” files</li>
+<li>Update templates to support ThreadX Low Power feature</li>
+<li>Update USBX device descriptor builder (template) to support DFU class</li>
+<li>Update nx_stm32_eth_config_h.ftl generated content to be aligned with the selected component.</li>
+</ul></li>
+<li>Fix device enumeration on Linux host for CDC ACM applications</li>
+<li>All applications files regenerated using STM32CubeMX V6.3.0 and new Azure RTOS pack v1.1.0</li>
+</ul></li>
 </ul>
 <h2 id="contents-4">Contents</h2>
 <h3 id="applications-3">Applications</h3>
@@ -1671,28 +1701,28 @@
 <tbody>
 <tr class="odd">
 <td style="text-align: left;"><strong>ThreadX</strong></td>
-<td style="text-align: left;">6.1.3</td>
-<td style="text-align: left;"><a href="https://github.com/azure-rtos/threadx/releases/tag/v6.1.3_rel">release notes</a></td>
+<td style="text-align: left;">6.1.7</td>
+<td style="text-align: left;"><a href="https://github.com/azure-rtos/threadx/releases/tag/v6.1.7_rel">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>NetXduo</strong></td>
-<td style="text-align: left;">6.1.3</td>
-<td style="text-align: left;"><a href="https://github.com/azure-rtos/netxduo/releases/tag/v6.1.3_rel">release notes</a></td>
+<td style="text-align: left;">6.1.7</td>
+<td style="text-align: left;"><a href="https://github.com/azure-rtos/netxduo/releases/tag/v6.1.7_rel">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>USBX</strong></td>
-<td style="text-align: left;">6.1.3</td>
-<td style="text-align: left;"><a href="https://github.com/azure-rtos/usbx/releases/tag/v6.1.3_rel">release notes</a></td>
+<td style="text-align: left;">6.1.7</td>
+<td style="text-align: left;"><a href="https://github.com/azure-rtos/usbx/releases/tag/v6.1.7_rel">release notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>FileX</strong></td>
-<td style="text-align: left;">6.1.3</td>
-<td style="text-align: left;"><a href="https://github.com/azure-rtos/filex/releases/tag/v6.1.3_rel">release notes</a></td>
+<td style="text-align: left;">6.1.7</td>
+<td style="text-align: left;"><a href="https://github.com/azure-rtos/filex/releases/tag/v6.1.7_rel">release notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>LevelX</strong></td>
-<td style="text-align: left;">6.1.3</td>
-<td style="text-align: left;"><a href="https://github.com/azure-rtos/levelx/releases/tag/v6.1.3_rel">release notes</a></td>
+<td style="text-align: left;">6.1.7</td>
+<td style="text-align: left;"><a href="https://github.com/azure-rtos/levelx/releases/tag/v6.1.7_rel">release notes</a></td>
 </tr>
 </tbody>
 </table>
@@ -1775,8 +1805,12 @@
 </ul></li>
 <li>USBX composite device descriptors
 <ul>
-<li>A maximum of 3 different class driver can be selected (restriction due to limited EP numbers)</li>
-<li>When using the Pack in STM32CubeMX: multi instance is not supported, a class driver can be instanced only once</li>
+<li>A maximum of 3 different class drivers can be selected (restriction due to limited EP numbers)</li>
+<li>When using the Pack in STM32CubeMX: multi instance is not supported, a class drivers can be instantiated only once</li>
+</ul></li>
+<li>ThreadX
+<ul>
+<li>Tx_MPU application is built with MDK-ARM AC5 compiler and requires manual changes when migrating it to MDK-ARM AC6</li>
 </ul></li>
 <li>NetXDuo
 <ul>
@@ -1784,16 +1818,419 @@
 </ul></li>
 <li>When using the Pack in STM32CubeMX
 <ul>
-<li>FileX/LevelX: multi instance is not supported, a low level interface driver can be instanced only once</li>
+<li>FileX/LevelX: multi instance is not supported, a low level interface driver can be instantiated only once</li>
 <li>USB Host Vbus is not managed by the Pack, user needs to configure the Vbus GPIO using STM32CubeMX “Pinout &amp; Configuration” panel</li>
-<li>USB multi instance is not supported, a class driver can be instanced only once</li>
+<li>USB multi instance is not supported, a class drivers can be instantiated only once</li>
+<li>The component “USBX/CoreSystem” must be selected alongside either “USBX/UX Host CoreStack” or “USBX/UX Device CoreStack”</li>
+<li>The component “Device/AZURE_RTOS_Applications/Application” must be selected when generating Azure RTOS based application</li>
+<li>When enabling “Network Ethernet Interface” component, the MX_ETH_Init() should be generated by STM32CubeMX with following settings in “Project Manager –&gt; Advanced settings” panel :
+<ul>
+<li>“Do Not Generate function call” should be checked</li>
+<li>“Visibility Static” should be unchecked</li>
+</ul></li>
+<li>X-CUBE-AZRTOS-H7 is no longer compatible with the MDK-ARM AC5 compiler: when generating a project for the MDK-ARM toolchain, the AC6 compiler is used by default</li>
+</ul></li>
+</ul>
+<h2 id="development-toolchains-and-compilers-3">Development toolchains and compilers</h2>
+<ul>
+<li>IAR Embedded Workbench for ARM (EWARM)toolchain 8.50.6 + ST-LINKV3.</li>
+<li><a href="https://www.st.com/en/development-tools/stm32cubeide.html">STM32CubeIDE V1.7.0</a> + ST-LINKV3</li>
+<li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.32 + ST-LINKV3</li>
+</ul>
+<h2 id="supported-devices-and-boards">Supported devices and boards</h2>
+<ul>
+<li><a href="https://www.st.com/en/evaluation-tools/nucleo-h723zg.html">NUCLEO-H723ZG</a> <em>(MB1364-E01)</em></li>
+<li><a href="https://www.st.com/en/evaluation-tools/stm32h735g-dk.html">STM32H735G-DK</a> <em>(MB1520-B02)</em></li>
+<li><a href="https://www.st.com/en/evaluation-tools/stm32h747i-disco.html">STM32H747I-DK</a> <em>(MB1248-D01)</em></li>
+<li><a href="https://www.st.com/en/evaluation-tools/stm32h743i-eval.html">STM32H743I-EVAL</a> <em>(MB1246-B03)</em></li>
+</ul>
+<h2 id="dependencies-3">Dependencies</h2>
+<p>This software release is compatible with:</p>
+<ul>
+<li>STM32CubeMX V6.3.0</li>
+<li>STM32PackCreator 3.2.0</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section2" aria-hidden="true"> <label for="collapse-section2" aria-hidden="true"><strong>V1.0.0 / 25-February-2021</strong></label>
+<div>
+<h2 id="main-changes-5">Main changes</h2>
+<ul>
+<li>First official release of STM32Cube Azure RTOS software expansion for STM32H7 MCU series</li>
+<li>Azure RTOS update to v6.1.3</li>
+<li>Add Azure RTOS STM32CubeMX configuration files (*ioc, PDSC, IPModes/IPConfigs and ftl files)</li>
+<li>Add ThreadX CMSIS-RTOS v2 APIs wrapper</li>
+<li>Rework all Azure RTOS applications to use static memory pool allocation</li>
+<li>Add 10 Azure RTOS applications including STM32H7 Dual Core support</li>
+<li>Add support of two boards STM32H747I-DISCO and STM32H743I-EVAL</li>
+<li>Add support of MDK-ARM toolchain</li>
+</ul>
+<h2 id="contents-5">Contents</h2>
+<h3 id="applications-4">Applications</h3>
+<p>Provides ready-to-run applicative examples for Azure RTOS on the supported boards. For detailed list refer to <a href="Projects/X-CUBE-AZRTOS-H7_ProjectsList.html">applications list</a></p>
+<h3 id="drivers-4">Drivers</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Cortex-M CMSIS</td>
+<td style="text-align: center;">v5.6.0</td>
+<td style="text-align: center;"><a href="Drivers/CMSIS/docs/General/html/index.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32H7xx CMSIS</td>
+<td style="text-align: center;">v1.10.0</td>
+<td style="text-align: center;"><a href="Drivers/CMSIS/Device/ST/STM32H7xx/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32H7xx HAL</td>
+<td style="text-align: center;">v1.10.0</td>
+<td style="text-align: center;"><a href="Drivers/STM32H7xx_HAL_Driver/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32H7xx_Nucleo</td>
+<td style="text-align: center;">v1.3.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H7xx_Nucleo/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32H735G-DK</td>
+<td style="text-align: center;">v1.2.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H735G-DK/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32H7B3I-EVAL</td>
+<td style="text-align: center;">v2.3.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H7B3I-EVAL/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32H7B3I-DK</td>
+<td style="text-align: center;">v2.3.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H7B3I-DK/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32H743I-EVAL</td>
+<td style="text-align: center;">v3.3.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H743I-EVAL/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32H745I-DISCO</td>
+<td style="text-align: center;">v3.3.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H745I-DISCO/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32H747I-EVAL</td>
+<td style="text-align: center;">v3.3.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H747I-EVAL/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32H747I-DISCO</td>
+<td style="text-align: center;">v3.5.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H747I-DISCO/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32H750B-DK</td>
+<td style="text-align: center;">v3.3.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/STM32H750B-DK/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP Adafruit_Shield</td>
+<td style="text-align: center;">v5.0.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Adafruit_Shield/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP Common</td>
+<td style="text-align: center;">v7.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/common/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP adv7533</td>
+<td style="text-align: center;">v2.0.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/adv7533/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP ampire480272</td>
+<td style="text-align: center;">v1.0.3</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/ampire480272/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP ampire640480</td>
+<td style="text-align: center;">v1.0.3</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/ampire640480/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP cs42l51</td>
+<td style="text-align: center;">v2.0.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/cs42l51/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP exc7200</td>
+<td style="text-align: center;">v2.0.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/exc7200/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP ft5336</td>
+<td style="text-align: center;">v2.0.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/ft5336/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP ft6x06</td>
+<td style="text-align: center;">v2.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/ft6x06/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP lan8742</td>
+<td style="text-align: center;">v1.0.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/lan8742/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP mfxstm32l152</td>
+<td style="text-align: center;">v3.0.2</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/mfxstm32l152/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP m24lr64</td>
+<td style="text-align: center;">v1.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/m24lr64/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP mt25tl01g</td>
+<td style="text-align: center;">v2.3.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/mt25tl01g/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP mx25lm51245g</td>
+<td style="text-align: center;">v2.0.2</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/mx25lm51245g/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP mt48lc4m32b2</td>
+<td style="text-align: center;">v1.0.1</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/mt48lc4m32b2/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP is42s32800j</td>
+<td style="text-align: center;">v1.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/is42s32800j/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP is42s32800g</td>
+<td style="text-align: center;">v1.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/is42s32800g/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP is42s16800j</td>
+<td style="text-align: center;">v1.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/is42s16800j/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP otm8009a</td>
+<td style="text-align: center;">v2.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/otm8009a/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP ov9655</td>
+<td style="text-align: center;">v2.2.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/ov9655/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP ov5640</td>
+<td style="text-align: center;">v3.2.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/ov5640/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP rk043fn48h</td>
+<td style="text-align: center;">v1.0.3</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/rk043fn48h/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP rk070er9427</td>
+<td style="text-align: center;">v1.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/rk070er9427/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP s5k5cag</td>
+<td style="text-align: center;">v2.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/s5k5cag/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP s70kl1281</td>
+<td style="text-align: center;">v1.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/s70kl1281/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP st7735</td>
+<td style="text-align: center;">v2.0.2</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/st7735/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP stmpe811</td>
+<td style="text-align: center;">v3.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/stmpe811/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP ts3510</td>
+<td style="text-align: center;">v2.0.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/ts3510/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP wm8994</td>
+<td style="text-align: center;">v3.0.2</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/wm8994/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP es_wifi</td>
+<td style="text-align: center;">v1.6.0</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/es_wifi/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP mx_wifi</td>
+<td style="text-align: center;">v1.0.4</td>
+<td style="text-align: center;"><a href="Drivers/BSP/Components/mx_wifi/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="middlewares-4">Middlewares</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>ThreadX</strong></td>
+<td style="text-align: left;">6.1.3</td>
+<td style="text-align: left;"><a href="https://github.com/azure-rtos/threadx/releases/tag/v6.1.3_rel">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>NetXduo</strong></td>
+<td style="text-align: left;">6.1.3</td>
+<td style="text-align: left;"><a href="https://github.com/azure-rtos/netxduo/releases/tag/v6.1.3_rel">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>USBX</strong></td>
+<td style="text-align: left;">6.1.3</td>
+<td style="text-align: left;"><a href="https://github.com/azure-rtos/usbx/releases/tag/v6.1.3_rel">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>FileX</strong></td>
+<td style="text-align: left;">6.1.3</td>
+<td style="text-align: left;"><a href="https://github.com/azure-rtos/filex/releases/tag/v6.1.3_rel">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>LevelX</strong></td>
+<td style="text-align: left;">6.1.3</td>
+<td style="text-align: left;"><a href="https://github.com/azure-rtos/levelx/releases/tag/v6.1.3_rel">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cmsis-rtos-wrapper-for-azure-rtos-threadx-5">CMSIS-RTOS wrapper for Azure RTOS ThreadX</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 16%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>CMSIS-RTOS API group</th>
+<th>Supported</th>
+<th>Short Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Kernel Information and Control</td>
+<td>Y</td>
+<td>It provides version/system information and starts/controls the RTOS Kernel. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__KernelCtrl.html">More…</a></td>
+</tr>
+<tr class="even">
+<td>Thread Management</td>
+<td>Y</td>
+<td>It defines, create, and control thread functions.. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__ThreadMgmt.html">More…</a></td>
+</tr>
+<tr class="odd">
+<td>Thread Flags</td>
+<td>N</td>
+<td>It synchronizes threads using flags. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__ThreadFlagsMgmt.html">More…</a></td>
+</tr>
+<tr class="even">
+<td>Event Flags</td>
+<td>Y</td>
+<td>It synchronizes threads using flags. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__EventFlags.html">More…</a></td>
+</tr>
+<tr class="odd">
+<td>Generic Wait Functions</td>
+<td>Y</td>
+<td>It waits for a certain period of time.. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__Wait.html">More…</a></td>
+</tr>
+<tr class="even">
+<td>Timer Management</td>
+<td>Y</td>
+<td>It creates and controls timer and timer callback functions. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__TimerMgmt.html">More…</a></td>
+</tr>
+<tr class="odd">
+<td>Mutex Management</td>
+<td>Y</td>
+<td>It synchronizes resource access using Mutual Exclusion (Mutex). <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__MutexMgmt.html">More…</a></td>
+</tr>
+<tr class="even">
+<td>Semaphores</td>
+<td>Y</td>
+<td>It access shared resources simultaneously from different threads. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__SemaphoreMgmt.html">More…</a></td>
+</tr>
+<tr class="odd">
+<td>Memory Pool</td>
+<td>N</td>
+<td>It manages thread-safe fixed-size blocks of dynamic memory. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html">More…</a></td>
+</tr>
+<tr class="even">
+<td>Message Queue</td>
+<td>Y</td>
+<td>It exchanges messages between threads in a FIFO-like operation. <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__Message.html">More…</a></td>
+</tr>
+</tbody>
+</table>
+<p>The CMSIS-RTOS provides generic RTOS interfaces for Arm® Cortex® processor-based devices. It provides a standardized API for software components that require RTOS functionality.</p>
+<p>For more information about CMSIS-RTOS APIs, please refer to the ARM manual: <a href="https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS.html">CMSIS-RTOS API</a></p>
+<p>For more information about CMSIS-RTOS wrapper for Azure RTOS ThreadX, please refer to <a href="./Middlewares/ST/cmsis_rtos_threadx/README.md">readme</a></p>
+<h2 id="known-limitations-4">Known limitations</h2>
+<ul>
+<li>STM32CubeMX configuration files (PDSC/IPmode/IPconfig)
+<ul>
+<li>Some low-level interfaces require BSP APIs that are not managed by the Pack and should be manually added to the project</li>
+<li>Some component inter-dependencies are missing and they will be added in future release</li>
+</ul></li>
+<li>USBX composite device descriptors
+<ul>
+<li>A maximum of 3 different class drivers can be selected (restriction due to limited EP numbers)</li>
+<li>When using the Pack in STM32CubeMX: multi instance is not supported, a class drivers can be instantiated only once</li>
+</ul></li>
+<li>NetXDuo
+<ul>
+<li>Ethernet cable hot-plug detection not supported</li>
+</ul></li>
+<li>When using the Pack in STM32CubeMX
+<ul>
+<li>FileX/LevelX: multi instance is not supported, a low level interface driver can be instantiated only once</li>
+<li>USB Host Vbus is not managed by the Pack, user needs to configure the Vbus GPIO using STM32CubeMX “Pinout &amp; Configuration” panel</li>
+<li>USB multi instance is not supported, a class drivers can be instantiated only once</li>
 <li>For STM32CubeIDE, the .mxproject should be removed before regeneration otherwise the project may get corrupted</li>
 <li>The component “USBX/CoreSystem” must be selected alongside either “USBX/UX Host CoreStack” or “USBX/UX Device CoreStack”</li>
 <li>When selecting the “Custom_Phy_Interface”, the “Ethernet Interface” component need to be selected too</li>
 <li>The “tx_initialize_low_level.s” need to be preprocessed before being assembled: this requires to add the option “–cpreproc” under “options–&gt; ASM–&gt; Misc Controls” for MDK-ARM IDE</li>
 </ul></li>
 </ul>
-<h2 id="development-toolchains-and-compilers-3">Development toolchains and compilers</h2>
+<h2 id="development-toolchains-and-compilers-4">Development toolchains and compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM)toolchain 8.50.6 + ST-LINKV3.</li>
 <li><a href="https://www.st.com/en/development-tools/stm32cubeide.html">STM32CubeIDE V1.6.0</a> + ST-LINKV3</li>
@@ -1806,7 +2243,7 @@
 <li><a href="https://www.st.com/en/evaluation-tools/stm32h747i-disco.html">STM32H747I-DK</a> <em>(MB1248-D01)</em></li>
 <li><a href="https://www.st.com/en/evaluation-tools/stm32h743i-eval.html">STM32H743I-EVAL</a> <em>(MB1246-B03)</em></li>
 </ul>
-<h2 id="dependencies-3">Dependencies</h2>
+<h2 id="dependencies-4">Dependencies</h2>
 <p>This software release is compatible with:</p>
 <ul>
 <li>STM32CubeMX V6.2.0</li>
@@ -1817,12 +2254,12 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section1" aria-hidden="true"> <label for="collapse-section1" aria-hidden="true"><strong>V1.0.0RC1 / 18-December-2020</strong></label>
 <div>
-<h2 id="main-changes-5">Main changes</h2>
+<h2 id="main-changes-6">Main changes</h2>
 <ul>
 <li>First Beta Package of Azure RTOS integration in STM32Cube Ecosystem</li>
 </ul>
-<h2 id="contents-5">Contents</h2>
-<h3 id="applications-4">Applications</h3>
+<h2 id="contents-6">Contents</h2>
+<h3 id="applications-5">Applications</h3>
 <table>
 <thead>
 <tr class="header">
@@ -1937,7 +2374,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="middlewares-4">Middlewares</h3>
+<h3 id="middlewares-5">Middlewares</h3>
 <table>
 <thead>
 <tr class="header">
@@ -1974,9 +2411,9 @@
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-4">Known limitations</h2>
+<h2 id="known-limitations-5">Known limitations</h2>
 <p>None</p>
-<h2 id="development-toolchains-and-compilers-4">Development toolchains and compilers</h2>
+<h2 id="development-toolchains-and-compilers-5">Development toolchains and compilers</h2>
 <ul>
 <li>IAR Embedded Workbench for ARM (EWARM)toolchain 8.50.1 + ST-LINKV3.</li>
 <li>STM32CubeIDE V1.5.0 + ST-LINKV3</li>
@@ -1986,11 +2423,11 @@
 <li>NUCLEO-H723ZG (MB1364E)</li>
 <li>STM32H735G-DK(MB1520B)</li>
 </ul>
-<h2 id="dependencies-4">Dependencies</h2>
+<h2 id="dependencies-5">Dependencies</h2>
 <p>None</p>
 </div>
 </div>
-</div>
+</section>
 </div>
 <footer class="sticky">
 <div class="columns">

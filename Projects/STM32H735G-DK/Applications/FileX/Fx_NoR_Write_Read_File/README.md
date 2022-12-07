@@ -11,13 +11,13 @@ The application starts by calling the ThreadX's initialization routine which exe
 
 all FileX resources are created, the MX25LM51245G driver is initialized and a single thread is created:
 
-  - fx_thread (Prio : 10; PreemptionPrio : 10) used for file operations.
+  - fx_app_thread (Prio : 10; PreemptionPrio : 10) used for file operations.
 
-The fx_thread will start by formatting the NOR Flash using FileX services. The resulting file system is a FAT32 compatible, with 512 bytes per sector
+The fx_app_thread will start by formatting the NOR Flash using FileX services. The resulting file system is a FAT32 compatible, with 512 bytes per sector
 
 and 8 sectors per cluster. The NOR flash should be erased prior to format either by the application or by the STM32CubeProgrammer, this allows LevelX and FileX to create a clean FAT FileSystem.
 
-Chip erase operation takes considerable time when done by the application, therefore it is disabled by default. 
+Chip erase operation takes considerable time when done by the application, therefore it is disabled by default.
 
 To enable it, please define  the flag  ``LX_STM32_OSPI_ERASE`` to <b> 1 </b> in "lx_stm32_ospi_driver.h":
 ````
@@ -34,13 +34,13 @@ The number of occupied sectors is also shown.
 
 #### <b>Expected success behavior</b>
 
-Successful operation is marked by a toggeling green LED light.
+Successful operation is marked by a toggling green LED light.
 
 Also, information regarding the total and available size of the flash media is printed to the serial port.
 
 #### <b>Error behaviors</b>
 
-On failure, the red LED starts toggeling while the green LED is switched OFF.
+On failure, the red LED starts toggling while the green LED is switched OFF.
 
 #### <b>Assumptions if any</b>
 None

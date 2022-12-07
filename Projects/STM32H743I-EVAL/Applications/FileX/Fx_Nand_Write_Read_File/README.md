@@ -53,9 +53,9 @@ NAND flash device, the code provides all required software code for properly man
 The application starts by calling the ThreadX's initialization routine which executes the main thread that handles file operations. 
 At this stage, all FileX resources are created, the NAND flash is initialized and a single thread is created:
 
-  - fx_thread (Prio : 1; PreemptionPrio : 1) used for file operations.
+  - fx_app_thread (Prio : 1; PreemptionPrio : 1) used for file operations.
 
-The fx_thread will start by formatting the NAND Flash using FileX services. The resulting file system is a FAT32 compatible, with 512 bytes per sector and 1 sector per cluster. 
+The fx_app_thread will start by formatting the NAND Flash using FileX services. The resulting file system is a FAT32 compatible, with 2048 bytes per sector and 1 sector per cluster. 
 Optionally, the NAND flash can be erased prior to format, this allows LevelX and FileX to create a clean FAT FileSystem. To enable flash mass erase, 
 please set the following flag in "lx_stm32_nand_fmc_driver.h":
 
@@ -69,12 +69,12 @@ Through all the steps, FileX/LevelX services are called to print the flash size 
 
 #### <b>Expected success behavior</b>
 
-Successful operation is marked by a toggeling green LED light.
+Successful operation is marked by a toggling green LED light.
 Also, information regarding the total and available size of the flash media is printed to the serial port.
 
 #### <b> Error behaviors</b>
 
-On failure, the red LED starts toggeling while the green LED is switched OFF.
+On failure, the red LED starts toggling while the green LED is switched OFF.
 
 #### <b>Assumptions if any</b>
 None

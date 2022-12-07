@@ -41,7 +41,7 @@ UINT   bytes_per_sector;
         {
             /*
              * the FX_DRIVER_INIT can be requested either from the fx_media_format() or fx_media_open()
-             * as the RAM meory should be always formatted before being used, by memset'ing it to '\0'
+             * as the RAM memory should be always formatted before being used, by memset'ing it to '\0'
              * we need to avoid double initialization to keep the file system integrity.
              */
             if (is_initialized == 0)

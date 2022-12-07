@@ -26,9 +26,9 @@
 <p>The application starts by calling the ThreadX’s initialization routine which executes the main thread that handles file operations. At this stage,</p>
 <p>all FileX resources are created, the MX25LM51245G driver is initialized and a single thread is created:</p>
 <ul>
-<li>fx_thread (Prio : 10; PreemptionPrio : 10) used for file operations.</li>
+<li>fx_app_thread (Prio : 10; PreemptionPrio : 10) used for file operations.</li>
 </ul>
-<p>The fx_thread will start by formatting the NOR Flash using FileX services. The resulting file system is a FAT32 compatible, with 512 bytes per sector</p>
+<p>The fx_app_thread will start by formatting the NOR Flash using FileX services. The resulting file system is a FAT32 compatible, with 512 bytes per sector</p>
 <p>and 8 sectors per cluster. The NOR flash should be erased prior to format either by the application or by the STM32CubeProgrammer, this allows LevelX and FileX to create a clean FAT FileSystem.</p>
 <p>Chip erase operation takes considerable time when done by the application, therefore it is disabled by default.</p>
 <p>To enable it, please define the flag <code>LX_STM32_OSPI_ERASE</code> to <b> 1 </b> in “lx_stm32_ospi_driver.h”:</p>
@@ -38,10 +38,10 @@
 <p>Through all the steps, FileX/LevelX services are called to print the flash size available before and after the example file is written into the flash.</p>
 <p>The number of occupied sectors is also shown.</p>
 <h4 id="expected-success-behavior"><b>Expected success behavior</b></h4>
-<p>Successful operation is marked by a toggeling green LED light.</p>
+<p>Successful operation is marked by a toggling green LED light.</p>
 <p>Also, information regarding the total and available size of the flash media is printed to the serial port.</p>
 <h4 id="error-behaviors"><b>Error behaviors</b></h4>
-<p>On failure, the red LED starts toggeling while the green LED is switched OFF.</p>
+<p>On failure, the red LED starts toggling while the green LED is switched OFF.</p>
 <h4 id="assumptions-if-any"><b>Assumptions if any</b></h4>
 <p>None</p>
 <h4 id="known-limitations"><b>Known limitations</b></h4>

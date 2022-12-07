@@ -1,4 +1,3 @@
-
 ## <b>Ux_Device_CDC_ECM application description</b>
 
 This application provides an example of Azure RTOS CDC_ECM stack usage on STM32H735G-DK board, it shows how to run Web HTTP server based application stack
@@ -8,7 +7,7 @@ kernel start, at this stage, the USBX initialize the network layer through USBx 
 the NX_IP instance and the Web HTTP server are created and configured, then the application creates two main threads
 
   - usbx_app_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device.
-  - nx_server_thread_entry (Prio :10; PreemptionPrio :10) used to assign a dynamic IP address, open the SD card driver as a FileX Media and start the Web HTTP server. 
+  - nx_server_thread_entry (Prio :10; PreemptionPrio :10) used to assign a dynamic IP address, open the SD card driver as a FileX Media and start the Web HTTP server.
   Fetching a dynamic IP address to the stm32H735 board is a step blocking until an IP address is obtained.
   Once the server is started, the user's browser can load web pages as index.html and STM32H7xxLED.html.
 
@@ -31,9 +30,6 @@ The board must be in a DHCP Ethernet network.
 #### <b>Known limitations</b>
 
 Hotplug is not implemented for this example, that is, the SD card is expected to be inserted before application running.
-
-When creating an USBX based application with MDK-ARM AC6 compiler make sure to disable the optimization for stm32h7xx_ll_usb.c file, otherwise application might not work correctly.
-This limitation will be fixed in future release.
 
 ### <b>Notes</b>
 
@@ -95,7 +91,7 @@ This limitation will be fixed in future release.
 
 ### <b>Keywords</b>
 
-RTOS, ThreadX, USBXDevice , Network, NetxDuo, FileX, File ,SDMMC, UART
+RTOS, ThreadX, USBXDevice, CDC_ECM, Network, NetxDuo, FileX, File ,SDMMC, UART
 
 
 ### <b>Hardware and Software environment</b>
@@ -109,7 +105,6 @@ RTOS, ThreadX, USBXDevice , Network, NetxDuo, FileX, File ,SDMMC, UART
       - Stop Bit = 1
       - Parity = none
       - Flow control = None
-
 
 ### <b>How to use it ?</b>
 

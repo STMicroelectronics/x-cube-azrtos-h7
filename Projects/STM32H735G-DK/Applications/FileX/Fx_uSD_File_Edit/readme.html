@@ -28,16 +28,16 @@
 <p>the SD card detection event is registered and drivers are initialized.</p>
 <p>A single thread is created:</p>
 <ul>
-<li>fx_thread (Prio : 10; PreemptionPrio : 10) used to initialize the SD driver and starting FileX’s file operations.</li>
+<li>fx_app_thread (Prio : 10; PreemptionPrio : 10) used to initialize the SD driver and starting FileX’s file operations.</li>
 </ul>
-<p>A message queue is used to signal the SD card detection event to the fx_thread thread:</p>
+<p>A message queue is used to signal the SD card detection event to the fx_app_thread thread:</p>
 <ul>
-<li>tx_msg_queue (Msg size : 1 (UINT); total messages : 16) used to notify the fx_thread about the SD card insertion status.</li>
+<li>tx_msg_queue (Msg size : 1 (UINT); total messages : 16) used to notify the fx_app_thread about the SD card insertion status.</li>
 </ul>
-<p>The fx_thread starts by checking whether the SD card is initially inserted or not. In the true case, it sends a message to the queue to ensure</p>
+<p>The fx_app_thread starts by checking whether the SD card is initially inserted or not. In the true case, it sends a message to the queue to ensure</p>
 <p>that the first iteration starts properly. The wait on the message queue blocks till it receives a new message about whether the SD card is inserted</p>
 <p>or removed. Interrupt callback for SD detection is registered and it is used to send the event information to the message queue.</p>
-<p>The fx_thread uses FileX services to open the SD media for file operations and attempt to create file STM32.TXT. If the file exists already,</p>
+<p>The fx_app_thread uses FileX services to open the SD media for file operations and attempt to create file STM32.TXT. If the file exists already,</p>
 <p>it will be overwritten. Dummy content is then written into the file and it is closed. The file is opened once again in read mode and content</p>
 <p>is checked if matches what was previously written.</p>
 <h4 id="expected-success-behavior"><b>Expected success behavior</b></h4>

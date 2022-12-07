@@ -189,7 +189,6 @@ void QUADSPI_IRQHandler(void)
   /* USER CODE END QUADSPI_IRQn 1 */
 }
 
-/* USER CODE BEGIN 1 */
 /**
   * @brief This function handles MDMA global interrupt.
   */
@@ -203,4 +202,7 @@ void MDMA_IRQHandler(void)
 
   /* USER CODE END MDMA_IRQn 1 */
 }
+
+/* USER CODE BEGIN 1 */
+
 /* USER CODE END 1 */

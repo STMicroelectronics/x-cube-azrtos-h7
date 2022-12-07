@@ -1,3 +1,4 @@
+
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -31,7 +32,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "main.h"
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -51,16 +52,38 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 UINT MX_FileX_Init(VOID *memory_ptr);
-
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+/* Main thread Name */
+#ifndef FX_APP_THREAD_NAME
+  #define FX_APP_THREAD_NAME "FileX app thread"
+#endif
+
+/* Main thread time slice */
+#ifndef FX_APP_THREAD_TIME_SLICE
+  #define FX_APP_THREAD_TIME_SLICE TX_NO_TIME_SLICE
+#endif
+
+/* Main thread auto start */
+#ifndef FX_APP_THREAD_AUTO_START
+  #define FX_APP_THREAD_AUTO_START TX_AUTO_START
+#endif
+
+/* Main thread preemption threshold */
+#ifndef FX_APP_PREEMPTION_THRESHOLD
+  #define FX_APP_PREEMPTION_THRESHOLD FX_APP_THREAD_PRIO
+#endif
+
+/* fx sd volume name */
+#ifndef FX_SD_VOLUME_NAME
+  #define FX_SD_VOLUME_NAME "STM32_SDIO_DISK"
+#endif
+
 /* USER CODE BEGIN PD */
-/* Flash address to load APP from */
-#define APP_ADDRESS      0x08020000
-#define FW_NAME_STRING   "STM32_FW_UPGRADE.BIN"
+
 /* USER CODE END PD */
 
 /* USER CODE BEGIN 1 */

@@ -1,3 +1,4 @@
+
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -30,6 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "ux_api.h"
 
 /* USER CODE END Includes */
 
@@ -50,7 +52,6 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 UINT MX_FileX_Init(VOID *memory_ptr);
-
 /* USER CODE BEGIN EFP */
 UINT  App_File_Create(FX_MEDIA *fx_media);
 UINT  App_File_Write(FX_MEDIA *fx_media);
@@ -58,6 +59,7 @@ UINT  App_File_Read(FX_MEDIA *fx_media);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+
 /* USER CODE BEGIN PD */
 
 /* USER CODE END PD */

@@ -28,16 +28,18 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-extern __IO UINT sd_rx_cplt;
-extern __IO UINT sd_tx_cplt;
+
 /* USER CODE END ET */
+
+extern __IO UINT sd_read_transfer_completed;
+extern __IO UINT sd_write_transfer_completed;
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
 
 /* USER CODE END EC */
 /* Default timeout used to wait for fx operations */
-#define FX_STM32_SD_DEFAULT_TIMEOUT                           (10 * 1000)
+#define FX_STM32_SD_DEFAULT_TIMEOUT                      (10000)
 
 /* Let the filex low-level driver initialize the SD driver */
 #define FX_STM32_SD_INIT                                 0
@@ -66,11 +68,11 @@ extern __IO UINT sd_tx_cplt;
 #endif
 
 /* Define the macro to get the current time in ticks */
-/* USER CODE BEGIN FX_STM32_SD_CURRENT_TIME_TX */
+/* USER CODE BEGIN FX_STM32_SD_CURRENT_TIME_HAL */
 
 #define FX_STM32_SD_CURRENT_TIME()                                   HAL_GetTick()
 
-/* USER CODE END FX_STM32_SD_CURRENT_TIME_TX */
+/* USER CODE END FX_STM32_SD_CURRENT_TIME_HAL */
 
 /* Macro called before initializing the SD driver
  * e.g. create a semaphore used for transfer notification */
@@ -125,34 +127,31 @@ extern __IO UINT sd_tx_cplt;
 /* Define how to notify about Read completion operation */
 /* USER CODE BEGIN FX_STM32_SD_READ_CPLT_NOTIFY */
 
-#define FX_STM32_SD_READ_CPLT_NOTIFY()     do { \
-                                              UINT start = HAL_GetTick(); \
-                                              while (HAL_GetTick() - start < FX_STM32_SD_DEFAULT_TIMEOUT) \
-                                              {\
-                                                if (sd_rx_cplt == 1) \
-                                                  break;\
-                                              }\
-                                              if (sd_rx_cplt == 0) \
-                                                return FX_IO_ERROR; \
-                                           } while(0)
+#define FX_STM32_SD_READ_CPLT_NOTIFY()                  do { \
+                                                          UINT start = FX_STM32_SD_CURRENT_TIME(); \
+                                                          while(FX_STM32_SD_CURRENT_TIME() - start < FX_STM32_SD_DEFAULT_TIMEOUT) \
+                                                          { \
+                                                            if (sd_read_transfer_completed == 1) \
+                                                            break; \
+                                                          } \
+                                                          if (sd_read_transfer_completed == 0) \
+                                                            return FX_IO_ERROR;\
+                                                        } while(0)
 
 /* USER CODE END FX_STM32_SD_READ_CPLT_NOTIFY */
 
 /* Define how to notify about write completion operation */
 /* USER CODE BEGIN FX_STM32_SD_WRITE_CPLT_NOTIFY */
-
-#define FX_STM32_SD_WRITE_CPLT_NOTIFY()      do { \
-                                              UINT start = HAL_GetTick(); \
-                                              while (HAL_GetTick() - start < FX_STM32_SD_DEFAULT_TIMEOUT) \
-                                              {\
-                                                if (sd_tx_cplt == 1) \
-                                                  break;\
-                                              }\
-                                              if (sd_tx_cplt == 0) \
-                                                return FX_IO_ERROR;\
-                                           } while(0)
-
-
+#define FX_STM32_SD_WRITE_CPLT_NOTIFY()                do { \
+                                                          UINT start = HAL_GetTick(); \
+                                                          while( HAL_GetTick() - start < FX_STM32_SD_DEFAULT_TIMEOUT) \
+                                                          { \
+                                                            if (sd_write_transfer_completed == 1) \
+                                                            break; \
+                                                          } \
+                                                          if (sd_write_transfer_completed == 0) \
+                                                            return FX_IO_ERROR;\
+                                                        } while(0)
 /* USER CODE END FX_STM32_SD_WRITE_CPLT_NOTIFY */
 
 /* Macro called before performing write operation */
@@ -165,14 +164,14 @@ extern __IO UINT sd_tx_cplt;
 /* Macro called after performing write operation */
 /* USER CODE BEGIN FX_STM32_SD_POST_WRITE_TRANSFER */
 
-#define FX_STM32_SD_POST_WRITE_TRANSFER					FX_STM32_SD_POST_READ_TRANSFER
+#define FX_STM32_SD_POST_WRITE_TRANSFER(_media_ptr)
 
 /* USER CODE END FX_STM32_SD_POST_WRITE_TRANSFER */
 
 /* Macro for write error handling */
 /* USER CODE BEGIN FX_STM32_SD_WRITE_TRANSFER_ERROR */
 
-#define FX_STM32_SD_WRITE_TRANSFER_ERROR				FX_STM32_SD_READ_TRANSFER_ERROR
+#define FX_STM32_SD_WRITE_TRANSFER_ERROR(_status_)
 
 /* USER CODE END FX_STM32_SD_WRITE_TRANSFER_ERROR */
 

@@ -148,6 +148,7 @@ static UINT sntp_time_sync_internal(ULONG sntp_server_address);
 static UINT sntp_time_sync(VOID);
 
 /* USER CODE END PFP */
+
 /**
   * @brief  Application NetXDuo Initialization.
   * @param memory_ptr: memory pointer
@@ -161,6 +162,10 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
   /* USER CODE BEGIN MX_NetXDuo_MEM_POOL */
   AppBytePool = byte_pool;
   /* USER CODE END MX_NetXDuo_MEM_POOL */
+
+  /* USER CODE BEGIN 0 */
+
+  /* USER CODE END 0 */
 
   /* USER CODE BEGIN MX_NetXDuo_Init */
 

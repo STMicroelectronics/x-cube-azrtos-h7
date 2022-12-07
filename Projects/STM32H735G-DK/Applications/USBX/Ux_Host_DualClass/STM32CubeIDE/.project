@@ -197,11 +197,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/usb_otg.c</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/STM32H735G-DK/stm32h735g_discovery.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Drivers/BSP/STM32H735G-DK/stm32h735g_discovery.c</locationURI>
-		</link>
-		<link>
 			<name>Application/User/AZURE_RTOS/App/app_azure_rtos.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/AZURE_RTOS/App/app_azure_rtos.c</locationURI>
@@ -1727,6 +1722,16 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/threadx/ports/cortex_m7/gnu/src/tx_thread_interrupt_control.S</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/ThreadX/RTOS/ThreadX/Core/tx_thread_interrupt_disable.S</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/threadx/ports/cortex_m7/gnu/src/tx_thread_interrupt_disable.S</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/ThreadX/RTOS/ThreadX/Core/tx_thread_interrupt_restore.S</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/threadx/ports/cortex_m7/gnu/src/tx_thread_interrupt_restore.S</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/ThreadX/RTOS/ThreadX/Core/tx_thread_preemption_change.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_thread_preemption_change.c</locationURI>
@@ -2217,11 +2222,6 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_system_initialize.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/CoreSystem/ux_system_tasks_run.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_system_tasks_run.c</locationURI>
-		</link>
-		<link>
 			<name>Middlewares/USBX/USB/USBX/CoreSystem/ux_system_uninitialize.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_system_uninitialize.c</locationURI>
@@ -2487,6 +2487,11 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_utility_timer_create.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/USBX/USB/USBX/CoreSystem/ux_utility_timer_delete.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_utility_timer_delete.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/USBX/USB/USBX/CoreSystem/ux_utility_unicode_to_string.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_utility_unicode_to_string.c</locationURI>
@@ -2550,11 +2555,6 @@
 			<name>Middlewares/USBX/USB/USBX/UX Host Class HID Core/ux_host_class_hid_idle_set.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_hid_idle_set.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host Class HID Core/ux_host_class_hid_idle_set_run.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_hid_idle_set_run.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host Class HID Core/ux_host_class_hid_instance_clean.c</name>
@@ -2637,19 +2637,9 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_hid_report_set.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host Class HID Core/ux_host_class_hid_report_set_run.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_hid_report_set_run.c</locationURI>
-		</link>
-		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host Class HID Core/ux_host_class_hid_resources_free.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_hid_resources_free.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host Class HID Core/ux_host_class_hid_tasks_run.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_hid_tasks_run.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host Class HID Core/ux_host_class_hid_transfer_request_completed.c</name>
@@ -2685,11 +2675,6 @@
 			<name>Middlewares/USBX/USB/USBX/UX Host Class HID Keyboard/ux_host_class_hid_keyboard_key_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_hid_keyboard_key_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host Class HID Keyboard/ux_host_class_hid_keyboard_tasks_run.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_hid_keyboard_tasks_run.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host Class HID Keyboard/ux_host_class_hid_keyboard_thread.c</name>
@@ -2742,11 +2727,6 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_cbw_initialize.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_check_run.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_check_run.c</locationURI>
-		</link>
-		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_configure.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_configure.c</locationURI>
@@ -2787,11 +2767,6 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_entry.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_lock.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_lock.c</locationURI>
-		</link>
-		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_max_lun_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_max_lun_get.c</locationURI>
@@ -2805,11 +2780,6 @@
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_media_characteristics_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_media_characteristics_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_media_check.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_media_check.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_media_format_capacity_get.c</name>
@@ -2852,11 +2822,6 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_partition_read.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_read_write_run.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_read_write_run.c</locationURI>
-		</link>
-		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_request_sense.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_request_sense.c</locationURI>
@@ -2870,11 +2835,6 @@
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_start_stop.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_start_stop.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_tasks_run.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_tasks_run.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_thread_entry.c</name>
@@ -2900,11 +2860,6 @@
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_transport_cbi.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_transport_cbi.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_transport_run.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_transport_run.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Host Class STORAGE/ux_host_class_storage_unit_ready_test.c</name>

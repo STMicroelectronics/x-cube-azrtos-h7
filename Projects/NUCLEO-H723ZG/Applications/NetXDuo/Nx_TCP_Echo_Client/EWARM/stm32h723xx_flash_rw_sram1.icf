@@ -11,7 +11,7 @@ define symbol __ICFEDIT_region_RAM_end__       = 0x2404FFFF;
 define symbol __ICFEDIT_region_ITCMRAM_start__ = 0x00000000;
 define symbol __ICFEDIT_region_ITCMRAM_end__   = 0x0000FFFF;
 define symbol __ICFEDIT_region_NXDATA_start__  = 0x24048200;
-define symbol __ICFEDIT_region_NXDATA_end__   = __ICFEDIT_region_RAM_end__;
+define symbol __ICFEDIT_region_NXDATA_end__    = __ICFEDIT_region_RAM_end__;
 /*-Sizes-*/
 define symbol __ICFEDIT_size_cstack__ = 0x400;
 define symbol __ICFEDIT_size_heap__   = 0x200;

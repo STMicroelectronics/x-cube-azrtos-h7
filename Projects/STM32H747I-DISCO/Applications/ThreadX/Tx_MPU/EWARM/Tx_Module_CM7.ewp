@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.50.6.28611</state>
+                    <state>8.50.9.33458</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -481,7 +481,7 @@
             <name>AARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>10</version>
+                <version>11</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -636,6 +636,10 @@
                 <option>
                     <name>AsmNoLiteralPool</name>
                     <state>0</state>
+                </option>
+                <option>
+                    <name>PreInclude</name>
+                    <state></state>
                 </option>
             </data>
         </settings>
@@ -1063,7 +1067,7 @@
     <group>
         <name>Application</name>
         <file>
-            <name>$PROJ_DIR$\..\Core\Src\app_module.c</name>
+            <name>$PROJ_DIR$\..\Src\app_module.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\txm_module_preamble.s</name>

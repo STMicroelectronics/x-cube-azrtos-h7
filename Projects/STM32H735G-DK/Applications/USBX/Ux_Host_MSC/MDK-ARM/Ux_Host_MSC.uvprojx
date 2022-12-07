@@ -10,7 +10,7 @@
       <TargetName>Ux_Host_MSC</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6140000::V6.14::ARMCLANG</pCCUsed>
+      <pCCUsed>6140001::V6.14.1::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -186,6 +186,7 @@
             <RvdsVP>3</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -339,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>TX_INCLUDE_USER_DEFINE_FILE,FX_INCLUDE_USER_DEFINE_FILE,UX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H735xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../AZURE_RTOS/App;../FileX/App;../USBX/App;../USBX/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Middlewares/ST/filex/common/inc/;../../../../../../Middlewares/ST/filex/ports/generic/inc/;../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/inc/;../../../../../../Middlewares/ST/usbx/common/core/inc/;../../../../../../Middlewares/ST/usbx/ports/generic/inc/;../../../../../../Middlewares/ST/usbx/common/usbx_stm32_host_controllers/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H735G-DK</IncludePath>
+              <IncludePath>../Core/Inc;../AZURE_RTOS/App;../FileX/App;../USBX/App;../USBX/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Middlewares/ST/filex/common/inc/;../../../../../../Middlewares/ST/filex/ports/generic/inc/;../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/inc/;../../../../../../Middlewares/ST/usbx/common/core/inc/;../../../../../../Middlewares/ST/usbx/ports/generic/inc/;../../../../../../Middlewares/ST/usbx/common/usbx_stm32_host_controllers/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -482,16 +483,6 @@
               <FileName>README.md</FileName>
               <FileType>5</FileType>
               <FilePath>../README.md</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Drivers/BSP/STM32H735G-DK</GroupName>
-          <Files>
-            <File>
-              <FileName>stm32h735g_discovery.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Drivers/BSP/STM32H735G-DK/stm32h735g_discovery.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1799,11 +1790,6 @@
               <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_cbw_initialize.c</FilePath>
             </File>
             <File>
-              <FileName>ux_host_class_storage_check_run.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_check_run.c</FilePath>
-            </File>
-            <File>
               <FileName>ux_host_class_storage_configure.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_configure.c</FilePath>
@@ -1844,11 +1830,6 @@
               <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_entry.c</FilePath>
             </File>
             <File>
-              <FileName>ux_host_class_storage_lock.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_lock.c</FilePath>
-            </File>
-            <File>
               <FileName>ux_host_class_storage_max_lun_get.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_max_lun_get.c</FilePath>
@@ -1862,11 +1843,6 @@
               <FileName>ux_host_class_storage_media_characteristics_get.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_media_characteristics_get.c</FilePath>
-            </File>
-            <File>
-              <FileName>ux_host_class_storage_media_check.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_media_check.c</FilePath>
             </File>
             <File>
               <FileName>ux_host_class_storage_media_format_capacity_get.c</FileName>
@@ -1909,11 +1885,6 @@
               <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_partition_read.c</FilePath>
             </File>
             <File>
-              <FileName>ux_host_class_storage_read_write_run.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_read_write_run.c</FilePath>
-            </File>
-            <File>
               <FileName>ux_host_class_storage_request_sense.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_request_sense.c</FilePath>
@@ -1927,11 +1898,6 @@
               <FileName>ux_host_class_storage_start_stop.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_start_stop.c</FilePath>
-            </File>
-            <File>
-              <FileName>ux_host_class_storage_tasks_run.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_tasks_run.c</FilePath>
             </File>
             <File>
               <FileName>ux_host_class_storage_thread_entry.c</FileName>
@@ -1957,11 +1923,6 @@
               <FileName>ux_host_class_storage_transport_cbi.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_transport_cbi.c</FilePath>
-            </File>
-            <File>
-              <FileName>ux_host_class_storage_transport_run.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/src/ux_host_class_storage_transport_run.c</FilePath>
             </File>
             <File>
               <FileName>ux_host_class_storage_unit_ready_test.c</FileName>
@@ -2554,6 +2515,11 @@
               <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_timer_create.c</FilePath>
             </File>
             <File>
+              <FileName>ux_utility_timer_delete.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_timer_delete.c</FilePath>
+            </File>
+            <File>
               <FileName>ux_utility_unicode_to_string.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_unicode_to_string.c</FilePath>
@@ -2572,11 +2538,6 @@
               <FileName>ux_system_initialize.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_system_initialize.c</FilePath>
-            </File>
-            <File>
-              <FileName>ux_system_tasks_run.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_system_tasks_run.c</FilePath>
             </File>
             <File>
               <FileName>ux_system_uninitialize.c</FileName>
@@ -3564,20 +3525,5 @@
     </components>
     <files/>
   </RTE>
-
-  <LayerInfo>
-    <Layers>
-      <Layer>
-        <LayName>&lt;Project Info&gt;</LayName>
-        <LayDesc></LayDesc>
-        <LayUrl></LayUrl>
-        <LayKeys></LayKeys>
-        <LayCat></LayCat>
-        <LayLic></LayLic>
-        <LayTarg>0</LayTarg>
-        <LayPrjMark>1</LayPrjMark>
-      </Layer>
-    </Layers>
-  </LayerInfo>
 
 </Project>

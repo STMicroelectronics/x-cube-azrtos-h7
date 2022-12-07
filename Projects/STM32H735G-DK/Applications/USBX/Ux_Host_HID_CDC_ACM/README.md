@@ -13,7 +13,7 @@ In case of composite or a simple device, the CDC_ACM Class APIs is used to send,
 The main entry function tx_application_define() is called by ThreadX during kernel start, at this stage, all USBx resources are initialized.
 The application creates 5 threads with different priorities :
 
-  - usbx_app_thread_entry            (Priority : 25; Preemption threshold : 25) used to initialize USB OTG HAL HCD driver and start the Host.
+  - usbx_app_thread_entry            (Priority : 10; Preemption threshold : 10) used to initialize USB OTG HAL HCD driver and start the Host.
   - cdc_acm_send_app_thread_entry    (Priority : 30; Preemption threshold : 30) used to send data from host to device.
   - cdc_acm_recieve_app_thread_entry (Priority : 30; Preemption threshold : 30) used to receive data from the device.
   - hid_mouse_thread_entry           (Priority : 30; Preemption threshold : 30) used to decode HID reports received  from a mouse.
@@ -50,8 +50,7 @@ User is familiar with USB 2.0 "Universal Serial BUS" Specification and CDC_ACM c
 
 #### <b>Known limitations</b>
 
-When creating an USBX based application with MDK-ARM AC6 compiler make sure to disable the optimization for stm32h7xx_ll_usb.c file, otherwise application might not work correctly.
-This limitation will be fixed in future release.
+None
 
 ### <b>Notes</b>
 
@@ -141,6 +140,9 @@ Connectivity, USBX Host, ThreadX, USB, Composite, CDC_ACM, HID, Mouse, Keyboard 
        - No parity
        - BaudRate = 9600 baud
        - Flow control: None
+
+     - To send data from the USB CDC_ACM Host use the user push-button and data will be received
+     and displayed in the hyperterminal connected to the CDC ACM Device.
 
 ### <b>How to use it ?</b>
 

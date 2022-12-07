@@ -8,6 +8,18 @@
   ******************************************************************************
   */
 
+### V1.3.0 / 30-September-2022 ###
+=================================
+Main changes
+-------------
+- USBX DCD ACM: fix transmit ZLP issue
+- Add USBX STM32 device callback notification
+
+Dependencies:
+-------------
+- Azure RTOS USBX V6.1.10 or higher
+- STM32Cube PCD HAL drivers
+
 ### V1.2.0 / 01-April-2022 ###
 =================================
 Main changes

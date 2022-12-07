@@ -30,10 +30,10 @@
 </ul>
 <p>The application then creates 2 threads with the same priorities:</p>
 <ul>
-<li><strong>AppMainThread</strong> (priority 10, PreemtionThreashold 10) : created with the <i>TX_AUTO_START</i> flag to start automatically.</li>
+<li><strong>NxAppThread</strong> (priority 10, PreemtionThreashold 10) : created with the <i>TX_AUTO_START</i> flag to start automatically.</li>
 <li><strong>AppTCPThread</strong> (priority 10, PreemtionThreashold 10) : created with the <i>TX_DONT_START</i> flag to be started later.</li>
 </ul>
-<p>The <strong>AppMainThread</strong> starts and perform the following actions:</p>
+<p>The <strong>NxAppThread</strong> starts and perform the following actions:</p>
 <ul>
 <li>Starts the DHCP client<br />
 </li>
@@ -60,7 +60,7 @@
 <pre><code> SUCCESS : 10 / 10 packets sent</code></pre>
 <h4 id="error-behaviors"><b>Error behaviors</b></h4>
 <ul>
-<li>The Red LED is toggling to indicate any error that have occurred.</li>
+<li>The Yellow LED is toggling to indicate any error that have occurred.</li>
 <li>In case the message exchange is not completed a failure message is printed on the HyperTerminal showing the actual sent message compared to the expected ones.</li>
 </ul>
 <h4 id="assumptions-if-any"><b>Assumptions if any</b></h4>
@@ -172,7 +172,7 @@ this section is then used in the <code> app_azure_rtos.c</code> file to force th
 #if defined ( __ICCARM__ ) /* IAR Compiler */
 #pragma location = &quot;.NetXPoolSection&quot;
 
-#elif defined ( __CC_ARM ) /* MDK ARM Compiler */
+#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(&quot;.NetXPoolSection&quot;)))
 
 #elif defined ( __GNUC__ ) /* GNU Compiler */
@@ -206,7 +206,7 @@ static TX_BYTE_POOL nx_app_byte_pool;</code></pre>
 <li><p>Run the <a href="https://github.com/PavelBansky/EchoTool/releases/tag/v1.5.0.0">echotool</a> utility on a windows console as following:</p>
 <pre><code>c:\&gt; .\echotool.exe /p tcp /s &lt;TCP_SERVER_PORT&gt; 
 
-Example : c:\&gt; .\echotool.exe /p tcp /s 6001</code></pre></li>
+Example : c:\&gt; .\echotool.exe /p tcp /s 6000</code></pre></li>
 <li>Rebuild all files and load your image into target memory</li>
 <li><p>Run the application</p></li>
 </ul>

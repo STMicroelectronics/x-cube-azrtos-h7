@@ -106,7 +106,7 @@ int main(void)
     if (((*(__IO uint32_t *) USBD_DFU_APP_DEFAULT_ADDR) & USBD_DFU_APP_MASK) ==
         USBD_DFU_APP_START_ADDR)
     {
-      /*  Disable interrupts for timers */
+      /* Disable interrupts for timers */
       HAL_NVIC_DisableIRQ(TIM6_DAC_IRQn);
 
       /* Jump to user application */
@@ -118,6 +118,7 @@ int main(void)
       JumpToApplication();
     }
   }
+
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */

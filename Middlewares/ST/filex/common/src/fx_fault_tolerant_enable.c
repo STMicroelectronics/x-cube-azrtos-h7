@@ -34,7 +34,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_fault_tolerant_enable                           PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.12a      */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -46,7 +46,7 @@
 /*    previous write operation failed, and appropriate action now must    */
 /*    be taken to restore the integrity of the file system.  Once the     */
 /*    recovery effort is completed, the file system is properly restored. */
-/*    An empty log file indicates the previous write operaiton was        */
+/*    An empty log file indicates the previous write operation was        */
 /*    successfully completed and no action needs to be taken at this      */
 /*    point.  If the file system does not have a log file, or the         */
 /*    checksum is not valid, it is an indication either the file system   */
@@ -86,6 +86,10 @@
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  08-25-2022     Tiejun Zhou              Modified comment(s),          */
+/*                                            fixed memory buffer when    */
+/*                                            cache is disabled,          */
+/*                                            resulting in version 6.1.12a*/
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_fault_tolerant_enable(FX_MEDIA *media_ptr, VOID *memory_buffer, UINT memory_size)
@@ -143,11 +147,13 @@ ULONG                         bytes_per_cluster;
            values of zero, endian issues are not important.  */
         /* Force update the available cluster. */
 
+#ifndef FX_DISABLE_CACHE
         /* Invalidate the current logical sector cache.  */
         _fx_utility_logical_sector_flush(media_ptr, ((ULONG64) 1), (ULONG64) (media_ptr -> fx_media_total_sectors), FX_TRUE);
 
         /* Reset the memory pointer.  */
         media_ptr -> fx_media_memory_buffer = media_ptr -> fx_media_sector_cache[0].fx_cached_sector_memory_buffer;
+#endif /* FX_DISABLE_CACHE */
 
         /* Reset the available cluster. */
         media_ptr -> fx_media_available_clusters = 0;
@@ -155,6 +161,7 @@ ULONG                         bytes_per_cluster;
         /* Loop through all FAT sectors in the primary FAT.  The first two entries are
            examined in this loop, but they are always unavailable.  */
         cluster_number =  0;
+#ifndef FX_DISABLE_CACHE
         for (i = 0; i < media_ptr -> fx_media_sectors_per_FAT; i = i + media_ptr -> fx_media_sector_cache_size)
         {
 
@@ -169,6 +176,18 @@ ULONG                         bytes_per_cluster;
             {
                 FAT_read_sectors =  media_ptr -> fx_media_sector_cache_size;
             }
+#else
+        /* Reset the buffer sector.  */
+        media_ptr -> fx_media_memory_buffer_sector = (ULONG64)-1;
+        for (i = 0; i < media_ptr -> fx_media_sectors_per_FAT; i++)
+        {
+
+            /* Calculate the starting next FAT sector.  */
+            FAT_sector =  media_ptr -> fx_media_reserved_sectors + i;
+
+            /* Calculate how many sectors to read.  */
+            FAT_read_sectors =  1;
+#endif /* FX_DISABLE_CACHE */
 
             /* Read the FAT sectors directly from the driver.  */
             media_ptr -> fx_media_driver_request =          FX_DRIVER_READ;

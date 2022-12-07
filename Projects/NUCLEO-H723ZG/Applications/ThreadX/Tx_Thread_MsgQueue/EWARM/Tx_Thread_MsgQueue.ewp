@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.50.6.28611</state>
+                    <state>8.50.9.33458</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -358,7 +358,6 @@
                     <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Include</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/inc/</state>
-                    <state>$PROJ_DIR$/../../../../../../Drivers/BSP/STM32H7xx_Nucleo</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -486,7 +485,7 @@
             <name>AARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>10</version>
+                <version>11</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -641,6 +640,10 @@
                 <option>
                     <name>AsmNoLiteralPool</name>
                     <state>0</state>
+                </option>
+                <option>
+                    <name>PreInclude</name>
+                    <state></state>
                 </option>
             </data>
         </settings>
@@ -1111,15 +1114,6 @@
     </group>
     <group>
         <name>Drivers</name>
-        <group>
-            <name>BSP</name>
-            <group>
-                <name>STM32H7xx_Nucleo</name>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\BSP\STM32H7xx_Nucleo\stm32h7xx_nucleo.c</name>
-                </file>
-            </group>
-        </group>
         <group>
             <name>CMSIS</name>
             <file>

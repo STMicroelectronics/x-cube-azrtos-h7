@@ -22,17 +22,17 @@
 <h2 id="nx_iperf-application-description"><b>Nx_Iperf application description</b></h2>
 <p>This application provides an example of Azure RTOS NetXDuo stack usage . It shows performance when using different modes : TCP_server, UDP_server, TCP_client and UDP_client. The main entry function tx_application_define() is then called by ThreadX during kernel start, at this stage, all NetXDuo resources are created.</p>
 <ul>
-<li>A NX_PACKET_POOL <strong>AppPool</strong> is allocated</li>
-<li>A NX_IP instance <strong>IpInstance</strong> using that pool is initialized</li>
+<li>A NX_PACKET_POOL <strong>NxAppPool</strong> is allocated</li>
+<li>A NX_IP instance <strong>NetXDuoEthIpInstance</strong> using that pool is initialized</li>
 <li>A NX_PACKET_POOL <strong>WebServerPool</strong> is allocated</li>
 <li>The ARP, ICMP and protocols (TCP and UDP) are enabled for the NX_IP instance</li>
 <li>A DHCP client is created.</li>
 </ul>
 <p>The application creates 1 thread :</p>
 <ul>
-<li><strong>AppMainThread</strong> (priority 4, PreemtionThreashold 4) : created with the <i>TX_AUTO_START</i> flag to start automatically.</li>
+<li><strong>NxAppThread</strong> (priority 4, PreemtionThreashold 4) : created with the <i>TX_AUTO_START</i> flag to start automatically.</li>
 </ul>
-<p>The <strong>AppMainThread</strong> starts and perform the following actions:</p>
+<p>The <strong>NxAppThread</strong> starts and perform the following actions:</p>
 <ul>
 <li>Starts the DHCP client</li>
 <li>Waits for the IP address resolution</li>
@@ -153,7 +153,7 @@ place in NXApp_region { section .NetXPoolSection};</code></pre>
 #if defined ( __ICCARM__ ) /* IAR Compiler */
 #pragma location = &quot;.NetXPoolSection&quot;
 
-#elif defined ( __CC_ARM ) /* MDK ARM Compiler */
+#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(&quot;.NetXPoolSection&quot;)))
 
 #elif defined ( __GNUC__ ) /* GNU Compiler */
@@ -168,7 +168,7 @@ static TX_BYTE_POOL nx_app_byte_pool;</code></pre>
 <p>RTOS, Network, ThreadX, NetXDuo, Iperf, UART</p>
 <h3 id="hardware-and-software-environment"><b>Hardware and Software environment</b></h3>
 <ul>
-<li>This application runs on STM32F767ZIxx devices</li>
+<li>This application runs on STM32H735xx devices</li>
 <li><p>This application has been tested with STMicroelectronics STM32H735G-DK boards Revision: MB1520-H735I-B02 and can be easily tailored to any other supported device and development board.</p></li>
 <li>This application uses USART3 to display logs, the hyperterminal configuration is as follows:
 <ul>

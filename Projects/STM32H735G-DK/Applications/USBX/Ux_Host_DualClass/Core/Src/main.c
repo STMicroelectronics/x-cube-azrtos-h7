@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -52,7 +52,7 @@ void SystemClock_Config(void);
 static void MPU_Config(void);
 /* USER CODE BEGIN PFP */
 #if defined ( __GNUC__) && !defined(__clang__)
-/* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
+/* With GCC, small printf (option LD Linker->Libraries->Small printf
    set to 'Yes') calls __io_putchar() */
 #define UART_DISPLAY int __io_putchar(int ch)
 #else
@@ -197,7 +197,6 @@ UART_DISPLAY
 
   return ch;
 }
-
 /* USER CODE END 4 */
 
 /* MPU Configuration */

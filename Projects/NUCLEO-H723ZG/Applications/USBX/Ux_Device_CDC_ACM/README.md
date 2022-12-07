@@ -1,4 +1,3 @@
-
 ## <b>Ux_Device_CDC_ACM application description </b>
 
 This application provides an example of Azure RTOS USBX stack usage on STM32H723ZG board, it shows how to develop USB Device communication Class "CDC_ACM" based application.
@@ -7,7 +6,7 @@ and associated Class descriptor report to build a compliant USB CDC_ACM device.
 At the beginning ThreadX call the entry function tx_application_define(), at this stage, all USBx resources are initialized, the CDC_ACM Class driver is registered and
 the application creates 3 threads with the same priorities :
 
-  - usbx_app_thread_entry (Prio : 20; PreemptionPrio : 20) used to initialize USB OTG HAL PCD driver and start the device.
+  - app_ux_device_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device.
   - usbx_cdc_acm_read_thread_entry (Prio : 20; PreemptionPrio : 20) used to Read the received data from Virtual COM Port.
   - usbx_cdc_acm_write_thread_entry (Prio : 20; PreemptionPrio : 20) used to send the received data over UART.
 
@@ -22,8 +21,9 @@ During enumeration phase, three communication pipes "endpoints" are declared in 
    When data are received through this endpoint they are saved in the buffer "UserRxBufferFS" then they are transmitted
    over UART using DMA mode and in meanwhile the OUT endpoint is NAKed.
    Once the transmission is over, the OUT endpoint is prepared to receive next packet in HAL_UART_RxCpltCallback().
+
  - 1 x Interrupt IN endpoint for setting and getting serial-port parameters:
-   When control setup is received, the corresponding request is executed in ux_app_parameters_change().
+   When control setup is received, the corresponding request is executed in USBD_CDC_ACM_ParameterChange.
 
 In this application, two requests are implemented:
 
@@ -55,8 +55,7 @@ User is familiar with USB 2.0 "Universal Serial BUS" Specification and CDC_ACM c
 
 #### <b> Known limitations</b>
 
-When creating an USBX based application with MDK-ARM AC6 compiler make sure to disable the optimization for stm32h7xx_ll_usb.c file, otherwise application might not work correctly.
-This limitation will be fixed in future release.
+None
 
 ### <b>Notes</b>
 
@@ -83,16 +82,16 @@ This limitation will be fixed in future release.
    This require changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+     place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	```
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);

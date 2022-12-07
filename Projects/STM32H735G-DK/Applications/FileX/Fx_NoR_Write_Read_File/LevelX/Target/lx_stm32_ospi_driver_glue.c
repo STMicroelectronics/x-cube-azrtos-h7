@@ -27,11 +27,6 @@
   ChipSelectBoundary    = 0
   DelayBlockBypass      = used
  */
-extern OSPI_HandleTypeDef hospi1;
-
-#if (LX_STM32_OSPI_INIT == 1)
-extern void MX_OCTOSPI1_Init(void);
-#endif
 
 static uint8_t ospi_memory_reset            (OSPI_HandleTypeDef *hospi);
 static uint8_t ospi_set_write_enable        (OSPI_HandleTypeDef *hospi);
@@ -64,24 +59,24 @@ INT lx_stm32_ospi_lowlevel_init(UINT instance)
 
   /* Call the DeInit function to reset the driver */
 #if (LX_STM32_OSPI_INIT == 1)
-  hospi1.Instance = OCTOSPI1;
-  if (HAL_OSPI_DeInit(&hospi1) != HAL_OK)
+  ospi_handle.Instance = OCTOSPI1;
+  if (HAL_OSPI_DeInit(&ospi_handle) != HAL_OK)
   {
     return 1;
   }
 
   /* Init the OSPI */
-  MX_OCTOSPI1_Init();
+  ospi_driver_init();
 #endif
 
   /* OSPI memory reset */
-  if (ospi_memory_reset(&hospi1) != 0)
+  if (ospi_memory_reset(&ospi_handle) != 0)
   {
     return 1;
   }
 
   /* Enable octal mode */
-  if (ospi_set_octal_mode(&hospi1) != 0)
+  if (ospi_set_octal_mode(&ospi_handle) != 0)
   {
     return 1;
   }
@@ -152,13 +147,13 @@ INT lx_stm32_ospi_get_status(UINT instance)
   /* USER CODE END GET_STATUS_CMD */
 
   /* Configure the command */
-  if (HAL_OSPI_Command(&hospi1, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Command(&ospi_handle, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
 
   /* Reception of the data */
-  if (HAL_OSPI_Receive(&hospi1, reg, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Receive(&ospi_handle, reg, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
@@ -247,13 +242,13 @@ INT lx_stm32_ospi_read(UINT instance, ULONG *address, ULONG *buffer, ULONG words
   /* USER CODE END OSPI_READ_CMD */
 
   /* Configure the command */
-  if (HAL_OSPI_Command(&hospi1, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Command(&ospi_handle, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
 
   /* Reception of the data */
-  if (HAL_OSPI_Receive_DMA(&hospi1, (uint8_t*)buffer) != HAL_OK)
+  if (HAL_OSPI_Receive_DMA(&ospi_handle, (uint8_t*)buffer) != HAL_OK)
   {
     return 1;
   }
@@ -334,19 +329,19 @@ INT lx_stm32_ospi_write(UINT instance, ULONG *address, ULONG *buffer, ULONG word
     s_command.NbData  = current_size;
 
     /* Enable write operations */
-    if (ospi_set_write_enable(&hospi1) != 0)
+    if (ospi_set_write_enable(&ospi_handle) != 0)
     {
       return 1;
     }
 
     /* Configure the command */
-    if (HAL_OSPI_Command(&hospi1, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_OSPI_Command(&ospi_handle, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
       return 1;
     }
 
     /* Transmission of the data */
-    if (HAL_OSPI_Transmit_DMA(&hospi1, (uint8_t*)data_buffer) != HAL_OK)
+    if (HAL_OSPI_Transmit_DMA(&ospi_handle, (uint8_t*)data_buffer) != HAL_OK)
     {
       return 1;
     }
@@ -357,7 +352,7 @@ INT lx_stm32_ospi_write(UINT instance, ULONG *address, ULONG *buffer, ULONG word
     }
 
     /* Configure automatic polling mode to wait for end of program */
-    if (ospi_auto_polling_ready(&hospi1, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != 0)
+    if (ospi_auto_polling_ready(&ospi_handle, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != 0)
     {
       return 1;
     }
@@ -430,19 +425,19 @@ INT lx_stm32_ospi_erase(UINT instance, ULONG block, ULONG erase_count, UINT full
   /* USER CODE END OSPI_ERASE_CMD */
 
   /* Enable write operations */
-  if (ospi_set_write_enable(&hospi1) != 0)
+  if (ospi_set_write_enable(&ospi_handle) != 0)
   {
     return 1;
   }
 
   /* Send the command */
-  if (HAL_OSPI_Command(&hospi1, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Command(&ospi_handle, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
 
   /* Configure automatic polling mode to wait for end of erase */
-  if (ospi_auto_polling_ready(&hospi1, LX_STM32_OSPI_BULK_ERASE_MAX_TIME) != 0)
+  if (ospi_auto_polling_ready(&ospi_handle, LX_STM32_OSPI_BULK_ERASE_MAX_TIME) != 0)
   {
     return 1;
   }
@@ -515,14 +510,14 @@ static uint8_t ospi_memory_reset(OSPI_HandleTypeDef *hospi)
   s_command.SIOOMode              = HAL_OSPI_SIOO_INST_EVERY_CMD;
 
   /* Send the command */
-  if (HAL_OSPI_Command(&hospi1, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Command(&ospi_handle, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
 
   /* Send the reset memory command */
   s_command.Instruction = LX_STM32_OSPI_RESET_MEMORY_CMD;
-  if (HAL_OSPI_Command(&hospi1, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Command(&ospi_handle, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
@@ -540,12 +535,12 @@ static uint8_t ospi_memory_reset(OSPI_HandleTypeDef *hospi)
   s_config.Interval      = 0x10;
   s_config.AutomaticStop = HAL_OSPI_AUTOMATIC_STOP_ENABLE;
 
-  if (HAL_OSPI_Command(&hospi1, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Command(&ospi_handle, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
 
-  if (HAL_OSPI_AutoPolling(&hospi1, &s_config, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_AutoPolling(&ospi_handle, &s_config, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
@@ -584,7 +579,7 @@ static uint8_t ospi_set_write_enable(OSPI_HandleTypeDef *hospi)
   /* DTR mode is enabled */
   s_command.InstructionDtrMode    = HAL_OSPI_INSTRUCTION_DTR_ENABLE;
 
-  if (HAL_OSPI_Command(&hospi1, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Command(&ospi_handle, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
@@ -642,13 +637,13 @@ static uint8_t ospi_auto_polling_ready(OSPI_HandleTypeDef *hospi, uint32_t timeo
 
   while( LX_STM32_OSPI_CURRENT_TIME() - start < timeout)
   {
-     if (HAL_OSPI_Command(&hospi1, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+     if (HAL_OSPI_Command(&ospi_handle, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
       status = 1;
       break;
     }
 
-    if (HAL_OSPI_Receive(&hospi1, reg, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_OSPI_Receive(&ospi_handle, reg, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
       status = 1;
       break;
@@ -705,7 +700,7 @@ static uint8_t ospi_set_octal_mode(OSPI_HandleTypeDef *hospi)
   /* Add a short delay to let the IP settle before starting the command */
   HAL_Delay(1);
 
-  if (HAL_OSPI_Command(&hospi1, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Command(&ospi_handle, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
@@ -718,12 +713,12 @@ static uint8_t ospi_set_octal_mode(OSPI_HandleTypeDef *hospi)
   s_command.DataMode    = HAL_OSPI_DATA_1_LINE;
   s_command.NbData      = 1;
 
-  if (HAL_OSPI_Command(&hospi1, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Command(&ospi_handle, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
 
-  if (HAL_OSPI_AutoPolling(&hospi1, &s_config, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_AutoPolling(&ospi_handle, &s_config, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
@@ -736,12 +731,12 @@ static uint8_t ospi_set_octal_mode(OSPI_HandleTypeDef *hospi)
 
   reg[0] = LX_STM32_OSPI_DUMMY_CYCLES_CR_CFG;
 
-  if (HAL_OSPI_Command(&hospi1, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Command(&ospi_handle, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
 
-  if (HAL_OSPI_Transmit(&hospi1, reg, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Transmit(&ospi_handle, reg, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
@@ -752,7 +747,7 @@ static uint8_t ospi_set_octal_mode(OSPI_HandleTypeDef *hospi)
   s_command.AddressMode = HAL_OSPI_ADDRESS_NONE;
   s_command.DataMode    = HAL_OSPI_DATA_NONE;
 
-  if (HAL_OSPI_Command(&hospi1, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Command(&ospi_handle, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
@@ -762,12 +757,12 @@ static uint8_t ospi_set_octal_mode(OSPI_HandleTypeDef *hospi)
   s_command.Instruction = LX_STM32_OSPI_READ_STATUS_REG_CMD;
   s_command.DataMode    = HAL_OSPI_DATA_1_LINE;
 
-  if (HAL_OSPI_Command(&hospi1, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Command(&ospi_handle, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
 
-  if (HAL_OSPI_AutoPolling(&hospi1, &s_config, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_AutoPolling(&ospi_handle, &s_config, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
@@ -782,17 +777,17 @@ static uint8_t ospi_set_octal_mode(OSPI_HandleTypeDef *hospi)
 
   reg[0] = LX_STM32_OSPI_CR2_DOPI;
 
-  if (HAL_OSPI_Command(&hospi1, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Command(&ospi_handle, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
 
-  if (HAL_OSPI_Transmit(&hospi1, reg, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Transmit(&ospi_handle, reg, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
 
-  if (ospi_auto_polling_ready(&hospi1, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != 0)
+  if (ospi_auto_polling_ready(&ospi_handle, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != 0)
   {
     return 1;
   }
@@ -812,12 +807,12 @@ static uint8_t ospi_set_octal_mode(OSPI_HandleTypeDef *hospi)
   s_command.DataDtrMode        = HAL_OSPI_DATA_DTR_ENABLE;
   s_command.DQSMode            = HAL_OSPI_DQS_ENABLE;
 
-  if (HAL_OSPI_Command(&hospi1, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Command(&ospi_handle, &s_command, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
 
-  if (HAL_OSPI_Receive(&hospi1, reg, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_OSPI_Receive(&ospi_handle, reg, HAL_OSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }

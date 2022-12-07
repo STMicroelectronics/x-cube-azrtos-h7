@@ -27,10 +27,14 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "ux_api.h"
+#include "ux_device_descriptors.h"
+#include "ux_device_cdc_ecm.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "usb_otg.h"
+#include "ux_dcd_stm32.h"
+#include "ux_network_driver.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -39,6 +43,11 @@ extern "C" {
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
+#define USBX_DEVICE_MEMORY_STACK_SIZE       38*1024
+
+#define UX_DEVICE_APP_THREAD_STACK_SIZE   1024
+#define UX_DEVICE_APP_THREAD_PRIO         10
+
 /* USER CODE BEGIN EC */
 
 /* USER CODE END EC */
@@ -52,13 +61,29 @@ extern "C" {
 UINT MX_USBX_Device_Init(VOID *memory_ptr);
 
 /* USER CODE BEGIN EFP */
-void MX_USB_Device_Init(void);
+void USBX_APP_Device_Init(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
 /* USER CODE END PD */
+
+#ifndef UX_DEVICE_APP_THREAD_NAME
+#define UX_DEVICE_APP_THREAD_NAME  "USBX Device App Main Thread"
+#endif
+
+#ifndef UX_DEVICE_APP_THREAD_PREEMPTION_THRESHOLD
+#define UX_DEVICE_APP_THREAD_PREEMPTION_THRESHOLD  UX_DEVICE_APP_THREAD_PRIO
+#endif
+
+#ifndef UX_DEVICE_APP_THREAD_TIME_SLICE
+#define UX_DEVICE_APP_THREAD_TIME_SLICE  TX_NO_TIME_SLICE
+#endif
+
+#ifndef UX_DEVICE_APP_THREAD_START_OPTION
+#define UX_DEVICE_APP_THREAD_START_OPTION  TX_AUTO_START
+#endif
 
 /* USER CODE BEGIN 1 */
 

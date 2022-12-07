@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_media_volume_get_extended                       PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.11       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -79,6 +79,10 @@
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  04-25-2022     Bhupendra Naphade        Modified comment(s), and      */
+/*                                            updated check for           */
+/*                                            volume name,                */
+/*                                            resulting in version 6.1.11 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_media_volume_get_extended(FX_MEDIA *media_ptr, CHAR *volume_name, UINT volume_name_buffer_length, UINT volume_source)
@@ -151,9 +155,10 @@ FX_DIR_ENTRY dir_entry;
 
             /* Check for a volume name.  */
 #ifdef FX_ENABLE_EXFAT
-            if (dir_entry.fx_dir_entry_attributes & FX_VOLUME || dir_entry.fx_dir_entry_type == FX_EXFAT_DIR_ENTRY_TYPE_VOLUME_LABEL)
+            if (((media_ptr -> fx_media_FAT_type == FX_exFAT) && ((dir_entry.fx_dir_entry_attributes & FX_VOLUME) || (dir_entry.fx_dir_entry_type == FX_EXFAT_DIR_ENTRY_TYPE_VOLUME_LABEL))) 
+                    || ((media_ptr -> fx_media_FAT_type != FX_exFAT) && (dir_entry.fx_dir_entry_attributes & FX_VOLUME) && ((UCHAR)dir_entry.fx_dir_entry_name[0] != (UCHAR)FX_DIR_ENTRY_FREE)))
 #else
-            if (dir_entry.fx_dir_entry_attributes & FX_VOLUME)
+            if ((dir_entry.fx_dir_entry_attributes & FX_VOLUME) && ((UCHAR)dir_entry.fx_dir_entry_name[0] != (UCHAR)FX_DIR_ENTRY_FREE))
 #endif /* FX_ENABLE_EXFAT */
             {
 
