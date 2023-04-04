@@ -18,8 +18,7 @@ LR_IROM1 0x08000000 0x00100000  {    ; load region size_region
   RW_UsbxPool 0x24036000 0xF800 {
    *(.UsbxPoolSection)
   }
-  RW_NxServerPool 0x24046000 0x12C0 {
-   *(.NxServerPoolSection)
+  RW_UsbxApp 0x24046000 0x12C0 {
+   *(.UsbxAppSection)
   }
 }
-

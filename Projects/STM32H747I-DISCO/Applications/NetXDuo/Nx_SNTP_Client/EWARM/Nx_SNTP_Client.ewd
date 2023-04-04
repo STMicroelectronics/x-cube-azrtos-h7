@@ -80,7 +80,7 @@
                 </option>
                 <option>
                     <name>OCProductVersion</name>
-                    <state>8.50.1.24770</state>
+                    <state>8.32.3.20186</state>
                 </option>
                 <option>
                     <name>OCDynDriverList</name>
@@ -1123,7 +1123,7 @@
                 <option>
                     <name>CCSTLinkProbeList</name>
                     <version>1</version>
-                    <state>0</state>
+                    <state>3</state>
                 </option>
             </data>
         </settings>
@@ -1565,7 +1565,7 @@
                 </option>
                 <option>
                     <name>OCProductVersion</name>
-                    <state>8.50.1.24770</state>
+                    <state>8.32.3.20186</state>
                 </option>
                 <option>
                     <name>OCDynDriverList</name>
@@ -2608,7 +2608,7 @@
                 <option>
                     <name>CCSTLinkProbeList</name>
                     <version>1</version>
-                    <state>0</state>
+                    <state>3</state>
                 </option>
             </data>
         </settings>

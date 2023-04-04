@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -50,7 +50,6 @@ void NMI_Handler(void);
 void HardFault_Handler(void);
 void MemManage_Handler(void);
 void BusFault_Handler(void);
-void UsageFault_Handler(void);
 void DebugMon_Handler(void);
 void TIM6_DAC_IRQHandler(void);
 void ETH_IRQHandler(void);

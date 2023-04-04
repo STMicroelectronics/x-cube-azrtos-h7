@@ -150,7 +150,6 @@ SECTIONS
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
   } >RAM_D1
-
   /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :
   {
@@ -161,8 +160,7 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >RAM_D1
-
-     .tcp_sec (NOLOAD) : {
+    .tcp_sec (NOLOAD) : {
 
     . = ABSOLUTE(0x24030000);
     *(.RxDecripSection)
@@ -177,14 +175,12 @@ SECTIONS
  {
     . = ABSOLUTE(0x24030100);
     *(.NxServerPoolSection)
-    
-    . = ABSOLUTE(0x24032100);
-    *(.NetXPoolSection) 
+
+    . = ABSOLUTE(0x24034100);
+    *(.NetXPoolSection)
 
  } >RAM_D1 AT >FLASH
-
-
-  /* Remove information from the compiler libraries */
+  /* Remove information from the standard libraries */
   /DISCARD/ :
   {
     libc.a ( * )

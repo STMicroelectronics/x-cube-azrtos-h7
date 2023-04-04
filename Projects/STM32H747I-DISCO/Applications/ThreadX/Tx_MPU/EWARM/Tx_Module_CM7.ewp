@@ -227,6 +227,7 @@
                     <state>USE_HAL_DRIVER</state>
                     <state> STM32H747xx</state>
                     <state>CORE_CM7</state>
+                    <state>TXM_MODULE_INCLUDE_USER_DEFINE_FILE</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -354,6 +355,7 @@
                     <state>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common_modules\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\ports_module\cortex_m7\iar\inc</state>
+                    <state>$PROJ_DIR$\..\Inc</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>

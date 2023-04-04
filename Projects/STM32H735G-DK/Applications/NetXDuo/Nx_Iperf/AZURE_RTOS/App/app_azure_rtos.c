@@ -3,11 +3,11 @@
   ******************************************************************************
   * @file    app_azure_rtos.c
   * @author  MCD Application Team
-  * @brief   azure_rtos application implementation file
+  * @brief   app_azure_rtos application implementation file
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "main.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

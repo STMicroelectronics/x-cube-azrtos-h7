@@ -33,7 +33,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define COMPOSITE_DEVICE 0x000000EF
+#define COMPOSITE_DEVICE                0x000000EF
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -166,7 +166,6 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
   }
 
   /* USER CODE BEGIN MX_USBX_Host_Init1 */
-
 
   /* Allocate the stack for cdc_acm receive thread */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
@@ -548,7 +547,6 @@ VOID USBX_APP_Host_Init(VOID)
   USBH_UsrLog("Connect your composite HID/CDC_ACM Device");
 
   /* USER CODE END USB_Host_Init_PreTreatment1 */
-
 }
 
 /**
@@ -602,5 +600,4 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     }
   }
 }
-
 /* USER CODE END 1 */

@@ -1,6 +1,7 @@
-## <b>Ux_Device_HID application description</b>
 
-This application provides an example of Azure RTOS USBX stack usage on STM32H723ZG board,
+# <b>Ux_Device_HID application description</b>
+
+This application provides an example of Azure RTOS USBX stack usage on NUCLEO-H723ZG board,
 it shows how to develop USB Device Human Interface "HID" mouse based application.
 
 The application is designed to emulate an USB HID mouse device, the code provides all required device descriptors framework
@@ -9,19 +10,18 @@ and associated Class descriptor report to build a compliant USB HID mouse device
 At the beginning ThreadX call the entry function tx_application_define(), at this stage, all USBx resources
 are initialized, the HID Class driver is registered and the application creates 2 threads with the same priorities :
 
-  - app_ux_device_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device.
+  - app_ux_device_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB_OTG HAL PCD driver and start the device.
   - usbx_hid_thread_entry (Prio : 20; PreemptionPrio : 20) used to send HID reports to move automatically the PC host machine cursor.
-
 To customize the HID application by sending the mouse position step by step every 10ms.
 For each 10ms, the application calls the GetPointerData() API to update the mouse position (x, y) and send
 the report buffer through the ux_device_class_hid_event_set() API.
 
 #### <b>Expected success behavior</b>
 
-When plugged to PC host, the STM32H723ZG must be properly enumerated as an USB HID mouse device.
+When plugged to PC host, the NUCLEO-H723ZG must be properly enumerated as an USB HID mouse device.
 During the enumeration phase, device provides host with the requested descriptors (Device, configuration, string).
 Those descriptors are used by host driver to identify the device capabilities.
-Once the STM32H723ZG USB device successfully completed the enumeration phase, the device sends a HID report after a user button press.
+Once the NUCLEO-H723ZG USB device successfully completed the enumeration phase, the device sends a HID report after a user button press.
 Each report sent should move the mouse cursor by one step on host side.
 
 #### <b>Error behaviors</b>
@@ -46,7 +46,7 @@ The remote wakeup feature is not yet implemented (used to bring the USB suspende
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -100,7 +100,7 @@ RTOS, ThreadX, USBXDevice, USB_OTG, Full Speed, HID, Mouse,
 ### <b>Hardware and Software environment</b>
 
   - This example runs on STM32H723xx devices.
-  - This example has been tested with STMicroelectronics STM32H723ZG boards Revision MB1364-H723ZG-E01 and can be easily tailored to any other supported device and development board.
+  - This example has been tested with STMicroelectronics NUCLEO-H723ZG boards Revision MB1364-H723ZG-E01 and can be easily tailored to any other supported device and development board.
 
 ### <b>How to use it ?</b>
 

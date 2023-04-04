@@ -175,6 +175,7 @@ UINT    _ux_dcd_stm32_transfer_abort(UX_DCD_STM32 *dcd_stm32, UX_SLAVE_TRANSFER 
 UINT    _ux_dcd_stm32_transfer_request(UX_DCD_STM32 *dcd_stm32, UX_SLAVE_TRANSFER *transfer_request);
 #else
 UINT    _ux_dcd_stm32_transfer_run(UX_DCD_STM32 *dcd_stm32, UX_SLAVE_TRANSFER *transfer_request);
+VOID    _ux_dcd_stm32_setup_isr_pending(UX_DCD_STM32 *dcd_stm32);
 #endif /* !defined(UX_DEVICE_STANDALONE) */
 
 UINT    _ux_dcd_stm32_initialize(ULONG dcd_io, ULONG parameter);

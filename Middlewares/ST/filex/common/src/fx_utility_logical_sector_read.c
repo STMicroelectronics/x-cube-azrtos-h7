@@ -38,7 +38,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_utility_logical_sector_read                     PORTABLE C      */
-/*                                                           6.1.12a      */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -96,10 +96,10 @@
 /*                                            updated check for logical   */
 /*                                            sector value,               */
 /*                                            resulting in version 6.1.6  */
-/*  08-25-2022     Tiejun Zhou              Modified comment(s),          */
+/*  10-31-2022     Tiejun Zhou              Modified comment(s),          */
 /*                                            fixed memory buffer when    */
 /*                                            cache is disabled,          */
-/*                                            resulting in version 6.1.12a*/
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_utility_logical_sector_read(FX_MEDIA *media_ptr, ULONG64 logical_sector,

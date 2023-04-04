@@ -63,7 +63,7 @@
 TX_THREAD       fx_app_thread;
 
 /* Buffer for FileX FX_MEDIA sector cache. */
-ALIGN_32BYTES (uint32_t fx_nor_qspi_media_memory[FX_NOR_QSPI_SECTOR_SIZE / sizeof(uint32_t)]);
+uint32_t fx_nor_qspi_media_memory[FX_NOR_QSPI_SECTOR_SIZE / sizeof(uint32_t)];
 /* Define FileX global data structures.  */
 FX_MEDIA        nor_qspi_flash_disk;
 

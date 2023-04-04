@@ -38,17 +38,15 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
 #define SD_READ_FLAG   0x01
 #define SD_WRITE_FLAG  0x02
 #define SD_TIMEOUT     100U
-
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 extern TX_EVENT_FLAGS_GROUP EventFlag;
-extern BSP_SD_CardInfo USBD_SD_CardInfo;
+extern HAL_SD_CardInfoTypeDef USBD_SD_CardInfo;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -116,18 +114,17 @@ UINT USBD_STORAGE_Read(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
   ULONG ReadFlags = 0U;
 
   /* Check if the SD card is present */
-  if (BSP_SD_IsDetected(SD_INSTANCE) != SD_NOT_PRESENT)
+  if (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_5) == GPIO_PIN_SET)
   {
     /* Check id SD card is ready */
-    if(check_sd_status() != BSP_ERROR_NONE)
+    if(check_sd_status() != HAL_OK)
     {
       Error_Handler();
     }
 
     /* Start the Dma write */
-    status =  BSP_SD_ReadBlocks_DMA(SD_INSTANCE,(uint32_t *) data_pointer, lba, number_blocks);
-
-    if(status != BSP_ERROR_NONE)
+    status =  HAL_SD_ReadBlocks_DMA(&hsd1, data_pointer, lba, number_blocks);
+    if(status != HAL_OK)
     {
       Error_Handler();
     }
@@ -170,18 +167,18 @@ UINT USBD_STORAGE_Write(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
   ULONG WriteFlags = 0U;
 
   /* Check if the SD card is present */
-  if (BSP_SD_IsDetected(SD_INSTANCE) != SD_NOT_PRESENT)
+  if (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_5) == GPIO_PIN_SET)
   {
     /* Check id SD card is ready */
-    if(check_sd_status() != BSP_ERROR_NONE)
+    if(check_sd_status() != HAL_OK)
     {
       Error_Handler();
     }
 
     /* Start the Dma write */
-    status = BSP_SD_WriteBlocks_DMA(SD_INSTANCE,(uint32_t *) data_pointer, lba, number_blocks);
+    status = HAL_SD_WriteBlocks_DMA(&hsd1, data_pointer, lba, number_blocks);
 
-    if(status != BSP_ERROR_NONE)
+    if(status != HAL_OK)
     {
       Error_Handler();
     }
@@ -252,7 +249,7 @@ UINT USBD_STORAGE_Status(VOID *storage_instance, ULONG lun, ULONG media_id,
 }
 
 /**
-  * @brief  USBD_STORAGE_Status
+  * @brief  USBD_STORAGE_Notification
   *         This function is invoked to obtain the notification of the device.
   * @param  storage_instance : Pointer to the storage class instance.
   * @param  lun: Logical unit number is the command is directed to.
@@ -326,7 +323,7 @@ ULONG USBD_STORAGE_GetMediaBlocklength(VOID)
   * @param  Instance
   * @retval none
   */
-void BSP_SD_WriteCpltCallback(uint32_t Instance)
+void HAL_SD_TxCpltCallback(SD_HandleTypeDef *hsd)
 {
   if (tx_event_flags_set(&EventFlag, SD_WRITE_FLAG, TX_OR) != TX_SUCCESS)
   {
@@ -340,7 +337,7 @@ void BSP_SD_WriteCpltCallback(uint32_t Instance)
   * @param  Instance
   * @retval None
   */
-void BSP_SD_ReadCpltCallback(uint32_t Instance)
+void HAL_SD_RxCpltCallback(SD_HandleTypeDef *hsd)
 {
   if (tx_event_flags_set(&EventFlag, SD_READ_FLAG, TX_OR) != TX_SUCCESS)
   {
@@ -360,13 +357,13 @@ static int32_t check_sd_status(VOID)
 
   while (tx_time_get() - start < SD_TIMEOUT)
   {
-    if (BSP_SD_GetCardState(SD_INSTANCE) == SD_TRANSFER_OK)
+    if (HAL_SD_GetCardState(&hsd1) == HAL_SD_CARD_TRANSFER)
     {
-      return BSP_ERROR_NONE;
+      return HAL_OK;
     }
   }
 
-  return BSP_ERROR_BUSY;
+  return HAL_ERROR;
 }
 
 /* USER CODE END 1 */

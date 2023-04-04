@@ -41,7 +41,7 @@ The **AppTCPThread**, once started:
 
 #### <b>Error behaviors</b>
 
-+ The Yellow LED is toggling to indicate any error that have occurred.
++ The Red LED is toggling to indicate any error that have occurred.
 + In case the message exchange is not completed a failure message is printed on the HyperTerminal showing the actual sent message compared to the expected ones.
 
 #### <b>Assumptions if any</b>
@@ -82,7 +82,7 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -96,17 +96,17 @@ None
    using the "first_unused_memory" argument.
    This require changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
-     ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+    ```
+    place in RAM_region    { last section FREE_MEM };
+    ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	```
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -114,7 +114,7 @@ None
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	```
+    ```
 
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
@@ -171,7 +171,6 @@ static TX_BYTE_POOL nx_app_byte_pool;
 ```
 For more details about the MPU configuration please refer to the [AN4838](https://www.st.com/resource/en/application_note/dm00272912-managing-memory-protection-unit-in-stm32-mcus-stmicroelectronics.pdf)
 
-
 ### <b>Keywords</b>
 
 RTOS, Network, ThreadX, NetXDuo, TCP, UART
@@ -182,7 +181,7 @@ RTOS, Network, ThreadX, NetXDuo, TCP, UART
   - This example has been tested with STMicroelectronics NUCLEO-H723ZG boards Revision MB1364-H723ZG-E01
     and can be easily tailored to any other supported device and development board.
 
- - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
+  - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
       - BaudRate = 115200 baud
       - Word Length = 8 Bits
       - Stop Bit = 1

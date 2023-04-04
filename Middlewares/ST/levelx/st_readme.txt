@@ -6,6 +6,11 @@
   *          Azure RTOS LeveLX for STM32 devices.
   ******************************************************************************
   */
+### V6.2.0 (23-12-2022) ###
+========================
+- Upgrade to Azure RTOS LeveLX 6.2.0
+- Add STM32H5/STM32WBA series to Azure RTOS licensed hardware list
+
 ### V6.1.12 (30-09-2022) ###
 ========================
 - Upgrade to Azure RTOS LeveLX 6.1.12

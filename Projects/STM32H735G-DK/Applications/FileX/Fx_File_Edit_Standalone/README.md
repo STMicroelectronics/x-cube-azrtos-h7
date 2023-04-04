@@ -1,7 +1,6 @@
-
 ## <b>Fx_File_Edit_Standalone Application Description</b>
 
-This application provides an example of FileX stack usage on STM32H735G board, running in standalone mode (without ThreadX). It demonstrates how to create a Fat File system on the SD card memory using FileX API.
+This application provides an example of FileX stack usage on STM32H735G-DK board, running in standalone mode (without ThreadX). It demonstrates how to create a Fat File system on the SD card memory using FileX API.
 
 The application is designed to execute file operations on the SD card, it provides all required software code for properly managing it.
 
@@ -11,7 +10,7 @@ Upon successful opening of the created SDIO-Disk media, FileX continues with cre
 
 
 As stated earlier, the present application runs in standalone mode without ThreadX, for this reason, the standalone variant of fileX is used, plus the following flags need to be set in fx_user.h:
-  
+
 -  #define FX_SINGLE_THREAD
 -  #define FX_STANDALONE_ENABLE
 
@@ -22,13 +21,14 @@ As stated earlier, the present application runs in standalone mode without Threa
 
 #### <b>Error behaviors</b>
 
-- On failure, the red LED should start blinking.
+- On failure, the LED_RED should start blinking.
 - Error handler is called at the spot where the error occurred.
 
 #### <b>Assumptions if any</b>
-None
+None.
 
 #### <b>Known limitations</b>
+
 No SD card insertion/removal mechanisms are implemented.
 
 ### <b>Notes</b>
@@ -42,20 +42,19 @@ No SD card insertion/removal mechanisms are implemented.
 
 ### <b>Keywords</b>
 
-FileX, File System, FAT32, SDMMC
+FileX, File system, SDMMC, FAT32
+
 
 ### <b>Hardware and Software environment</b>
 
-  - This application runs on  STM32H735xx devices.
-  - This application has been tested with STMicroelectronics STM32H735G boards Revision: MB1520-H735I-B02.
+  - This application runs on STM32H735xx devices.
+  - This application has been tested with STMicroelectronics STM32H735G-DK boards Revision: MB1520-H735I-B02.
     and can be easily tailored to any other supported device and development board.
-
 
 ### <b>How to use it ?</b>
 
 In order to make the program work, you must do the following :
 
- - Open your preferred toolchain
- - Rebuild all files and load your image into target memory
- - Run the application
- 
+  - Open your preferred toolchain
+  - Rebuild all files and load your image into target memory
+  - Run the application

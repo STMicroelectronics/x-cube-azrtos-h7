@@ -57,7 +57,18 @@ int32_t nx_eth_phy_init(void)
 }
 
 /**
-  * @brief  get the Phy link status.
+  * @brief  set the Phy link state.
+  * @param  LinkState
+  * @retval the link status.
+  */
+
+int32_t nx_eth_phy_set_link_state(int32_t LinkState)
+{
+    return (LAN8742_SetLinkState(&LAN8742, LinkState));
+}
+
+/**
+  * @brief  get the Phy link state.
   * @param  none
   * @retval the link status.
   */

@@ -42,7 +42,7 @@ extern "C" {
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
-#define USBX_HOST_MEMORY_STACK_SIZE     1024 * 18
+#define USBX_HOST_MEMORY_STACK_SIZE     1024 * 24
 
 #define UX_HOST_APP_THREAD_STACK_SIZE   1024
 #define UX_HOST_APP_THREAD_PRIO         10
@@ -59,6 +59,7 @@ extern "C" {
 #define USBH_ErrLog(...)   printf("ERROR: ") ;\
                            printf(__VA_ARGS__);\
                            printf("\n");
+
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
@@ -67,7 +68,6 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr);
 /* USER CODE BEGIN EFP */
 VOID USBX_APP_Host_Init(VOID);
 void USBH_DriverVBUS(uint8_t state);
-
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -92,13 +92,11 @@ void USBH_DriverVBUS(uint8_t state);
 #endif
 
 /* USER CODE BEGIN 1 */
-
 typedef enum
 {
   USB_VBUS_FALSE = 0,
   USB_VBUS_TRUE,
 } USB_VBUS_State;
-
 /* USER CODE END 1 */
 
 #ifdef __cplusplus

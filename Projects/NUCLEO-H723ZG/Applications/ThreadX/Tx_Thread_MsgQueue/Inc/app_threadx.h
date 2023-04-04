@@ -30,6 +30,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "main.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -65,6 +66,7 @@ extern "C" {
 #define TX_APP_THREAD_AUTO_START                TX_AUTO_START
 #endif
 /* USER CODE BEGIN MTD */
+
 /* USER CODE END MTD */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -80,6 +82,7 @@ void MsgSenderThreadOne_Entry(ULONG thread_input);
 /* USER CODE END EFP */
 
 /* USER CODE BEGIN 1 */
+
 /* USER CODE END 1 */
 
 #ifdef __cplusplus

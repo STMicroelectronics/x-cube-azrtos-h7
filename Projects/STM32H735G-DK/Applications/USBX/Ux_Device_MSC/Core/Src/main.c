@@ -17,8 +17,9 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 #include "app_threadx.h"
+#include "main.h"
+#include "sdmmc.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -43,7 +44,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-BSP_SD_CardInfo                     USBD_SD_CardInfo;
+HAL_SD_CardInfoTypeDef                     USBD_SD_CardInfo;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -90,28 +91,23 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  BSP_LED_Init(LED_RED);
-
-  BSP_SD_Init(SD_INSTANCE);
-
-  while(BSP_SD_IsDetected(0) == SD_NOT_PRESENT)
-  {
-  }
-
-  /* Get SD card info */
-  status = BSP_SD_GetCardInfo(SD_INSTANCE, &USBD_SD_CardInfo);
-
-  if (status != BSP_ERROR_NONE)
-  {
-    Error_Handler();
-  }
-
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_SDMMC1_SD_Init();
   /* USER CODE BEGIN 2 */
+  while(HAL_GPIO_ReadPin(GPIOF,GPIO_PIN_5)==SD_NOT_PRESENT)
+    {
+    }
 
+  /* Get SD card info */
+  status = HAL_SD_GetCardInfo(&hsd1, &USBD_SD_CardInfo);
+
+  if (status != HAL_OK)
+  {
+    Error_Handler();
+  }
   /* USER CODE END 2 */
 
   MX_ThreadX_Init();
@@ -151,7 +147,7 @@ void SystemClock_Config(void)
   * in the RCC_OscInitTypeDef structure.
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48|RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
@@ -219,7 +215,7 @@ void MPU_Config(void)
   /** Initializes and configures the Region and the memory to be protected
   */
   MPU_InitStruct.Number = MPU_REGION_NUMBER1;
-  MPU_InitStruct.BaseAddress = 0x24027000;
+  MPU_InitStruct.BaseAddress = 0x24035000;
   MPU_InitStruct.Size = MPU_REGION_SIZE_64KB;
   MPU_InitStruct.SubRegionDisable = 0x0;
   MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL1;
@@ -264,7 +260,7 @@ void Error_Handler(void)
   /* User can add his own implementation to report the HAL error return state */
   while (1)
   {
-    BSP_LED_Toggle(LED_RED);
+    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
     HAL_Delay(100);
   }
   /* USER CODE END Error_Handler_Debug */

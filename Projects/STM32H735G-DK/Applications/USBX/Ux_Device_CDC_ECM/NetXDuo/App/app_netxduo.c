@@ -57,13 +57,13 @@ NX_WEB_HTTP_SERVER HTTPServer;
 FX_MEDIA SDMedia;
 ALIGN_32BYTES(uint32_t DataBuffer[512]);
 
-/* Set nx_server_pool start address to 0x24046000 */
+/* Set nx_server_pool start address */
 #if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = 0x24046000
+#pragma location = ".UsbxAppSection"
 #elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
-__attribute__((section(".NxServerPoolSection")))
+__attribute__((section(".UsbxAppSection")))
 #elif defined ( __GNUC__ ) /* GNU Compiler */
-__attribute__((section(".NxServerPoolSection")))
+__attribute__((section(".UsbxAppSection")))
 #endif
 static uint8_t nx_server_pool[SERVER_POOL_SIZE];
 
@@ -71,10 +71,15 @@ static uint8_t nx_server_pool[SERVER_POOL_SIZE];
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
+
+/* DHCP state change notify callback */
 static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr);
+
+/* Web Server callback when a new request from a web client is triggered */
 static UINT webserver_request_notify_callback(NX_WEB_HTTP_SERVER *server_ptr,
                                               UINT request_type, CHAR *resource,
                                               NX_PACKET *packet_ptr);
+
 /* USER CODE END PFP */
 
 /**
@@ -255,12 +260,12 @@ UINT webserver_request_notify_callback(NX_WEB_HTTP_SERVER *server_ptr,
     /* Check if requested data equal LED_ON */
     if (strncmp((char const *)request_data, LED_ON, sizeof(LED_ON)) == 0)
     {
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
     }
     /* Check if requested data equal LED_OFF */
     else if (strncmp((char const *)request_data, LED_OFF, sizeof(LED_OFF)) == 0)
     {
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
     }
   }
 
@@ -269,11 +274,12 @@ UINT webserver_request_notify_callback(NX_WEB_HTTP_SERVER *server_ptr,
 
 /**
   * @brief  nx_server_thread_entry
-            Application thread for HTTP web server
+  *         Application thread for HTTP web server
   * @param  thread_input : thread input
   * @retval None
   */
-VOID nx_server_thread_entry(ULONG thread_input)
+
+void nx_server_thread_entry(ULONG thread_input)
 {
   ULONG IPAddress;
   ULONG NetMask;

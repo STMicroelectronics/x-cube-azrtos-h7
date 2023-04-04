@@ -212,11 +212,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/usb_otg.c</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/STM32H735G-DK/stm32h735g_discovery.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Drivers/BSP/STM32H735G-DK/stm32h735g_discovery.c</locationURI>
-		</link>
-		<link>
 			<name>Application/User/AZURE_RTOS/App/app_azure_rtos.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/AZURE_RTOS/App/app_azure_rtos.c</locationURI>

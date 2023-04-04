@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -31,7 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "stdio.h"
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -57,10 +57,10 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define LED_GREEN_Pin GPIO_PIN_12
-#define LED_GREEN_GPIO_Port GPIOI
-#define LED_RED_Pin GPIO_PIN_14
-#define LED_RED_GPIO_Port GPIOI
+#define LED1_Pin GPIO_PIN_12
+#define LED1_GPIO_Port GPIOI
+#define LED2_Pin GPIO_PIN_14
+#define LED2_GPIO_Port GPIOI
 
 /* USER CODE BEGIN Private defines */
 

@@ -176,11 +176,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/CM4/Core/Src/tx_initialize_low_level.S</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/Components/mt25tl01g.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Drivers/BSP/Components/mt25tl01g/mt25tl01g.c</locationURI>
-		</link>
-		<link>
 			<name>Application/User/AZURE_RTOS/App/app_azure_rtos.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/CM4/AZURE_RTOS/App/app_azure_rtos.c</locationURI>

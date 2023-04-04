@@ -51,10 +51,10 @@ extern "C" {
 #define LEAVE_DFU_DISABLED  0
 
 /* Special Commands with Download Request */
-#define DFU_CMD_GETCOMMANDS        0x00U
-#define DFU_CMD_SETADDRESSPOINTER  0x21U
-#define DFU_CMD_ERASE              0x41U
-#define DFU_CMD_READ_UNPROTECT     0x92U
+#define DFU_CMD_GETCOMMANDS             0x00U
+#define DFU_CMD_SETADDRESSPOINTER       0x21U
+#define DFU_CMD_ERASE                   0x41U
+#define DFU_CMD_READ_UNPROTECT          0x92U
 
 /* USER CODE END EM */
 

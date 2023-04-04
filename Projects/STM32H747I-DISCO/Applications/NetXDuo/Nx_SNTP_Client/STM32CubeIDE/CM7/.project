@@ -31,11 +31,6 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>Doc/README.md</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/README.md</locationURI>
-		</link>
-		<link>
 			<name>Drivers/CMSIS/system_stm32h7xx_dualcore_boot_cm4_cm7.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Common/Src/system_stm32h7xx_dualcore_boot_cm4_cm7.c</locationURI>
@@ -354,6 +349,11 @@
 			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_arp_static_entry_delete_internal.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_arp_static_entry_delete_internal.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_http_proxy_client.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_http_proxy_client.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_icmp_cleanup.c</name>
@@ -3524,86 +3524,6 @@
 			<name>Middlewares/ThreadX/RTOS/ThreadX/Core/txe_timer_info_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/txe_timer_info_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/ThreadX/RTOS/ThreadX/PerformanceInfo/tx_block_pool_performance_info_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_block_pool_performance_info_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/ThreadX/RTOS/ThreadX/PerformanceInfo/tx_block_pool_performance_system_info_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_block_pool_performance_system_info_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/ThreadX/RTOS/ThreadX/PerformanceInfo/tx_byte_pool_performance_info_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_byte_pool_performance_info_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/ThreadX/RTOS/ThreadX/PerformanceInfo/tx_byte_pool_performance_system_info_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_byte_pool_performance_system_info_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/ThreadX/RTOS/ThreadX/PerformanceInfo/tx_event_flags_performance_info_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_event_flags_performance_info_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/ThreadX/RTOS/ThreadX/PerformanceInfo/tx_event_flags_performance_system_info_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_event_flags_performance_system_info_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/ThreadX/RTOS/ThreadX/PerformanceInfo/tx_mutex_performance_info_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_mutex_performance_info_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/ThreadX/RTOS/ThreadX/PerformanceInfo/tx_mutex_performance_system_info_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_mutex_performance_system_info_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/ThreadX/RTOS/ThreadX/PerformanceInfo/tx_queue_performance_info_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_queue_performance_info_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/ThreadX/RTOS/ThreadX/PerformanceInfo/tx_queue_performance_system_info_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_queue_performance_system_info_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/ThreadX/RTOS/ThreadX/PerformanceInfo/tx_semaphore_performance_info_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_semaphore_performance_info_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/ThreadX/RTOS/ThreadX/PerformanceInfo/tx_semaphore_performance_system_info_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_semaphore_performance_system_info_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/ThreadX/RTOS/ThreadX/PerformanceInfo/tx_thread_performance_info_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_thread_performance_info_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/ThreadX/RTOS/ThreadX/PerformanceInfo/tx_thread_performance_system_info_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_thread_performance_system_info_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/ThreadX/RTOS/ThreadX/PerformanceInfo/tx_timer_performance_info_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_timer_performance_info_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/ThreadX/RTOS/ThreadX/PerformanceInfo/tx_timer_performance_system_info_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/threadx/common/src/tx_timer_performance_system_info_get.c</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

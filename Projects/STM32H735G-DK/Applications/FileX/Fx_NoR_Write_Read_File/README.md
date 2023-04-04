@@ -19,9 +19,10 @@ and 8 sectors per cluster. The NOR flash should be erased prior to format either
 
 Chip erase operation takes considerable time when done by the application, therefore it is disabled by default.
 
-To enable it, please define  the flag  ``LX_STM32_OSPI_ERASE`` to <b> 1 </b> in "lx_stm32_ospi_driver.h":
+To enable it, please define  the flag ``LX_STM32_OSPI_ERASE`` to <b> 1 </b> in "lx_stm32_ospi_driver.h":
 ````
 #define LX_STM32_OSPI_ERASE                              1
+
 ````
 
 Upon successful opening of the flash media, FileX continue with creating a file called "STM32.TXT" into the root directory, then write into it
@@ -34,13 +35,13 @@ The number of occupied sectors is also shown.
 
 #### <b>Expected success behavior</b>
 
-Successful operation is marked by a toggling green LED light.
+Successful operation is marked by a toggling LED_GREEN LED light.
 
 Also, information regarding the total and available size of the flash media is printed to the serial port.
 
 #### <b>Error behaviors</b>
 
-On failure, the red LED starts toggling while the green LED is switched OFF.
+On failure, the LED_RED LED starts toggling while the LED_GREEN LED is switched OFF.
 
 #### <b>Assumptions if any</b>
 None
@@ -57,7 +58,7 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -72,16 +73,16 @@ None
    This require changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+     place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	```
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -89,7 +90,7 @@ None
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	```
+    ```
 
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
@@ -99,13 +100,10 @@ None
 
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
 
-
 #### <b>FileX/LevelX usage hints</b>
-
 - FileX OCTOSPI driver is using the MDMA and access the DTCM memory (0x20000000), so in case to change memory make sure to configure it in order to correctly manage cache coherency.
 - When calling the fx_media_format() API, it is highly recommended to understand all the parameters used by the API to correctly generate a valid filesystem.
 - FileX is using data buffers, passed as arguments to fx_media_open(), fx_media_read() and fx_media_write() API it is recommended that these buffers are multiple of sector size and "32 bytes" aligned to avoid cache maintenance issues.
-
 
 ### <b>Keywords</b>
 

@@ -24,15 +24,16 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
-#include "main.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -135,9 +136,7 @@ void ThreadOne_Entry(ULONG thread_input)
       printf("** ThreadOne : SyncObject acquired ** \n");
 
       /*sync object acquired, toggle the LED_GREEN each 500ms for 5s */
-      Led_Toggle(LED_GREEN_GPIO_Port, LED_GREEN_Pin, 10);
-
-
+      Led_Toggle(LED1_GPIO_Port, LED1_Pin, 10);
       /*release the sync object */
       APP_SYNC_PUT(&SyncObject);
 
@@ -166,11 +165,13 @@ void ThreadOne_Entry(ULONG thread_input)
 void MX_ThreadX_Init(void)
 {
   /* USER CODE BEGIN  Before_Kernel_Start */
+
   /* USER CODE END  Before_Kernel_Start */
 
   tx_kernel_enter();
 
   /* USER CODE BEGIN  Kernel_Start_Error */
+
   /* USER CODE END  Kernel_Start_Error */
 }
 
@@ -194,8 +195,7 @@ void ThreadTwo_Entry(ULONG thread_input)
       printf("** ThreadTwo : SyncObject acquired ** \n");
 
       /*Sync object acquired toggle the LED_RED each 500ms for 5s*/
-      Led_Toggle(LED_RED_GPIO_Port, LED_RED_Pin, 10);
-
+      Led_Toggle(LED2_GPIO_Port, LED2_Pin, 10);
       /*release the sync object*/
       APP_SYNC_PUT(&SyncObject);
 
@@ -214,7 +214,6 @@ void ThreadTwo_Entry(ULONG thread_input)
     iteration++;
   }
 }
-
 /**
   * @brief Critical section function that needs acquiring SyncObject.
   * @param  led: LED to toggle
@@ -236,7 +235,6 @@ static VOID Led_Toggle(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, UINT iter)
 
   HAL_GPIO_WritePin(GPIOx, GPIO_Pin, GPIO_PIN_SET);
 }
-
 /**
   * @brief  Application Delay function.
   * @param  Delay : number of ticks to wait
@@ -256,9 +254,11 @@ void App_Delay(ULONG Delay)
 PUTCHAR_PROTOTYPE
 {
   /* Place your implementation of fputc here */
-  /* e.g. write a character to the USART1 and Loop until the end of transmission */
+  /* e.g. write a character to the USART3 and Loop until the end of transmission */
+
   HAL_UART_Transmit(&huart3, (uint8_t *)&ch, 1, 0xFFFF);
 
   return ch;
 }
+
 /* USER CODE END 1 */

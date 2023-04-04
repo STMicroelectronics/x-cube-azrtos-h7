@@ -33,9 +33,9 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
+#include "main.h"
 #include "string.h"
 #include "stm32h7xx.h"
-#include "fx_stm32_levelx_nor_driver.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -101,11 +101,7 @@ UINT MX_FileX_Init(VOID *memory_ptr);
 #endif
 
 /* USER CODE BEGIN PD */
-#define LED1_GPIO_PORT                   GPIOC
-#define LED1_PIN                         GPIO_PIN_3
 
-#define LED2_GPIO_PORT                   GPIOC
-#define LED2_PIN                         GPIO_PIN_2
 /* USER CODE END PD */
 
 /* USER CODE BEGIN 1 */

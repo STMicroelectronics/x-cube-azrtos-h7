@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -108,10 +108,7 @@ void HAL_SD_MspInit(SD_HandleTypeDef* hsd)
     /**SDMMC1 GPIO Configuration
     PD2     ------> SDMMC1_CMD
     PC12     ------> SDMMC1_CK
-    PC11     ------> SDMMC1_D3
-    PC10     ------> SDMMC1_D2
     PC8     ------> SDMMC1_D0
-    PC9     ------> SDMMC1_D1
     */
     GPIO_InitStruct.Pin = GPIO_PIN_2;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -120,8 +117,7 @@ void HAL_SD_MspInit(SD_HandleTypeDef* hsd)
     GPIO_InitStruct.Alternate = GPIO_AF12_SDMMC1;
     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_11|GPIO_PIN_10|GPIO_PIN_8
-                          |GPIO_PIN_9;
+    GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_8;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
@@ -129,7 +125,7 @@ void HAL_SD_MspInit(SD_HandleTypeDef* hsd)
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
     /* SDMMC1 interrupt Init */
-    HAL_NVIC_SetPriority(SDMMC1_IRQn, 7, 0);
+    HAL_NVIC_SetPriority(SDMMC1_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(SDMMC1_IRQn);
   /* USER CODE BEGIN SDMMC1_MspInit 1 */
 
@@ -157,15 +153,11 @@ void HAL_SD_MspDeInit(SD_HandleTypeDef* hsd)
     /**SDMMC1 GPIO Configuration
     PD2     ------> SDMMC1_CMD
     PC12     ------> SDMMC1_CK
-    PC11     ------> SDMMC1_D3
-    PC10     ------> SDMMC1_D2
     PC8     ------> SDMMC1_D0
-    PC9     ------> SDMMC1_D1
     */
     HAL_GPIO_DeInit(GPIOD, GPIO_PIN_2);
 
-    HAL_GPIO_DeInit(GPIOC, GPIO_PIN_12|GPIO_PIN_11|GPIO_PIN_10|GPIO_PIN_8
-                          |GPIO_PIN_9);
+    HAL_GPIO_DeInit(GPIOC, GPIO_PIN_12|GPIO_PIN_8);
 
     /* SDMMC1 interrupt DeInit */
     HAL_NVIC_DisableIRQ(SDMMC1_IRQn);

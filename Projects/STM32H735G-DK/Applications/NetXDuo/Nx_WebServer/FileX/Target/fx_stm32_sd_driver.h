@@ -23,6 +23,7 @@ extern "C" {
 #include "stm32h7xx_hal.h"
 
 /* USER CODE BEGIN Includes */
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -59,13 +60,11 @@ extern TX_SEMAPHORE sd_rx_semaphore;
 /* USER CODE BEGIN EM */
 
 /* USER CODE END EM */
-
 /* Define the CPU Cache maintenance macros */
 #if (FX_STM32_SD_CACHE_MAINTENANCE == 1)
 #define invalidate_cache_by_addr(__ptr__, __size__)                  SCB_InvalidateDCache_by_Addr((void *)__ptr__, (int32_t)__size__)
 #define clean_cache_by_addr(__ptr__, __size__)                       SCB_CleanDCache_by_Addr((uint32_t *)__ptr__, (int32_t)__size__)
 #endif
-
 /* Define the macro to get the current time in ticks */
 /* USER CODE BEGIN FX_STM32_SD_CURRENT_TIME_TX */
 
@@ -77,7 +76,7 @@ extern TX_SEMAPHORE sd_rx_semaphore;
  * e.g. create a semaphore used for transfer notification */
 /* USER CODE BEGIN FX_STM32_SD_PRE_INIT */
 
-#define FX_STM32_SD_PRE_INIT(_media_ptr)                do { \
+#define FX_STM32_SD_PRE_INIT(_media_ptr)               do { \
                                                           if ((tx_semaphore_create(&sd_rx_semaphore, "sd rx transfer semaphore", 0) != TX_SUCCESS) || \
                                                               (tx_semaphore_create(&sd_tx_semaphore, "sd tx transfer semaphore", 0) != TX_SUCCESS))  \
                                                           { \
@@ -97,7 +96,7 @@ extern TX_SEMAPHORE sd_rx_semaphore;
 /* Macro called after the SD deinit */
 /* USER CODE BEGIN FX_STM32_SD_POST_DEINIT */
 
-#define FX_STM32_SD_POST_DEINIT(_media_ptr)             do { \
+#define FX_STM32_SD_POST_DEINIT(_media_ptr)            do { \
                                                           tx_semaphore_delete(&sd_rx_semaphore); \
                                                           tx_semaphore_delete(&sd_tx_semaphore); \
                                                         } while(0)
@@ -136,7 +135,7 @@ extern TX_SEMAPHORE sd_rx_semaphore;
 
 /* USER CODE BEGIN FX_STM32_SD_READ_CPLT_NOTIFY */
 
-#define FX_STM32_SD_READ_CPLT_NOTIFY()                  do { \
+#define FX_STM32_SD_READ_CPLT_NOTIFY()                 do { \
                                                           if(tx_semaphore_get(&sd_rx_semaphore, FX_STM32_SD_DEFAULT_TIMEOUT) != TX_SUCCESS) \
                                                             { \
                                                               return FX_IO_ERROR; \
@@ -148,7 +147,7 @@ extern TX_SEMAPHORE sd_rx_semaphore;
 /* Define how to notify about write completion operation */
 /* USER CODE BEGIN FX_STM32_SD_WRITE_CPLT_NOTIFY */
 
-#define FX_STM32_SD_WRITE_CPLT_NOTIFY()                 do { \
+#define FX_STM32_SD_WRITE_CPLT_NOTIFY()                do { \
                                                           if(tx_semaphore_get(&sd_tx_semaphore, FX_STM32_SD_DEFAULT_TIMEOUT) != TX_SUCCESS) \
                                                             { \
                                                               return FX_IO_ERROR; \

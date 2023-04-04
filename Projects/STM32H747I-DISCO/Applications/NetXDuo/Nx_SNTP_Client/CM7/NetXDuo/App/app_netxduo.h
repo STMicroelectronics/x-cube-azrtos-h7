@@ -33,6 +33,7 @@ extern "C" {
 
 /* USER CODE BEGIN Includes */
 #include "main.h"
+#include "nxd_dhcp_client.h"
 #include "nxd_sntp_client.h"
 #include "nxd_dns.h"
 /* USER CODE END Includes */

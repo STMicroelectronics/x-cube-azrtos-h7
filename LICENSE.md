@@ -15,9 +15,9 @@
 | BSP Components                  | STMicroelectronics                                    | BSD-3-Clause |
 | Application Projects            | STMicroelectronics                                    | Proprietary  |
 | CMSIS RTOS Threadx wrapper      | STMicroelectronics                                    | Proprietary  |
-| Aure RTOS ThreadX               | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
-| Aure RTOS NetXDuo               | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
-| Aure RTOS FileX                 | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
-| Aure RTOS LeveLX                | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
-| Aure RTOS USBX                  | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
+| Azure RTOS ThreadX              | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
+| Azure RTOS NetXDuo              | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
+| Azure RTOS FileX                | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
+| Azure RTOS LeveLX               | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
+| Azure RTOS USBX                 | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
 | Cypress-WHD                     | Cypress Semiconductor Corporation                     | Apache-2.0 for sources and PBL-1.0 for binaries |

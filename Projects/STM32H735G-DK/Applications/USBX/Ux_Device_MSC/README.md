@@ -1,3 +1,4 @@
+
 ## <b>Ux_Device_MSC application description</b>
 
 This application provides an example of Azure RTOS USBX stack usage on STM32H735G-DK board, it shows how to develop USB Device mass storage class based
@@ -11,7 +12,6 @@ At the beginning ThreadX calls the entry function tx_application_define(), at th
 registered and the application creates one thread:
 
   - app_ux_device_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device.
-
 In addition two callback functions are needed for the USBX mass storage class device:
 
   - USBD_STORAGE_Read used to read data through DMA from the mass storage device.
@@ -52,7 +52,7 @@ The Eject operation is not supported yet by MSC class.
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -67,8 +67,8 @@ The Eject operation is not supported yet by MSC class.
    This require changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-    place in RAM_region    { last section FREE_MEM };
-    ```
+     place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
     ```
     either define the RW_IRAM1 region in the ".sct" file

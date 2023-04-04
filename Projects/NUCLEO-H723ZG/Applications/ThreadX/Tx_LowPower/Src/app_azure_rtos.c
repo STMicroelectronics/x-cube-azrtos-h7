@@ -3,7 +3,7 @@
   ******************************************************************************
   * @file    app_azure_rtos.c
   * @author  MCD Application Team
-  * @brief   azure_rtos application implementation file
+  * @brief   app_azure_rtos application implementation file
   ******************************************************************************
   * @attention
   *
@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "main.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -60,6 +60,7 @@ static TX_BYTE_POOL tx_app_byte_pool;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
+void Error_Handler(void);
 /* USER CODE END PFP */
 
 /**

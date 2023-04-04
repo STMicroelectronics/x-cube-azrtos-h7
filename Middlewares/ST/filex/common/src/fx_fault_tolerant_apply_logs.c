@@ -33,7 +33,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_fault_tolerant_apply_logs                       PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -81,6 +81,9 @@
 /*  09-30-2020     William E. Lamie         Modified comment(s), verified */
 /*                                            memcpy usage,               */
 /*                                            resulting in version 6.1    */
+/*  10-31-2022     Tiejun Zhou              Modified comment(s), fixed    */
+/*                                            overflow in log size check, */
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT _fx_fault_tolerant_apply_logs(FX_MEDIA *media_ptr)
@@ -215,7 +218,7 @@ ULONG                          tail_cluster;
 
             copy_size = log_len - FX_FAULT_TOLERANT_DIR_LOG_ENTRY_SIZE;
 
-            if ((copy_offset + copy_size) > media_ptr -> fx_media_memory_size)
+            if (((ULONG64)copy_offset + (ULONG64)copy_size) > (ULONG64)(media_ptr -> fx_media_memory_size))
             {
                 return(FX_FILE_CORRUPT);
             }

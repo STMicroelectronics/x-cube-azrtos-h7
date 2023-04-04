@@ -24,6 +24,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,7 +52,6 @@ TX_THREAD                  mouse_app_thread;
 UX_HOST_CLASS_HID          *hid_instance;
 UX_HOST_CLASS_HID_MOUSE    *mouse;
 UX_HOST_CLASS_HID_KEYBOARD *keyboard;
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -59,7 +59,6 @@ static VOID app_ux_host_thread_entry(ULONG thread_input);
 static UINT ux_host_event_callback(ULONG event, UX_HOST_CLASS *current_class, VOID *current_instance);
 static VOID ux_host_error_callback(UINT system_level, UINT system_context, UINT error_code);
 /* USER CODE BEGIN PFP */
-
 /* USER CODE END PFP */
 
 /**
@@ -443,8 +442,6 @@ VOID USBX_APP_Host_Init(VOID)
 
   /* USER CODE END USB_Host_Init_PostTreatment1 */
 }
-
-
 /**
 * @brief  Drive VBUS.
 * @param  state : VBUS state
@@ -478,5 +475,4 @@ void USBH_DriverVBUS(uint8_t state)
 
   HAL_Delay(200);
 }
-
 /* USER CODE END 1 */

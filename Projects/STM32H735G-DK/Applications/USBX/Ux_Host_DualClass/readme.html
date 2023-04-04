@@ -61,7 +61,7 @@ used to decode HID reports received from a keyboard.</li>
 used to proceed to file operations.</li>
 </ul>
 <h4 id="expected-success-behavior"><b>Expected success behavior</b></h4>
-<p>When a hid device plugged to NUCLEO-H723ZG board, a Message will be
+<p>When a hid device plugged to STM32H735G-DK board, a Message will be
 displayed on the uart HyperTerminal showing the Vendor ID and Product ID
 of the attached device. After enumeration phase, a message will
 indicates that the device is ready for use. The host must be able to
@@ -85,8 +85,7 @@ host proceed to file operations :</p>
 <ul>
 <li>Create a “Test.txt” file.</li>
 <li>Write a small text in the created file.</li>
-<li>Read the written text and check data integrity<br />
-</li>
+<li>Read the written text and check data integrity</li>
 <li>Close the File</li>
 </ul>
 <p>During the file operations process a message will be displayed on the
@@ -131,7 +130,7 @@ attributes using the MPU.</li>
 <li>Please refer to the <strong>AN4838</strong> “Managing memory
 protection unit (MPU) in STM32 MCUs”.</li>
 <li>Please refer to the <strong>AN4839</strong> “Level 1 cache on
-STM32F7 Series”</li>
+STM32F7 Series and STM32H7 Series”</li>
 </ul></li>
 </ol>
 <h4 id="threadx-usage-hints"><b>ThreadX usage hints</b></h4>
@@ -179,8 +178,8 @@ or modify the line below in &quot;tx_initialize_low_level.S to match the memory 
    } &gt;RAM_D1 AT&gt; RAM_D1</code></pre>
 <pre><code>The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
 In the example above the ThreadX heap size is set to 64KBytes.
-The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.  
-Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).  
+The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
 Read more in STM32CubeIDE User Guide, chapter: &quot;Linker script&quot;.</code></pre>
 <ul>
 <li>The “tx_initialize_low_level.S” should be also modified to enable
@@ -201,10 +200,11 @@ Mass Storage, BOT, SCSI, Removable drive, UART/USART</p>
 <h3 id="hardware-and-software-environment"><b>Hardware and Software
 environment</b></h3>
 <ul>
-<li><p>This application runs on STM32H735XX devices.</p></li>
+<li><p>This application runs on STM32H735xx devices.</p></li>
 <li><p>This application has been tested with STMicroelectronics
-STM32H735G-DK MB1520-H735I-B02. boards and can be easily tailored to any
-other supported device and development board.</p></li>
+STM32H735G-DK boards Revision: MB1520-H735I-B02. boards and can be
+easily tailored to any other supported device and development
+board.</p></li>
 <li><p>STM32H735G-DK Set-up</p>
 <ul>
 <li>Plug the USB device (mouse, keyboard, flash disk) into the

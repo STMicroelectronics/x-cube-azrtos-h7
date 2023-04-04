@@ -3,7 +3,7 @@
   ******************************************************************************
   * @file    app_azure_rtos.h
   * @author  MCD Application Team
-  * @brief   azure_rtos application header file
+  * @brief   app_azure_rtos application header file
   ******************************************************************************
   * @attention
   *
@@ -33,7 +33,7 @@ extern "C" {
 #include "app_usbx_device.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "main.h"
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

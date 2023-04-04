@@ -1177,15 +1177,6 @@
   <group>
     <name>Drivers</name>
     <group>
-      <name>BSP</name>
-      <group>
-        <name>STM32H735G-DK</name>
-        <file>
-          <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.c</name>
-        </file>
-      </group>
-    </group>
-    <group>
       <name>CMSIS</name>
       <file>
         <name>$PROJ_DIR$\..\Core\Src\system_stm32h7xx.c</name>
@@ -2024,9 +2015,6 @@
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_initialize_kernel_setup.c</name>
         </file>
         <file>
-          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\ports\cortex_m7\iar\src\tx_iar.c</name>
-        </file>
-        <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_block_allocate.c</name>
         </file>
         <file>
@@ -2484,6 +2472,9 @@
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_timer_info_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\ports\cortex_m7\iar\src\tx_iar.c</name>
         </file>
       </group>
     </group>

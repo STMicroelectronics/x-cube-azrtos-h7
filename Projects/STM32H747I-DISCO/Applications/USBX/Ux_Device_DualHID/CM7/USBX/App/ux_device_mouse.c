@@ -34,6 +34,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define CURSOR_STEP     5
+extern __IO uint8_t JoyState;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -163,11 +164,16 @@ VOID usbx_hid_mouse_thread_entry(ULONG thread_input)
       /* Sleep for 10ms */
       tx_thread_sleep(MS_TO_TICK(10));
 
-      /* Check if Joy is pressed */
-      GetPointerData(&hid_event);
-
-      /* Send hid event */
-      ux_device_class_hid_event_set(hid_mouse, &hid_event);
+      /* Get JoyState */
+      if (JoyState != JOY_NONE)
+      {
+        /* Get the new position */
+        GetPointerData(&hid_event);
+        /* Send hid event */
+        ux_device_class_hid_event_set(hid_mouse, &hid_event);
+      }
+      /* Reset JoyStick state */
+      JoyState = JOY_NONE;
     }
     else
     {
@@ -187,7 +193,7 @@ static VOID GetPointerData(UX_SLAVE_CLASS_HID_EVENT *hid_event)
 {
   int8_t x = 0, y = 0;
 
-  switch ( BSP_JOY_GetState(JOY1, 0) )
+  switch (JoyState)
   {
     case JOY_LEFT:
       x -= CURSOR_STEP;
@@ -209,16 +215,20 @@ static VOID GetPointerData(UX_SLAVE_CLASS_HID_EVENT *hid_event)
       break;
   }
 
-  /* Mouse event. Length is fixed to 3 */
-  hid_event->ux_device_class_hid_event_length = 3;
+  /* Mouse event. Length is fixed to 4 */
+  hid_event->ux_device_class_hid_event_length = 4;
+
+  /* Set select position */
+  hid_event->ux_device_class_hid_event_buffer[0] = 0;
 
   /* Set X position */
-  hid_event->ux_device_class_hid_event_buffer[0] = x;
+  hid_event->ux_device_class_hid_event_buffer[1] = x;
 
   /* Set Y position */
-  hid_event->ux_device_class_hid_event_buffer[1] = y;
+  hid_event->ux_device_class_hid_event_buffer[2] = y;
 
-  hid_event->ux_device_class_hid_event_buffer[2] = 0;
+  /* Set wheel position */
+  hid_event->ux_device_class_hid_event_buffer[3] = 0;
 }
 
 /* USER CODE END 1 */

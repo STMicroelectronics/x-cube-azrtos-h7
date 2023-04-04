@@ -38,7 +38,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_utility_FAT_entry_read                          PORTABLE C      */
-/*                                                           6.1.12a      */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -80,9 +80,9 @@
 /*                                            added conditional to        */
 /*                                            disable fat entry refresh,  */
 /*                                            resulting in version 6.1    */
-/*  08-25-2022     Tiejun Zhou              Modified comment(s), and      */
+/*  10-31-2022     Tiejun Zhou              Modified comment(s), and      */
 /*                                            fixed compiler warning,     */
-/*                                            resulting in version 6.1.12a*/
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_utility_FAT_entry_read(FX_MEDIA *media_ptr, ULONG cluster, ULONG *entry_ptr)

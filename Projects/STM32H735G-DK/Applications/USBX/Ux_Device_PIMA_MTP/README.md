@@ -1,4 +1,5 @@
-## Ux_Device_PIMA_MTP application description</b>
+
+## <b>Ux_Device_PIMA_MTP application description</b>
 
 This application provides an example of Azure RTOS USBX stack usage on STM32H735G-DK board, it shows how to develop USB Device Media Transfer Protocol class based
 application. The application is designed to emulate an USB PIMA MTP device, the code provides all required device descriptors framework and the associated Class
@@ -8,7 +9,7 @@ At the beginning ThreadX calls the entry function tx_application_define(), at th
 
 registered and the application creates one thread:
 
-  - app_ux_device_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device.
+  - app_ux_device_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB_OTG HAL PCD driver and start the device.
 
 #### <b>Expected success behavior</b>
 
@@ -66,7 +67,7 @@ None.
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 

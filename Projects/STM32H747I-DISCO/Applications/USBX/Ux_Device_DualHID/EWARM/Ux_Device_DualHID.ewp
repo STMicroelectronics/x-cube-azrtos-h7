@@ -2460,12 +2460,6 @@
           </excluded>
         </file>
         <file>
-          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\ports\cortex_m7\iar\src\tx_iar.c</name>
-          <excluded>
-            <configuration>Ux_Device_DualHID_CM4</configuration>
-          </excluded>
-        </file>
-        <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\tx_block_allocate.c</name>
           <excluded>
             <configuration>Ux_Device_DualHID_CM4</configuration>
@@ -3379,6 +3373,12 @@
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\common\src\txe_timer_info_get.c</name>
+          <excluded>
+            <configuration>Ux_Device_DualHID_CM4</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\threadx\ports\cortex_m7\iar\src\tx_iar.c</name>
           <excluded>
             <configuration>Ux_Device_DualHID_CM4</configuration>
           </excluded>

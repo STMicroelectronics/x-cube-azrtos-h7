@@ -22,7 +22,7 @@
 *****************************************************************************
 ** @attention
 **
-** Copyright (c) 2022 STMicroelectronics.
+** Copyright (c) 2021 STMicroelectronics.
 ** All rights reserved.
 **
 ** This software is licensed under terms that can be found in the LICENSE file
@@ -89,12 +89,12 @@ SECTIONS
     . = ALIGN(4);
   } >FLASH
 
-  .ARM.extab   : { 
+  .ARM.extab   : {
     . = ALIGN(4);
     *(.ARM.extab* .gnu.linkonce.armextab.*)
     . = ALIGN(4);
   } >FLASH
-  
+
   .ARM : {
     . = ALIGN(4);
     __exidx_start = .;
@@ -111,7 +111,7 @@ SECTIONS
     PROVIDE_HIDDEN (__preinit_array_end = .);
     . = ALIGN(4);
   } >FLASH
-  
+
   .init_array :
   {
     . = ALIGN(4);
@@ -121,7 +121,7 @@ SECTIONS
     PROVIDE_HIDDEN (__init_array_end = .);
     . = ALIGN(4);
   } >FLASH
-  
+
   .fini_array :
   {
     . = ALIGN(4);
@@ -136,7 +136,7 @@ SECTIONS
   _sidata = LOADADDR(.data);
 
   /* Initialized data sections into "RAM" Ram type memory */
-  .data : 
+  .data :
   {
     . = ALIGN(4);
     _sdata = .;        /* create a global symbol at data start */
@@ -175,25 +175,20 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >RAM_D1
-
-  .usbx_data 0x24027000 (NOLOAD):
+  .usbx_data 0x24035000 (NOLOAD):
   {
     *(.UsbHpcdSection)
-
   } >RAM_D1
 
-  .uart_bss 0x24028000 (NOLOAD):
+  .uart_bss 0x24036000 (NOLOAD):
   {
     *(.UsbxAppSection)
-
   } >RAM_D1
 
-  .usbx_bss 0x24029000 (NOLOAD):
+  .usbx_bss 0x24046000 (NOLOAD):
   {
     *(.UsbxPoolSection)
-
   } >RAM_D1
-
   /* Remove information from the standard libraries */
   /DISCARD/ :
   {

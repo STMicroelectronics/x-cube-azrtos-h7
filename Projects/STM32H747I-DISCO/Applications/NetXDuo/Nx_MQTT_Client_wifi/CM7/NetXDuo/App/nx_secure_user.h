@@ -172,13 +172,6 @@
 #define NX_SECURE_ENABLE_CLIENT_CERTIFICATE_VERIFY
 */
 
-/* Defined, this option removes all TLS logic for Elliptic Curve Cryptography
-  (ECC) ciphersuites. These ciphersuites are optional in TLS 1.2 and earlier
-  and disabling them can result in significant code and data size reduction. */
-/*
-#define NX_SECURE_DISABLE_ECC_CIPHERSUITE
-*/
-
 /* Defined, this option enables the legacy TLSv1.0 mode. TLSv1.0 is considered
    obsolete so it should only be enabled for backward-compatibility with older
    applications. */
@@ -382,11 +375,6 @@
 #define NX_SECURE_X509_USE_EXTENDED_DISTINGUISHED_NAMES
 */
 
-/* Defined, this option enables TLS initialisation. */
-/*
-#define NX_SECURE_DTLS_INIT
-*/
-
 /* Defined, this option enables the ECC support in TLS. */
 #define NX_SECURE_ENABLE_ECC_CIPHERSUITE
 
@@ -404,11 +392,6 @@
 /* Defined, this option enables secure renegotiation.*/
 /*
 #define NX_SECURE_TLS_ENABLE_SECURE_RENEGOTIATION
-*/
-
-/* Defined, this option enables TLS initialisation.*/
-/*
-#define NX_SECURE_TLS_INIT
 */
 
 /* Defined, this option enables certificate verify extension.*/

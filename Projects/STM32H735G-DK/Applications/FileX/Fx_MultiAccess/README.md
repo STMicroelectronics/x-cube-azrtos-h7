@@ -1,4 +1,3 @@
-
 ## <b>Fx_MultiAccess application description</b>
 
 This application provides an example of Azure RTOS FileX stack usage on STM32H735G-DK board, it demonstrates the FileX's concurrent file access capabilities. The application is designed to execute file operations on the SD card device, the code provides all required software code for handling SD card I/O operations.
@@ -22,11 +21,11 @@ system, the main thread starts the two file operations threads, fx_thread_one an
 
 This demonstrates the concurrent access handling capabilities of FileX, without the need for an external access-aribitration locks.
 
-Successful operation is marked by a toggling green LED light.
+Successful operation is marked by a toggling LED_GREEN light.
 
 #### <b>Error behaviors</b>
 
-On failure, the red LED starts toggling while the green LED is switched OFF.
+On failure, the LED_RED starts toggling while the LED_GREEN is switched OFF.
 
 #### <b>Assumptions if any</b>
 
@@ -35,7 +34,6 @@ Hotplug is not implemented for this application, the SD card is expected to be i
 #### <b>Known limitations</b>
 
 None
-
 
 ### <b>Notes</b>
 
@@ -47,7 +45,7 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -62,16 +60,16 @@ None
    This require changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+     place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	```
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -79,7 +77,7 @@ None
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	```
+    ```
 
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
@@ -91,11 +89,9 @@ None
 
 
 #### <b>FileX/LevelX usage hints</b>
-
 - FileX sd driver is using the DMA, thus the DTCM (0x20000000) memory should not be used by the application, as it is not accessible by the SD DMA.
 - When calling the fx_media_format() API, it is highly recommended to understand all the parameters used by the API to correctly generate a valid filesystem.
 - FileX is using data buffers, passed as arguments to fx_media_open(), fx_media_read() and fx_media_write() API it is recommended that these buffers are multiple of sector size and "32 bytes" aligned to avoid cache maintenance issues.
-
 
 ### <b>Keywords</b>
 

@@ -1,18 +1,18 @@
 
 ## <b>Ux_Host_DualClass application description</b>
 
-This application provides an example of Azure RTOS USBX stack usage. 
+This application provides an example of Azure RTOS USBX stack usage.
 It shows how to develop USB Host Human Interface "HID" and Mass Storage "MSC" able to enumerate and communicates with:
 
   - A mouse or a Keyboard.
   - A removable usb flash disk.
 
 The application is designed to behave as an:
-     
+
   - USB HID Host, the code provides required requests to properly enumerate HID devices , HID Class APIs to decode HID reports received from a mouse or a keyboard and display data on uart HyperTerminal.
   - USB MSC Host able to operate with an USB flash disk using the Bulk Only Transfer (BOT) and Small Computer System Interface (SCSI) transparent commands combined with a file system AzureRTOS FILEX.
 
-The main entry function tx_application_define() is then called by ThreadX during kernel start, at this stage, all USBx resources are initialized, the MSC and the HID Class drivers are registered. 
+The main entry function tx_application_define() is then called by ThreadX during kernel start, at this stage, all USBx resources are initialized, the MSC and the HID Class drivers are registered.
 The application creates four threads :
 
   - usbx_app_thread_entry     (Priority : 10; Preemption threshold : 10) used to initialize USB OTG HAL HCD driver, start the Host and proceed to file operations or HID reports once the device is properly enumerated.
@@ -22,18 +22,18 @@ The application creates four threads :
 
 #### <b>Expected success behavior</b>
 
-When a hid device plugged to NUCLEO-H723ZG board, a Message will be displayed on the uart HyperTerminal showing 
+When a hid device plugged to STM32H735G-DK board, a Message will be displayed on the uart HyperTerminal showing
 the Vendor ID and Product ID of the attached device.
 After enumeration phase, a message will indicates that the device is ready for use.
 The host must be able to properly decode HID reports sent by the corresponding device and display those information on the HyperTerminal.
 
-The received HID reports are used by host to identify: 
+The received HID reports are used by host to identify:
 
 in case of a mouse:
 
-   - (x,y) mouse position 
-   - Wheel position 
-   - Pressed mouse buttons 
+   - (x,y) mouse position
+   - Wheel position
+   - Pressed mouse buttons
 
 in case of a keyboard:
 
@@ -42,10 +42,10 @@ in case of a keyboard:
 When an usb flash disk is plugged to STM32H735G-DK board, a Message will be displayed on the uart HyperTerminal showing  the Vendor ID and the Product ID of the attached device.
 After enumeration phase , the host proceed to file operations :
 
-  - Create a "Test.txt" file. 
-  - Write  a small text in the created file. 
-  - Read the written text and check data integrity  
-  - Close the File 
+  - Create a "Test.txt" file.
+  - Write  a small text in the created file.
+  - Read the written text and check data integrity
+  - Close the File
 
 During the file operations process a message will be displayed on the HyperTerminal to indicates the outcome of each operation  (Create/Write/Read/Close) .
 If all operations were successful a message will be displayed on the HyperTerminal to indicates the end of operations.
@@ -70,8 +70,8 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
-  
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
+
 #### <b>ThreadX usage hints</b>
 
  - ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.
@@ -94,7 +94,7 @@ None
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
     ```
     + For STM32CubeIDE add the following section into the .ld file:
-    ``` 
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -102,16 +102,16 @@ None
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-    ``` 
-    
+    ```
+
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
-       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.	 
-       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).	 
+       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
        Read more in STM32CubeIDE User Guide, chapter: "Linker script".
-      
+
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
-               
+
 #### <b>USBX usage hints</b>
 
 - The DTCM (0x20000000) memory region should not be used by application in case USB DMA is enabled
@@ -124,9 +124,9 @@ Connectivity, USBXHost, FILEX, ThreadX, HID, Mouse, Keyboard, MSC, Mass Storage,
 
 ### <b>Hardware and Software environment</b>
 
-  - This application runs on STM32H735XX devices.
+  - This application runs on STM32H735xx devices.
 
-  - This application has been tested with STMicroelectronics STM32H735G-DK MB1520-H735I-B02.
+  - This application has been tested with STMicroelectronics STM32H735G-DK boards Revision: MB1520-H735I-B02.
     boards and can be easily tailored to any other supported device
     and development board.
 

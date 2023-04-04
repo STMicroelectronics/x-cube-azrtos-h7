@@ -16,7 +16,6 @@
   *
   ******************************************************************************
   */
-
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
@@ -28,7 +27,6 @@
 #include "nx_ip.h"
 #include "stm32h7xx_hal_rtc.h"
 #include <time.h>
-#include "main.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,6 +52,7 @@ NX_IP          NetXDuoEthIpInstance;
 TX_SEMAPHORE   DHCPSemaphore;
 NX_DHCP        DHCPClient;
 /* USER CODE BEGIN PV */
+
 TX_THREAD AppSNTPThread;
 TX_THREAD AppLinkThread;
 
@@ -67,20 +66,24 @@ ULONG                    NetMask;
 
 CHAR                     buffer[64];
 
+
 struct tm timeInfos;
 /* RTC handler declaration */
 RTC_HandleTypeDef RtcHandle;
 
 /* set the SNTP network interface to the primary interface. */
 UINT  iface_index =0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 static VOID nx_app_thread_entry (ULONG thread_input);
 static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr);
 /* USER CODE BEGIN PFP */
+
 static VOID App_SNTP_Thread_Entry(ULONG thread_input);
 static VOID App_Link_Thread_Entry(ULONG thread_input);
+
 
 static VOID time_update_callback(NX_SNTP_TIME_MESSAGE *time_update_ptr, NX_SNTP_TIME *local_time);
 /* USER CODE END PFP */
@@ -97,7 +100,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
   CHAR *pointer;
 
   /* USER CODE BEGIN MX_NetXDuo_MEM_POOL */
-  (void)byte_pool;
+
   /* USER CODE END MX_NetXDuo_MEM_POOL */
 
   /* USER CODE BEGIN 0 */
@@ -503,7 +506,7 @@ static void App_SNTP_Thread_Entry(ULONG info)
   {
     /* Display RTC time each second  */
     display_rtc_time(&RtcHandle);
-    HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port,LED_GREEN_Pin);
+    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
     /* Delay for 1s */
     tx_thread_sleep(100);
   }
@@ -651,7 +654,7 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
 
   while(1)
   {
-    /* Get Physical Link stackavailtus. */
+    /* Get Physical Link status. */
     status = nx_ip_interface_status_check(&NetXDuoEthIpInstance, 0, NX_IP_LINK_ENABLED,
                                       &actual_status, 10);
 

@@ -30,20 +30,24 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
+
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
+
 /* USER CODE END EC */
 
 /* Private defines -----------------------------------------------------------*/
 #define TX_APP_STACK_SIZE                       512
 #define TX_APP_THREAD_PRIO                      10
 /* USER CODE BEGIN PD */
+
 /* USER CODE END PD */
 
 /* Main thread defines -------------------------------------------------------*/
@@ -58,11 +62,13 @@ extern "C" {
 #define TX_APP_THREAD_AUTO_START                TX_AUTO_START
 #endif
 /* USER CODE BEGIN MTD */
+
 /* USER CODE END MTD */
 
 /* Exported macro ------------------------------------------------------------*/
 
 /* USER CODE BEGIN EM */
+
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
@@ -70,9 +76,11 @@ UINT App_ThreadX_Init(VOID *memory_ptr);
 void MX_ThreadX_Init(void);
 void MainThread_Entry(ULONG thread_input);
 /* USER CODE BEGIN EFP */
+
 /* USER CODE END EFP */
 
 /* USER CODE BEGIN 1 */
+
 /* USER CODE END 1 */
 
 #ifdef __cplusplus

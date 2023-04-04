@@ -50,6 +50,7 @@ extern "C" {
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
+UCHAR *USBD_PRINTER_GetDeviceID(VOID);
 VOID USBD_PRINTER_Activate(VOID *printer_instance);
 VOID USBD_PRINTER_Deactivate(VOID *printer_instance);
 VOID USBD_PRINTER_SoftReset(VOID *printer_instance);

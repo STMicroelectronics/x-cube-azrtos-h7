@@ -16,7 +16,6 @@
   *
   ******************************************************************************
   */
-
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
@@ -25,7 +24,6 @@
 /* Private includes ----------------------------------------------------------*/
 #include "nxd_dhcp_client.h"
 /* USER CODE BEGIN Includes */
-#include "main.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -414,7 +412,7 @@ static VOID App_TCP_Thread_Entry(ULONG thread_input)
 
       if (ret == NX_SUCCESS)
       {
-        HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+        HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
 
         /* get the client IP address and  port */
         nx_udp_source_extract(data_packet, &source_ip_address, &source_port);
@@ -430,7 +428,7 @@ static VOID App_TCP_Thread_Entry(ULONG thread_input)
 
         if (ret == NX_SUCCESS)
         {
-          HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+          HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
         }
       }
       else
@@ -443,7 +441,7 @@ static VOID App_TCP_Thread_Entry(ULONG thread_input)
     else
     {
       /*toggle the green led to indicate the idle state */
-      HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+      HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
     }
   }
 }
@@ -460,7 +458,7 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
 
   while(1)
   {
-    /* Get Physical Link stackavailtus. */
+    /* Get Physical Link status. */
     status = nx_ip_interface_status_check(&NetXDuoEthIpInstance, 0, NX_IP_LINK_ENABLED,
                                       &actual_status, 10);
 

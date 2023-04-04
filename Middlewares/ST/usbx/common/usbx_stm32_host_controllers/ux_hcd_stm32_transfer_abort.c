@@ -82,7 +82,8 @@ UINT  _ux_hcd_stm32_transfer_abort(UX_HCD_STM32 *hcd_stm32, UX_TRANSFER *transfe
 
 UX_ENDPOINT         *endpoint;
 UX_HCD_STM32_ED     *ed;
-
+UX_TRANSFER         *transfer;
+UX_INTERRUPT_SAVE_AREA
 
     /* Get the pointer to the endpoint associated with the transfer request.  */
     endpoint =  (UX_ENDPOINT *) transfer_request -> ux_transfer_request_endpoint;
@@ -103,11 +104,33 @@ UX_HCD_STM32_ED     *ed;
         return(UX_ENDPOINT_HANDLE_UNKNOWN);
     }
 
-    /* Save the transfer status in the ED.  */
-    ed -> ux_stm32_ed_status = UX_HCD_STM32_ED_STATUS_ABORTED;
+    UX_DISABLE
 
     /* Halt the host channel.  */
     HAL_HCD_HC_Halt(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel);
+
+    /* Save the transfer status in the ED.  */
+    ed -> ux_stm32_ed_status = UX_HCD_STM32_ED_STATUS_ABORTED;
+
+    /* Finish current transfer.  */
+    _ux_hcd_stm32_request_trans_finish(hcd_stm32, ed);
+
+    /* Update the transfer status in linked transfer requests.  */
+    transfer = ed -> ux_stm32_ed_transfer_request;
+    while(transfer)
+    {
+
+        /* Set transfer status to aborted.  */
+        transfer -> ux_transfer_request_status = UX_TRANSFER_STATUS_ABORT;
+
+        /* Get next transfer linked.  */
+        transfer = transfer -> ux_transfer_request_next_transfer_request;
+    }
+
+    /* No transfer on going.  */
+    ed -> ux_stm32_ed_transfer_request = UX_NULL;
+
+    UX_RESTORE
 
 #if !defined(UX_HOST_STANDALONE)
 

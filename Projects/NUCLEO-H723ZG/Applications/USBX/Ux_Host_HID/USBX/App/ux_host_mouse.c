@@ -44,7 +44,6 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 extern UX_HOST_CLASS_HID_MOUSE *mouse;
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -58,7 +57,6 @@ extern UX_HOST_CLASS_HID_MOUSE *mouse;
 /* USER CODE END 0 */
 
 /* USER CODE BEGIN 1 */
-
 /**
   * @brief  Function implementing hid_mouse_thread_entry.
   * @param  thread_input: Not used

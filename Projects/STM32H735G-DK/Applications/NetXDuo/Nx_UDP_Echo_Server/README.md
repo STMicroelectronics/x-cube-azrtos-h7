@@ -27,18 +27,18 @@ The **AppUDPThread**, once started:
 
   + creates an UDP server socket
   + listen indefinitely on new client connections.
-  + As soon as a new connection is established, the UDP server socket starts receiving data packets from the client.
+  + As soon as a new connection is established, the green led starts toggling and the UDP server socket starts receiving data packets from the client.
 
   + At each received message the server:
-  
+
       + extracts the Client IP address and remote port
       + retrieve the data from the received packet
       + prints the info above on the HyperTerminal
-      
-  + Once the data exchange is completed the UDP server enters in an idle state an toggles the green led.
-      
 
-#### <b>Expected success behavior</b>
+  + Once the data exchange is completed the UDP server enters an idle state and the green led keeps on toggling.
+
+
+####  <b>Expected success behavior</b>
 
  + The board IP address is printed on the HyperTerminal
  + The response messages sent by the server are printed on the HyerTerminal
@@ -62,7 +62,7 @@ Reply from 192.168.1.2:6000, time 47 ms OK
 - The Application is using the DHCP to acquire IP address, thus a DHCP server should be reachable by the board in the LAN used to test the application.
 - The application does not support Ethernet cable hot-plug, therefore the board should be connected to the LAN before running the application.
 
-- The application is configuring the Ethernet IP with a static predefined MAC Address, make sure to change it in case multiple boards are connected on 
+- The application is configuring the Ethernet IP with a static predefined MAC Address, make sure to change it in case multiple boards are connected on
 the same LAN to avoid any potential network traffic issues.
 - The MAC Address is defined in the `main.c`
 
@@ -89,7 +89,6 @@ void MX_ETH_Init(void)
 None
 
 ### <b>Notes</b>
-
  1. Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from Flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.
  2.  If the application is using the DTCM/ITCM memories (@0x20000000/ 0x0000000: not cacheable and only accessible by the Cortex M7 and the MDMA), no need for cache maintenance when the Cortex M7 and the MDMA access these RAMs. If the application needs to use DMA (or other masters) based access or requires more RAM, then the user has to:
       - Use a non TCM SRAM. (example : D1 AXI-SRAM @ 0x24000000).
@@ -98,7 +97,7 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -113,16 +112,16 @@ None
    This require changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+     place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	``` 
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -130,14 +129,14 @@ None
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	``` 
-	
+    ```
+
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
-       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.	 
-       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).	 
+       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
        Read more in STM32CubeIDE User Guide, chapter: "Linker script".
-	  
+
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
 
 #### <b>NetX Duo usage hints</b>
@@ -148,24 +147,23 @@ None
 - The NetXDuo application needs to allocate the <b> <i> NX_PACKET </i> </b> pool in a dedicated section that is  configured as either "Cacheable Write-through" for <i>STM32H72XX</i> and <i>STM32H73XX </i>,  <i>STM32H7AXX</i> and <i>STM32H7BXX </i> or non-cacheable for other STM32H7 families. Below is an example of the section declaration for different IDEs.
    + For EWARM ".icf" file
    ```
-   define symbol __ICFEDIT_region_NXDATA_start__  = 0x24048200;
+   define symbol __ICFEDIT_region_NXDATA_start__  = 0x24032100;
    define symbol __ICFEDIT_region_NXDATA_end__   = 0x2404FFFF;
    define region NXApp_region  = mem:[from __ICFEDIT_region_NXDATA_start__ to __ICFEDIT_region_NXDATA_end__];
    place in NXApp_region { section .NetXPoolSection};
    ```
    + For MDK-ARM
    ```
-    RW_NXDriverSection 0x24048200 0x7E00  {
+    RW_NXDriverSection 0x24032100 0x7E00  {
   *(.NetXPoolSection)
   }
    ```
    + For STM32CubeIDE ".ld" file
-   ``` 
-   .nx_section 0x24048200 (NOLOAD): {
+   ```
+   .nx_section 0x24032100 (NOLOAD): {
      *(.NetXPoolSection)
      } >RAM_D1
    ```
-
   this section is then used in the <code> app_azure_rtos.c</code> file to force the <code>nx_byte_pool_buffer</code> allocation.
 
 ```
@@ -187,15 +185,14 @@ static TX_BYTE_POOL nx_app_byte_pool;
 ```
 For more details about the MPU configuration please refer to the [AN4838](https://www.st.com/resource/en/application_note/dm00272912-managing-memory-protection-unit-in-stm32-mcus-stmicroelectronics.pdf)
 
-
 ### <b>Keywords</b>
 
 RTOS, Network, ThreadX, NetXDuo, UDP, UART
 
 ### <b>Hardware and Software environment</b>
 
-  - This application runs on STM32H735xx devices.
-  - This application has been tested with STMicroelectronics STM32H735G-DK boards Revision: MB1520-H735I-B02
+  - This application runs on STM32H735xx devices
+  - This application has been tested with STMicroelectronics STM32H735G-DK boards Revision MB1520-H735I-B02
     and can be easily tailored to any other supported device and development board.
 
   - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
@@ -214,7 +211,7 @@ In order to make the program work, you must do the following :
  - run the [echotool](https://github.com/PavelBansky/EchoTool/releases/tag/v1.5.0.0) utility on a windows console as following:
 
        c:\> echotool.exe  <board IP address> /p udp  /r  <DEFAULT_PORT> /n 10 /d "Hello World"
- 
+
        example :  c:\> echotool.exe 192.168.1.2 /p udp /r 6000 /n 10 /d "Hello World"
 
  - Rebuild all files and load your image into target memory

@@ -33,6 +33,7 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "ux_hcd_stm32.h"
 #include "usb_otg.h"
+#include "app_azure_rtos_config.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -66,7 +67,6 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr);
 /* USER CODE BEGIN EFP */
 VOID USBX_APP_Host_Init(VOID);
 void USBH_DriverVBUS(uint8_t state);
-
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -97,7 +97,6 @@ typedef enum
   USB_VBUS_FALSE = 0,
   USB_VBUS_TRUE,
 } USB_VBUS_State;
-
 /* USER CODE END 1 */
 
 #ifdef __cplusplus

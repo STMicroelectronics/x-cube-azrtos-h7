@@ -49,15 +49,14 @@
 
 UX_SLAVE_CLASS_DFU *dfu;
 
-extern TX_QUEUE ux_app_MsgQueue;
-extern ux_dfu_downloadInfotypeDef ux_dfu_download;
-extern PCD_HandleTypeDef hpcd_USB_OTG_HS;
+extern TX_QUEUE                         ux_app_MsgQueue;
+extern ux_dfu_downloadInfotypeDef       ux_dfu_download;
+extern PCD_HandleTypeDef                hpcd_USB_OTG_HS;
 
-ULONG dfu_status = 0U;
-ULONG Address_ptr;
-UCHAR RX_Data[1024];
-UINT Leave_DFU_State = LEAVE_DFU_DISABLED;
-
+ULONG   dfu_status = 0U;
+ULONG   Address_ptr;
+UCHAR   RX_Data[1024];
+UINT    Leave_DFU_State = LEAVE_DFU_DISABLED;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -342,7 +341,6 @@ VOID usbx_dfu_download_thread_entry(ULONG thread_input)
 {
   UINT status, Command;
   ULONG Block_index, Data_address, Address_dest, Media_address;
-
   UX_PARAMETER_NOT_USED(thread_input);
 
   while (1)
@@ -483,15 +481,14 @@ static uint16_t DFU_Erase(uint32_t Address)
   FLASH_EraseInitTypeDef EraseInitStruct;
   uint16_t status = UX_SUCCESS;
   uint32_t SECTORError  = 0;
-
   TX_INTERRUPT_SAVE_AREA
 
   /* Fill EraseInit structure */
-  EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
-  EraseInitStruct.Banks = FLASH_BANK_1;
-  EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
-  EraseInitStruct.Sector = GetSector(Address);
-  EraseInitStruct.NbSectors = 1;
+  EraseInitStruct.TypeErase     = FLASH_TYPEERASE_SECTORS;
+  EraseInitStruct.Banks         = FLASH_BANK_1;
+  EraseInitStruct.VoltageRange  = FLASH_VOLTAGE_RANGE_3;
+  EraseInitStruct.Sector        = GetSector(Address);
+  EraseInitStruct.NbSectors     = 1;
 
   TX_DISABLE
 
@@ -529,5 +526,4 @@ static uint32_t GetSector(uint32_t Address)
 
   return (sector);
 }
-
 /* USER CODE END 1 */

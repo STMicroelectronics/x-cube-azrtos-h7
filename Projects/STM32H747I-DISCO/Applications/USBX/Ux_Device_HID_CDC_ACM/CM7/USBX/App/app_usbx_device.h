@@ -68,7 +68,6 @@ VOID USBX_APP_UART_Init(UART_HandleTypeDef **huart);
 
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
 /* USER CODE END PD */
 
 #ifndef UX_DEVICE_APP_THREAD_NAME
@@ -88,7 +87,6 @@ VOID USBX_APP_UART_Init(UART_HandleTypeDef **huart);
 #endif
 
 /* USER CODE BEGIN 1 */
-
 /* USER CODE END 1 */
 
 #ifdef __cplusplus

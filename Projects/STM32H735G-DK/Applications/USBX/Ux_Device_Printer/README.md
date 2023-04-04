@@ -8,7 +8,7 @@ descriptor report to build a compliant USB Printer device.
 At the beginning ThreadX calls the entry function tx_application_define(), at this stage, all USBx resources are initialized, the printer Class driver is
 registered and the application creates one thread:
 
-  - usbx_app_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device.
+  - usbx_app_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB_OTG HAL PCD driver and start the device.
   - usbx_printer_read_thread_entry (Prio : 20; PreemptionPrio : 20) used to read data from the Printer device
   - usbx_printer_write_thread_entry (Prio : 20; PreemptionPrio : 20) used to write data into the printer device.
 
@@ -46,7 +46,7 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 

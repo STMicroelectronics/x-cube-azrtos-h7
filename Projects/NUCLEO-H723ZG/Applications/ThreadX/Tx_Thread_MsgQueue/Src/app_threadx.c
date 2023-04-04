@@ -63,6 +63,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   UINT ret = TX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
   /* USER CODE BEGIN App_ThreadX_MEM_POOL */
+
   /* USER CODE END App_ThreadX_MEM_POOL */
   CHAR *pointer;
 
@@ -172,11 +173,13 @@ void MsgSenderThreadOne_Entry(ULONG thread_input)
 void MX_ThreadX_Init(void)
 {
   /* USER CODE BEGIN  Before_Kernel_Start */
+
   /* USER CODE END  Before_Kernel_Start */
 
   tx_kernel_enter();
 
   /* USER CODE BEGIN  Kernel_Start_Error */
+
   /* USER CODE END  Kernel_Start_Error */
 }
 
@@ -227,7 +230,9 @@ void MsgReceiverThread_Entry(ULONG thread_input)
       }
       else
       {
-        HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+        /* Turn ON GREEN LED */
+        printf("** Message is available on MsgQueueOne: SET_GREEN_LED**\r\n");
+        HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
       }
     }
     else
@@ -241,8 +246,9 @@ void MsgReceiverThread_Entry(ULONG thread_input)
           Error_Handler();
         }
         else
-        {
-          HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
+        {          /* Turn ON RED LED */
+          printf("** Message is available on MsgQueueTwo: SET_RED_LED**\r\n");
+          HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
         }
       }
     }

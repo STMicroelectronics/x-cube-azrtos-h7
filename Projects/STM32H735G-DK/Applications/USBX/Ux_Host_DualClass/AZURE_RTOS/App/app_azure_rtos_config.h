@@ -16,6 +16,7 @@
   *
   ******************************************************************************
   */
+
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -46,7 +47,7 @@ extern "C" {
 
 #define FX_APP_MEM_POOL_SIZE                     1024 * 2
 
-#define UX_HOST_APP_MEM_POOL_SIZE                1024 * 47
+#define UX_HOST_APP_MEM_POOL_SIZE                1024 * 53
 
 /* USER CODE BEGIN EC */
 

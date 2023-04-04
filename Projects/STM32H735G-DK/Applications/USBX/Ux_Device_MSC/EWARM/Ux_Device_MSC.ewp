@@ -366,7 +366,6 @@
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_device_controllers/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/inc/</state>
                     <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/inc/</state>
-                    <state>$PROJ_DIR$/../../../../../../Drivers/BSP/STM32H735G-DK</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -1113,6 +1112,9 @@
                     <name>$PROJ_DIR$\..\Core\Src\main.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\Core\Src\sdmmc.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\Core\Src\stm32h7xx_hal_msp.c</name>
                 </file>
                 <file>
@@ -1153,18 +1155,6 @@
     </group>
     <group>
         <name>Drivers</name>
-        <group>
-            <name>BSP</name>
-            <group>
-                <name>STM32H735G-DK</name>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.c</name>
-                </file>
-            </group>
-        </group>
         <group>
             <name>CMSIS</name>
             <file>

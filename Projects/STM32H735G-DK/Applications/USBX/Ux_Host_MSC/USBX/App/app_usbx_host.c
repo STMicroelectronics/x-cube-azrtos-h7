@@ -373,7 +373,7 @@ VOID USBX_APP_Host_Init(VOID)
   /* Initialize the LL driver */
   MX_USB_OTG_HS_HCD_Init();
 
-  /* Initialize the host controller driver */
+  /* Register all the USB host controllers available in this system. */
   ux_host_stack_hcd_register(_ux_system_host_hcd_stm32_name,
                              _ux_hcd_stm32_initialize, USB_OTG_HS_PERIPH_BASE,
                              (ULONG)&hhcd_USB_OTG_HS);

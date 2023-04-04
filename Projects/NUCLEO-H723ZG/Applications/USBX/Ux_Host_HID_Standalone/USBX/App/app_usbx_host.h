@@ -32,8 +32,8 @@ extern "C" {
 #include "ux_host_keyboard.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "usb_otg.h"
 #include "ux_hcd_stm32.h"
+#include "usb_otg.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -66,6 +66,7 @@ UINT MX_USBX_Host_Init(VOID);
 VOID USBX_APP_Host_Init(VOID);
 VOID USBH_DriverVBUS(uint8_t state);
 VOID USBX_Host_Process(VOID *arg);
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -80,7 +81,6 @@ typedef enum
   USB_VBUS_FALSE = 0,
   USB_VBUS_TRUE,
 } USB_VBUS_State;
-
 
 /* USER CODE END 1 */
 

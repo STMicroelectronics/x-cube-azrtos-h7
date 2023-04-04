@@ -47,7 +47,6 @@ static ULONG printer_interface_number;
 static ULONG printer_configuration_number;
 static UX_DEVICE_CLASS_PRINTER_PARAMETER printer_parameter;
 static TX_THREAD ux_device_app_thread;
-extern UCHAR USBD_PRINTER_DeviceID [];
 
 /* USER CODE BEGIN PV */
 TX_THREAD ux_printer_read_thread;
@@ -131,7 +130,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
   }
 
   /* Initialize the printer class parameters for the device */
-  printer_parameter.ux_device_class_printer_device_id           = USBD_PRINTER_DeviceID;
+  printer_parameter.ux_device_class_printer_device_id           = USBD_PRINTER_GetDeviceID();
   printer_parameter.ux_device_class_printer_instance_activate   = USBD_PRINTER_Activate;
   printer_parameter.ux_device_class_printer_instance_deactivate = USBD_PRINTER_Deactivate;
   printer_parameter.ux_device_class_printer_soft_reset          = USBD_PRINTER_SoftReset;
@@ -250,11 +249,12 @@ VOID USBX_APP_Device_Init(VOID)
   MX_USB_OTG_HS_PCD_Init();
 
   /* USER CODE BEGIN USB_Device_Init_PreTreatment_1 */
-
+  /* Set Rx FIFO */
   HAL_PCDEx_SetRxFiFo(&hpcd_USB_OTG_HS, 0x200);
+  /* Set Tx FIFO 0 */
   HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 0, 0x40);
+  /* Set Tx FIFO 1 */
   HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 1, 0x100);
-
   /* USER CODE END USB_Device_Init_PreTreatment_1 */
 
   /* Initialize and link controller HAL driver */

@@ -2288,18 +2288,6 @@
     <group>
         <name>Drivers</name>
         <group>
-            <name>BSP</name>
-            <group>
-                <name>STM32H747I-DISCO</name>
-                <file>
-                    <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\BSP\STM32H747I-DISCO\stm32h747i_discovery.c</name>
-                    <excluded>
-                        <configuration>Ux_Device_HID_CDC_ACM_CM4</configuration>
-                    </excluded>
-                </file>
-            </group>
-        </group>
-        <group>
             <name>CMSIS</name>
             <file>
                 <name>$PROJ_DIR$\..\Common\Src\system_stm32h7xx_dualcore_boot_cm4_cm7.c</name>

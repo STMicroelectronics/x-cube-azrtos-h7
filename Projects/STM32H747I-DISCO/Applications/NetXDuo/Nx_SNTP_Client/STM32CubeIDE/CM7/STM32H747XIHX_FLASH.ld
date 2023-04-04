@@ -22,7 +22,7 @@
 *****************************************************************************
 ** @attention
 **
-** Copyright (c) 2022 STMicroelectronics.
+** Copyright (c) 2021 STMicroelectronics.
 ** All rights reserved.
 **
 ** This software is licensed under terms that can be found in the LICENSE file
@@ -89,12 +89,12 @@ SECTIONS
     . = ALIGN(4);
   } >FLASH
 
-  .ARM.extab   : { 
+  .ARM.extab   : {
     . = ALIGN(4);
     *(.ARM.extab* .gnu.linkonce.armextab.*)
     . = ALIGN(4);
   } >FLASH
-  
+
   .ARM : {
     . = ALIGN(4);
     __exidx_start = .;
@@ -111,7 +111,7 @@ SECTIONS
     PROVIDE_HIDDEN (__preinit_array_end = .);
     . = ALIGN(4);
   } >FLASH
-  
+
   .init_array :
   {
     . = ALIGN(4);
@@ -121,7 +121,7 @@ SECTIONS
     PROVIDE_HIDDEN (__init_array_end = .);
     . = ALIGN(4);
   } >FLASH
-  
+
   .fini_array :
   {
     . = ALIGN(4);
@@ -136,7 +136,7 @@ SECTIONS
   _sidata = LOADADDR(.data);
 
   /* Initialized data sections into "RAM" Ram type memory */
-  .data : 
+  .data :
   {
     . = ALIGN(4);
     _sdata = .;        /* create a global symbol at data start */
@@ -175,23 +175,25 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >RAM_D1
+     .tcp_sec (NOLOAD) :
+     {
 
-  .tcp_sec (NOLOAD) : {
-
-    . = ABSOLUTE(0x30000000);
+    . = ABSOLUTE(0x24030000);
     *(.RxDecripSection)
 
-    . = ABSOLUTE(0x30000060);
+    . = ABSOLUTE(0x24030060);
     *(.TxDecripSection)
 
-  } >RAM_D2 AT> FLASH
+  } >RAM_D1 AT> FLASH
 
-  .nx_data 0x30000200 (NOLOAD):
-  {
+
+.nx_data 0x24030100 (NOLOAD):
+ {
+    . = ABSOLUTE(0x24032100);
     *(.NetXPoolSection)
 
-  } >RAM_D2 AT >FLASH
-  /* Remove information from the compiler libraries */
+ } >RAM_D1 AT >FLASH
+  /* Remove information from the standard libraries */
   /DISCARD/ :
   {
     libc.a ( * )

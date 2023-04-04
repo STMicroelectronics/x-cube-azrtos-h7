@@ -491,6 +491,11 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_arp_static_entry_delete_internal.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_http_proxy_client.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_http_proxy_client.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_icmp_cleanup.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_icmp_cleanup.c</locationURI>

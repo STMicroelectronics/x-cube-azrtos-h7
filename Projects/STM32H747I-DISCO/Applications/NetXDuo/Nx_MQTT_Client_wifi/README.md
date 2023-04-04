@@ -1,4 +1,3 @@
-
 ## <b>Nx_MQTT_Client_wifi application description</b>
 
 This application provides an example of Azure RTOS NetX/NetXDuo stack usage.

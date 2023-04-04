@@ -32,7 +32,7 @@ User is familiar with USB 2.0 "Universal Serial BUS" Specification and CDC_ACM c
 
 #### <b>Known limitations</b>
 
-None
+- If the USB cable is unplugged then re-plugged, sometimes the data are not received correctly by the STM32 USB host (some extra bytes sent).
 
 ### <b>Notes</b>
 
@@ -44,7 +44,7 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -93,18 +93,18 @@ None
 
 ### <b>Keywords</b>
 
-Connectivity, USBX Host, ThreadX, USB, CDC_ACM, UART, USART,
+Connectivity, USBX Host, ThreadX, USB, CDC_ACM, UART, USART
 
 
 ### <b>Hardware and Software environment</b>
 
   - This application runs on STM32H723xx devices
-  - This application has been tested with STMicroelectronics NUCLEO-H723ZG MB1364-H723ZG-E01.
+  - This application has been tested with STMicroelectronics NUCLEO-H723ZG boards Revision MB1364-H723ZG-E01.
     and can be easily tailored to any other supported device and development board.
 
 - NUCLEO-H723ZG Set-up
     - Plug the USB CDC_ACM device into the NUCLEO-H723ZG board through 'USB micro A-Male  to A-Female' cable to the connector:
-      - CN13 : to use USB High Speed OTG IP in full speed (HS_IN_FS)
+      - CN13 : to use USB High Speed OTG IP.
     - Connect ST-Link cable to the PC USB port to display data on the HyperTerminal.
 
     A virtual COM port will then appear in the HyperTerminal:
@@ -137,7 +137,6 @@ In order to make the program work, you must do the following :
 <b>Notes</b>
 
 - The user has to check the list of the COM ports in Device Manager to find out the number of the COM ports that have been assigned (by OS) to the Stlink VCP.
-
 - The application uses the bypass HSE clock (STlink MCO Output) which is HSI/2 (Default configuration).
 It is recommended for USB Host applications on NUCLEO-H723ZG board to change the USB Clock source to StlinkV3 MCO output: HSE/3(8.33MHZ) in order to have more accurate HSE input clock.
 To change MCO Clock Output please follow the steps below :

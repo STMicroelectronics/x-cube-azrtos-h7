@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2020-2021 STMicroelectronics.
+  * Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -24,6 +24,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "app_usbx_host.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -56,11 +57,11 @@ uint8_t                         block_reception_size[APP_RX_DATA_SIZE / BLOCK_SI
 uint16_t                        RxSzeIdx;
 
 #if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = 0x24034000
+#pragma location = ".UsbHpcdSection"
 #elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
-__attribute__((section(".UsbxAppSection")))
+__attribute__((section(".UsbHpcdSection")))
 #elif defined ( __GNUC__ ) /* GNU Compiler */
-__attribute__((section(".UsbxAppSection")))
+__attribute__((section(".UsbHpcdSection")))
 #endif
 static UCHAR UserRxBuffer[APP_RX_DATA_SIZE];
 /* USER CODE END PV */
@@ -84,8 +85,8 @@ static UCHAR UserRxBuffer[APP_RX_DATA_SIZE];
   */
 VOID cdc_acm_send_app_thread_entry(ULONG thread_input)
 {
-  UINT  status;
-  ULONG send_dataflag = 0;
+  UINT      status;
+  ULONG     send_dataflag = 0;
 
   while (1)
   {
@@ -112,7 +113,6 @@ VOID cdc_acm_send_app_thread_entry(ULONG thread_input)
       {
         USBH_ErrLog("Unable to send data");
       }
-
     }
     else
     {

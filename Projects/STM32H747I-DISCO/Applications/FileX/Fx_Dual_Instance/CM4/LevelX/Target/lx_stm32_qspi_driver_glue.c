@@ -33,7 +33,6 @@ TX_SEMAPHORE qspi_tx_semaphore;
 TX_SEMAPHORE qspi_rx_semaphore;
 
 /* USER CODE BEGIN DUAL_BANK_FLAG */
-
 /* USER CODE BEGIN DUAL_BANK_FLAG */
 
 #define QSPI_WRITE_ENABLE_SPI_MODE            0
@@ -152,7 +151,6 @@ INT lx_stm32_qspi_get_status(UINT instance)
 
   QSPI_CommandTypeDef s_command;
   uint8_t reg;
-
   /* Initialize the read flag status register command */
   /* USER CODE BEGIN QSPI_HAL_CFG_GetStatus */
   s_command.InstructionMode   = QSPI_INSTRUCTION_4_LINES;
@@ -178,7 +176,6 @@ INT lx_stm32_qspi_get_status(UINT instance)
   {
     return 1;
   }
-
   /* Check the value of the register */
   if ((reg & LX_STM32_QSPI_SR_WIP) != 0U)
   {
@@ -557,6 +554,7 @@ static uint8_t qspi_memory_reset(QSPI_HandleTypeDef *quadspi_handle)
   {
     return 1;
   }
+
   return 0;
 }
 
@@ -675,7 +673,7 @@ static uint8_t qspi_enter_4bytes_address_mode(QSPI_HandleTypeDef *quadspi_handle
   }
 
   /* Send the command */
-  if (HAL_QSPI_Command(quadspi_handle, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_QSPI_Command(quadspi_handle, &s_command, HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
@@ -698,7 +696,7 @@ static uint8_t qspi_enter_4bytes_address_mode(QSPI_HandleTypeDef *quadspi_handle
 static uint8_t qspi_dummy_cycles_configure(QSPI_HandleTypeDef *quadspi_handle)
 {
   QSPI_CommandTypeDef s_command;
-  uint16_t reg = 0;
+  uint8_t reg[2];
 
   /* Initialize the read volatile configuration register command */
   s_command.InstructionMode   = QSPI_INSTRUCTION_4_LINES;
@@ -706,20 +704,20 @@ static uint8_t qspi_dummy_cycles_configure(QSPI_HandleTypeDef *quadspi_handle)
   s_command.AddressMode       = QSPI_ADDRESS_NONE;
   s_command.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
   s_command.DataMode          = QSPI_DATA_4_LINES;
-  s_command.DummyCycles       = 0;
   s_command.NbData            = 2;
+  s_command.DummyCycles       = 0;
   s_command.DdrMode           = QSPI_DDR_MODE_DISABLE;
   s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
   s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
   /* Configure the command */
-  if (HAL_QSPI_Command(quadspi_handle, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_QSPI_Command(quadspi_handle, &s_command, HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
 
   /* Reception of the data */
-  if (HAL_QSPI_Receive(quadspi_handle, (uint8_t *)(&reg), HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_QSPI_Receive(quadspi_handle, &(reg[1]), HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
@@ -732,17 +730,16 @@ static uint8_t qspi_dummy_cycles_configure(QSPI_HandleTypeDef *quadspi_handle)
 
   /* Update volatile configuration register (with new dummy cycles) */
   s_command.Instruction = LX_STM32_QSPI_WRITE_VOL_CFG_REG_CMD;
-  MODIFY_REG(reg, 0xF0F0, ((LX_STM32_QSPI_DUMMY_CYCLES_READ_QUAD_STR << 4) |
+  MODIFY_REG(reg[1], 0xF0F0, ((LX_STM32_QSPI_DUMMY_CYCLES_READ_QUAD_STR << 4) |
                                (LX_STM32_QSPI_DUMMY_CYCLES_READ_QUAD_STR << 12)));
-
   /* Configure the write volatile configuration register command */
-  if (HAL_QSPI_Command(quadspi_handle, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_QSPI_Command(quadspi_handle, &s_command, HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
 
   /* Transmission of the data */
-  if (HAL_QSPI_Transmit(quadspi_handle, (uint8_t *)(&reg), HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_QSPI_Transmit(quadspi_handle, &(reg[0]), HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
@@ -772,13 +769,14 @@ static uint8_t qspi_enter_qpi_mode(QSPI_HandleTypeDef *quadspi_handle)
   s_command.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
   s_command.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-  if (HAL_QSPI_Command(quadspi_handle, &s_command, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+  if (HAL_QSPI_Command(quadspi_handle, &s_command, HAL_QSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
   {
     return 1;
   }
 
   return 0;
 }
+
 /**
   * @brief  Rx Transfer completed callbacks.
   * @param  handle_qspi: QSPI handle

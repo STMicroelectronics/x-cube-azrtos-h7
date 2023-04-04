@@ -8,7 +8,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2020-2021 STMicroelectronics.
+  * Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -46,14 +46,13 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+
 /* Define FileX global data structures.  */
 FX_MEDIA        sdio_disk;
 FX_FILE         fx_file;
-
 /* Buffer for FileX FX_MEDIA sector cache. this should be 32-Bytes
 aligned to avoid cache maintenance issues */
 ALIGN_32BYTES(uint32_t media_memory[FX_STM32_SD_DEFAULT_SECTOR_SIZE / sizeof(uint32_t)]);
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

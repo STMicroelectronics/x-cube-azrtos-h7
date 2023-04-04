@@ -95,7 +95,7 @@ void HAL_OSPI_MspInit(OSPI_HandleTypeDef* hospi)
   /** Initializes the peripherals clock
   */
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_OSPI;
-    PeriphClkInitStruct.OspiClockSelection = RCC_OSPICLKSOURCE_PLL;
+    PeriphClkInitStruct.OspiClockSelection = RCC_OSPICLKSOURCE_D1HCLK;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
     {
       Error_Handler();
@@ -202,7 +202,7 @@ void HAL_OSPI_MspInit(OSPI_HandleTypeDef* hospi)
     __HAL_LINKDMA(hospi,hmdma,hmdma_octospi1_fifo_th);
 
     /* OCTOSPI1 interrupt Init */
-    HAL_NVIC_SetPriority(OCTOSPI1_IRQn, 7, 0);
+    HAL_NVIC_SetPriority(OCTOSPI1_IRQn, 8, 0);
     HAL_NVIC_EnableIRQ(OCTOSPI1_IRQn);
   /* USER CODE BEGIN OCTOSPI1_MspInit 1 */
 

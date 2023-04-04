@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -41,9 +41,9 @@ ULONG NetMask;
 UCHAR *http_stack;
 UCHAR *iperf_stack;
 
-/* Set nx_server_pool start address to 0x24030100 */
+/* Set nx_server_pool start address */
 #if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = 0x24030100
+#pragma location = ".NxServerPoolSection"
 #elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(".NxServerPoolSection")))
 #elif defined ( __GNUC__ ) /* GNU Compiler */
@@ -386,7 +386,7 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
 
   while(1)
   {
-    /* Get Physical Link stackavailtus. */
+    /* Get Physical Link status. */
     status = nx_ip_interface_status_check(&NetXDuoEthIpInstance, 0, NX_IP_LINK_ENABLED,
                                       &actual_status, 10);
 

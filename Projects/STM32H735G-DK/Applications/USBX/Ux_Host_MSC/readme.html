@@ -41,7 +41,7 @@ initialized, the MSC Class driver is registered. The application creates
 two threads :</p>
 <ul>
 <li>usbx_app_thread_entry (Priority : 10; Preemption threshold : 10)
-used to initialize USB OTG HAL HCD driver and start the Host.</li>
+used to initialize USB_OTG HAL HCD driver and start the Host.</li>
 <li>msc_process_thread_entry (Priority : 30; Preemption threshold : 30)
 used to proceed to file operations once the device is properly
 enumerated.</li>
@@ -99,7 +99,7 @@ attributes using the MPU.</li>
 <li>Please refer to the <strong>AN4838</strong> “Managing memory
 protection unit (MPU) in STM32 MCUs”.</li>
 <li>Please refer to the <strong>AN4839</strong> “Level 1 cache on
-STM32F7 Series”</li>
+STM32F7 Series and STM32H7 Series”</li>
 </ul></li>
 </ol>
 <h4 id="threadx-usage-hints"><b>ThreadX usage hints</b></h4>
@@ -169,16 +169,17 @@ Removable drive, UART/USART</p>
 <h3 id="hardware-and-software-environment"><b>Hardware and Software
 environment</b></h3>
 <ul>
-<li><p>This application runs on STM32H735XX devices.</p></li>
+<li><p>This application runs on STM32H735xx devices.</p></li>
 <li><p>This application has been tested with STMicroelectronics
-STM32H735G-DK MB1520-H735I-B02. boards and can be easily tailored to any
-other supported device and development board.</p></li>
+STM32H735G-DK boards Revision: MB1520-H735I-B02. boards and can be
+easily tailored to any other supported device and development
+board.</p></li>
 <li><p>STM32H735G-DK Set-up</p>
 <ul>
 <li>Plug the USB key into the STM32H735G-DK board through ‘USB micro
 A-Male to A-Female’ cable to the connector:
 <ul>
-<li>CN14 : to use USB High Speed OTG IP in full speed (HS_IN_FS)</li>
+<li>CN14 : to use USB High Speed OTG IP.</li>
 </ul></li>
 <li>Connect ST-Link cable to the PC USB port to display data on the
 HyperTerminal.</li>

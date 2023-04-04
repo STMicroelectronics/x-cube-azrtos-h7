@@ -1,16 +1,15 @@
-
 ## <b>Tx_Thread_Creation application description</b>
 
 This application provides an example of Azure RTOS ThreadX stack usage, it shows how to develop an application using the ThreadX thread management APIs.
-It demonstrates how to create and destroy multiple threads using Azure RTOS ThreadX APIs. In addition, it shows how to use preemption threshold between threads and change priorities on-fly. 
+It demonstrates how to create and destroy multiple threads using Azure RTOS ThreadX APIs. In addition, it shows how to use preemption threshold between threads and change priorities on-fly.
 The main entry function tx_application_define() is then called by ThreadX during kernel start, at this stage, the application creates 3 threads with different priorities :
- 
+
   - MainThread (Prio : 5; Preemption Threshold : 5)
   - ThreadOne (Prio : 10; Preemption Threshold : 9)
   - ThreadTwo (Prio : 10; Preemption Threshold : 10)
 
-Once started, the <b>MainThread</b> is suspended waiting for the event flag. 
-The *ThreadOne* starts to toggle the *LED_GREEN* each 500ms and <b>ThreadTwo</b> cannot as its priority is less than the *ThreadOne* threshold. 
+Once started, the <b>MainThread</b> is suspended waiting for the event flag.
+The *ThreadOne* starts to toggle the *LED_GREEN* each 500ms and <b>ThreadTwo</b> cannot as its priority is less than the *ThreadOne* threshold.
 After 5 seconds it sends an event *THREAD_ONE_EVT* to the <b>MainThread</b>.
 
 After receiving the *THREAD_ONE_EVT*, the <b>MainThread</b> change the <b>ThreadTwo</b> priority to 8 and its preemption threshold to 8 to be more than the *ThreadOne* threshold then waits for an event.
@@ -26,8 +25,8 @@ After repeating the sequence above 3 times, the <b>MainThread</b> should destroy
   - Success status (After 3 times) :  'LED_GREEN' toggles every 1 second for ever.
 
 #### <b>Error behaviors</b>
-
 LED_RED toggles every 1 second if any error occurs.
+an error message is printed to the serial port.
 
 #### <b>Assumptions if any</b>
 None
@@ -45,8 +44,8 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
-  
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
+
 #### <b>ThreadX usage hints</b>
 
  - ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.
@@ -60,16 +59,16 @@ None
    This require changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+     place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	``` 
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -77,16 +76,16 @@ None
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	``` 
-	
+    ```
+
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
-       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.	 
-       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).	 
+       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
        Read more in STM32CubeIDE User Guide, chapter: "Linker script".
-	  
+
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
-         
+
 ### <b>Keywords</b>
 
 RTOS, ThreadX, Threading, Event flags, Preemption threshold
@@ -97,6 +96,13 @@ RTOS, ThreadX, Threading, Event flags, Preemption threshold
   - This example runs on STM32H723xx devices
   - This example has been tested with STMicroelectronics NUCLEO-H723ZG boards Revision MB1364-H723ZG-E01
     and can be easily tailored to any other supported device and development board.
+
+  - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
+      - BaudRate = 115200 baud
+      - Word Length = 8 Bits
+      - Stop Bit = 1
+      - Parity = None
+      - Flow control = None
 
 ###  <b>How to use it ?</b>
 

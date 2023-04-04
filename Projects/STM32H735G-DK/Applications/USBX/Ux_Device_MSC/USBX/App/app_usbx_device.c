@@ -50,6 +50,7 @@ static TX_THREAD ux_device_app_thread;
 
 /* USER CODE BEGIN PV */
 TX_EVENT_FLAGS_GROUP EventFlag;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -255,8 +256,11 @@ VOID USBX_APP_Device_Init(VOID)
 
   /* USER CODE BEGIN USB_Device_Init_PreTreatment_1 */
 
+  /* Set Rx FIFO */
   HAL_PCDEx_SetRxFiFo(&hpcd_USB_OTG_HS, 0x200);
+  /* Set Tx FIFO 0 */
   HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 0, 0x40);
+  /* Set Tx FIFO 1 */
   HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 1, 0x100);
 
   /* USER CODE END USB_Device_Init_PreTreatment_1 */

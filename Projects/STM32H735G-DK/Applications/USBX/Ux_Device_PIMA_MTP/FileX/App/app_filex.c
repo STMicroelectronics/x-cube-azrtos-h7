@@ -53,7 +53,6 @@ TX_THREAD fx_app_thread;
 UINT object_handles_counter;
 UINT object_handle_index_num = 1;
 ObjectHandleTypeDef ObjectHandleInfo[MTP_MAX_HANDLES];
-
 ALIGN_32BYTES (uint32_t fx_sd_media_memory[FX_STM32_SD_DEFAULT_SECTOR_SIZE / sizeof(uint32_t)]);
 extern HAL_SD_CardInfoTypeDef  pCardInfo;
 /* USER CODE END PV */

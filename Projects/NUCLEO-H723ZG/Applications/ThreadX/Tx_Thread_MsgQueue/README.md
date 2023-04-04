@@ -1,9 +1,8 @@
-
 ##  <b>Tx_Thread_MsgQueue application description</b>
 
 This application provides an example of Azure RTOS ThreadX stack usage, it shows how to develop an application using the ThreadX message queue APIs.
 It demonstrates how to send and receive messages between threads using ThreadX message queue APIs. In addition, it shows how to use the event chaining feature.
-The main entry function tx_application_define() is then called by ThreadX during kernel start, at this stage, the application creates 3 threads with different 
+The main entry function tx_application_define() is then called by ThreadX during kernel start, at this stage, the application creates 3 threads with different
 priorities and 2 message queues :
 
   - MsgSenderThreadOne (Priority : 5; Preemption Threshold : 5)
@@ -11,20 +10,17 @@ priorities and 2 message queues :
   - MsgReceiverThread (Priority : 10; Preemption Threshold : 10)
   - MsgQueueOne (shared by MsgSenderThreadOne and MsgReceiverThread)
   - MsgQueueTwo (shared by MsgSenderThreadTwo and MsgReceiverThread)
-
 <i> MsgSenderThreadOne</i> puts the message <i>TOGGLE_LED</i> on <i>MsgQueueOne</i> each 200 ms.
 <i>MsgSenderThreadTwo</i> puts the message <i>TOGGLE_LED</i> on <i>MsgQueueTwo</i> each 500 ms.
 <i>MsgReceiverThread</i> listen on both message queues :
-
   - When a message is available on <i>MsgQueueOne</i>, the <i>GREEN LED</i> is Toggled once.
   - When a message is available on <i>MsgQueueTwo</i>, the <i>RED LED</i> is Toggled once.
 
 ####  <b>Expected success behavior</b>
-
 <i>GREEN_LED</i> toggles every 200ms and <i>RED_LED</i> toggles every 500ms if the application is running successfully.
 
 #### <b>Error behaviors</b>
-
+On failure, an error message is printed to the serial port while the <i>GREEN_LED</i>  is turned OFF.
 <i>LED_RED</i> toggles every 1 second if any error occurs.
 
 #### <b>Assumptions if any</b>
@@ -43,8 +39,8 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
-  
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
+
 #### <b>ThreadX usage hints</b>
 
  - ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.
@@ -58,16 +54,16 @@ None
    This require changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+     place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	``` 
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -75,14 +71,13 @@ None
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	``` 
-	
+    ```
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
-       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.	 
-       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).	 
+       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
        Read more in STM32CubeIDE User Guide, chapter: "Linker script".
-	  
+
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
 
 ### <b>Keywords</b>
@@ -95,6 +90,12 @@ RTOS, ThreadX, Threading, Message Queue, Event chaining
   - This example has been tested with STMicroelectronics NUCLEO-H723ZG boards Revision MB1364-H723ZG-E01
     and can be easily tailored to any other supported device and development board.
 
+  - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
+      - BaudRate = 115200 baud
+      - Word Length = 8 Bits
+      - Stop Bit = 1
+      - Parity = None
+      - Flow control = None
 
 ###  <b>How to use it ?</b>
 
@@ -103,4 +104,3 @@ In order to make the program work, you must do the following:
  - Open your preferred toolchain
  - Rebuild all files and load your image into target memory
  - Run the application
- 

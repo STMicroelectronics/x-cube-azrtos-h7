@@ -448,8 +448,6 @@ UINT message_generate()
 {
   uint32_t RandomNbr = 0;
 
-  HAL_RNG_Init(&hrng);
-
   /* generate a random number */
   if(HAL_RNG_GenerateRandomNumber(&hrng, &RandomNbr) != HAL_OK)
   {
@@ -522,6 +520,7 @@ UINT tls_setup_callback(NXD_MQTT_CLIENT *client_pt,
   }
 
   /* Add a CA Certificate to our trusted store */
+
   ret = nx_secure_tls_trusted_certificate_add(TLS_session_ptr, trusted_certificate_ptr);
   if (ret != TX_SUCCESS)
   {
@@ -787,7 +786,7 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
 
   while(1)
   {
-    /* Get Physical Link stackavailtus. */
+    /* Get Physical Link status. */
     status = nx_ip_interface_status_check(&NetXDuoEthIpInstance, 0, NX_IP_LINK_ENABLED,
                                       &actual_status, 10);
 

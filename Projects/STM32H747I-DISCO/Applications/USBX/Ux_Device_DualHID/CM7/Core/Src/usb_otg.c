@@ -22,10 +22,11 @@
 
 /* USER CODE BEGIN 0 */
 
+#include <string.h>
 /* Set hpcd_USB_OTG_HS at the end of non-cacheable
-   Memory address 0x24027000. */
+   Memory address ".UsbHpcdSection". */
 #if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = 0x24027000
+#pragma location = ".UsbHpcdSection"
 #elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(".UsbHpcdSection")))
 #elif defined ( __GNUC__ ) /* GNU Compiler */

@@ -30,7 +30,6 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -69,11 +68,13 @@ extern "C" {
 #define TX_APP_THREAD_AUTO_START                TX_AUTO_START
 #endif
 /* USER CODE BEGIN MTD */
+
 /* USER CODE END MTD */
 
 /* Exported macro ------------------------------------------------------------*/
 
 /* USER CODE BEGIN EM */
+
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/

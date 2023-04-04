@@ -72,7 +72,6 @@ Hotplug is not implemented for this example, that is, the SD card is expected to
 
 
 ### <b>Notes</b>
-
  1. Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from Flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.
  2.  If the application is using the DTCM/ITCM memories (@0x20000000/ 0x0000000: not cacheable and only accessible by the Cortex M7 and the MDMA), no need for cache maintenance when the Cortex M7 and the MDMA access these RAMs. If the application needs to use DMA (or other masters) based access or requires more RAM, then the user has to:
       - Use a non TCM SRAM. (example : D1 AXI-SRAM @ 0x24000000).
@@ -81,7 +80,7 @@ Hotplug is not implemented for this example, that is, the SD card is expected to
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -132,13 +131,14 @@ Hotplug is not implemented for this example, that is, the SD card is expected to
 #### <b>NetX Duo usage hints</b>
 
 - The ETH TX And RX descriptors are accessed by the CPU and the ETH DMA IP, thus they should not be allocated into the DTCM RAM "0x20000000".
+
 - Make sure to allocate them into a "Non-Cacheable" memory region to always ensure data coherency between the CPU and ETH DMA.
 - Depending on the application scenario, the total TX and RX descriptors may need to be increased by updating respectively  the "ETH_TX_DESC_CNT" and "ETH_RX_DESC_CNT" in the "stm32h7xx_hal_conf.h", to guarantee the application correct behaviour, but this will cost extra memory to allocate.
 - The NetXDuo application needs to allocate the <b> <i> NX_PACKET </i> </b> pool in a dedicated section that is  configured as either "Cacheable Write-through" for <i>STM32H72XX</i> and <i>STM32H73XX </i>,  <i>STM32H7AXX</i> and <i>STM32H7BXX </i> or non-cacheable for other STM32H7 families. Below is an example of the section declaration for different IDEs.
    + For EWARM ".icf" file
    ```
-   define symbol __ICFEDIT_region_NXDATA_start__  = 0x24032100;
-   define symbol __ICFEDIT_region_NXDATA_end__   = 0x2404FFFF;
+   define symbol __ICFEDIT_region_NXDATA_start__  = 0x24030100;
+   define symbol __ICFEDIT_region_NXDATA_end__   = 0x240340FF;
    define region NXApp_region  = mem:[from __ICFEDIT_region_NXDATA_start__ to __ICFEDIT_region_NXDATA_end__];
    place in NXApp_region { section .NetXPoolSection};
    ```
@@ -148,7 +148,7 @@ Hotplug is not implemented for this example, that is, the SD card is expected to
   *(.NxServerPoolSection)
   }
 
-   RW_NXDriverSection 0x24032100 0x1F000  {
+   RW_NXDriverSection 0x24034100 0x1F000  {
   *(.NetXPoolSection)
   }
    ```
@@ -159,7 +159,7 @@ Hotplug is not implemented for this example, that is, the SD card is expected to
     . = ABSOLUTE(0x24030100);
     *(.NxServerPoolSection)
 
-    . = ABSOLUTE(0x24032100);
+    . = ABSOLUTE(0x24034100);
     *(.NetXPoolSection)
 
  } >RAM_D1 AT >FLASH

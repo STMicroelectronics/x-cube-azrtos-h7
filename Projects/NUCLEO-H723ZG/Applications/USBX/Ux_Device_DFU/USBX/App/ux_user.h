@@ -316,7 +316,7 @@
 
 /* Defined, this macro will enable DFU_GETSTATUS and DFU_GETSTATE in dfuERROR.  */
 
-/* #define UX_DEVICE_CLASS_DFU_ERROR_GET_ENABLE  */
+#define UX_DEVICE_CLASS_DFU_ERROR_GET_ENABLE
 
 /* Defined, this macro will change status mode.
    0 - simple mode,

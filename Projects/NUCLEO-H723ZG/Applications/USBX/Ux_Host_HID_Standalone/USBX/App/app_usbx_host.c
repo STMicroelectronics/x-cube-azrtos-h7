@@ -46,7 +46,7 @@
 /* USER CODE BEGIN UX_Host_Memory_Buffer */
 
 #if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = 0x24027000
+#pragma location = ".UsbxPoolSection"
 #elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(".UsbxPoolSection")))
 #elif defined ( __GNUC__ ) /* GNU Compiler */

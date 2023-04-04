@@ -65,7 +65,6 @@ VOID USBX_APP_Device_Init(VOID);
 
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
 /* USER CODE END PD */
 
 #ifndef UX_DEVICE_APP_THREAD_NAME
@@ -85,7 +84,6 @@ VOID USBX_APP_Device_Init(VOID);
 #endif
 
 /* USER CODE BEGIN 1 */
-
 /* USER CODE END 1 */
 
 #ifdef __cplusplus

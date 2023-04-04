@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2020-2021 STMicroelectronics.
+  * Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -43,7 +43,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-extern UX_HOST_CLASS_HID_MOUSE *mouse;
+extern UX_HOST_CLASS_HID_MOUSE      *mouse;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -151,4 +151,5 @@ VOID hid_mouse_thread_entry(ULONG thread_input)
     }
   }
 }
+
 /* USER CODE END 1 */

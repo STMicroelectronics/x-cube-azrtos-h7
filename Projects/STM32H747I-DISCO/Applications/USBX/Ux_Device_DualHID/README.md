@@ -1,6 +1,6 @@
 ## <b>Ux_Device_DualHID application description</b>
 
-This application provides an example of Azure RTOS USBX stack usage on STM32H747I_Discovery board, it shows how to develop a composite USB Device Human Interface
+This application provides an example of Azure RTOS USBX stack usage on STM32H747I-DISCO board, it shows how to develop a composite USB Device Human Interface
 Device Class "HID Mouse" and "HID Keyboard" based application.
 
 The application is designed to emulate an USB HID Composite mouse & keyboard device , the code provides all required device descriptors framework
@@ -22,9 +22,9 @@ the report buffer through the ux_device_class_hid_event_set() API.
 
 #### <b>Expected success behavior</b>
 
-When plugged to PC host, the STM32H747I_Discovery must be properly enumerated a composite device as an HID ,USB Serial device and an STlink Com port.
+When plugged to PC host, the STM32H747I-DISCO must be properly enumerated a composite device as an HID ,USB Serial device and an STlink Com port.
 During the enumeration phase, the device must provide host with the requested descriptors (Device descriptor, configuration descriptor, string descriptors).
-Those descriptors are used by host driver to identify the device capabilities. Once STM32H747I_Discovery USB device successfully completed the enumeration phase.
+Those descriptors are used by host driver to identify the device capabilities. Once STM32H747I-DISCO USB device successfully completed the enumeration phase.
 Connect USB cable to Host .
 
 - Press Joystick to send cursor position.
@@ -43,7 +43,6 @@ User is familiar with USB 2.0 "Universal Serial BUS" Specification and CDC_ACM c
 None.
 
 ### <b>Notes</b>
-
  1. Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from Flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.
  2.  If the application is using the DTCM/ITCM memories (@0x20000000/ 0x0000000: not cacheable and only accessible by the Cortex M7 and the MDMA), no need for cache maintenance when the Cortex M7 and the MDMA access these RAMs. If the application needs to use DMA (or other masters) based access or requires more RAM, then the user has to:
       - Use a non TCM SRAM. (example : D1 AXI-SRAM @ 0x24000000).
@@ -52,7 +51,7 @@ None.
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -95,7 +94,6 @@ None.
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
 
 #### <b>USBX usage hints</b>
-
 - The DTCM (0x20000000) memory region should not be used by application in case USB DMA is enabled
 - Should make sure to configure the USB pool memory region with attribute "Non-Cacheable" to ensure coherency between CPU and USB DMA
 
@@ -107,14 +105,13 @@ RTOS, ThreadX, USBX, USBXDevice, USB_OTG, High Speed, HID, Keyboard, Mouse.
 ### <b>Hardware and Software environment</b>
 
   - This example runs on STM32H747xx devices
-  - This example has been tested with STMicroelectronics STM32H747I_Discovery boards Revision MB1520-H735I-B02 and can be easily tailored to any other supported device and development board.
-  - STM32H747I_Discovery Set-up
-  - Connect the STM32H747I_Discovery board CN1 to the PC through "MICRO-USB" to "Standard A" cable.
+  - This example has been tested with STMicroelectronics STM32H747I-DISCO boards Revision MB1520-H747I-B02 and can be easily tailored to any other supported device and development board.
+  - STM32H747I-DISCO Set-up
+  - Connect the STM32H747I-DISCO board CN1 to the PC through "MICRO-USB" to "Standard A" cable.
 
 ### <b>How to use it ?</b>
 
 In order to make the program work, you must do the following :
-
  - Open your preferred toolchain
  - For each target configuration (Ux_Device_DualHID_CM4 first then Ux_Device_DualHID_CM7) :
      - Rebuild all files

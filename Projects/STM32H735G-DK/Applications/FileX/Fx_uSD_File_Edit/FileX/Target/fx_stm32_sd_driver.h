@@ -42,7 +42,7 @@ extern TX_SEMAPHORE sd_rx_semaphore;
 #define FX_STM32_SD_DEFAULT_TIMEOUT                      (10 * TX_TIMER_TICKS_PER_SECOND)
 
 /* Let the filex low-level driver initialize the SD driver */
-#define FX_STM32_SD_INIT                                 1
+#define FX_STM32_SD_INIT                                 0
 
 /* Enable the cache mainatenance, required when using the SD DMA */
 #define FX_STM32_SD_CACHE_MAINTENANCE                    1
@@ -60,13 +60,11 @@ extern TX_SEMAPHORE sd_rx_semaphore;
 /* USER CODE BEGIN EM */
 
 /* USER CODE END EM */
-
 /* Define the CPU Cache maintenance macros */
 #if (FX_STM32_SD_CACHE_MAINTENANCE == 1)
 #define invalidate_cache_by_addr(__ptr__, __size__)                  SCB_InvalidateDCache_by_Addr((void *)__ptr__, (int32_t)__size__)
 #define clean_cache_by_addr(__ptr__, __size__)                       SCB_CleanDCache_by_Addr((uint32_t *)__ptr__, (int32_t)__size__)
 #endif
-
 /* Define the macro to get the current time in ticks */
 /* USER CODE BEGIN FX_STM32_SD_CURRENT_TIME_TX */
 

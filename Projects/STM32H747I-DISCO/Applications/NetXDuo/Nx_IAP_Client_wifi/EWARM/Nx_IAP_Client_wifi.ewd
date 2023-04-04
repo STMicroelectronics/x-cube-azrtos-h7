@@ -80,7 +80,7 @@
                 </option>
                 <option>
                     <name>OCProductVersion</name>
-                    <state>8.32.3.20186</state>
+                    <state>8.50.1.24770</state>
                 </option>
                 <option>
                     <name>OCDynDriverList</name>
@@ -1123,7 +1123,7 @@
                 <option>
                     <name>CCSTLinkProbeList</name>
                     <version>1</version>
-                    <state>3</state>
+                    <state>0</state>
                 </option>
             </data>
         </settings>
@@ -1565,7 +1565,7 @@
                 </option>
                 <option>
                     <name>OCProductVersion</name>
-                    <state>8.32.3.20186</state>
+                    <state>8.50.1.24770</state>
                 </option>
                 <option>
                     <name>OCDynDriverList</name>
@@ -2608,7 +2608,7 @@
                 <option>
                     <name>CCSTLinkProbeList</name>
                     <version>1</version>
-                    <state>3</state>
+                    <state>0</state>
                 </option>
             </data>
         </settings>
@@ -2939,7 +2939,7 @@
             </plugin>
             <plugin>
                 <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ENU.ewplugin</file>
-                <loadFlag>1</loadFlag>
+                <loadFlag>0</loadFlag>
             </plugin>
             <plugin>
                 <file>$TOOLKIT_DIR$\plugins\rtos\TI-RTOS\tirtosplugin.ewplugin</file>

@@ -87,7 +87,6 @@ VOID USBX_APP_UART_Init(UART_HandleTypeDef **huart);
 #endif
 
 /* USER CODE BEGIN 1 */
-
 /* USER CODE END 1 */
 
 #ifdef __cplusplus

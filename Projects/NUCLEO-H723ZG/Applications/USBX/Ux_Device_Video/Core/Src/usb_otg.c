@@ -21,17 +21,18 @@
 #include "usb_otg.h"
 
 /* USER CODE BEGIN 0 */
+#include "string.h"
+/* Set hpcd_USB_OTG_HS at the end of non-cacheable */
 
-/* Set hpcd_USB_OTG_HS at the end of non-cacheable
-   Memory address 0x24027000. */
 #if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = 0x24027000
+#pragma location = ".UsbHpcdSection"
+
 #elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(".UsbHpcdSection")))
 #elif defined ( __GNUC__ ) /* GNU Compiler */
 __attribute__((section(".UsbHpcdSection")))
-#endif
 
+#endif
 /* USER CODE END 0 */
 
 PCD_HandleTypeDef hpcd_USB_OTG_HS;
@@ -96,7 +97,7 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle)
     __HAL_RCC_USB_OTG_HS_CLK_ENABLE();
 
     /* USB_OTG_HS interrupt Init */
-    HAL_NVIC_SetPriority(OTG_HS_IRQn, 6, 0);
+    HAL_NVIC_SetPriority(OTG_HS_IRQn, 7, 0);
     HAL_NVIC_EnableIRQ(OTG_HS_IRQn);
   /* USER CODE BEGIN USB_OTG_HS_MspInit 1 */
 

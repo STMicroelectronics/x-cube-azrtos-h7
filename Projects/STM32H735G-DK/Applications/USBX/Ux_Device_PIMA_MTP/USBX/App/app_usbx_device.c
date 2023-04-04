@@ -255,7 +255,6 @@ static VOID app_ux_device_thread_entry(ULONG thread_input)
 VOID USBX_APP_Device_Init(VOID)
 {
   /* USER CODE BEGIN USB_Device_Init_PreTreatment_0 */
-
   /* USER CODE END USB_Device_Init_PreTreatment_0 */
 
   /* USB_OTG_HS init function */
@@ -263,9 +262,13 @@ VOID USBX_APP_Device_Init(VOID)
 
   /* USER CODE BEGIN USB_Device_Init_PreTreatment_1 */
 
+  /* Set Rx FIFO */
   HAL_PCDEx_SetRxFiFo(&hpcd_USB_OTG_HS, 0x200);
+  /* Set Tx FIFO 0 */
   HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 0, 0x40);
+  /* Set Tx FIFO 1 */
   HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 1, 0x140);
+    /* Set Tx FIFO 2 */
   HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 2, 0x20);
 
   /* USER CODE END USB_Device_Init_PreTreatment_1 */

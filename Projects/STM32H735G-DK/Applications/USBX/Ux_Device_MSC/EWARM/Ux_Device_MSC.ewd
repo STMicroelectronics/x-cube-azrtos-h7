@@ -80,7 +80,7 @@
 				</option>
 				<option>
 					<name>OCProductVersion</name>
-					<state>8.50.1.24770</state>
+					<state>8.32.3.20186</state>
 				</option>
 				<option>
 					<name>OCDynDriverList</name>
@@ -88,7 +88,7 @@
 				</option>
 				<option>
 					<name>OCLastSavedByProductVersion</name>
-					<state>8.50.1.24770</state>
+					<state>8.32.3.20186</state>
 				</option>
 				<option>
 					<name>UseFlashLoader</name>
@@ -1118,8 +1118,8 @@
 				</option>
 				<option>
 					<name>CCSTLinkProbeList</name>
-					<version>1</version>
-					<state>0</state>
+					<version>0</version>
+					<state>2</state>
 				</option>
 			</data>
 		</settings>

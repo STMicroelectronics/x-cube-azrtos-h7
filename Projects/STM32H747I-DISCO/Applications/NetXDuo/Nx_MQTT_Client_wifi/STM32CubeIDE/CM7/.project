@@ -726,6 +726,11 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_arp_static_entry_delete_internal.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_http_proxy_client.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_http_proxy_client.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_icmp_cleanup.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_icmp_cleanup.c</locationURI>
@@ -3346,9 +3351,54 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_dtls_verify_mac.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_generate_client_key_exchange.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_generate_client_key_exchange.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_generate_master_secret.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_generate_master_secret.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_generate_premaster_secret.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_generate_premaster_secret.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_generate_server_key_exchange.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_generate_server_key_exchange.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_generate_session_keys.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_generate_session_keys.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_module_hash_compute.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_module_hash_compute.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_process_client_key_exchange.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_process_client_key_exchange.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_process_server_key_exchange.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_process_server_key_exchange.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_remote_certificate_verify.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_remote_certificate_verify.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_session_keys_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_session_keys_set.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_tls_1_3_client_handshake.c</name>
@@ -3836,6 +3886,11 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_tls_session_packet_buffer_set.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_tls_session_packet_pool_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_tls_session_packet_pool_set.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_tls_session_protocol_version_override.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_tls_session_protocol_version_override.c</locationURI>
@@ -3919,6 +3974,16 @@
 			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_tls_verify_mac.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_tls_verify_mac.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_trusted_certificate_add.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_trusted_certificate_add.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_verify_mac.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nx_secure_verify_mac.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nx_secure_x509.c</name>
@@ -4369,6 +4434,11 @@
 			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nxe_secure_tls_session_packet_buffer_set.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nxe_secure_tls_session_packet_buffer_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nxe_secure_tls_session_packet_pool_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/nx_secure/src/nxe_secure_tls_session_packet_pool_set.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/TLS/nxe_secure_tls_session_protocol_version_override.c</name>

@@ -1,7 +1,6 @@
+## <b>Fx_uSD_File_Edit application description</b>
 
-## <b>Fx_uSD_File_Edit application description </b>
-
-This application provides an example of Azure RTOS FileX stack usage on STM32H735G-DK board, it shows how to develop a basic SD card file
+This application provides an example of Azure RTOS FileX stack usage on STM32H735G-DK, it shows how to develop a basic SD card file
 
 operations application. The application is designed to handle SD card insertion/removal events, and depending on that state, it starts
 
@@ -40,13 +39,14 @@ is checked if matches what was previously written.
 
 #### <b>Error behaviors</b>
 
-- On failure, the red LED should start blinking.
+- On failure, the LED_RED should start blinking.
 - Error handler is called at the spot where the error occurred.
 
 #### <b>Assumptions if any</b>
 - The SD card should be plugged prior to run the application.
 
 #### <b>Known limitations</b>
+
 None
 
 ### <b>Notes</b>
@@ -59,7 +59,8 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 and STM32H7 Series"
+
 
 #### <b>ThreadX usage hints</b>
 
@@ -101,17 +102,16 @@ None
 
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
 
-
 #### <b>FileX/LevelX usage hints</b>
 
-- FileX sd driver is using the DMA, thus the DTCM (0x20000000) memory should not be used by the application, as it is not accessible by the SD DMA.
+- FileX sd driver is using the DMA, thus the DTCM 0x20000000 memory should not be used by the application, as it is not accessible by the SD DMA.
 - When calling the fx_media_format() API, it is highly recommended to understand all the parameters used by the API to correctly generate a valid filesystem.
 - FileX is using data buffers, passed as arguments to fx_media_open(), fx_media_read() and fx_media_write() API it is recommended that these buffers are multiple of sector size and "32 bytes" aligned to avoid cache maintenance issues.
-
 
 ### <b>Keywords</b>
 
 RTOS, ThreadX, FileX, File system, SDMMC, FAT32
+
 
 ### <b>Hardware and Software environment</b>
 
@@ -119,11 +119,10 @@ RTOS, ThreadX, FileX, File system, SDMMC, FAT32
   - This application has been tested with STMicroelectronics STM32H735G-DK boards Revision: MB1520-H735I-B02.
     and can be easily tailored to any other supported device and development board.
 
-
 ### <b>How to use it ?</b>
 
 In order to make the program work, you must do the following :
 
- - Open your preferred toolchain
- - Rebuild all files and load your image into target memory
- - Run the application
+  - Open your preferred toolchain
+  - Rebuild all files and load your image into target memory
+  - Run the application

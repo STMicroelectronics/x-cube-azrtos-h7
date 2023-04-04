@@ -1,6 +1,6 @@
 ## <b>Ux_Device_CCID application description</b>
 
-This application provides an example of Azure RTOS USBX stack usage on STM32H723ZG board,
+This application provides an example of Azure RTOS USBX stack usage on NUCLEO-H723ZG board,
 it shows how to develop USB Device for Integrated Circuit Card Interface Device based application.
 
 The application is designed to emulate a smart card reader device, the code provides all required device descriptors framework
@@ -9,7 +9,7 @@ and associated Class descriptor to build a USB CCID device.
 At the beginning ThreadX call the entry function tx_application_define(), at this stage, all USBx resources
 are initialized, the CCID Class driver is registered and the application creates 2 threads with the same priorities :
 
-  - usbx_app_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device.
+  - usbx_app_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB_OTG HAL PCD driver and start the device.
   - usbx_ccid_thread_entry (Prio : 20; PreemptionPrio : 20) used to simulate Card insert remove detection.
 
 CCID reader example is hosted on PC and can be tested with any PC/SC application using contactless interface smart card.
@@ -25,10 +25,10 @@ Response APDU: Data SW1 SW2
 
 #### <b>Expected success behavior</b>
 
-When plugged to PC host, the STM32H723ZG must be properly enumerated as an USB CCID device.
+When plugged to PC host, the NUCLEO-H723ZG must be properly enumerated as an USB CCID device.
 During the enumeration phase, device provides host with the requested descriptors (Device, configuration, string).
 Those descriptors are used by host driver to identify the device capabilities.
-Once the STM32H723ZG USB device successfully completed the enumeration phase,
+Once the NUCLEO-H723ZG USB device successfully completed the enumeration phase,
 send and receive the CCID class commands through the bulk out, bulk in and interrupt endpoints:
 - CCID Events like card detection or removal are sent on the Interrupt Endpoint.
 - CCID Commands are sent on BULK-OUT Endpoint.
@@ -72,7 +72,7 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -117,7 +117,7 @@ None
 #### <b>USBX usage hints</b>
 
 - The DTCM (0x20000000) memory region should not be used by application in case USB DMA is enabled
-- Should make sure to configure the USB pool memory region with attribute "Non-Cacheable" to ensure coherency between CPU and USB DMA
+- Should make sure to configure the USB pool memory region with attribute "Non-Cacheable" to ensure coherency between CPU and USB DMA.
 
 ### <b>Keywords</b>
 
@@ -126,7 +126,7 @@ RTOS, ThreadX, USBXDevice, USB_OTG, Full Speed, CCID, ICC
 ### <b>Hardware and Software environment</b>
 
   - This example runs on STM32H723xx devices.
-  - This example has been tested with STMicroelectronics STM32H723ZG boards Revision MB1364-H723ZG-E01 and can be easily tailored to any other supported device and development board.
+  - This example has been tested with STMicroelectronics NUCLEO-H723ZG boards Revision MB1364-H723ZG-E01 and can be easily tailored to any other supported device and development board.
 
 ### <b>How to use it ?</b>
 

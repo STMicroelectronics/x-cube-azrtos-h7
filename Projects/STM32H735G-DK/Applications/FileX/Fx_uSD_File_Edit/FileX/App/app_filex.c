@@ -8,7 +8,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2020-2021 STMicroelectronics.
+  * Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -40,7 +40,6 @@
 
 /* USER CODE BEGIN PD */
 #define DEFAULT_QUEUE_LENGTH             16
-
 
 /* Message content*/
 typedef enum {
@@ -209,18 +208,17 @@ void fx_app_thread_entry(ULONG thread_input)
           /* We have a valid SD insertion event, start processing.. */
           /* Update last known status */
           last_status = CARD_STATUS_CONNECTED;
-          HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET); /*Led Red Off*/
+          HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET); /*LED_RED Off*/
           break;
         }
         else
         {
           /* Update last known status */
           last_status = CARD_STATUS_DISCONNECTED;
-          HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);  /*LED Green Off*/
-          HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET); /*LED Red On*/
+          HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);  /*LED_GREEN Off*/
+          HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET); /*LED_GREEN On*/
         }
       }
-
     }
 
     /* Create a file called STM32.TXT in the root directory.  */

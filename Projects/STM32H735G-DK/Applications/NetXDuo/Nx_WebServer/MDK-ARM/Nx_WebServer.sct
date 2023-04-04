@@ -22,11 +22,11 @@ LR_IROM1 0x08000000 0x00100000  {    ; load region size_region
    *(.TxDecripSection)
   }
 
-  RW_NXServerPoolSection 0x24030100 0x2000  {
+  RW_NXServerPoolSection 0x24030100 0x4000  {
   *(.NxServerPoolSection)
   }
 
-   RW_NXDriverSection 0x24032100 0x1F000  {
+   RW_NXDriverSection 0x24034100 0x1B800  {
   *(.NetXPoolSection)
   }
 }

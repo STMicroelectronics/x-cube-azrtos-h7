@@ -43,7 +43,7 @@ extern "C" {
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
-#define USBX_HOST_MEMORY_STACK_SIZE     1024 * 40
+#define USBX_HOST_MEMORY_STACK_SIZE     1024 * 46
 
 #define UX_HOST_APP_THREAD_STACK_SIZE   1024
 #define UX_HOST_APP_THREAD_PRIO         10
@@ -68,7 +68,6 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr);
 /* USER CODE BEGIN EFP */
 VOID USBX_APP_Host_Init(VOID);
 void USBH_DriverVBUS(uint8_t state);
-
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

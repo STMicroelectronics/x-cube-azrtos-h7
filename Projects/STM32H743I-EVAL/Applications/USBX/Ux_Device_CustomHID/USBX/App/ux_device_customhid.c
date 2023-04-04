@@ -50,7 +50,6 @@ UX_DEVICE_CLASS_HID_RECEIVED_EVENT hid_received_event;
 
 extern TX_QUEUE ux_hid_msgqueue;
 extern ADC_HandleTypeDef hadc1;
-
 ALIGN_32BYTES (int32_t ADCConvertedValue[8]) = {0};
 int32_t ADC_Prev_ConvertedValue = 0;
 

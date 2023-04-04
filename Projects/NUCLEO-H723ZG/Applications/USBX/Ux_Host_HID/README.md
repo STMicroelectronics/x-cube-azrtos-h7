@@ -10,8 +10,7 @@ HID devices , HID Class APIs to decode HID reports received from a mouse or a ke
 The main entry function tx_application_define() is then called by ThreadX during kernel start, at this stage, all USBx resources
 are initialized, the HID Class driver and HID clients are registered.
 The application creates 3 threads with different priorities :
-
-  - usbx_app_thread_entry     (Priority : 10; Preemption threshold : 10) used to initialize USB OTG HAL HCD driver and start the Host.
+  - usbx_app_thread_entry     (Priority : 25; Preemption threshold : 25) used to initialize USB OTG HAL HCD driver and start the Host.
   - hid_mouse_thread_entry    (Priority : 30; Preemption threshold : 30) used to decode HID reports received  from a mouse.
   - hid_keyboard_thread_entry (Priority : 30; Preemption threshold : 30) used to decode HID reports received  from a keyboard.
 
@@ -44,7 +43,6 @@ User is familiar with USB 2.0 "Universal Serial BUS" Specification and HID class
 None
 
 ### <b>Notes</b>
-
  1. Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from Flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.
  2.  If the application is using the DTCM/ITCM memories (@0x20000000/ 0x0000000: not cacheable and only accessible by the Cortex M7 and the MDMA), no need for cache maintenance when the Cortex M7 and the MDMA access these RAMs. If the application needs to use DMA (or other masters) based access or requires more RAM, then the user has to:
       - Use a non TCM SRAM. (example : D1 AXI-SRAM @ 0x24000000).
@@ -53,7 +51,7 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -96,14 +94,12 @@ None
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
 
 #### <b>USBX usage hints</b>
-
 - The DTCM (0x20000000) memory region should not be used by application in case USB DMA is enabled
--  Should make sure to configure the USB pool memory region with attribute "Non-Cacheable" to ensure coherency between CPU and USB DMA
+- Should make sure to configure the USB pool memory region with attribute "Non-Cacheable" to ensure coherency between CPU and USB DMA
 
 ### <b>Keywords</b>
 
 Connectivity, USBX Host, ThreadX, USB, HID, Mouse, Keyboard, UART, USART,
-
 
 ### <b>Hardware and Software environment</b>
 
@@ -124,7 +120,6 @@ Connectivity, USBX Host, ThreadX, USB, HID, Mouse, Keyboard, UART, USART,
        - BaudRate = 115200 baud
        - Flow control: None
 
-
 ### <b>How to use it ?</b>
 
 In order to make the program work, you must do the following :
@@ -132,7 +127,6 @@ In order to make the program work, you must do the following :
  - Open your preferred toolchain
  - Rebuild all files and load your image into target memory
  - Run the application
-
 <b>Note</b>
 
 The user has to check the list of the COM ports in Device Manager to find out the number of the COM ports that have been assigned (by OS) to the Stlink VCP.

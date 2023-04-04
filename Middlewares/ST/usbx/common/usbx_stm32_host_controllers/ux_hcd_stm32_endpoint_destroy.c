@@ -124,8 +124,8 @@ UINT                   endpoint_type;
         if (hcd_stm32 -> ux_hcd_stm32_periodic_ed_head == ed)
         {
 
-            /* The only one in the list, just set the pointer to null.  */
-            hcd_stm32 -> ux_hcd_stm32_periodic_ed_head = UX_NULL;
+            /* The head one in the list, just set the pointer to it's next.  */
+            hcd_stm32 -> ux_hcd_stm32_periodic_ed_head = ed -> ux_stm32_ed_next_ed;
         }
         else
         {
@@ -156,6 +156,13 @@ UINT                   endpoint_type;
 
     /* Now we can safely make the ED free.  */
     ed -> ux_stm32_ed_status =  UX_HCD_STM32_ED_STATUS_FREE;
+
+#if defined (USBH_HAL_HUB_SPLIT_SUPPORTED)
+    HAL_HCD_HC_ClearHubInfo(hcd_stm32->hcd_handle, ed -> ux_stm32_ed_channel);
+#endif /* USBH_HAL_HUB_SPLIT_SUPPORTED */
+
+    /* Finish current transfer.  */
+    _ux_hcd_stm32_request_trans_finish(hcd_stm32, ed);
 
 #if defined(UX_HOST_STANDALONE)
 

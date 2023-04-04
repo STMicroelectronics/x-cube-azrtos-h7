@@ -198,6 +198,14 @@ VOID module_manager_entry(ULONG thread_input)
     Error_Handler();
   }
 
+  /* Configure an extra unneeded region to prevent loss of previously configured READWRITE_REGION. */
+  status = txm_module_manager_external_memory_enable(&my_module, (void*)NULL, 0U, 0);
+
+  if(status != TX_SUCCESS)
+  {
+    Error_Handler();
+  }
+
   /* Get module properties. */
   status = txm_module_manager_properties_get(&my_module, &module_properties);
 

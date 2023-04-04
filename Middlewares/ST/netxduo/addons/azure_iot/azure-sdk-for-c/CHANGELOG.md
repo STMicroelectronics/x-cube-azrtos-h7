@@ -1,5 +1,30 @@
 # Release History
 
+## 1.4.0 (2022-11-11)
+
+### Features Added
+
+- [[#2329](https://github.com/Azure/azure-sdk-for-c/pull/2329)] Add Base64 URL decoder.
+- [[#2375](https://github.com/Azure/azure-sdk-for-c/pull/2375)] Add Azure Device Update for IoT Hub, enabling Over-the-Air (OTA) updates for embedded devices.
+
+### Breaking Changes
+
+- Modified the `az_json_string_unescape()` function signature to accept `az_span` as the destination.
+
+### Bugs Fixed
+
+- [[#2372](https://github.com/Azure/azure-sdk-for-c/pull/2372)] Incorrect minimum buffer size calculation when logging an HTTP request.
+
+### Other Changes
+
+- [[#2400](https://github.com/Azure/azure-sdk-for-c/pull/2400)] Updated the vcpkg baseline for installing SDK dependencies to the October 2022 tag.
+
+## 1.4.0-beta.1 (2022-08-09)
+
+### Features Added
+
+- Added support in `az_json.h` to unescape JSON string tokens within an `az_span` using the `az_json_string_unescape()` API.
+
 ## 1.3.2 (2022-07-07)
 
 ### Other Changes

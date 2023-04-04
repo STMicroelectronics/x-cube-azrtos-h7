@@ -75,7 +75,6 @@ UINT Object_GetHandleFile(ULONG handle_index, FX_FILE **mtp_object_file);
 /* Private defines -----------------------------------------------------------*/
 
 /* USER CODE BEGIN PD */
-
 /* Structure of the Object property dataset */
 typedef struct OBJECT_PROP_VALUE_DATASET
 {

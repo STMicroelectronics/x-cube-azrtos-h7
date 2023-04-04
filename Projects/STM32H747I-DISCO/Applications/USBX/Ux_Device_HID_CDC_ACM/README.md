@@ -1,17 +1,18 @@
+
 ## <b>Ux_Device_HID_CDC_ACM application description</b>
 
-This application provides an example of Azure RTOS USBX stack usage on STM32H747I_Discovery board, it shows how to develop a composite USB Device communication
+This application provides an example of Azure RTOS USBX stack usage on STM32H747I-DISCO board, it shows how to develop a composite USB Device communication
 Class "HID" and "CDC_ACM" based application.
+
 The application is designed to emulate an USB HID mouse device and USB-to-UART bridge following the Virtual COM Port (VCP) implementations,
 the code provides all required device descriptors framework and associated to both Classes descriptor report to build a composite compliant USB HID_CDC_ACM device.
 At the beginning ThreadX call the entry function tx_application_define(), at this stage, all USBx resources are initialized, the CDC_ACM and HID Class driver is
 registered and the application creates 4 threads with the same priorities :
 
-  - app_ux_device_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device.
+  - app_ux_device_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB_OTG HAL PCD driver and start the device.
   - usbx_cdc_acm_read_thread_entry (Prio : 20; PreemptionPrio : 20) used to Read the received data from Virtual COM Port.
   - usbx_cdc_acm_write_thread_entry (Prio : 20; PreemptionPrio : 20) used to send the received data over UART .
   - usbx_hid_thread_entry (Prio : 20; PreemptionPrio : 20) used to send HID reports to move automatically the PC host machine cursor.
-
 During enumeration phase, four communication pipes "endpoints" are declared in the CDC class and HID implementations :
 
  - 1 x Bulk IN endpoint for receiving data from STM32 device to PC host:
@@ -35,7 +36,6 @@ In CDC_ACM application, two requests are implemented:
 - 1 x Interrupt IN endpoint for setting the HID position:
    When the User Button is pressed the application calls the GetPointerData() API to update the mouse position (x, y) and send
    the report buffer through the ux_device_class_hid_event_set() API.
-
 <b>Note</b>
 
 - Receiving data over UART is handled by interrupt while transmitting is handled by DMA allowing hence the application to receive data at the same time it is transmitting another data (full- duplex feature).
@@ -45,9 +45,9 @@ The support of the VCP interface is managed through the ST Virtual COM Port driv
 
 #### <b>Expected success behavior</b>
 
-When plugged to PC host, the STM32H747I_Discovery must be properly enumerated a composite device as an HID ,USB Serial device and an STlink Com port.
+When plugged to PC host, the STM32H747I-DISCO must be properly enumerated a composite device as an HID ,USB Serial device and an STlink Com port.
 During the enumeration phase, the device must provide host with the requested descriptors (Device descriptor, configuration descriptor, string descriptors).
-Those descriptors are used by host driver to identify the device capabilities. Once STM32H747I_Discovery USB device successfully completed the enumeration phase.
+Those descriptors are used by host driver to identify the device capabilities. Once STM32H747I-DISCO USB device successfully completed the enumeration phase.
 Connect USB cable to Host , Open two hyperterminals (USB com port and UART com port) to send/receive data to/from host to/from device.
 When USER_Button is pressed, the device sneds a HID report. Each report sent should move the PC host machine mouse cursor by one step.
 
@@ -64,7 +64,6 @@ User is familiar with USB 2.0 "Universal Serial BUS" Specification and CDC_ACM c
 None.
 
 ### <b>Notes</b>
-
  1. Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from Flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.
  2.  If the application is using the DTCM/ITCM memories (@0x20000000/ 0x0000000: not cacheable and only accessible by the Cortex M7 and the MDMA), no need for cache maintenance when the Cortex M7 and the MDMA access these RAMs. If the application needs to use DMA (or other masters) based access or requires more RAM, then the user has to:
       - Use a non TCM SRAM. (example : D1 AXI-SRAM @ 0x24000000).
@@ -73,7 +72,7 @@ None.
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -116,7 +115,6 @@ None.
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
 
 #### <b>USBX usage hints</b>
-
 - The DTCM (0x20000000) memory region should not be used by application in case USB DMA is enabled
 - Should make sure to configure the USB pool memory region with attribute "Non-Cacheable" to ensure coherency between CPU and USB DMA
 
@@ -128,9 +126,9 @@ RTOS, ThreadX, USBX, USBXDevice, USB_OTG, High Speed, CDC, HID, VCP, USART, DMA,
 ### <b>Hardware and Software environment</b>
 
   - This example runs on STM32H747xx devices
-  - This example has been tested with STMicroelectronics STM32H747I_Discovery boards Revision MB1520-H735I-B02 and can be easily tailored to any other supported device and development board.
-  - STM32H747I_Discovery Set-up
-  - Connect the STM32H747I_Discovery board CN1 to the PC through "MICRO-USB" to "Standard A" cable.
+  - This example has been tested with STMicroelectronics STM32H747I-DISCO boards Revision MB1520-H747I-B02 and can be easily tailored to any other supported device and development board.
+  - STM32H747I-DISCO Set-up
+  - Connect the STM32H747I-DISCO board CN1 to the PC through "MICRO-USB" to "Standard A" cable.
   - For VCP the configuration is dynamic for example it can be :
     - BaudRate = 115200 baud
     - Word Length = 8 Bits
@@ -138,9 +136,9 @@ RTOS, ThreadX, USBX, USBXDevice, USB_OTG, High Speed, CDC, HID, VCP, USART, DMA,
     - Parity = None
     - Flow control = None
 
-  - The USART1 interface available on PA9 and PA10 of the microcontroller are
-  connected to ST-LINK MCU.
+  - The USART1 interface available on PA9 and PA10 of the microcontroller are connected to ST-LINK MCU.
   By default the USART1 communication between the target MCU and ST-LINK MCU is enabled.
+
   It's configuration is as following:
     - BaudRate = 115200 baud
     - Word Length = 8 Bits

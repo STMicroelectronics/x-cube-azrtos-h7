@@ -34,6 +34,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usb_otg.h"
+#include "ux_dcd_stm32.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -48,8 +49,7 @@ extern "C" {
 #define UX_DEVICE_APP_THREAD_PRIO         10
 
 /* USER CODE BEGIN EC */
-#include "usb_otg.h"
-#include "ux_dcd_stm32.h"
+
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/

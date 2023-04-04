@@ -33,7 +33,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+__IO uint8_t JoyState = 0U;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -138,7 +138,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
   hid_mouse_parameter.ux_slave_class_hid_instance_deactivate       = USBD_HID_Mouse_Deactivate;
   hid_mouse_parameter.ux_device_class_hid_parameter_report_address = USBD_HID_ReportDesc(INTERFACE_HID_MOUSE);
   hid_mouse_parameter.ux_device_class_hid_parameter_report_length  = USBD_HID_ReportDesc_length(INTERFACE_HID_MOUSE);
-  hid_mouse_parameter.ux_device_class_hid_parameter_report_id      = UX_TRUE;
+  hid_mouse_parameter.ux_device_class_hid_parameter_report_id      = UX_FALSE;
   hid_mouse_parameter.ux_device_class_hid_parameter_callback       = USBD_HID_Mouse_SetReport;
   hid_mouse_parameter.ux_device_class_hid_parameter_get_callback   = USBD_HID_Mouse_GetReport;
 
@@ -284,9 +284,13 @@ VOID USBX_APP_Device_Init(VOID)
 
   /* USER CODE BEGIN USB_Device_Init_PreTreatment_1 */
 
+  /* Set Rx FIFO */
   HAL_PCDEx_SetRxFiFo(&hpcd_USB_OTG_HS, 0x200);
+  /* Set Tx FIFO 0 */
   HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 0, 0x80);
+  /* Set Tx FIFO 1 */
   HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 1, 0x40);
+  /* Set Tx FIFO 2 */
   HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 2, 0x40);
 
   /* USER CODE END USB_Device_Init_PreTreatment_1 */
@@ -315,6 +319,38 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   if (GPIO_Pin == GPIO_PIN_13)
   {
     User_Button_State ^= 1U;
+  }
+}
+
+void BSP_JOY_Callback(JOY_TypeDef JOY, uint32_t JoyPin)
+{
+  if(JOY == JOY1)
+  {
+    /* Disable the JOY clock */
+    switch(JoyPin)
+    {
+      case JOY_SEL:
+        JoyState = JOY_SEL;
+        break;
+
+      case JOY_DOWN:
+        JoyState = JOY_DOWN;
+        break;
+
+      case JOY_LEFT:
+        JoyState = JOY_LEFT;
+        break;
+
+      case JOY_RIGHT:
+        JoyState = JOY_RIGHT;
+        break;
+
+      case JOY_UP:
+        JoyState = JOY_UP;
+        break;
+      default:
+        break;
+    }
   }
 }
 

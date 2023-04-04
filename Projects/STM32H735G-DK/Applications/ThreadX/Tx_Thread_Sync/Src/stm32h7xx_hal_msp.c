@@ -1,14 +1,13 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    ThreadX/Tx_Thread_Sync/Src/stm32h7xx_hal_msp.c
-  * @author  MCD Application Team
-  * @brief   This file provides code for the MSP Initialization 
-  *                      and de-Initialization codes.
+  * @file         stm32h7xx_hal_msp.c
+  * @brief        This file provides code for the MSP Initialization
+  *               and de-Initialization codes.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2020-2021 STMicroelectronics.
+  * Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file

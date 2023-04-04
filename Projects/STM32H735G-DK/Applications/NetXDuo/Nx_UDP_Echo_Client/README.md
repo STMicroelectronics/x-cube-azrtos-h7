@@ -1,35 +1,35 @@
 
 ## <b>Nx_UDP_Echo_Client application description</b>
 
-This application provides an example of Azure RTOS NetX/NetXDuo stack usage . 
+This application provides an example of Azure RTOS NetX/NetXDuo stack usage .
 It shows how to develop a NetX udp client to communicate with a remote sever using
 the NetX UDP socket API.
 
 The main entry function tx_application_define() is called by ThreadX during kernel start, at this stage, all NetX resources are created.
 
- + A NX_PACKET_POOL is allocated 
- + A NX_IP instance using that pool is initialized 
- + The ARP, ICMP and UDP protocols are enabled for the NX_IP instance 
+ + A NX_PACKET_POOL is allocated
+ + A NX_IP instance using that pool is initialized
+ + The ARP, ICMP and UDP protocols are enabled for the NX_IP instance
  + A DHCP client is created.
- 
+
 The application then creates 2 threads with the same priorities:
 
- + **NxAppThread** (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically. 
+ + **NxAppThread** (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.
  + **AppUDPThread** (priority 10, PreemtionThreashold 10) : created with the TX_DONT_START flag to be started later.
- 
+
 The **NxAppThread** starts and perform the following actions:
 
-  + starts the DHCP client  
-  + waits for the IP address resolution  
+  + starts the DHCP client
+  + waits for the IP address resolution
   + resumes the **AppUDPThread**
 
 The **AppUDPThread**, once started:
 
-  + creates a UDP socket  
-  + connects to the remote UDP server on the predefined port  
-  + On connection success, the UDP client sends a MAX_PACKET_COUNT messages to the server.  
+  + creates a UDP socket
+  + connects to the remote UDP server on the predefined port
+  + On connection success, the UDP client sends a MAX_PACKET_COUNT messages to the server.
   + At each message sent, the UDP client reads the sever response and prints it on the Hyperterminal and the green led is toggled.
-  
+
 #### <b>Expected success behavior</b>
 
  + The board IP address is printed on the HyperTerminal
@@ -48,7 +48,7 @@ The **AppUDPThread**, once started:
 #### <b>Assumptions if any</b>
 
 - The Application is using the DHCP to acquire IP address, thus a DHCP server should be reachable by the board in the LAN used to test the application.
-- The application is configuring the Ethernet IP with a static predefined MAC Address, make sure to change it in case multiple boards are connected on the 
+- The application is configuring the Ethernet IP with a static predefined MAC Address, make sure to change it in case multiple boards are connected on the
 same LAN to avoid any potential network traffic issues.
 - The MAC Address is defined in the `main.c`
 
@@ -84,8 +84,8 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
-  
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
+
 #### <b>ThreadX usage hints</b>
 
  - ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.
@@ -99,16 +99,16 @@ None
    This require changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+     place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	``` 
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -116,16 +116,16 @@ None
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	``` 
-	
+    ```
+
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
-       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.	 
-       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).	 
+       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
        Read more in STM32CubeIDE User Guide, chapter: "Linker script".
-	  
+
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
-         
+
 #### <b>NetX Duo usage hints</b>
 
 - The ETH TX And RX descriptors are accessed by the CPU and the ETH DMA IP, thus they should not be allocated into the DTCM RAM "0x20000000".
@@ -134,24 +134,23 @@ None
 - The NetXDuo application needs to allocate the <b> <i> NX_PACKET </i> </b> pool in a dedicated section that is  configured as either "Cacheable Write-through" for <i>STM32H72XX</i> and <i>STM32H73XX </i>,  <i>STM32H7AXX</i> and <i>STM32H7BXX </i> or non-cacheable for other STM32H7 families. Below is an example of the section declaration for different IDEs.
    + For EWARM ".icf" file
    ```
-   define symbol __ICFEDIT_region_NXDATA_start__  = 0x24048200;
+   define symbol __ICFEDIT_region_NXDATA_start__  = 0x24032100;
    define symbol __ICFEDIT_region_NXDATA_end__   = 0x2404FFFF;
    define region NXApp_region  = mem:[from __ICFEDIT_region_NXDATA_start__ to __ICFEDIT_region_NXDATA_end__];
    place in NXApp_region { section .NetXPoolSection};
    ```
    + For MDK-ARM
    ```
-    RW_NXDriverSection 0x24048200 0x7E00  {
+    RW_NXDriverSection 0x24032100 0x7E00  {
   *(.NetXPoolSection)
   }
    ```
    + For STM32CubeIDE ".ld" file
-   ``` 
-   .nx_section 0x24048200 (NOLOAD): {
+   ```
+   .nx_section 0x24032100 (NOLOAD): {
      *(.NetXPoolSection)
      } >RAM_D1
    ```
-
   this section is then used in the <code> app_azure_rtos.c</code> file to force the <code>nx_byte_pool_buffer</code> allocation.
 
 ```
@@ -172,7 +171,6 @@ static UCHAR  nx_byte_pool_buffer[NX_APP_MEM_POOL_SIZE];
 static TX_BYTE_POOL nx_app_byte_pool;
 ```
 For more details about the MPU configuration please refer to the [AN4838](https://www.st.com/resource/en/application_note/dm00272912-managing-memory-protection-unit-in-stm32-mcus-stmicroelectronics.pdf)
-   
 
 ### <b>Keywords</b>
 
@@ -180,29 +178,28 @@ RTOS, Network, ThreadX, NetXDuo, UDP, UART
 
 ### <b>Hardware and Software environment</b>
 
- - This application runs on STM32H735xx devices.
- - This application has been tested with STMicroelectronics STM32H735G-DK boards Revision: MB1520-H735I-B02
+  - This application runs on STM32H735xx devices
+  - This application has been tested with STMicroelectronics STM32H735G-DK boards Revision MB1520-H735I-B02
     and can be easily tailored to any other supported device and development board.
 
- - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
- 
+  - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
       - BaudRate = 115200 baud
       - Word Length = 8 Bits
       - Stop Bit = 1
       - Parity = None
       - Flow control = None
 
-### <b>How to use it ?</b>
+###  <b>How to use it ?</b>
 
 In order to make the program work, you must do the following :
 
  - Open your preferred toolchain
  - Edit the file <code> NetXDuo/App/app_netxduo.h</code> and correctly define the <UDP_SERVER_ADDRESS> and <UDP_SERVER_PORT> to connect on.
  - run the [echotool](https://github.com/PavelBansky/EchoTool/releases/tag/v1.5.0.0) utility    on a windows console as following:
-   
-       c:\> .\echotool.exe /p udp /s <UDP_SERVER_PORT> 
-           
-       example : c:\> .\echotool.exe /p udp /s 6001 
-   
+
+       c:\> .\echotool.exe /p udp /s <UDP_SERVER_PORT>
+
+       example : c:\> .\echotool.exe /p udp /s 6001
+
  - Rebuild all files and load your image into target memory
- - Run the application 
+ - Run the application

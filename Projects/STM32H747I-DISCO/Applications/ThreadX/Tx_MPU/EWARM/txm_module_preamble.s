@@ -47,8 +47,8 @@ __txm_module_preamble:
     DC32      _txm_module_callback_request_thread_entry - . - 0 // Module Callback Thread Entry
     DC32      1                                                 // Module Callback Thread Priority
     DC32      1024                                              // Module Callback Thread Stack Size
-    DC32      ROPI$$Length                                      // Module Code Size
-    DC32      RWPI$$Length                                      // Module Data Size
+    DC32      0x1000                                            // Module Code Size
+    DC32      0x1000                                            // Module Data Size
     DC32      0                                                 // Reserved 0
     DC32      0                                                 // Reserved 1
     DC32      0                                                 // Reserved 2

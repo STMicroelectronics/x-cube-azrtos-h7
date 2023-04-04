@@ -39,19 +39,19 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
-#define APP_RX_DATA_SIZE   2048
-#define APP_TX_DATA_SIZE   2048
+#define APP_RX_DATA_SIZE                          2048
+#define APP_TX_DATA_SIZE                          2048
 
 /* Rx/TX flag */
-#define RX_NEW_RECEIVED_DATA      0x01
-#define TX_NEW_TRANSMITTED_DATA   0x02
+#define RX_NEW_RECEIVED_DATA                      0x01
+#define TX_NEW_TRANSMITTED_DATA                   0x02
 
 /* Data length for vcp */
-#define VCP_WORDLENGTH8  8
-#define VCP_WORDLENGTH9  9
+#define VCP_WORDLENGTH8                           8
+#define VCP_WORDLENGTH9                           9
 
 /* the minimum baudrate */
-#define MIN_BAUDRATE     9600
+#define MIN_BAUDRATE                              9600
 
 /* USER CODE END PM */
 
@@ -59,20 +59,28 @@
 /* USER CODE BEGIN PV */
 
 UX_SLAVE_CLASS_CDC_ACM  *cdc_acm;
-
 #if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = 0x24028000
+#pragma location = ".UsbxAppSection"
 #elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(".UsbxAppSection")))
 #elif defined ( __GNUC__ ) /* GNU Compiler */
 __attribute__((section(".UsbxAppSection")))
 #endif
+/* Data received over uart are stored in this buffer */
 uint8_t UserRxBufferFS[APP_RX_DATA_SIZE];
+
+/* Data to send over USB CDC are stored in this buffer   */
 uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
 
+/* Increment this pointer or roll it back to
+start address when data are received over USART */
 uint32_t UserTxBufPtrIn;
+
+/* Increment this pointer or roll it back to
+start address when data are sent over USB */
 uint32_t UserTxBufPtrOut;
 
+/* uart handler */
 UART_HandleTypeDef *uart_handler;
 extern TX_EVENT_FLAGS_GROUP EventFlag;
 
@@ -94,7 +102,6 @@ static void USBD_CDC_VCP_Config(UX_SLAVE_CLASS_CDC_ACM_LINE_CODING_PARAMETER *);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
 /* USER CODE END 0 */
 
 /**

@@ -136,7 +136,6 @@ UX_HCD_STM32_ED         *ed;
         /* Restore request information.  */
         transfer_request -> ux_transfer_request_requested_length =
                                                 ed -> ux_stm32_ed_saved_length;
-        transfer_request -> ux_transfer_request_data_pointer = ed -> ux_stm32_ed_data;
         transfer_request -> ux_transfer_request_actual_length = 0;
 
         /* Check completion code.  */
@@ -245,9 +244,6 @@ UX_HCD_STM32_ED         *ed;
     /* Wait for the completion of the transfer request.  */
     status =  _ux_host_semaphore_get(&transfer_request -> ux_transfer_request_semaphore, MS_TO_TICK(UX_CONTROL_TRANSFER_TIMEOUT));
 
-    /* Restore original data buffer pointer.  */
-    transfer_request -> ux_transfer_request_data_pointer = ed -> ux_stm32_ed_data;
-
     /* Free the resources.  */
     _ux_utility_memory_free(ed -> ux_stm32_ed_setup);
 
@@ -309,13 +305,6 @@ UX_HCD_STM32_ED         *ed;
             /* Return completion to caller.  */
             return(transfer_request -> ux_transfer_request_completion_code);
         }
-
-        if (ed -> ux_stm32_ed_dir)
-        {
-
-            /* Get the actual transfer length.  */
-            transfer_request -> ux_transfer_request_actual_length = HAL_HCD_HC_GetXferCount(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel);
-        }
     }
 
     /* Prepare status stage.  */
@@ -358,7 +347,7 @@ UCHAR                   *setup_request;
 
     /* Build the SETUP packet (phase 1 of the control transfer).  */
     ed -> ux_stm32_ed_setup = UX_NULL;
-    setup_request =  _ux_utility_memory_allocate(UX_NO_ALIGN, UX_REGULAR_MEMORY, UX_SETUP_SIZE);
+    setup_request = _ux_utility_memory_allocate(UX_NO_ALIGN, UX_CACHE_SAFE_MEMORY, UX_SETUP_SIZE);
 
     if (setup_request == UX_NULL)
         return;
@@ -374,19 +363,30 @@ UCHAR                   *setup_request;
 
     /* Save the original transfer parameter.  */
     ed -> ux_stm32_ed_saved_length = transfer_request -> ux_transfer_request_requested_length;
-    ed -> ux_stm32_ed_data = transfer_request -> ux_transfer_request_data_pointer;
+    ed -> ux_stm32_ed_data = setup_request;
 
     /* Reset requested length for SETUP packet.  */
     transfer_request -> ux_transfer_request_requested_length = 0;
 
     /* Set the packet length for SETUP packet.  */
-    transfer_request -> ux_transfer_request_packet_length = 8;
-
-    /* Change data pointer to setup data buffer.  */
-    transfer_request -> ux_transfer_request_data_pointer = setup_request;
+    ed -> ux_stm32_ed_packet_length = 8;
 
     /* Set the current status.  */
     ed -> ux_stm32_ed_status = UX_HCD_STM32_ED_STATUS_CONTROL_SETUP;
+
+    /* Set device speed.  */
+    switch (endpoint -> ux_endpoint_device -> ux_device_speed)
+    {
+    case UX_HIGH_SPEED_DEVICE:
+        ed -> ux_stm32_ed_speed =  HCD_DEVICE_SPEED_HIGH;
+        break;
+    case UX_LOW_SPEED_DEVICE:
+        ed -> ux_stm32_ed_speed =  HCD_DEVICE_SPEED_LOW;
+        break;
+    default:
+        ed -> ux_stm32_ed_speed =  HCD_DEVICE_SPEED_FULL;
+        break;
+    }
 
     /* Initialize the host channel for SETUP phase.  */
     ed -> ux_stm32_ed_dir = 0;
@@ -398,9 +398,19 @@ UCHAR                   *setup_request;
                     EP_TYPE_CTRL,
                     endpoint -> ux_endpoint_descriptor.wMaxPacketSize);
 
+#if defined (USBH_HAL_HUB_SPLIT_SUPPORTED)
+    /* Check if device connected to hub  */
+    if (endpoint->ux_endpoint_device->ux_device_parent != NULL)
+    {
+      HAL_HCD_HC_SetHubInfo(hcd_stm32->hcd_handle, ed->ux_stm32_ed_channel,
+                            endpoint->ux_endpoint_device->ux_device_parent->ux_device_address,
+                            endpoint->ux_endpoint_device->ux_device_port_location);
+    }
+#endif /* USBH_HAL_HUB_SPLIT_SUPPORTED */
+
     /* Send the SETUP packet.  */
     HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel,
-                         0, EP_TYPE_CTRL, USBH_PID_SETUP, setup_request, 8, 0);
+                             0, EP_TYPE_CTRL, USBH_PID_SETUP, setup_request, 8, 0);
 }
 
 static inline VOID _ux_hcd_stm32_request_control_data(UX_HCD_STM32 *hcd_stm32,
@@ -421,6 +431,16 @@ static inline VOID _ux_hcd_stm32_request_control_data(UX_HCD_STM32 *hcd_stm32,
                         ed -> ux_stm32_ed_speed,
                         EP_TYPE_CTRL,
                         endpoint -> ux_endpoint_descriptor.wMaxPacketSize);
+
+#if defined (USBH_HAL_HUB_SPLIT_SUPPORTED)
+        /* Check if device connected to hub  */
+        if (endpoint->ux_endpoint_device->ux_device_parent != NULL)
+        {
+          HAL_HCD_HC_SetHubInfo(hcd_stm32->hcd_handle, ed->ux_stm32_ed_channel,
+                                endpoint->ux_endpoint_device->ux_device_parent->ux_device_address,
+                                endpoint->ux_endpoint_device->ux_device_port_location);
+        }
+#endif /* USBH_HAL_HUB_SPLIT_SUPPORTED */
 
         /* Set the current status to data IN.  */
         ed -> ux_stm32_ed_status = UX_HCD_STM32_ED_STATUS_CONTROL_DATA_IN;
@@ -448,24 +468,27 @@ static inline VOID _ux_hcd_stm32_request_control_data(UX_HCD_STM32 *hcd_stm32,
     {
 
         /* Set transfer length to MPS.  */
-        transfer_request -> ux_transfer_request_packet_length = endpoint -> ux_endpoint_descriptor.wMaxPacketSize;
+        ed -> ux_stm32_ed_packet_length = endpoint -> ux_endpoint_descriptor.wMaxPacketSize;
     }
     else
     {
 
         /* Keep the original transfer length.  */
-        transfer_request -> ux_transfer_request_packet_length = transfer_request -> ux_transfer_request_requested_length;
+        ed -> ux_stm32_ed_packet_length = transfer_request -> ux_transfer_request_requested_length;
     }
 
     /* Reset actual length.  */
     transfer_request -> ux_transfer_request_actual_length = 0;
 
+    /* Prepare transactions.  */
+    _ux_hcd_stm32_request_trans_prepare(hcd_stm32, ed, transfer_request);
+
     /* Submit the transfer request.  */
     HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel,
                                 ed -> ux_stm32_ed_dir,
                                 EP_TYPE_CTRL, USBH_PID_DATA,
-                                transfer_request -> ux_transfer_request_data_pointer,
-                                transfer_request -> ux_transfer_request_packet_length, 0);
+                                ed -> ux_stm32_ed_data,
+                                ed -> ux_stm32_ed_packet_length, 0);
 }
 
 static inline VOID _ux_hcd_stm32_request_control_status(UX_HCD_STM32 *hcd_stm32,
@@ -481,6 +504,16 @@ static inline VOID _ux_hcd_stm32_request_control_status(UX_HCD_STM32 *hcd_stm32,
                 ed -> ux_stm32_ed_speed,
                 EP_TYPE_CTRL,
                 endpoint -> ux_endpoint_descriptor.wMaxPacketSize);
+
+#if defined (USBH_HAL_HUB_SPLIT_SUPPORTED)
+    /* Check if device connected to hub  */
+    if (endpoint->ux_endpoint_device->ux_device_parent != NULL)
+    {
+      HAL_HCD_HC_SetHubInfo(hcd_stm32->hcd_handle, ed->ux_stm32_ed_channel,
+                            endpoint->ux_endpoint_device->ux_device_parent->ux_device_address,
+                            endpoint->ux_endpoint_device->ux_device_port_location);
+    }
+#endif /* USBH_HAL_HUB_SPLIT_SUPPORTED */
 
     /* Save the pending transfer in the ED.  */
     ed -> ux_stm32_ed_transfer_request = transfer_request;
@@ -498,7 +531,7 @@ static inline VOID _ux_hcd_stm32_request_control_status(UX_HCD_STM32 *hcd_stm32,
     transfer_request -> ux_transfer_request_actual_length = 0;
 
     /* Reset the packet length.  */
-    transfer_request -> ux_transfer_request_packet_length = 0;
+    ed -> ux_stm32_ed_packet_length = 0;
 
     /* Set the current status to data OUT.  */
     ed -> ux_stm32_ed_status = ed -> ux_stm32_ed_dir ?
@@ -510,4 +543,3 @@ static inline VOID _ux_hcd_stm32_request_control_status(UX_HCD_STM32 *hcd_stm32,
                              ed -> ux_stm32_ed_dir,
                              EP_TYPE_CTRL, USBH_PID_DATA, 0, 0, 0);
 }
-

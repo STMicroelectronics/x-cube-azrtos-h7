@@ -126,21 +126,6 @@ void BusFault_Handler(void)
 }
 
 /**
-  * @brief This function handles Undefined instruction or illegal state.
-  */
-void UsageFault_Handler(void)
-{
-  /* USER CODE BEGIN UsageFault_IRQn 0 */
-
-  /* USER CODE END UsageFault_IRQn 0 */
-  while (1)
-  {
-    /* USER CODE BEGIN W1_UsageFault_IRQn 0 */
-    /* USER CODE END W1_UsageFault_IRQn 0 */
-  }
-}
-
-/**
   * @brief This function handles Debug monitor.
   */
 void DebugMon_Handler(void)
@@ -203,5 +188,64 @@ void OTG_HS_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+
+/**
+  * @brief This function handles EXTI line[15:10] interrupts.
+  */
+void EXTI4_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI4_IRQHandler 0 */
+
+  /* USER CODE END EXTI4_IRQHandler 0 */
+  BSP_JOY_IRQHandler(JOY1, JOY_LEFT);
+  /* USER CODE BEGIN EXTI4_IRQHandler 1 */
+
+  /* USER CODE END EXTI4_IRQHandler 1 */
+}
+
+/**
+  * @brief This function handles EXTI line[15:10] interrupts.
+  */
+void EXTI9_5_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI9_5_IRQHandler 0 */
+
+  /* USER CODE END EXTI9_5_IRQHandler 0 */
+  BSP_JOY_IRQHandler(JOY1, JOY_RIGHT);
+  BSP_JOY_IRQHandler(JOY1, JOY_UP);
+  /* USER CODE BEGIN EXTI9_5_IRQHandler 1 */
+
+  /* USER CODE END EXTI9_5_IRQHandler 1 */
+}
+
+
+/**
+  * @brief This function handles EXTI line[15:10] interrupts.
+  */
+void EXTI3_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI3_IRQHandler 0 */
+
+  /* USER CODE END EXTI3_IRQHandler 0 */
+  BSP_JOY_IRQHandler(JOY1, JOY_DOWN);
+  /* USER CODE BEGIN EXTI3_IRQHandler 1 */
+
+  /* USER CODE END EXTI3_IRQHandler 1 */
+}
+
+/**
+  * @brief This function handles EXTI line[15:10] interrupts.
+  */
+void EXTI2_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI2_IRQHandler 0 */
+
+  /* USER CODE END EXTI2_IRQHandler 0 */
+  BSP_JOY_IRQHandler(JOY1, JOY_SEL);
+  /* USER CODE BEGIN EXTI2_IRQHandler 1 */
+
+  /* USER CODE END EXTI2_IRQHandler 1 */
+}
+
 
 /* USER CODE END 1 */

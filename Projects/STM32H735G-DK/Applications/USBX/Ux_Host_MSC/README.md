@@ -8,7 +8,7 @@ The application is designed to behave as an USB MSC Host able to operate with an
 The main entry function tx_application_define() is then called by ThreadX during kernel start, at this stage, all USBx resources are initialized, the MSC Class driver is registered.
 The application creates two threads :
 
-  - usbx_app_thread_entry    (Priority : 10; Preemption threshold : 10) used to initialize USB OTG HAL HCD driver and start the Host.
+  - usbx_app_thread_entry    (Priority : 10; Preemption threshold : 10) used to initialize USB_OTG HAL HCD driver and start the Host.
   - msc_process_thread_entry (Priority : 30; Preemption threshold : 30) used to proceed to file operations once the device is properly enumerated.
 
 ####  <b>Expected success behavior</b>
@@ -46,7 +46,7 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -100,14 +100,13 @@ Connectivity, USBXHost, FILEX, ThreadX, MSC, Mass Storage, BOT, SCSI, Removable 
 
 ### <b>Hardware and Software environment</b>
 
-  - This application runs on STM32H735XX devices.
-  - This application has been tested with STMicroelectronics STM32H735G-DK MB1520-H735I-B02.
-    boards and can be easily tailored to any other supported device
-    and development board.
+  - This application runs on STM32H735xx devices.
+  - This application has been tested with STMicroelectronics STM32H735G-DK boards Revision: MB1520-H735I-B02.
+    boards and can be easily tailored to any other supported device and development board.
 
   - STM32H735G-DK Set-up
     - Plug the USB key into the STM32H735G-DK board through 'USB micro A-Male  to A-Female' cable to the connector:
-      - CN14 : to use USB High Speed OTG IP in full speed (HS_IN_FS)
+      - CN14 : to use USB High Speed OTG IP.
     - Connect ST-Link cable to the PC USB port to display data on the HyperTerminal.
 
     A virtual COM port will then appear in the HyperTerminal:
@@ -132,4 +131,3 @@ In order to make the program work, you must do the following :
 
    The user has to check the list of the COM ports in Device Manager to find out the number of the
    COM ports that have been assigned (by OS) to the Stlink VCP .
-

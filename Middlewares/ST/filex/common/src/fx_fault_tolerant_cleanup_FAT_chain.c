@@ -29,12 +29,94 @@
 
 #ifdef FX_ENABLE_FAULT_TOLERANT
 
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _fx_utility_FAT_entry_multiple_sectors_check        PORTABLE C      */
+/*                                                           6.2.0        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Tiejun Zhou, Microsoft Corporation                                  */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks whether the FAT entry spans multiple sectors.  */
+/*    It is only possible when the file system is FAT12.                  */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    media_ptr                             Media control block pointer   */
+/*    cluster                               Cluster entry number          */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    FX_TRUE                               FAT entry spans two sectors   */
+/*    FX_FALSE                              FAT entry in one sector       */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    None                                                                */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    _fx_fault_tolerant_cleanup_FAT_chain                                */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  10-31-2022     Tiejun Zhou              Initial Version 6.2.0         */
+/*                                                                        */
+/**************************************************************************/
+static UINT _fx_utility_FAT_entry_multiple_sectors_check(FX_MEDIA *media_ptr, ULONG cluster)
+{
+ULONG byte_offset;
+ULONG FAT_sector;
+
+    /* Check FAT format.  */
+    if (!media_ptr -> fx_media_12_bit_FAT)
+    {
+
+        /* Not FAT12. The FAT entry will be in one sector.  */
+        return(FX_FALSE);
+    }
+
+    /* File system is FAT12.  */
+    /* Calculate the byte offset to the cluster entry.  */
+    byte_offset =  (((ULONG)cluster << 1) + cluster) >> 1;
+
+    /* Calculate the FAT sector the requested FAT entry resides in.  */
+    FAT_sector =  (byte_offset / media_ptr -> fx_media_bytes_per_sector) +
+        (ULONG)media_ptr -> fx_media_reserved_sectors;
+
+    /* Now calculate the byte offset into this FAT sector.  */
+    byte_offset =  byte_offset -
+        ((FAT_sector - (ULONG)media_ptr -> fx_media_reserved_sectors) *
+            media_ptr -> fx_media_bytes_per_sector);
+
+    /* Determine if we are now past the end of the FAT buffer in memory.  */
+    if (byte_offset == (ULONG)(media_ptr -> fx_media_bytes_per_sector - 1))
+    {
+
+        /* Yes, we are past the end of the FAT buffer.  */
+        return(FX_TRUE);
+    }
+    else
+    {
+
+        /* No, we are not past the end of the FAT buffer.  */
+        return(FX_FALSE);
+    }
+}
+
 /**************************************************************************/
 /*                                                                        */
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_fault_tolerant_cleanup_FAT_chain                PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -72,6 +154,8 @@
 /*    _fx_utility_FAT_flush                 Flush written FAT entries     */
 /*    _fx_fault_tolerant_calculate_checksum Compute Checksum of data      */
 /*    _fx_fault_tolerant_write_log_file     Write log file                */
+/*    _fx_utility_FAT_entry_multiple_sectors_check                        */
+/*                                          Check sectors for FAT entry   */
 /*                                                                        */
 /*  CALLED BY                                                             */
 /*                                                                        */
@@ -85,6 +169,10 @@
 /*  05-19-2020     William E. Lamie         Initial Version 6.0           */
 /*  09-30-2020     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  10-31-2022     Tiejun Zhou              Modified comment(s),          */
+/*                                            fixed FAT entry span two    */
+/*                                            sectors for FAT12,          */
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT    _fx_fault_tolerant_cleanup_FAT_chain(FX_MEDIA *media_ptr, UINT operation)
@@ -123,7 +211,7 @@ ULONG                        last_FAT_sector;
 
     /* At this point, the head_cluster points to the cluster chain that is to be removed. */
 
-    /* Tail cluster points to the back of the origianl FAT chain where the new chain is attached to.
+    /* Tail cluster points to the back of the origianal FAT chain where the new chain is attached to.
        The remove process terminates once this cluster is encountered. */
     tail_cluster = _fx_utility_32_unsigned_read((UCHAR *)&FAT_chain -> fx_fault_tolerant_FAT_chain_insertion_back);
 
@@ -133,7 +221,7 @@ ULONG                        last_FAT_sector;
         return(FX_SUCCESS);
     }
 
-    /* To opimize the deletion process of a long FAT chain, the deletion is done in sessions.  During one session,
+    /* To optimize the deletion process of a long FAT chain, the deletion is done in sessions.  During one session,
        a set of FAT entries are removed.  If one session is interrupted, after restart the deletion process resumes and
        picks up from where it left.
 
@@ -172,6 +260,16 @@ ULONG                        last_FAT_sector;
 
             /* Cache the FAT list. */
             cache_ptr[cache_count++] = current_cluster;
+
+            /* Check whether FAT entry spans multiple sectors.  */
+            if (_fx_utility_FAT_entry_multiple_sectors_check(media_ptr, current_cluster))
+            {
+                if (head_cluster == next_session || next_session == FX_FREE_CLUSTER)
+                {
+                    next_session = next_cluster;
+                }
+                break;
+            }
 
             /* Move to next cluster. */
             current_cluster = next_cluster;
@@ -289,4 +387,3 @@ ULONG                        last_FAT_sector;
     return(FX_SUCCESS);
 }
 #endif /* FX_ENABLE_FAULT_TOLERANT */
-

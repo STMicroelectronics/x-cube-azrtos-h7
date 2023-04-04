@@ -43,7 +43,7 @@ static inline VOID _ux_device_class_cdc_acm_transmission_write_run(UX_SLAVE_CLAS
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_device_class_cdc_acm_tasks_run                  PORTABLE C      */
-/*                                                           6.1.12a      */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -83,9 +83,9 @@ static inline VOID _ux_device_class_cdc_acm_transmission_write_run(UX_SLAVE_CLAS
 /*                                            names conflict C++ keyword, */
 /*                                            supported write auto ZLP,   */
 /*                                            resulting in version 6.1.12 */
-/*  08-30-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*  10-31-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            fixed compile warnings,     */
-/*                                            resulting in version 6.1.12a*/
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT _ux_device_class_cdc_acm_tasks_run(VOID *instance)

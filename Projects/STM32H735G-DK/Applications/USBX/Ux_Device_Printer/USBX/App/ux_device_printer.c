@@ -73,6 +73,23 @@ static UCHAR device_printer_buffer[512];
 /* USER CODE END 0 */
 
 /**
+  * @brief  USBD_PRINTER_GetDeviceID
+  *         Get the printer device ID.
+  * @param  none
+  * @retval USBD_PRINTER_DeviceID : Pointer to printer device ID.
+  */
+UCHAR *USBD_PRINTER_GetDeviceID(VOID)
+{
+  /* USER CODE BEGIN USBD_PRINTER_GetDeviceID */
+
+  ux_utility_short_put_big_endian(USBD_PRINTER_DeviceID, sizeof(USBD_PRINTER_DeviceID));
+
+  /* USER CODE END USBD_PRINTER_GetDeviceID */
+
+  return USBD_PRINTER_DeviceID;
+}
+
+/**
   * @brief  USBD_PRINTER_Activate
   *         This function is called while inserting a printer device.
   * @param  printer_instance: Pointer to the printer class instance.

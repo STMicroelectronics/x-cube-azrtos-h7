@@ -538,7 +538,17 @@ static VOID  _nx_driver_enable(NX_IP_DRIVER *driver_req_ptr)
   {
     switch (PHYLinkState)
     {
-    case ETH_PHY_STATUS_100MBITS_FULLDUPLEX:
+#if defined(ETH_PHY_1000MBITS_SUPPORTED)
+    case ETH_PHY_STATUS_1000MBITS_FULLDUPLEX:
+      duplex = ETH_FULLDUPLEX_MODE;
+      speed = ETH_SPEED_1000M;
+      break;
+    case ETH_PHY_STATUS_1000MBITS_HALFDUPLEX:
+      duplex = ETH_HALFDUPLEX_MODE;
+      speed = ETH_SPEED_1000M;
+      break;
+#endif
+case ETH_PHY_STATUS_100MBITS_FULLDUPLEX:
       duplex = ETH_FULLDUPLEX_MODE;
       speed = ETH_SPEED_100M;
       break;
@@ -564,6 +574,13 @@ static VOID  _nx_driver_enable(NX_IP_DRIVER *driver_req_ptr)
     HAL_ETH_GetMACConfig(&eth_handle, &MACConf);
     MACConf.DuplexMode = duplex;
     MACConf.Speed = speed;
+#if defined(ETH_DMASBMR_BLEN4) /* ETH AXI support*/
+#if defined(ETH_PHY_1000MBITS_SUPPORTED)
+    MACConf.PortSelect = 0;
+#else
+    MACConf.PortSelect = 1;
+#endif
+#endif
     HAL_ETH_SetMACConfig(&eth_handle, &MACConf);
   }
 
@@ -1400,7 +1417,6 @@ static VOID _nx_driver_transfer_to_netx(NX_IP *ip_ptr, NX_PACKET *packet_ptr)
 /**************************************************************************/
 static UINT  _nx_driver_hardware_initialize(NX_IP_DRIVER *driver_req_ptr)
 {
-
   /* Default to successful return.  */
   driver_req_ptr -> nx_ip_driver_status =  NX_SUCCESS;
 
@@ -1433,7 +1449,13 @@ static UINT  _nx_driver_hardware_initialize(NX_IP_DRIVER *driver_req_ptr)
   dmaDefaultConf.FlushRxPacket = DISABLE;
 #ifndef STM32_ETH_HAL_LEGACY
   dmaDefaultConf.PBLx8Mode = DISABLE;
+#if defined(ETH_DMASBMR_BLEN4) /* ETH AXI support*/
+  dmaDefaultConf.RxOSRLimit = ETH_RX_OSR_LIMIT_3;
+  dmaDefaultConf.TxOSRLimit = ETH_TX_OSR_LIMIT_3;
+  dmaDefaultConf.AXIBLENMaxSize = ETH_BLEN_MAX_SIZE_16;
+#else
   dmaDefaultConf.RebuildINCRxBurst = DISABLE;
+#endif
   dmaDefaultConf.SecondPacketOperate = ENABLE;
   dmaDefaultConf.TCPSegmentation = DISABLE;
   dmaDefaultConf.MaximumSegmentSize = 536;
@@ -1451,8 +1473,11 @@ static UINT  _nx_driver_hardware_initialize(NX_IP_DRIVER *driver_req_ptr)
 #endif
   /* enable OSF bit to enhance throughput */
   HAL_ETH_SetDMAConfig(&eth_handle, &dmaDefaultConf);
-
+#ifdef STM32_ETH_PROMISCUOUS_ENABLE
+  FilterConfig.PromiscuousMode = ENABLE;
+#else
   FilterConfig.PromiscuousMode = DISABLE;
+#endif
   FilterConfig.HashUnicast = DISABLE;
   FilterConfig.HashMulticast = DISABLE;
   FilterConfig.DestAddrInverseFiltering = DISABLE;

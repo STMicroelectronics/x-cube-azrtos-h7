@@ -17,8 +17,8 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 #include "app_threadx.h"
+#include "main.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -91,22 +91,23 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  BSP_LED_Init(LED_RED);
 
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  /* USER CODE BEGIN 2 */
   /* Unlock the Flash to enable the flash control register access */
   HAL_FLASH_Unlock();
 
-  /* Configure User push-button */
-  BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
-
   /* Check if the User push-button is pressed */
-  if (BSP_PB_GetState(BUTTON_USER) != BUTTON_PRESSED)
+  if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_RESET)
   {
     /* Test if user code is programmed starting from address 0x08020000 */
     if (((*(__IO uint32_t *) USBD_DFU_APP_DEFAULT_ADDR) & USBD_DFU_APP_MASK) ==
         USBD_DFU_APP_START_ADDR)
     {
-      /* Disable interrupts for timers */
+      /*  Disable interrupts for timers */
       HAL_NVIC_DisableIRQ(TIM6_DAC_IRQn);
 
       /* Jump to user application */
@@ -118,12 +119,6 @@ int main(void)
       JumpToApplication();
     }
   }
-
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
 
@@ -165,7 +160,7 @@ void SystemClock_Config(void)
   * in the RCC_OscInitTypeDef structure.
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48|RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
   RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
@@ -248,7 +243,7 @@ void MPU_Config(void)
   /** Initializes and configures the Region and the memory to be protected
   */
   MPU_InitStruct.Number = MPU_REGION_NUMBER1;
-  MPU_InitStruct.BaseAddress = 0x24027000;
+  MPU_InitStruct.BaseAddress = 0x24035000;
   MPU_InitStruct.Size = MPU_REGION_SIZE_64KB;
   MPU_InitStruct.SubRegionDisable = 0x0;
   MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL1;
@@ -291,7 +286,7 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
+
   while (1)
   {
   }

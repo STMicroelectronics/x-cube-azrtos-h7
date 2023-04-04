@@ -54,9 +54,9 @@ __ALIGN_BEGIN static UCHAR tx_byte_pool_buffer[TX_APP_MEM_POOL_SIZE] __ALIGN_END
 static TX_BYTE_POOL tx_app_byte_pool;
 
 /* USER CODE BEGIN UX_HOST_Pool_Buffer */
-/* Set usbx_pool start address to 0x24027000 */
+/* Set usbx_pool start address */
 #if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = 0x24027000
+#pragma location = ".UsbxPoolSection"
 #elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(".UsbxPoolSection")))
 #elif defined ( __GNUC__ ) /* GNU Compiler */
@@ -125,9 +125,9 @@ VOID tx_application_define(VOID *first_unused_memory)
 
   if (tx_byte_pool_create(&ux_host_app_byte_pool, "Ux App memory pool", ux_host_byte_pool_buffer, UX_HOST_APP_MEM_POOL_SIZE) != TX_SUCCESS)
   {
-    /* USER CODE BEGIN TX_Byte_Pool_Error */
+    /* USER CODE BEGIN UX_Byte_Pool_Error */
 
-    /* USER CODE END TX_Byte_Pool_Error */
+    /* USER CODE END UX_Byte_Pool_Error */
   }
   else
   {

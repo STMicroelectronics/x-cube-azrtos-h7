@@ -3,7 +3,7 @@
   ******************************************************************************
   * @file    app_azure_rtos.c
   * @author  MCD Application Team
-  * @brief   azure_rtos application implementation file
+  * @brief   app_azure_rtos application implementation file
   ******************************************************************************
   * @attention
   *
@@ -69,7 +69,7 @@ static TX_BYTE_POOL fx_app_byte_pool;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-void Error_Handler(void);
+
 /* USER CODE END PFP */
 
 /**
@@ -103,7 +103,9 @@ VOID tx_application_define(VOID *first_unused_memory)
     if (status != TX_SUCCESS)
     {
       /* USER CODE BEGIN  App_ThreadX_Init_Error */
-
+      while(1)
+      {
+      }
       /* USER CODE END  App_ThreadX_Init_Error */
     }
 
@@ -117,8 +119,6 @@ VOID tx_application_define(VOID *first_unused_memory)
   {
     /* USER CODE BEGIN FX_Byte_Pool_Error */
 
-    /* Unseccussful pool creation, call error handler.  */
-    Error_Handler();
     /* USER CODE END FX_Byte_Pool_Error */
   }
   else
@@ -132,7 +132,9 @@ VOID tx_application_define(VOID *first_unused_memory)
     if (status != FX_SUCCESS)
     {
       /* USER CODE BEGIN  MX_FileX_Init_Error */
-
+      while(1)
+      {
+      }
       /* USER CODE END  MX_FileX_Init_Error */
     }
 

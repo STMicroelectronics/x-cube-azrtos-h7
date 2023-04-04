@@ -60,13 +60,11 @@ extern __IO UINT sd_write_transfer_completed;
 /* USER CODE BEGIN EM */
 
 /* USER CODE END EM */
-
 /* Define the CPU Cache maintenance macros */
 #if (FX_STM32_SD_CACHE_MAINTENANCE == 1)
 #define invalidate_cache_by_addr(__ptr__, __size__)                  SCB_InvalidateDCache_by_Addr((void *)__ptr__, (int32_t)__size__)
 #define clean_cache_by_addr(__ptr__, __size__)                       SCB_CleanDCache_by_Addr((uint32_t *)__ptr__, (int32_t)__size__)
 #endif
-
 /* Define the macro to get the current time in ticks */
 /* USER CODE BEGIN FX_STM32_SD_CURRENT_TIME_HAL */
 
@@ -127,7 +125,7 @@ extern __IO UINT sd_write_transfer_completed;
 /* Define how to notify about Read completion operation */
 /* USER CODE BEGIN FX_STM32_SD_READ_CPLT_NOTIFY */
 
-#define FX_STM32_SD_READ_CPLT_NOTIFY()                  do { \
+#define FX_STM32_SD_READ_CPLT_NOTIFY()                 do { \
                                                           UINT start = FX_STM32_SD_CURRENT_TIME(); \
                                                           while(FX_STM32_SD_CURRENT_TIME() - start < FX_STM32_SD_DEFAULT_TIMEOUT) \
                                                           { \

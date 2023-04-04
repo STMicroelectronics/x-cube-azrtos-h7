@@ -61,7 +61,7 @@
 UX_SLAVE_CLASS_CDC_ACM  *cdc_acm;
 
 #if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = 0x24028000
+#pragma location = ".UsbxAppSection"
 #elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(".UsbxAppSection")))
 #elif defined ( __GNUC__ ) /* GNU Compiler */

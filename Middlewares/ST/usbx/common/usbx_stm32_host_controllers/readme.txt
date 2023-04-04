@@ -8,6 +8,18 @@
   ******************************************************************************
   */
 
+### V3.0.0 / 23-December-2022 ###
+===============================
+Main changes
+-------------
+- Add ISO transfer support
+- Add HUB Split HS Transactions support
+- Fix compile warnings in standalone mode
+
+Dependencies:
+-------------
+- Azure RTOS USBX V6.1.12 or higher
+
 ### V2.0.0 / 30-September-2022 ###
 ===============================
 Main changes

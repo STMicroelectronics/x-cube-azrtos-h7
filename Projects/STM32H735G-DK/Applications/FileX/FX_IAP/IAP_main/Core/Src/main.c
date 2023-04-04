@@ -17,12 +17,11 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 #include "app_threadx.h"
+#include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,7 +57,6 @@ static void MPU_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SDMMC1_SD_Init(void);
 static void MX_USART3_UART_Init(void);
-static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 static void CallUserApp(uint32_t Address);
 
@@ -112,11 +110,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART3_UART_Init();
-
-  /* Initialize interrupts */
-  MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
-
   /* Application behavior changes depending from the state of the USER_BUTTON:
      USER_BUTTON pressed : enter the IAP mode
      USER_BUTTON released: run the user application already programmed
@@ -203,17 +197,6 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief NVIC Configuration.
-  * @retval None
-  */
-static void MX_NVIC_Init(void)
-{
-  /* SDMMC1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(SDMMC1_IRQn, 15, 0);
-  HAL_NVIC_EnableIRQ(SDMMC1_IRQn);
-}
-
-/**
   * @brief SDMMC1 Initialization Function
   * @param None
   * @retval None
@@ -231,7 +214,7 @@ static void MX_SDMMC1_SD_Init(void)
   hsd1.Instance = SDMMC1;
   hsd1.Init.ClockEdge = SDMMC_CLOCK_EDGE_RISING;
   hsd1.Init.ClockPowerSave = SDMMC_CLOCK_POWER_SAVE_DISABLE;
-  hsd1.Init.BusWide = SDMMC_BUS_WIDE_4B;
+  hsd1.Init.BusWide = SDMMC_BUS_WIDE_1B;
   hsd1.Init.HardwareFlowControl = SDMMC_HARDWARE_FLOW_CONTROL_DISABLE;
   hsd1.Init.ClockDiv = 0;
   if (HAL_SD_Init(&hsd1) != HAL_OK)
@@ -300,6 +283,8 @@ static void MX_USART3_UART_Init(void)
 static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
+/* USER CODE BEGIN MX_GPIO_Init_1 */
+/* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOD_CLK_ENABLE();
@@ -322,6 +307,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
+/* USER CODE BEGIN MX_GPIO_Init_2 */
+/* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
@@ -339,17 +326,15 @@ static void CallUserApp(uint32_t Address)
   /* Please note that this assumes that the RAM region starts at RAM_START_ADDRESS, otherwise change it accordingly. */
   if (((*(__IO uint32_t *)Address) & RAM_RANGE_MASK) != RAM_START_ADDRESS)
   {
-    printf("Invalid signature (SP)");
+    printf("Invalid signature (SP)\n");
     Error_Handler();
   }
 
   /* De-init all init'ed peripherals */
-  HAL_SD_DeInit(&hsd1);
   HAL_UART_DeInit(&huart3);
   HAL_GPIO_DeInit(LED1_GPIO_Port, LED1_Pin);
   HAL_GPIO_DeInit(LED2_GPIO_Port, LED2_Pin);
   HAL_GPIO_DeInit(BUTTON_USER_GPIO_Port, BUTTON_USER_Pin);
-
   /* Disable MPU */
   HAL_MPU_Disable();
 

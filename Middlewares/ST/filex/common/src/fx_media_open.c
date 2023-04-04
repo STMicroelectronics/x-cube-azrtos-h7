@@ -36,7 +36,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _fx_media_open                                      PORTABLE C      */
-/*                                                           6.1.12a      */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -132,10 +132,10 @@
 /*  01-31-2022     William E. Lamie         Modified comment(s), fixed    */
 /*                                            errors without cache,       */
 /*                                            resulting in version 6.1.10 */
-/*  08-25-2022     Tiejun Zhou              Modified comment(s),          */
+/*  10-31-2022     Tiejun Zhou              Modified comment(s),          */
 /*                                            fixed memory buffer when    */
 /*                                            cache is disabled,          */
-/*                                            resulting in version 6.1.12a*/
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _fx_media_open(FX_MEDIA *media_ptr, CHAR *media_name,

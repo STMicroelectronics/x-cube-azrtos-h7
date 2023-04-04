@@ -1,3 +1,4 @@
+
 ## <b>Ux_Device_CDC_ECM application description</b>
 
 This application provides an example of Azure RTOS CDC_ECM stack usage on STM32H735G-DK board, it shows how to run Web HTTP server based application stack
@@ -6,9 +7,9 @@ class, the code provides all required features to build a compliant Web HTTP Ser
 kernel start, at this stage, the USBX initialize the network layer through USBx Class (CDC_ECM) also the FileX and the NetXDuo system are initialized,
 the NX_IP instance and the Web HTTP server are created and configured, then the application creates two main threads
 
-  - usbx_app_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device.
+  - usbx_app_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB_OTG HAL PCD driver and start the device.
   - nx_server_thread_entry (Prio :10; PreemptionPrio :10) used to assign a dynamic IP address, open the SD card driver as a FileX Media and start the Web HTTP server.
-  Fetching a dynamic IP address to the stm32H735 board is a step blocking until an IP address is obtained.
+  Fetching a dynamic IP address to the STM32H735G-DK board is a step blocking until an IP address is obtained.
   Once the server is started, the user's browser can load web pages as index.html and STM32H7xxLED.html.
 
 #### <b>Expected success behavior</b>
@@ -19,7 +20,7 @@ An example web pages is provided for testing the application that can be found u
 
 #### <b>Error behaviors</b>
 
-If the WEB HTTP server is not successfully started, the red LED stays ON.
+If the WEB HTTP server is not successfully started, the LED_RED should start blinking.
 In case of other errors, the Web HTTP server does not operate as designed (Files stored in the SD card are not loaded in the web browser).
 
 #### <b>Assumptions if any</b>
@@ -41,7 +42,7 @@ Hotplug is not implemented for this example, that is, the SD card is expected to
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -83,7 +84,6 @@ Hotplug is not implemented for this example, that is, the SD card is expected to
 
 
 #### <b>FileX/LevelX usage hints</b>
-
 - FileX sd driver is using the DMA, thus the DTCM (0x20000000) memory should not be used by the application, as it is not accessible by the SD DMA.
 - When calling the fx_media_format() API, it is highly recommended to understand all the parameters used by the API to correctly generate a valid filesystem.
 - FileX is using data buffers, passed as arguments to fx_media_open(), fx_media_read() and fx_media_write() API it is recommended that these buffers are multiple of sector size and "32 bytes" aligned to avoid cache maintenance issues.

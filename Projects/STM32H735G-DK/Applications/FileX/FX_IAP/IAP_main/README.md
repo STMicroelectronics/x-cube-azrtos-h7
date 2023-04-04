@@ -4,7 +4,7 @@
 This application provides an example of Azure RTOS FileX stack usage on STM32H735G-DK board, it implements an In-Application programming (IAP) demonstrating FileX's SD file access capabilities.
 The application is designed to erase and write to on-chip flash memory, it provides all required software code for handling SD card and flash memory I/O operations.
 
-This is a typical application on how to use the STM32H735 SD card peripheral for firmware upgrade application or IAP, allowing user to erase and write to on-chip flash memory.
+This is a typical application on how to use the STM32H735xx SD card peripheral for firmware upgrade application or IAP, allowing user to erase and write to on-chip flash memory.
 
 The application starts by checking the state of the user button (BUTTON_USER), and depending on its state the application will enter one of the two startup sequences:
 
@@ -47,13 +47,13 @@ For that the steps below will be followed:
 
 ### <b>Expected success behavior</b>
 
-In programming new software sequence, success is marked by a blinking green LED.
+In programming new software sequence, success is marked by a blinking LED_GREEN.
 In the loading new software sequence, the loaded application should start and run as expected.
 
 
 ### <b>Error behaviors</b>
 
-On failure, the red LED starts toggling while the green LED is switched OFF.
+On failure, the LED_RED starts toggling while the green LED is switched OFF.
 
 
 ### <b>Assumptions if any</b>
@@ -87,7 +87,7 @@ The name for the binary should also be specified there as defined by **FW_NAME_S
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -102,16 +102,16 @@ The name for the binary should also be specified there as defined by **FW_NAME_S
    This require changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+     place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	```
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -119,7 +119,7 @@ The name for the binary should also be specified there as defined by **FW_NAME_S
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	```
+    ```
 
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
@@ -129,10 +129,9 @@ The name for the binary should also be specified there as defined by **FW_NAME_S
 
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
 
-
 #### <b>FileX/LevelX usage hints</b>
 
-- FileX SD driver is using the DMA, thus the DTCM (0x20000000) memory should not be used by the application, as it is not accessible by the SD DMA.
+- FileX SD driver is using the DMA, thus the DTCM 0x20000000 memory should not be used by the application, as it is not accessible by the SD DMA.
 - FileX is using data buffers, passed as arguments to fx_media_open(), fx_media_read() and fx_media_write() API it is recommended that these buffers are multiple of sector size and "32 bytes" aligned to avoid cache maintenance issues.
 
 #### <b>Debugging</b>
@@ -143,11 +142,10 @@ While in loading new software sequence, the loaded-App can be debugged using IAR
 
 RTOS, ThreadX, FileX, File system, SDMMC, SDIO, FAT32
 
-
 ### <b>Hardware and Software environment</b>
 
   - This example runs on STM32H735xx devices.
-  - This example has been tested with STMicroelectronics STM32H735G-DK boards Revision: MB1520-H735I-B02 and can be easily tailored to any other supported device and development board.
+  - This example has been tested with STMicroelectronics STM32H735G-DK boards Revision: MB1520-H735I-B02 and can be easily tailored to any other supported device and development board
   - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
       - BaudRate = 115200 baud
       - Word Length = 8 Bits

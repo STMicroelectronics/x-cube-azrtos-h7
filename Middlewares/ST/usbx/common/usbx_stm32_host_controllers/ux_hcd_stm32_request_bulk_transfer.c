@@ -87,7 +87,6 @@ UX_HCD_STM32_ED     *ed;
 UINT                direction;
 UINT                length;
 
-
     /* Get the pointer to the Endpoint.  */
     endpoint =  (UX_ENDPOINT *) transfer_request -> ux_transfer_request_endpoint;
 
@@ -133,35 +132,64 @@ UINT                length;
     /* Direction, 0 : Output / 1 : Input */
     direction = ed -> ux_stm32_ed_dir;
 
-    /* If the direction is OUT, request size is larger than MPS, and DMA is not used, we need to set transfer length to MPS.  */
-    if ((direction == 0) && (transfer_request -> ux_transfer_request_requested_length > endpoint -> ux_endpoint_descriptor.wMaxPacketSize)
-#ifndef USB_DRD_FS
-        && (hcd_stm32 -> hcd_handle -> Init.dma_enable == 0)
-#endif /* USB_DRD_FS */
-          )
+#if defined (USBH_HAL_HUB_SPLIT_SUPPORTED)
+    if (hcd_stm32->hcd_handle->hc[ed -> ux_stm32_ed_channel].do_ssplit == 1U)
     {
-
+      if ((direction == 0) && (transfer_request -> ux_transfer_request_requested_length > endpoint -> ux_endpoint_descriptor.wMaxPacketSize))
+      {
         /* Set transfer length to MPS.  */
         length = endpoint -> ux_endpoint_descriptor.wMaxPacketSize;
-    }
-    else
-    {
-
+      }
+      else
+      {
         /* Keep the original transfer length.  */
         length = transfer_request -> ux_transfer_request_requested_length;
+      }
+    }
+    else
+#endif /* USBH_HAL_HUB_SPLIT_SUPPORTED */
+    {
+
+      /* If DMA enabled, use max possible transfer length.  */
+      if (hcd_stm32 -> hcd_handle -> Init.dma_enable)
+      {
+        if (transfer_request -> ux_transfer_request_requested_length > endpoint -> ux_endpoint_transfer_request.ux_transfer_request_maximum_length)
+          length = endpoint -> ux_endpoint_transfer_request.ux_transfer_request_maximum_length;
+        else
+          length = transfer_request -> ux_transfer_request_requested_length;
+      }
+      else
+      {
+        /* If the direction is OUT, request size is larger than MPS, and DMA is not used, we need to set transfer length to MPS.  */
+        if ((direction == 0) && (transfer_request -> ux_transfer_request_requested_length > endpoint -> ux_endpoint_descriptor.wMaxPacketSize))
+        {
+
+          /* Set transfer length to MPS.  */
+          length = endpoint -> ux_endpoint_descriptor.wMaxPacketSize;
+        }
+        else
+        {
+
+          /* Keep the original transfer length.  */
+          length = transfer_request -> ux_transfer_request_requested_length;
+        }
+      }
     }
 
     /* Save the transfer status in the ED.  */
     ed -> ux_stm32_ed_status = direction == 0 ? UX_HCD_STM32_ED_STATUS_BULK_OUT : UX_HCD_STM32_ED_STATUS_BULK_IN;
 
     /* Save the transfer length.  */
-    transfer_request -> ux_transfer_request_packet_length = length;
+    ed -> ux_stm32_ed_packet_length = length;
+
+    /* Prepare transactions.  */
+    _ux_hcd_stm32_request_trans_prepare(hcd_stm32, ed, transfer_request);
 
     /* Submit the transfer request.  */
     HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel,
                              direction,
                              EP_TYPE_BULK, USBH_PID_DATA,
-                             transfer_request->ux_transfer_request_data_pointer,
+                             ed -> ux_stm32_ed_data,
                              length, 0);
 
 #if defined(UX_HOST_STANDALONE)

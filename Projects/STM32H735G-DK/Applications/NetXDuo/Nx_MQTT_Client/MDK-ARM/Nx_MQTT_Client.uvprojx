@@ -10,7 +10,7 @@
       <TargetName>Nx_MQTT_Client</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6140001::V6.14.1::ARMCLANG</pCCUsed>
+      <pCCUsed>6180000::V6.18::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -338,9 +338,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>TX_INCLUDE_USER_DEFINE_FILE,NX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H735xx,NX_SECURE_INCLUDE_USER_DEFINE_FILE</Define>
+              <Define>TX_INCLUDE_USER_DEFINE_FILE,NX_SECURE_INCLUDE_USER_DEFINE_FILE,NX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H735xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../AZURE_RTOS/App;../NetXDuo/App;../NetXDuo/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Drivers/BSP/Components/lan8742/;../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/;../../../../../../Middlewares/ST/netxduo/addons/mqtt/;../../../../../../Middlewares/ST/netxduo/addons/sntp/;../../../../../../Middlewares/ST/netxduo/addons/dns/;../../../../../../Middlewares/ST/netxduo/addons/dhcp/;../../../../../../Middlewares/ST/netxduo/common/inc/;../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/ac5/inc/;../../../../../../Middlewares/ST/netxduo/nx_secure/inc/;../../../../../../Middlewares/ST/netxduo/nx_secure/ports/;../../../../../../Middlewares/ST/netxduo/crypto_libraries/inc/;../../../../../../Middlewares/ST/netxduo/crypto_libraries/ports/cortex_m7/ac6/inc/;../../../../../../Middlewares/ST/netxduo/crypto_libraries/ports/cortex_m4/ac6/inc/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/;../../../../../../Drivers/BSP/STM32H735G-DK</IncludePath>
+              <IncludePath>../Core/Inc;../AZURE_RTOS/App;../NetXDuo/App;../NetXDuo/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Drivers/BSP/Components/lan8742/;../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/;../../../../../../Middlewares/ST/netxduo/addons/mqtt/;../../../../../../Middlewares/ST/netxduo/addons/sntp/;../../../../../../Middlewares/ST/netxduo/addons/dns/;../../../../../../Middlewares/ST/netxduo/addons/dhcp/;../../../../../../Middlewares/ST/netxduo/common/inc/;../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/ac5/inc/;../../../../../../Middlewares/ST/netxduo/nx_secure/inc/;../../../../../../Middlewares/ST/netxduo/nx_secure/ports/;../../../../../../Middlewares/ST/netxduo/crypto_libraries/inc/;../../../../../../Middlewares/ST/netxduo/crypto_libraries/ports/cortex_m7/ac6/inc/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -669,11 +669,6 @@
         <Group>
           <GroupName>Middlewares/NetXDuo/Network/NetXDuo/NX Core</GroupName>
           <Files>
-            <File>
-              <FileName>nx_ram_network_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_ram_network_driver.c</FilePath>
-            </File>
             <File>
               <FileName>nx_arp_announce_send.c</FileName>
               <FileType>1</FileType>
@@ -3139,6 +3134,11 @@
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_nd_cache_slow_periodic_update.c</FilePath>
             </File>
+            <File>
+              <FileName>nx_http_proxy_client.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_http_proxy_client.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4548,6 +4548,71 @@
               <FileName>nxe_secure_x509_key_usage_extension_parse.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/netxduo/nx_secure/src/nxe_secure_x509_key_usage_extension_parse.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_secure_generate_client_key_exchange.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/nx_secure/src/nx_secure_generate_client_key_exchange.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_secure_generate_master_secret.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/nx_secure/src/nx_secure_generate_master_secret.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_secure_generate_premaster_secret.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/nx_secure/src/nx_secure_generate_premaster_secret.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_secure_generate_server_key_exchange.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/nx_secure/src/nx_secure_generate_server_key_exchange.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_secure_generate_session_keys.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/nx_secure/src/nx_secure_generate_session_keys.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_secure_process_client_key_exchange.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/nx_secure/src/nx_secure_process_client_key_exchange.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_secure_process_server_key_exchange.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/nx_secure/src/nx_secure_process_server_key_exchange.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_secure_remote_certificate_verify.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/nx_secure/src/nx_secure_remote_certificate_verify.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_secure_session_keys_set.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/nx_secure/src/nx_secure_session_keys_set.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_secure_tls_session_packet_pool_set.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/nx_secure/src/nx_secure_tls_session_packet_pool_set.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_secure_trusted_certificate_add.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/nx_secure/src/nx_secure_trusted_certificate_add.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_secure_verify_mac.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/nx_secure/src/nx_secure_verify_mac.c</FilePath>
+            </File>
+            <File>
+              <FileName>nxe_secure_tls_session_packet_pool_set.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/nx_secure/src/nxe_secure_tls_session_packet_pool_set.c</FilePath>
             </File>
           </Files>
         </Group>

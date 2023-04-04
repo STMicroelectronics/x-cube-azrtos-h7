@@ -1,5 +1,4 @@
-
-## <b>Ux_Host_HID application description</b>
+# <b>Ux_Host_HID_Standalone application description</b>
 
 This application provides an example of Azure RTOS USBX stack usage .
 It shows how to develop bare metal USB Host Human Interface "HID" able to enumerate and communicates with a mouse or a keyboard.
@@ -16,9 +15,9 @@ HID devices , HID Class APIs to decode HID reports received from a mouse or a ke
 
 #### <b>Expected success behavior</b>
 
-When a hid device is plugged to NUCLEO-H723ZG board, a Message will be displayed on the uart HyperTerminal showing
+When a HID device is plugged to NUCLEO-H723ZG board, a Message will be displayed on the uart HyperTerminal showing
 the Vendor ID and Product ID of the attached device.
-After enumeration phase, a message will indicates that the device is ready for use.
+After enumeration phase, a message will indicate that the device is ready for use.
 The host must be able to properly decode HID reports sent by the corresponding device and display those information on the HyperTerminal.
 
 The received HID reports are used by host to identify:
@@ -52,27 +51,25 @@ None.
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
 
 #### <b>USBX usage hints</b>
 
 - The DTCM (0x20000000) memory region should not be used by application in case USB DMA is enabled
--  Should make sure to configure the USB pool memory region with attribute "Non-Cacheable" to ensure coherency between CPU and USB DMA
+- Should make sure to configure the USB pool memory region with attribute "Non-Cacheable" to ensure coherency between CPU and USB DMA
 
 ### <b>Keywords</b>
 
-Standalone, USBX Host, USB, HID, Mouse, Keyboard, UART, USART,
-
+Standalone, USBXHost, USB_OTG, Full Speed, HID, Mouse, Keyboard,
 
 ### <b>Hardware and Software environment</b>
 
-  - This application runs on STM32H723xx devices
-  - This application has been tested with STMicroelectronics NUCLEO-H723ZG MB1364-H723ZG-E01.
-    and can be easily tailored to any other supported device and development board.
+  - This application runs on STM32H723xx devices.
+  - This application has been tested with STMicroelectronics NUCLEO-H723ZG boards Revision MB1364-H723ZG-E01 and can be easily tailored to any other supported device and development board.
 
-- NUCLEO-H723ZG Set-up
+  - NUCLEO-H723ZG Set-up
     - Plug the USB HID device into the NUCLEO-H723ZG board through 'USB micro A-Male  to A-Female' cable to the connector:
-      - CN13 : to use USB High Speed OTG IP in full speed (HS_IN_FS)
+      - CN13 : to use USB High Speed OTG IP.
     - Connect ST-Link cable to the PC USB port to display data on the HyperTerminal.
 
     A virtual COM port will then appear in the HyperTerminal:
@@ -83,7 +80,6 @@ Standalone, USBX Host, USB, HID, Mouse, Keyboard, UART, USART,
        - BaudRate = 115200 baud
        - Flow control: None
 
-
 ### <b>How to use it ?</b>
 
 In order to make the program work, you must do the following :
@@ -92,7 +88,7 @@ In order to make the program work, you must do the following :
  - Rebuild all files and load your image into target memory
  - Run the application
 
-<b>Note</b>
+<b>Notes</b>
 
 The user has to check the list of the COM ports in Device Manager to find out the number of the COM ports that have been assigned (by OS) to the Stlink VCP.
 

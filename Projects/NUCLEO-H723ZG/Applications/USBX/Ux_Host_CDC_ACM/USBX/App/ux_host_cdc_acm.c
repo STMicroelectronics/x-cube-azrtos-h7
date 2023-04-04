@@ -35,7 +35,6 @@
 /* USER CODE BEGIN PD */
 #define APP_RX_DATA_SIZE             2048U
 #define BLOCK_SIZE                   64U
-
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -57,11 +56,11 @@ uint8_t                         block_reception_size[APP_RX_DATA_SIZE / BLOCK_SI
 uint16_t                        RxSzeIdx;
 
 #if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = 0x2402b800
+#pragma location =".UsbHpcdSection"
 #elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
-__attribute__((section(".UsbxAppSection")))
+__attribute__((section(".UsbHpcdSection")))
 #elif defined ( __GNUC__ ) /* GNU Compiler */
-__attribute__((section(".UsbxAppSection")))
+__attribute__((section(".UsbHpcdSection")))
 #endif
 static UCHAR UserRxBuffer[APP_RX_DATA_SIZE];
 

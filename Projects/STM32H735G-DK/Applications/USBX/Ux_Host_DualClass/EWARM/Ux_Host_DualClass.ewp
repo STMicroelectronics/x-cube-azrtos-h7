@@ -2937,6 +2937,12 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_host_controllers\ux_hcd_stm32_request_periodic_transfer.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_host_controllers\ux_hcd_stm32_request_trans_finish.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_host_controllers\ux_hcd_stm32_request_trans_prepare.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_stm32_host_controllers\ux_hcd_stm32_request_transfer.c</name>
                 </file>
                 <file>

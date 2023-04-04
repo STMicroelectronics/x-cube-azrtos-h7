@@ -44,7 +44,6 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 extern UX_HOST_CLASS_HID_KEYBOARD *keyboard;
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -76,7 +75,7 @@ VOID hid_keyboard_thread_entry(ULONG thread_input)
         (keyboard->ux_host_class_hid_keyboard_state == (ULONG) UX_HOST_CLASS_INSTANCE_LIVE))
     {
       /* Get the keyboard key pressed */
-      if (ux_host_class_hid_keyboard_key_get(keyboard, &keyboard_key, &keyboard_state))
+      if (ux_host_class_hid_keyboard_key_get(keyboard, &keyboard_key, &keyboard_state) == UX_SUCCESS)
       {
         /* Print the key pressed */
         USBH_UsrLog("%c", (CHAR)keyboard_key);

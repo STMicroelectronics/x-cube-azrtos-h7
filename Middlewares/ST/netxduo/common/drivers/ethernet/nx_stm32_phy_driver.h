@@ -25,11 +25,16 @@ extern   "C" {
 
 #define  ETH_PHY_STATUS_LINK_ERROR            ((int32_t) 0)
 #define  ETH_PHY_STATUS_LINK_DOWN             ((int32_t) 1)
+
 #define  ETH_PHY_STATUS_100MBITS_FULLDUPLEX   ((int32_t) 2)
 #define  ETH_PHY_STATUS_100MBITS_HALFDUPLEX   ((int32_t) 3)
 #define  ETH_PHY_STATUS_10MBITS_FULLDUPLEX    ((int32_t) 4)
 #define  ETH_PHY_STATUS_10MBITS_HALFDUPLEX    ((int32_t) 5)
 #define  ETH_PHY_STATUS_AUTONEGO_NOT_DONE     ((int32_t) 6)
+#if defined(ETH_PHY_1000MBITS_SUPPORTED)
+#define  ETH_PHY_STATUS_1000MBITS_FULLDUPLEX  ((int32_t) 7)
+#define  ETH_PHY_STATUS_1000MBITS_HALFDUPLEX  ((int32_t) 8)
+#endif
 
 typedef void * 	nx_eth_phy_handle_t;
 

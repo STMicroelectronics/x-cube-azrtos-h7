@@ -81,10 +81,10 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr);
 
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define QUEUE_MAX_SIZE           512
+#define QUEUE_MAX_SIZE                        512
 
-#define LINK_PRIORITY            11
-#define DEFAULT_PORT             6000
+#define LINK_PRIORITY                         11
+#define DEFAULT_PORT                          6000
 
 #define NX_APP_CABLE_CONNECTION_CHECK_PERIOD  (6 * NX_IP_PERIODIC_RATE)
 /* USER CODE END PD */

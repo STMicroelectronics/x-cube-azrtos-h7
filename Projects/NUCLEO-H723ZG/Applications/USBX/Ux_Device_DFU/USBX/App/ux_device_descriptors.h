@@ -241,7 +241,7 @@ uint16_t USBD_Get_Configuration_Number(uint8_t class_type, uint8_t interface_typ
 #define USBD_PID                                      0xdf11
 #define USBD_LANGID_STRING                            1033
 #define USBD_MANUFACTURER_STRING                      "STMicroelectronics"
-#define USBD_PRODUCT_STRING                           "STM DFU Device"
+#define USBD_PRODUCT_STRING                           "STM Device in DFU Mode"
 #define USBD_SERIAL_NUMBER                            "DFU001"
 
 #define USB_DESC_TYPE_INTERFACE                       0x04U

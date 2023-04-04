@@ -156,7 +156,7 @@ ULONG   words;
     pointer =  (ULONG *) &nor_memory_area[0];
 
     /* Loop to erase block.  */
-    words =  sizeof(nor_memory_area)/sizeof(ULONG);
+    words =  sizeof(nor_memory_area)/(sizeof(ULONG));
     while (words--)
     {
         

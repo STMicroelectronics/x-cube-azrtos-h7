@@ -14,7 +14,7 @@ The main entry function tx_application_define() is then called by ThreadX during
   + The steps above are repeated indefinitely.
 
 When the "MainThread" is in suspended state, waiting for the 'Semaphore', the system is in idle state and the scheduler decides to enter in low mode
-by calling the TX_LOW_POWER_USER_ENTER that makes the system enter the stop mode via the HAL_EnterStopMode() API.
+by calling the TX_LOW_POWER_USER_ENTER that makes the system enter the stop mode via the HAL_PWR_EnterSTOPMode() API.
 
 As soon as the User button is pressed, the 'Semaphore' is released, and the 'MainThread' passes in Active state.
 
@@ -22,7 +22,7 @@ The scheduler exits the stop mode by calling the TX_LOW_POWER_EXIT.
 
 In System STOP mode, all I/O pins keep the same state as in Run mode.
 
-When exiting from Stop mode, the system clock, D3 domain bus matrix clocks and voltage scaling are reset, so they should be reconfigured.
+When exiting from STOP mode, the system clock, D3 domain bus matrix clocks and voltage scaling are reset, so they should be reconfigured.
 
 ####  <b>Expected success behavior</b>
 
@@ -32,6 +32,9 @@ When exiting from Stop mode, the system clock, D3 domain bus matrix clocks and v
 #### <b>Error behaviors</b>
 
 LED_RED toggles every 1 second if any error occurs.
+an error message is printed to the serial port.
+
+
 
 #### <b>Assumptions if any</b>
 None
@@ -63,9 +66,9 @@ For keeping track of time while in low power mode, there are two possibilities:
 
 3. Entering Low-power mode through WFI will be executed only if no interrupt is pending.
 
-4. The Debug Module must be stopped during STOP mode, otherwise, It will generate interrupts that cause the Wake-up of the system immediately after entering the Stop mode.
+4. The Debug Module must be stopped during STOP mode, otherwise, It will generate interrupts that cause the Wake-up of the system immediately after entering the STOP mode.
 
-5. The user push-button interrupt priority must be set to the highest possible value, otherwise, after Exit Stop mode the processor will not execute the interrupt handler.
+5. The user push-button interrupt priority must be set to the highest possible value, otherwise, after Exit STOP mode the processor will not execute the interrupt handler.
 
 6. To measure the current consumption remove JP4 jumper and connect an amperemeter to JP4 to measure IDD current.
 
@@ -118,7 +121,8 @@ RTOS, ThreadX, Threading, Semaphore, LowPower
 ### <b>Hardware and Software environment</b>
 
   - This example runs on STM32H723xx devices
-  - This example has been tested with STMicroelectronics NUCLEO-H723ZG boards Revision: MB1364-H723ZG-E01.
+  - This example has been tested with STMicroelectronics NUCLEO-H723ZG boards Revision: MB1364-H723ZG-E01
+
     and can be easily tailored to any other supported device and development board.
 
 ###  <b>How to use it ?</b>

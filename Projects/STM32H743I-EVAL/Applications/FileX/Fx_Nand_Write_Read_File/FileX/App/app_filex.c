@@ -332,7 +332,7 @@ void fx_app_thread_entry(ULONG thread_input)
   status =  fx_media_space_available(&nand_flash_disk, &available_space_post);
 
   printf("User available NAND Flash disk space size after file is written: %lu bytes.\n", available_space_post);
-  printf("The test file occupied a total of %lu cluster(s) (%u per cluster).",
+  printf("The test file occupied a total of %lu cluster(s) (%u per cluster).\n",
          (available_space_pre - available_space_post) / (nand_flash_disk.fx_media_bytes_per_sector * nand_flash_disk.fx_media_sectors_per_cluster),
          nand_flash_disk.fx_media_bytes_per_sector * nand_flash_disk.fx_media_sectors_per_cluster);
 

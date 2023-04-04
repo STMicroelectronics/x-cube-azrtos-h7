@@ -630,11 +630,6 @@
           <GroupName>Middlewares/NetXDuo/Network/NetXDuo/NX Core</GroupName>
           <Files>
             <File>
-              <FileName>nx_ram_network_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_ram_network_driver.c</FilePath>
-            </File>
-            <File>
               <FileName>nx_arp_announce_send.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_arp_announce_send.c</FilePath>
@@ -3098,6 +3093,11 @@
               <FileName>nx_nd_cache_slow_periodic_update.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_nd_cache_slow_periodic_update.c</FilePath>
+            </File>
+            <File>
+              <FileName>nx_http_proxy_client.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/netxduo/common/src/nx_http_proxy_client.c</FilePath>
             </File>
           </Files>
         </Group>

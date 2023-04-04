@@ -32,6 +32,7 @@ extern "C" {
 #include "nx_stm32_eth_driver.h"
 
 /* USER CODE BEGIN Includes */
+#include "main.h"
 
 /* USER CODE END Includes */
 
@@ -93,7 +94,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr);
 #define TCP_SERVER_ADDRESS       IP_ADDRESS(10, 157, 5, 175)
 
 #define MAX_PACKET_COUNT         100
-#define DEFAULT_MESSAGE          "TCP Client on STM32H723-Nucleo"
+#define DEFAULT_MESSAGE          "TCP Client on NUCLEO-H723ZG"
 #define DEFAULT_TIMEOUT          10 * NX_IP_PERIODIC_RATE
 
 #define NX_APP_CABLE_CONNECTION_CHECK_PERIOD  (6 * NX_IP_PERIODIC_RATE)

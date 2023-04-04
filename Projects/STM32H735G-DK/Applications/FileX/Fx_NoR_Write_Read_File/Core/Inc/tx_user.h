@@ -147,7 +147,7 @@
    enabled. If the application does not use preemption-threshold, it may be disabled to reduce
    code size and improve performance.  */
 
-/*#define TX_DISABLE_PREEMPTION_THRESHOLD*/
+#define TX_DISABLE_PREEMPTION_THRESHOLD
 
 /* Determine if global ThreadX variables should be cleared. If the compiler startup code clears
    the .bss section prior to ThreadX running, the define can be used to eliminate unnecessary
@@ -172,7 +172,7 @@
    enabled. If the application does not use notify callbacks, they may be disabled to reduce
    code size and improve performance.  */
 
-/*#define TX_DISABLE_NOTIFY_CALLBACKS*/
+#define TX_DISABLE_NOTIFY_CALLBACKS
 
 /*Defined, the basic parameter error checking is disabled.*/
 

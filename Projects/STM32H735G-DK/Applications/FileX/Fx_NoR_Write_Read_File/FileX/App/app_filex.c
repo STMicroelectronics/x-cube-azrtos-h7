@@ -24,7 +24,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "main.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -39,7 +38,6 @@
 #define FX_APP_THREAD_PRIO               10
 
 /* USER CODE BEGIN PD */
-
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -84,6 +82,7 @@ UINT MX_FileX_Init(VOID *memory_ptr)
   VOID *pointer;
 
   /* USER CODE BEGIN MX_FileX_MEM_POOL */
+
   /* USER CODE END MX_FileX_MEM_POOL */
 
   /* USER CODE BEGIN 0 */
@@ -320,7 +319,7 @@ void fx_app_thread_entry(ULONG thread_input)
 
   while(1)
   {
-      HAL_GPIO_TogglePin(LED1_GPIO_PORT, LED1_PIN);
+      HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
       tx_thread_sleep(40);
   }
   /* USER CODE END fx_app_thread_entry 1 */

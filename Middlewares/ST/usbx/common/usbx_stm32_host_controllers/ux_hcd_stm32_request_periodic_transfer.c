@@ -59,8 +59,8 @@
 /*                                                                        */
 /*  CALLS                                                                 */
 /*                                                                        */
-/*    UX_DISABLE_INTS                       Disable interrupt             */
-/*    UX_RESTORE_INTS                       Restore interrupt             */
+/*    UX_DISABLE                            Disable interrupt             */
+/*    UX_RESTORE                            Restore interrupt             */
 /*                                                                        */
 /*  CALLED BY                                                             */
 /*                                                                        */
@@ -82,6 +82,7 @@ UINT  _ux_hcd_stm32_request_periodic_transfer(UX_HCD_STM32 *hcd_stm32, UX_TRANSF
 
 UX_ENDPOINT             *endpoint;
 UX_HCD_STM32_ED         *ed;
+UX_TRANSFER             *transfer;
 UX_INTERRUPT_SAVE_AREA
 
 
@@ -91,8 +92,10 @@ UX_INTERRUPT_SAVE_AREA
     /* Now get the physical ED attached to this endpoint.  */
     ed =  endpoint -> ux_endpoint_ed;
 
-#if defined(UX_HOST_STANDALONE)
+    /* Disable interrupt.  */
     UX_DISABLE
+
+#if defined(UX_HOST_STANDALONE)
 
     /* Check if transfer is still in progress.  */
     if ((ed -> ux_stm32_ed_status & UX_HCD_STM32_ED_STATUS_PENDING_MASK) >
@@ -121,15 +124,30 @@ UX_INTERRUPT_SAVE_AREA
     }
     transfer_request -> ux_transfer_request_status = UX_TRANSFER_STATUS_PENDING;
 
-#else
-    UX_DISABLE
 #endif /* defined(UX_HOST_STANDALONE) */
 
     /* Save the transfer status in the ED.  */
     ed -> ux_stm32_ed_status = UX_HCD_STM32_ED_STATUS_PERIODIC_TRANSFER;
 
+    /* Isochronous transfer supports transfer list.  */
+    if (ed -> ux_stm32_ed_transfer_request == UX_NULL)
+    {
+
+        /* Scheduler is needed to start, and kept if interval is more than 1 SOF/uSOF.  */
+        ed -> ux_stm32_ed_sch_mode = 1;
+
     /* Save the pending transfer in the ED.  */
     ed -> ux_stm32_ed_transfer_request = transfer_request;
+    }
+    else
+    {
+
+        /* Link the pending transfer to list tail.  */
+        transfer = ed -> ux_stm32_ed_transfer_request;
+        while(transfer -> ux_transfer_request_next_transfer_request != UX_NULL)
+            transfer = transfer -> ux_transfer_request_next_transfer_request;
+        transfer -> ux_transfer_request_next_transfer_request = transfer_request;
+    }
 
     /* Restore interrupt.  */
     UX_RESTORE

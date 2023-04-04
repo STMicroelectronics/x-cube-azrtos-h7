@@ -63,6 +63,7 @@ UINT App_ThreadX_Init(VOID *memory_ptr)
   UINT ret = TX_SUCCESS;
   TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
   /* USER CODE BEGIN App_ThreadX_MEM_POOL */
+
   /* USER CODE END App_ThreadX_MEM_POOL */
   CHAR *pointer;
 
@@ -170,7 +171,8 @@ void MainThread_Entry(ULONG thread_input)
   /* Infinite loop */
   while(1)
   {
-    HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+
     /* Thread sleep for 1s */
     tx_thread_sleep(100);
   }
@@ -185,11 +187,13 @@ void MainThread_Entry(ULONG thread_input)
 void MX_ThreadX_Init(void)
 {
   /* USER CODE BEGIN  Before_Kernel_Start */
+
   /* USER CODE END  Before_Kernel_Start */
 
   tx_kernel_enter();
 
   /* USER CODE BEGIN  Kernel_Start_Error */
+
   /* USER CODE END  Kernel_Start_Error */
 }
 
@@ -206,7 +210,8 @@ void ThreadOne_Entry(ULONG thread_input)
   /* Infinite loop */
   while(1)
   {
-    HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+
     /* Delay for 500ms (App_Delay is used to avoid context change). */
     App_Delay(50);
     count ++;
@@ -233,7 +238,7 @@ void ThreadTwo_Entry(ULONG thread_input)
   /* Infinite loop */
   while (1)
   {
-    HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
     /* Delay for 200ms (App_Delay is used to avoid context change). */
     App_Delay(20);
     count ++;

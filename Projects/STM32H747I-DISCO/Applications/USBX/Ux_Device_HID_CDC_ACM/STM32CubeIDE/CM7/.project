@@ -206,11 +206,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/CM7/Core/Src/usb_otg.c</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Drivers/BSP/STM32H747I-DISCO/stm32h747i_discovery.c</locationURI>
-		</link>
-		<link>
 			<name>Application/User/AZURE_RTOS/App/app_azure_rtos.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/CM7/AZURE_RTOS/App/app_azure_rtos.c</locationURI>

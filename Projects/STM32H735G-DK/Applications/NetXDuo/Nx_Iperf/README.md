@@ -73,9 +73,15 @@ void MX_ETH_Init(void)
 
 ### <b>Notes</b>
 
- 1.  If the user code size exceeds the DTCM-RAM size or starts from internal cacheable memories (SRAM1 and SRAM2), that is shared between several processors,
-      then it is highly recommended to enable the CPU cache and maintain its coherence at application level.
-      The address and the size of cacheable buffers (shared between CPU and other masters) must be properly updated to be aligned to cache line size (32 bytes).
+ 1. Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from Flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.
+ 2.  If the application is using the DTCM/ITCM memories (@0x20000000/ 0x0000000: not cacheable and only accessible by the Cortex M7 and the MDMA), no need for cache maintenance when the Cortex M7 and the MDMA access these RAMs. If the application needs to use DMA (or other masters) based access or requires more RAM, then the user has to:
+      - Use a non TCM SRAM. (example : D1 AXI-SRAM @ 0x24000000).
+      - Add a cache maintenance mechanism to ensure the cache coherence between CPU and other masters (DMAs,DMA2D,LTDC,MDMA).
+      - The addresses and the size of cacheable buffers (shared between CPU and other masters) must be properly defined to be aligned to L1-CACHE line size (32 bytes).
+ 3.  It is recommended to enable the cache and maintain its coherence:
+      - Depending on the use case it is also possible to configure the cache attributes using the MPU.
+      - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -90,16 +96,16 @@ void MX_ETH_Init(void)
    This require changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+     place in RAM_region    { last section FREE_MEM };
+    ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	```
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -123,22 +129,24 @@ void MX_ETH_Init(void)
  of the section declaration for different IDEs.
  + For EWARM ".icf" file
    ```
-   define symbol __ICFEDIT_region_NXDATA_start__  = 0x24034100;
-   define symbol __ICFEDIT_region_NXDATA_end__   = 0x2404FFFF;
-   define region NXApp_region  = mem:[from __ICFEDIT_region_NXDATA_start__ to __ICFEDIT_region_NXDATA_end__];
-   place in NXApp_region { section .NetXPoolSection};
+   define symbol __ICFEDIT_region_NXDATA_start__  = 0x24030100;
+   define symbol __ICFEDIT_region_NXDATA_end__   = 0x240340FF;
+   define symbol __ICFEDIT_region_NXDATA_POOL_start__  = 0x24034100;
+   define symbol __ICFEDIT_region_NXDATA_POOL_end__   = __ICFEDIT_region_RAM_end__;
+   place in NXApp_region_pool { section .NetXPoolSection};
    ```
    + For MDK-ARM
    ```
-    RW_NXDriverSection 0x24034100 0x1B800  {
+   RW_NXDriverSection 0x24034100 0x1B800  {
   *(.NetXPoolSection)
   }
    ```
    + For STM32CubeIDE ".ld" file
    ```
-   .nx_section 0x24034100 (NOLOAD): {
-     *(.NetXPoolSection)
-     } >RAM
+   .nx_data 0x24030100 (NOLOAD):
+   {
+    *(.NetXPoolSection)
+   } >RAM
    ```
 
   this section is then used in the <code> app_azure_rtos.c</code> file to force the <code>nx_byte_pool_buffer</code> allocation.

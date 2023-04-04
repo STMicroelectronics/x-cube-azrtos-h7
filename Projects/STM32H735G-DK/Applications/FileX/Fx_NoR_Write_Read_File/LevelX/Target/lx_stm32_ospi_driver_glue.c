@@ -212,7 +212,6 @@ INT lx_stm32_ospi_read(UINT instance, ULONG *address, ULONG *buffer, ULONG words
   OSPI_RegularCmdTypeDef s_command;
 
   /* USER CODE BEGIN PRE_OSPI_READ */
-
   /* USER CODE END PRE_OSPI_READ */
 
   /* Initialize the read command */
@@ -281,7 +280,6 @@ INT lx_stm32_ospi_write(UINT instance, ULONG *address, ULONG *buffer, ULONG word
   uint32_t data_buffer;
 
   /* USER CODE BEGIN PRE_OSPI_WRITE */
-
   /* USER CODE END PRE_OSPI_WRITE */
 
   /* Calculation of the size between the write address and the end of the page */

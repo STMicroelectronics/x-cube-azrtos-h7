@@ -6,6 +6,7 @@ project(levelx
 )
 
 option(LX_STANDALONE_ENABLE "Enable LevelX in standalone mode" OFF)
+option(LX_ENABLE_FILE_SERVERS "Includes a dependency on FileX" ON)
 
 if(NOT DEFINED THREADX_ARCH)
     message(FATAL_ERROR "Error: THREADX_ARCH not defined")
@@ -23,6 +24,11 @@ add_library("azrtos::${PROJECT_NAME}" ALIAS ${PROJECT_NAME})
 if(NOT LX_STANDALONE_ENABLE)
     target_link_libraries(${PROJECT_NAME} PUBLIC 
         "azrtos::threadx")
+endif()
+
+if(LX_ENABLE_FILE_SERVERS)
+    message(STATUS "LX_ENABLE_FILE_SERVERS - defined")
+    target_link_libraries(${PROJECT_NAME} PUBLIC "azrtos::filex")
 endif()
 
 # A place for generated/copied include files (no need to change)

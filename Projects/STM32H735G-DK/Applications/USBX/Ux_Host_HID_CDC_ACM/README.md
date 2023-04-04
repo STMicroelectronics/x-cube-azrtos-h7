@@ -1,7 +1,6 @@
-
 ## <b>Ux_Host_HID_CDC_ACM application description </b>
 
-This application provides an example of Azure RTOS USBX stack usage on STM32H735-DK.
+This application provides an example of Azure RTOS USBX stack usage on STM32H735G-DK.
 It shows how to develop a composite "USB HID CDC_ACM Host" that is able to enumerate and communicate with:
 
   - Composite USB HID CDC_ACM device
@@ -13,7 +12,7 @@ In case of composite or a simple device, the CDC_ACM Class APIs is used to send,
 The main entry function tx_application_define() is called by ThreadX during kernel start, at this stage, all USBx resources are initialized.
 The application creates 5 threads with different priorities :
 
-  - usbx_app_thread_entry            (Priority : 10; Preemption threshold : 10) used to initialize USB OTG HAL HCD driver and start the Host.
+  - usbx_app_thread_entry            (Priority : 10; Preemption threshold : 10) used to initialize USB USB_OTG HAL HCD driver and start the Host.
   - cdc_acm_send_app_thread_entry    (Priority : 30; Preemption threshold : 30) used to send data from host to device.
   - cdc_acm_recieve_app_thread_entry (Priority : 30; Preemption threshold : 30) used to receive data from the device.
   - hid_mouse_thread_entry           (Priority : 30; Preemption threshold : 30) used to decode HID reports received  from a mouse.
@@ -62,7 +61,7 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -116,13 +115,13 @@ Connectivity, USBX Host, ThreadX, USB, Composite, CDC_ACM, HID, Mouse, Keyboard 
 
 ### <b>Hardware and Software environment</b>
 
-  - This application runs on STM32H723xx devices
-  - This application has been tested with STMicroelectronics STM32H735G-DK MB1520-H735l-B02.
+  - This application runs on STM32H735xx devices
+  - This application has been tested with STMicroelectronics STM32H735G-DK MB1520-H735I-B02.
     and can be easily tailored to any other supported device and development board.
 
 - STM32H735G-DK Set-up
     - Plug the USB CDC_ACM device into the STM32H735G-DK board through 'USB micro A-Male  to A-Female' cable to the connector:
-      - CN13 : to use USB High Speed OTG IP in full speed (HS_IN_FS)
+      - CN13 : to use USB HS.
     - Connect ST-Link cable to the PC USB port to display data on the HyperTerminal.
 
     A virtual COM port will then appear in the HyperTerminal:

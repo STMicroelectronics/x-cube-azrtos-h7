@@ -33,7 +33,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_device_class_hid_initialize                     PORTABLE C      */ 
-/*                                                           6.1.12a      */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -85,9 +85,9 @@
 /*                                            fixed parameter/variable    */
 /*                                            names conflict C++ keyword, */
 /*                                            resulting in version 6.1.12 */
-/*  08-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*  10-31-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            fixed compile warnings,     */
-/*                                            resulting in version 6.1.12a*/
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_device_class_hid_initialize(UX_SLAVE_CLASS_COMMAND *command)

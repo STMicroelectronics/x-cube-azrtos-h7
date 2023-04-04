@@ -7,6 +7,24 @@
   ******************************************************************************
   */
 
+### V3.2.0 / 09-December-2022 ###
+=================================
+Main changes
+-------------
+- Add rtl8211eg PHY driver interface
+- LAN8742 PHY driver interface and Ethernet driver: Add support for 1000MBITS configuration
+- Ethernet driver: Set Promiscuous Mode based on a Preprocessor switch
+
+
+Dependencies:
+-------------
+- Azure RTOS NetXDuo V6.1.10 or higher
+- STM32CubeH7 Ethernet HAL driver V1.11.0
+- STM32CubeF4 Ethernet HAL driver V1.8.0
+- STM32CubeF7 Ethernet HAL driver V1.3.0
+- Cypress_WHD middleware 1.70.0
+- MX_WIFI component driver 2.3.4
+
 ### V3.1.1 / 11-November-2022 ###
 =================================
 Main changes

@@ -69,7 +69,7 @@ Message 5 received: TOPIC = Temperature, MESSAGE = 33
 client disconnected from server
  ```
  + Green led is toggling after successfully receiving all messages.
- 
+
 #### <b> Error behaviors</b>
 
 + The red LED is toggling to indicate any error that has occurred.
@@ -77,7 +77,7 @@ client disconnected from server
 #### <b> Assumptions if any</b>
 
 - The Application is using the DHCP to acquire IP address, thus a DHCP server should be reachable by the board in the LAN used to test the application.
-- The application is configuring the Ethernet IP with a static predefined MAC Address, make sure to change it in case multiple boards are connected on 
+- The application is configuring the Ethernet IP with a static predefined MAC Address, make sure to change it in case multiple boards are connected on
 the same LAN to avoid any potential network traffic issues.
 
 - The MAC Address is defined in the `main.c`
@@ -119,11 +119,11 @@ void MX_ETH_Init(void)
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
-      
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
+
  4. To make an encrypted connection with MQTT server, user should follow these steps to add an x509 certificate to the _mqtt\_client_ and use it to ensure server's authentication :
       - download certificate authority CA (in this application "mosquitto.org.der" downloaded from [test.mosquitto](https://test.mosquitto.org)
-      - convert certificate downloaded by executing the following cmd from the file downloaded path : 
+      - convert certificate downloaded by executing the following cmd from the file downloaded path :
 
    		                xxd.exe -i mosquitto.org.der > mosquitto.cert.h
 
@@ -190,7 +190,7 @@ void MX_ETH_Init(void)
   }
    ```
    + For STM32CubeIDE ".ld" file
-   ``` 
+   ```
    .nx_section 0x24030200 (NOLOAD): {
      *(.NXAppPoolSection)
      } >RAM_D1
@@ -217,7 +217,6 @@ static TX_BYTE_POOL nx_app_byte_pool;
 ```
 For more details about the MPU configuration please refer to the [AN4838](https://www.st.com/resource/en/application_note/dm00272912-managing-memory-protection-unit-in-stm32-mcus-stmicroelectronics.pdf)
 
-
 ### <b>Keywords</b>
 
 RTOS, Network, ThreadX, NetXDuo, MQTT, TLS, UART
@@ -226,6 +225,7 @@ RTOS, Network, ThreadX, NetXDuo, MQTT, TLS, UART
 
  - This application runs on STM32H735xx devices.
  - This application has been tested with STMicroelectronics STM32H735G-DK boards Revision: MB1520-H735I-B02
+
     and can be easily tailored to any other supported device and development board.
 
  - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
@@ -242,4 +242,4 @@ In order to make the program work, you must do the following :
  - Open your preferred toolchain
  - Edit the file app_netxduo.h : define the USER_DNS_ADDRESS (if necessary), the MQTT_BROKER_NAME and NB_MESSAGE.
  - Rebuild all files and load your image into target memory
- - Run the application  
+ - Run the application

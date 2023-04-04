@@ -1,4 +1,3 @@
-
 ## <b>Tx_Thread_Sync application description</b>
 
 This application provides an example of Azure RTOS ThreadX stack usage, it shows how to develop an application using the ThreadX synchronization APIs.
@@ -31,11 +30,11 @@ the compile flags in the file "app_threadx.h".
 
   - 'LED_GREEN' toggles every 500ms for 5 seconds
   - 'LED_RED' toggles every 500ms for 5 seconds
-  - Messages on HyperTerminal : 
+  - Messages on HyperTerminal :
      + "** ThreadXXX : waiting for SyncObject !! **" : When thread is waiting for the SyncObject.
-	 + "** ThreadXXX : waiting SyncObject released **" : When thread put the SyncObject.
-	 + "** ThreadXXX : waiting SyncObject acquired **" : When thread get the SyncObject.
-	 
+     + "** ThreadXXX : waiting SyncObject released **" : When thread put the SyncObject.
+     + "** ThreadXXX : waiting SyncObject acquired **" : When thread get the SyncObject.
+
 #### <b>Error behaviors</b>
 
 'LED_RED' toggles every 1 second if any error occurs.
@@ -56,8 +55,8 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
-  
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
+
 #### <b>ThreadX usage hints</b>
 
  - ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.
@@ -71,16 +70,16 @@ None
    This require changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+     place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	``` 
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -88,16 +87,16 @@ None
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	``` 
-	
+    ```
+
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
-       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.	 
-       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).	 
+       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
        Read more in STM32CubeIDE User Guide, chapter: "Linker script".
-	  
+
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
-               
+
 
 ### <b>Keywords</b>
 
@@ -108,6 +107,7 @@ RTOS, ThreadX, Threading, Semaphore, Mutex
 
   - This example runs on STM32H735xx devices
   - This example has been tested with STMicroelectronics STM32H735G-DK boards Revision: MB1520-H735I-B02.
+
     and can be easily tailored to any other supported device and development board.
   - A virtual COM port appears in the HyperTerminal:
       - Hyperterminal configuration:

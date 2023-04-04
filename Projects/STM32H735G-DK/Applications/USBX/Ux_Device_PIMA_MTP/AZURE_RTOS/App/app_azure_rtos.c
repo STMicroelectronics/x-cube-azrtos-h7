@@ -54,7 +54,6 @@ __ALIGN_BEGIN static UCHAR tx_byte_pool_buffer[TX_APP_MEM_POOL_SIZE] __ALIGN_END
 static TX_BYTE_POOL tx_app_byte_pool;
 
 /* USER CODE BEGIN FX_Pool_Buffer */
-
 /* USER CODE END FX_Pool_Buffer */
 #if defined ( __ICCARM__ )
 #pragma data_alignment=4
@@ -63,15 +62,13 @@ __ALIGN_BEGIN static UCHAR fx_byte_pool_buffer[FX_APP_MEM_POOL_SIZE] __ALIGN_END
 static TX_BYTE_POOL fx_app_byte_pool;
 
 /* USER CODE BEGIN UX_Device_Pool_Buffer */
-
 #if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = 0x24028000
+#pragma location = ".UsbxPoolSection"
 #elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(".UsbxPoolSection")))
 #elif defined ( __GNUC__ ) /* GNU Compiler */
 __attribute__((section(".UsbxPoolSection")))
 #endif
-
 /* USER CODE END UX_Device_Pool_Buffer */
 #if defined ( __ICCARM__ )
 #pragma data_alignment=4
@@ -107,7 +104,9 @@ VOID tx_application_define(VOID *first_unused_memory)
   if (tx_byte_pool_create(&tx_app_byte_pool, "Tx App memory pool", tx_byte_pool_buffer, TX_APP_MEM_POOL_SIZE) != TX_SUCCESS)
   {
     /* USER CODE BEGIN TX_Byte_Pool_Error */
-
+    while(1)
+    {
+    }
     /* USER CODE END TX_Byte_Pool_Error */
   }
   else
@@ -164,7 +163,9 @@ VOID tx_application_define(VOID *first_unused_memory)
   if (tx_byte_pool_create(&ux_device_app_byte_pool, "Ux App memory pool", ux_device_byte_pool_buffer, UX_DEVICE_APP_MEM_POOL_SIZE) != TX_SUCCESS)
   {
     /* USER CODE BEGIN UX_Device_Byte_Pool_Error */
-
+    while(1)
+    {
+    }
     /* USER CODE END UX_Device_Byte_Pool_Error */
   }
   else

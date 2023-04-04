@@ -34,7 +34,6 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define CURSOR_STEP         10
-#define BUTTON_DETECT_WAIT  10
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -45,7 +44,7 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 UX_SLAVE_CLASS_HID *hid_mouse;
-__IO uint8_t User_Button_State = 0;
+__IO uint8_t User_Button_State = 0U;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -147,27 +146,15 @@ UINT USBD_HID_Mouse_GetReport(UX_SLAVE_CLASS_HID *hid_instance,
   */
 VOID USBX_DEVICE_HID_MOUSE_Task(VOID)
 {
-  ULONG tick;
   UX_SLAVE_DEVICE *device;
   UX_SLAVE_CLASS_HID_EVENT hid_event;
 
   device = &_ux_system_slave->ux_system_slave_device;
   ux_utility_memory_set(&hid_event, 0, sizeof(UX_SLAVE_CLASS_HID_EVENT));
 
-  tick = HAL_GetTick();
-
   /* Check if the device state already configured */
   if ((device->ux_slave_device_state == UX_DEVICE_CONFIGURED) && (hid_mouse != UX_NULL))
   {
-
-    /* Sleep for 10ms */
-    if (ux_utility_time_elapsed(tick, HAL_GetTick()) > BUTTON_DETECT_WAIT)
-    {
-      return;
-    }
-
-    tick = HAL_GetTick();
-
     /* Check if user button is pressed */
     if (User_Button_State)
     {
@@ -223,16 +210,20 @@ static VOID GetPointerData(UX_SLAVE_CLASS_HID_EVENT *hid_event)
   /* Increment counter */
   counter++;
 
-  /* Mouse event. Length is fixed to 3 */
-  hid_event->ux_device_class_hid_event_length = 3;
+  /* Mouse event. Length is fixed to 4 */
+  hid_event->ux_device_class_hid_event_length = 4;
 
-  /* Set X position. */
-  hid_event->ux_device_class_hid_event_buffer[0] = x;
+  /* Set select position */
+  hid_event->ux_device_class_hid_event_buffer[0] = 0;
 
-  /* Set Y position. */
-  hid_event->ux_device_class_hid_event_buffer[1] = y;
+  /* Set X position */
+  hid_event->ux_device_class_hid_event_buffer[1] = x;
 
-  hid_event->ux_device_class_hid_event_buffer[2] = 0;
+  /* Set Y position */
+  hid_event->ux_device_class_hid_event_buffer[2] = y;
+
+  /* Set wheel position */
+  hid_event->ux_device_class_hid_event_buffer[3] = 0;
 }
 
 /* USER CODE END 1 */

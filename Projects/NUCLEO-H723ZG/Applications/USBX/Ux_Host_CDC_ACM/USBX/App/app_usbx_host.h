@@ -66,7 +66,6 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr);
 /* USER CODE BEGIN EFP */
 VOID USBX_APP_Host_Init(VOID);
 void USBH_DriverVBUS(uint8_t state);
-
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -91,6 +90,7 @@ void USBH_DriverVBUS(uint8_t state);
 #endif
 
 /* USER CODE BEGIN 1 */
+
 typedef enum
 {
   USB_VBUS_FALSE = 0,

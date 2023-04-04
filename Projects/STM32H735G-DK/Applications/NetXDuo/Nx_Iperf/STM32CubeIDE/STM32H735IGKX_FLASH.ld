@@ -21,7 +21,7 @@
 *****************************************************************************
 ** @attention
 **
-** Copyright (c) 2022 STMicroelectronics.
+** Copyright (c) 2021 STMicroelectronics.
 ** All rights reserved.
 **
 ** This software is licensed under terms that can be found in the LICENSE file
@@ -135,7 +135,7 @@ SECTIONS
     _edata = .;        /* define a global symbol at data end */
   } >RAM_D1 AT> FLASH
 
-  /* Uninitialized data section into "RAM_D1" Ram type memory */
+  /* Uninitialized data section */
   . = ALIGN(4);
   .bss :
   {
@@ -150,8 +150,7 @@ SECTIONS
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
   } >RAM_D1
-
-  /* User_heap_stack section, used to check that there is enough "RAM_D1" Ram  type memory left */
+  /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :
   {
     . = ALIGN(8);
@@ -161,8 +160,7 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >RAM_D1
-
-     .tcp_sec (NOLOAD) : {
+    .tcp_sec (NOLOAD) : {
 
     . = ABSOLUTE(0x24030000);
     *(.RxDecripSection)
@@ -177,14 +175,12 @@ SECTIONS
  {
     . = ABSOLUTE(0x24030100);
     *(.NxServerPoolSection)
-    
+
     . = ABSOLUTE(0x24034100);
-    *(.NetXPoolSection) 
+    *(.NetXPoolSection)
 
  } >RAM_D1 AT >FLASH
-
-
-  /* Remove information from the compiler libraries */
+  /* Remove information from the standard libraries */
   /DISCARD/ :
   {
     libc.a ( * )

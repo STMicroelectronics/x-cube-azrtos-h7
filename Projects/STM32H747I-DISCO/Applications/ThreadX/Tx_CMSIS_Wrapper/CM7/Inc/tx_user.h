@@ -24,7 +24,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    tx_user.h                                           PORTABLE C      */
-/*                                                           6.1.9        */
+/*                                                           6.1.11       */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -42,7 +42,7 @@
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  05-19-2020     William E. Lamie         Initial Version 6.0           */
+/*  05-19-2020      William E. Lamie        Initial Version 6.0           */
 /*  09-30-2020      Yuxin Zhou              Modified comment(s),          */
 /*                                            resulting in version 6.1    */
 /*  03-02-2021      Scott Larson            Modified comment(s),          */
@@ -56,6 +56,10 @@
 /*                                            user-configurable symbol    */
 /*                                            TX_TIMER_TICKS_PER_SECOND   */
 /*                                            resulting in version 6.1.9  */
+/*  04-25-2022      Wenhui Xie              Modified comment(s),          */
+/*                                            optimized the definition of */
+/*                                            TX_TIMER_TICKS_PER_SECOND,  */
+/*                                            resulting in version 6.1.11 */
 /*                                                                        */
 /**************************************************************************/
 
@@ -107,6 +111,7 @@
 #define TX_THREAD_USER_EXTENSION           ULONG               tx_thread_detached_joinable;
 /*#define TX_TIMER_THREAD_STACK_SIZE                1024*/
 /*#define TX_TIMER_THREAD_PRIORITY                0*/
+
 /*#define TX_MINIMUM_STACK                200*/
 
 /* Determine if timer expirations (application timers, timeouts, and tx_thread_sleep calls
@@ -230,19 +235,6 @@
 
 /*#define TX_TIMER_ENABLE_PERFORMANCE_INFO*/
 
-/* Define if the execution change notify is enabled. */
-
-/*#define TX_ENABLE_EXECUTION_CHANGE_NOTIFY*/
-
-/* Define the get system state macro. */
-
-/*#define TX_THREAD_GET_SYSTEM_STATE() _tx_thread_system_state */
-
-/* Define the check for whether or not to call the
-    _tx_thread_system_return function (TX_THREAD_SYSTEM_RETURN_CHECK(c)). */
-
-/*#define TX_THREAD_SYSTEM_RETURN_CHECK (c)  ((ULONG) _tx_thread_preempt_disable)*/
-
 /* Define the common timer tick reference for use by other middleware components. */
 
 /*#define TX_TIMER_TICKS_PER_SECOND                100*/
@@ -267,7 +259,7 @@
 
 /*#define TX_MEMSET  memset((a),(b),(c))*/
 
-#ifdef __IAR_SYSTEMS_ASM__
+#ifdef __ICCARM__
 /* Define if the IAR library is supported. */
 /*#define TX_ENABLE_IAR_LIBRARY_SUPPORT*/
 #endif

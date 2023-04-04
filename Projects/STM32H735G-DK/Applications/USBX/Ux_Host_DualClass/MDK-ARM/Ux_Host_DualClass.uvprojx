@@ -16,8 +16,8 @@
         <TargetCommonOption>
           <Device>STM32H735IGKx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32H7xx_DFP.2.4.3</PackID>
-          <PackURL>https://www.keil.com/pack/</PackURL>
+          <PackID>Keil.STM32H7xx_DFP.3.0.0</PackID>
+          <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000-0x2001FFFF) IRAM2(0x24000000-0x2404FFFF) IROM(0x8000000-0x80FFFFF) CLOCK(12000000) FPU3(DFPU) CPUTYPE("Cortex-M7") ELITTLE TZ</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -2903,6 +2903,16 @@
               <FileName>ux_hcd_stm32_request_transfer.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_stm32_host_controllers/ux_hcd_stm32_request_transfer.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_hcd_stm32_request_trans_finish.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_stm32_host_controllers/ux_hcd_stm32_request_trans_finish.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_hcd_stm32_request_trans_prepare.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/usbx_stm32_host_controllers/ux_hcd_stm32_request_trans_prepare.c</FilePath>
             </File>
             <File>
               <FileName>ux_hcd_stm32_transfer_abort.c</FileName>

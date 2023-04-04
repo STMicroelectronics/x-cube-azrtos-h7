@@ -182,6 +182,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/main.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/Core/sdmmc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/sdmmc.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/Core/stm32h7xx_hal_msp.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/stm32h7xx_hal_msp.c</locationURI>
@@ -205,16 +210,6 @@
 			<name>Application/User/Core/usb_otg.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/usb_otg.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/STM32H735G-DK/stm32h735g_discovery.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Drivers/BSP/STM32H735G-DK/stm32h735g_discovery.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/STM32H735G-DK/stm32h735g_discovery_sd.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Drivers/BSP/STM32H735G-DK/stm32h735g_discovery_sd.c</locationURI>
 		</link>
 		<link>
 			<name>Application/User/AZURE_RTOS/App/app_azure_rtos.c</name>

@@ -70,9 +70,9 @@ ULONG free_bytes;
 
 NX_WEB_HTTP_SERVER HTTPServer;
 
-/* Set nx_server_pool start address to 0x24030100 */
+/* Set nx_server_pool start address */
 #if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = 0x24030100
+#pragma location = ".NxServerPoolSection"
 #elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(".NxServerPoolSection")))
 #elif defined ( __GNUC__ ) /* GNU Compiler */
@@ -506,7 +506,7 @@ UINT webserver_request_notify_callback(NX_WEB_HTTP_SERVER *server_ptr, UINT requ
   else if (strcmp(resource, "/LedOff") == 0)
   {
     printf(" Loggling Green Led Off \n");
-    HAL_GPIO_WritePin (LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin (LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
     tx_thread_suspend(&LedThread);
   }
   else
@@ -591,7 +591,7 @@ void nx_server_thread_entry(ULONG thread_input)
   {
     /* Print HTTP WEB Server Starting success. */
     printf("HTTP WEB Server successfully started.\n");
-    /* LED_GREEN On. */
+    /* LED1 On. */
   }
 }
 
@@ -603,7 +603,7 @@ void LedThread_Entry(ULONG thread_input)
   /* Infinite loop */
   while (1)
   {
-    HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
     /* Delay for 500ms (App_Delay is used to avoid context change). */
     tx_thread_sleep(50);
   }
@@ -621,7 +621,7 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
 
   while(1)
   {
-    /* Get Physical Link stackavailtus. */
+    /* Get Physical Link status. */
     status = nx_ip_interface_status_check(&NetXDuoEthIpInstance, 0, NX_IP_LINK_ENABLED,
                                       &actual_status, 10);
 

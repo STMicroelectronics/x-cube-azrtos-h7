@@ -47,7 +47,7 @@ Reply from 192.168.1.2:6000, time 47 ms OK
 
 #### <b>Error behaviors</b>
 
-+ The Yellow LED is toggling to indicate any error that have occurred.
++ The Red LED is toggling to indicate any error that have occurred.
 + In case the message exchange is not completed the HyperTerminal is not printing the received messages.
 
 #### <b>Assumptions if any</b>
@@ -89,7 +89,7 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
 
 #### <b>ThreadX usage hints</b>
 
@@ -131,7 +131,6 @@ None
 
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
 
-
 #### <b>NetX Duo usage hints</b>
 
 - The ETH TX And RX descriptors are accessed by the CPU and the ETH DMA IP, thus they should not be allocated into the DTCM RAM "0x20000000".
@@ -157,7 +156,6 @@ None
      *(.NetXPoolSection)
      } >RAM_D1
    ```
-
   this section is then used in the <code> app_azure_rtos.c</code> file to force the <code>nx_byte_pool_buffer</code> allocation.
 
 ```
@@ -178,7 +176,6 @@ static UCHAR  nx_byte_pool_buffer[NX_APP_MEM_POOL_SIZE];
 static TX_BYTE_POOL nx_app_byte_pool;
 ```
 For more details about the MPU configuration please refer to the [AN4838](https://www.st.com/resource/en/application_note/dm00272912-managing-memory-protection-unit-in-stm32-mcus-stmicroelectronics.pdf)
-
 
 ### <b>Keywords</b>
 

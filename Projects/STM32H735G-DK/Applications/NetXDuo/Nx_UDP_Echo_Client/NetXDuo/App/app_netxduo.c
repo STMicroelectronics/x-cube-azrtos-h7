@@ -16,7 +16,6 @@
   *
   ******************************************************************************
   */
-
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
@@ -390,7 +389,7 @@ static VOID App_UDP_Thread_Entry(ULONG thread_input)
       nx_packet_release(server_packet);
 
       /* toggle the green led on success */
-      HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+      HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
     }
     else
     {
@@ -429,7 +428,7 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
 
   while(1)
   {
-    /* Get Physical Link stackavailtus. */
+    /* Get Physical Link status. */
     status = nx_ip_interface_status_check(&NetXDuoEthIpInstance, 0, NX_IP_LINK_ENABLED,
                                       &actual_status, 10);
 
