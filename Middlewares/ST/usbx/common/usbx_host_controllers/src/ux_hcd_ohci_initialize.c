@@ -35,7 +35,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_hcd_ohci_initialize                             PORTABLE C      */ 
-/*                                                           6.1.10       */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -61,8 +61,8 @@
 /*    _ux_hcd_ohci_register_read            Read OHCI register            */ 
 /*    _ux_hcd_ohci_register_write           Write OHCI register           */ 
 /*    _ux_utility_memory_allocate           Allocate memory block         */ 
-/*    _ux_utility_mutex_on                  Get mutex protection          */ 
-/*    _ux_utility_mutex_off                 Release mutex protection      */ 
+/*    _ux_host_mutex_on                     Get mutex protection          */ 
+/*    _ux_host_mutex_off                    Release mutex protection      */ 
 /*    _ux_utility_physical_address          Get physical address          */ 
 /*    _ux_utility_set_interrupt_handler     Setup interrupt handler       */ 
 /*                                                                        */ 
@@ -82,6 +82,12 @@
 /*  01-31-2022     Xiuwen Cai               Modified comment(s),          */
 /*                                            fixed HcPeriodicStart value,*/
 /*                                            resulting in version 6.1.10 */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed standalone compile,   */
+/*                                            resulting in version 6.1.11 */
+/*  07-29-2022     Yajun Xia                Modified comment(s),          */
+/*                                            fixed OHCI PRSC issue,      */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_hcd_ohci_initialize(UX_HCD *hcd)
@@ -161,7 +167,7 @@ UINT            status;
 
     /* The following is time critical. If we get interrupted here, the controller will go in 
        suspend mode. Get the protection mutex.  */
-    _ux_utility_mutex_on(&_ux_system -> ux_system_mutex);
+    _ux_host_mutex_on(&_ux_system -> ux_system_mutex);
 
     /* Send the reset command to the controller. The controller should ack
        this command within 10us. We try this several time and check for timeout.  */
@@ -180,7 +186,7 @@ UINT            status;
     {
 
         /* Release the thread protection.  */
-        _ux_utility_mutex_off(&_ux_system -> ux_system_mutex);
+        _ux_host_mutex_off(&_ux_system -> ux_system_mutex);
 
         /* Error trap. */
         _ux_system_error_handler(UX_SYSTEM_LEVEL_THREAD, UX_SYSTEM_CONTEXT_HCD, UX_CONTROLLER_INIT_FAILED);
@@ -206,7 +212,7 @@ UINT            status;
     hcd -> ux_hcd_status =  UX_HCD_STATUS_OPERATIONAL;
 
     /* We can safely release the mutex protection.  */    
-    _ux_utility_mutex_off(&_ux_system -> ux_system_mutex);
+    _ux_host_mutex_off(&_ux_system -> ux_system_mutex);
 
     /* Set the controller interval.  */
     ohci_register =  _ux_hcd_ohci_register_read(hcd_ohci, OHCI_HC_FM_INTERVAL) & OHCI_HC_FM_INTERVAL_CLEAR;
@@ -228,6 +234,11 @@ UINT            status;
     if (hcd -> ux_hcd_nb_root_hubs > UX_MAX_ROOTHUB_PORT)
         hcd -> ux_hcd_nb_root_hubs = UX_MAX_ROOTHUB_PORT;
     hcd_ohci -> ux_hcd_ohci_nb_root_hubs =  hcd -> ux_hcd_nb_root_hubs;
+
+    /* Create HCD event flags */
+    status = _ux_host_event_flags_create(&hcd_ohci -> ux_hcd_ohci_event_flags_group, "ux_hcd_ohci_event_flags_group");
+    if (status != UX_SUCCESS)
+        return(status);
 
     /* All ports must now be powered to pick up device insertion.  */
     _ux_hcd_ohci_power_root_hubs(hcd_ohci);

@@ -34,7 +34,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_host_stack_configuration_instance_delete        PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -68,40 +68,54 @@
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed parameter/variable    */
+/*                                            names conflict C++ keyword, */
+/*                                            resulting in version 6.1.12 */
+/*  10-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added interface instance    */
+/*                                            creation strategy control,  */
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 VOID  _ux_host_stack_configuration_instance_delete(UX_CONFIGURATION *configuration)
 {
 
-UX_INTERFACE    *interface;
+UX_INTERFACE    *interface_ptr;
 ULONG           current_alternate_setting;
     
     /* If trace is enabled, insert this event into the trace buffer.  */
     UX_TRACE_IN_LINE_INSERT(UX_TRACE_HOST_STACK_CONFIGURATION_INSTANCE_DELETE, configuration, 0, 0, 0, UX_TRACE_HOST_STACK_EVENTS, 0, 0)
 
     /* Obtain the first interface for this configuration.  */
-    interface =  configuration -> ux_configuration_first_interface;
+    interface_ptr =  configuration -> ux_configuration_first_interface;
     
     /* In order to keep the compiler happy, we reset the alternate setting.  */
     current_alternate_setting =  0;
 
     /* Each selected alternate setting for each interface must be deleted.  */
-    while (interface != UX_NULL)
+    while (interface_ptr != UX_NULL)
     {
 
         /* If this is the first alternate setting, the current alternate setting is maintained here.  */
-        if (interface -> ux_interface_descriptor.bAlternateSetting == 0)
+        if (interface_ptr -> ux_interface_descriptor.bAlternateSetting == 0)
         {
 
-            current_alternate_setting =  interface -> ux_interface_current_alternate_setting;
+            current_alternate_setting =  interface_ptr -> ux_interface_current_alternate_setting;
         }
         
-        if (interface -> ux_interface_descriptor.bAlternateSetting == current_alternate_setting)
+        if (interface_ptr -> ux_interface_descriptor.bAlternateSetting == current_alternate_setting)
         {
-            _ux_host_stack_interface_instance_delete(interface);
+
+#if UX_HOST_STACK_CONFIGURATION_INSTANCE_CREATE_CONTROL == UX_HOST_STACK_CONFIGURATION_INSTANCE_CREATE_OWNED
+
+            /* If interface is usable, remove physical creates.  */
+            if (interface_ptr -> ux_interface_class || configuration -> ux_configuration_device -> ux_device_class)
+#endif
+                _ux_host_stack_interface_instance_delete(interface_ptr);
         }
 
-        interface =  interface -> ux_interface_next_interface;
+        interface_ptr =  interface_ptr -> ux_interface_next_interface;
     }
 
     return; 

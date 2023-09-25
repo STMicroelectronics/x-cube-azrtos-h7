@@ -36,7 +36,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_hcd_stm32_request_bulk_transfer                 PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -71,16 +71,21 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_hcd_stm32_request_bulk_transfer(UX_HCD_STM32 *hcd_stm32, UX_TRANSFER *transfer_request)
 {
 
+#if defined(UX_HOST_STANDALONE)
+UX_INTERRUPT_SAVE_AREA
+#endif /* defined(UX_HOST_STANDALONE) */
 UX_ENDPOINT         *endpoint;
 UX_HCD_STM32_ED     *ed;
 UINT                direction;
 UINT                length;
-
 
     /* Get the pointer to the Endpoint.  */
     endpoint =  (UX_ENDPOINT *) transfer_request -> ux_transfer_request_endpoint;
@@ -88,44 +93,114 @@ UINT                length;
     /* Now get the physical ED attached to this endpoint.  */
     ed =  endpoint -> ux_endpoint_ed;
 
+#if defined(UX_HOST_STANDALONE)
+    UX_DISABLE
+
+    /* Check if transfer is still in progress.  */
+    if ((ed -> ux_stm32_ed_status & UX_HCD_STM32_ED_STATUS_PENDING_MASK) >
+        UX_HCD_STM32_ED_STATUS_ABORTED)
+    {
+
+        /* Check done bit.  */
+        if ((ed -> ux_stm32_ed_status & UX_HCD_STM32_ED_STATUS_TRANSFER_DONE) == 0)
+        {
+            UX_RESTORE
+            return(UX_STATE_WAIT);
+        }
+
+        /* Check status to see if it's first initialize.  */
+        if (transfer_request -> ux_transfer_request_status !=
+            UX_TRANSFER_STATUS_NOT_PENDING)
+        {
+
+            /* Done, modify status and notify state change.  */
+            ed -> ux_stm32_ed_status = UX_HCD_STM32_ED_STATUS_ALLOCATED;
+            UX_RESTORE
+            return(UX_STATE_NEXT);
+        }
+
+        /* Maybe transfer completed but state not reported yet.  */
+    }
+    transfer_request -> ux_transfer_request_status = UX_TRANSFER_STATUS_PENDING;
+
+    UX_RESTORE
+#endif /* defined(UX_HOST_STANDALONE) */
+
     /* Save the pending transfer in the ED.  */
     ed -> ux_stm32_ed_transfer_request = transfer_request;
 
     /* Direction, 0 : Output / 1 : Input */
-    direction = (transfer_request -> ux_transfer_request_type & UX_REQUEST_DIRECTION) == UX_REQUEST_IN ? 1 : 0;
+    direction = ed -> ux_stm32_ed_dir;
 
-    /* If the direction is OUT, request size is larger than MPS, and DMA is not used, we need to set transfer length to MPS.  */
-    if ((direction == 0) && (transfer_request -> ux_transfer_request_requested_length > endpoint -> ux_endpoint_descriptor.wMaxPacketSize)
-#ifndef USB_DRD_FS
-        && (hcd_stm32 -> hcd_handle -> Init.dma_enable == 0)
-#endif /* USB_DRD_FS */
-          )
+#if defined (USBH_HAL_HUB_SPLIT_SUPPORTED)
+    if (hcd_stm32->hcd_handle->hc[ed -> ux_stm32_ed_channel].do_ssplit == 1U)
     {
-
+      if ((direction == 0) && (transfer_request -> ux_transfer_request_requested_length > endpoint -> ux_endpoint_descriptor.wMaxPacketSize))
+      {
         /* Set transfer length to MPS.  */
         length = endpoint -> ux_endpoint_descriptor.wMaxPacketSize;
-    }
-    else
-    {
-
+      }
+      else
+      {
         /* Keep the original transfer length.  */
         length = transfer_request -> ux_transfer_request_requested_length;
+      }
+    }
+    else
+#endif /* USBH_HAL_HUB_SPLIT_SUPPORTED */
+    {
+
+      /* If DMA enabled, use max possible transfer length.  */
+      if (hcd_stm32 -> hcd_handle -> Init.dma_enable)
+      {
+        if (transfer_request -> ux_transfer_request_requested_length > endpoint -> ux_endpoint_transfer_request.ux_transfer_request_maximum_length)
+          length = endpoint -> ux_endpoint_transfer_request.ux_transfer_request_maximum_length;
+        else
+          length = transfer_request -> ux_transfer_request_requested_length;
+      }
+      else
+      {
+        /* If the direction is OUT, request size is larger than MPS, and DMA is not used, we need to set transfer length to MPS.  */
+        if ((direction == 0) && (transfer_request -> ux_transfer_request_requested_length > endpoint -> ux_endpoint_descriptor.wMaxPacketSize))
+        {
+
+          /* Set transfer length to MPS.  */
+          length = endpoint -> ux_endpoint_descriptor.wMaxPacketSize;
+        }
+        else
+        {
+
+          /* Keep the original transfer length.  */
+          length = transfer_request -> ux_transfer_request_requested_length;
+        }
+      }
     }
 
     /* Save the transfer status in the ED.  */
     ed -> ux_stm32_ed_status = direction == 0 ? UX_HCD_STM32_ED_STATUS_BULK_OUT : UX_HCD_STM32_ED_STATUS_BULK_IN;
 
     /* Save the transfer length.  */
-    transfer_request -> ux_transfer_request_packet_length = length;
+    ed -> ux_stm32_ed_packet_length = length;
+
+    /* Prepare transactions.  */
+    _ux_hcd_stm32_request_trans_prepare(hcd_stm32, ed, transfer_request);
 
     /* Submit the transfer request.  */
     HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel,
                              direction,
                              EP_TYPE_BULK, USBH_PID_DATA,
-                             transfer_request->ux_transfer_request_data_pointer,
+                             ed -> ux_stm32_ed_data,
                              length, 0);
+
+#if defined(UX_HOST_STANDALONE)
+
+    /* Background transfer started but not done yet.  */
+    return(UX_STATE_WAIT);
+#else
 
     /* Return successful completion.  */
     return(UX_SUCCESS);
+#endif /* defined(UX_HOST_STANDALONE) */
+
 }
 

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>X-CUBE-AZRTOS-H7_ProjectsList</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="../_htmresc/mini-st_2020.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div class="row">
+<div class="col-sm-12 col-lg-8">
+<center>
+<p>Copyright © 2020 STMicroelectronics<br />
+</p>
+<a href="https://www.st.com" class="logo"><img src="../_htmresc/st_logo_2020.png" alt="ST logo" /></a>
+</center>
+<h2 id="x-cube-azrtos-h7-azure-rtos-software-applications-list"><b>X-CUBE-AZRTOS-H7 Azure RTOS Software applications list</b></h2>
+<p>The X-CUBE-AZRTOS-H7 Azure RTOS package comes with a rich set of applications running on STMicroelectronics boards,</p>
+<p>organized by board and provided with preconfigured projects for the main supported toolchains</p>
+<p>Projects are structured as follows:</p>
+<center>
+<img src="../_htmresc/AzureRTOS_Projects_Structure.png" width="60%" height="40%"/>
+</center>
+<h2 id="applications"><b>Applications</b></h2>
+<table>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 43%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Middleware</th>
+<th>Applications</th>
+<th>Short Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ThreadX</td>
+<td>Tx_Thread_Creation</td>
+<td>It demonstrates how to create and destroy multiple threads using Azure RTOS ThreadX APIs. In addition, it shows how to use preemption threshold between threads and change priorities on-fly. <a href="./NUCLEO-H723ZG/Applications/ThreadX/Tx_Thread_Creation/readme.html">more…</a></td>
+</tr>
+<tr class="even">
+<td>ThreadX</td>
+<td>Tx_Thread_Sync</td>
+<td>It demonstrates how to synchronize between threads using binary semaphores or mutexes. <a href="./STM32H735G-DK/Applications/ThreadX/Tx_Thread_Sync/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>ThreadX</td>
+<td>Tx_Thread_MsgQueue</td>
+<td>It demonstrates how to exchange message between threads using Message Queue API and how to handle message from different queues using oddt queue chaining feature. <a href="./NUCLEO-H723ZG/Applications/ThreadX/Tx_Thread_MsgQueue/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>ThreadX</td>
+<td>Tx_FreeRTOS_Wrapper</td>
+<td>It demonstrates how to create threads using the FreeRTOS wrapper APIs. <a href="./STM32H735G-DK/Applications/ThreadX/Tx_FreeRTOS_Wrapper/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>ThreadX</td>
+<td>Tx_CMSIS_Wrapper</td>
+<td>It demonstrates how CMSIS RTOS adaptation layer for Azure RTOS ThreadX, it shows how to develop an application using the CMSIS RTOS 2 APIs. <a href="./STM32H747I-DISCO/Applications/ThreadX/Tx_CMSIS_Wrapper/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>ThreadX</td>
+<td>Tx_LowPower</td>
+<td>It demonstrates how to configure the LowPower feature of Azure RTOS ThreadX stack. In addition, it shows how to use ThreadX MACRO related to the LowPower feature. <a href="./NUCLEO-H723ZG/Applications/ThreadX/Tx_LowPower/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>ThreadX</td>
+<td>Tx_MPU</td>
+<td>It demonstrates how to load, start and unload modules. In addition, it shows how ThreadX memory protection on modules using the Memory Protection Unit (MPU). <a href="./STM32H747I-DISCO/Applications/ThreadX/Tx_MPU/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>USBX</td>
+<td>Ux_Host_MSC</td>
+<td>It demonstrates how to develop USB Host Mass Storage “MSC” able to enumerate and communicates with a removable usb flash disk. The application is designed to behave as an USB MSC Host able to operate with an USB flash disk using the Bulk Only Transfer (BOT) and Small Computer System Interface (SCSI) transparent commands combined with a file system Azure RTOS FileX. <a href="./STM32H735G-DK/Applications/USBX/Ux_Host_MSC/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>USBX</td>
+<td>Ux_Host_HID</td>
+<td>It demonstrates how to develop USB Host Human Interface “HID” able to enumerate and communicates with a mouse or a keyboard. The application is designed to behave as an USB HID Host, the code provides required requests to properly enumerate HID devices , HID Class APIs to decode HID reports received from a mouse or a keyboard and display data on uart HyperTerminal. <a href="./NUCLEO-H723ZG/Applications/USBX/Ux_Host_HID/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>USBX</td>
+<td>Ux_Host_CDC_ACM</td>
+<td>It demonstrates how to develop USB Host CDC ACM device able to properly enumerate CDC devices then send and receive data that can be displayed on Hyperterminal or alike. <a href="./NUCLEO-H723ZG/Applications/USBX/Ux_Host_CDC_ACM/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>USBX</td>
+<td>Ux_Host_DualClass</td>
+<td>It demonstrates how to develop USB Host supporting two device classes: USB_HID (mouse or keyboard) and USB_MSC (removable flash disk). <a href="./STM32H735G-DK/Applications/USBX/Ux_Host_DualClass/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>USBX</td>
+<td>Ux_Host_HID_CDC_ACM</td>
+<td>It demonstrates how to develop a composite "USB HID CDC_ACM Host" that is able to enumerate and communicate with composite USB HID CDC_ACM and simple HID/CDC_ACM devices.<a href="./STM32H735G-DK/Applications/USBX/Ux_Host_HID_CDC_ACM/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>USBX</td>
+<td>Ux_Device_HID_CDC_ACM</td>
+<td>It demonstrates how to develop a composite USB Device application. The application is designed to emulate a USB HID mouse combined with an USB-to-UART bridge following the Virtual COM Port (VCP) implementation, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant composite USB HID and CDC_ACM device. <a href="./STM32H747I-DISCO/Applications/USBX/Ux_Device_HID_CDC_ACM/readme.html">more …</a>.</td>
+</tr>
+<tr class="even">
+<td>USBX</td>
+<td>Ux_Device_DFU</td>
+<td>It demonstrates how to develop USB Device Firmware Upgrade “DFU” based application. The application is designed to emulate an USB DFU device, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB DFU device. <a href="./NUCLEO-H723ZG/Applications/USBX/Ux_Device_DFU/readme.html">more …</a>.</td>
+</tr>
+<tr class="odd">
+<td>USBX</td>
+<td>Ux_Device_HID</td>
+<td>It demonstrates how to develop USB Device Human Interface “HID” mouse based application. The application is designed to emulate an USB HID mouse device, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB HID mouse device. <a href="./NUCLEO-H723ZG/Applications/USBX/Ux_Device_HID/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>USBX</td>
+<td>Ux_Device_CDC_ECM</td>
+<td>It demonstrates how to develop USB Device CDC ECM communication. It shows how to run Web HTTP server based application stack over USB interface using USB CDC ECM protocol. <a href="./STM32H735G-DK/Applications/USBX/Ux_Device_CDC_ECM/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>USBX</td>
+<td>Ux_Device_MSC</td>
+<td>It demonstrates how to develop USB Device mass storage class based application. The application is designed to emulate an USB MSC device, the code provides all required device descriptors framework and the associated Class descriptor report to build a compliant USB MSC device <a href="./STM32H735G-DK/Applications/USBX/Ux_Device_MSC/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>USBX</td>
+<td>Ux_Device_CDC_ACM</td>
+<td>It demonstrates how to develop USB Device communication Class “CDC_ACM” based application. The application is designed to emulate an USB-to-UART bridge following the Virtual COM Port (VCP) implementation, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB CDC_ACM device. <a href="./NUCLEO-H723ZG/Applications/USBX/Ux_Device_CDC_ACM/readme.html">more …</a>.</td>
+</tr>
+<tr class="odd">
+<td>USBX</td>
+<td>Ux_Device_Video</td>
+<td>It demonstrates how to develop a basic USB Device Video based application. The application is designed to emulate an USB VIDEO device, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB VIDEO device. <a href="./NUCLEO-H723ZG/Applications/USBX/Ux_Device_Video/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>USBX</td>
+<td>Ux_Device_DualHID</td>
+<td>It demonstrates how to develop a composite USB Device Human Interface Device Class “HID Mouse” and “HID Keyboard” based application. The application is designed to emulate an USB HID Composite mouse & keyboard device , the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB HID Composite device. <a href="./STM32H747I-DISCO/Applications/USBX/Ux_Device_DualHID/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>USBX</td>
+<td>Ux_Device_CustomHID</td>
+<td>It demonstrates how to develop USB Device Human Interface “HID” Custom based application. The application is designed to emulate an USB HID Custom device, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB HID Custom device. <a href="./STM32H743I-EVAL/Applications/USBX/Ux_Device_CustomHID/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>USBX</td>
+<td>Ux_Device_RNDIS</td>
+<td>It demonstrates how to run Web HTTP server based application stack over USB interface. The application is designed to load files and web pages stored in SD card using a Web HTTP server through USB RNDIS interface class, the code provides all required features to build a compliant Web HTTP Server. <a href="./STM32H735G-DK/Applications/USBX/Ux_Device_RNDIS/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>USBX</td>
+<td>Ux_Device_PIMA_MTP</td>
+<td>It demonstrates how to develop USB Device Media Transfer Protocol class based application. The application is designed to emulate an USB PIMA MTP device, the code provides all required device descriptors framework and the associated Class descriptor report to build a compliant USB MTP device. <a href="./STM32H735G-DK/Applications/USBX/Ux_Device_PIMA_MTP/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>USBX</td>
+<td>Ux_Device_CCID</td>
+<td>It demonstrates how to develop USB Device for Integrated Circuit Card Interface Device based application. The application is designed to emulate a smart card reader device, the code provides all required device descriptors framework and associated Class descriptor to build a USB CCID device. <a href="./NUCLEO-H723ZG/Applications/USBX/Ux_Device_CCID/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>USBX</td>
+<td>Ux_Device_Printer</td>
+<td>It demonstrates how to develop USB Device Printer Class based application. The application is designed to emulate a USB Printer device, the code provides all required device descriptors framework and the associated Class descriptor report to build a compliant USB Printer device. <a href="./STM32H735G-DK/Applications/USBX/Ux_Device_Printer/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>USBX</td>
+<td>Ux_Device_HID_Standalone</td>
+<td>It demonstrates how to develop USB Device Human Interface “HID” mouse based bare metal application. The application is designed to emulate an USB HID mouse device, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB HID mouse device. <a href="./NUCLEO-H723ZG/Applications/USBX/Ux_Device_HID_Standalone/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>USBX</td>
+<td>Ux_Host_HID_Standalone</td>
+<td>It demonstrates how to develop bare metal USB Host Human Interface “HID” able to enumerate and communicates with a mouse or a keyboard. The application is designed to behave as an USB HID Host, the code provides required requests to properly enumerate HID devices , HID Class APIs to decode HID reports received from a mouse or a keyboard and display data on uart HyperTerminal. <a href="./NUCLEO-H723ZG/Applications/USBX/Ux_Host_HID_Standalone/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>FileX</td>
+<td>Fx_uSD_File_Edit</td>
+<td>It demonstrates how to develop a basic SD card file operations application. The application is designed to handle SD card insertion/removal oddts, and depending on that state, it starts and stops file operations from and into the SD card. <a href="./STM32H735G-DK/Applications/FileX/Fx_uSD_File_Edit/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>FileX</td>
+<td>Fx_MultiAccess</td>
+<td>It demonstrates the FileX’s concurrent file access capabilities. The application is designed to execute file operations on the SD card device, the code provides all required software code for handling SD card I/O operations. <a href="./STM32H735G-DK/Applications/FileX/Fx_MultiAccess/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>FileX</td>
+<td>Fx_NoR_Write_Read_File</td>
+<td>It demonstrates how to create a Fat File system on the NOR flash using FileX alongside LevelX. The application is designed to execute file operations on the MX25LM51245G NOR flash device, the code provides all required software code for properly managing it. <a href="./STM32H735G-DK/Applications/FileX/Fx_NoR_Write_Read_File/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>FileX</td>
+<td>Fx_DualInstance</td>
+<td>It demonstrates the coexistence capability of two FileX/LevelX stacks running independently on each core. <a href="./STM32H747I-DISCO/Applications/FileX/Fx_Dual_Instance/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>FileX</td>
+<td>Fx_IAP</td>
+<td>It demonstrates how to implement an In-Application programming (IAP) using FileX’s SD file access capabilities. The application is designed to erase and write to on-chip flash memory, it provides all required software code for handling SD card and flash memory I/O operations. This is a typical application on how to use the SD card peripheral for firmware upgrade application or IAP, allowing user to erase and write to on-chip flash memory. <a href="./STM32H735G-DK/Applications/FileX/FX_IAP/IAP_main/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>FileX</td>
+<td>Fx_NAND_Write_Read_File</td>
+<td>It demonstrates create a Fat File system on the NAND flash using FileX alongside LevelX. The application is designed to execute file operations on the Micron MT29F2G16ABAEAWP NAND flash device, the code provides all required software code for properly managing it. <a href="./STM32H743I-EVAL/Applications/FileX/Fx_Nand_Write_Read_File/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>FileX</td>
+<td>Fx_File_Edit_Standalone</td>
+<td>It demonstrates how to create a Fat File system on the SD card memory using FileX running in standalone mode without ThreadX. <a href="./STM32H735G-DK/Applications/FileX/Fx_File_Edit_Standalone/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>NetXDuo</td>
+<td>Nx_TCP_Echo_Server</td>
+<td>It demonstrates how to develop a NetX TCP server to communicate with a remote client using the NetX TCP socket API. <a href="./NUCLEO-H723ZG/Applications/NetXDuo/Nx_TCP_Echo_Server/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>NetXDuo</td>
+<td>Nx_TCP_Echo_Client</td>
+<td>It demonstrates how to develop a NetX TCP client to communicate with a remote sever using the NetX TCP socket API. <a href="./NUCLEO-H723ZG/Applications/NetXDuo/Nx_TCP_Echo_Client/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>NetXDuo</td>
+<td>Nx_UDP_Echo_Server</td>
+<td>It demonstrates how to develop a NetX UDP server to communicate with a remote client using the NetX UDP socket API. <a href="./STM32H735G-DK/Applications/NetXDuo/Nx_UDP_Echo_Server/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>NetXDuo</td>
+<td>Nx_UDP_Echo_Client</td>
+<td>It demonstrates how to develop a NetX UDP client to communicate with a remote sever using the NetX UDP socket API. <a href="./STM32H735G-DK/Applications/NetXDuo/Nx_UDP_Echo_Client/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>NetXDuo</td>
+<td>Nx_WebServer</td>
+<td>It demonstrates how to develop Web HTTP server based application.It is designed to load files and static web pages stored in SD card using a Web HTTP server, the code provides all required features to build a compliant Web HTTP Server. <a href="./STM32H735G-DK/Applications/NetXDuo/Nx_WebServer/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>NetXDuo</td>
+<td>Nx_MQTT_Client</td>
+<td>It demonstrates how to exchange data between client and server using MQTT protocol in an encrypted mode supporting TLS v1.2. <a href="./STM32H735G-DK/Applications/NetXDuo/Nx_MQTT_Client/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>NetXDuo</td>
+<td>Nx_Iperf</td>
+<td>It shows the performance of NetX IPerf stack when using different modes: TCP_server, UDP_server, TCP_client and UDP_client. <a href="./STM32H735G-DK/Applications/NetXDuo/Nx_Iperf/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>NetXDuo</td>
+<td>Nx_SNTP_Client</td>
+<td>It demonstrates how to develop a NetX SNTP client and connect with an STNP server to get a time update. <a href="./STM32H747I-DISCO/Applications/NetXDuo/Nx_SNTP_Client/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>NetXDuo</td>
+<td>Nx_HTTP_SSE_wifi</td>
+<td>It runs a HTTP server application where the client browser page is updated each time events are sent by the server. <a href="./STM32H747I-DISCO/Applications/NetXDuo/Nx_HTTP_SSE_wifi/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>NetXDuo</td>
+<td>Nx_IAP_Client_wifi</td>
+<td>It shows how to use the WiFi module to perform an IAP ("In Application Programming") from a remote HTTP server. <a href="./STM32H747I-DISCO/Applications/NetXDuo/Nx_IAP_Client_wifi/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>NetXDuo</td>
+<td>Nx_Iperf_wifi</td>
+<td>It is a network traffic tool for measuring TCP and UDP performance with metrics around both throughput and latency. <a href="./STM32H747I-DISCO/Applications/NetXDuo/Nx_Iperf_wifi/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>NetXDuo</td>
+<td>Nx_MDNS_wifi</td>
+<td>It demonstrates mDNS protocole on Cypress module. <a href="./STM32H747I-DISCO/Applications/NetXDuo/Nx_MDNS_wifi/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>NetXDuo</td>
+<td>Nx_MQTT_Client_wifi</td>
+<td>It demonstrates how to exchange data between client and server using MQTT protocol in an encrypted mode supporting TLS v1.2. <a href="./STM32H747I-DISCO/Applications/NetXDuo/Nx_MQTT_Client_wifi/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>NetXDuo</td>
+<td>Nx_Network_Basics_wifi</td>
+<td>It demonstrates WiFi connectivity with scan, ping, HTTP download and TCP echo server. <a href="./STM32H747I-DISCO/Applications/NetXDuo/Nx_Network_Basics_wifi/readme.html">more …</a></td>
+</tr>
+
+</tbody>
+</table>
+<h3 id="notes"><b>Notes</b></h3>
+<ol type="1">
+<li>Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from Flash memory. This feature can be activated using ‘#pragma location = “.itcmram”’ to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.</li>
+<li>If the application is using the DTCM/ITCM memories (<span class="citation" data-cites="0x20000000">@0x20000000</span>/ 0x0000000: not cacheable and only accessible by the Cortex M7 and the MDMA), no need for cache maintenance when the Cortex M7 and the MDMA access these RAMs. If the application needs to use DMA (or other masters) based access or requires more RAM, then the user has to:
+<ul>
+<li>Use a non TCM SRAM. (example : D1 AXI-SRAM @ 0x24000000).</li>
+<li>Add a cache maintenance mechanism to ensure the cache coherence between CPU and other masters (DMAs,DMA2D,LTDC,MDMA).</li>
+<li>The addresses and the size of cacheable buffers (shared between CPU and other masters) must be properly defined to be aligned to L1-CACHE line size (32 bytes).</li>
+</ul></li>
+<li>It is recommended to enable the cache and maintain its coherence:
+<ul>
+<li>Depending on the use case it is also possible to configure the cache attributes using the MPU.</li>
+<li>Please refer to the <strong>AN4838</strong> “Managing memory protection unit (MPU) in STM32 MCUs”.</li>
+<li>Please refer to the <strong>AN4839</strong> “Level 1 cache on STM32F7 Series”</li>
+</ul></li>
+</ol>
+<h4 id="threadx-usage-hints"><b>ThreadX usage hints</b></h4>
+<ul>
+<li>ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.</li>
+<li>ThreadX is configured with 100 ticks/sec by default, this should be taken into account when using delays or timeouts at application. It is always possible to reconfigure it in the “tx_user.h”, the “TX_TIMER_TICKS_PER_SECOND” define,but this should be reflected in “tx_initialize_low_level.S” file too.</li>
+<li>ThreadX is disabling all interrupts during kernel start-up to avoid any unexpected behavior, therefore all system related calls (HAL, BSP) should be done either at the beginning of the application or inside the thread entry functions.</li>
+<li>ThreadX offers the “tx_application_define()” function, that is automatically called by the tx_kernel_enter() API. It is highly recommended to use it to create all applications ThreadX related resources (threads, semaphores, memory pools…) but it should not in any way contain a system API call (HAL or BSP).</li>
+<li>Using dynamic memory allocation requires to apply some changes to the linker file. ThreadX needs to pass a pointer to the first free memory location in RAM to the tx_application_define() function, using the “first_unused_memory” argument. This require changes in the linker files to expose this memory location.
+<ul>
+<li>For EWARM add the following section into the .icf file:</li>
+</ul>
+<pre><code>place in RAM_region    { last section FREE_MEM };</code></pre>
+<ul>
+<li>For MDK-ARM:</li>
+</ul>
+<pre><code>either define the RW_IRAM1 region in the &quot;.sct&quot; file
+or modify the line below in &quot;tx_initialize_low_level.S to match the memory region being used
+    LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|</code></pre>
+<ul>
+<li>For STM32CubeIDE add the following section into the .ld file:</li>
+</ul>
+<pre><code>._threadx_heap :
+  {
+     . = ALIGN(8);
+     __RAM_segment_used_end__ = .;
+     . = . + 64K;
+     . = ALIGN(8);
+   } &gt;RAM_D1 AT&gt; RAM_D1</code></pre>
+<pre><code>The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
+In the example above the ThreadX heap size is set to 64KBytes.
+The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.  
+Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).  
+Read more in STM32CubeIDE User Guide, chapter: &quot;Linker script&quot;.</code></pre>
+<ul>
+<li>The “tx_initialize_low_level.S” should be also modified to enable the “USE_DYNAMIC_MEMORY_ALLOCATION” flag.</li>
+</ul></li>
+</ul>
+<h4 id="netx-duo-usage-hints"><b>NetX Duo usage hints</b></h4>
+<ul>
+<li>The ETH TX And RX descriptors are accessed by the CPU and the ETH DMA IP, thus they should not be allocated into the DTCM RAM “0x20000000”.</li>
+<li>Make sure to allocate them into a “Non-Cacheable” memory region to always ensure data coherency between the CPU and ETH DMA.</li>
+<li>Depending on the application scenario, the total TX and RX descriptors may need to be increased by updating respectively the “ETH_TX_DESC_CNT” and “ETH_RX_DESC_CNT” in the “stm32h7xx_hal_conf.h”, to guarantee the application correct behaviour, but this will cost extra memory to allocate.</li>
+<li>The NetXDuo application needs to allocate the <b> <i> NX_PACKET </i> </b> pool in a dedicated section that is configured as either “Cacheable Write-through” for <i>STM32H72XX</i> and <i>STM32H73XX </i>, <i>STM32H7AXX</i> and <i>STM32H7BXX </i> or non-cacheable for other STM32H7 families. Below is an example of the section declaration for different IDEs.
+<ul>
+<li>For EWARM “.icf” file</li>
+</ul>
+<pre><code>define symbol __ICFEDIT_region_NXDATA_start__  = 0x24018200;
+define symbol __ICFEDIT_region_NXDATA_end__   = 0x24027FFF;
+define region NXAppPool_region  = mem:[from __ICFEDIT_region_NXDATA_start__ to __ICFEDIT_region_NXDATA_end__];
+place in NXAppPool_region { section .NXAppPoolSection};</code></pre>
+<ul>
+<li>For MDK-ARM</li>
+</ul>
+<pre><code> RW_NXDriverSection 0x24030200 0x20000  {
+*(.NetXPoolSection)
+}</code></pre>
+<ul>
+<li>For STM32CubeIDE “.ld” file</li>
+</ul>
+<pre><code>.nx_section 0x24018200 (NOLOAD): {
+  *(.NXAppPoolSection)
+  } &gt;RAM_D1</code></pre>
+this section is then used in the <code> app_azure_rtos.c</code> file to force the <code>nx_byte_pool_buffer</code> allocation.</li>
+</ul>
+<pre><code>/* USER CODE BEGIN NX_Pool_Buffer */
+
+#if defined ( __ICCARM__ ) /* IAR Compiler */
+#pragma location = &quot;.NetXPoolSection&quot;
+
+#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
+__attribute__((section(&quot;.NetXPoolSection&quot;)))
+
+#elif defined ( __GNUC__ ) /* GNU Compiler */
+__attribute__((section(&quot;.NetXPoolSection&quot;)))
+#endif
+
+/* USER CODE END NX_Pool_Buffer */
+static UCHAR  nx_byte_pool_buffer[NX_APP_MEM_POOL_SIZE];
+static TX_BYTE_POOL nx_app_byte_pool;</code></pre>
+<p>For more details about the MPU configuration please refer to the <a href="https://www.st.com/resource/en/application_note/dm00272912-managing-memory-protection-unit-in-stm32-mcus-stmicroelectronics.pdf">AN4838</a></p>
+<h4 id="usbx-usage-hints"><b>USBX usage hints</b></h4>
+<ul>
+<li>The DTCM (0x20000000) memory region should not be used by application in case USB DMA is enabled</li>
+<li>Should make sure to configure the USB pool memory region with attribute “Non-Cacheable” to ensure coherency between CPU and USB DMA</li>
+</ul>
+<h4 id="filexlevelx-usage-hints"><b>FileX/LevelX usage hints</b></h4>
+<ul>
+<li>FileX sd driver is using the DMA, thus the DTCM (0x20000000) memory should not be used by the application, as it is not accessible by the SD DMA.</li>
+<li>When calling the fx_media_format() API, it is highly recommended to understand all the parameters used by the API to correctly generate a valid filesystem.</li>
+<li>FileX is using data buffers, passed as arguments to fx_media_open(), fx_media_read() and fx_media_write() API it is recommended that these buffers are multiple of sector size and “32 bytes” aligned to avoid cache maintenance issues.</li>
+</ul>
+</div>
+</div>
+</body>
+</html>

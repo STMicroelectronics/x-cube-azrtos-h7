@@ -20,10 +20,20 @@
 /**************************************************************************/
 /**************************************************************************/
 
+#include "ux_api.h"
+
+#if !defined(UX_STANDALONE)
+#ifndef UX_NETWORK_DRIVER_ENABLE
+#define UX_NETWORK_DRIVER_ENABLE
+#endif
+#else
+/* Standalone mode not supported.  */
+#endif
+
+#if defined(UX_NETWORK_DRIVER_ENABLE)
 #include "tx_api.h"
 #include "tx_thread.h"
 #include "nx_api.h"
-#include "ux_api.h"
 
 #include "ux_network_driver.h"
 
@@ -36,7 +46,7 @@ static USB_NETWORK_DEVICE_TYPE usb_network_devices[USB_NETWORK_DEVICE_MAX_INSTAN
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_network_init                                    PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.11       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -69,6 +79,9 @@ static USB_NETWORK_DEVICE_TYPE usb_network_devices[USB_NETWORK_DEVICE_MAX_INSTAN
 /*                                            verified memset and memcpy  */
 /*                                            cases,                      */
 /*                                            resulting in version 6.1    */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed standalone compile,   */
+/*                                            resulting in version 6.1.11 */
 /*                                                                        */
 /**************************************************************************/
 UINT _ux_network_driver_init(VOID)
@@ -385,7 +398,7 @@ USB_NETWORK_DEVICE_TYPE *usb_network_device;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_network_driver_entry                            PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -422,6 +435,9 @@ USB_NETWORK_DEVICE_TYPE *usb_network_device;
 /*                                            TX symbols instead of using */
 /*                                            them directly,              */
 /*                                            resulting in version 6.1    */
+/*  07-29-2022     Yajun Xia                Modified comment(s),          */
+/*                                            fixed ipv6 support issue,   */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 
@@ -610,22 +626,20 @@ UINT                            i;
                 }
                 else
                 {
-#ifdef FEATURE_NX_IPV6
                     if (packet_ptr -> nx_packet_ip_version == NX_IP_VERSION_V4)
-#endif /* FEATURE_NX_IPV6 */
                         *(ethernet_frame_ptr+3) |= NX_ETHERNET_IP;
 #ifdef FEATURE_NX_IPV6
                     else if (packet_ptr -> nx_packet_ip_version == NX_IP_VERSION_V6)
-                        *(ethernet_frame_ptr+3) |= NX_ETHERNET_IPV6;           
+                        *(ethernet_frame_ptr+3) |= NX_ETHERNET_IPV6;
+#endif /* FEATURE_NX_IPV6 */
                     else 
                     {
                         /* Unknown IP version */
                         /* free the packet that we will not send */
-                        nx_packet_release(packet_ptr);
+                        nx_packet_transmit_release(packet_ptr);
                         nx_ip_driver  -> nx_ip_driver_status =  NX_NOT_SUCCESSFUL;        
                         break;
                     }
-#endif /* FEATURE_NX_IPV6 */
                 }
 
                 /* Endian swapping if NX_LITTLE_ENDIAN is defined.  */
@@ -709,10 +723,7 @@ UINT                            i;
         
             /* Invalid driver request.  */
             nx_ip_driver -> nx_ip_driver_status =  NX_UNHANDLED_COMMAND;
-            
-            /* Return the link status in the supplied return pointer.  */
-            if(nx_ip_driver -> nx_ip_driver_return_ptr)
-                *(nx_ip_driver -> nx_ip_driver_return_ptr) =  (ULONG)0;
+
             break;
         }
     }
@@ -727,7 +738,7 @@ UINT                            i;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_network_driver_packet_received                  PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -762,6 +773,9 @@ UINT                            i;
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  07-29-2022     Yajun Xia                Modified comment(s),          */
+/*                                            fixed ipv6 support issue,   */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 
@@ -797,7 +811,11 @@ NX_IP           *nx_ip;
     switch (packet_type)
     {
         case NX_ETHERNET_IP     :
-    
+#ifdef FEATURE_NX_IPV6
+        /* fallthrough */
+        case NX_ETHERNET_IPV6   :
+#endif /* FEATURE_NX_IPV6 */
+
             /* Note:  The length reported by some Ethernet hardware includes 
                bytes after the packet as well as the Ethernet header.  In some 
                cases, the actual packet length after the Ethernet header should 
@@ -966,3 +984,4 @@ USB_NETWORK_DEVICE_TYPE *usb_network_device_ptr = (USB_NETWORK_DEVICE_TYPE*)ux_n
     usb_network_device_ptr -> ux_network_device_link_status = NX_FALSE;
 
 }
+#endif

@@ -33,7 +33,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_device_class_cdc_ecm_change                     PORTABLE C      */ 
-/*                                                           6.1.10       */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -56,7 +56,7 @@
 /*    _ux_network_driver_link_down          Link status down              */
 /*    _ux_utility_memory_set                Set memory                    */
 /*    _ux_device_thread_resume              Resume thread                 */
-/*    _ux_utility_event_flags_set           Set event flags               */
+/*    _ux_device_event_flags_set            Set event flags               */
 /*    _ux_device_stack_transfer_all_request_abort                         */
 /*                                          Abort transfer                */
 /*                                                                        */ 
@@ -78,32 +78,39 @@
 /*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            refined macros names,       */
 /*                                            resulting in version 6.1.10 */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed standalone compile,   */
+/*                                            resulting in version 6.1.11 */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed parameter/variable    */
+/*                                            names conflict C++ keyword, */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_device_class_cdc_ecm_change(UX_SLAVE_CLASS_COMMAND *command)
 {
 
-UX_SLAVE_INTERFACE                      *interface;            
+UX_SLAVE_INTERFACE                      *interface_ptr;            
+UX_SLAVE_CLASS                          *class_ptr;
 UX_SLAVE_CLASS_CDC_ECM                  *cdc_ecm;
-UX_SLAVE_CLASS                          *class;
 UX_SLAVE_ENDPOINT                       *endpoint;
 
     /* Get the class container.  */
-    class =  command -> ux_slave_class_command_class_ptr;
+    class_ptr =  command -> ux_slave_class_command_class_ptr;
 
     /* Get the class instance in the container.  */
-    cdc_ecm = (UX_SLAVE_CLASS_CDC_ECM *) class -> ux_slave_class_instance;
+    cdc_ecm = (UX_SLAVE_CLASS_CDC_ECM *) class_ptr -> ux_slave_class_instance;
 
     /* Get the interface that owns this instance.  */
-    interface =  (UX_SLAVE_INTERFACE  *) command -> ux_slave_class_command_interface;
+    interface_ptr =  (UX_SLAVE_INTERFACE  *) command -> ux_slave_class_command_interface;
     
     /* Locate the endpoints.  Control and Bulk in/out for Data Interface.  */
-    endpoint =  interface -> ux_slave_interface_first_endpoint;
+    endpoint =  interface_ptr -> ux_slave_interface_first_endpoint;
     
     /* If the interface to mount has a non zero alternate setting, the class is really active with
        the endpoints active.  If the interface reverts to alternate setting 0, it needs to have
        the pending transactions terminated.  */
-    if (interface -> ux_slave_interface_descriptor.bAlternateSetting != 0)       
+    if (interface_ptr -> ux_slave_interface_descriptor.bAlternateSetting != 0)       
     {
     
         /* Parse all endpoints.  */
@@ -157,7 +164,7 @@ UX_SLAVE_ENDPOINT                       *endpoint;
         _ux_device_thread_resume(&cdc_ecm -> ux_slave_class_cdc_ecm_bulkin_thread); 
         
         /* Wake up the Interrupt thread and send a network notification to the host.  */
-        _ux_utility_event_flags_set(&cdc_ecm -> ux_slave_class_cdc_ecm_event_flags_group, UX_DEVICE_CLASS_CDC_ECM_NETWORK_NOTIFICATION_EVENT, UX_OR);                
+        _ux_device_event_flags_set(&cdc_ecm -> ux_slave_class_cdc_ecm_event_flags_group, UX_DEVICE_CLASS_CDC_ECM_NETWORK_NOTIFICATION_EVENT, UX_OR);                
 
         /* If there is an activate function call it.  */
         if (cdc_ecm -> ux_slave_class_cdc_ecm_parameter.ux_slave_class_cdc_ecm_instance_activate != UX_NULL)
@@ -182,10 +189,10 @@ UX_SLAVE_ENDPOINT                       *endpoint;
 
         /* Notify the thread waiting for network notification events. In this case,
            the event is that the link state has been switched to down.  */
-        _ux_utility_event_flags_set(&cdc_ecm -> ux_slave_class_cdc_ecm_event_flags_group, UX_DEVICE_CLASS_CDC_ECM_NETWORK_NOTIFICATION_EVENT, UX_OR);                
+        _ux_device_event_flags_set(&cdc_ecm -> ux_slave_class_cdc_ecm_event_flags_group, UX_DEVICE_CLASS_CDC_ECM_NETWORK_NOTIFICATION_EVENT, UX_OR);                
 
         /* Wake up the bulk in thread so that it can clean up the xmit queue.  */
-        _ux_utility_event_flags_set(&cdc_ecm -> ux_slave_class_cdc_ecm_event_flags_group, UX_DEVICE_CLASS_CDC_ECM_NEW_DEVICE_STATE_CHANGE_EVENT, UX_OR);                
+        _ux_device_event_flags_set(&cdc_ecm -> ux_slave_class_cdc_ecm_event_flags_group, UX_DEVICE_CLASS_CDC_ECM_NEW_DEVICE_STATE_CHANGE_EVENT, UX_OR);                
 
         /* If there is a deactivate function call it.  */
         if (cdc_ecm -> ux_slave_class_cdc_ecm_parameter.ux_slave_class_cdc_ecm_instance_deactivate != UX_NULL)
@@ -195,7 +202,7 @@ UX_SLAVE_ENDPOINT                       *endpoint;
     }
 
     /* Set the CDC ECM alternate setting to the new one.  */
-    cdc_ecm -> ux_slave_class_cdc_ecm_current_alternate_setting = interface -> ux_slave_interface_descriptor.bAlternateSetting;
+    cdc_ecm -> ux_slave_class_cdc_ecm_current_alternate_setting = interface_ptr -> ux_slave_interface_descriptor.bAlternateSetting;
 
     /* If trace is enabled, insert this event into the trace buffer.  */
     UX_TRACE_IN_LINE_INSERT(UX_TRACE_DEVICE_CLASS_CDC_ECM_CHANGE, cdc_ecm, 0, 0, 0, UX_TRACE_DEVICE_CLASS_EVENTS, 0, 0)

@@ -34,7 +34,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_device_class_printer_write                      PORTABLE C      */
-/*                                                           6.1.10       */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -48,7 +48,8 @@
 /*    printer                               Address of printer class      */
 /*                                            instance                    */
 /*    buffer                                Pointer to data to write      */
-/*    requested_length                      Length of bytes to write      */
+/*    requested_length                      Length of bytes to write,     */
+/*                                            set to 0 to issue ZLP       */
 /*    actual_length                         Pointer to save number of     */
 /*                                            bytes written               */
 /*                                                                        */
@@ -60,8 +61,8 @@
 /*                                                                        */
 /*   _ux_utility_memory_copy                Copy memory                   */
 /*   _ux_device_stack_transfer_request      Transfer request              */
-/*   _ux_utility_mutex_on                   Take Mutex                    */
-/*   _ux_utility_mutex_off                  Release Mutex                 */
+/*   _ux_device_mutex_on                    Take Mutex                    */
+/*   _ux_device_mutex_off                   Release Mutex                 */
 /*                                                                        */
 /*  CALLED BY                                                             */
 /*                                                                        */
@@ -72,6 +73,12 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  01-31-2022     Chaoqiong Xiao           Initial Version 6.1.10        */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed standalone compile,   */
+/*                                            resulting in version 6.1.11 */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added auto ZLP support,     */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 UINT _ux_device_class_printer_write(UX_DEVICE_CLASS_PRINTER *printer, UCHAR *buffer,
@@ -82,6 +89,7 @@ UX_SLAVE_ENDPOINT           *endpoint;
 UX_SLAVE_DEVICE             *device;
 UX_SLAVE_TRANSFER           *transfer_request;
 ULONG                       local_requested_length;
+ULONG                       local_host_length;
 UINT                        status = 0;
 
     /* If trace is enabled, insert this event into the trace buffer.  */
@@ -112,7 +120,7 @@ UINT                        status = 0;
         return(UX_FUNCTION_NOT_SUPPORTED);
 
     /* Protect this thread.  */
-    _ux_utility_mutex_on(&printer -> ux_device_class_printer_endpoint_in_mutex);
+    _ux_device_mutex_on(&printer -> ux_device_class_printer_endpoint_in_mutex);
 
     /* We are writing to the IN endpoint.  */
     transfer_request =  &endpoint -> ux_slave_endpoint_transfer_request;
@@ -128,13 +136,14 @@ UINT                        status = 0;
         status =  _ux_device_stack_transfer_request(transfer_request, 0, 0);
 
         /* Free Mutex resource.  */
-        _ux_utility_mutex_off(&printer -> ux_device_class_printer_endpoint_in_mutex);
+        _ux_device_mutex_off(&printer -> ux_device_class_printer_endpoint_in_mutex);
 
         /* Return the status.  */
         return(status);
     }
 
     /* Check if we need more transactions.  */
+    local_host_length = UX_SLAVE_REQUEST_DATA_MAX_LENGTH;
     while (device -> ux_slave_device_state == UX_DEVICE_CONFIGURED &&
             requested_length != 0)
     {
@@ -146,9 +155,21 @@ UINT                        status = 0;
             local_requested_length = UX_SLAVE_REQUEST_DATA_MAX_LENGTH;
 
         else
+        {
 
             /* We can proceed with the demanded length.  */
             local_requested_length = requested_length;
+
+#if !defined(UX_DEVICE_CLASS_PRINTER_WRITE_AUTO_ZLP)
+
+            /* Assume expected length matches.  */
+            local_host_length = requested_length;
+#else
+
+            /* Assume expected more so stack appends ZLP if needed.  */
+            local_host_length = UX_SLAVE_REQUEST_DATA_MAX_LENGTH + 1;
+#endif
+        }
 
         /* On a out, we copy the buffer to the caller. Not very efficient but it makes the API
             easier.  */
@@ -157,7 +178,7 @@ UINT                        status = 0;
 
         /* Send the request to the device controller.  */
         status =  _ux_device_stack_transfer_request(transfer_request,
-                                local_requested_length, local_requested_length);
+                                local_requested_length, local_host_length);
 
         /* Check the status */
         if (status == UX_SUCCESS)
@@ -176,7 +197,7 @@ UINT                        status = 0;
         {
 
             /* Free Mutex resource.  */
-            _ux_utility_mutex_off(&printer -> ux_device_class_printer_endpoint_in_mutex);
+            _ux_device_mutex_off(&printer -> ux_device_class_printer_endpoint_in_mutex);
 
             /* We had an error, abort.  */
             return(status);
@@ -184,7 +205,7 @@ UINT                        status = 0;
     }
 
     /* Free Mutex resource.  */
-    _ux_utility_mutex_off(&printer -> ux_device_class_printer_endpoint_in_mutex);
+    _ux_device_mutex_off(&printer -> ux_device_class_printer_endpoint_in_mutex);
 
     /* Check why we got here, either completion or device was extracted.  */
     if (device -> ux_slave_device_state != UX_DEVICE_CONFIGURED)

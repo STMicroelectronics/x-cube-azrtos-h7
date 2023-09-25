@@ -24,7 +24,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */ 
 /*                                                                        */ 
 /*    ux_device_class_rndis.h                             PORTABLE C      */ 
-/*                                                           6.1.8        */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -49,6 +49,12 @@
 /*                                            added extern "C" keyword    */
 /*                                            for compatibility with C++, */
 /*                                            resulting in version 6.1.8  */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed standalone compile,   */
+/*                                            resulting in version 6.1.11 */
+/*  10-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added wait and length DEFs, */
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -65,8 +71,29 @@ extern   "C" {
 
 #endif  
 
+#if !defined(UX_DEVICE_STANDALONE)
 #include "nx_api.h"
 #include "ux_network_driver.h"
+#else
+
+/* Assume NX definitions for compiling.  */
+#define NX_PACKET                                               VOID*
+#define NX_IP                                                   VOID*
+/*
+UINT  _ux_network_driver_deactivate(VOID *ux_instance, VOID *ux_network_handle);
+VOID  _ux_network_driver_link_up(VOID *ux_network_handle);
+VOID  _ux_network_driver_link_down(VOID *ux_network_handle);
+*/
+#ifndef _ux_network_driver_deactivate
+#define _ux_network_driver_deactivate(a,b)                      do {} while(0)
+#endif
+#ifndef _ux_network_driver_link_up
+#define _ux_network_driver_link_up(a)                           do {} while(0)
+#endif
+#ifndef _ux_network_driver_link_down
+#define _ux_network_driver_link_down(a)                         do {} while(0)
+#endif
+#endif
 
 /* Define generic RNDIS equivalences.  */
 #define UX_DEVICE_CLASS_RNDIS_CLASS_COMMUNICATION_CONTROL                       0x02
@@ -454,6 +481,16 @@ extern   "C" {
 #define UX_DEVICE_CLASS_RNDIS_PACKET_POOL_WAIT                                  10  
 #endif
 
+#ifndef UX_DEVICE_CLASS_RNDIS_PACKET_POOL_INST_WAIT
+#define UX_DEVICE_CLASS_RNDIS_PACKET_POOL_INST_WAIT                             100
+#endif
+
+/* Calculate message buffer length (not overflow).  */
+#define UX_DEVICE_CLASS_RNDIS_MAX_MSG_LENGTH                                    (UX_DEVICE_CLASS_RNDIS_MAX_PACKET_LENGTH + UX_DEVICE_CLASS_RNDIS_PACKET_HEADER_LENGTH)
+#if UX_DEVICE_CLASS_RNDIS_MAX_MSG_LENGTH > UX_SLAVE_REQUEST_DATA_MAX_LENGTH
+#error "Error: the maximum-sized RNDIS response cannot fit inside the control endpoint's data buffer. Increase UX_SLAVE_REQUEST_DATA_MAX_LENGTH."
+#endif
+
 /* Calculate response buffer length.  */
 #define UX_DEVICE_CLASS_RNDIS_OID_SUPPORTED_RESPONSE_LENGTH             (UX_DEVICE_CLASS_RNDIS_CMPLT_QUERY_INFO_BUFFER + UX_DEVICE_CLASS_RNDIS_OID_SUPPORTED_LIST_LENGTH * 4)
 #define UX_DEVICE_CLASS_RNDIS_VENDOR_DESCRIPTION_MAX_RESPONSE_LENGTH    (UX_DEVICE_CLASS_RNDIS_CMPLT_QUERY_INFO_BUFFER + UX_DEVICE_CLASS_RNDIS_VENDOR_DESCRIPTION_MAX_LENGTH)
@@ -518,25 +555,31 @@ typedef struct UX_SLAVE_CLASS_RNDIS_STRUCT
     ULONG                                   ux_slave_class_rndis_statistics_rcv_error_alignment;
     ULONG                                   ux_slave_class_rndis_statistics_xmit_one_collision;
     ULONG                                   ux_slave_class_rndis_statistics_xmit_more_collisions;
-    UX_EVENT_FLAGS_GROUP                    ux_slave_class_rndis_event_flags_group;
     UCHAR                                   ux_slave_class_rndis_local_node_id[UX_DEVICE_CLASS_RNDIS_NODE_ID_LENGTH];
     UCHAR                                   ux_slave_class_rndis_remote_node_id[UX_DEVICE_CLASS_RNDIS_NODE_ID_LENGTH];
-    NX_IP                                   *ux_slave_class_rndis_nx_ip;
     ULONG                                   ux_slave_class_rndis_nx_ip_address;
     ULONG                                   ux_slave_class_rndis_nx_ip_network_mask;
+
+#if !defined(UX_DEVICE_STANDALONE)
+    NX_IP                                   *ux_slave_class_rndis_nx_ip;
     NX_INTERFACE                            *ux_slave_class_rndis_nx_interface;
     NX_PACKET                               *ux_slave_class_rndis_xmit_queue;
     NX_PACKET                               *ux_slave_class_rndis_receive_queue;
-    UCHAR                                   *ux_slave_class_rndis_pool_memory;
-    NX_PACKET_POOL                          ux_slave_class_rndis_packet_pool;
+    NX_PACKET_POOL                          *ux_slave_class_rndis_packet_pool;
+#endif
+
+#if !defined(UX_DEVICE_STANDALONE)
+    UX_EVENT_FLAGS_GROUP                    ux_slave_class_rndis_event_flags_group;
     UX_THREAD                               ux_slave_class_rndis_interrupt_thread;
     UX_THREAD                               ux_slave_class_rndis_bulkin_thread;
     UX_THREAD                               ux_slave_class_rndis_bulkout_thread;
+    UX_MUTEX                                ux_slave_class_rndis_mutex;
     UCHAR                                   *ux_slave_class_rndis_interrupt_thread_stack;
     UCHAR                                   *ux_slave_class_rndis_bulkin_thread_stack;
     UCHAR                                   *ux_slave_class_rndis_bulkout_thread_stack;
+#endif
+
     ULONG                                   ux_slave_class_rndis_link_state;
-    UX_MUTEX                                ux_slave_class_rndis_mutex;
     VOID                                    *ux_slave_class_rndis_network_handle;
     
 } UX_SLAVE_CLASS_RNDIS;

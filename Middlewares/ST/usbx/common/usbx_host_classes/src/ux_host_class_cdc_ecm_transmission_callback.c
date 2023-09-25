@@ -35,7 +35,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_host_class_cdc_ecm_transmission_callback        PORTABLE C      */ 
-/*                                                           6.1.9        */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -77,15 +77,27 @@
 /*                                            use pre-calculated value    */
 /*                                            instead of wMaxPacketSize,  */
 /*                                            resulting in version 6.1.9  */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed standalone compile,   */
+/*                                            resulting in version 6.1.11 */
+/*  10-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            supported NX packet chain,  */
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 VOID  _ux_host_class_cdc_ecm_transmission_callback(UX_TRANSFER *transfer_request)
 {
+#if defined(UX_HOST_STANDALONE)
+    UX_PARAMETER_NOT_USED(transfer_request);
+#else
 
 UX_HOST_CLASS_CDC_ECM           *cdc_ecm;
 NX_PACKET                       *current_packet;
 NX_PACKET                       *next_packet;
 UCHAR                           *packet_header;
+#ifdef UX_HOST_CLASS_CDC_ECM_PACKET_CHAIN_SUPPORT
+ULONG                           copied;
+#endif
     
     /* Get the data and control class instances for this transfer request.  */
     cdc_ecm =  (UX_HOST_CLASS_CDC_ECM *) transfer_request -> ux_transfer_request_class_instance;
@@ -144,8 +156,22 @@ UCHAR                           *packet_header;
         if (next_packet != UX_NULL)
         {
 
-            /* Load the address of the current packet header at the physical header.  */
-            packet_header =  next_packet -> nx_packet_prepend_ptr;
+#ifdef UX_HOST_CLASS_CDC_ECM_PACKET_CHAIN_SUPPORT
+
+            if (next_packet -> nx_packet_next != UX_NULL)
+            {
+
+                /* Put packet to continuous buffer to transfer.  */
+                packet_header = cdc_ecm -> ux_host_class_cdc_ecm_xmit_buffer;
+                nx_packet_data_extract_offset(next_packet, 0, packet_header, next_packet -> nx_packet_length, &copied);
+            }
+            else
+#endif
+            {
+
+                /* Load the address of the current packet header at the physical header.  */
+                packet_header =  next_packet -> nx_packet_prepend_ptr;
+            }
         
             /* Prepare the values for this new transmission.  */
             transfer_request -> ux_transfer_request_data_pointer     =  packet_header;
@@ -183,4 +209,5 @@ UCHAR                           *packet_header;
 
     /* There is no status to be reported back to the stack.  */
     return; 
+#endif
 }

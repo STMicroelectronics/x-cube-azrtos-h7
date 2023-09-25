@@ -39,7 +39,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_device_class_rndis_control_request              PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -64,7 +64,7 @@
 /*    _ux_utility_memory_set                Set memory                    */
 /*    _ux_utility_memory_copy               Copy memory                   */
 /*    _ux_utility_long_get                  Get 32-bit value              */
-/*    _ux_utility_event_flags_set           Set event flags               */
+/*    _ux_device_event_flags_set            Set event flags               */
 /*    _ux_device_class_rndis_msg_initialize Command initialize            */
 /*    _ux_device_class_rndis_msg_query      Command query                 */
 /*    _ux_device_class_rndis_msg_set        Command set                   */
@@ -86,6 +86,13 @@
 /*                                            refer to TX symbols instead */
 /*                                            of using them directly,     */
 /*                                            resulting in version 6.1    */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed standalone compile,   */
+/*                                            resulting in version 6.1.11 */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed parameter/variable    */
+/*                                            names conflict C++ keyword, */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_device_class_rndis_control_request(UX_SLAVE_CLASS_COMMAND *command)
@@ -97,7 +104,7 @@ UX_SLAVE_DEVICE         *device;
 ULONG                   request;
 ULONG                   request_length;
 ULONG                   rndis_command;
-UX_SLAVE_CLASS          *class;
+UX_SLAVE_CLASS          *class_ptr;
 UX_SLAVE_CLASS_RNDIS    *rndis;
 
     /* Get the pointer to the device.  */
@@ -111,10 +118,10 @@ UX_SLAVE_CLASS_RNDIS    *rndis;
     request_length =   _ux_utility_short_get(transfer_request -> ux_slave_transfer_request_setup + UX_SETUP_LENGTH);
 
     /* Get the class container.  */
-    class =  command -> ux_slave_class_command_class_ptr;
+    class_ptr =  command -> ux_slave_class_command_class_ptr;
     
     /* Get the rndis instance from this class container.  */
-    rndis =  (UX_SLAVE_CLASS_RNDIS *) class -> ux_slave_class_instance;
+    rndis =  (UX_SLAVE_CLASS_RNDIS *) class_ptr -> ux_slave_class_instance;
     
     /* Here we proceed only the standard request we know of at the device level.  */
     switch (request)
@@ -181,7 +188,7 @@ UX_SLAVE_CLASS_RNDIS    *rndis;
             transfer_request_in -> ux_slave_transfer_request_data_pointer[0] = UX_DEVICE_CLASS_RNDIS_INTERRUPT_RESPONSE_AVAILABLE_FLAG;
 
             /* Set an event to wake up the interrupt thread.  */
-            _ux_utility_event_flags_set(&rndis -> ux_slave_class_rndis_event_flags_group, UX_DEVICE_CLASS_RNDIS_NEW_INTERRUPT_EVENT, UX_OR);                
+            _ux_device_event_flags_set(&rndis -> ux_slave_class_rndis_event_flags_group, UX_DEVICE_CLASS_RNDIS_NEW_INTERRUPT_EVENT, UX_OR);                
             
             break;
             

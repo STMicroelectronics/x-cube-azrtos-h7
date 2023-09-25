@@ -26,7 +26,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */ 
 /*                                                                        */ 
 /*    ux_host_class_cdc_ecm.h                             PORTABLE C      */ 
-/*                                                           6.1.8        */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -54,6 +54,12 @@
 /*                                            added extern "C" keyword    */
 /*                                            for compatibility with C++, */
 /*                                            resulting in version 6.1.8  */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed standalone compile,   */
+/*                                            resulting in version 6.1.11 */
+/*  10-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            supported NX packet chain,  */
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -70,9 +76,16 @@ extern   "C" {
 
 #endif  
 
-/* Include the NetX API.  */
+#if !defined(UX_HOST_STANDALONE)
 #include "nx_api.h"
 #include "ux_network_driver.h"
+#else
+
+/* Assume NX things for compiling.  */
+#define NX_PACKET                                   VOID*
+#define NX_PACKET_POOL                              VOID*
+#endif
+
 
 /* Define CDC_ECM Class constants.  Insert here the PID/VID of vendors and products using the CDC ECM chipset. 
    It is a better mechanism to put this value in the ux_user.h file. */
@@ -134,11 +147,18 @@ extern   "C" {
         32), UX_HOST_CLASS_CDC_ECM_NX_ETHERNET_POOL_ALLOCSIZE_calc2_ovf)
 #define UX_HOST_CLASS_CDC_ECM_NX_ETHERNET_POOL_ALLOCSIZE       (UX_HOST_CLASS_CDC_ECM_NX_PKPOOL_ENTRIES * UX_HOST_CLASS_CDC_ECM_NX_BUFF_SIZE + 32)
 
+#ifdef NX_DISABLE_PACKET_CHAIN
+#undef UX_HOST_CLASS_CDC_ECM_PACKET_CHAIN_SUPPORT
+#else
+#define UX_HOST_CLASS_CDC_ECM_PACKET_CHAIN_SUPPORT
+#endif
+
 #define UX_HOST_CLASS_CDC_ECM_ETHERNET_SIZE                    14
                                                                 
 #define UX_HOST_CLASS_CDC_ECM_DEVICE_INIT_DELAY                (1 * UX_PERIODIC_RATE)
 #define UX_HOST_CLASS_CDC_ECM_CLASS_TRANSFER_TIMEOUT           300000
 #define UX_HOST_CLASS_CDC_ECM_SETUP_BUFFER_SIZE                16
+
 
 /* Define NetX errors inside the CDC ECM class.  */
 #define UX_HOST_CLASS_CDC_ECM_NX_SUCCESS                       0x00
@@ -270,11 +290,10 @@ typedef struct UX_HOST_CLASS_CDC_ECM_STRUCT
     ULONG           ux_host_class_cdc_ecm_link_state;
     NX_PACKET       *ux_host_class_cdc_ecm_xmit_queue_head;
     NX_PACKET       *ux_host_class_cdc_ecm_xmit_queue_tail;
-#ifndef UX_HOST_CLASS_CDC_ECM_USE_PACKET_POOL_FROM_NETX
-    NX_PACKET_POOL  ux_host_class_cdc_ecm_packet_pool;
-    UCHAR           *ux_host_class_cdc_ecm_pool_memory;
-#else
     NX_PACKET_POOL  *ux_host_class_cdc_ecm_packet_pool;
+#ifdef UX_HOST_CLASS_CDC_ECM_PACKET_CHAIN_SUPPORT
+    UCHAR           *ux_host_class_cdc_ecm_xmit_buffer;
+    UCHAR           *ux_host_class_cdc_ecm_receive_buffer;
 #endif
 
     UCHAR           ux_host_class_cdc_ecm_node_id[UX_HOST_CLASS_CDC_ECM_NODE_ID_LENGTH];

@@ -78,6 +78,9 @@ UX_HCD_STM32_ED       *ed;
     /* From the endpoint container fetch the STM32 ED descriptor.  */
     ed =  (UX_HCD_STM32_ED *) endpoint -> ux_endpoint_ed;
 
+    /* Finish current transfer.  */
+    _ux_hcd_stm32_request_trans_finish(hcd_stm32, ed);
+
     /* Reset the data0/data1 toggle bit.  */
     hcd_stm32 -> hcd_handle -> hc[ed -> ux_stm32_ed_channel].toggle_in = 0;
     hcd_stm32 -> hcd_handle -> hc[ed -> ux_stm32_ed_channel].toggle_out = 0;

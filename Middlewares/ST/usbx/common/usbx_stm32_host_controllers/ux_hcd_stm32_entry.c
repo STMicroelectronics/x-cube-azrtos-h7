@@ -35,7 +35,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_hcd_stm32_entry                                 PORTABLE C      */
-/*                                                           6.x          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -85,8 +85,9 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
-/*  xx-xx-xxxx     Chaoqiong Xiao           Modified comment(s),          */
-/*                                            resulting in version 6.x    */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            refined macros names,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_hcd_stm32_entry(UX_HCD *hcd, UINT function, VOID *parameter)
@@ -94,7 +95,7 @@ UINT  _ux_hcd_stm32_entry(UX_HCD *hcd, UINT function, VOID *parameter)
 
 UINT                status;
 UX_HCD_STM32       *hcd_stm32;
-UX_INT_SAVE_AREA
+UX_INTERRUPT_SAVE_AREA
 
 
     /* Check the status of the controller.  */
@@ -210,9 +211,9 @@ UX_INT_SAVE_AREA
         _ux_hcd_stm32_periodic_schedule(hcd_stm32);
 
         /* Reset the SOF flag.  */
-        UX_DISABLE_INTS
+        UX_DISABLE
         hcd_stm32 -> ux_hcd_stm32_controller_flag &= ~UX_HCD_STM32_CONTROLLER_FLAG_SOF;
-        UX_RESTORE_INTS
+        UX_RESTORE
 
         status =  UX_SUCCESS;
         break;

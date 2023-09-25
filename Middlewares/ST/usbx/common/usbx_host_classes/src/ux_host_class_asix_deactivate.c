@@ -30,12 +30,13 @@
 #include "ux_host_stack.h"
 
 
+#if !defined(UX_HOST_STANDALONE)
 /**************************************************************************/ 
 /*                                                                        */ 
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_host_class_asix_deactivate                      PORTABLE C      */ 
-/*                                                           6.1.10       */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -80,6 +81,15 @@
 /*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            refined macros names,       */
 /*                                            resulting in version 6.1.10 */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            internal clean up,          */
+/*                                            fixed standalone compile,   */
+/*                                            resulting in version 6.1.11 */
+/*  10-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            supported NX packet chain,  */
+/*                                            added reception buffer,     */
+/*                                            removed internal NX pool,   */
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_host_class_asix_deactivate(UX_HOST_CLASS_COMMAND *command)
@@ -142,7 +152,7 @@ UINT                        status;
     asix -> ux_host_class_asix_link_state = UX_HOST_CLASS_ASIX_LINK_STATE_DOWN;
 
     /* Deregister this interface to the NetX USB interface broker.  */
-    status = _ux_network_driver_deactivate((VOID *) asix, asix -> ux_host_class_asix_network_handle);
+    _ux_network_driver_deactivate((VOID *) asix, asix -> ux_host_class_asix_network_handle);
     
     /* If the interrupt endpoint is defined, clean any pending transfer.  */
     if (asix -> ux_host_class_asix_interrupt_endpoint != UX_NULL)
@@ -191,12 +201,16 @@ UINT                        status;
     /* free its stack memory.  */
     _ux_utility_memory_free(asix -> ux_host_class_asix_thread_stack);
 
-    /* We may have allocated a packet pool.  */
-    if (asix -> ux_host_class_asix_pool_memory != UX_NULL)
-    
-        /* Free this pool of packets.  */
-        _ux_utility_memory_free(asix -> ux_host_class_asix_pool_memory);
-    
+    /* Free receive buffer memory.  */
+    _ux_utility_memory_free(asix -> ux_host_class_asix_receive_buffer);
+
+#ifdef UX_HOST_CLASS_ASIX_PACKET_CHAIN_SUPPORT
+
+    /* Free transmit buffer memory.  */
+    if (asix -> ux_host_class_asix_xmit_buffer)
+        _ux_utility_memory_free(asix -> ux_host_class_asix_xmit_buffer);
+#endif
+
     /* Before we free the device resources, we need to inform the application
         that the device is removed.  */
     if (_ux_system_host -> ux_system_host_change_function != UX_NULL)
@@ -218,4 +232,4 @@ UINT                        status;
     /* Return successful status.  */
     return(UX_SUCCESS);         
 }
-
+#endif

@@ -36,7 +36,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    HAL_HCD_Connect_Callback                            PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -66,6 +66,9 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            refined macros names,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 void HAL_HCD_Connect_Callback(HCD_HandleTypeDef *hhcd)
@@ -87,7 +90,7 @@ UX_HCD_STM32        *hcd_stm32;
     hcd_stm32 -> ux_hcd_stm32_controller_flag &= ~UX_HCD_STM32_CONTROLLER_FLAG_DEVICE_DETACHED;
 
     /* Wake up the root hub thread.  */
-    _ux_utility_semaphore_put(&_ux_system_host -> ux_system_host_enum_semaphore);
+    _ux_host_semaphore_put(&_ux_system_host -> ux_system_host_enum_semaphore);
 }
 
 
@@ -96,7 +99,7 @@ UX_HCD_STM32        *hcd_stm32;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    HAL_HCD_Disconnect_Callback                         PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -126,6 +129,9 @@ UX_HCD_STM32        *hcd_stm32;
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            refined macros names,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 void HAL_HCD_Disconnect_Callback(HCD_HandleTypeDef *hhcd)
@@ -147,7 +153,7 @@ UX_HCD_STM32        *hcd_stm32;
     hcd_stm32 -> ux_hcd_stm32_controller_flag &= ~UX_HCD_STM32_CONTROLLER_FLAG_DEVICE_ATTACHED;
 
     /* Wake up the root hub thread.  */
-    _ux_utility_semaphore_put(&_ux_system_host -> ux_system_host_enum_semaphore);
+    _ux_host_semaphore_put(&_ux_system_host -> ux_system_host_enum_semaphore);
 }
 
 
@@ -156,7 +162,7 @@ UX_HCD_STM32        *hcd_stm32;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    HAL_HCD_Disconnect_Callback                         PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -189,6 +195,13 @@ UX_HCD_STM32        *hcd_stm32;
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            refined macros names,       */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.10 */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added ISO transfer support, */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 void HAL_HCD_HC_NotifyURBChange_Callback(HCD_HandleTypeDef *hhcd, uint8_t chnum, HCD_URBStateTypeDef urb_state)
@@ -198,6 +211,7 @@ UX_HCD              *hcd;
 UX_HCD_STM32        *hcd_stm32;
 UX_HCD_STM32_ED     *ed;
 UX_TRANSFER         *transfer_request;
+UX_TRANSFER         *transfer_next;
 
 
     /* Check the URB state.  */
@@ -218,17 +232,15 @@ UX_TRANSFER         *transfer_request;
         /* Check if ED is still valid.  */
         if (ed == UX_NULL)
         {
-
             return;
         }
 
         /* Get transfer request.  */
         transfer_request = ed -> ux_stm32_ed_transfer_request;
 
-        /* Check if ED is still valid.  */
+        /* Check if request is still valid.  */
         if (transfer_request == UX_NULL)
         {
-
             return;
         }
 
@@ -244,39 +256,97 @@ UX_TRANSFER         *transfer_request;
                 /* Set the completion code to stalled.  */
                 transfer_request -> ux_transfer_request_completion_code =  UX_TRANSFER_STALLED;
                 break;
+
             case URB_DONE:
 
                 /* Check the request direction.  */
-                if ((((ed->ux_stm32_ed_endpoint -> ux_endpoint_descriptor.bmAttributes) & UX_MASK_ENDPOINT_TYPE) != UX_CONTROL_ENDPOINT) &&
-                    (transfer_request -> ux_transfer_request_type & UX_REQUEST_DIRECTION) == UX_REQUEST_IN)
+                if (ed -> ux_stm32_ed_dir == 1)
                 {
+                  if ((ed -> ux_stm32_ed_type == EP_TYPE_CTRL) || (ed -> ux_stm32_ed_type == EP_TYPE_BULK))
+                  {
+                    /* Get transfer size for receiving direction. */
+                    transfer_request -> ux_transfer_request_actual_length += HAL_HCD_HC_GetXferCount(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel);
 
-                    /* Get transfer size for receiving direction.  */
+                    /* Check if there is more data to be received. */
+                    if ((transfer_request -> ux_transfer_request_requested_length > transfer_request -> ux_transfer_request_actual_length) &&
+                       (HAL_HCD_HC_GetXferCount(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel) == ed->ux_stm32_ed_endpoint->ux_endpoint_descriptor.wMaxPacketSize))
+                    {
+                      /* Adjust the transmit length.  */
+                      ed -> ux_stm32_ed_packet_length = UX_MIN(ed->ux_stm32_ed_endpoint->ux_endpoint_descriptor.wMaxPacketSize,
+                                                               transfer_request -> ux_transfer_request_requested_length - transfer_request -> ux_transfer_request_actual_length);
+
+                      /* Submit the transmit request.  */
+                      HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel,
+                                               1U,
+                                               ed -> ux_stm32_ed_type,
+                                               USBH_PID_DATA,
+                                               ed -> ux_stm32_ed_data + transfer_request -> ux_transfer_request_actual_length,
+                                               ed -> ux_stm32_ed_packet_length, 0);
+                      return;
+                    }
+                  }
+                  else
+                  {
+                    /* Get transfer size for receiving direction. */
                     transfer_request -> ux_transfer_request_actual_length = HAL_HCD_HC_GetXferCount(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel);
+                  }
                 }
 
-                /* Check if the request is for bulk OUT or control OUT.  */
-                if ((((ed -> ux_stm32_ed_endpoint -> ux_endpoint_descriptor.bmAttributes) & UX_MASK_ENDPOINT_TYPE) == UX_BULK_ENDPOINT ||
-                     ((ed -> ux_stm32_ed_endpoint -> ux_endpoint_descriptor.bmAttributes) & UX_MASK_ENDPOINT_TYPE) == UX_CONTROL_ENDPOINT) &&
-                     (transfer_request -> ux_transfer_request_type & UX_REQUEST_DIRECTION) == UX_REQUEST_OUT)
+                /* Check if the request is for OUT transfer.  */
+                if (ed -> ux_stm32_ed_dir == 0U)
                 {
 
+#if defined (USBH_HAL_HUB_SPLIT_SUPPORTED)
+                  if ((hcd_stm32->hcd_handle->hc[ed -> ux_stm32_ed_channel].do_ssplit == 1U) && (ed -> ux_stm32_ed_type == EP_TYPE_ISOC) &&
+                      (ed -> ux_stm32_ed_packet_length > hcd_stm32->hcd_handle->hc[ed -> ux_stm32_ed_channel].max_packet))
+                  {
+                    /* Update actual transfer length with ISOC max packet size for split transaction  */
+                    transfer_request -> ux_transfer_request_actual_length += hcd_stm32->hcd_handle->hc[ed -> ux_stm32_ed_channel].max_packet;
+                  }
+                  else
+#endif /*defined (USBH_HAL_HUB_SPLIT_SUPPORTED) */
+                  {
                     /* Update actual transfer length.  */
-                    transfer_request -> ux_transfer_request_actual_length += transfer_request -> ux_transfer_request_packet_length;
+                    transfer_request -> ux_transfer_request_actual_length += ed -> ux_stm32_ed_packet_length;
+                  }
 
                     /* Check if there is more data to send.  */
-                    if (transfer_request -> ux_transfer_request_requested_length > transfer_request -> ux_transfer_request_actual_length)
+                    if (transfer_request -> ux_transfer_request_requested_length >
+                        transfer_request -> ux_transfer_request_actual_length)
                     {
 
+#if defined (USBH_HAL_HUB_SPLIT_SUPPORTED)
+                      if ((hcd_stm32->hcd_handle->hc[ed -> ux_stm32_ed_channel].do_ssplit == 1U) && (ed -> ux_stm32_ed_type == EP_TYPE_ISOC) &&
+                          (ed -> ux_stm32_ed_packet_length > hcd_stm32->hcd_handle->hc[ed -> ux_stm32_ed_channel].max_packet))
+                      {
                         /* Adjust the transmit length.  */
-                        transfer_request -> ux_transfer_request_packet_length = UX_MIN(ed->ux_stm32_ed_endpoint->ux_endpoint_descriptor.wMaxPacketSize,
-                                transfer_request -> ux_transfer_request_requested_length - transfer_request -> ux_transfer_request_actual_length);
+                        ed -> ux_stm32_ed_packet_length = transfer_request -> ux_transfer_request_packet_length - \
+                                                          hcd_stm32->hcd_handle->hc[ed -> ux_stm32_ed_channel].max_packet;
 
                         /* Submit the transmit request.  */
                         HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel,
-                                 0, EP_TYPE_BULK, USBH_PID_DATA,
-                                 transfer_request->ux_transfer_request_data_pointer + transfer_request -> ux_transfer_request_actual_length,
-                                 transfer_request -> ux_transfer_request_packet_length, 0);
+                                                 0, ed -> ux_stm32_ed_type, USBH_PID_DATA,
+                                                 ed -> ux_stm32_ed_data + transfer_request -> ux_transfer_request_actual_length,
+                                                 ed -> ux_stm32_ed_packet_length, 0);
+                        return;
+                      }
+#endif /* defined (USBH_HAL_HUB_SPLIT_SUPPORTED) */
+
+                        /* Periodic transfer that needs schedule is not started here.  */
+                        if (ed -> ux_stm32_ed_sch_mode)
+                            return;
+
+                        /* Adjust the transmit length.  */
+                        ed -> ux_stm32_ed_packet_length =
+                            UX_MIN(transfer_request -> ux_transfer_request_packet_length,
+                                   transfer_request -> ux_transfer_request_requested_length -
+                                   transfer_request -> ux_transfer_request_actual_length);
+
+                        /* Submit the transmit request.  */
+                        HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel,
+                                                 0, ed -> ux_stm32_ed_type, USBH_PID_DATA,
+                                                 ed -> ux_stm32_ed_data + transfer_request -> ux_transfer_request_actual_length,
+                                                 ed -> ux_stm32_ed_packet_length, 0);
                         return;
                     }
                 }
@@ -284,20 +354,65 @@ UX_TRANSFER         *transfer_request;
                 /* Set the completion code to SUCCESS.  */
                 transfer_request -> ux_transfer_request_completion_code =  UX_SUCCESS;
                 break;
+
             default:
                 /* Set the completion code to transfer error.  */
                 transfer_request -> ux_transfer_request_completion_code =  UX_TRANSFER_ERROR;
             }
 
+            /* Finish current transfer.  */
+            _ux_hcd_stm32_request_trans_finish(hcd_stm32, ed);
+
             /* Move to next transfer.  */
-            ed -> ux_stm32_ed_transfer_request = transfer_request -> ux_transfer_request_next_transfer_request;
+            transfer_next = transfer_request -> ux_transfer_request_next_transfer_request;
+            ed -> ux_stm32_ed_transfer_request = transfer_next;
+
+            /* If there is transfer to start, start it.  */
+            if (transfer_next)
+            {
+
+                /* If transfer is not started by schedular, start here.  */
+                if (!ed -> ux_stm32_ed_sch_mode)
+                {
+
+                    /* For ISO OUT, packet size is from request variable,
+                    * otherwise, use request length.  */
+                    if ((ed -> ux_stm32_ed_type == EP_TYPE_ISOC) && (ed -> ux_stm32_ed_dir == 0))
+                        ed -> ux_stm32_ed_packet_length = transfer_next -> ux_transfer_request_packet_length;
+                    else
+                        ed -> ux_stm32_ed_packet_length = transfer_next -> ux_transfer_request_requested_length;
+
+                    /* Prepare transactions.  */
+                    _ux_hcd_stm32_request_trans_prepare(hcd_stm32, ed, transfer_next);
+
+                    /* Call HAL driver to submit the transfer request.  */
+                    HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel,
+                                             ed -> ux_stm32_ed_dir,
+                                             ed -> ux_stm32_ed_type, USBH_PID_DATA,
+                                             ed -> ux_stm32_ed_data + transfer_next -> ux_transfer_request_actual_length,
+                                             ed -> ux_stm32_ed_packet_length, 0);
+                }
+            }
+            else
+            {
+
+                /* Transfer not continued, periodic needs re-schedule.  */
+                if ((ed -> ux_stm32_ed_type == EP_TYPE_INTR) ||
+                    (ed -> ux_stm32_ed_type == EP_TYPE_ISOC))
+                    ed -> ux_stm32_ed_sch_mode = 1;
+                }
+
+#if defined(UX_HOST_STANDALONE)
+            transfer_request -> ux_transfer_request_status = UX_TRANSFER_STATUS_COMPLETED;
+            ed -> ux_stm32_ed_status |= UX_HCD_STM32_ED_STATUS_TRANSFER_DONE;
+#endif /* defined(UX_HOST_STANDALONE) */
 
             /* Invoke callback function.  */
             if (transfer_request -> ux_transfer_request_completion_function)
                 transfer_request -> ux_transfer_request_completion_function(transfer_request);
 
             /* Wake up the transfer request thread.  */
-            _ux_utility_semaphore_put(&transfer_request -> ux_transfer_request_semaphore);
+            _ux_host_semaphore_put(&transfer_request -> ux_transfer_request_semaphore);
 
         }
         else
@@ -315,8 +430,8 @@ UX_TRANSFER         *transfer_request;
                 HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel, 0,
                                         ((ed -> ux_stm32_ed_endpoint -> ux_endpoint_descriptor.bmAttributes) & UX_MASK_ENDPOINT_TYPE) == UX_BULK_ENDPOINT ? EP_TYPE_BULK : EP_TYPE_CTRL,
                                          ed -> ux_stm32_ed_status == UX_HCD_STM32_ED_STATUS_CONTROL_SETUP ? USBH_PID_SETUP : USBH_PID_DATA,
-                                         transfer_request -> ux_transfer_request_data_pointer + transfer_request -> ux_transfer_request_actual_length,
-                                         transfer_request -> ux_transfer_request_packet_length, 0);
+                                         ed -> ux_stm32_ed_data + transfer_request -> ux_transfer_request_actual_length,
+                                         ed -> ux_stm32_ed_packet_length, 0);
             }
 
         }
@@ -329,7 +444,7 @@ UX_TRANSFER         *transfer_request;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    HAL_HCD_SOF_Callback                                PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -359,6 +474,9 @@ UX_TRANSFER         *transfer_request;
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            refined macros names,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 void HAL_HCD_SOF_Callback(HCD_HandleTypeDef *hhcd)
@@ -378,6 +496,6 @@ UX_HCD_STM32        *hcd_stm32;
         hcd -> ux_hcd_thread_signal++;
 
         /* Wake up the scheduler.  */
-        _ux_utility_semaphore_put(&_ux_system_host -> ux_system_host_hcd_semaphore);
+        _ux_host_semaphore_put(&_ux_system_host -> ux_system_host_hcd_semaphore);
     }
 }

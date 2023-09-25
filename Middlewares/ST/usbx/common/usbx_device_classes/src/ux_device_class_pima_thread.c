@@ -29,12 +29,13 @@
 #include "ux_device_stack.h"
 
 
+#if !defined(UX_DEVICE_STANDALONE)
 /**************************************************************************/ 
 /*                                                                        */ 
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_device_class_pima_thread                        PORTABLE C      */ 
-/*                                                           6.1.10       */
+/*                                                           6.1.11       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -120,12 +121,15 @@
 /*                                            updated phase states,       */
 /*                                            refined internal function,  */
 /*                                            resulting in version 6.1.10 */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed standalone compile,   */
+/*                                            resulting in version 6.1.11 */
 /*                                                                        */
 /**************************************************************************/
 VOID  _ux_device_class_pima_thread(ULONG pima_class)
 {
 
-UX_SLAVE_CLASS              *class;
+UX_SLAVE_CLASS              *class_ptr;
 UX_SLAVE_CLASS_PIMA         *pima;
 UX_SLAVE_DEVICE             *device;
 UX_SLAVE_TRANSFER           *transfer_request;
@@ -138,10 +142,10 @@ UINT                        status;
 
     
     /* Cast properly the pima instance.  */
-    UX_THREAD_EXTENSION_PTR_GET(class, UX_SLAVE_CLASS, pima_class)
+    UX_THREAD_EXTENSION_PTR_GET(class_ptr, UX_SLAVE_CLASS, pima_class)
     
     /* Get the pima instance from this class container.  */
-    pima =  (UX_SLAVE_CLASS_PIMA *) class -> ux_slave_class_instance;
+    pima =  (UX_SLAVE_CLASS_PIMA *) class_ptr -> ux_slave_class_instance;
     
     /* Allocate some memory for the thread stack. */
     pima -> ux_device_class_pima_interrupt_thread_stack =  
@@ -487,7 +491,7 @@ UINT                        status;
         }
 
     /* We need to suspend ourselves. We will be resumed by the device enumeration module.  */
-    _ux_device_thread_suspend(&class -> ux_slave_class_thread);
+    _ux_device_thread_suspend(&class_ptr -> ux_slave_class_thread);
     }
 }
-
+#endif

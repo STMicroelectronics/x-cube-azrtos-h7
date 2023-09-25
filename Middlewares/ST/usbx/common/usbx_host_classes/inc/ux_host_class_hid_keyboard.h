@@ -26,7 +26,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */ 
 /*                                                                        */ 
 /*    ux_host_class_hid_keyboard.h                        PORTABLE C      */ 
-/*                                                           6.1.10       */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -53,6 +53,13 @@
 /*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            added standalone support,   */
 /*                                            resulting in version 6.1.10 */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed clients management,   */
+/*                                            resulting in version 6.1.11 */
+/*  10-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            improved HID OUTPUT report  */
+/*                                            handling in standalone mode,*/
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -212,6 +219,8 @@ typedef struct UX_HOST_CLASS_HID_KEYBOARD_STRUCT
     UX_THREAD       ux_host_class_hid_keyboard_thread;
     UX_SEMAPHORE    ux_host_class_hid_keyboard_semaphore;
 #else
+    UX_HOST_CLASS_HID_REPORT
+                    *ux_host_class_hid_keyboard_out_report;
     UINT            ux_host_class_hid_keyboard_status;
     UCHAR           ux_host_class_hid_keyboard_enum_state;
     UCHAR           ux_host_class_hid_keyboard_next_state;
@@ -226,6 +235,12 @@ typedef struct UX_HOST_CLASS_HID_KEYBOARD_STRUCT
     UX_HOST_CLASS_HID_KEYBOARD_LAYOUT *ux_host_class_hid_keyboard_layout;
     ULONG           ux_host_class_hid_keyboard_keys_decode_disable;
 } UX_HOST_CLASS_HID_KEYBOARD;
+
+typedef struct UX_HOST_CLASS_HID_CLIENT_KEYBOARD_STRUCT
+{
+    UX_HOST_CLASS_HID_KEYBOARD   ux_host_class_hid_client_keyboard_keyboard;
+    UX_HOST_CLASS_HID_CLIENT     ux_host_class_hid_client_keyboard_client;
+} UX_HOST_CLASS_HID_CLIENT_KEYBOARD;
 
 /* Define HID Keyboard Class function prototypes.  */
 
@@ -251,7 +266,7 @@ VOID    _ux_host_class_hid_keyboard_tasks_run(UX_HOST_CLASS_HID_CLIENT *client);
    C conditional started above.  */   
 #ifdef __cplusplus
 } 
-#endif 
+#endif
 
 #endif
 

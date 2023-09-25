@@ -36,7 +36,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_hcd_stm32_endpoint_destroy                      PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -68,11 +68,17 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_hcd_stm32_endpoint_destroy(UX_HCD_STM32 *hcd_stm32, UX_ENDPOINT *endpoint)
 {
 
+#if defined(UX_HOST_STANDALONE)
+UX_INTERRUPT_SAVE_AREA
+#endif /* defined(UX_HOST_STANDALONE) */
 UX_HCD_STM32_ED       *ed;
 UX_HCD_STM32_ED       *next_ed;
 UINT                   endpoint_type;
@@ -94,9 +100,15 @@ UINT                   endpoint_type;
 
     }
 
+#if defined(UX_HOST_STANDALONE)
+
+    /* There is no background thread, just remove the ED from processing list.  */
+    UX_DISABLE
+#else
 
     /* Wait for the controller to finish the current frame processing.  */
     _ux_utility_delay_ms(1);
+#endif /* defined(UX_HOST_STANDALONE) */
 
     /* We need to free the channel.  */
     hcd_stm32 -> ux_hcd_stm32_channels_ed[ed -> ux_stm32_ed_channel] =  UX_NULL;
@@ -112,8 +124,8 @@ UINT                   endpoint_type;
         if (hcd_stm32 -> ux_hcd_stm32_periodic_ed_head == ed)
         {
 
-            /* The only one in the list, just set the pointer to null.  */
-            hcd_stm32 -> ux_hcd_stm32_periodic_ed_head = UX_NULL;
+            /* The head one in the list, just set the pointer to it's next.  */
+            hcd_stm32 -> ux_hcd_stm32_periodic_ed_head = ed -> ux_stm32_ed_next_ed;
         }
         else
         {
@@ -144,6 +156,22 @@ UINT                   endpoint_type;
 
     /* Now we can safely make the ED free.  */
     ed -> ux_stm32_ed_status =  UX_HCD_STM32_ED_STATUS_FREE;
+
+#if defined (USBH_HAL_HUB_SPLIT_SUPPORTED)
+    HAL_HCD_HC_ClearHubInfo(hcd_stm32->hcd_handle, ed -> ux_stm32_ed_channel);
+#endif /* USBH_HAL_HUB_SPLIT_SUPPORTED */
+
+    /* Finish current transfer.  */
+    _ux_hcd_stm32_request_trans_finish(hcd_stm32, ed);
+
+#if defined(UX_HOST_STANDALONE)
+
+    /* If setup memory is not freed correct, free it.  */
+    if (ed -> ux_stm32_ed_setup)
+        _ux_utility_memory_free(ed -> ux_stm32_ed_setup);
+
+    UX_RESTORE
+#endif /* defined(UX_HOST_STANDALONE) */
 
     /* Return successful completion.  */
     return(UX_SUCCESS);

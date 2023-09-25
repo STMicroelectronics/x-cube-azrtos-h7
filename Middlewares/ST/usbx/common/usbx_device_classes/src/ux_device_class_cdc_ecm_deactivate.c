@@ -34,7 +34,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_device_class_cdc_ecm_deactivate                 PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -55,7 +55,7 @@
 /*                                                                        */ 
 /*    _ux_device_stack_transfer_all_request_abort                         */
 /*                                          Abort all transfers           */
-/*    _ux_utility_event_flags_set           Set event flags               */
+/*    _ux_device_event_flags_set            Set event flags               */
 /*    _ux_network_driver_deactivate         Deactivate NetX USB interface */
 /*                                                                        */ 
 /*  CALLED BY                                                             */ 
@@ -72,30 +72,37 @@
 /*                                            TX symbols instead of using */
 /*                                            them directly,              */
 /*                                            resulting in version 6.1    */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed standalone compile,   */
+/*                                            resulting in version 6.1.11 */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed parameter/variable    */
+/*                                            names conflict C++ keyword, */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_device_class_cdc_ecm_deactivate(UX_SLAVE_CLASS_COMMAND *command)
 {
                                           
 UX_SLAVE_CLASS_CDC_ECM      *cdc_ecm;
-UX_SLAVE_INTERFACE          *interface;            
-UX_SLAVE_CLASS              *class;
+UX_SLAVE_INTERFACE          *interface_ptr;            
+UX_SLAVE_CLASS              *class_ptr;
 
     /* Get the class container.  */
-    class =  command -> ux_slave_class_command_class_ptr;
+    class_ptr =  command -> ux_slave_class_command_class_ptr;
 
     /* Get the class instance in the container.  */
-    cdc_ecm = (UX_SLAVE_CLASS_CDC_ECM *) class -> ux_slave_class_instance;
+    cdc_ecm = (UX_SLAVE_CLASS_CDC_ECM *) class_ptr -> ux_slave_class_instance;
 
     /* Get the interface that owns this instance.  Normally the interface can be derived
        from the class instance but since CDC_ECM has 2 interfaces and we only store the Control
        interface in the class container, we used the class_command pointer to retrieve the
        correct interface which issued the deactivation. */
-    interface =  (UX_SLAVE_INTERFACE  *) command -> ux_slave_class_command_interface;
+    interface_ptr =  (UX_SLAVE_INTERFACE  *) command -> ux_slave_class_command_interface;
     
     /* Check if this is the Control or Data interface.  We only need to dismount the link and abort the
        transfer once for the 2 classes.  */
-    if (interface -> ux_slave_interface_descriptor.bInterfaceClass == UX_DEVICE_CLASS_CDC_ECM_CLASS_COMMUNICATION_CONTROL)
+    if (interface_ptr -> ux_slave_interface_descriptor.bInterfaceClass == UX_DEVICE_CLASS_CDC_ECM_CLASS_COMMUNICATION_CONTROL)
     {
 
         /* Is the link state up?  */
@@ -120,7 +127,7 @@ UX_SLAVE_CLASS              *class;
                 _ux_device_stack_transfer_all_request_abort(cdc_ecm -> ux_slave_class_cdc_ecm_interrupt_endpoint, UX_TRANSFER_BUS_RESET);
 
             /* Wake up the bulk in thread so it will release the NetX resources used and suspend.  */
-            _ux_utility_event_flags_set(&cdc_ecm -> ux_slave_class_cdc_ecm_event_flags_group, UX_DEVICE_CLASS_CDC_ECM_NEW_DEVICE_STATE_CHANGE_EVENT, UX_OR);                
+            _ux_device_event_flags_set(&cdc_ecm -> ux_slave_class_cdc_ecm_event_flags_group, UX_DEVICE_CLASS_CDC_ECM_NEW_DEVICE_STATE_CHANGE_EVENT, UX_OR);                
 
             /* If there is a deactivate function call it.  */
             if (cdc_ecm -> ux_slave_class_cdc_ecm_parameter.ux_slave_class_cdc_ecm_instance_deactivate != UX_NULL)

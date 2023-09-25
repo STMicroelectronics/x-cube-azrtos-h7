@@ -34,7 +34,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_host_stack_device_configuration_deactivate      PORTABLE C      */
-/*                                                           6.1.10       */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -74,6 +74,13 @@
 /*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            added standalone support,   */
 /*                                            resulting in version 6.1.10 */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            internal clean up,          */
+/*                                            resulting in version 6.1.11 */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed parameter/variable    */
+/*                                            names conflict C++ keyword, */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_host_stack_device_configuration_deactivate(UX_DEVICE *device)
@@ -84,7 +91,7 @@ UX_INTERRUPT_SAVE_AREA
 #endif
 UX_HOST_CLASS_COMMAND       command;
 UX_CONFIGURATION            *configuration;
-UX_INTERFACE                *interface;
+UX_INTERFACE                *interface_ptr;
 UINT                        status;
 
 
@@ -101,11 +108,8 @@ UINT                        status;
         return(UX_DEVICE_HANDLE_UNKNOWN);
     }
 
-    /* Get the configuration.  */
-    configuration = device -> ux_device_current_configuration;
-
     /* If trace is enabled, insert this event into the trace buffer.  */
-    UX_TRACE_IN_LINE_INSERT(UX_TRACE_HOST_STACK_DEVICE_CONFIGURATION_DEACTIVATE, device, configuration, 0, 0, UX_TRACE_HOST_STACK_EVENTS, 0, 0)
+    UX_TRACE_IN_LINE_INSERT(UX_TRACE_HOST_STACK_DEVICE_CONFIGURATION_DEACTIVATE, device, device -> ux_device_current_configuration, 0, 0, UX_TRACE_HOST_STACK_EVENTS, 0, 0)
 
 #if defined(UX_HOST_STANDALONE)
 
@@ -132,7 +136,7 @@ UINT                        status;
         _ux_system_error_handler(UX_SYSTEM_LEVEL_THREAD, UX_SYSTEM_CONTEXT_ENUMERATOR, UX_SEMAPHORE_ERROR);
 
         /* If trace is enabled, insert this event into the trace buffer.  */
-        UX_TRACE_IN_LINE_INSERT(UX_TRACE_ERROR, UX_SEMAPHORE_ERROR, configuration, 0, 0, UX_TRACE_ERRORS, 0, 0)
+        UX_TRACE_IN_LINE_INSERT(UX_TRACE_ERROR, UX_SEMAPHORE_ERROR, device -> ux_device_current_configuration, 0, 0, UX_TRACE_ERRORS, 0, 0)
 
         return(UX_SEMAPHORE_ERROR);
     }
@@ -158,25 +162,25 @@ UINT                        status;
     /* If device configured configuration must be activated.  */
 
     /* We have the correct configuration, search the interface(s).  */
-    interface =  configuration -> ux_configuration_first_interface;
+    interface_ptr =  configuration -> ux_configuration_first_interface;
 
     /* Loop to perform the search.  */
-    while (interface != UX_NULL)
+    while (interface_ptr != UX_NULL)
     {
 
         /* Check if an instance of the interface is present.  */
-        if (interface -> ux_interface_class_instance != UX_NULL)
+        if (interface_ptr -> ux_interface_class_instance != UX_NULL)
         {
 
             /* We need to stop the class instance for the device.  */
-            command.ux_host_class_command_instance =  interface -> ux_interface_class_instance;
+            command.ux_host_class_command_instance =  interface_ptr -> ux_interface_class_instance;
 
             /* Call the class.  */
-            interface -> ux_interface_class -> ux_host_class_entry_function(&command);
+            interface_ptr -> ux_interface_class -> ux_host_class_entry_function(&command);
         }
 
         /* Move to next interface.  */
-        interface =  interface -> ux_interface_next_interface;
+        interface_ptr =  interface_ptr -> ux_interface_next_interface;
     }
 
     /* The device can now be un-configured.  */

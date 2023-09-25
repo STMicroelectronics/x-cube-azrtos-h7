@@ -87,6 +87,13 @@ UCHAR                                   *baInterfaceNr;
                 /* Check if this the VC interface is expected.  */
                 bInCollection = packed_entity_descriptor[11];
                 baInterfaceNr = packed_entity_descriptor + 12;
+
+                /* Validation:
+                 * baInterfaceNr not exceeding current descriptor.
+                 */
+                if (packed_entity_descriptor[0] + packed_entity_descriptor < baInterfaceNr + bInCollection)
+                    return(1);
+
                 while(bInCollection)
                 {
 
@@ -97,6 +104,10 @@ UCHAR                                   *baInterfaceNr;
                         parser -> parsed_flags |= UX_HOST_CLASS_VIDEO_DESCRIPTORS_PARSER_VC_HEADER;
                         return(0);
                     }
+
+                    /* Next interface number in descriptor.  */
+                    baInterfaceNr ++;
+                    bInCollection --;
                 }
             }
 
@@ -159,7 +170,7 @@ UCHAR                                   *baInterfaceNr;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_host_class_video_activate                       PORTABLE C      */ 
-/*                                                           6.1.10       */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -209,12 +220,23 @@ UCHAR                                   *baInterfaceNr;
 /*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            refined macros names,       */
 /*                                            resulting in version 6.1.10 */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            internal clean up,          */
+/*                                            fixed standalone compile,   */
+/*                                            resulting in version 6.1.11 */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed parameter/variable    */
+/*                                            names conflict C++ keyword, */
+/*                                            resulting in version 6.1.12 */
+/*  10-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            improved VC header check,   */
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_host_class_video_activate(UX_HOST_CLASS_COMMAND *command)
 {
 
-UX_INTERFACE                            *interface;
+UX_INTERFACE                            *interface_ptr;
 UX_HOST_CLASS_VIDEO                     *video;
 UINT                                    status;
 UX_HOST_CLASS_VIDEO_DESCRIPTORS_PARSER  parser;
@@ -222,12 +244,12 @@ UX_HOST_CLASS_VIDEO_DESCRIPTORS_PARSER  parser;
 
     /* The video is always activated by the interface descriptor and not the
        device descriptor.  */
-    interface =  (UX_INTERFACE *) command -> ux_host_class_command_container;
+    interface_ptr =  (UX_INTERFACE *) command -> ux_host_class_command_container;
 
     /* Check the subclass of the new device. If it is a Video Control Interface,
        we don't need to create an instance of this function. When we get the streaming interface,
        we will search the video control interface for the device.  */
-    if (interface -> ux_interface_descriptor.bInterfaceSubClass == UX_HOST_CLASS_VIDEO_SUBCLASS_CONTROL)
+    if (interface_ptr -> ux_interface_descriptor.bInterfaceSubClass == UX_HOST_CLASS_VIDEO_SUBCLASS_CONTROL)
         return(UX_SUCCESS);
     
     /* Obtain memory for this class instance.  */
@@ -239,16 +261,16 @@ UX_HOST_CLASS_VIDEO_DESCRIPTORS_PARSER  parser;
     video -> ux_host_class_video_class =  command -> ux_host_class_command_class_ptr;
 
     /* Store the interface container into the video class instance.  */
-    video -> ux_host_class_video_streaming_interface =  interface;
+    video -> ux_host_class_video_streaming_interface =  interface_ptr;
 
     /* Store the device container into the video class instance.  */
-    video -> ux_host_class_video_device =  interface -> ux_interface_configuration -> ux_configuration_device;
+    video -> ux_host_class_video_device =  interface_ptr -> ux_interface_configuration -> ux_configuration_device;
 
     /* This instance of the device must also be stored in the interface container.  */
-    interface -> ux_interface_class_instance =  (VOID *) video;
+    interface_ptr -> ux_interface_class_instance =  (VOID *) video;
 
     /* Create this class instance.  */
-    status =  _ux_host_stack_class_instance_create(video -> ux_host_class_video_class, (VOID *) video);
+    _ux_host_stack_class_instance_create(video -> ux_host_class_video_class, (VOID *) video);
         
     /* Configure the video.  */
     status =  _ux_host_class_video_configure(video);     
@@ -321,14 +343,14 @@ UX_HOST_CLASS_VIDEO_DESCRIPTORS_PARSER  parser;
        no need to free.  */
 
     /* Destroy the semaphore.  */
-    if (video -> ux_host_class_video_semaphore.tx_semaphore_id != 0)
+    if (_ux_host_semaphore_created(&video -> ux_host_class_video_semaphore))
         _ux_host_semaphore_delete(&video -> ux_host_class_video_semaphore);
 
     /* Destroy the class instance.  */
     _ux_host_stack_class_instance_destroy(video -> ux_host_class_video_class, (VOID *) video);
 
     /* This instance of the device must also be cleared in the interface container.  */
-    interface -> ux_interface_class_instance = UX_NULL;
+    interface_ptr -> ux_interface_class_instance = UX_NULL;
 
     /* Free instance memory.  */
     _ux_utility_memory_free(video);

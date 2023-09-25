@@ -35,7 +35,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_host_class_cdc_ecm_mac_address_get              PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -71,6 +71,12 @@
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            checked MAC string length,  */
+/*                                            resulting in version 6.1.12 */
+/*  10-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            checked descriptor length,  */
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_host_class_cdc_ecm_mac_address_get(UX_HOST_CLASS_CDC_ECM *cdc_ecm)
@@ -165,6 +171,20 @@ UCHAR                                       element_hexa_lower;
                 descriptor_length  =  *descriptor;
                 descriptor_type    =  *(descriptor + 1);
                 descriptor_subtype =  *(descriptor + 2);
+
+                /* Descriptor length validation.  */
+                if (descriptor_length < 3 || descriptor_length > total_configuration_length)
+                {
+
+                    /* Error trap.  */
+                    _ux_system_error_handler(UX_SYSTEM_LEVEL_THREAD, UX_SYSTEM_CONTEXT_CLASS, UX_DESCRIPTOR_CORRUPTED);
+
+                    /* Free descriptor memory.  */
+                    _ux_utility_memory_free(start_descriptor);
+
+                    /* Return error.  */
+                    return(UX_DESCRIPTOR_CORRUPTED);
+                }
     
                 /* Check the type for an interface descriptor and the subtype for a ECM functional descriptor.  */
                 if ((descriptor_type == UX_HOST_CLASS_CDC_ECM_CS_INTERFACE) && (descriptor_subtype == UX_HOST_CLASS_CDC_ECM_FUNCTIONAL_DESCRIPTOR))
@@ -205,12 +225,13 @@ UCHAR                                       element_hexa_lower;
                     if (status == UX_SUCCESS)
                     {
 
-                        /* Translate from Unicode to string. Length is in the first byte. We must take away 2 from it
-                           and divide by 2 to find the right asciiz length. */
+                        /* Translate from Unicode to string. Length is in the first byte followed type.
+                           We must take away 2 from it and divide by 2 to find the right ascii length. */
                         string_length = (ULONG) *mac_address_string;
 
-                        /* Check the length of the mac address Unicode string.  */
-                        if (string_length > 26)
+                        /* Check the length of the MAC address Unicode string
+                           (length or 1B + type of 1B + string or 12*2B).  */
+                        if (string_length != 26)
                         {
 
                             /* Error trap. */
@@ -224,9 +245,9 @@ UCHAR                                       element_hexa_lower;
                         
                             /* No error in length, decode the string.  */
                             string_length -=2;
-                            string_length = string_length/2;
+                            string_length = string_length / 2;
     
-                            /* Now we have a string of 12 hexa ASCII digits to be translated into 6 hexa digit bytes. 
+                            /* Now we have a string of 12 hex ASCII digits to be translated into 6 hex digit bytes. 
                                and copy into the node ID.  */
                             for (string_index = 0; string_index < string_length; string_index++)
                             {
@@ -234,7 +255,7 @@ UCHAR                                       element_hexa_lower;
                                 /* Get the upper element from the ASCII string.  */
                                 element_content = *(mac_address_string + (string_index * 2) + 2);
                                 
-                                /* We have a valid element content.  Turn it into a hexa decimal value.  Note
+                                /* We have a valid element content.  Turn it into a hex decimal value.  Note
                                    that only hex digits are allowed.  */
                                 if (element_content <= '9')
                                     
@@ -285,7 +306,7 @@ UCHAR                                       element_hexa_lower;
                                 *(cdc_ecm -> ux_host_class_cdc_ecm_node_id + string_index / 2) = (UCHAR)(element_hexa_upper << 4 | element_hexa_lower);
     
                                 /* Skip the lower nibble. */
-                                string_index++;
+                                string_index ++;
                                 
                             }
                             
@@ -332,17 +353,3 @@ UCHAR                                       element_hexa_lower;
     return(UX_DESCRIPTOR_CORRUPTED);
     
 }    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    

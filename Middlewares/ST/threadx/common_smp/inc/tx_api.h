@@ -26,7 +26,7 @@
 /*  APPLICATION INTERFACE DEFINITION                       RELEASE        */
 /*                                                                        */
 /*    tx_api.h                                            PORTABLE SMP    */
-/*                                                           6.1.10       */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -71,6 +71,17 @@
 /*                                            add unused parameter macro, */
 /*                                            update patch number,        */
 /*                                            resulting in version 6.1.10 */
+/*  04-25-2022      Wenhui Xie              Modified comment(s),          */
+/*                                            optimized the definition of */
+/*                                            TX_TIMER_TICKS_PER_SECOND,  */
+/*                                            resulting in version 6.1.11 */
+/*  07-29-2022      Scott Larson            Modified comment(s),          */
+/*                                            update patch number,        */
+/*                                            resulting in version 6.1.12 */
+/*  10-31-2022      Scott Larson            Modified comment(s),          */
+/*                                            add extension macros,       */
+/*                                            update version numbers,     */
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -122,8 +133,8 @@ extern   "C" {
 
 #define AZURE_RTOS_THREADX
 #define THREADX_MAJOR_VERSION           6
-#define THREADX_MINOR_VERSION           1
-#define THREADX_PATCH_VERSION           10
+#define THREADX_MINOR_VERSION           2
+#define THREADX_PATCH_VERSION           0
 
 /* Define the following symbol for backward compatibility */
 #define EL_PRODUCT_THREADX
@@ -221,12 +232,82 @@ extern   "C" {
 #define TX_FEATURE_NOT_ENABLED          ((UINT) 0xFF)
 
 
+#ifdef TX_64_BIT
+
+#ifndef TX_THREAD_EXTENSION_PTR_SET
+#define TX_THREAD_EXTENSION_PTR_SET(a, b)                   { \
+                                                                TX_THREAD *thread_ptr; \
+                                                                thread_ptr = (TX_THREAD *) (a); \
+                                                                (thread_ptr -> tx_thread_extension_ptr) = (VOID *)(b); \
+                                                            }
+#endif /* TX_THREAD_EXTENSION_PTR_SET  */
+
+#ifndef TX_THREAD_EXTENSION_PTR_GET
+#define TX_THREAD_EXTENSION_PTR_GET(a, b, c)                { \
+                                                                TX_PARAMETER_NOT_USED(c); \
+                                                                TX_THREAD *thread_ptr; \
+                                                                thread_ptr = tx_thread_identify(); \
+                                                                while(1)\
+                                                                { \
+                                                                    if (thread_ptr -> tx_thread_extension_ptr) \
+                                                                    { \
+                                                                        (a) = (b *)(thread_ptr -> tx_thread_extension_ptr); \
+                                                                        break; \
+                                                                    } \
+                                                                    tx_thread_sleep(1); \
+                                                                } \
+                                                            }
+#endif /* TX_THREAD_EXTENSION_PTR_GET  */
+
+#ifndef TX_TIMER_EXTENSION_PTR_SET
+#define TX_TIMER_EXTENSION_PTR_SET(a, b)                    { \
+                                                                TX_TIMER *timer_ptr; \
+                                                                timer_ptr = (TX_TIMER *) (a);   \
+                                                                (timer_ptr -> tx_timer_internal.tx_timer_internal_extension_ptr) = (VOID *)(b); \
+                                                            }
+#endif /* TX_TIMER_EXTENSION_PTR_SET  */
+
+#ifndef TX_TIMER_EXTENSION_PTR_GET
+#define TX_TIMER_EXTENSION_PTR_GET(a, b, c)                 { \
+                                                                TX_PARAMETER_NOT_USED(c); \
+                                                                if (!_tx_timer_expired_timer_ptr -> tx_timer_internal_extension_ptr) \
+                                                                    return; \
+                                                                (a) = (b *)(_tx_timer_expired_timer_ptr -> tx_timer_internal_extension_ptr); \
+                                                            }
+#endif /* TX_TIMER_EXTENSION_PTR_GET  */
+
+#else   /* not 64 bit */
+
+#ifndef TX_THREAD_EXTENSION_PTR_SET
+#define TX_THREAD_EXTENSION_PTR_SET(a, b)
+#endif /* TX_THREAD_EXTENSION_PTR_SET  */
+
+#ifndef TX_THREAD_EXTENSION_PTR_GET
+#define TX_THREAD_EXTENSION_PTR_GET(a, b, c)                { \
+                                                                (a) = (b *)(c); \
+                                                            }
+#endif /* TX_THREAD_EXTENSION_PTR_GET  */
+
+#ifndef TX_TIMER_EXTENSION_PTR_SET
+#define TX_TIMER_EXTENSION_PTR_SET(a, b)
+#endif /* TX_TIMER_EXTENSION_PTR_SET  */
+
+#ifndef TX_TIMER_EXTENSION_PTR_GET
+#define TX_TIMER_EXTENSION_PTR_GET(a, b, c)                 { \
+                                                                (a) = (b *)(c); \
+                                                            }
+#endif /* TX_TIMER_EXTENSION_PTR_GET  */
+
+#endif  /* TX_64_BIT */
+
+
+
 /* Define the common timer tick reference for use by other middleware components. The default
    value is 10ms, but may be replaced by a port specific version in tx_port.h or by the user
    as a compilation option.  */
 
 #ifndef TX_TIMER_TICKS_PER_SECOND
-#define TX_TIMER_TICKS_PER_SECOND       ((ULONG) 100)
+#define TX_TIMER_TICKS_PER_SECOND       (100UL)
 #endif
 
 

@@ -35,7 +35,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_host_class_video_transfer_buffer_add            PORTABLE C      */
-/*                                                           6.1.10       */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -82,6 +82,12 @@
 /*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            refined macros names,       */
 /*                                            resulting in version 6.1.10 */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed standalone compile,   */
+/*                                            resulting in version 6.1.11 */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            set pending on endpoint,    */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_host_class_video_transfer_buffer_add(UX_HOST_CLASS_VIDEO *video, UCHAR* buffer)
@@ -89,6 +95,7 @@ UINT  _ux_host_class_video_transfer_buffer_add(UX_HOST_CLASS_VIDEO *video, UCHAR
 
 UINT            status;
 UX_TRANSFER     *transfer_request;
+UX_ENDPOINT     *endpoint;
 ULONG           transfer_index;
 ULONG           packet_size;
 
@@ -110,13 +117,16 @@ ULONG           packet_size;
     if (status != UX_SUCCESS)
         return(status);
 
+    /* Get endpoint.  */
+    endpoint = video -> ux_host_class_video_isochronous_endpoint;
+
     /* Ensure we have a selected interface that allows isoch transmission.  */
-    if ((video -> ux_host_class_video_isochronous_endpoint == UX_NULL) ||
-        (video -> ux_host_class_video_isochronous_endpoint -> ux_endpoint_descriptor.wMaxPacketSize == 0))
+    if ((endpoint == UX_NULL) ||
+        (endpoint -> ux_endpoint_descriptor.wMaxPacketSize == 0))
     {
 
         /* Unprotect thread reentry to this instance.  */
-        status =  _ux_host_semaphore_put(&video -> ux_host_class_video_semaphore);
+        _ux_host_semaphore_put(&video -> ux_host_class_video_semaphore);
 
         /* Error trap. */
         _ux_system_error_handler(UX_SYSTEM_LEVEL_THREAD, UX_SYSTEM_CONTEXT_CLASS, UX_HOST_CLASS_VIDEO_WRONG_INTERFACE);
@@ -133,7 +143,7 @@ ULONG           packet_size;
     {
 
         /* Unprotect thread reentry to this instance.  */
-        status =  _ux_host_semaphore_put(&video -> ux_host_class_video_semaphore);
+        _ux_host_semaphore_put(&video -> ux_host_class_video_semaphore);
 
         /* Return error status.  */
         return(UX_MEMORY_ARRAY_FULL);
@@ -143,14 +153,14 @@ ULONG           packet_size;
     video->ux_host_class_video_transfer_request_start_index = transfer_index;
 
     /* Select the direction. We do this by taking the endpoint direction.  */
-    transfer_request -> ux_transfer_request_type =  video -> ux_host_class_video_isochronous_endpoint ->
-        ux_endpoint_descriptor.bEndpointAddress & UX_REQUEST_DIRECTION;
+    transfer_request -> ux_transfer_request_type =  endpoint ->
+                ux_endpoint_descriptor.bEndpointAddress & UX_REQUEST_DIRECTION;
 
     /* Calculate packet size.  */
     packet_size = video -> ux_host_class_video_current_max_payload_size;
 
     /* Fill the transfer request with all the required fields.  */
-    transfer_request -> ux_transfer_request_endpoint =             video -> ux_host_class_video_isochronous_endpoint;
+    transfer_request -> ux_transfer_request_endpoint =             endpoint;
     transfer_request -> ux_transfer_request_data_pointer =         buffer;
     transfer_request -> ux_transfer_request_requested_length =     packet_size;
     transfer_request -> ux_transfer_request_completion_function =  _ux_host_class_video_transfer_request_callback;
@@ -158,6 +168,9 @@ ULONG           packet_size;
 
     /* Add single transfer.  */
     transfer_request -> ux_transfer_request_next_transfer_request = UX_NULL;
+
+    /* Set endpoint to pending state, for callback and abort to check.  */
+    endpoint -> ux_endpoint_transfer_request.ux_transfer_request_completion_code = UX_TRANSFER_STATUS_PENDING;
 
     /* Transfer the transfer request.  */
     status =  _ux_host_stack_transfer_request(transfer_request);
@@ -168,4 +181,3 @@ ULONG           packet_size;
     /* Return completion status.  */
     return(status);
 }
-

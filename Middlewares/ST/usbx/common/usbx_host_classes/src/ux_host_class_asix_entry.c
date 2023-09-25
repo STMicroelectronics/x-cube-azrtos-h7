@@ -30,12 +30,17 @@
 #include "ux_host_stack.h"
 
 
+#if !defined(UX_HOST_STANDALONE)
+static inline UINT _ux_host_class_asix_try_all_vid_pids(UX_HOST_CLASS_COMMAND *command);
+#endif
+
+
 /**************************************************************************/ 
 /*                                                                        */ 
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_host_class_asix_entry                           PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -71,10 +76,21 @@
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed standalone compile,   */
+/*                                            resulting in version 6.1.11 */
+/*  10-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed compile warning,      */
+/*                                            refined VID/PID check flow, */
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_host_class_asix_entry(UX_HOST_CLASS_COMMAND *command)
 {
+#if defined(UX_HOST_STANDALONE)
+    UX_PARAMETER_NOT_USED(command);
+    return(UX_FUNCTION_NOT_SUPPORTED);
+#else
 
 UINT    status;
 
@@ -90,17 +106,8 @@ UINT    status;
            this device or not.  */
         if(command -> ux_host_class_command_usage == UX_HOST_CLASS_COMMAND_USAGE_PIDVID) 
         {
-            
-            /* Try all the possible PID/VID.  */
-            if ((command -> ux_host_class_command_pid == UX_HOST_CLASS_ASIX_PRODUCT_ID) &&
-                (command -> ux_host_class_command_vid == UX_HOST_CLASS_ASIX_VENDOR_ID ))
-                return(UX_SUCCESS);                        
-
-            /* Try all the possible PID/VID.  */
-            if ((command -> ux_host_class_command_pid == UX_HOST_CLASS_ASIX_PRODUCT_FUJIEI_ID) &&
-                (command -> ux_host_class_command_vid == UX_HOST_CLASS_ASIX_VENDOR_FUJIEI_ID ))
-                return(UX_SUCCESS);                        
-
+            if (_ux_host_class_asix_try_all_vid_pids(command) == UX_SUCCESS)
+                return(UX_SUCCESS);
         }
         
         /* No match.  */
@@ -130,5 +137,25 @@ UINT    status;
 
         return(UX_FUNCTION_NOT_SUPPORTED);
     }   
+#endif
 }
+#if !defined(UX_HOST_STANDALONE)
+static const USHORT _ux_host_class_asix_vid_pid_array[] =
+{
+    UX_HOST_CLASS_ASIX_VID_PID_ARRAY
+};
 
+static inline UINT _ux_host_class_asix_try_all_vid_pids(UX_HOST_CLASS_COMMAND *command)
+{
+UINT    i, pos;
+UINT    n_ids = sizeof(_ux_host_class_asix_vid_pid_array) >> 1;
+UINT    n_id_pairs = n_ids >> 1;
+    for (i = 0, pos = 0; i < n_id_pairs; i ++, pos += 2)
+    {
+        if ((command -> ux_host_class_command_pid == _ux_host_class_asix_vid_pid_array[pos + 1]) &&
+            (command -> ux_host_class_command_vid == _ux_host_class_asix_vid_pid_array[pos    ]))
+            return(UX_SUCCESS);
+    }
+    return(UX_NO_CLASS_MATCH);
+}
+#endif

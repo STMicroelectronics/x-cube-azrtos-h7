@@ -31,8 +31,11 @@
 
 #if defined(UX_DEVICE_STANDALONE)
 
+
+#ifndef UX_DEVICE_CLASS_CDC_ACM_TRANSMISSION_DISABLE
 static inline VOID _ux_device_class_cdc_acm_transmission_read_run(UX_SLAVE_CLASS_CDC_ACM *cdc_acm);
 static inline VOID _ux_device_class_cdc_acm_transmission_write_run(UX_SLAVE_CLASS_CDC_ACM *cdc_acm);
+#endif
 
 
 /**************************************************************************/
@@ -40,7 +43,7 @@ static inline VOID _ux_device_class_cdc_acm_transmission_write_run(UX_SLAVE_CLAS
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_device_class_cdc_acm_tasks_run                  PORTABLE C      */
-/*                                                           6.1.10       */
+/*                                                           6.2.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -75,20 +78,27 @@ static inline VOID _ux_device_class_cdc_acm_transmission_write_run(UX_SLAVE_CLAS
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  01-31-2022     Chaoqiong Xiao           Initial Version 6.1.10        */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed parameter/variable    */
+/*                                            names conflict C++ keyword, */
+/*                                            supported write auto ZLP,   */
+/*                                            resulting in version 6.1.12 */
+/*  10-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed compile warnings,     */
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT _ux_device_class_cdc_acm_tasks_run(VOID *instance)
 {
 
-UX_SLAVE_DEVICE                    *device;
-UX_SLAVE_CLASS_CDC_ACM             *cdc_acm;
 UINT                                status = UX_STATE_IDLE;
 
+#ifndef UX_DEVICE_CLASS_CDC_ACM_TRANSMISSION_DISABLE
+UX_SLAVE_DEVICE                    *device;
+UX_SLAVE_CLASS_CDC_ACM             *cdc_acm;
 
     /* Get CDC ACM instance.  */
     cdc_acm = (UX_SLAVE_CLASS_CDC_ACM*) instance;
-
-#ifndef UX_DEVICE_CLASS_CDC_ACM_TRANSMISSION_DISABLE
 
     /* Check if transmission is started.  */
     if (!cdc_acm -> ux_slave_class_cdc_acm_transmission_status)
@@ -125,16 +135,16 @@ static inline VOID _ux_device_class_cdc_acm_transmission_read_run(UX_SLAVE_CLASS
 
 UINT                        status;
 UX_SLAVE_ENDPOINT           *endpoint;
-UX_SLAVE_INTERFACE          *interface;
+UX_SLAVE_INTERFACE          *interface_ptr;
 UX_SLAVE_TRANSFER           *transfer_request;
 ULONG                       max_transfer_length;
 
 
     /* Get the interface to the class.  */
-    interface =  cdc_acm -> ux_slave_class_cdc_acm_interface;
+    interface_ptr =  cdc_acm -> ux_slave_class_cdc_acm_interface;
 
     /* Locate the endpoints.  */
-    endpoint =  interface -> ux_slave_interface_first_endpoint;
+    endpoint =  interface_ptr -> ux_slave_interface_first_endpoint;
 
     /* Check the endpoint direction, if OUT we have the correct endpoint.  */
     if ((endpoint -> ux_slave_endpoint_descriptor.bEndpointAddress & UX_ENDPOINT_DIRECTION) != UX_ENDPOINT_OUT)
@@ -205,7 +215,7 @@ static inline VOID _ux_device_class_cdc_acm_transmission_write_run(UX_SLAVE_CLAS
 
 UINT                        status;
 UX_SLAVE_ENDPOINT           *endpoint;
-UX_SLAVE_INTERFACE          *interface;
+UX_SLAVE_INTERFACE          *interface_ptr;
 UX_SLAVE_TRANSFER           *transfer_request;
 UINT                        zlp = UX_FALSE;
 ULONG                       requested_length;
@@ -216,10 +226,10 @@ ULONG                       requested_length;
         return;
 
     /* We need the interface to the class.  */
-    interface =  cdc_acm -> ux_slave_class_cdc_acm_interface;
+    interface_ptr =  cdc_acm -> ux_slave_class_cdc_acm_interface;
 
     /* Locate the endpoints.  */
-    endpoint =  interface -> ux_slave_interface_first_endpoint;
+    endpoint =  interface_ptr -> ux_slave_interface_first_endpoint;
 
     /* Check the endpoint direction, if IN we have the correct endpoint.  */
     if ((endpoint -> ux_slave_endpoint_descriptor.bEndpointAddress & UX_ENDPOINT_DIRECTION) != UX_ENDPOINT_IN)
@@ -239,6 +249,7 @@ ULONG                       requested_length;
         cdc_acm -> ux_device_class_cdc_acm_write_state = UX_DEVICE_CLASS_CDC_ACM_WRITE_START;
         cdc_acm -> ux_device_class_cdc_acm_write_status = UX_TRANSFER_NO_ANSWER;
         cdc_acm -> ux_device_class_cdc_acm_write_actual_length = 0;
+        cdc_acm -> ux_device_class_cdc_acm_write_host_length = UX_SLAVE_REQUEST_DATA_MAX_LENGTH;
         if (cdc_acm -> ux_device_class_cdc_acm_write_requested_length == 0)
             zlp = UX_TRUE;
 
@@ -271,9 +282,21 @@ ULONG                       requested_length;
                                             UX_SLAVE_REQUEST_DATA_MAX_LENGTH;
 
         else
+        {
 
             /* We can proceed with the demanded length.  */
             cdc_acm -> ux_device_class_cdc_acm_write_transfer_length = requested_length;
+
+#if !defined(UX_DEVICE_CLASS_CDC_ACM_WRITE_AUTO_ZLP)
+
+            /* Assume expected length matches length to send.  */
+            cdc_acm -> ux_device_class_cdc_acm_write_host_length = requested_length;
+#else
+
+            /* Assume expected more to let stack append ZLP if needed.  */
+            cdc_acm -> ux_device_class_cdc_acm_write_host_length = UX_SLAVE_REQUEST_DATA_MAX_LENGTH + 1;
+#endif
+        }
 
         /* On a out, we copy the buffer to the caller. Not very efficient but it makes the API
            easier.  */
@@ -291,7 +314,7 @@ ULONG                       requested_length;
         /* Send the request to the device controller.  */
         status =  _ux_device_stack_transfer_run(transfer_request,
                             cdc_acm -> ux_device_class_cdc_acm_write_transfer_length,
-                            cdc_acm -> ux_device_class_cdc_acm_write_transfer_length);
+                            cdc_acm -> ux_device_class_cdc_acm_write_host_length);
 
         /* Error case.  */
         if (status < UX_STATE_NEXT)

@@ -26,7 +26,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */ 
 /*                                                                        */ 
 /*    ux_user.h                                           PORTABLE C      */ 
-/*                                                           6.1.10       */
+/*                                                           6.2.0        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -78,6 +78,17 @@
 /*                                            added option to validate    */
 /*                                            class code in enumeration,  */
 /*                                            resulting in version 6.1.10 */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added audio class features, */
+/*                                            added device CDC_ACM and    */
+/*                                            printer write auto ZLP,     */
+/*                                            resulting in version 6.1.12 */
+/*  10-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            deprecated ECM pool option, */
+/*                                            added align minimal config, */
+/*                                            added host stack instance   */
+/*                                            creation strategy control,  */
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -88,6 +99,8 @@
 /* Define various build options for the USBX port.  The application should either make changes
    here by commenting or un-commenting the conditional compilation defined OR supply the defines 
    though the compiler's equivalent of the -D option.  */
+
+/* Define USBX Generic Thread Stack Size.  */
 /* #define UX_THREAD_STACK_SIZE                                (2 * 1024) */
 
 /* Define USBX Host Enum Thread Stack Size. The default is to use UX_THREAD_STACK_SIZE */
@@ -96,7 +109,7 @@
 */
 
 
-/* Define USBX Host Thread Stack Size.  The default is to use UX_THREAD_STACK_SIZE */
+/* Define USBX Host HCD Thread Stack Size.  The default is to use UX_THREAD_STACK_SIZE */
 /*
 #define UX_HOST_HCD_THREAD_STACK_SIZE                       UX_THREAD_STACK_SIZE
 */
@@ -108,6 +121,10 @@
 
 /* Override various options with default values already assigned in ux_api.h or ux_port.h. Please 
    also refer to ux_port.h for descriptions on each of these options.  */
+
+/* Defined, this value represents minimal allocated memory alignment in number of bytes.
+   The default is UX_ALIGN_16 (0x0f) to align allocated memory to 16 bytes.  */
+/* #define UX_ALIGN_MIN UX_ALIGN_16  */
 
 /* Defined, this value represents how many ticks per seconds for a specific hardware platform. 
    The default is 1000 indicating 1 tick per millisecond.  */
@@ -310,7 +327,9 @@
 
 /* #define UX_HOST_CLASS_CDC_ECM_PACKET_POOL_INSTANCE_WAIT  10 */
 
-/* Defined, this enables CDC ECM class to use the packet pool from NetX instance.  */
+/* Defined, this enables CDC ECM class to use the packet pool from NetX instance.
+   It's deprecated, packet pool from NetX instance is always used now.
+ */
 
 /* #define UX_HOST_CLASS_CDC_ECM_USE_PACKET_POOL_FROM_NETX */
 
@@ -369,13 +388,22 @@
 
 /* #define UX_DEVICE_CLASS_CDC_ACM_TRANSMISSION_DISABLE  */
 
+/* Defined, device HID interrupt OUT transfer is supported.  */
+
+/* #define UX_DEVICE_CLASS_HID_INTERRUPT_OUT_SUPPORT  */
+
 /* defined, this macro enables device audio feedback endpoint support.  */
 
 /* #define UX_DEVICE_CLASS_AUDIO_FEEDBACK_SUPPORT  */
 
-/* Defined, device HID interrupt OUT transfer is supported.  */
+/* Defined, class _write is pending ZLP automatically (complete transfer) after buffer is sent.  */
 
-/* #define UX_DEVICE_CLASS_HID_INTERRUPT_OUT_SUPPORT  */
+/* #define UX_DEVICE_CLASS_CDC_ACM_WRITE_AUTO_ZLP  */
+/* #define UX_DEVICE_CLASS_PRINTER_WRITE_AUTO_ZLP  */
+
+/* defined, this macro enables device audio interrupt endpoint support.  */
+
+/* define UX_DEVICE_CLASS_AUDIO_INTERRUPT_SUPPORT  */
 
 /* Defined, this macro enables device bi-directional-endpoint support.  */
 
@@ -401,6 +429,24 @@
    The default is 10000 milliseconds.  */
 
 /* #define UX_HOST_CLASS_HID_REPORT_TRANSFER_TIMEOUT               10000 */
+
+/* Defined, host audio UAC 2.0 is supported.  */
+/* #define UX_HOST_CLASS_AUDIO_2_SUPPORT  */
+
+/* Defined, host audio optional feedback endpoint is supported.  */
+/* #define UX_HOST_CLASS_AUDIO_FEEDBACK_SUPPORT  */
+
+/* Defined, host audio optional interrupt endpoint is support.  */
+/* #define UX_HOST_CLASS_AUDIO_INTERRUPT_SUPPORT  */
+
+/* Defined, this value controls host configuration instance creation, include all
+   interfaces and endpoints physical resources.
+   Possible settings:
+    UX_HOST_STACK_CONFIGURATION_INSTANCE_CREATE_ALL (0) - The default, create all inside configuration.
+    UX_HOST_STACK_CONFIGURATION_INSTANCE_CREATE_OWNED (1) - Create things owned by class driver.
+   Not defined, default setting is applied.
+ */
+/* #define UX_HOST_STACK_CONFIGURATION_INSTANCE_CREATE_CONTROL UX_HOST_STACK_CONFIGURATION_INSTANCE_CREATE_OWNED */
 
 /* Defined, this value will only enable the host side of usbx.  */
 /* #define UX_HOST_SIDE_ONLY   */

@@ -36,7 +36,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_hcd_stm32_endpoint_create                       PORTABLE C      */
-/*                                                           6.0          */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -68,6 +68,12 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
+/*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.1.10 */
+/*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added ISO transfer support, */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_hcd_stm32_endpoint_create(UX_HCD_STM32 *hcd_stm32, UX_ENDPOINT *endpoint)
@@ -78,6 +84,8 @@ UX_DEVICE              *device;
 ULONG                   channel_index;
 UINT                    device_speed;
 UINT                    endpoint_type;
+ULONG                   packet_size;
+ULONG                   endpoint_bInterval;
 
 
     /* Get the pointer to the device.  */
@@ -158,27 +166,50 @@ UINT                    endpoint_type;
     /* Check for interrupt and isochronous endpoints.  */
     if ((endpoint_type == EP_TYPE_INTR) || (endpoint_type == EP_TYPE_ISOC))
     {
-
-        /* Check endpoint type and device speed.  */
-        if (endpoint_type == EP_TYPE_ISOC || device_speed == HCD_DEVICE_SPEED_HIGH)
+      if (device_speed == HCD_DEVICE_SPEED_HIGH)
+      {
+        if ((device->ux_device_current_configuration->ux_configuration_first_interface->ux_interface_descriptor.bInterfaceClass == 0x9U) &&
+            (endpoint -> ux_endpoint_descriptor.bInterval > 9U))
         {
-
-            /* Set the interval mask for high speed or isochronous endpoints.  */
-            ed -> ux_stm32_ed_interval_mask =  (UCHAR)(1 << (endpoint -> ux_endpoint_descriptor.bInterval - 1)) - 1;
+          /* Some hubs has an issue with larger binterval scheduling */
+            endpoint_bInterval = UX_HCD_STM32_MAX_HUB_BINTERVAL;
         }
         else
         {
-
-            /* Set the interval mask for other endpoints.  */
-            ed -> ux_stm32_ed_interval_mask = endpoint -> ux_endpoint_descriptor.bInterval;
-            ed -> ux_stm32_ed_interval_mask |= ed -> ux_stm32_ed_interval_mask >> 1;
-            ed -> ux_stm32_ed_interval_mask |= ed -> ux_stm32_ed_interval_mask >> 2;
-            ed -> ux_stm32_ed_interval_mask |= ed -> ux_stm32_ed_interval_mask >> 4;
-            ed -> ux_stm32_ed_interval_mask >>= 1;
+          endpoint_bInterval = endpoint -> ux_endpoint_descriptor.bInterval;
         }
 
+        /* Set the interval mask for high speed or isochronous endpoints.  */
+        ed -> ux_stm32_ed_interval_mask = (1 << (endpoint_bInterval - 1U)) - 1U;
+      }
+      else
+      {
+
+        /* Set the interval mask for other endpoints.  */
+        ed -> ux_stm32_ed_interval_mask = endpoint -> ux_endpoint_descriptor.bInterval;
+
+        if (device->ux_device_parent != NULL)
+        {
+          if (device->ux_device_parent->ux_device_speed == UX_HIGH_SPEED_DEVICE)
+          {
+            ed -> ux_stm32_ed_interval_mask <<= 3U;
+          }
+        }
+
+        ed -> ux_stm32_ed_interval_mask |= ed -> ux_stm32_ed_interval_mask >> 1;
+        ed -> ux_stm32_ed_interval_mask |= ed -> ux_stm32_ed_interval_mask >> 2;
+        ed -> ux_stm32_ed_interval_mask |= ed -> ux_stm32_ed_interval_mask >> 4;
+        ed -> ux_stm32_ed_interval_mask >>= 1;
+      }
+
         /* Select a transfer time slot with least traffic.  */
-        ed -> ux_stm32_ed_interval_position =  (UCHAR)_ux_hcd_stm32_least_traffic_list_get(hcd_stm32);
+        if (ed -> ux_stm32_ed_interval_mask == 0)
+            ed -> ux_stm32_ed_interval_position = 0;
+        else
+        ed -> ux_stm32_ed_interval_position =  _ux_hcd_stm32_least_traffic_list_get(hcd_stm32);
+
+        /* No transfer on going.  */
+        ed -> ux_stm32_ed_transfer_request = UX_NULL;
 
         /* Attach the ed to periodic ed list.  */
         ed -> ux_stm32_ed_next_ed = hcd_stm32 -> ux_hcd_stm32_periodic_ed_head;
@@ -193,6 +224,25 @@ UINT                    endpoint_type;
 
     /* Now do the opposite, attach the ED container to the physical ED.  */
     ed -> ux_stm32_ed_endpoint =  endpoint;
+    ed -> ux_stm32_ed_speed = (UCHAR)device_speed;
+    ed -> ux_stm32_ed_dir = (endpoint -> ux_endpoint_descriptor.bEndpointAddress & 0x80) ? 1 : 0;
+    ed -> ux_stm32_ed_type     =  endpoint_type;
+    packet_size                =  endpoint -> ux_endpoint_descriptor.wMaxPacketSize & UX_MAX_PACKET_SIZE_MASK;
+    if (endpoint -> ux_endpoint_descriptor.wMaxPacketSize & UX_MAX_NUMBER_OF_TRANSACTIONS_MASK)
+    {
+
+        /* Free the ED.  */
+        ed -> ux_stm32_ed_status =  UX_HCD_STM32_ED_STATUS_FREE;
+
+        /* High bandwidth are not supported for now.  */
+        return(UX_FUNCTION_NOT_SUPPORTED);
+    }
+
+    /* By default scheduler is not needed.  */
+    ed -> ux_stm32_ed_sch_mode = 0;
+
+    /* By default data pointer is not used.  */
+    ed -> ux_stm32_ed_data = UX_NULL;
 
     /* Call HAL to initialize the host channel.  */
     HAL_HCD_HC_Init(hcd_stm32->hcd_handle,
@@ -207,12 +257,20 @@ UINT                    endpoint_type;
     hcd_stm32 -> hcd_handle -> hc[ed -> ux_stm32_ed_channel].toggle_in = 0;
     hcd_stm32 -> hcd_handle -> hc[ed -> ux_stm32_ed_channel].toggle_out = 0;
 
+#if defined (USBH_HAL_HUB_SPLIT_SUPPORTED)
+    /* Check if device connected to hub  */
+    if (endpoint->ux_endpoint_device->ux_device_parent != NULL)
+    {
+      HAL_HCD_HC_SetHubInfo(hcd_stm32->hcd_handle, ed->ux_stm32_ed_channel,
+                            endpoint->ux_endpoint_device->ux_device_parent->ux_device_address,
+                            endpoint->ux_endpoint_device->ux_device_port_location);
+    }
+#endif /* USBH_HAL_HUB_SPLIT_SUPPORTED */
+
     /* We need to take into account the nature of the HCD to define the max size
        of any transfer in the transfer request.  */
-    endpoint -> ux_endpoint_transfer_request.ux_transfer_request_maximum_length =  UX_HCD_STM32_MAX_PACKET_COUNT *
-                                                                                   endpoint -> ux_endpoint_descriptor.wMaxPacketSize;
+    endpoint -> ux_endpoint_transfer_request.ux_transfer_request_maximum_length =  UX_HCD_STM32_MAX_PACKET_COUNT * packet_size;
 
     /* Return successful completion.  */
     return(UX_SUCCESS);
 }
-
