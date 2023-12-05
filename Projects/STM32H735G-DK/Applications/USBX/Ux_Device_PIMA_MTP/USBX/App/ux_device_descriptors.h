@@ -39,7 +39,7 @@ extern "C" {
 #define USBD_MAX_NUM_CONFIGURATION                     1U
 #define USBD_MAX_SUPPORTED_CLASS                       3U
 #define USBD_MAX_CLASS_ENDPOINTS                       9U
-#define USBD_MAX_CLASS_INTERFACES                      11U
+#define USBD_MAX_CLASS_INTERFACES                      12U
 
 #define USBD_PIMA_MTP_CLASS_ACTIVATED                  1U
 

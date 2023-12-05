@@ -319,7 +319,7 @@
                 </option>
                 <option>
                     <name>CCRequirePrototypes</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCDiagWarnAreErr</name>
@@ -2280,9 +2280,6 @@
         <name>Doc</name>
         <file>
             <name>$PROJ_DIR$\..\README.md</name>
-            <excluded>
-                <configuration>Nx_IAP_Client_wifi_CM4</configuration>
-            </excluded>
         </file>
     </group>
     <group>

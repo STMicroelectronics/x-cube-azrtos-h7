@@ -169,6 +169,11 @@ SECTIONS
   {
     *(.UsbxPoolSection)
   } >RAM_D1
+
+  .usbx_bss 0x24046000 (NOLOAD):
+  {
+    *(.UsbxAppSection)
+  } >RAM_D1
   /* Remove information from the standard libraries */
   /DISCARD/ :
   {

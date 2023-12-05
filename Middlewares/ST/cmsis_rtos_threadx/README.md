@@ -20,7 +20,7 @@ The list of features supported by the current implementation are as below:
 |Timer Management               |      Y     | It create and control timer and timer callback functions.  [More...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__TimerMgmt.html) |
 |Mutex Management               |      Y     | It synchronize resource access using Mutual Exclusion (Mutex). [More...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__MutexMgmt.html) |
 |Semaphores                     |      Y     | It access shared resources simultaneously from different threads. [More...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__SemaphoreMgmt.html) |
-|Memory Pool                    |      N     | It manage thread-safe fixed-size blocks of dynamic memory. [More...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html) |
+|Memory Pool                    |      Y     | It manage thread-safe fixed-size blocks of dynamic memory. [More...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html) |
 |Message Queue                  |      Y     | It exchange messages between threads in a FIFO-like operation. [More...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__Message.html) |
 
 For more information about CMSIS-RTOS v2 APIs, please refer to the ARM manual: [CMSIS-RTOS API v2](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS.html)
@@ -65,6 +65,12 @@ In fact, three internal functions are added as following:
  - The minimum size of HeapBytePool and StackBytePool is defined by the threadX macro define TX_BYTE_POOL_MIN
  - The HeapBytePool and StackBytePool are allocated from the first free memory area defined by the threadX variable _tx_initialize_unused_memory.
 
+### Static Memory Management
+
+CMSIS-RTOS v2 gives the possibilities to the user, when implementing his application, to statically allocate the memory.
+In fact, static buffers will be created and allocated based on user defines RTOS2_BYTE_POOL_HEAP_SIZE and RTOS2_BYTE_POOL_STACK_SIZE.
+The minimum size of HeapBytePool and StackBytePool is defined by the threadX macro define TX_BYTE_POOL_MIN.
+ 
 # CMSIS-RTOS v2 Modules description
 
 ### Kernel Information and Control
@@ -241,19 +247,18 @@ Freeing memory to the pool (using osMemoryPoolFree) simply rechains the block in
 
 | API Name                | Supported |       Short Description      |       Limitation             |
 |-------------------------|-----------|------------------------------|------------------------------|
-|osMemoryPoolNew          |     N     | [MemoryPool New...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#ga497ced5d72dc5cd405c4c418516220dc)            | Not yet implemented |
-|osMemoryPoolGetName      |     N     | [MemoryPool Get Name...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#gab414a1e138205a55820acfa277c8f386)       | Not yet implemented |
-|osMemoryPoolAlloc        |     N     | [MemoryPool Alloc...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#ga8ead54e99ccb8f112356c88f99d38fbe)          | Not yet implemented |
-|osMemoryPoolFree         |     N     | [MemoryPool Free...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#gabb4f4560daa6d1f8c8789082ee186d16)           | Not yet implemented |
-|osMemoryPoolGetCapacity  |     N     | [MemoryPool Get Capacity...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#gad696e94bfbe28f0b6613f9303fdf6a37)   | Not yet implemented |
-|osMemoryPoolGetBlockSize |     N     | [MemoryPool Get Block Size...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#gab2bf059b7fa7679c3cccdaeec60b6c0e) | Not yet implemented |
-|osMemoryPoolGetCount     |     N     | [MemoryPool Get Count...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#ga958a9449bff8c95ce213de98eef5739d)      | Not yet implemented |
-|osMemoryPoolGetSpace     |     N     | [MemoryPool Get Count...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#ga0394cffa9479a7994e3b03c79c1cb909)      | Not yet implemented |
-|osMemoryPoolDelete       |     N     | [MemoryPool Delete...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#ga8c39e7e5cd2b9eda907466808e59d62e)         | Not yet implemented |
+|osMemoryPoolNew          |     Y     | [MemoryPool New...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#ga497ced5d72dc5cd405c4c418516220dc)            | No limitations |
+|osMemoryPoolGetName      |     Y     | [MemoryPool Get Name...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#gab414a1e138205a55820acfa277c8f386)       | No limitations |
+|osMemoryPoolAlloc        |     Y     | [MemoryPool Alloc...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#ga8ead54e99ccb8f112356c88f99d38fbe)          | No limitations |
+|osMemoryPoolFree         |     Y     | [MemoryPool Free...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#gabb4f4560daa6d1f8c8789082ee186d16)           | No limitations |
+|osMemoryPoolGetCapacity  |     Y     | [MemoryPool Get Capacity...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#gad696e94bfbe28f0b6613f9303fdf6a37)   | No limitations |
+|osMemoryPoolGetBlockSize |     Y     | [MemoryPool Get Block Size...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#gab2bf059b7fa7679c3cccdaeec60b6c0e) | No limitations |
+|osMemoryPoolGetCount     |     Y     | [MemoryPool Get Count...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#ga958a9449bff8c95ce213de98eef5739d)      | No limitations |
+|osMemoryPoolGetSpace     |     Y     | [MemoryPool Get Count...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#ga0394cffa9479a7994e3b03c79c1cb909)      | No limitations |
+|osMemoryPoolDelete       |     Y     | [MemoryPool Delete...](https://www.keil.com/pack/doc/cmsis/RTOS2/html/group__CMSIS__RTOS__PoolMgmt.html#ga8c39e7e5cd2b9eda907466808e59d62e)         | No limitations |
 
 **Notes:**
  - The functions osMemoryPoolAlloc, osMemoryPoolFree, osMemoryPoolGetCapacity, osMemoryPoolGetBlockSize, osMemoryPoolGetCount, osMemoryPoolGetSpace can be called from Interrupt Service Routines.
- - TheMemory Pool management functions are not supported in the current CMSIS RTOS v2 implementation and will be implemented in the future version.
 
 ### Message Queue
 

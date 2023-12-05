@@ -320,7 +320,7 @@
         </option>
         <option>
           <name>CCRequirePrototypes</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>CCDiagWarnAreErr</name>
@@ -1944,6 +1944,9 @@
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_video_read_payload_get.c</name>
         </file>
         <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_video_read_task_function.c</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_video_read_thread_entry.c</name>
         </file>
         <file>
@@ -1963,6 +1966,9 @@
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_video_write_payload_get.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_video_write_task_function.c</name>
         </file>
         <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\usbx\common\usbx_device_classes\src\ux_device_class_video_write_thread_entry.c</name>

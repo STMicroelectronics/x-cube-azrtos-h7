@@ -32,7 +32,6 @@ __attribute__((section(".UsbHpcdSection")))
 #elif defined ( __GNUC__ ) /* GNU Compiler */
 __attribute__((section(".UsbHpcdSection")))
 #endif
-
 /* USER CODE END 0 */
 
 PCD_HandleTypeDef hpcd_USB_OTG_HS;

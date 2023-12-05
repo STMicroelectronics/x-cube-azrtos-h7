@@ -35,6 +35,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -94,12 +95,12 @@ VOID tx_application_define(VOID *first_unused_memory)
     if (status != TX_SUCCESS)
     {
       /* USER CODE BEGIN  App_ThreadX_Init_Error */
-         Error_Handler();
+      Error_Handler();
       /* USER CODE END  App_ThreadX_Init_Error */
     }
 
     /* USER CODE BEGIN  App_ThreadX_Init_Success */
-  
+
     /* USER CODE END  App_ThreadX_Init_Success */
 
   }

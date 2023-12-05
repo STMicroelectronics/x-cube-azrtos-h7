@@ -76,6 +76,7 @@ TX_THREAD       fx_thread_two;
 /* Define child threads completion event flags */
 TX_EVENT_FLAGS_GROUP    finish_flag;
 
+const static CHAR data[] = "This is FileX working concurrently on STM32";
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -139,8 +140,14 @@ UINT MX_FileX_Init(VOID *memory_ptr)
   }
 
   /* Create the 1st concurrent thread.  */
-  tx_thread_create(&fx_thread_one, "fx_thread_one", fx_thread_one_entry, 0, pointer, DEFAULT_STACK_SIZE, DEFAULT_THREAD_PRIO,
-                   DEFAULT_PREEMPTION_THRESHOLD, DEFAULT_TIME_SLICE, TX_DONT_START);
+  ret = tx_thread_create(&fx_thread_one, "fx_thread_one", fx_thread_one_entry, 0, pointer, DEFAULT_STACK_SIZE, DEFAULT_THREAD_PRIO,
+                         DEFAULT_PREEMPTION_THRESHOLD, DEFAULT_TIME_SLICE, TX_DONT_START);
+
+  if (ret != FX_SUCCESS)
+  {
+    /* Failed at creating thread */
+    Error_Handler();
+  }
 
   /* Allocate memory for the 2nd concurrent thread's stack */
   ret = tx_byte_allocate(byte_pool, &pointer, DEFAULT_STACK_SIZE, TX_NO_WAIT);
@@ -152,11 +159,23 @@ UINT MX_FileX_Init(VOID *memory_ptr)
   }
 
   /* Create the 2nd concurrent thread */
-  tx_thread_create(&fx_thread_two, "fx_thread_two", fx_thread_two_entry, 0, pointer, DEFAULT_STACK_SIZE, DEFAULT_THREAD_PRIO,
-                   DEFAULT_PREEMPTION_THRESHOLD, DEFAULT_TIME_SLICE, TX_DONT_START);
+  ret = tx_thread_create(&fx_thread_two, "fx_thread_two", fx_thread_two_entry, 0, pointer, DEFAULT_STACK_SIZE, DEFAULT_THREAD_PRIO,
+                         DEFAULT_PREEMPTION_THRESHOLD, DEFAULT_TIME_SLICE, TX_DONT_START);
+
+  if (ret != FX_SUCCESS)
+  {
+    /* Failed at creating thread */
+    Error_Handler();
+  }
 
   /* An event flag to indicate the status of execution */
-  tx_event_flags_create(&finish_flag, "event_flag");
+  ret = tx_event_flags_create(&finish_flag, "event_flag");
+
+  if (ret != FX_SUCCESS)
+  {
+    /* Failed at creating event flag */
+    Error_Handler();
+  }
 
   /* USER CODE END MX_FileX_Init */
 
@@ -234,13 +253,13 @@ void fx_app_thread_entry(ULONG thread_input)
 }
 
 /* USER CODE BEGIN 1 */
+
 VOID fx_thread_one_entry(ULONG thread_input)
 {
 
   UINT status;
   ULONG bytes_read;
   CHAR read_buffer[32];
-  CHAR data[] = "This is FileX working concurrently on STM32";
 
   /* Create a file called STM32_FILE1.TXT in the root directory.  */
   status =  fx_file_create(&sdio_disk, "STM32_FILE1.TXT");
@@ -278,7 +297,7 @@ VOID fx_thread_one_entry(ULONG thread_input)
   }
 
   /* Write a string to the test file.  */
-  status =  fx_file_write(&fx_file_one, data, sizeof(data));
+  status =  fx_file_write(&fx_file_one, (void*) data, sizeof(data));
 
   /* Check the file write status.  */
   if (status != FX_SUCCESS)
@@ -355,7 +374,11 @@ VOID fx_thread_one_entry(ULONG thread_input)
     App_Error_Handler(THREAD_ID_1);
   }
 
-  while (1);
+  while (1)
+  {
+    /* Do nothing wait for the other thread */
+      tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND);
+  }
 }
 
 VOID fx_thread_two_entry(ULONG thread_input)
@@ -364,7 +387,6 @@ VOID fx_thread_two_entry(ULONG thread_input)
   UINT status;
   ULONG bytes_read;
   CHAR read_buffer[32];
-  CHAR data[] = "This is FileX working concurrently on STM32";
 
   /* Create a file called STM32_FILE2.TXT in the root directory.  */
   status =  fx_file_create(&sdio_disk, "STM32_FILE2.TXT");
@@ -402,7 +424,7 @@ VOID fx_thread_two_entry(ULONG thread_input)
   }
 
   /* Write a string to the test file.  */
-  status =  fx_file_write(&fx_file_two, data, sizeof(data));
+  status =  fx_file_write(&fx_file_two, (void*) data, sizeof(data));
 
   /* Check the file write status.  */
   if (status != FX_SUCCESS)
@@ -479,7 +501,11 @@ VOID fx_thread_two_entry(ULONG thread_input)
     App_Error_Handler(THREAD_ID_1);
   }
 
-  while (1);
+  while (1)
+  {
+    /* Do nothing wait for the other thread */
+      tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND);
+  }
 }
 
 VOID App_Error_Handler(INT id)

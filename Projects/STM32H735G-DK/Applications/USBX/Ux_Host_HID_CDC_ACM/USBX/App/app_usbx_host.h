@@ -35,6 +35,7 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "ux_hcd_stm32.h"
 #include "usb_otg.h"
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

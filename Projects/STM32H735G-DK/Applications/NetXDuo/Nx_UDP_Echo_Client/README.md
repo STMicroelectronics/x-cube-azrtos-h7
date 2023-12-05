@@ -2,8 +2,7 @@
 ## <b>Nx_UDP_Echo_Client application description</b>
 
 This application provides an example of Azure RTOS NetX/NetXDuo stack usage .
-It shows how to develop a NetX udp client to communicate with a remote sever using
-the NetX UDP socket API.
+It shows how to develop a NetX udp client to communicate with a remote sever using the NetX UDP socket API.
 
 The main entry function tx_application_define() is called by ThreadX during kernel start, at this stage, all NetX resources are created.
 
@@ -17,39 +16,39 @@ The application then creates 2 threads with the same priorities:
  + **NxAppThread** (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.
  + **AppUDPThread** (priority 10, PreemtionThreashold 10) : created with the TX_DONT_START flag to be started later.
 
-The **NxAppThread** starts and perform the following actions:
+The **NxAppThread** starts and performs the following actions:
 
-  + starts the DHCP client
-  + waits for the IP address resolution
-  + resumes the **AppUDPThread**
+  + Starts the DHCP client
+  + Waits for the IP address resolution
+  + Resumes the **AppUDPThread**
 
 The **AppUDPThread**, once started:
 
-  + creates a UDP socket
-  + connects to the remote UDP server on the predefined port
-  + On connection success, the UDP client sends a MAX_PACKET_COUNT messages to the server.
-  + At each message sent, the UDP client reads the sever response and prints it on the Hyperterminal and the green led is toggled.
+  + Creates a UDP socket
+  + Connects to the remote UDP server on the predefined port
+  + On connection success, the UDP client sends MAX_PACKET_COUNT messages to the server.
+  + At each message sent, the UDP client reads the sever response and prints it on the Hyperterminal and the green LED is toggled.
 
 #### <b>Expected success behavior</b>
 
  + The board IP address is printed on the HyperTerminal
  + The response messages sent by the server are printed on the HyerTerminal
- + if the [echotool](https://github.com/PavelBansky/EchoTool/releases/tag/v1.5.0.0) utility is used the message sent by the client are displayed on the PC console.
- + a summary message similar to the following is printed on the HyperTerminal and the green LED is toggling.
+ + If the [echotool](https://github.com/PavelBansky/EchoTool/releases/tag/v1.5.0.0) utility is used the message sent by the client are displayed on the PC console.
+ + A summary message similar to the following is printed on the HyperTerminal and the green LED is toggling.
  ```
   SUCCESS : 10 / 10 packets sent
 ```
 
 #### <b>Error behaviors</b>
 
-+ the Red LED is toggling to indicate any error that have occurred.
++ the red LED is toggling to indicate any error that have occurred.
 + In case the message exchange is not completed a failure message is printed on the HyperTerminal showing the actual sent message compared to the expected ones.
 
 #### <b>Assumptions if any</b>
 
-- The Application is using the DHCP to acquire IP address, thus a DHCP server should be reachable by the board in the LAN used to test the application.
+- The application is using the DHCP to acquire IP address, thus a DHCP server should be reachable by the board in the LAN used to test the application.
 - The application is configuring the Ethernet IP with a static predefined MAC Address, make sure to change it in case multiple boards are connected on the
-same LAN to avoid any potential network traffic issues.
+  same LAN to avoid any potential network traffic issues.
 - The MAC Address is defined in the `main.c`
 
 ```
@@ -65,13 +64,15 @@ void MX_ETH_Init(void)
   /* USER CODE END ETH_Init 1 */
   heth.Instance = ETH;
   heth.Init.MACAddr[0] =   0x00;
-  heth.Init.MACAddr[1] =   0x11;
-  heth.Init.MACAddr[2] =   0x83;
-  heth.Init.MACAddr[3] =   0x45;
-  heth.Init.MACAddr[4] =   0x26;
+  heth.Init.MACAddr[1] =   0x80;
+  heth.Init.MACAddr[2] =   0xE1;
+  heth.Init.MACAddr[3] =   0x00;
+  heth.Init.MACAddr[4] =   0x30;
   heth.Init.MACAddr[5] =   0x20;
 ```
+
 #### <b>Known limitations</b>
+
 None
 
 ### <b>Notes</b>
@@ -89,14 +90,14 @@ None
 #### <b>ThreadX usage hints</b>
 
  - ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.
- - ThreadX is configured with 100 ticks/sec by default, this should be taken into account when using delays or timeouts at application. It is always possible to reconfigure it in the "tx_user.h", the "TX_TIMER_TICKS_PER_SECOND" define,but this should be reflected in "tx_initialize_low_level.S" file too.
+ - ThreadX is configured with 100 ticks/sec by default, this should be taken into account when using delays or timeouts at application. It is always possible to reconfigure it, by updating the "TX_TIMER_TICKS_PER_SECOND" define in the "tx_user.h" file. The update should be reflected in "tx_initialize_low_level.S" file too.
  - ThreadX is disabling all interrupts during kernel start-up to avoid any unexpected behavior, therefore all system related calls (HAL, BSP) should be done either at the beginning of the application or inside the thread entry functions.
  - ThreadX offers the "tx_application_define()" function, that is automatically called by the tx_kernel_enter() API.
    It is highly recommended to use it to create all applications ThreadX related resources (threads, semaphores, memory pools...)  but it should not in any way contain a system API call (HAL or BSP).
  - Using dynamic memory allocation requires to apply some changes to the linker file.
    ThreadX needs to pass a pointer to the first free memory location in RAM to the tx_application_define() function,
    using the "first_unused_memory" argument.
-   This require changes in the linker files to expose this memory location.
+   This requires changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
      place in RAM_region    { last section FREE_MEM };
@@ -151,7 +152,8 @@ None
      *(.NetXPoolSection)
      } >RAM_D1
    ```
-  this section is then used in the <code> app_azure_rtos.c</code> file to force the <code>nx_byte_pool_buffer</code> allocation.
+
+  This section is then used in the <code> app_azure_rtos.c</code> file to force the <code>nx_byte_pool_buffer</code> allocation.
 
 ```
 /* USER CODE BEGIN NX_Pool_Buffer */
@@ -179,9 +181,8 @@ RTOS, Network, ThreadX, NetXDuo, UDP, UART
 ### <b>Hardware and Software environment</b>
 
   - This application runs on STM32H735xx devices
-  - This application has been tested with STMicroelectronics STM32H735G-DK boards Revision MB1520-H735I-B02
+  - This application has been tested with STMicroelectronics STM32H735G-DK boards revision MB1520-H735I-B02
     and can be easily tailored to any other supported device and development board.
-
   - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
       - BaudRate = 115200 baud
       - Word Length = 8 Bits
@@ -195,11 +196,11 @@ In order to make the program work, you must do the following :
 
  - Open your preferred toolchain
  - Edit the file <code> NetXDuo/App/app_netxduo.h</code> and correctly define the <UDP_SERVER_ADDRESS> and <UDP_SERVER_PORT> to connect on.
- - run the [echotool](https://github.com/PavelBansky/EchoTool/releases/tag/v1.5.0.0) utility    on a windows console as following:
+ - Run the [echotool](https://github.com/PavelBansky/EchoTool/releases/tag/v1.5.0.0) utility on a windows console as following:
 
        c:\> .\echotool.exe /p udp /s <UDP_SERVER_PORT>
 
-       example : c:\> .\echotool.exe /p udp /s 6001
+       example : c:\> .\echotool.exe /p udp /s 6000
 
  - Rebuild all files and load your image into target memory
  - Run the application

@@ -24,7 +24,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    ux_user.h                                           PORTABLE C      */
-/*                                                           6.1.12       */
+/*                                                           6.2.1        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -81,6 +81,22 @@
 /*                                            added device CDC_ACM and    */
 /*                                            printer write auto ZLP,     */
 /*                                            resulting in version 6.1.12 */
+/*  10-31-2022     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            deprecated ECM pool option, */
+/*                                            added align minimal config, */
+/*                                            added host stack instance   */
+/*                                            creation strategy control,  */
+/*                                            resulting in version 6.2.0  */
+/*  03-08-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added option to disable dev */
+/*                                            alternate setting support,  */
+/*                                            added option to disable dev */
+/*                                            framework initialize scan,  */
+/*                                            added option to reference   */
+/*                                            names by pointer to chars,  */
+/*                                            added option to enable      */
+/*                                            basic USBX error checking,  */
+/*                                            resulting in version 6.2.1  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -112,6 +128,10 @@
 /* Override various options with default values already assigned in ux_api.h or ux_port.h. Please
    also refer to ux_port.h for descriptions on each of these options.  */
 
+/* Defined, this value represents minimal allocated memory alignment in number of bytes.
+   The default is UX_ALIGN_16 (0x0f) to align allocated memory to 16 bytes.  */
+/* #define UX_ALIGN_MIN                      UX_ALIGN_16 */
+
 /* Defined, this value represents how many ticks per seconds for a specific hardware platform.
    The default is 1000 indicating 1 tick per millisecond.  */
 
@@ -130,6 +150,8 @@
    particular implementation of USBX needs the hub class, the printer class, and the storage
    class, then the UX_MAX_CLASSES value can be set to 3 regardless of the number of devices
    that belong to these classes.  */
+
+/* #define UX_MAX_CLASSES    2 */
 
 /* #define UX_MAX_CLASS_DRIVER    3 */
 
@@ -368,6 +390,22 @@
 
 /* #define UX_DEVICE_BIDIRECTIONAL_ENDPOINT_SUPPORT */
 
+/* Defined, this macro disables interface alternate setting support.
+   Device stalls
+ */
+/* #define UX_DEVICE_ALTERNATE_SETTING_SUPPORT_DISABLE  */
+
+/* Defined, this macro disables device framework scan, where max number of endpoints (except EP0)
+   and max number of interfaces are calculated at runtime, as a base to allocate memory for
+   interfaces and endpoints structures and their buffers.
+   Undefined, the following two macros must be defined to initialize memory structures.
+ */
+/* #define UX_DEVICE_INITIALIZE_FRAMEWORK_SCAN_DISABLE */
+
+/* Defined, host HID interrupt OUT transfer is supported.  */
+
+/* #define UX_HOST_CLASS_HID_INTERRUPT_OUT_SUPPORT  */
+
 /* Defined, this macro enables device/host PIMA MTP support.  */
 /* #define UX_PIMA_WITH_MTP_SUPPORT */
 
@@ -396,6 +434,21 @@
 
 /* Defined, host audio optional interrupt endpoint is support.  */
 /* #define UX_HOST_CLASS_AUDIO_INTERRUPT_SUPPORT  */
+
+/* Defined, this value controls host configuration instance creation, include all
+   interfaces and endpoints physical resources.
+   Possible settings:
+    UX_HOST_STACK_CONFIGURATION_INSTANCE_CREATE_ALL (0) - The default, create all inside configuration.
+    UX_HOST_STACK_CONFIGURATION_INSTANCE_CREATE_OWNED (1) - Create things owned by class driver.
+   Not defined, default setting is applied.
+ */
+/* #define UX_HOST_STACK_CONFIGURATION_INSTANCE_CREATE_CONTROL        UX_HOST_STACK_CONFIGURATION_INSTANCE_CREATE_ALL */
+
+/* Defined, the _name in structs are referenced by pointer instead of by contents.
+   By default the _name is an array of string that saves characters, the contents are compared to confirm match.
+   If referenced by pointer the address pointer to const string is saved, the pointers are compared to confirm match.
+ */
+/* #define UX_NAME_REFERENCED_BY_POINTER  */
 
 /* Defined, this value will only enable the host side of usbx.  */
 
@@ -502,6 +555,12 @@
 /* Define USBX max TT. */
 
 /* #define UX_MAX_TT                        8 */
+
+/* Defined, this option enables the basic USBX error checking. This define is typically used
+   when the application is debugging and removed after the application is fully debugged.  */
+/*
+#define UX_ENABLE_ERROR_CHECKING
+*/
 
 /* USER CODE BEGIN 2 */
 

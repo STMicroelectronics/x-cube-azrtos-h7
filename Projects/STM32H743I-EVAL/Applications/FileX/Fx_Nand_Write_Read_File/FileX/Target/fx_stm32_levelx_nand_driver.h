@@ -95,6 +95,8 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
+/* Define the flag for format NAND flash memory */
+#define FX_NAND_FORMAT_FLASH_BEFORE_OPEN
 
 /* USER CODE END EM */
 #if !defined(LX_NAND_DEFAULT_DRIVER) && !defined (LX_NAND_CUSTOM_DRIVERS) && !defined(LX_NAND_SIMULATOR_DRIVER)

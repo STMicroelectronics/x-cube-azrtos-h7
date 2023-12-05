@@ -7,6 +7,23 @@
   ******************************************************************************
   */
 
+### V6.2.1 (22-09-2023) ###
+============================
+- iperf utility: fix regression introduced with Azure RTOS NetXDuo 6.2.1
+
+### V6.2.1 (14-07-2023) ###
+============================
+- Upgrade to Azure RTOS NetXDuo 6.2.1 with additional following patch
+   + azure_iot addons: fix to handle null URLs in the received ADU JSON
+
+### V6.2.0 (28-04-2023) ###
+============================
+- azure_iot addons: fix to handle null URLs in the received ADU JSON
+
+### V6.2.0 (03-03-2023) ###
+============================
+- azure_iot addons: Correct compatibility property name to match the values in import manifest
+
 ### V6.2.0 (23-12-2022) ###
 ============================
 - Upgrade to Azure RTOS NetXDuo 6.2.0

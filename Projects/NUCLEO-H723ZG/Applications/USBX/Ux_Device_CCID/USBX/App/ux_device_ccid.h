@@ -32,7 +32,6 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "app_usbx_device.h"
-
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -97,7 +96,7 @@ UINT USBD_CCID_set_data_rate_and_clock_frequency(ULONG slot, UX_DEVICE_CLASS_CCI
 /* USER CODE BEGIN EFP */
 VOID usbx_ccid_thread_entry(ULONG thread_input);
 VOID usbx_ccid_apdu_process(CCID_APDU_Command *, CCID_APDU_Response *);
-
+VOID usbx_ccid_apdu_read_data(CCID_APDU_Command *apdu_cmd, CCID_APDU_Response *apdu_rsp);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

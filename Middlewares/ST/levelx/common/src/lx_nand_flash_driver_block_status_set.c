@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nand_flash_driver_block_status_set              PORTABLE C      */ 
-/*                                                           6.1.7        */
+/*                                                           6.2.1       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -78,6 +78,10 @@
 /*                                            resulting in version 6.1    */
 /*  06-02-2021     Bhupendra Naphade        Modified comment(s),          */
 /*                                            resulting in version 6.1.7  */
+/*  03-08-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            removed cache support,      */
+/*                                            added new driver interface, */
+/*                                            resulting in version 6.2.1 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nand_flash_driver_block_status_set(LX_NAND_FLASH *nand_flash, ULONG block, UCHAR bad_block_flag)
@@ -86,19 +90,15 @@ UINT  _lx_nand_flash_driver_block_status_set(LX_NAND_FLASH *nand_flash, ULONG bl
 UINT    status;
 
 
-    /* Determine if the block status cache is enabled.  */
-    if (nand_flash -> lx_nand_flash_block_status_cache != LX_NULL)
-    {
-    
-        /* Save the block status value in the cache.  */
-        nand_flash -> lx_nand_flash_block_status_cache[block] =  bad_block_flag;       
-    }
-
     /* Increment the block status set count.  */
     nand_flash -> lx_nand_flash_diagnostic_block_status_sets++;
 
     /* Call driver block status set function.  */
+#ifdef LX_NAND_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+    status =  (nand_flash -> lx_nand_flash_driver_block_status_set)(nand_flash, block, bad_block_flag);
+#else
     status =  (nand_flash -> lx_nand_flash_driver_block_status_set)(block, bad_block_flag);
+#endif
 
     /* Return status.  */
     return(status);

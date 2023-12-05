@@ -86,6 +86,8 @@ static VOID App_Link_Thread_Entry(ULONG thread_input);
 
 
 static VOID time_update_callback(NX_SNTP_TIME_MESSAGE *time_update_ptr, NX_SNTP_TIME *local_time);
+static UINT dns_create(NX_DNS *dns_ptr);
+
 /* USER CODE END PFP */
 
 /**
@@ -360,7 +362,7 @@ static VOID nx_app_thread_entry (ULONG thread_input)
 * @param dns_ptr
 * @retval ret
 */
-UINT dns_create(NX_DNS *dns_ptr)
+static UINT dns_create(NX_DNS *dns_ptr)
 {
   UINT ret = NX_SUCCESS;
 

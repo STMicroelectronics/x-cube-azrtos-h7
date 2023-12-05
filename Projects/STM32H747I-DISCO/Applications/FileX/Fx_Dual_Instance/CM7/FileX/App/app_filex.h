@@ -86,8 +86,6 @@ UINT MX_FileX_Init(VOID *memory_ptr);
 #define SD_DETECT_PIN                        GPIO_PIN_8
 #define SD_DETECT_GPIO_PORT                  GPIOI
 
-#define SD_NOT_PRESENT                       -1
-#define SD_PRESENT                            0
 /* USER CODE END PD */
 
 /* USER CODE BEGIN 1 */

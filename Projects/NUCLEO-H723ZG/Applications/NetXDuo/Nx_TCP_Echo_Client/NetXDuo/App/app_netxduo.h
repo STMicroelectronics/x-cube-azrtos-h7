@@ -91,7 +91,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr);
 
 #define DEFAULT_PORT             6000
 #define TCP_SERVER_PORT          DEFAULT_PORT
-#define TCP_SERVER_ADDRESS       IP_ADDRESS(10, 157, 5, 175)
+#define TCP_SERVER_ADDRESS       IP_ADDRESS(192, 168, 1, 1)
 
 #define MAX_PACKET_COUNT         100
 #define DEFAULT_MESSAGE          "TCP Client on NUCLEO-H723ZG"

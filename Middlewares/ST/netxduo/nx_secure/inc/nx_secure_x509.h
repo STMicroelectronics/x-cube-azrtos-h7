@@ -26,7 +26,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */
 /*                                                                        */
 /*    nx_secure_x509.h                                    PORTABLE C      */
-/*                                                           6.1.12       */
+/*                                                           6.2.1        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -59,6 +59,9 @@
 /*                                            checked expiration for all  */
 /*                                            the certs in the chain,     */
 /*                                            resulting in version 6.1.12 */
+/*  03-08-2023     Yanwu Cai                Modified comment(s),          */
+/*                                            included TLS port header,   */
+/*                                            resulting in version 6.2.1  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -75,6 +78,10 @@ extern   "C" {
 #endif
 
 #include "nx_crypto.h"
+
+#ifndef NX_CRYPTO_STANDALONE_ENABLE
+#include "nx_secure_port.h"
+#endif
 
 /* Enable ECC by default. */
 #ifndef NX_SECURE_DISABLE_ECC_CIPHERSUITE

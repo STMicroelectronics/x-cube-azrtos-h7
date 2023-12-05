@@ -161,7 +161,6 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >RAM_D1
-
   /* Remove information from the standard libraries */
   /DISCARD/ :
   {

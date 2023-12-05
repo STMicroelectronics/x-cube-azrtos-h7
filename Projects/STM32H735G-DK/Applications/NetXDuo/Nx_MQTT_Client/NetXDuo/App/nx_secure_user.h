@@ -24,7 +24,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    nx_secure_user.h                                    PORTABLE C      */
-/*                                                           6.1.9        */
+/*                                                           6.2.0        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -53,6 +53,9 @@
 /*                                            initiated renegotiation for */
 /*                                            TLS server instances,       */
 /*                                            resulting in version 6.1.9  */
+/*  10-31-2022     Yanwu Cai                Modified comment(s), added    */
+/*                                            macro to custom secret size,*/
+/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -328,6 +331,18 @@
 #define NX_SECURE_TLS_PREMASTER_SIZE         48
 */
 
+/* NX_SECURE_TLS_MASTER_SIZE defines the size of master secret.
+   The default value is 48. */
+/*
+   #define NX_SECURE_TLS_MASTER_SIZE 48
+*/
+
+/* NX_SECURE_TLS_KEY_MATERIAL_SIZE defines the size of key material.
+   The default value is (2 * (NX_SECURE_TLS_MAX_HASH_SIZE + NX_SECURE_TLS_MAX_KEY_SIZE + NX_SECURE_TLS_MAX_IV_SIZE)). */
+/*
+   #define NX_SECURE_TLS_KEY_MATERIAL_SIZE (2 * (NX_SECURE_TLS_MAX_HASH_SIZE + NX_SECURE_TLS_MAX_KEY_SIZE + NX_SECURE_TLS_MAX_IV_SIZE))
+*/
+
 /* This option disables Server Name Indication (SNI) extension. */
 /*
 #define NX_SECURE_TLS_SNI_EXTENSION_DISABLED
@@ -336,6 +351,13 @@
 /* This option enables SCSV ciphersuite in ClientHello message. */
 /*
 #define NX_SECURE_TLS_USE_SCSV_CIPHPERSUITE
+*/
+
+/* NX_SECURE_CUSTOM_SECRET_GENERATION enables the user to pass pointers of customized secret generation functions to
+   TLS in the user defined nx_secure_custom_secret_generation_init function. This will allow TLS to use customized
+   secret generation functions. */
+/*
+#define NX_SECURE_CUSTOM_SECRET_GENERATION
 */
 
 /* This option disables X509 Certificate Revocation List check. */

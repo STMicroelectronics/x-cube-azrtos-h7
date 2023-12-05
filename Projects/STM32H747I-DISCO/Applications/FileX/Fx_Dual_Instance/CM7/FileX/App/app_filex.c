@@ -87,7 +87,7 @@ TX_QUEUE        tx_msg_queue;
 void fx_app_thread_entry(ULONG thread_input);
 
 /* USER CODE BEGIN PFP */
-static int32_t SD_IsDetected(uint32_t Instance);
+static UINT SD_IsDetected(uint32_t Instance);
 void Error_Handler(void);
 
 /* USER CODE END PFP */
@@ -178,7 +178,7 @@ void fx_app_thread_entry(ULONG thread_input)
   CHAR read_buffer[32];
   CHAR data[] = "This is FileX working on STM32";
 
-  if(SD_IsDetected(FX_STM32_SD_INSTANCE) == SD_PRESENT)
+  if(SD_IsDetected(FX_STM32_SD_INSTANCE) == HAL_OK)
   {
     /* SD card is already inserted, place the info into the queue */
     tx_queue_send(&tx_msg_queue, &s_msg, TX_NO_WAIT);
@@ -215,7 +215,7 @@ void fx_app_thread_entry(ULONG thread_input)
         /* for debouncing purpose we wait a bit till it settles down */
         tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND / 2);
 
-        if(SD_IsDetected(FX_STM32_SD_INSTANCE) == SD_PRESENT)
+        if(SD_IsDetected(FX_STM32_SD_INSTANCE) == HAL_OK)
         {
           /* We have a valid SD insertion event, start processing.. */
           /* Update last known status */
@@ -379,19 +379,19 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   }
 }
 
-static int32_t SD_IsDetected(uint32_t Instance)
+static UINT SD_IsDetected(uint32_t Instance)
 {
-  int32_t ret;
+  UINT ret;
 
   ret = (uint32_t)HAL_GPIO_ReadPin(SD_DETECT_GPIO_PORT, SD_DETECT_PIN);
 
   if(ret != GPIO_PIN_RESET)
   {
-    ret = (int32_t)SD_NOT_PRESENT;
+    ret = (UINT)HAL_ERROR;
   }
   else
   {
-    ret = (int32_t)SD_PRESENT;
+    ret = (UINT)HAL_OK;
   }
 
   return ret;

@@ -163,7 +163,7 @@ void fx_app_thread_entry(ULONG thread_input)
   if (sd_status != FX_SUCCESS)
   {
     /* USER CODE BEGIN SD open error */
-    while(1);
+    Error_Handler();
     /* USER CODE END SD open error */
   }
 

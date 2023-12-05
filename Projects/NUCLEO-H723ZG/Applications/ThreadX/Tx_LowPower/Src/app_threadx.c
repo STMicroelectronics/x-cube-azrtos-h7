@@ -174,17 +174,11 @@ void App_ThreadX_LowPower_Exit(void)
   */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  ULONG currentValue = 0;
   if (GPIO_Pin == GPIO_PIN_13)
   {
-    /* Add additional checks to avoid multiple semaphore puts by successively
-    clicking on the user button */
-    tx_semaphore_info_get(&tx_app_semaphore, NULL, &currentValue, NULL, NULL, NULL);
-    if (currentValue == 0)
-    {
-      /* Put the semaphore to release the MainThread */
-      tx_semaphore_put(&tx_app_semaphore);
-    }
+      /* Put the semaphore to release the MainThread and specify ceiling to 1 to avoid 
+      multiple semaphore puts by successively clicking on the user button */
+      tx_semaphore_ceiling_put(&tx_app_semaphore,1); 
   }
 }
 /**

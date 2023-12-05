@@ -87,7 +87,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr);
 
 #define DEFAULT_PORT                          6000
 #define UDP_SERVER_PORT                       DEFAULT_PORT
-#define UDP_SERVER_ADDRESS                    IP_ADDRESS(10, 157, 21, 8)
+#define UDP_SERVER_ADDRESS                    IP_ADDRESS(10, 157, 11, 178)
 
 #define MAX_PACKET_COUNT                      100
 #define DEFAULT_MESSAGE                       "NetXDuo On STM32H735"

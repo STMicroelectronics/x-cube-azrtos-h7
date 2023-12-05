@@ -188,6 +188,7 @@ ULONG                   endpoint_bInterval;
         /* Set the interval mask for other endpoints.  */
         ed -> ux_stm32_ed_interval_mask = endpoint -> ux_endpoint_descriptor.bInterval;
 
+#if UX_MAX_DEVICES > 1
         if (device->ux_device_parent != NULL)
         {
           if (device->ux_device_parent->ux_device_speed == UX_HIGH_SPEED_DEVICE)
@@ -195,6 +196,7 @@ ULONG                   endpoint_bInterval;
             ed -> ux_stm32_ed_interval_mask <<= 3U;
           }
         }
+#endif
 
         ed -> ux_stm32_ed_interval_mask |= ed -> ux_stm32_ed_interval_mask >> 1;
         ed -> ux_stm32_ed_interval_mask |= ed -> ux_stm32_ed_interval_mask >> 2;

@@ -24,7 +24,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    lx_user.h                                           PORTABLE C      */
-/*                                                           6.1.7        */
+/*                                                           6.2.1        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -46,6 +46,9 @@
 /*  06-02-2021     Bhupendra Naphade        Modified comment(s), and      */
 /*                                            added standalone support,   */
 /*                                            resulting in version 6.1.7  */
+/*  03-08-2023     Xiuwen Cai               Modified comment(s), and      */
+/*                                            added new NAND options,     */
+/*                                            resulting in version 6.2.1 */
 /*                                                                        */
 /**************************************************************************/
 
@@ -59,6 +62,12 @@
 /* Defined, this option bypasses the NOR flash driver read routine in favor or reading
    the NOR memory directly, resulting in a significant performance increase.
 */
+
+/* By default this value is 4, which represents a maximum of 4 blocks that
+   can be allocated for metadata.
+*/
+
+/* #define LX_NAND_FLASH_MAX_METADATA_BLOCKS         4 */
 
 /* By default this value is 128 and defines the logical sector mapping cache size.
    Large values improve performance, but cost memory. The minimum size is 8 and

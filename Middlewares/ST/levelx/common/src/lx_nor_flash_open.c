@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nor_flash_open                                  PORTABLE C      */ 
-/*                                                           6.1.7        */
+/*                                                           6.2.1       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -92,6 +92,9 @@
 /*  06-02-2021     Bhupendra Naphade        Modified comment(s), and      */
 /*                                            updated product constants   */
 /*                                            resulting in version 6.1.7  */
+/*  03-08-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            added new driver interface, */
+/*                                            resulting in version 6.2.1 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nor_flash_open(LX_NOR_FLASH  *nor_flash, CHAR *name, UINT (*nor_driver_initialize)(LX_NOR_FLASH *))
@@ -393,7 +396,11 @@ LX_INTERRUPT_SAVE_AREA
                 nor_flash -> lx_nor_flash_diagnostic_erased_block++;
 
                 /* Check to see if the block is erased. */
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+                status =  (nor_flash -> lx_nor_flash_driver_block_erased_verify)(nor_flash, l);
+#else
                 status =  (nor_flash -> lx_nor_flash_driver_block_erased_verify)(l);
+#endif
 
                 /* Is the block completely erased?  */
                 if (status != LX_SUCCESS)

@@ -30,6 +30,20 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
+/* Define the flag for format and erase NAND flash memory */
+/* #define LX_DRIVER_ERASES_FLASH_AFTER_INIT */
+
+/* Define constants for the NAND flash custom. */
+#error "[This error was thrown on purpose] : define the flags below related to the NAND Flash memory used"
+
+#define TOTAL_BLOCKS                        0             /* Number of total blocks */
+#define BYTES_PER_PHYSICAL_PAGE             0             /* Number of bytes per page */
+#define SPARE_BYTES_PER_PAGE                0             /* Number of spare bytes per page */
+
+#define SPARE_DATA1_OFFSET                  0             /* Offset of spare data 1 */
+#define SPARE_DATA1_LENGTH                  0             /* length of spare data 1 */
+#define SPARE_DATA2_OFFSET                  0             /* Offset of spare data 2 */
+#define SPARE_DATA2_LENGTH                  0             /* length of spare data 2 */
 
 /* USER CODE END EC */
 

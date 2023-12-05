@@ -40,10 +40,10 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nand_flash_sector_write                         PORTABLE C      */ 
-/*                                                           6.1.7        */
+/*                                                           6.2.1       */
 /*  AUTHOR                                                                */
 /*                                                                        */
-/*    William E. Lamie, Microsoft Corporation                             */
+/*    Xiuwen Cai, Microsoft Corporation                                   */
 /*                                                                        */
 /*  DESCRIPTION                                                           */ 
 /*                                                                        */ 
@@ -63,18 +63,19 @@
 /*                                                                        */ 
 /*  CALLS                                                                 */ 
 /*                                                                        */ 
-/*    _lx_nand_flash_driver_read            Driver flash sector read      */ 
-/*    _lx_nand_flash_driver_write           Driver flash sector write     */ 
-/*    _lx_nand_flash_driver_extra_bytes_get Get extra bytes from spare    */ 
-/*    _lx_nand_flash_driver_extra_bytes_set Set extra bytes in spare      */ 
-/*    _lx_nand_flash_block_full_update      Update page 0 with list of    */ 
-/*                                            mapped pages                */ 
-/*    _lx_nand_flash_block_obsoleted_check  Check for block obsoleted     */ 
-/*    _lx_nand_flash_block_reclaim          Reclaim one flash block       */ 
-/*    _lx_nand_flash_logical_sector_find    Find logical sector           */ 
-/*    _lx_nand_flash_physical_page_allocate Allocate new page             */ 
-/*    _lx_nand_flash_sector_mapping_cache_invalidate                      */ 
-/*                                          Invalidate cache entry        */ 
+/*    _lx_nand_flash_block_find             Find the mapped block         */ 
+/*    _lx_nand_flash_block_allocate         Allocate block                */ 
+/*    _lx_nand_flash_mapped_block_list_remove                             */
+/*                                          Remove mapped block           */ 
+/*    _lx_nand_flash_data_page_copy         Copy data pages               */ 
+/*    _lx_nand_flash_free_block_list_add    Add free block to list        */
+/*    _lx_nand_flash_block_mapping_set      Set block mapping             */ 
+/*    lx_nand_flash_driver_pages_write      Write pages                   */ 
+/*    _lx_nand_flash_block_status_set       Set block status              */ 
+/*    _lx_nand_flash_driver_block_erase     Erase block                   */ 
+/*    _lx_nand_flash_erase_count_set        Set erase count               */
+/*    _lx_nand_flash_block_data_move        Move block data               */
+/*    _lx_nand_flash_mapped_block_list_add  Add mapped block to list      */
 /*    _lx_nand_flash_system_error           Internal system error handler */ 
 /*    tx_mutex_get                          Get thread protection         */ 
 /*    tx_mutex_put                          Release thread protection     */ 
@@ -87,30 +88,21 @@
 /*                                                                        */ 
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  05-19-2020     William E. Lamie         Initial Version 6.0           */
-/*  09-30-2020     William E. Lamie         Modified comment(s),          */
-/*                                            resulting in version 6.1    */
-/*  06-02-2021     Bhupendra Naphade        Modified comment(s),          */
-/*                                            resulting in version 6.1.7  */
+/*  03-08-2023     Xiuwen Cai               Initial Version 6.2.1        */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nand_flash_sector_write(LX_NAND_FLASH *nand_flash, ULONG logical_sector, VOID *buffer)
 {
 
-LX_NAND_PAGE_EXTRA_INFO             old_extra_info;
-LX_NAND_PAGE_EXTRA_INFO             new_extra_info;
-ULONG                               old_block;
-ULONG                               old_page;
-ULONG                               new_block;
-ULONG                               new_page;
-ULONG                               new_erase_count;
-ULONG                               i;
-#ifndef LX_NAND_FLASH_DIRECT_MAPPING_CACHE
-LX_NAND_SECTOR_MAPPING_CACHE_ENTRY  *sector_mapping_cache_entry_ptr;
-#endif
 UINT                                status;
-ULONG                               *block_word_ptr;
-
+ULONG                               block;
+ULONG                               new_block;
+ULONG                               page;
+USHORT                              block_status = 0;
+USHORT                              new_block_status = LX_NAND_BLOCK_STATUS_ALLOCATED;
+UCHAR                               *spare_buffer_ptr;
+UINT                                update_mapping = LX_FALSE;
+UINT                                copy_block = LX_FALSE;
 
 #ifdef LX_THREAD_SAFE_ENABLE
 
@@ -118,62 +110,22 @@ ULONG                               *block_word_ptr;
     tx_mutex_get(&nand_flash -> lx_nand_flash_mutex, TX_WAIT_FOREVER);
 #endif
 
-    /* Determine if there are less than two block's worth of free pages.  */
-    i =  0;
-    while (nand_flash -> lx_nand_flash_free_pages <= nand_flash -> lx_nand_flash_pages_per_block)
-    {
-     
-        /* Attempt to reclaim one block.  */
-        _lx_nand_flash_block_reclaim(nand_flash);
-
-        /* Increment the block count.  */
-        i++;
-
-        /* Have we exceeded the number of blocks in the system?  */
-        if (i >= nand_flash -> lx_nand_flash_total_blocks)
-        { 
-          
-            /* Yes, break out of the loop.  */
-            break;
-        }
-    }
-
     /* Increment the number of write requests.  */
     nand_flash -> lx_nand_flash_diagnostic_sector_write_requests++;
 
     /* See if we can find the logical sector in the current mapping.  */
-    _lx_nand_flash_logical_sector_find(nand_flash, logical_sector, LX_FALSE, &old_block, &old_page);
+    status = _lx_nand_flash_block_find(nand_flash, logical_sector, &block, &block_status);
     
-    /* Allocate a new page for this write.  */
-    _lx_nand_flash_physical_page_allocate(nand_flash, &new_block, &new_page, &new_erase_count);
-
-    /* Determine if the new page allocation was successful.  */
-    if (new_page)
+    /* Check return status.   */
+    if(status != LX_SUCCESS)
     {
-    
-        /* Yes, we were able to allocate a new page.  */
 
-        /* Determine if this is the new maximum mapped sector.  */
-        if (logical_sector > nand_flash -> lx_nand_flash_max_mapped_sector)
+        /* Call system error handler.  */
+        _lx_nand_flash_system_error(nand_flash, status, block, 0);
+
+        /* Determine if the error is fatal.  */
+        if (status != LX_NAND_ERROR_CORRECTED)
         {
-            
-            /* Remember this maximum mapped sector.  */
-            nand_flash -> lx_nand_flash_max_mapped_sector =  logical_sector;
-        }
-
-        /* Update the number of free pages.  */
-        nand_flash -> lx_nand_flash_free_pages--;
-
-        /* Write the logical sector data to the new page.  */
-        status =  _lx_nand_flash_driver_write(nand_flash, new_block, new_page, buffer, nand_flash -> lx_nand_flash_words_per_page);
-
-        /* Check for an error from flash driver.   */
-        if (status)
-        {
-        
-            /* Call system error handler.  */
-            _lx_nand_flash_system_error(nand_flash, status, new_block, new_page);
-
 #ifdef LX_THREAD_SAFE_ENABLE
 
             /* Release the thread safe mutex.  */
@@ -183,44 +135,38 @@ ULONG                               *block_word_ptr;
             /* Return an error.  */
             return(LX_ERROR);
         }
+    }
 
-        /* Determine if there was an old mapping.  */
-        if (old_page)
+    /* Check if block is unmapped or block is full.  */
+    if (block == LX_NAND_BLOCK_UNMAPPED || block_status & LX_NAND_BLOCK_STATUS_FULL)
+    {
+
+        /* Allocate a new block.  */
+        status = _lx_nand_flash_block_allocate(nand_flash, &new_block);
+
+        /* Check if there is no blocks.  */
+        if (status == LX_NO_BLOCKS)
         {
-
-            /* Read the extra info of the old page.  */
-            status =  _lx_nand_flash_driver_extra_bytes_get(nand_flash, old_block, old_page, (UCHAR *) &old_extra_info, sizeof(old_extra_info));    
-        
-            /* Check for an error from flash driver.   */
-            if (status)
-            {
-        
-                /* Call system error handler.  */
-                _lx_nand_flash_system_error(nand_flash, status, old_block, old_page);
-
 #ifdef LX_THREAD_SAFE_ENABLE
 
-                /* Release the thread safe mutex.  */
-                tx_mutex_put(&nand_flash -> lx_nand_flash_mutex);
+            /* Release the thread safe mutex.  */
+            tx_mutex_put(&nand_flash -> lx_nand_flash_mutex);
 #endif
 
-                /* Return an error.  */
-                return(LX_ERROR);
-            }
-        
-            /* Clear bit 30, which indicates this sector is superceded.  */
-            old_extra_info.lx_nand_page_extra_info_logical_sector =  old_extra_info.lx_nand_page_extra_info_logical_sector & (~((ULONG) LX_NAND_PAGE_SUPERCEDED));
+            /* Return error.  */
+            return(status);
+        }
 
-            /* Write the extra info to old page.  */
-            status =  _lx_nand_flash_driver_extra_bytes_set(nand_flash, old_block, old_page, (UCHAR *) &old_extra_info, sizeof(old_extra_info));    
-        
-            /* Check for an error from flash driver.   */
-            if (status)
+        /* Check return status.  */
+        else if (status != LX_SUCCESS)
+        {
+
+            /* Call system error handler.  */
+            _lx_nand_flash_system_error(nand_flash, status, new_block, 0);
+
+            /* Determine if the error is fatal.  */
+            if (status != LX_NAND_ERROR_CORRECTED)
             {
-        
-                /* Call system error handler.  */
-                _lx_nand_flash_system_error(nand_flash, status, old_block, old_page);
-
 #ifdef LX_THREAD_SAFE_ENABLE
 
                 /* Release the thread safe mutex.  */
@@ -232,221 +178,250 @@ ULONG                               *block_word_ptr;
             }
         }
 
-        /* Now build the new mapping entry  - with the not valid bit set initially.  */
-        new_extra_info.lx_nand_page_extra_info_logical_sector =  ((ULONG) LX_NAND_PAGE_VALID) | ((ULONG) LX_NAND_PAGE_SUPERCEDED) |  ((ULONG) LX_NAND_PAGE_MAPPING_NOT_VALID) | logical_sector;
-            
-        /* Write out the new mapping entry.  */
-        status =  _lx_nand_flash_driver_extra_bytes_set(nand_flash, new_block, new_page, (UCHAR *) &new_extra_info, sizeof(new_extra_info));    
-
-        /* Check for an error from flash driver.   */
-        if (status)
-        {
-        
-            /* Call system error handler.  */
-            _lx_nand_flash_system_error(nand_flash, status, new_block, new_page);
-
-#ifdef LX_THREAD_SAFE_ENABLE
-
-            /* Release the thread safe mutex.  */
-            tx_mutex_put(&nand_flash -> lx_nand_flash_mutex);
-#endif
-
-            /* Return an error.  */
-            return(LX_ERROR);
-        }
-
-        /* Now clear the not valid bit to make this sector mapping valid.  This is done because the writing of the extra bytes itself can 
-           be interrupted and we need to make sure this can be detected when the flash is opened again.  */
-        new_extra_info.lx_nand_page_extra_info_logical_sector =  new_extra_info.lx_nand_page_extra_info_logical_sector & ~((ULONG) LX_NAND_PAGE_MAPPING_NOT_VALID);
-            
-        /* Clear the not valid bit.  */
-        status =  _lx_nand_flash_driver_extra_bytes_set(nand_flash, new_block, new_page, (UCHAR *) &new_extra_info, sizeof(new_extra_info));    
-
-        /* Check for an error from flash driver.   */
-        if (status)
-        {
-        
-            /* Call system error handler.  */
-            _lx_nand_flash_system_error(nand_flash, status, new_block, new_page);
-
-#ifdef LX_THREAD_SAFE_ENABLE
-
-            /* Release the thread safe mutex.  */
-            tx_mutex_put(&nand_flash -> lx_nand_flash_mutex);
-#endif
-
-            /* Return an error.  */
-            return(LX_ERROR);
-        }
-
-
-        /* Increment the number of mapped sectors.  */
-        nand_flash -> lx_nand_flash_mapped_pages++;
-        
-        /* Was there a previously mapped sector?  */
-        if (old_page)
-        {
-        
-            /* Now clear bit 31, which indicates this sector is now obsoleted.  */
-            old_extra_info.lx_nand_page_extra_info_logical_sector =  old_extra_info.lx_nand_page_extra_info_logical_sector & ~((ULONG) LX_NAND_PAGE_VALID);
-            
-            /* Write the value back to the flash to clear bit 31.  */
-            status =  _lx_nand_flash_driver_extra_bytes_set(nand_flash, old_block, old_page, (UCHAR *) &old_extra_info, sizeof(old_extra_info));    
-            
-            /* Check for an error from flash driver.   */
-            if (status)
-            {
-        
-                /* Call system error handler.  */
-                _lx_nand_flash_system_error(nand_flash, status, old_block, old_page);
-
-#ifdef LX_THREAD_SAFE_ENABLE
-
-                /* Release the thread safe mutex.  */
-                tx_mutex_put(&nand_flash -> lx_nand_flash_mutex);
-#endif
-
-                /* Return an error.  */
-                return(LX_ERROR);
-            }
-
-            /* Setup pointer to internal buffer.  */
-            block_word_ptr =  nand_flash -> lx_nand_flash_page_buffer;
-
-            /* Now read page 0 of the block, which has the erase count in the first 4 bytes. */
-            status =  _lx_nand_flash_driver_read(nand_flash, old_block, 0, block_word_ptr, (nand_flash -> lx_nand_flash_pages_per_block + 1));
-            
-            /* Check for an error from flash driver.   */
-            if (status)
-            {
-            
-                /* Call system error handler.  */
-                _lx_nand_flash_system_error(nand_flash, status, old_block, 0);
-
-                /* Determine if the error is fatal.  */
-                if (status != LX_NAND_ERROR_CORRECTED)
-                {
-                                
-#ifdef LX_THREAD_SAFE_ENABLE
-
-                    /* Release the thread safe mutex.  */
-                    tx_mutex_put(&nand_flash -> lx_nand_flash_mutex);
-#endif
-
-                    /* Return the error.  */
-                    return(status);
-                }
-            }
-
-#ifndef LX_NAND_FLASH_MAPPING_LIST_UPDATE_DISABLE
-
-            /* Determine if there is a valid mapping list.  */
-            if ((block_word_ptr[1] != LX_NAND_PAGE_FREE) &&
-                (block_word_ptr[nand_flash -> lx_nand_flash_pages_per_block] == LX_NAND_PAGE_LIST_VALID))
-            {
-
-                /* Mark the entry as invalid.  */
-                block_word_ptr[old_page] &= ~LX_NAND_PAGE_VALID;
-
-                /* Invalidate the page.  */
-                status =  _lx_nand_flash_driver_write(nand_flash, old_block, 0, block_word_ptr, (nand_flash -> lx_nand_flash_pages_per_block + 1));
-            }
-#endif
-
-            /* Increment the number of obsolete pages.  */
-            nand_flash -> lx_nand_flash_obsolete_pages++;
-
-            /* Decrement the number of mapped pages.  */
-            nand_flash -> lx_nand_flash_mapped_pages--;
-            
-            /* Invalidate the old sector mapping cache entry.  */
-            _lx_nand_flash_sector_mapping_cache_invalidate(nand_flash, logical_sector);
-            
-            /* Call routine to see if this block is completely obsoleted.  If so, 
-               we can reclaim it immediately.  */
-            _lx_nand_flash_block_obsoleted_check(nand_flash, old_block);
-        }
-
-        /* Read the extra info of the old page.  */
-        status =  _lx_nand_flash_driver_extra_bytes_get(nand_flash, new_block, new_page, (UCHAR *) &new_extra_info, sizeof(new_extra_info));    
-
-        /* Check for an error from flash driver.   */
-        if (status)
-        {
-        
-            /* Call system error handler.  */
-            _lx_nand_flash_system_error(nand_flash, status, old_block, old_page);
-
-#ifdef LX_THREAD_SAFE_ENABLE
-
-            /* Release the thread safe mutex.  */
-            tx_mutex_put(&nand_flash -> lx_nand_flash_mutex);
-#endif
-
-            /* Return an error.  */
-            return(LX_ERROR);
-        }
-
-        /* Check to see if the logical sector is still mapped to the same block/page.  */
-        if (((new_extra_info.lx_nand_page_extra_info_logical_sector & LX_NAND_LOGICAL_SECTOR_MASK) == logical_sector) &&
-            (new_extra_info.lx_nand_page_extra_info_logical_sector & ((ULONG) LX_NAND_PAGE_VALID)))
+        /* Check if the block is full.  */
+        if (block_status & LX_NAND_BLOCK_STATUS_FULL)
         {
 
-            /* Determine if the new page is the last page of the block.  */
-            if (new_page == (nand_flash -> lx_nand_flash_pages_per_block - 1))
-            {
-        
-            
-                /* Yes, we need to update page 0 of the block with the list of mapped 
-                   pages for this block.  */
-                _lx_nand_flash_block_full_update(nand_flash, new_block, new_erase_count);
-            }
-
-            /* Determine if the logical sector mapping cache is enabled.  */
-            if (nand_flash -> lx_nand_flash_sector_mapping_cache_enabled)
-            {
-        
-                /* Yes, sector mapping cache is enabled, place this logical sector mapping information in the cache.  */
-
-#ifndef LX_NAND_FLASH_DIRECT_MAPPING_CACHE
-                
-                /* Calculate the starting index of the sector mapping cache for this sector entry.  */
-                i =  (logical_sector & LX_NAND_SECTOR_MAPPING_CACHE_HASH_MASK) * LX_NAND_SECTOR_MAPPING_CACHE_DEPTH;
-
-                /* Build a pointer to the cache entry.  */
-                sector_mapping_cache_entry_ptr =  &nand_flash -> lx_nand_flash_sector_mapping_cache[i];
-
-                /* Move all the cache entries down so the oldest is at the bottom.  */
-                *(sector_mapping_cache_entry_ptr + 3) =  *(sector_mapping_cache_entry_ptr + 2);
-                *(sector_mapping_cache_entry_ptr + 2) =  *(sector_mapping_cache_entry_ptr + 1);
-                *(sector_mapping_cache_entry_ptr + 1) =  *(sector_mapping_cache_entry_ptr);
-           
-                /* Setup the new logical sector information in the cache.  */
-                sector_mapping_cache_entry_ptr -> lx_nand_sector_mapping_cache_logical_sector =  (logical_sector | LX_NAND_SECTOR_MAPPING_CACHE_ENTRY_VALID);
-                sector_mapping_cache_entry_ptr -> lx_nand_sector_mapping_cache_block =           (USHORT) new_block;
-                sector_mapping_cache_entry_ptr -> lx_nand_sector_mapping_cache_page =            (USHORT) new_page;
-#else
-
-                /* Determine if this logical sector fits in the logical sector cache mapping.  */
-                if (logical_sector < LX_NAND_SECTOR_MAPPING_CACHE_SIZE)
-                {
-
-                    /* Yes, store the logical sector to block/page mapping in the cache.  */
-                    nand_flash -> lx_nand_flash_sector_mapping_cache[logical_sector].lx_nand_sector_mapping_cache_block =  (USHORT) new_block;
-                    nand_flash -> lx_nand_flash_sector_mapping_cache[logical_sector].lx_nand_sector_mapping_cache_page =   (USHORT) new_page;
-                }
-#endif
-            }
+            /* Set copy block flag.  */
+            copy_block = LX_TRUE;
         }
 
-        /* Indicate the write was successful.  */
-        status =  LX_SUCCESS;        
+        /* Set update mapping flag.  */
+        update_mapping = LX_TRUE;
     }
     else
     {
+
+        /* Set new block to the same as old block.  */
+        new_block = block;
+        new_block_status = block_status;
+    }
     
-        /* Indicate the write was unsuccessful.  */
-        status =  LX_NO_SECTORS;
+    /* Check if copy block flag is set.  */
+    if (copy_block)
+    {
+
+        /* Remove the old block from mapped block list.  */
+        _lx_nand_flash_mapped_block_list_remove(nand_flash, logical_sector / nand_flash -> lx_nand_flash_pages_per_block);
+
+        /* Copy valid sector to new block.  */
+        status =  _lx_nand_flash_data_page_copy(nand_flash, logical_sector - (logical_sector % nand_flash -> lx_nand_flash_pages_per_block), block, block_status, new_block, &new_block_status, (logical_sector % nand_flash -> lx_nand_flash_pages_per_block));
+
+        /* Check for an error from flash driver.   */
+        if (status)
+        {
+
+            /* Call system error handler.  */
+            _lx_nand_flash_system_error(nand_flash, status, block, 0);
+#ifdef LX_THREAD_SAFE_ENABLE
+
+            /* Release the thread safe mutex.  */
+            tx_mutex_put(&nand_flash -> lx_nand_flash_mutex);
+#endif
+
+            /* Return an error.  */
+            return(LX_ERROR);
+        }
+    }
+    
+    /* Check if update mapping flag is set.  */
+    if (update_mapping)
+    {
+
+        /* Update block mapping.  */
+        _lx_nand_flash_block_mapping_set(nand_flash, logical_sector, new_block);
+    }
+
+    /* Setup spare buffer pointer.  */
+    spare_buffer_ptr = nand_flash -> lx_nand_flash_page_buffer;
+
+    /* Set spare buffer to all 0xFF bytes.  */
+    LX_MEMSET(spare_buffer_ptr, 0xFF, nand_flash -> lx_nand_flash_spare_total_length);
+                
+    /* Check if there is enough spare data for metadata block number.  */
+    if (nand_flash -> lx_nand_flash_spare_data2_length >= sizeof(USHORT))
+    {
+
+        /* Save metadata block number in spare bytes.  */
+        LX_UTILITY_SHORT_SET(&spare_buffer_ptr[nand_flash -> lx_nand_flash_spare_data2_offset], nand_flash -> lx_nand_flash_metadata_block_number);
+    }
+
+    /* Set page type and sector address.  */
+    LX_UTILITY_LONG_SET(&spare_buffer_ptr[nand_flash -> lx_nand_flash_spare_data1_offset], LX_NAND_PAGE_TYPE_USER_DATA | logical_sector);
+    
+    /* Get page to write.  */
+    page = new_block_status & LX_NAND_BLOCK_STATUS_PAGE_NUMBER_MASK;
+
+    /* Write the page.  */
+#ifdef LX_NAND_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+    status = (nand_flash -> lx_nand_flash_driver_pages_write)(nand_flash, new_block, page, (UCHAR*)buffer, spare_buffer_ptr, 1);
+#else
+    status = (nand_flash -> lx_nand_flash_driver_pages_write)(new_block, page, (UCHAR*)buffer, spare_buffer_ptr, 1);
+#endif
+
+    /* Check for an error from flash driver.   */
+    if (status)
+    {
+
+        /* Call system error handler.  */
+        _lx_nand_flash_system_error(nand_flash, status, new_block, 0);
+#ifdef LX_THREAD_SAFE_ENABLE
+
+        /* Release the thread safe mutex.  */
+        tx_mutex_put(&nand_flash -> lx_nand_flash_mutex);
+#endif
+
+        /* Return an error.  */
+        return(LX_ERROR);
+    }
+
+    /* Determine if the sector number is sequential.  */
+    if ((new_block_status & LX_NAND_BLOCK_STATUS_PAGE_NUMBER_MASK) != (logical_sector % nand_flash -> lx_nand_flash_pages_per_block))
+    {
+
+        /* Set non sequential status flag.  */
+        new_block_status |= LX_NAND_BLOCK_STATUS_NON_SEQUENTIAL;
+    }
+
+    /* Increase page number.  */
+    page++;
+
+    /* Check if page number reaches total pages per block.  */
+    if (page == nand_flash -> lx_nand_flash_pages_per_block)
+    {
+
+        /* Set block full status flag.  */
+        new_block_status |= LX_NAND_BLOCK_STATUS_FULL;
+    }
+
+    /* Build block status word.  */
+    new_block_status = (USHORT)(page | (new_block_status & ~LX_NAND_BLOCK_STATUS_PAGE_NUMBER_MASK));
+
+    /* Determine if there are sectors after the addressed sector need to be copied.  */
+    if (copy_block && ((logical_sector % nand_flash -> lx_nand_flash_pages_per_block) < (nand_flash -> lx_nand_flash_pages_per_block - 1)))
+    {
+
+        /* Copy valid sector to new block.  */
+        status = _lx_nand_flash_data_page_copy(nand_flash, logical_sector + 1, block, block_status, new_block, &new_block_status, (nand_flash -> lx_nand_flash_pages_per_block - 1) - (logical_sector % nand_flash -> lx_nand_flash_pages_per_block));
+
+        /* Check for an error from flash driver.   */
+        if (status)
+        {
+
+            /* Call system error handler.  */
+            _lx_nand_flash_system_error(nand_flash, status, block, 0);
+#ifdef LX_THREAD_SAFE_ENABLE
+
+            /* Release the thread safe mutex.  */
+            tx_mutex_put(&nand_flash -> lx_nand_flash_mutex);
+#endif
+
+            /* Return an error.  */
+            return(LX_ERROR);
+        }
+    }
+
+    /* Set new block status.  */
+    status = _lx_nand_flash_block_status_set(nand_flash, new_block, new_block_status);
+
+    /* Check for an error from flash driver.   */
+    if (status)
+    {
+
+        /* Call system error handler.  */
+        _lx_nand_flash_system_error(nand_flash, status, new_block, 0);
+#ifdef LX_THREAD_SAFE_ENABLE
+
+        /* Release the thread safe mutex.  */
+        tx_mutex_put(&nand_flash -> lx_nand_flash_mutex);
+#endif
+
+        /* Return an error.  */
+        return(LX_ERROR);
+    }
+
+    /* Check if copy block flag is set.  */
+    if (copy_block)
+    {
+
+        /* Erase old block.  */
+        status = _lx_nand_flash_driver_block_erase(nand_flash, block, nand_flash -> lx_nand_flash_base_erase_count + nand_flash -> lx_nand_flash_erase_count_table[block] + 1);
+
+        /* Check for an error from flash driver.   */
+        if (status)
+        {
+
+            /* Call system error handler.  */
+            _lx_nand_flash_system_error(nand_flash, status, block, 0);
+#ifdef LX_THREAD_SAFE_ENABLE
+
+            /* Release the thread safe mutex.  */
+            tx_mutex_put(&nand_flash -> lx_nand_flash_mutex);
+#endif
+
+            /* Return an error.  */
+            return(LX_ERROR);
+        }
+
+        /* Update erase count for the old block.  */
+        status = _lx_nand_flash_erase_count_set(nand_flash, block, (UCHAR)(nand_flash -> lx_nand_flash_erase_count_table[block] + 1));
+
+        /* Check for an error from flash driver.   */
+        if (status)
+        {
+
+            /* Call system error handler.  */
+            _lx_nand_flash_system_error(nand_flash, status, block, 0);
+#ifdef LX_THREAD_SAFE_ENABLE
+
+            /* Release the thread safe mutex.  */
+            tx_mutex_put(&nand_flash -> lx_nand_flash_mutex);
+#endif
+
+            /* Return an error.  */
+            return(LX_ERROR);
+        }
+
+        /* Check if the block has too many erases.  */
+        if (nand_flash -> lx_nand_flash_erase_count_table[block] > LX_NAND_FLASH_MAX_ERASE_COUNT_DELTA)
+        {
+
+            /* Move data from less worn block.  */
+            _lx_nand_flash_block_data_move(nand_flash, block);
+        }
+        else
+        {
+
+            /* Set the block status to free.  */
+            status = _lx_nand_flash_block_status_set(nand_flash, block, LX_NAND_BLOCK_STATUS_FREE);
+
+            /* Check for an error from flash driver.   */
+            if (status)
+            {
+
+                /* Call system error handler.  */
+                _lx_nand_flash_system_error(nand_flash, status, block, 0);
+#ifdef LX_THREAD_SAFE_ENABLE
+
+                /* Release the thread safe mutex.  */
+                tx_mutex_put(&nand_flash -> lx_nand_flash_mutex);
+#endif
+
+                /* Return an error.  */
+                return(LX_ERROR);
+            }
+
+            /* Add the block to free block list.  */
+            _lx_nand_flash_free_block_list_add(nand_flash, block);
+        }
+    }
+
+    /* Check if update mapping flag is set.  */
+    if (update_mapping)
+    {
+
+        /* Add the new block to mapped block list.  */
+        _lx_nand_flash_mapped_block_list_add(nand_flash, logical_sector / nand_flash -> lx_nand_flash_pages_per_block);
     }
 
 #ifdef LX_THREAD_SAFE_ENABLE

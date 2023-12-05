@@ -143,20 +143,20 @@ void fx_app_thread_entry(ULONG thread_input)
   /* USER CODE END fx_app_thread_entry 0 */
 
   /* Format the OCTO-SPI NOR flash as FAT */
-  nor_ospi_status =  fx_media_format(&nor_ospi_flash_disk,                               // nor_ospi_flash_disk pointer
-                                     fx_stm32_levelx_nor_driver,                         // Driver entry
-                                     (VOID *)LX_NOR_OSPI_DRIVER_ID,                      // Device info pointer
-                                     (UCHAR *) fx_nor_ospi_media_memory,                 // Media buffer pointer
-                                     sizeof(fx_nor_ospi_media_memory),                   // Media buffer size
-                                     FX_NOR_OSPI_VOLUME_NAME,                            // Volume Name
-                                     FX_NOR_OSPI_NUMBER_OF_FATS,                         // Number of FATs
-                                     32,                                                 // Directory Entries
-                                     FX_NOR_OSPI_HIDDEN_SECTORS,                         // Hidden sectors
-                                     LX_STM32_OSPI_FLASH_SIZE / FX_NOR_OSPI_SECTOR_SIZE, // Total sectors
-                                     FX_NOR_OSPI_SECTOR_SIZE,                            // Sector size
-                                     8,                                                  // Sectors per cluster
-                                     1,                                                  // Heads
-                                     1);                                                 // Sectors per track
+  nor_ospi_status =  fx_media_format(&nor_ospi_flash_disk,                                                               // nor_ospi_flash_disk pointer
+                                     fx_stm32_levelx_nor_driver,                                                         // Driver entry
+                                     (VOID *)LX_NOR_OSPI_DRIVER_ID,                                                      // Device info pointer
+                                     (UCHAR *) fx_nor_ospi_media_memory,                                                 // Media buffer pointer
+                                     sizeof(fx_nor_ospi_media_memory),                                                   // Media buffer size
+                                     FX_NOR_OSPI_VOLUME_NAME,                                                            // Volume Name
+                                     FX_NOR_OSPI_NUMBER_OF_FATS,                                                         // Number of FATs
+                                     32,                                                                                 // Directory Entries
+                                     FX_NOR_OSPI_HIDDEN_SECTORS,                                                         // Hidden sectors
+                                     ((LX_STM32_OSPI_FLASH_SIZE - LX_STM32_OSPI_SECTOR_SIZE) / FX_NOR_OSPI_SECTOR_SIZE), // Total sectors minus one
+                                     FX_NOR_OSPI_SECTOR_SIZE,                                                            // Sector size
+                                     8,                                                                                  // Sectors per cluster
+                                     1,                                                                                  // Heads
+                                     1);                                                                                 // Sectors per track
 
   /* Check the format nor_ospi_status */
   if (nor_ospi_status != FX_SUCCESS)

@@ -1,43 +1,44 @@
+
 ## <b>Ux_Device_CustomHID application description</b>
 
 This application provides an example of Azure RTOS USBX stack usage on STM32H743I-EVAL board,
-it shows how to develop USB Device Human Interface "HID" Custom based application.
+it shows how to develop USB Device Human Interface "HID" custom based application.
 
-The application is designed to emulate an USB HID Custom device, the code provides all required device descriptors framework
-and associated Class descriptor report to build a compliant USB HID Custom device.
+The application is designed to emulate an USB HID custom device, the code provides all required device descriptors framework
+and associated class descriptor report to build a compliant USB HID custom device.
 
-At the beginning ThreadX call the entry function tx_application_define(), at this stage, all USBx resources
-are initialized, the HID Class driver is registered and the application creates 2 threads with the same priorities :
+At the beginning ThreadX calls the entry function tx_application_define(), at this stage, all USBx resources
+are initialized, the HID class driver is registered and the application creates 2 threads with the same priorities :
 
   - app_ux_device_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB_OTG HAL PCD driver and start the device.
   - usbx_cutomhid_thread_entry (Prio : 20; PreemptionPrio : 20) used to send HID reports to move automatically the PC host machine.
 
 #### <b>Expected success behavior</b>
 
-When plugged to PC host, the STM32H743I-EVAL must be properly enumerated as an USB HID Custom device.
-During the enumeration phase, device provides host with the requested descriptors (Device, configuration, string).
+When plugged to PC host, the STM32H743I-EVAL must be properly enumerated as an USB HID custom device.
+During the enumeration phase, device provides host with the requested descriptors (device, configuration, string).
 Those descriptors are used by host driver to identify the device capabilities.
-Once the STM32H743I-EVAL USB device successfully completed the enumeration phase.
 
+Once the STM32H743I-EVAL USB device successfully completed the enumeration phase:
  - Start the "USB HID Demonstrator" PC applet, available for download from www.st.com,
    and connect STM32 USB to PC
  - The device should be detected and shown in the USB HID target box
  - Press Graphic View button
- - Select "use SET_FEATURE" or "use SET_REPORT" in order to use SET_REPORT request to send HID Report
+ - Select "use SET_FEATURE" or "use SET_REPORT" in order to use SET_REPORT request to send HID report
    for LED control
  - Use the potentiometer of the STM32H743I-EVAL board to transfer the result of the converted voltage
-  (via the ADC) the to the PC host (these values are sent to the PC using the endpoint1 IN)
- - Make sure that following report ID are configured: LED1 ID (0x1), LED2 ID(0x2), LED3 ID(0x3),
+  (via the ADC) to the PC host (these values are sent to the PC using the endpoint1 IN)
+ - Make sure that the following report IDs are configured: LED1 ID (0x1), LED2 ID(0x2), LED3 ID(0x3),
    LED4 ID(0x4), BUTTON1_ID(0x6) and Potentiometer_ID(0x7).
  - Select LEDs to switch on/off on the STM32H743I-EVAL board: a SET_REPORT request will be sent.
 
 #### <b>Error behaviors</b>
 
-Host PC shows that USB device does not operate as designed (HID device enumeration failed, the mouse pointer doesn't move).
+Host PC shows that USB device does not operate as designed (HID device enumeration failed).
 
 #### <b>Assumptions if any</b>
 
-User is familiar with USB 2.0 "Universal Serial BUS" Specification and HID class Specification.
+User is familiar with USB 2.0 "Universal Serial BUS" specification and HID class specification.
 
 #### <b>Known limitations</b>
 
@@ -58,14 +59,14 @@ None.
 #### <b>ThreadX usage hints</b>
 
  - ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.
- - ThreadX is configured with 100 ticks/sec by default, this should be taken into account when using delays or timeouts at application. It is always possible to reconfigure it in the "tx_user.h", the "TX_TIMER_TICKS_PER_SECOND" define,but this should be reflected in "tx_initialize_low_level.S" file too.
+ - ThreadX is configured with 100 ticks/sec by default, this should be taken into account when using delays or timeouts at application. It is always possible to reconfigure it, by updating the "TX_TIMER_TICKS_PER_SECOND" define in the "tx_user.h" file. The update should be reflected in "tx_initialize_low_level.S" file too.
  - ThreadX is disabling all interrupts during kernel start-up to avoid any unexpected behavior, therefore all system related calls (HAL, BSP) should be done either at the beginning of the application or inside the thread entry functions.
  - ThreadX offers the "tx_application_define()" function, that is automatically called by the tx_kernel_enter() API.
    It is highly recommended to use it to create all applications ThreadX related resources (threads, semaphores, memory pools...)  but it should not in any way contain a system API call (HAL or BSP).
  - Using dynamic memory allocation requires to apply some changes to the linker file.
    ThreadX needs to pass a pointer to the first free memory location in RAM to the tx_application_define() function,
    using the "first_unused_memory" argument.
-   This require changes in the linker files to expose this memory location.
+   This requires changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
      place in RAM_region    { last section FREE_MEM };
@@ -107,11 +108,9 @@ RTOS, ThreadX, USBXDevice, USB_OTG, High Speed, HID, Custom, Potentiometer, ADC
 ### <b>Hardware and Software environment</b>
 
   - This example runs on STM32H743xx devices.
-
-  - This example has been tested with STMicroelectronics STM32H743I-EVAL boards Revision MB1246-B03 and can be easily
+  - This example has been tested with STMicroelectronics STM32H743I-EVAL boards revision MB1246-B03 and can be easily
     tailored to any other supported device and development board.
-
-  - STM32H743I-EVAL  Set-up
+  - STM32H743I-EVAL set-up:
     - Connect the STM32H743I-EVAL board to the PC through 'USB micro A-Male
       to A-Male' cable to the connector:
       - CN14: to use USB High Speed (HS)

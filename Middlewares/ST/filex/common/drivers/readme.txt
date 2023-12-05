@@ -7,6 +7,36 @@
   ******************************************************************************
   */
 
+### V3.1.0 / 17-November-2023 ###
+=================================
+Main changes
+-------------
+- Add lx_nand_flash_format() API call for FileX NAND driver before the lx_nand_flash_open()
+  introduced by LevelX 6.2.1.
+  + fx_stm32_levelx_nand_driver.c
+
+- Add new flag FX_NAND_FORMAT_FLASH_BEFORE_OPEN for FileX NAND driver to control the
+  lx_nand_flash_format() call.
+    + fx_stm32_levelx_nand_driver.c
+    + template\fx_stm32_levelx_nand_driver.h
+
+Dependencies:
+-------------
+- Azure RTOS FileX V6.2.1
+- Azure RTOS LevelX V6.2.1
+
+### V3.0.0 / 14-July-2023 ###
+=================================
+Main changes
+-------------
+- Align NAND driver against new Azure RTOS LevelX V6.2.1 version
+
+Dependencies:
+-------------
+- Azure RTOS FileX V6.2.1
+- Azure RTOS LevelX V6.2.1
+- STM32Cube SD, MMC HAL drivers
+
 ### V2.1.4 / 11-November-2022 ###
 =================================
 Main changes

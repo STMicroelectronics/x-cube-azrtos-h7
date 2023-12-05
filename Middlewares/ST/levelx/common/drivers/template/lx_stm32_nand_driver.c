@@ -48,6 +48,10 @@ static UINT  lx_nand_driver_extra_bytes_set(ULONG block, ULONG page, UCHAR *sour
 
 static UINT  lx_nand_driver_system_error(UINT error_code, ULONG block, ULONG page);
 
+static UINT  lx_nand_flash_driver_pages_read(ULONG block, ULONG page, UCHAR *main_buffer, UCHAR *spare_buffer, ULONG pages);
+static UINT  lx_nand_flash_driver_pages_write(ULONG block, ULONG page, UCHAR *main_buffer, UCHAR *spare_buffer, ULONG pages);
+static UINT  lx_nand_flash_driver_pages_copy(ULONG source_block, ULONG source_page, ULONG destination_block, ULONG destination_page, ULONG pages, UCHAR *data_buffer);
+
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
@@ -65,23 +69,28 @@ static UINT  lx_nand_driver_system_error(UINT error_code, ULONG block, ULONG pag
 #define WORDS_PER_PHYSICAL_PAGE 512
 #endif
 
-ULONG  nand_flash_buffer[WORDS_PER_PHYSICAL_PAGE];
+static UCHAR  nand_flash_buffer[WORDS_PER_PHYSICAL_PAGE];
 
 UINT lx_stm32_nand_custom_driver_initialize(LX_NAND_FLASH *nand_flash)
 {
   UINT ret = LX_SUCCESS;
 
-  ULONG total_blocks = 0;
-  ULONG pages_per_block = 0;
-  ULONG bytes_per_page = 0;
-
   /* USER CODE BEGIN Init_Section_0 */
 
   /*USER CODE END Init_Section_0 */
 
-  nand_flash->lx_nand_flash_total_blocks =    total_blocks;
-  nand_flash->lx_nand_flash_pages_per_block = pages_per_block;
-  nand_flash->lx_nand_flash_bytes_per_page =  bytes_per_page;
+  nand_flash->lx_nand_flash_total_blocks =                  TOTAL_BLOCKS;
+  nand_flash->lx_nand_flash_pages_per_block =               PHYSICAL_PAGES_PER_BLOCK;
+  nand_flash->lx_nand_flash_bytes_per_page =                BYTES_PER_PHYSICAL_PAGE;
+
+  nand_flash -> lx_nand_flash_spare_data1_offset =          SPARE_DATA1_OFFSET;
+  nand_flash -> lx_nand_flash_spare_data1_length =          SPARE_DATA1_LENGTH;
+
+  nand_flash -> lx_nand_flash_spare_data2_offset =          SPARE_DATA2_OFFSET;
+  nand_flash -> lx_nand_flash_spare_data2_length =          SPARE_DATA2_LENGTH;
+
+  nand_flash -> lx_nand_flash_spare_total_length =          SPARE_BYTES_PER_PAGE;
+
 
   /* USER CODE BEGIN Init_Section_1 */
 
@@ -102,6 +111,9 @@ UINT lx_stm32_nand_custom_driver_initialize(LX_NAND_FLASH *nand_flash)
 
   nand_flash->lx_nand_flash_driver_system_error =           lx_nand_driver_system_error;
 
+  nand_flash->lx_nand_flash_driver_pages_read =             lx_nand_flash_driver_pages_read;
+  nand_flash->lx_nand_flash_driver_pages_write =            lx_nand_flash_driver_pages_write;
+  nand_flash->lx_nand_flash_driver_pages_copy =             lx_nand_flash_driver_pages_copy;
 
   /* USER CODE BEGIN Init_Section_2 */
 
@@ -223,6 +235,39 @@ static UINT  lx_nand_driver_system_error(UINT error_code, ULONG block, ULONG pag
  /* USER CODE BEGIN system_error */
 
  /* USER CODE END system_error */
+
+  return ret;
+}
+
+static UINT  lx_nand_flash_driver_pages_read(ULONG block, ULONG page, UCHAR *main_buffer, UCHAR *spare_buffer, ULONG pages)
+{
+  UINT ret = LX_SUCCESS;
+
+ /* USER CODE BEGIN driver_pages_read */
+
+ /* USER CODE END driver_pages_read */
+
+  return ret;
+}
+
+static UINT  lx_nand_flash_driver_pages_write(ULONG block, ULONG page, UCHAR *main_buffer, UCHAR *spare_buffer, ULONG pages)
+{
+  UINT ret = LX_SUCCESS;
+
+ /* USER CODE BEGIN driver_pages_write */
+
+ /* USER CODE END driver_pages_write */
+
+  return ret;
+}
+
+static UINT  lx_nand_flash_driver_pages_copy(ULONG source_block, ULONG source_page, ULONG destination_block, ULONG destination_page, ULONG pages, UCHAR *data_buffer)
+{
+  UINT ret = LX_SUCCESS;
+
+ /* USER CODE BEGIN driver_pages_copy */
+
+ /* USER CODE END driver_pages_copy */
 
   return ret;
 }

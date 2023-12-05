@@ -53,7 +53,7 @@ extern "C" {
 /* Exported functions prototypes ---------------------------------------------*/
 UINT MX_FileX_Init(VOID *memory_ptr);
 /* USER CODE BEGIN EFP */
-int32_t SD_IsDetected(uint32_t Instance);
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -83,8 +83,6 @@ int32_t SD_IsDetected(uint32_t Instance);
 #endif
 
 /* USER CODE BEGIN PD */
-#define SD_PRESENT                       1UL
-#define SD_NOT_PRESENT                   0UL
 
 /* USER CODE END PD */
 

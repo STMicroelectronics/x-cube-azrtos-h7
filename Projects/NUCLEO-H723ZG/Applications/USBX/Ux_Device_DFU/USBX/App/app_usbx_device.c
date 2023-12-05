@@ -59,7 +59,6 @@ static TX_THREAD usbx_dfu_download_thread;
   #pragma data_alignment=4
 #endif /* defined ( __ICCARM__ ) */
 __ALIGN_BEGIN ux_dfu_downloadInfotypeDef  ux_dfu_download  __ALIGN_END;
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -82,7 +81,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
   ULONG device_framework_hs_length;
   ULONG device_framework_fs_length;
   ULONG string_framework_length;
-  ULONG languge_id_framework_length;
+  ULONG language_id_framework_length;
   UCHAR *string_framework;
   UCHAR *language_id_framework;
   UCHAR *pointer;
@@ -121,7 +120,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
   string_framework = USBD_Get_String_Framework(&string_framework_length);
 
   /* Get Language Id Framework and get the length */
-  language_id_framework = USBD_Get_Language_Id_Framework(&languge_id_framework_length);
+  language_id_framework = USBD_Get_Language_Id_Framework(&language_id_framework_length);
 
   /* Install the device portion of USBX */
   if (ux_device_stack_initialize(device_framework_high_speed,
@@ -131,7 +130,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
                                  string_framework,
                                  string_framework_length,
                                  language_id_framework,
-                                 languge_id_framework_length,
+                                 language_id_framework_length,
                                  USBD_ChangeFunction) != UX_SUCCESS)
   {
     /* USER CODE BEGIN USBX_DEVICE_INITIALIZE_ERORR */

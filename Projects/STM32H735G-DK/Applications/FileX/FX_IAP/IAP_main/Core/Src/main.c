@@ -22,6 +22,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#if defined(__ICCARM__)
+#include <LowLevelIOInterface.h>
+#endif /* __ICCARM__ */
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -60,11 +63,16 @@ static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
 static void CallUserApp(uint32_t Address);
 
-#if defined ( __GNUC__) && !defined(__clang__)
-#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-#else
+#if defined(__ICCARM__)
+/* New definition from EWARM V9, compatible with EWARM8 */
+int iar_fputc(int ch);
+#define PUTCHAR_PROTOTYPE  int iar_fputc(int ch)
+#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION)
+/* ARM Compiler 5/6*/
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#endif
+#elif defined(__GNUC__)
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#endif /* __ICCARM__ */
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -109,6 +117,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_SDMMC1_SD_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   /* Application behavior changes depending from the state of the USER_BUTTON:
@@ -119,9 +128,6 @@ int main(void)
   {
     CallUserApp((uint32_t)APP_ADDRESS);
   }
-
-  /* Enter IAP mode. Initialize SDMMC */
-  MX_SDMMC1_SD_Init();
   /* USER CODE END 2 */
 
   MX_ThreadX_Init();
@@ -357,6 +363,28 @@ static void CallUserApp(uint32_t Address)
   __set_MSP(*(__IO uint32_t *) Address);
   UserApp();
 }
+
+/**
+  * @brief  Retargets the C library __write function to the IAR function iar_fputc.
+  * @param  file: file descriptor.
+  * @param  ptr: pointer to the buffer where the data is stored.
+  * @param  len: length of the data to write in bytes.
+  * @retval length of the written data in bytes.
+  */
+#if defined(__ICCARM__)
+size_t __write(int file, unsigned char const *ptr, size_t len)
+{
+  size_t idx;
+  unsigned char const *pdata = ptr;
+
+  for (idx = 0; idx < len; idx++)
+  {
+    iar_fputc((int)*pdata);
+    pdata++;
+  }
+  return len;
+}
+#endif /* __ICCARM__ */
 
 /**
   * @brief  Retargets the C library printf function to the USART.

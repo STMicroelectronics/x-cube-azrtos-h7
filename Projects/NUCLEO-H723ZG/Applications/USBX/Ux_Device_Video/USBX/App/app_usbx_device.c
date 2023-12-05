@@ -50,7 +50,6 @@ static UX_DEVICE_CLASS_VIDEO_STREAM_PARAMETER video_stream_parameter[USBD_VIDEO_
 static TX_THREAD ux_device_app_thread;
 
 /* USER CODE BEGIN PV */
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -72,7 +71,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
   ULONG device_framework_hs_length;
   ULONG device_framework_fs_length;
   ULONG string_framework_length;
-  ULONG languge_id_framework_length;
+  ULONG language_id_framework_length;
   UCHAR *string_framework;
   UCHAR *language_id_framework;
   UCHAR *pointer;
@@ -111,7 +110,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
   string_framework = USBD_Get_String_Framework(&string_framework_length);
 
   /* Get Language Id Framework and get the length */
-  language_id_framework = USBD_Get_Language_Id_Framework(&languge_id_framework_length);
+  language_id_framework = USBD_Get_Language_Id_Framework(&language_id_framework_length);
 
   /* Install the device portion of USBX */
   if (ux_device_stack_initialize(device_framework_high_speed,
@@ -121,7 +120,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
                                  string_framework,
                                  string_framework_length,
                                  language_id_framework,
-                                 languge_id_framework_length,
+                                 language_id_framework_length,
                                  UX_NULL) != UX_SUCCESS)
   {
     /* USER CODE BEGIN USBX_DEVICE_INITIALIZE_ERORR */

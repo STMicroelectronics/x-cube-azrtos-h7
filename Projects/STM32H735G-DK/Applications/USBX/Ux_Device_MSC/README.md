@@ -1,17 +1,15 @@
 
 ## <b>Ux_Device_MSC application description</b>
 
-This application provides an example of Azure RTOS USBX stack usage on STM32H735G-DK board, it shows how to develop USB Device mass storage class based
-
-application. The application is designed to emulate an USB MSC device, the code provides all required device descriptors framework and the associated Class
-
+This application provides an example of Azure RTOS USBX stack usage on STM32H735G-DK board, it shows how to develop USB device mass storage class based application.
+The application is designed to emulate a USB MSC device, the code provides all required device descriptors framework and the associated class
 descriptor report to build a compliant USB MSC device.
 
-At the beginning ThreadX calls the entry function tx_application_define(), at this stage, all USBx resources are initialized, the mass storage Class driver is
-
+At the beginning ThreadX calls the entry function tx_application_define(), at this stage, all USBx resources are initialized, the mass storage class driver is
 registered and the application creates one thread:
 
   - app_ux_device_thread_entry (Prio : 10; PreemptionPrio : 10) used to initialize USB OTG HAL PCD driver and start the device.
+
 In addition two callback functions are needed for the USBX mass storage class device:
 
   - USBD_STORAGE_Read used to read data through DMA from the mass storage device.
@@ -19,23 +17,19 @@ In addition two callback functions are needed for the USBX mass storage class de
 
 #### <b>Expected success behavior</b>
 
-When plugged to PC host, the STM32H735G-DK should enumerate as an USB MSC device. During the enumeration phase, device must provide host with the requested
-
-descriptors (Device descriptor, configuration descriptor, string descriptors).
-
+When plugged to PC host, the STM32H735G-DK should enumerate as a USB MSC device. During the enumeration phase, device must provide host with the requested
+descriptors (device descriptor, configuration descriptor, string descriptors).
 Those descriptors are used by the host driver to identify the device capabilities.
-
 Once the STM32H735G-DK USB device successfully completed the enumeration phase, a new removable drive appears in the system window and write/read/format
-
 operations can be performed as with any other removable drive.
 
 #### <b>Error behaviors</b>
 
-Host PC shows that USB device does not operate as designed (MSC enumeration fails, The new removable drive appears but read, write or format operations fail).
+Host PC shows that USB device does not operate as designed (MSC enumeration fails, the new removable drive appears but read, write or format operations fail).
 
 #### <b>Assumptions if any</b>
 
-  - USB cable should not be unplugged during enumeration and driver install.
+  - USB cable should not be unplugged during enumeration and driver installation.
   - SD card should be inserted before application is started.
 
 #### <b>Known limitations</b>
@@ -57,14 +51,14 @@ The Eject operation is not supported yet by MSC class.
 #### <b>ThreadX usage hints</b>
 
  - ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.
- - ThreadX is configured with 100 ticks/sec by default, this should be taken into account when using delays or timeouts at application. It is always possible to reconfigure it in the "tx_user.h", the "TX_TIMER_TICKS_PER_SECOND" define,but this should be reflected in "tx_initialize_low_level.S" file too.
+ - ThreadX is configured with 100 ticks/sec by default, this should be taken into account when using delays or timeouts at application. It is always possible to reconfigure it, by updating the "TX_TIMER_TICKS_PER_SECOND" define in the "tx_user.h" file. The update should be reflected in "tx_initialize_low_level.S" file too.
  - ThreadX is disabling all interrupts during kernel start-up to avoid any unexpected behavior, therefore all system related calls (HAL, BSP) should be done either at the beginning of the application or inside the thread entry functions.
  - ThreadX offers the "tx_application_define()" function, that is automatically called by the tx_kernel_enter() API.
    It is highly recommended to use it to create all applications ThreadX related resources (threads, semaphores, memory pools...)  but it should not in any way contain a system API call (HAL or BSP).
  - Using dynamic memory allocation requires to apply some changes to the linker file.
    ThreadX needs to pass a pointer to the first free memory location in RAM to the tx_application_define() function,
    using the "first_unused_memory" argument.
-   This require changes in the linker files to expose this memory location.
+   This requires changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
      place in RAM_region    { last section FREE_MEM };
@@ -106,7 +100,7 @@ RTOS, ThreadX, USBXDevice, Device, USB_OTG, Full Speed, MSC, Mass Storage, SD Ca
 ### <b>Hardware and Software environment</b>
 
   - This example runs on STM32H735xx devices.
-  - This example has been tested with STMicroelectronics STM32H735G-DK boards Revision: MB1520-H735I-B02.
+  - This example has been tested with STMicroelectronics STM32H735G-DK boards revision: MB1520-H735I-B02
     and can be easily tailored to any other supported device and development board.
 
 ### <b>How to use it ?</b>

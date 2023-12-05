@@ -143,12 +143,12 @@
         <option>
           <name>FPU2</name>
           <version>0</version>
-          <state>4</state>
+          <state>0</state>
         </option>
         <option>
           <name>NrRegs</name>
           <version>0</version>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>NEON</name>
@@ -322,7 +322,7 @@
         </option>
         <option>
           <name>CCRequirePrototypes</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>CCDiagWarnAreErr</name>
@@ -1405,7 +1405,7 @@
         </option>
         <option>
           <name>CCRequirePrototypes</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>CCDiagWarnAreErr</name>
@@ -2337,18 +2337,6 @@
   </group>
   <group>
     <name>Drivers</name>
-    <group>
-      <name>BSP</name>
-      <group>
-        <name>Components</name>
-        <file>
-          <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\BSP\Components\mt25tl01g\mt25tl01g.c</name>
-          <excluded>
-            <configuration>Fx_Dual_Instance_CM7</configuration>
-          </excluded>
-        </file>
-      </group>
-    </group>
     <group>
       <name>CMSIS</name>
       <file>

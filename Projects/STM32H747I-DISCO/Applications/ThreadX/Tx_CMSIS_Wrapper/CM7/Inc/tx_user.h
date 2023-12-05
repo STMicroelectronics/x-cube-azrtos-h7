@@ -108,7 +108,6 @@
    to tx_port.h for descriptions on each of these options.  */
 
 #define TX_MAX_PRIORITIES                64
-#define TX_THREAD_USER_EXTENSION           ULONG               tx_thread_detached_joinable;
 /*#define TX_TIMER_THREAD_STACK_SIZE                1024*/
 /*#define TX_TIMER_THREAD_PRIORITY                0*/
 
@@ -281,6 +280,9 @@
 #define USE_DYNAMIC_MEMORY_ALLOCATION
 
 /*#define USE_MEMORY_POOL_ALLOCATION*/
+
+#define TX_THREAD_USER_EXTENSION           ULONG               tx_thread_detached_joinable;
+
 /* USER CODE END 2 */
 
 #endif

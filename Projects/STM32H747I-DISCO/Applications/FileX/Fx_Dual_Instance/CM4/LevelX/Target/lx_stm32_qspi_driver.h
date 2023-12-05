@@ -167,9 +167,6 @@ UINT lx_stm32_qspi_initialize(LX_NOR_FLASH *nor_flash);
 
 #if (LX_STM32_QSPI_INIT == 1)
 extern void MX_QUADSPI_Init(void);
-#endif
-
-#if (LX_STM32_QSPI_INIT == 1)
 #define qspi_driver_init() MX_QUADSPI_Init()
 #endif
 

@@ -1,7 +1,6 @@
-
 ##  <b>Fx_Dual_Instance application description</b>
 
-This application provide user a working example of two storage media managed by two independent instances of FileX/LevelX running on STM32H747I-DISCO board (Dual core).
+This application provides user a working example of two storage media managed by two independent instances of FileX/LevelX running on STM32H747I-DISCO board (Dual core).
 This is to demonstrate the coexistence capability of two FileX/Levelx stacks running independently on each core.
 
 Two independent media storage: µSD and QSPI NOR Flash will be used on STM32H747I-DISCO board(Dual core).
@@ -50,8 +49,8 @@ The application starts by calling the ThreadX's initialization routine which exe
 
 The fx_app_thread will start by formatting the NOR Flash using FileX services. The resulting file system is a FAT32 compatible, with 512 bytes per sector and 8 sectors per cluster.
 The NOR flash should be erased prior to format either by the application or by the STM32CubeProgrammer, this allows LevelX and FileX to create a clean FAT FileSystem.
-Chip erase operation takes considerable time when done by the application, therefore it is disabled by default. 
-To enable it, please define  the flag  ``LX_STM32_QSPI_ERASE`` to <b> 1 </b> in "lx_stm32_ospi_driver.h":
+Chip erase operation takes considerable time when done by the application, therefore it is disabled by default.
+To enable it, please define  the flag  ``LX_STM32_QSPI_ERASE`` to <b> 1 </b> in "lx_stm32_qspi_driver.h":
 ````
 #define LX_STM32_QSPI_ERASE                              1
 ````
@@ -107,7 +106,7 @@ None
 #### <b>ThreadX usage hints</b>
 
  - ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.
- - ThreadX is configured with 100 ticks/sec by default, this should be taken into account when using delays or timeouts at application. It is always possible to reconfigure it in the "tx_user.h", the "TX_TIMER_TICKS_PER_SECOND" define,but this should be reflected in "tx_initialize_low_level.S" file too.
+ - ThreadX is configured with 100 ticks/sec by default, this should be taken into account when using delays or timeouts at application. It is always possible to reconfigure it in the "tx_user.h", the "TX_TIMER_TICKS_PER_SECOND" define, but this should be reflected in "tx_initialize_low_level.S" file too.
  - ThreadX is disabling all interrupts during kernel start-up to avoid any unexpected behavior, therefore all system related calls (HAL, BSP) should be done either at the beginning of the application or inside the thread entry functions.
  - ThreadX offers the "tx_application_define()" function, that is automatically called by the tx_kernel_enter() API.
    It is highly recommended to use it to create all applications ThreadX related resources (threads, semaphores, memory pools...)  but it should not in any way contain a system API call (HAL or BSP).

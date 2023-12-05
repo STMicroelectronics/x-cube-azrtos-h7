@@ -63,6 +63,7 @@ __ALIGN_BEGIN static UCHAR ux_host_memory_buffer[USBX_HOST_APP_MEMORY_BUFFER_SIZ
 UX_HOST_CLASS_HID          *hid_instance;
 UX_HOST_CLASS_HID_MOUSE    *mouse;
 UX_HOST_CLASS_HID_KEYBOARD *keyboard;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

@@ -119,7 +119,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
   /* USER CODE END MX_NetXDuo_MEM_POOL */
 
   /* USER CODE BEGIN 0 */
-
+  printf("Nx_Webserver application started..\n");
   /* USER CODE END 0 */
 
   /* Initialize the NetXDuo system. */
@@ -246,12 +246,6 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
   tx_semaphore_create(&DHCPSemaphore, "DHCP Semaphore", 0);
 
   /* USER CODE BEGIN MX_NetXDuo_Init */
-
-  printf("Nx_Webserver application started..\n");
-
-  /* Initialize the NetXDuo system. */
-  nx_system_initialize();
-
 
   /* Allocate the server packet pool. */
   ret = tx_byte_allocate(byte_pool, (VOID **) &pointer, SERVER_POOL_SIZE, TX_NO_WAIT);
@@ -500,12 +494,12 @@ UINT webserver_request_notify_callback(NX_WEB_HTTP_SERVER *server_ptr, UINT requ
   }
   else if (strcmp(resource, "/LedOn") == 0)
   {
-    printf(" Loggling Green Led On \n");
+    printf(" Toggling Green Led On \n");
     tx_thread_resume(&LedThread);
   }
   else if (strcmp(resource, "/LedOff") == 0)
   {
-    printf(" Loggling Green Led Off \n");
+    printf(" Toggling Green Led Off \n");
     HAL_GPIO_WritePin (LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
     tx_thread_suspend(&LedThread);
   }

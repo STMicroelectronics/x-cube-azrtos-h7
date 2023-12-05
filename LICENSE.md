@@ -13,8 +13,8 @@
 | BSP STM32H747I-EVAL             | STMicroelectronics                                    | BSD-3-Clause |
 | BSP STM32H750B-DK               | STMicroelectronics                                    | BSD-3-Clause |
 | BSP Components                  | STMicroelectronics                                    | BSD-3-Clause |
-| Application Projects            | STMicroelectronics                                    | Proprietary  |
-| CMSIS RTOS Threadx wrapper      | STMicroelectronics                                    | Proprietary  |
+| Application Projects            | STMicroelectronics                                    | SLA0044  |
+| CMSIS RTOS Threadx wrapper      | STMicroelectronics                                    | SLA0044  |
 | Azure RTOS ThreadX              | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
 | Azure RTOS NetXDuo              | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
 | Azure RTOS FileX                | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |

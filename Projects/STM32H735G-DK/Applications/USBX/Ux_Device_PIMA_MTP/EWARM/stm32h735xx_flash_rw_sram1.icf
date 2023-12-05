@@ -13,7 +13,9 @@ define symbol __ICFEDIT_region_ITCMRAM_end__   = 0x0000FFFF;
 define symbol __ICFEDIT_region_UXDATA_start__  = 0x24035000;
 define symbol __ICFEDIT_region_UXDATA_end__   = 0x24035FFF;
 define symbol __ICFEDIT_region_UXDATA_POOL_start__  = 0x24036000;
-define symbol __ICFEDIT_region_UXDATA_POOL_end__   = __ICFEDIT_region_RAM_end__;
+define symbol __ICFEDIT_region_UXDATA_POOL_end__   = 0x24045FFF;
+define symbol __ICFEDIT_region_UXDATA_POOL_APP_start__  = 0x24046000;
+define symbol __ICFEDIT_region_UXDATA_POOL_APP_end__   = __ICFEDIT_region_RAM_end__;
 
 /*-Sizes-*/
 define symbol __ICFEDIT_size_cstack__ = 0x400;
@@ -27,6 +29,7 @@ define region RAM_region      = mem:[from __ICFEDIT_region_RAM_start__   to __IC
 define region ITCMRAM_region  = mem:[from __ICFEDIT_region_ITCMRAM_start__ to __ICFEDIT_region_ITCMRAM_end__];
 define region UXApp_region = mem:[from __ICFEDIT_region_UXDATA_start__ to __ICFEDIT_region_UXDATA_end__];
 define region UXApp_region_pool = mem:[from __ICFEDIT_region_UXDATA_POOL_start__ to __ICFEDIT_region_UXDATA_POOL_end__];
+define region UXApp_region_pool_app = mem:[from __ICFEDIT_region_UXDATA_POOL_APP_start__ to __ICFEDIT_region_UXDATA_POOL_APP_end__];
 
 define block CSTACK    with alignment = 8, size = __ICFEDIT_size_cstack__   { };
 define block HEAP      with alignment = 8, size = __ICFEDIT_size_heap__     { };
@@ -41,3 +44,4 @@ place in RAM_region   { readwrite,
                         block CSTACK, block HEAP };
 place in UXApp_region { section .UsbHpcdSection};
 place in UXApp_region_pool { section .UsbxPoolSection};
+place in UXApp_region_pool_app { section .UsbxAppSection};

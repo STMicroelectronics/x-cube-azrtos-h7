@@ -64,8 +64,6 @@
 
 /* ::CMSIS:RTOS2 */
 #include "cmsis_os2.h"
-/* CMSIS compiler specific defines */
-#include "cmsis_compiler.h"
 
 #include "tx_api.h"
 #include "tx_initialize.h"
@@ -76,6 +74,10 @@
 #include "tx_mutex.h"
 #include "tx_semaphore.h"
 #include "tx_queue.h"
+#include "tx_block_pool.h"
+
+/* CMSIS compiler specific defines */
+#include "cmsis_compiler.h"
 
 /*---------------------------------------------------------------------------*/
 
@@ -139,6 +141,7 @@ extern uint32_t SystemCoreClock;
 
 TX_BYTE_POOL HeapBytePool;
 TX_BYTE_POOL StackBytePool;
+TX_BLOCK_POOL BlockPool;
 
 /*---------------------------------------------------------------------------*/
 /*-------------------CMSIS RTOS2 Internal Functions--------------------------*/
@@ -245,7 +248,7 @@ static osStatus_t MemInit(void)
 {
   /* Allocated memory size */
   uint32_t bytepool_size = RTOS2_BYTE_POOL_STACK_SIZE;
-#ifdef USE_DYNAMIC_MEMORY_ALLOCATION  
+#ifdef USE_DYNAMIC_MEMORY_ALLOCATION
   /* Unused memory address */
   CHAR *unused_memory = NULL;
 #else
@@ -253,7 +256,7 @@ static osStatus_t MemInit(void)
     CHAR *unused_memory_Stack = NULL;
     CHAR *unused_memory_Heap = NULL;
   #endif
-#endif  
+#endif
 
   /* If the memory size the be allocated is less then the TX_BYTE_POOL_MIN */
   if (bytepool_size < TX_BYTE_POOL_MIN)
@@ -262,18 +265,16 @@ static osStatus_t MemInit(void)
     bytepool_size = TX_BYTE_POOL_MIN;
   }
 /* Initialize the Heap BytePool address */
-#ifdef USE_DYNAMIC_MEMORY_ALLOCATION  
-  unused_memory = (CHAR *)_tx_initialize_unused_memory;  
-#else
-  #ifdef USE_MEMORY_POOL_ALLOCATION  
+#ifdef USE_DYNAMIC_MEMORY_ALLOCATION
+  unused_memory = (CHAR *)_tx_initialize_unused_memory;
+#elif  USE_MEMORY_POOL_ALLOCATION
   static CHAR freememStack[RTOS2_BYTE_POOL_STACK_SIZE + RTOS2_INTERNAL_BYTE_POOL_SIZE];
   static CHAR freememHeap[RTOS2_BYTE_POOL_HEAP_SIZE + RTOS2_INTERNAL_BYTE_POOL_SIZE];
   unused_memory_Stack = (CHAR *)freememStack;
   unused_memory_Heap = (CHAR *)freememHeap;
-  #endif
 #endif
-  
-#ifdef USE_DYNAMIC_MEMORY_ALLOCATION 
+
+#ifdef USE_DYNAMIC_MEMORY_ALLOCATION
   /* Create a byte memory pool from which to allocate the timer control
      block */
   if (tx_byte_pool_create(&StackBytePool, "Byte Pool Stack", unused_memory,
@@ -314,9 +315,9 @@ static osStatus_t MemInit(void)
 
   /* Update the _tx_initialize_unused_memory */
   _tx_initialize_unused_memory = unused_memory;
-  
+
 #else
-  #ifdef USE_MEMORY_POOL_ALLOCATION 
+  #ifdef USE_MEMORY_POOL_ALLOCATION
   /* Create a byte memory pool from which to allocate the timer control
      block */
   if (tx_byte_pool_create(&StackBytePool, "Byte Pool Stack", unused_memory_Stack,
@@ -344,7 +345,7 @@ static osStatus_t MemInit(void)
     return (osError);
   }
   #endif
-#endif  
+#endif
   return (osOK);
 }
 
@@ -1483,9 +1484,6 @@ osStatus_t osThreadTerminate(osThreadId_t thread_id)
       /* Free the thread resources if it is Detached */
       if (thread_ptr->tx_thread_detached_joinable == osThreadDetached)
       {
-        /* Delete the thread */
-        tx_thread_delete(thread_ptr);
-
         /* Free the already allocated memory for thread stack */
         MemFree(thread_ptr->tx_thread_stack_start);
 
@@ -2763,7 +2761,7 @@ osStatus_t osMutexAcquire(osMutexId_t mutex_id, uint32_t timeout)
       /* Return osOK for success */
       status = osOK;
     }
-    else if (tx_status == TX_WAIT_ABORTED)
+    else if ((tx_status == TX_WAIT_ABORTED) || (tx_status == TX_NOT_AVAILABLE))
     {
       /* Return osErrorTimeout when the mutex is not obtained in the given time */
       status = osErrorTimeout;
@@ -3100,7 +3098,7 @@ osStatus_t osSemaphoreAcquire(osSemaphoreId_t semaphore_id, uint32_t timeout)
       /* Return osOK for success */
       status = osOK;
     }
-    else if (tx_status == TX_WAIT_ABORTED)
+    else if ((tx_status == TX_WAIT_ABORTED) || (tx_status == TX_NO_INSTANCE))
     {
       /* Return osErrorTimeout when the semaphore is not obtained
       in the given time */
@@ -3817,6 +3815,517 @@ osStatus_t osMessageQueueGet(osMessageQueueId_t mq_id, void *msg_ptr, uint8_t *m
   }
 
   return (status);
+}
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------Memory Pool Management APIs---------------------*/
+/*---------------------------------------------------------------------------*/
+/**
+  * @brief  The function osMemoryPoolNew creates and initializes a memory pool
+  *         object and returns the pointer to the memory pool object identifier
+  *         or NULL in case of an error. It can be safely called before the RTOS
+  *         is started (call to osKernelStart), but not before it is initialized
+  *         (call to osKernelInitialize).
+  *         The total amount of memory needed is at least block_count * block_size.
+  *         Memory from the pool can only be allocated/freed in fixed portions
+  *         of block_size.
+  *         Note : This function cannot be called from Interrupt Service Routines.
+  * @param  [in] block_count maximum number of memory blocks in memory pool.
+  *         [in] block_size memory block size in bytes.
+  *         [in] attr memory pool attributes; NULL: default values.
+  * @retval memory pool ID for reference by other functions or NULL in case of error.
+  */
+osMemoryPoolId_t osMemoryPoolNew (uint32_t block_count, uint32_t block_size, const osMemoryPoolAttr_t *attr)
+{
+  /* For TX_BLOCK_POOL the control block pointer is the memory pool identifier */
+  TX_BLOCK_POOL *block_pool_ptr = NULL;
+  /* Pointer to memory pool named */
+  CHAR *name_ptr = NULL;
+  /* Pointer to start address of the memory pool storage data */
+  VOID * pool_start = NULL;
+  /* The memory pool data size */
+  UINT pool_size = 0U;
+  /* The memory pool control block size */
+  ULONG cb_size = 0U;
+
+  /* Check if this API is called from Interrupt Service Routines or the block_count
+     is equal to 0 or block_size is equal to 0 */
+  if ((!IS_IRQ_MODE() && (block_size != 0) && (block_count != 0)))
+  {
+     /* Initialize the name_ptr to NULL */
+     name_ptr = NULL;
+
+     if (attr != NULL)
+     {
+      /* Check if the name_ptr is not NULL */
+      if (attr->name != NULL)
+      {
+        /* Set the message queue name_ptr */
+        name_ptr = (CHAR *)attr->name;
+      }
+      /* Check if the memory pool data storage size is equal to 0 */
+      if (attr->mp_size == 0U)
+      {
+        /* Set memory pool data size to block_count * block_size (The total amount of memory required
+           for the memory pool data storage) */
+        pool_size = block_count * block_size;
+      }
+      else if (attr->mp_size < (pool_size))
+      {
+        /* Return NULL pointer in case of error */
+        return (NULL);
+      }
+      else if (attr->mp_size < TX_BYTE_POOL_MIN)
+      {
+        /* Set memory pool data size to TX_BYTE_POOL_MIN */
+        pool_size = TX_BYTE_POOL_MIN;
+      }
+      else
+      {
+        /* Set memory pool data size to attr->mp_size */
+        pool_size = (ULONG)attr->mp_size;
+      }
+      /* Check if the input memory pool data pointer is NULL */
+      if (attr->mp_mem == NULL)
+      {
+        /* Allocate the data for the memory pool to be created */
+        pool_start = MemAlloc(pool_size, RTOS2_BYTE_POOL_STACK_TYPE);
+        if (pool_start == NULL)
+        {
+          /* Return NULL pointer in case of error */
+          return (NULL);
+        }
+      }
+      else
+      {
+        if (attr->mp_size == 0U)
+        {
+          /* Return NULL pointer in case of error */
+          return (NULL);
+        }
+        else
+        {
+          /* Set memory pool data size to attr->mp_size */
+          pool_size = (ULONG)attr->mp_size;
+        }
+
+        /* The memory pool shall point to the memory pool data memory address */
+        pool_start = attr->mp_mem;
+      }
+      /* Check if the control block size is equal to 0 */
+      if (attr->cb_size == 0U)
+      {
+        /* Set control block size to sizeof(TX_BLOCK_POOL) */
+        cb_size = sizeof(TX_BLOCK_POOL);
+      }
+      else if (attr->cb_size < sizeof(TX_BLOCK_POOL))
+      {
+        /* Return NULL pointer in case of error */
+        return (NULL);
+      }
+      else
+      {
+        /* Set memory pool data size to attr->cb_size */
+        cb_size = (ULONG)attr->cb_size;
+      }
+      /* Check if the input control block pointer is NULL */
+      if (attr->cb_mem == NULL)
+      {
+        /* Allocate the block_pool_ptr structure for the memory pool to be created */
+        block_pool_ptr = (TX_BLOCK_POOL *)MemAlloc(cb_size, RTOS2_BYTE_POOL_HEAP_TYPE);
+        if (block_pool_ptr == NULL)
+        {
+          /* Check if the memory for memory pool data has been internally allocated */
+          if (attr->mp_mem == NULL)
+          {
+            /* Free the already allocated memory for memory pool data */
+            MemFree(pool_start);
+          }
+          /* Return NULL pointer in case of error */
+          return (NULL);
+        }
+      }
+      else
+      {
+        /* The control block shall point to the input cb_mem memory address */
+        block_pool_ptr = attr->cb_mem;
+      }
+    }
+    else /* attr == NULL*/
+    {
+      /* Initialize the name_ptr to NULL */
+      name_ptr = NULL;
+
+      /* Initialize the memory pool data size to block_count * block_size (The total amount of memory required
+           for the memory pool data storage) */
+      pool_size = block_count * block_size;
+
+      /* Allocate the data for pool_start to be created */
+      pool_start = MemAlloc(pool_size, RTOS2_BYTE_POOL_STACK_TYPE);
+
+      if (pool_start == NULL)
+      {
+        /* Return NULL pointer in case of error */
+        return (NULL);
+      }
+      /* Allocate the block_pool_ptr structure for the block pool to be created */
+      block_pool_ptr = (TX_BLOCK_POOL *)MemAlloc(sizeof(TX_BLOCK_POOL), RTOS2_BYTE_POOL_HEAP_TYPE);
+
+      if (block_pool_ptr == NULL)
+      {
+        /* Free the already allocated memory for block pool data */
+        MemFree(pool_start);
+        /* Return NULL pointer in case of error */
+        return (NULL);
+      }
+    }
+    /* Call the tx_block_pool_create function to create the new  memory pool */
+    if (tx_block_pool_create(block_pool_ptr, name_ptr, block_size, pool_start, pool_size) != TX_SUCCESS)
+    {
+      /* Check if the memory for  memory pool control block has been internally
+         allocated */
+      if ((attr->cb_mem == NULL) || (attr == NULL))
+      {
+        /* Free the already allocated memory for  memory pool control block */
+        MemFree(block_pool_ptr);
+      }
+
+      /* Check if the memory for  memory pool data has been internally allocated */
+      if ((attr->mp_mem == NULL) || (attr == NULL))
+      {
+        /* Free the already allocated memory for memory pool data */
+        MemFree(pool_start);
+      }
+
+      /* Return NULL pointer in case of error */
+      block_pool_ptr = NULL;
+    }
+  }
+  else
+  {
+    block_pool_ptr = NULL;
+  }
+
+  return((osMemoryPoolId_t)(block_pool_ptr));
+}
+
+/**
+  * @brief  The function osMemoryPoolGetName returns the pointer to the name
+  *         string of the memory pool identified by parameter mp_id or NULL in
+  *         case of an error.
+  *         Note : This function cannot be called from Interrupt Service
+  *         Routines.
+  * @param  [in] mp_id memory pool ID obtained by osMemoryPoolNew.
+  * @retval maximum number of memory blocks in the memory pool object.
+  */
+const char *osMemoryPoolGetName(osMemoryPoolId_t mp_id)
+{
+  /* For TX_BLOCK_POOL the control block pointer is the Block pool identifier */
+  TX_BLOCK_POOL *block_pool_ptr = (TX_BLOCK_POOL *)mp_id;
+  /* The output name_ptr as null-terminated string */
+  CHAR *name_ptr = NULL;
+
+  /* Check if this API is called from Interrupt Service Routines, the mq_id is
+     NULL or mp_id->tx_block_pool_id != TX_BLOCK_POOL_ID */
+  if (IS_IRQ_MODE() || (block_pool_ptr == NULL) || (block_pool_ptr->tx_block_pool_id != TX_BLOCK_POOL_ID))
+  {
+    /* Return NULL in case of an error */
+    name_ptr = NULL;
+  }
+  else
+  {
+    /* Call the tx_block_pool_info_get to get the block_pool name_ptr */
+    if (tx_block_pool_info_get(block_pool_ptr, &name_ptr, TX_NULL,TX_NULL, TX_NULL,TX_NULL, TX_NULL)!= TX_SUCCESS)
+    {
+      /* Return NULL in case of an error */
+      name_ptr = NULL;
+    }
+  }
+
+  return (name_ptr);
+}
+/**
+  * @brief  The blocking function osMemoryPoolAlloc allocates the memory pool
+  *         parameter mp_id and returns a pointer to the address of the allocated
+  *         memory or 0 in case of an error.
+  *         The parameter timeout specifies how long the system waits to allocate
+  *         the memory. While the system waits, the thread that is calling this
+  *         function is put into the BLOCKED state. The thread will become READY
+  *         as soon as at least one block of memory gets available.
+  *         The parameter timeout can have the following values:
+  *          - when timeout is 0, the function returns instantly (i.e. try semantics).
+  *          - when timeout is set to osWaitForever the function will wait for an
+  *            infinite time until the memory is allocated (i.e. wait semantics).
+  *          - All other values specify a time in kernel ticks for a timeout
+  *           (i.e. timed-wait semantics).
+  *         Note :
+  *         - This function may be called from Interrupt Service Routines.
+  *         - It is in the responsibility of the user to respect the block size,
+  *         i.e. not access memory beyond the blocks limit.
+  * @param  [in] mp_id memory pool ID obtained by osMemoryPoolNew.
+  * @param  [in] timeout Timeout Value or 0 in case of no time-out.
+  * @retval address of the allocated memory block or NULL in case of no memory
+  *         is available.
+  */
+void * osMemoryPoolAlloc(osMemoryPoolId_t mp_id, uint32_t timeout)
+{
+  /* For TX_BLOCK_POOL the control block pointer is the Block pool identifier */
+  TX_BLOCK_POOL *block_pool_ptr = (TX_BLOCK_POOL *)mp_id;
+
+  /* The output name_ptr as null-terminated string */
+  void *block;
+
+  /* Check if the mq_id is NULL or mp_id->tx_block_pool_id != TX_BLOCK_POOL_ID */
+  if((block_pool_ptr == NULL) || (block_pool_ptr->tx_block_pool_id != TX_BLOCK_POOL_ID))
+  {
+    /* Return NULL in case of an error */
+    block = NULL;
+  }
+  else
+  {
+    block = NULL;
+    /* Get a block from the free-list */
+    if(tx_block_allocate(block_pool_ptr, &block, timeout) != TX_SUCCESS)
+    {
+      /* Return NULL in case of an error */
+      block = NULL;
+    }
+  }
+  return (block);
+}
+/**
+  * @brief  The function osMemoryPoolFree frees the memory pool block specified
+  *         by the parameter block in the memory pool object specified by the
+  *         parameter mp_id. The memory block is put back to the list of
+  *         available blocks
+  *         If another thread is waiting for memory to become available the
+  *         thread is put to READY state.
+  *         Possible osStatus_t return values:
+  *           - osOK: the memory has been freed.
+  *           - oosErrorParameter: parameter mp_id is NULL or invalid, block
+  *              points to invalid memory.
+  *           - oosErrorResource: the memory pool is in an invalid state.
+  *         Note : osMemoryPoolFree may perform certain checks on the block
+  *                pointer given. But using osMemoryPoolFree with a pointer other
+  *                than one received from osMemoryPoolAlloc has UNPREDICTED behaviour.
+  *                This function may be called from Interrupt Service Routines.
+  * @param  [in] mp_id memory pool ID obtained by osMemoryPoolNew.
+  *         [in] [in] block address of the allocated memory block to be
+  *         returned to the memory pool
+  * @retval status code that indicates the execution status of the function.
+  */
+osStatus_t osMemoryPoolFree(osMemoryPoolId_t mp_id, void * block)
+{
+   /* For TX_BLOCK_POOL the control block pointer is the Block pool identifier */
+   TX_BLOCK_POOL *block_pool_ptr = (TX_BLOCK_POOL *)mp_id;
+
+   osStatus_t status;
+
+  /* Check if the mq_id is NULL or mp_id->tx_block_pool_id != TX_BLOCK_POOL_ID */
+  if((block_pool_ptr == NULL) || (block_pool_ptr->tx_block_pool_id != TX_BLOCK_POOL_ID) || (block == NULL))
+  {
+    /* Invalid input parameters */
+    status = osErrorParameter;
+  }
+  else
+  {
+    if(tx_block_release((VOID *)block) != TX_SUCCESS)
+    {
+      status = osErrorResource;
+    }
+    else
+    {
+      status = osOK;
+    }
+  }
+  return (status);
+}
+/**
+  * @brief  The function osMemoryPoolGetCapacity returns the maximum number
+  *         of memory blocks in the memory pool object specified by
+  *         parameter mp_id or 0 in case of an error.
+  *         Note : This function may be called from Interrupt Service
+  *         Routines.
+  * @param  [in] mp_id memory pool ID obtained by osMemoryPoolNew.
+  * @retval maximum number of memory blocks in the memory pool object.
+  */
+uint32_t osMemoryPoolGetCapacity(osMemoryPoolId_t mp_id)
+{
+  /* For TX_BLOCK_POOL the control block pointer is the Block pool identifier */
+  TX_BLOCK_POOL *block_pool_ptr = (TX_BLOCK_POOL *)mp_id;
+  /* The output name_ptr as null-terminated string */
+  ULONG total_blocks = 0;
+
+  /* Check if this API is called from Interrupt Service Routines, the mq_id is
+     NULL or mp_id->tx_block_pool_id != TX_BLOCK_POOL_ID */
+  if ((block_pool_ptr == NULL) || (block_pool_ptr->tx_block_pool_id != TX_BLOCK_POOL_ID))
+  {
+    /* Return 0 in case of an error */
+    total_blocks = 0;
+  }
+  else
+  {
+    /* Call the tx_block_pool_info_get to get the total_blocks */
+    if (tx_block_pool_info_get(block_pool_ptr, TX_NULL, TX_NULL, &total_blocks, TX_NULL,TX_NULL, TX_NULL)!= TX_SUCCESS)
+    {
+      /* Return 0 in case of an error */
+      total_blocks = 0;
+    }
+  }
+
+  return (total_blocks);
+}
+/**
+  * @brief  The function osMemoryPoolGetBlockSize returns the memory block size
+  *         in bytes in the memory pool object specified by parameter mp_id
+  *         or 0 in case of an error.
+  *         Note : This function may be called from Interrupt Service
+  *         Routines.
+  * @param  [in] mp_id memory pool ID obtained by osMemoryPoolNew.
+  * @retval memory block size in bytes.
+  */
+uint32_t osMemoryPoolGetBlockSize(osMemoryPoolId_t mp_id)
+{
+  /* For TX_BLOCK_POOL the control block pointer is the Block pool identifier */
+  TX_BLOCK_POOL *block_pool_ptr = (TX_BLOCK_POOL *)mp_id;
+  /* The output name_ptr as null-terminated string */
+  uint32_t block_pool_size = 0;
+
+  /* Check if this API is called from Interrupt Service Routines, the mq_id is
+     NULL or mp_id->tx_block_pool_id != TX_BLOCK_POOL_ID */
+  if ((block_pool_ptr == NULL) || (block_pool_ptr->tx_block_pool_id != TX_BLOCK_POOL_ID))
+  {
+    /* Return 0 in case of an error */
+    block_pool_size = 0;
+  }
+  else
+  {
+    block_pool_size = block_pool_ptr->tx_block_pool_block_size;
+  }
+
+  return (block_pool_size);
+}
+/**
+  * @brief  The function osMemoryPoolGetCount returns the number of memory blocks
+  *         used in the memory pool object specified by parameter mp_id or 0 in
+  *         case of an error.
+  *         Note : This function may be called from Interrupt Service
+  *         Routines.
+  * @param  [in] mp_id memory pool ID obtained by osMemoryPoolNew.
+  * @retval number of memory blocks used.
+  */
+uint32_t osMemoryPoolGetCount(osMemoryPoolId_t mp_id)
+{
+  /* For TX_BLOCK_POOL the control block pointer is the Block pool identifier */
+  TX_BLOCK_POOL *block_pool_ptr = (TX_BLOCK_POOL *)mp_id;
+  /* The output name_ptr as null-terminated string */
+  ULONG block_pool_total = 0;
+  ULONG block_pool_available = 0;
+  ULONG block_pool_used = 0;
+
+  /* Check if this API is called from Interrupt Service Routines, the mq_id is
+     NULL or mp_id->tx_block_pool_id != TX_BLOCK_POOL_ID */
+  if ((block_pool_ptr == NULL) || (block_pool_ptr->tx_block_pool_id != TX_BLOCK_POOL_ID))
+  {
+    /* Return 0 in case of an error */
+    block_pool_used = 0;
+  }
+  else
+  {
+   /* Call the tx_block_pool_info_get to get the block_pool name_ptr */
+    if (tx_block_pool_info_get(block_pool_ptr, TX_NULL, &block_pool_available, &block_pool_total, TX_NULL, TX_NULL, TX_NULL)!= TX_SUCCESS)
+    {
+      /* Return 0 in case of an error */
+      block_pool_used = 0;
+    }
+    else
+    {
+      /* Return number of used blocks */
+      block_pool_used = (block_pool_total - block_pool_available);
+    }
+  }
+
+  return ((uint32_t)(block_pool_used));
+}
+/**
+  * @brief  The function osMemoryPoolGetSpace returns the number of memory blocks
+  *         available in the memory pool object specified by parameter mp_id
+  *         or 0 in case of an error.
+  *         Note : This function may be called from Interrupt Service
+  *         Routines.
+  * @param  [in] mp_id memory pool ID obtained by osMemoryPoolNew.
+  * @retval number of memory blocks available.
+  */
+uint32_t osMemoryPoolGetSpace(osMemoryPoolId_t mp_id)
+{
+  /* For TX_BLOCK_POOL the control block pointer is the Block pool identifier */
+  TX_BLOCK_POOL *block_pool_ptr = (TX_BLOCK_POOL *)mp_id;
+  /* The output name_ptr as null-terminated string */
+  ULONG block_pool_available = 0;
+
+  /* Check if this API is called from Interrupt Service Routines, the mq_id is
+     NULL or mp_id->tx_block_pool_id != TX_BLOCK_POOL_ID */
+  if ((block_pool_ptr == NULL) || (block_pool_ptr->tx_block_pool_id != TX_BLOCK_POOL_ID))
+  {
+    /* Return 0 in case of an error */
+    block_pool_available = 0;
+  }
+  else
+  {
+   /* Call the tx_block_pool_info_get to get the block_pool name_ptr */
+    if (tx_block_pool_info_get(block_pool_ptr, TX_NULL, &block_pool_available, TX_NULL, TX_NULL, TX_NULL, TX_NULL)!= TX_SUCCESS)
+    {
+      /* Return 0 in case of an error */
+      block_pool_available = 0;
+    }
+  }
+
+  return (block_pool_available);
+}
+/**
+  * @brief  The function osMemoryPoolDelete deletes a memory pool object
+  *         specified by parameter mp_id. It releases internal memory obtained
+  *         for memory pool handling. After this call, the mp_id is no longer
+  *         valid and cannot be used. The memory pool may be created again using
+  *         the function osMemoryPoolNew
+  *         Possible osStatus_t return values:
+  *           - osOK: the memory pool object has been deleted.
+  *           - osErrorParameter: parameter mp_id is NULL or invalid.
+  *           - osErrorResource: the memory pool is in an invalid state.
+  *           - osErrorISR: osMemoryPoolDelete cannot be called from interrupt service routines.
+  *         Note : This function cannot be called from Interrupt Service Routines.
+  * @param  [in] mp_id memory pool ID obtained by osMemoryPoolNew.
+  * @retval status code that indicates the execution status of the function.
+  */
+osStatus_t osMemoryPoolDelete(osMemoryPoolId_t mp_id)
+{
+  /* For TX_BLOCK_POOL the control block pointer is the Block pool identifier */
+  TX_BLOCK_POOL *block_pool_ptr = (TX_BLOCK_POOL *)mp_id;
+
+  osStatus_t status;
+
+  /* Check if this API is called from Interrupt Service Routines, the mq_id is
+     NULL or mp_id->tx_block_pool_id != TX_BLOCK_POOL_ID */
+  if ((block_pool_ptr == NULL) || (block_pool_ptr->tx_block_pool_id != TX_BLOCK_POOL_ID))
+  {
+    status = osErrorParameter;
+  }
+  else if(IS_IRQ_MODE())
+  {
+    status = osErrorISR;
+  }
+  else
+  {
+    if(tx_block_pool_delete(block_pool_ptr) != TX_SUCCESS)
+    {
+      status = osErrorResource;
+    }
+    else
+    {
+      status = osOK;
+    }
+  }
+  return(status);
 }
 
 /*---------------------------------------------------------------------------*/

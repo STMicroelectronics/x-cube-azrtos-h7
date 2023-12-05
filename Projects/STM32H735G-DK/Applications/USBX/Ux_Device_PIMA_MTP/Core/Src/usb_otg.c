@@ -22,7 +22,7 @@
 
 /* USER CODE BEGIN 0 */
 
-#include "string.h"
+#include <string.h>
 /* Set hpcd_USB_OTG_HS at the end of non-cacheable
    Memory address ".UsbHpcdSection"*/
 #if defined ( __ICCARM__ ) /* IAR Compiler */

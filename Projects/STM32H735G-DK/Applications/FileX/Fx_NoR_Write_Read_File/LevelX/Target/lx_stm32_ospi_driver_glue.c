@@ -21,7 +21,7 @@
   ChipSelectHighTime    = 2
   FreeRunningClock      = disabled
   ClockMode             = low
-  ClockPrescaler        = 4
+  ClockPrescaler        = 2
   SampleShifting        = none
   DelayHoldQuarterCycle = enabled
   ChipSelectBoundary    = 0

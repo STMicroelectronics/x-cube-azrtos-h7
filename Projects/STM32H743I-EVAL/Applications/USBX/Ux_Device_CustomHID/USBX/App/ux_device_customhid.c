@@ -297,7 +297,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   hid_event.ux_device_class_hid_event_report_id = TAMPER_REPORT_ID;
 
     /* Set button tamper event buffer */
-  if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_RESET)
+  if(HAL_GPIO_ReadPin(BUTTON_USER_GPIO_Port, BUTTON_USER_Pin) == GPIO_PIN_RESET)
   {
     hid_event.ux_device_class_hid_event_buffer[0] = 0x01;
   }

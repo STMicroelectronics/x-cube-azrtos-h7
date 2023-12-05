@@ -91,15 +91,18 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_SDMMC1_SD_Init();
   /* USER CODE BEGIN 2 */
-  while(HAL_GPIO_ReadPin(GPIOF,GPIO_PIN_5)==SD_NOT_PRESENT)
-    {
-    }
+  /* Check if SD card is present */
+  if(HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_5) == GPIO_PIN_RESET)
+  {
+    Error_Handler();
+  }
 
   /* Get SD card info */
   status = HAL_SD_GetCardInfo(&hsd1, &USBD_SD_CardInfo);
@@ -260,8 +263,6 @@ void Error_Handler(void)
   /* User can add his own implementation to report the HAL error return state */
   while (1)
   {
-    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-    HAL_Delay(100);
   }
   /* USER CODE END Error_Handler_Debug */
 }

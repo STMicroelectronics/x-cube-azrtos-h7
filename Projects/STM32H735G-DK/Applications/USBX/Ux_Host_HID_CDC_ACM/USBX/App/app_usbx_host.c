@@ -55,7 +55,6 @@ UX_HOST_CLASS_CDC_ACM      *cdc_acm;
 UX_HOST_CLASS_HID          *hid_instance;
 UX_HOST_CLASS_HID_MOUSE    *mouse;
 UX_HOST_CLASS_HID_KEYBOARD *keyboard;
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

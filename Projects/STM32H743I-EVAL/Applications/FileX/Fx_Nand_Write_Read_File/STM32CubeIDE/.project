@@ -1402,24 +1402,39 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_256byte_ecc_compute.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_block_full_update.c</name>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_block_allocate.c</name>
 			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_block_full_update.c</locationURI>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_block_allocate.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_block_obsoleted_check.c</name>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_block_data_move.c</name>
 			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_block_obsoleted_check.c</locationURI>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_block_data_move.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_block_reclaim.c</name>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_block_find.c</name>
 			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_block_reclaim.c</locationURI>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_block_find.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_block_mapping_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_block_mapping_set.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_block_status_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_block_status_set.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_close.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_close.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_data_page_copy.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_data_page_copy.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_defragment.c</name>
@@ -1447,29 +1462,14 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_driver_block_status_set.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_driver_extra_bytes_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_driver_extra_bytes_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_driver_extra_bytes_set.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_driver_extra_bytes_set.c</locationURI>
-		</link>
-		<link>
 			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_driver_page_erased_verify.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_driver_page_erased_verify.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_driver_read.c</name>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_erase_count_set.c</name>
 			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_driver_read.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_driver_write.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_driver_write.c</locationURI>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_erase_count_set.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_extended_cache_enable.c</name>
@@ -1477,19 +1477,54 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_extended_cache_enable.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_format.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_format.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_free_block_list_add.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_free_block_list_add.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_initialize.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_initialize.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_logical_sector_find.c</name>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_mapped_block_list_add.c</name>
 			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_logical_sector_find.c</locationURI>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_mapped_block_list_add.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_next_block_to_erase_find.c</name>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_mapped_block_list_get.c</name>
 			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_next_block_to_erase_find.c</locationURI>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_mapped_block_list_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_mapped_block_list_remove.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_mapped_block_list_remove.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_memory_initialize.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_memory_initialize.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_metadata_allocate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_metadata_allocate.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_metadata_build.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_metadata_build.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_metadata_write.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_metadata_write.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_open.c</name>
@@ -1512,16 +1547,6 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_partial_defragment.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_physical_page_allocate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_physical_page_allocate.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_sector_mapping_cache_invalidate.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_sector_mapping_cache_invalidate.c</locationURI>
-		</link>
-		<link>
 			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_sector_read.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_sector_read.c</locationURI>
@@ -1535,6 +1560,21 @@
 			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_sector_write.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_sector_write.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_sectors_read.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_sectors_read.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_sectors_release.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_sectors_release.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_sectors_write.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/levelx/common/src/lx_nand_flash_sectors_write.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/LevelX/File System/LevelX/NAND Flash Support/lx_nand_flash_system_error.c</name>

@@ -3,7 +3,7 @@
   ******************************************************************************
   * @file    app_azure_rtos.h
   * @author  MCD Application Team
-  * @brief   azure_rtos application header file
+  * @brief   app_azure_rtos application header file
   ******************************************************************************
   * @attention
   *

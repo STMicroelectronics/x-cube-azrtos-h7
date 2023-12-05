@@ -95,6 +95,13 @@ static VOID App_Link_Thread_Entry(ULONG thread_input);
 static VOID time_update_callback(NX_SNTP_TIME_MESSAGE *time_update_ptr, NX_SNTP_TIME *local_time);
 static ULONG nx_secure_tls_session_time_function(void);
 static UINT dns_create(NX_DNS *dns_ptr);
+
+static UINT message_generate(void);
+static UINT tls_setup_callback(NXD_MQTT_CLIENT *client_pt,
+                        NX_SECURE_TLS_SESSION *TLS_session_ptr,
+                        NX_SECURE_X509_CERT *certificate_ptr,
+                        NX_SECURE_X509_CERT *trusted_certificate_ptr);
+
 /* USER CODE END PFP */
 
 /**
@@ -444,7 +451,7 @@ static VOID my_notify_func(NXD_MQTT_CLIENT* client_ptr, UINT number_of_messages)
 * @param  RandomNbr
 * @retval none
 */
-UINT message_generate()
+static UINT message_generate()
 {
   uint32_t RandomNbr = 0;
 
@@ -464,7 +471,7 @@ ULONG nx_secure_tls_session_time_function(void)
 }
 
 /* Callback to setup TLS parameters for secure MQTT connection. */
-UINT tls_setup_callback(NXD_MQTT_CLIENT *client_pt,
+static UINT tls_setup_callback(NXD_MQTT_CLIENT *client_pt,
                         NX_SECURE_TLS_SESSION *TLS_session_ptr,
                         NX_SECURE_X509_CERT *certificate_ptr,
                         NX_SECURE_X509_CERT *trusted_certificate_ptr)

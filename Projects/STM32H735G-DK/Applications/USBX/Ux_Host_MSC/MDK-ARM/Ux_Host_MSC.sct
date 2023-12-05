@@ -9,7 +9,7 @@ LR_IROM1 0x08000000 0x00100000  {    ; load region size_region
    .ANY (+RO)
    .ANY (+XO)
   }
-  RW_IRAM1 0x24000000 0x00050000  {  ; RW data
+  RW_IRAM1 0x24000000 0x00035000  {  ; RW data
    .ANY (+RW +ZI)
   }
 

@@ -183,6 +183,7 @@ UINT    _ux_dcd_stm32_uninitialize(ULONG dcd_io, ULONG parameter);
 
 
 #define ux_dcd_stm32_initialize                      _ux_dcd_stm32_initialize
+#define ux_dcd_stm32_uninitialize                    _ux_dcd_stm32_uninitialize
 #define ux_dcd_stm32_interrupt_handler               _ux_dcd_stm32_interrupt_handler
 
 #endif /* UX_DCD_STM32_H */

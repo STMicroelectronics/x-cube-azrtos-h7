@@ -322,7 +322,7 @@
         </option>
         <option>
           <name>CCRequirePrototypes</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>CCDiagWarnAreErr</name>
@@ -1184,12 +1184,6 @@
     </group>
   </group>
   <group>
-    <name>Doc</name>
-    <file>
-      <name>$PROJ_DIR$\..\README.md</name>
-    </file>
-  </group>
-  <group>
     <name>Drivers</name>
     <group>
       <name>CMSIS</name>
@@ -2011,9 +2005,6 @@
       </group>
       <group>
         <name>Network/NetXDuo/NX Core</name>
-        <file>
-          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ram_network_driver.c</name>
-        </file>
         <file>
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_arp_announce_send.c</name>
         </file>
@@ -3494,7 +3485,7 @@
           <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_nd_cache_slow_periodic_update.c</name>
         </file>
         <file>
-          <name>$PROJ_DIR$/../../../../../../Middlewares/ST/netxduo/common/src/nx_http_proxy_client.c</name>
+          <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_http_proxy_client.c</name>
         </file>
       </group>
     </group>
@@ -4353,6 +4344,12 @@
         </file>
       </group>
     </group>
+  </group>
+  <group>
+    <name>Doc</name>
+    <file>
+      <name>$PROJ_DIR$/../README.md</name>
+    </file>
   </group>
 </project>
 

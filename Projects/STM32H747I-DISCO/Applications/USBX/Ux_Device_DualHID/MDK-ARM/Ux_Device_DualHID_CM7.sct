@@ -12,10 +12,9 @@ LR_IROM1 0x08000000 0x00100000  {    ; load region size_region
    .ANY (+RW +ZI)
   }
   RW_UsbHpcd 0x24035000 0x1000 {
-   *(.UsbHpcdSection)
+  *(.UsbHpcdSection)
   }
-
-  RW_UsbxPool 0x24036000 0x2400 {
-   *(.UsbxPoolSection)
+  RW_UsbxPool 0x24036000 0x9000 {
+  *(.UsbxPoolSection)
   }
 }

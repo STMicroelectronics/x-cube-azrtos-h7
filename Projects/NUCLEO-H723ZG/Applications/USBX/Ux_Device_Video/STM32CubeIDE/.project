@@ -1372,6 +1372,11 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_video_read_payload_get.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Device Class VIDEO/ux_device_class_video_read_task_function.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_video_read_task_function.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Device Class VIDEO/ux_device_class_video_read_thread_entry.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_video_read_thread_entry.c</locationURI>
@@ -1405,6 +1410,11 @@
 			<name>Middlewares/USBX/USB/USBX/UX Device Class VIDEO/ux_device_class_video_write_payload_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_video_write_payload_get.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/UX Device Class VIDEO/ux_device_class_video_write_task_function.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_video_write_task_function.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Device Class VIDEO/ux_device_class_video_write_thread_entry.c</name>

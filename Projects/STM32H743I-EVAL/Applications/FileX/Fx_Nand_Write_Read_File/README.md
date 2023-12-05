@@ -15,7 +15,7 @@ NAND flash device, the code provides all required software code for properly man
       - BlockNbr = 2048
       - PlaneSize = 2048 (NAND memory plane size is measured in number of blocks )
       - PlaneNbr = 1
-	  
+
   - User should have attention when configuring timings for the NAND memory. for more details about the timings please refer to AN4761.
 
   - The timings are configured the same for the ComSpaceTiming and AttSpaceTiming as below:
@@ -50,14 +50,18 @@ NAND flash device, the code provides all required software code for properly man
       - PE14  ------> FMC_D11
       - PE15  ------> FMC_D12
 
-The application starts by calling the ThreadX's initialization routine which executes the main thread that handles file operations. 
+The application starts by calling the ThreadX's initialization routine which executes the main thread that handles file operations.
 At this stage, all FileX resources are created, the NAND flash is initialized and a single thread is created:
 
   - fx_app_thread (Prio : 1; PreemptionPrio : 1) used for file operations.
 
-The fx_app_thread will start by formatting the NAND Flash using FileX services. The resulting file system is a FAT32 compatible, with 2048 bytes per sector and 1 sector per cluster. 
-Optionally, the NAND flash can be erased prior to format, this allows LevelX and FileX to create a clean FAT FileSystem. To enable flash mass erase, 
-please set the following flag in "lx_stm32_nand_fmc_driver.h":
+The fx_app_thread will start by formatting the NAND Flash using FileX services. The resulting file system is a FAT32 compatible, with 2048 bytes per sector and 1 sector per cluster.
+In case FAT FileSystem is not created, please check the following flag in "fx_stm32_levelx_nand_driver.h" is enabled:
+
+  - FX_NAND_FORMAT_FLASH_BEFORE_OPEN
+
+Optionally, the NAND flash can be erased prior to format, this allows LevelX and FileX to create a clean FAT FileSystem. 
+To enable flash mass erase, please set the following flag in "lx_stm32_nand_custom_driver.h":
 
   - LX_DRIVER_ERASES_FLASH_AFTER_INIT
 
@@ -92,8 +96,8 @@ None
  3.  It is recommended to enable the cache and maintain its coherence:
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
-      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series"
-  
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 and STM32H7 Series"
+
 #### <b>ThreadX usage hints</b>
 
  - ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.
@@ -107,16 +111,16 @@ None
    This require changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+     place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	``` 
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -124,17 +128,17 @@ None
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	``` 
-	
+    ```
+
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
-       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.	 
-       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).	 
+       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
        Read more in STM32CubeIDE User Guide, chapter: "Linker script".
-	  
+
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
-               
-               
+
+
 #### <b>FileX/LevelX usage hints</b>
 
 - FileX sd driver is using the DMA, thus the DTCM (0x20000000) memory should not be used by the application, as it is not accessible by the SD DMA.
@@ -168,4 +172,3 @@ In order to make the program work, you must do the following :
  - Open your preferred toolchain
  - Rebuild all files and load your image into target memory
  - Run the application
- 

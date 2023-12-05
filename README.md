@@ -4,7 +4,7 @@
 
 With Azure RTOS complementing the extensive STM32Cube ecosystem providing free development tools, software bricks, and software expansion packages, STM32 users can also leverage the rich services of Azure RTOS, which meet the needs of tiny, smart, connected devices.
 
-**X-CUBE-AZRTOS-H7** (Azure RTOS Software Expansion for STM32Cube) provides a full integration of **Microsoft Azure RTOS** in the STM32Cube environment for the STM32H7 series of microcontrollers. Ready-to-run applicative examples are also provided for the *NUCLEO-H723ZG*, *STM32H735G-DK*, *STM32H747I-DK* and *STM32H743I-EVAL* evaluation boards, thus **reducing the learning curve** and ensuring a **smooth application development experience** with Azure RTOS and STM32H7 MCUs.
+**X-CUBE-AZRTOS-H7** (Azure RTOS Software Expansion for STM32Cube) provides a full integration of **Microsoft Azure RTOS** in the STM32Cube environment for the STM32H7 series of microcontrollers. Ready-to-run applicative examples are also provided for the *NUCLEO-H723ZG*, *STM32H735G-DK*, *STM32H747I-DISCO* and *STM32H743I-EVAL* evaluation boards, thus **reducing the learning curve** and ensuring a **smooth application development experience** with Azure RTOS and STM32H7 MCUs.
 
 The scope of this package covers the following Azure RTOS middleware: RTOS (***ThreadX***), USB Device and Host (***USBX***), File System including NOR/NAND memories support (***FileX*** and ***LevelX***) and Networking including Ethernet and WiFi media (***NetXDuo***).
 
@@ -27,13 +27,13 @@ Azure RTOS is a professional grade, highly reliable and market proven Middleware
 One of the following toolchains:
 
 - IAR Embedded Workbench for ARM (EWARM) toolchain 8.50.9 + ST-LINKV3
-- [STM32CubeIDE V1.12.0](https://www.st.com/en/development-tools/stm32cubeide.html)  + ST-LINKV3
+- [STM32CubeIDE V1.13.1](https://www.st.com/en/development-tools/stm32cubeide.html) + ST-LINKV3
 - RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.37 + ST-LINKV3
 
 ## Supported Devices and Boards by applications
 - [NUCLEO-H723ZG](https://www.st.com/en/evaluation-tools/nucleo-h723zg.html) *(MB1364-E01)*
 - [STM32H735G-DK](https://www.st.com/en/evaluation-tools/stm32h735g-dk.html) *(MB1520-B02)*
-- [STM32H747I-DK](https://www.st.com/en/evaluation-tools/stm32h747i-disco.html) *(MB1248-D01)*
+- [STM32H747I-DISCO](https://www.st.com/en/evaluation-tools/stm32h747i-disco.html) *(MB1248-D01)*
 - [STM32H743I-EVAL](https://www.st.com/en/evaluation-tools/stm32h743i-eval.html) *(MB1246-B03)*
 
 
@@ -50,7 +50,7 @@ The STMicroelectronics GitHub X-CUBE-AZRTOS repository consists of the following
 More comprehensive documentation is available on STM32 [MCU Wiki](https://wiki.st.com/stm32mcu/wiki/STM32CoreMW_overview).
 
 ## License
-Azure RTOS is distributed by Microsoft under [GitHub](https://github.com/azure-rtos) and under Microsoft license. 
+Azure RTOS is distributed by Microsoft under [GitHub](https://github.com/azure-rtos) and under Microsoft license.
 STMicroelectronics include Azure RTOS in selected STM32Cube software packages, whether delivered by Microsoft under GitHub, or by STMicroelectronics through STM32 CubeFW packages on www.st.com or GitHub, proprietary license terms are the same between Microsoft and User:
 -	Source code is available
 -	User is granted modification

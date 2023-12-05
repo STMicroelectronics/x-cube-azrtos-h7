@@ -81,7 +81,9 @@
 UINT  _ux_dcd_stm32_transfer_abort(UX_DCD_STM32 *dcd_stm32, UX_SLAVE_TRANSFER *transfer_request)
 {
 
-UX_SLAVE_ENDPOINT       *endpoint;
+#if !defined (USBD_HAL_TRANSFER_ABORT_NOT_SUPPORTED)
+
+   UX_SLAVE_ENDPOINT       *endpoint;
 
 
     /* Get the pointer to the logical endpoint from the transfer request.  */
@@ -91,6 +93,7 @@ UX_SLAVE_ENDPOINT       *endpoint;
     HAL_PCD_EP_Flush(dcd_stm32 -> pcd_handle, endpoint->ux_slave_endpoint_descriptor.bEndpointAddress);
 
     /* No semaphore put here since it's already done in stack.  */
+#endif /* USBD_HAL_TRANSFER_ABORT_NOT_SUPPORTED */
 
     /* Return to caller with success.  */
     return(UX_SUCCESS);

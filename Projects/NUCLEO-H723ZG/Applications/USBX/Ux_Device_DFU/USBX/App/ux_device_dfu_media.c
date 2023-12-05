@@ -398,7 +398,7 @@ VOID usbx_dfu_download_thread_entry(ULONG thread_input)
             else
             {
               /* Set DFU status OK */
-              dfu_status =  UX_SLAVE_CLASS_DFU_MEDIA_STATUS_OK;
+              dfu_status = UX_SLAVE_CLASS_DFU_MEDIA_STATUS_OK;
               dfu_status += UX_SLAVE_CLASS_DFU_STATUS_OK << 4;
             }
 

@@ -8,7 +8,7 @@ At the main function, the application creates 2 threads with the same priority w
   - 'ThreadOne' (Priority : osPriorityNormal)
   - 'ThreadTwo' (Priority : osPriorityNormal)
 
-The function "Led_Toggle()" is the entry function for both threads to toggle the leds.Therefore it is considered as a "critical section" that needs protection with a 'SyncObject' flag in the file "app_tx_cmsisrtos.h"
+The function "Led_Toggle()" is the entry function for both threads to toggle the leds. Therefore it is considered as a "critical section" that needs protection with a 'SyncObject' flag in the file "app_tx_cmsisrtos.h"
 Each thread is running in an infinite loop as following:
 
 - 'ThreadOne':
@@ -25,7 +25,7 @@ Each thread is running in an infinite loop as following:
   + Sleep for 10ms.
   + Repeat the steps above.
 
-By default the 'SyncObject' is defined as  "osMutexId_t" .It is possible to use a semaphore "osSemaphoreId_t" by tuning
+By default the 'SyncObject' is defined as  "osMutexId_t". It is possible to use a semaphore "osSemaphoreId_t" by tuning
 the compile flags in the file "app_tx_cmsisrtos.h".
 
 ####  <b>Expected success behavior</b>
@@ -34,8 +34,8 @@ the compile flags in the file "app_tx_cmsisrtos.h".
   - 'LED_RED' toggles every 500ms for 5 seconds
   - Messages on HyperTerminal :
      + "** ThreadXXX : waiting for SyncObject !! **" : When thread is waiting for the SyncObject.
-	 + "** ThreadXXX : waiting SyncObject released **" : When thread put the SyncObject.
-	 + "** ThreadXXX : waiting SyncObject acquired **" : When thread get the SyncObject.
+	 + "** ThreadXXX : SyncObject released **" : When thread put the SyncObject.
+	 + "** ThreadXXX : SyncObject acquired **" : When thread get the SyncObject.
 
 #### <b>Error behaviors</b>
 

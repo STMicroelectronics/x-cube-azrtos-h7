@@ -52,7 +52,8 @@ CARD_STATUS_CONNECTED           = 77
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+#define MEDIA_CLOSED                     1UL
+#define MEDIA_OPENED                     0UL
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -65,12 +66,11 @@ ALIGN_32BYTES (uint32_t fx_sd_media_memory[FX_STM32_SD_DEFAULT_SECTOR_SIZE / siz
 FX_MEDIA        sdio_disk;
 
 /* USER CODE BEGIN PV */
-
+static UINT media_status;
 /* Define FileX global data structures.  */
 FX_FILE         fx_file;
 /* Define ThreadX global data structures.  */
 TX_QUEUE        tx_msg_queue;
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -78,7 +78,8 @@ TX_QUEUE        tx_msg_queue;
 void fx_app_thread_entry(ULONG thread_input);
 
 /* USER CODE BEGIN PFP */
-
+static UINT SD_IsDetected(uint32_t Instance);
+static VOID media_close_callback (FX_MEDIA *media_ptr);
 /* USER CODE END PFP */
 
 /**
@@ -165,8 +166,9 @@ void fx_app_thread_entry(ULONG thread_input)
   }
 
   /* USER CODE BEGIN fx_app_thread_entry 1 */
+  fx_media_close_notify_set(&sdio_disk, media_close_callback);
 
-  if(SD_IsDetected(FX_STM32_SD_INSTANCE) == SD_PRESENT)
+  if(SD_IsDetected(FX_STM32_SD_INSTANCE) == HAL_OK)
   {
     /* SD card is already inserted, place the info into the queue */
     tx_queue_send(&tx_msg_queue, &s_msg, TX_NO_WAIT);
@@ -203,7 +205,7 @@ void fx_app_thread_entry(ULONG thread_input)
         /* for debouncing purpose we wait a bit till it settles down */
         tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND / 2);
 
-        if(SD_IsDetected(FX_STM32_SD_INSTANCE) == SD_PRESENT)
+        if(SD_IsDetected(FX_STM32_SD_INSTANCE) == HAL_OK)
         {
           /* We have a valid SD insertion event, start processing.. */
           /* Update last known status */
@@ -222,6 +224,12 @@ void fx_app_thread_entry(ULONG thread_input)
     }
 
     /* Create a file called STM32.TXT in the root directory.  */
+    if (media_status == MEDIA_CLOSED)
+    {
+      fx_media_open(&sdio_disk, FX_SD_VOLUME_NAME, fx_stm32_sd_driver, (VOID *)FX_NULL, (VOID *) fx_sd_media_memory, sizeof(fx_sd_media_memory));
+      media_status = MEDIA_OPENED;
+    }
+
     sd_status =  fx_file_create(&sdio_disk, "STM32.TXT");
 
     /* Check the create status.  */
@@ -346,9 +354,10 @@ void fx_app_thread_entry(ULONG thread_input)
  * @param Instance  SD Instance
  * @retval Returns if SD is detected or not
  */
-int32_t SD_IsDetected(uint32_t Instance)
+static UINT SD_IsDetected(uint32_t Instance)
 {
-  int32_t ret;
+  UINT ret;
+
   if(Instance >= 1)
   {
     ret = HAL_ERROR;
@@ -358,15 +367,15 @@ int32_t SD_IsDetected(uint32_t Instance)
     /* Check SD card detect pin */
     if (HAL_GPIO_ReadPin(SD_DETECT_GPIO_Port, SD_DETECT_Pin) == GPIO_PIN_SET)
     {
-      ret = SD_NOT_PRESENT;
+      ret = HAL_ERROR;
     }
     else
     {
-      ret = SD_PRESENT;
+      ret = HAL_OK;
     }
   }
 
-  return(int32_t)ret;
+  return ret;
 }
 
 /**
@@ -382,6 +391,16 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   {
     tx_queue_send(&tx_msg_queue, &s_msg, TX_NO_WAIT);
   }
+}
+
+/**
+  * @brief  Media close notify callback function.
+  * @param  media_ptr: Media control block pointer
+  * @retval None
+  */
+static VOID media_close_callback(FX_MEDIA *media_ptr)
+{
+  media_status = MEDIA_CLOSED;
 }
 
 /* USER CODE END 1 */

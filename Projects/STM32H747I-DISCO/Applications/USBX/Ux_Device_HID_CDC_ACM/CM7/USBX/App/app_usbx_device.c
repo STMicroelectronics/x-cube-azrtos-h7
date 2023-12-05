@@ -78,7 +78,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
   ULONG device_framework_hs_length;
   ULONG device_framework_fs_length;
   ULONG string_framework_length;
-  ULONG languge_id_framework_length;
+  ULONG language_id_framework_length;
   UCHAR *string_framework;
   UCHAR *language_id_framework;
   UCHAR *pointer;
@@ -117,7 +117,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
   string_framework = USBD_Get_String_Framework(&string_framework_length);
 
   /* Get Language Id Framework and get the length */
-  language_id_framework = USBD_Get_Language_Id_Framework(&languge_id_framework_length);
+  language_id_framework = USBD_Get_Language_Id_Framework(&language_id_framework_length);
 
   /* Install the device portion of USBX */
   if (ux_device_stack_initialize(device_framework_high_speed,
@@ -127,7 +127,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
                                  string_framework,
                                  string_framework_length,
                                  language_id_framework,
-                                 languge_id_framework_length,
+                                 language_id_framework_length,
                                  UX_NULL) != UX_SUCCESS)
   {
     /* USER CODE BEGIN USBX_DEVICE_INITIALIZE_ERORR */
@@ -281,7 +281,7 @@ static VOID app_ux_device_thread_entry(ULONG thread_input)
 
   /* Initialization of USB device */
   USBX_APP_Device_Init();
-  
+
   /* USER CODE END app_ux_device_thread_entry */
 }
 
@@ -355,7 +355,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 
   /* Check if EXTI from User Button */
-  if (GPIO_Pin == GPIO_PIN_13)
+  if (GPIO_Pin == BUTTON_USER_Pin)
   {
     User_Button_State ^= 1U;
   }

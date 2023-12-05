@@ -39,6 +39,7 @@ TX_QUEUE                *resident_queue;
 
 /* Function prototypes*/
 
+void default_module_start(ULONG id);
 void thread_0_entry(ULONG thread_input);
 void Error_Handler(void);
 

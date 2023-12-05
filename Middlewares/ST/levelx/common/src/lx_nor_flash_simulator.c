@@ -60,13 +60,20 @@ FLASH_BLOCK   nor_memory_area[TOTAL_BLOCKS];
 ULONG         nor_sector_memory[WORDS_PER_PHYSICAL_SECTOR];
 
 UINT  _lx_nor_flash_simulator_initialize(LX_NOR_FLASH *nor_flash);
+UINT  _lx_nor_flash_simulator_erase_all(VOID);
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+UINT  _lx_nor_flash_simulator_read(LX_NOR_FLASH *nor_flash, ULONG *flash_address, ULONG *destination, ULONG words);
+UINT  _lx_nor_flash_simulator_write(LX_NOR_FLASH *nor_flash, ULONG *flash_address, ULONG *source, ULONG words);
+UINT  _lx_nor_flash_simulator_block_erase(LX_NOR_FLASH *nor_flash, ULONG block, ULONG erase_count);
+UINT  _lx_nor_flash_simulator_block_erased_verify(LX_NOR_FLASH *nor_flash, ULONG block);
+UINT  _lx_nor_flash_simulator_system_error(LX_NOR_FLASH *nor_flash, UINT error_code, ULONG block, ULONG sector);
+#else
 UINT  _lx_nor_flash_simulator_read(ULONG *flash_address, ULONG *destination, ULONG words);
 UINT  _lx_nor_flash_simulator_write(ULONG *flash_address, ULONG *source, ULONG words);
 UINT  _lx_nor_flash_simulator_block_erase(ULONG block, ULONG erase_count);
 UINT  _lx_nor_flash_simulator_block_erased_verify(ULONG block);
-UINT  _lx_nor_flash_simulator_erase_all(VOID);
 UINT  _lx_nor_flash_simulator_system_error(UINT error_code, ULONG block, ULONG sector);
-
+#endif
 
 
 UINT  _lx_nor_flash_simulator_initialize(LX_NOR_FLASH *nor_flash)
@@ -92,9 +99,16 @@ UINT  _lx_nor_flash_simulator_initialize(LX_NOR_FLASH *nor_flash)
     return(LX_SUCCESS);
 }
 
-
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+UINT  _lx_nor_flash_simulator_read(LX_NOR_FLASH *nor_flash, ULONG *flash_address, ULONG *destination, ULONG words)
+#else
 UINT  _lx_nor_flash_simulator_read(ULONG *flash_address, ULONG *destination, ULONG words)
+#endif
 {
+
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+    LX_PARAMETER_NOT_USED(nor_flash);
+#endif
 
     /* Loop to read flash.  */
     while (words--)
@@ -107,8 +121,16 @@ UINT  _lx_nor_flash_simulator_read(ULONG *flash_address, ULONG *destination, ULO
 }
 
 
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+UINT  _lx_nor_flash_simulator_write(LX_NOR_FLASH *nor_flash, ULONG *flash_address, ULONG *source, ULONG words)
+#else
 UINT  _lx_nor_flash_simulator_write(ULONG *flash_address, ULONG *source, ULONG words)
+#endif
 {
+
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+    LX_PARAMETER_NOT_USED(nor_flash);
+#endif
 
     /* Loop to write flash.  */
     while (words--)
@@ -121,12 +143,19 @@ UINT  _lx_nor_flash_simulator_write(ULONG *flash_address, ULONG *source, ULONG w
     return(LX_SUCCESS);
 }
 
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+UINT  _lx_nor_flash_simulator_block_erase(LX_NOR_FLASH *nor_flash, ULONG block, ULONG erase_count)
+#else
 UINT  _lx_nor_flash_simulator_block_erase(ULONG block, ULONG erase_count)
+#endif
 {
 
 ULONG   *pointer;
 ULONG   words;
 
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+    LX_PARAMETER_NOT_USED(nor_flash);
+#endif
     LX_PARAMETER_NOT_USED(erase_count);
 
     /* Setup pointer.  */
@@ -168,11 +197,19 @@ ULONG   words;
 }
 
 
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+UINT  _lx_nor_flash_simulator_block_erased_verify(LX_NOR_FLASH *nor_flash, ULONG block)
+#else
 UINT  _lx_nor_flash_simulator_block_erased_verify(ULONG block)
+#endif
 {
 
 ULONG   *word_ptr;
 ULONG   words;
+
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+    LX_PARAMETER_NOT_USED(nor_flash);
+#endif
 
     /* Determine if the block is completely erased.  */
     
@@ -195,8 +232,16 @@ ULONG   words;
     return(LX_SUCCESS);
 }
 
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+UINT  _lx_nor_flash_simulator_system_error(LX_NOR_FLASH *nor_flash, UINT error_code, ULONG block, ULONG sector)
+#else
 UINT  _lx_nor_flash_simulator_system_error(UINT error_code, ULONG block, ULONG sector)
+#endif
 {
+
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+    LX_PARAMETER_NOT_USED(nor_flash);
+#endif
     LX_PARAMETER_NOT_USED(error_code);
     LX_PARAMETER_NOT_USED(block);
     LX_PARAMETER_NOT_USED(sector);

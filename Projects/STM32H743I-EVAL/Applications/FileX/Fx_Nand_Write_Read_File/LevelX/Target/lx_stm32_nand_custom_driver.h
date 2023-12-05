@@ -47,9 +47,14 @@ extern "C" {
 #define ECC_BYTE_POSITION                   40                                  /*      40 is the ECC starting byte position                   */
 
 #define NAND_INSTANCE                       0
-#define LX_DRIVER_ERASES_FLASH_AFTER_INIT   1
+/* Define the flag for erase NAND flash memory */
+#define LX_DRIVER_ERASES_FLASH_AFTER_INIT
 #define NAND_FLASH_SIZE                     (TOTAL_BLOCKS * PHYSICAL_PAGES_PER_BLOCK * BYTES_PER_PHYSICAL_PAGE)
 
+#define SPARE_DATA1_OFFSET                  0
+#define SPARE_DATA1_LENGTH                  0x40
+#define SPARE_DATA2_OFFSET                  0
+#define SPARE_DATA2_LENGTH                  0
 
 /* Definition of the spare area is relative to the block size of the NAND part and perhaps manufactures of the NAND part.
    Here are some common definitions:

@@ -1,12 +1,13 @@
+
 ## <b>Tx_Thread_Creation application description</b>
 
 This application provides an example of Azure RTOS ThreadX stack usage, it shows how to develop an application using the ThreadX thread management APIs.
 It demonstrates how to create and destroy multiple threads using Azure RTOS ThreadX APIs. In addition, it shows how to use preemption threshold between threads and change priorities on-fly.
-The main entry function tx_application_define() is then called by ThreadX during kernel start, at this stage, the application creates 3 threads with different priorities :
+The main entry function tx_application_define() is then called by ThreadX during kernel start, at this stage, the application creates 3 threads with different priorities:
 
   - MainThread (Prio : 5; Preemption Threshold : 5)
-  - ThreadOne (Prio : 10; Preemption Threshold : 9)
-  - ThreadTwo (Prio : 10; Preemption Threshold : 10)
+  - ThreadOne  (Prio : 10; Preemption Threshold : 9)
+  - ThreadTwo  (Prio : 10; Preemption Threshold : 10)
 
 Once started, the <b>MainThread</b> is suspended waiting for the event flag.
 The *ThreadOne* starts to toggle the *LED_GREEN* each 500ms and <b>ThreadTwo</b> cannot as its priority is less than the *ThreadOne* threshold.
@@ -22,16 +23,19 @@ After repeating the sequence above 3 times, the <b>MainThread</b> should destroy
 
   - LED_GREEN toggles every 500ms for 5 seconds
   - LED_GREEN toggles every 200ms for 5 seconds
-  - Success status (After 3 times) :  'LED_GREEN' toggles every 1 second for ever.
+  - Success status (After 3 times) : 'LED_GREEN' toggles every 1 second forever.
 
 #### <b>Error behaviors</b>
-LED_RED toggles every 1 second if any error occurs.
-an error message is printed to the serial port.
+
+LED_RED toggles every 1 second if an error occurs.
+An error message is printed to the serial port.
 
 #### <b>Assumptions if any</b>
+
 None
 
 #### <b>Known limitations</b>
+
 None
 
 ### <b>Notes</b>
@@ -90,11 +94,10 @@ None
 
 RTOS, ThreadX, Threading, Event flags, Preemption threshold
 
-
 ### <b>Hardware and Software environment</b>
 
   - This example runs on STM32H723xx devices
-  - This example has been tested with STMicroelectronics NUCLEO-H723ZG boards Revision MB1364-H723ZG-E01
+  - This example has been tested with STMicroelectronics NUCLEO-H723ZG boards revision MB1364-H723ZG-E01
     and can be easily tailored to any other supported device and development board.
 
   - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
