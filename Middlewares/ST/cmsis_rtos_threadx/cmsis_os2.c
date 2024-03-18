@@ -1433,6 +1433,9 @@ __NO_RETURN void osThreadExit(void)
     /* Check if the current running thread pointer is not NULL */
     if (thread_ptr != NULL)
     {
+      /* remove thread list */
+      tx_thread_delete(thread_ptr);
+      
       /* Call the tx_thread_terminate to terminates the specified application
          thread regardless of whether the thread is suspended or not. A thread
          may call this service to terminate itself. */
@@ -1489,6 +1492,9 @@ osStatus_t osThreadTerminate(osThreadId_t thread_id)
 
         /* Free the already allocated memory for thread control block */
         MemFree(thread_ptr);
+
+        /* remove thread list */
+        tx_thread_delete(thread_ptr);
       }
 
       /* Return osOK for success */
@@ -2155,10 +2161,7 @@ osStatus_t osTimerDelete(osTimerId_t timer_id)
     if (tx_timer_delete(timer_ptr) == TX_SUCCESS)
     {
       /* Free the already allocated memory for timer control block */
-      MemFree(timer_ptr);
-
-      /* Return osOK for success */
-      status = osOK;
+      status =MemFree(timer_ptr);
     }
     else
     {
@@ -3868,7 +3871,7 @@ osMemoryPoolId_t osMemoryPoolNew (uint32_t block_count, uint32_t block_size, con
       {
         /* Set memory pool data size to block_count * block_size (The total amount of memory required
            for the memory pool data storage) */
-        pool_size = block_count * block_size;
+        pool_size = block_count * (block_size + sizeof(void *));
       }
       else if (attr->mp_size < (pool_size))
       {
@@ -3958,7 +3961,7 @@ osMemoryPoolId_t osMemoryPoolNew (uint32_t block_count, uint32_t block_size, con
 
       /* Initialize the memory pool data size to block_count * block_size (The total amount of memory required
            for the memory pool data storage) */
-      pool_size = block_count * block_size;
+      pool_size = block_count * (block_size + sizeof(void *));
 
       /* Allocate the data for pool_start to be created */
       pool_start = MemAlloc(pool_size, RTOS2_BYTE_POOL_STACK_TYPE);
@@ -4322,7 +4325,8 @@ osStatus_t osMemoryPoolDelete(osMemoryPoolId_t mp_id)
     }
     else
     {
-      status = osOK;
+        status |= MemFree(block_pool_ptr->tx_block_pool_start);
+        status |= MemFree(block_pool_ptr);
     }
   }
   return(status);
