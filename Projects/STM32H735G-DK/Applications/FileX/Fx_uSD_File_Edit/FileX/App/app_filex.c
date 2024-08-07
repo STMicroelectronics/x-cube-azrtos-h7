@@ -116,7 +116,7 @@ UINT MX_FileX_Init(VOID *memory_ptr)
                          FX_APP_THREAD_PRIO, FX_APP_PREEMPTION_THRESHOLD, FX_APP_THREAD_TIME_SLICE, FX_APP_THREAD_AUTO_START);
 
   /* Check main thread creation */
-  if (ret != FX_SUCCESS)
+  if (ret != TX_SUCCESS)
   {
     return TX_THREAD_ERROR;
   }
@@ -125,6 +125,11 @@ UINT MX_FileX_Init(VOID *memory_ptr)
   /* Create the message queue */
   tx_queue_create(&tx_msg_queue, "sd_event_queue", 1, pointer, DEFAULT_QUEUE_LENGTH * sizeof(ULONG));
 
+  /* Check msg queue creation */
+  if (ret != FX_SUCCESS)
+  {
+    return TX_QUEUE_ERROR;
+  }
   /* USER CODE END MX_FileX_Init */
 
   /* Initialize FileX.  */

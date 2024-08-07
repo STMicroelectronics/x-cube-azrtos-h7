@@ -1137,6 +1137,16 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_utility_memory_allocate_mulv_safe.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/USBX/USB/USBX/CoreSystem/ux_utility_memory_byte_pool_create.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_utility_memory_byte_pool_create.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/USBX/USB/USBX/CoreSystem/ux_utility_memory_byte_pool_search.c</name>
+			<type>1</type>
+			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_utility_memory_byte_pool_search.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/USBX/USB/USBX/CoreSystem/ux_utility_memory_compare.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_utility_memory_compare.c</locationURI>
@@ -1150,11 +1160,6 @@
 			<name>Middlewares/USBX/USB/USBX/CoreSystem/ux_utility_memory_free.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_utility_memory_free.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/USBX/USB/USBX/CoreSystem/ux_utility_memory_free_block_best_get.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/core/src/ux_utility_memory_free_block_best_get.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/CoreSystem/ux_utility_memory_set.c</name>
@@ -1372,11 +1377,6 @@
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_video_read_payload_get.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Device Class VIDEO/ux_device_class_video_read_task_function.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_video_read_task_function.c</locationURI>
-		</link>
-		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Device Class VIDEO/ux_device_class_video_read_thread_entry.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_video_read_thread_entry.c</locationURI>
@@ -1410,11 +1410,6 @@
 			<name>Middlewares/USBX/USB/USBX/UX Device Class VIDEO/ux_device_class_video_write_payload_get.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_video_write_payload_get.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/USBX/USB/USBX/UX Device Class VIDEO/ux_device_class_video_write_task_function.c</name>
-			<type>1</type>
-			<locationURI>PARENT-6-PROJECT_LOC/Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_video_write_task_function.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/USBX/USB/USBX/UX Device Class VIDEO/ux_device_class_video_write_thread_entry.c</name>

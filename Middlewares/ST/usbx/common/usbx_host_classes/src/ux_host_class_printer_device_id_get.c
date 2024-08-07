@@ -35,7 +35,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_host_class_printer_device_id_get                PORTABLE C      */
-/*                                                           6.1.12       */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -83,6 +83,9 @@
 /*                                            fixed parameter/variable    */
 /*                                            names conflict C++ keyword, */
 /*                                            resulting in version 6.1.12 */
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed compile warnings,     */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_host_class_printer_device_id_get(UX_HOST_CLASS_PRINTER *printer, UCHAR *descriptor_buffer, ULONG length)
@@ -142,7 +145,7 @@ UINT                 status;
     transfer_request -> ux_transfer_request_function =          UX_HOST_CLASS_PRINTER_GET_DEVICE_ID;
     transfer_request -> ux_transfer_request_type =              UX_REQUEST_IN | UX_REQUEST_TYPE_CLASS | UX_REQUEST_TARGET_INTERFACE;
     transfer_request -> ux_transfer_request_value =             0; /* Do not support multiple configuration for now.  */
-    transfer_request -> ux_transfer_request_index =             (interface_ptr -> ux_interface_descriptor.bInterfaceNumber  << 8) |
+    transfer_request -> ux_transfer_request_index =             ((UINT)interface_ptr -> ux_interface_descriptor.bInterfaceNumber  << 8) |
                                                                 (interface_ptr -> ux_interface_descriptor.bAlternateSetting     );
 
 #if defined(UX_HOST_STANDALONE)
@@ -159,4 +162,57 @@ UINT                 status;
 
     /* Return completion status.  */
     return(status);
+}
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _uxe_host_class_printer_device_id_get               PORTABLE C      */
+/*                                                           6.3.0        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Yajun Xia, Microsoft Corporation                                    */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks errors in printer device ID get function call. */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    printer                               Pointer to printer class      */
+/*    descriptor_buffer                     Pointer to a buffer to fill   */
+/*                                          IEEE 1284 device ID string    */
+/*                                          (including length in the      */
+/*                                          first two bytes in BE format) */
+/*    length                                Length of buffer in bytes     */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    Completion Status                                                   */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_host_class_printer_device_id_get  Obtains the printer device ID */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Application                                                         */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  10-31-2023        Yajun xia             Initial Version 6.3.0         */
+/*                                                                        */
+/**************************************************************************/
+UINT  _uxe_host_class_printer_device_id_get(UX_HOST_CLASS_PRINTER *printer, UCHAR *descriptor_buffer, ULONG length)
+{
+
+    /* Sanity checks.  */
+    if ((printer == UX_NULL) || (descriptor_buffer == UX_NULL) || (length == 0))
+        return(UX_INVALID_PARAMETER);
+
+    /* Call the actual printer device ID get function.  */
+    return(_ux_host_class_printer_device_id_get(printer, descriptor_buffer, length));
 }

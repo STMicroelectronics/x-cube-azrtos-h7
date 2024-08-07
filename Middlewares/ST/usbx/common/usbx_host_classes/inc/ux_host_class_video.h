@@ -12,8 +12,8 @@
 
 /**************************************************************************/
 /**************************************************************************/
-/**                                                                       */ 
-/** USBX Component                                                        */ 
+/**                                                                       */
+/** USBX Component                                                        */
 /**                                                                       */
 /**   Video Class                                                         */
 /**                                                                       */
@@ -21,25 +21,25 @@
 /**************************************************************************/
 
 
-/**************************************************************************/ 
-/*                                                                        */ 
-/*  COMPONENT DEFINITION                                   RELEASE        */ 
-/*                                                                        */ 
-/*    ux_host_class_video.h                               PORTABLE C      */ 
-/*                                                           6.1.8        */
+/**************************************************************************/
+/*                                                                        */
+/*  COMPONENT DEFINITION                                   RELEASE        */
+/*                                                                        */
+/*    ux_host_class_video.h                               PORTABLE C      */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
 /*                                                                        */
 /*  DESCRIPTION                                                           */
-/*                                                                        */ 
+/*                                                                        */
 /*    This file contains all the header and extern functions used by the  */
-/*    USBX video class.                                                   */ 
-/*                                                                        */ 
-/*  RELEASE HISTORY                                                       */ 
-/*                                                                        */ 
-/*    DATE              NAME                      DESCRIPTION             */ 
-/*                                                                        */ 
+/*    USBX video class.                                                   */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            added new definition, field */
@@ -56,35 +56,47 @@
 /*                                            according to UVC 1.5 Class  */
 /*                                            specification,              */
 /*                                            resulting in version 6.1.8  */
-/*                                                                        */ 
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added format and frame data */
+/*                                            fields for H264 support,    */
+/*                                            optimized USB descriptors,  */
+/*                                            added error checks support, */
+/*                                            resulting in version 6.3.0  */
+/*                                                                        */
 /**************************************************************************/
 
 #ifndef UX_HOST_CLASS_VIDEO_H
 #define UX_HOST_CLASS_VIDEO_H
 
-/* Determine if a C++ compiler is being used.  If so, ensure that standard 
-   C is used to process the API information.  */ 
+/* Determine if a C++ compiler is being used.  If so, ensure that standard
+   C is used to process the API information.  */
 
-#ifdef   __cplusplus 
+#ifdef   __cplusplus
 
-/* Yes, C++ compiler is present.  Use standard C.  */ 
-extern   "C" { 
+/* Yes, C++ compiler is present.  Use standard C.  */
+extern   "C" {
 
-#endif  
+#endif
+
+/* Internal option: enable the basic USBX error checking. This define is typically used
+   while debugging application.  */
+#if defined(UX_ENABLE_ERROR_CHECKING) && !defined(UX_HOST_CLASS_VIDEO_ENABLE_ERROR_CHECKING)
+#define UX_HOST_CLASS_VIDEO_ENABLE_ERROR_CHECKING
+#endif
 
 /* Define external static data.  */
 extern UCHAR _ux_system_class_video_interface_descriptor_structure[];
-extern UCHAR _ux_system_class_video_input_terminal_descriptor_structure[];     
-extern UCHAR _ux_system_class_video_input_header_descriptor_structure[];       
+extern UCHAR _ux_system_class_video_input_terminal_descriptor_structure[];
+extern UCHAR _ux_system_class_video_input_header_descriptor_structure[];
 extern UCHAR _ux_system_class_video_processing_unit_descriptor_structure[];
 extern UCHAR _ux_system_class_video_streaming_interface_descriptor_structure[];
-extern UCHAR _ux_system_class_video_streaming_endpoint_descriptor_structure[];  
+extern UCHAR _ux_system_class_video_streaming_endpoint_descriptor_structure[];
 extern UCHAR _ux_system_class_video_frame_descriptor_structure[];
 
-extern UCHAR _ux_system_host_class_video_name[];   
+extern UCHAR _ux_system_host_class_video_name[];
 
 /* Define Video Class IOCTL constants.  */
-                                                                                            
+
 #define UX_HOST_CLASS_VIDEO_IOCTL_GET_INPUT_TERMINAL                                        0x01
 #define UX_HOST_CLASS_VIDEO_IOCTL_GET_FORMAT_NUMBER                                         0x02
 #define UX_HOST_CLASS_VIDEO_IOCTL_GET_FORMAT_DATA                                           0x03
@@ -94,11 +106,11 @@ extern UCHAR _ux_system_host_class_video_name[];
 #define UX_HOST_CLASS_VIDEO_IOCTL_CHANNEL_STOP                                              0x07
 #define UX_HOST_CLASS_VIDEO_IOCTL_GET_FRAME_INTERVAL                                        0x08
 
-#define UX_HOST_CLASS_VIDEO_IOCTL_ABORT_IN_PIPE                                             0x80 
+#define UX_HOST_CLASS_VIDEO_IOCTL_ABORT_IN_PIPE                                             0x80
 
 /* Define Video Class main constants.  */
 
-#define UX_HOST_CLASS_VIDEO_CLASS_TRANSFER_TIMEOUT                                          30 
+#define UX_HOST_CLASS_VIDEO_CLASS_TRANSFER_TIMEOUT                                          30
 #define UX_HOST_CLASS_VIDEO_CLASS                                                           0x0e
 #define UX_HOST_CLASS_VIDEO_SUBCLASS_UNDEFINED                                              0
 #define UX_HOST_CLASS_VIDEO_SUBCLASS_CONTROL                                                1
@@ -110,7 +122,7 @@ extern UCHAR _ux_system_host_class_video_name[];
 
 #define UX_HOST_CLASS_VIDEO_CS_UNDEFINED                                                    0x20
 #define UX_HOST_CLASS_VIDEO_CS_DEVICE                                                       0x21
-#define UX_HOST_CLASS_VIDEO_CS_CONFIGURATION                                                0x22 
+#define UX_HOST_CLASS_VIDEO_CS_CONFIGURATION                                                0x22
 #define UX_HOST_CLASS_VIDEO_CS_STRING                                                       0x23
 #define UX_HOST_CLASS_VIDEO_CS_INTERFACE                                                    0x24
 #define UX_HOST_CLASS_VIDEO_CS_ENDPOINT                                                     0x25
@@ -252,7 +264,7 @@ extern UCHAR _ux_system_host_class_video_name[];
 #define UX_HOST_CLASS_VIDEO_PROCESSING_UNIT_DESCRIPTOR_LENGTH                               9
 
 #define UX_HOST_CLASS_VIDEO_STREAMING_INTERFACE_DESCRIPTOR_ENTRIES                          6
-#define UX_HOST_CLASS_VIDEO_STREAMING_INTERFACE_DESCRIPTOR_LENGTH                           6       
+#define UX_HOST_CLASS_VIDEO_STREAMING_INTERFACE_DESCRIPTOR_LENGTH                           6
 
 #define UX_HOST_CLASS_VIDEO_STREAMING_ENDPOINT_DESCRIPTOR_ENTRIES                           6
 #define UX_HOST_CLASS_VIDEO_STREAMING_ENDPOINT_DESCRIPTOR_LENGTH                            6
@@ -380,14 +392,15 @@ extern UCHAR _ux_system_host_class_video_name[];
 typedef struct UX_HOST_CLASS_VIDEO_INTERFACE_HEADER_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubType;
-    ULONG           bcdUVC;
-    ULONG           wTotalLength;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubType;
+    UCHAR           _align_bcdUVC[1];
+    USHORT          bcdUVC;
+    USHORT          wTotalLength;
     ULONG           dwClockFrequency;
-    ULONG           bInCollection;
-    ULONG           baInterfaceNr;
+    UCHAR           bInCollection;
+    UCHAR           baInterfaceNr;
 } UX_HOST_CLASS_VIDEO_INTERFACE_HEADER_DESCRIPTOR;
 
 /* Define Video Class specific input header interface descriptor.  */
@@ -395,13 +408,13 @@ typedef struct UX_HOST_CLASS_VIDEO_INTERFACE_HEADER_DESCRIPTOR_STRUCT
 typedef struct UX_HOST_CLASS_VIDEO_INPUT_TERMINAL_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubType;
-    ULONG           bTerminalID;
-    ULONG           wTerminalType;
-    ULONG           bAssocTerminal;
-    ULONG           iTerminal;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubType;
+    UCHAR           bTerminalID;
+    USHORT          wTerminalType;
+    UCHAR           bAssocTerminal;
+    UCHAR           iTerminal;
 } UX_HOST_CLASS_VIDEO_INPUT_TERMINAL_DESCRIPTOR;
 
 /* Define Video Class specific input header interface descriptor.  */
@@ -409,19 +422,19 @@ typedef struct UX_HOST_CLASS_VIDEO_INPUT_TERMINAL_DESCRIPTOR_STRUCT
 typedef struct UX_HOST_CLASS_VIDEO_INPUT_HEADER_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubType;
-    ULONG           bNumFormats;
-    ULONG           wTotalLength;
-    ULONG           bEndpointAddress;
-    ULONG           bmInfo;
-    ULONG           bTerminalLink;
-    ULONG           bStillCaptureMethod;
-    ULONG           bTriggerSupport;
-    ULONG           bTriggerUsage;
-    ULONG           bControlSize;
-    ULONG           bmaControls;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubType;
+    UCHAR           bNumFormats;
+    USHORT          wTotalLength;
+    UCHAR           bEndpointAddress;
+    UCHAR           bmInfo;
+    UCHAR           bTerminalLink;
+    UCHAR           bStillCaptureMethod;
+    UCHAR           bTriggerSupport;
+    UCHAR           bTriggerUsage;
+    UCHAR           bControlSize;
+    UCHAR           bmaControls;
 } UX_HOST_CLASS_VIDEO_INPUT_HEADER_DESCRIPTOR;
 
 /* Define Video Class Selector descriptor.  */
@@ -429,12 +442,12 @@ typedef struct UX_HOST_CLASS_VIDEO_INPUT_HEADER_DESCRIPTOR_STRUCT
 typedef struct UX_HOST_CLASS_VIDEO_SELECTOR_UNIT_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubtype;
-    ULONG           bUnitID;
-    ULONG           bNrInPins;
-    ULONG           baSourceID;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubtype;
+    UCHAR           bUnitID;
+    UCHAR           bNrInPins;
+    UCHAR           baSourceID;
 } UX_HOST_CLASS_VIDEO_SELECTOR_UNIT_DESCRIPTOR;
 
 /* Define Video Class Camera Terminal descriptor.  */
@@ -442,17 +455,18 @@ typedef struct UX_HOST_CLASS_VIDEO_SELECTOR_UNIT_DESCRIPTOR_STRUCT
 typedef struct UX_HOST_CLASS_VIDEO_CAMERA_TERMINAL_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubtype;
-    ULONG           bTerminalID;
-    ULONG           wTerminalType;
-    ULONG           bAssocTerminal;
-    ULONG           iTerminal;
-    ULONG           wObjectiveFocalLengthMin;
-    ULONG           wObjectiveFocalLengthMax;
-    ULONG           wOcularFocalLength;
-    ULONG           bControlSize;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubtype;
+    UCHAR           bTerminalID;
+    USHORT          wTerminalType;
+    UCHAR           bAssocTerminal;
+    UCHAR           iTerminal;
+    USHORT          wObjectiveFocalLengthMin;
+    USHORT          wObjectiveFocalLengthMax;
+    USHORT          wOcularFocalLength;
+    UCHAR           bControlSize;
+    UCHAR           _align_bmControls[1];
     ULONG           bmControls;
 } UX_HOST_CLASS_VIDEO_CAMERA_TERMINAL_DESCRIPTOR;
 
@@ -461,18 +475,21 @@ typedef struct UX_HOST_CLASS_VIDEO_CAMERA_TERMINAL_DESCRIPTOR_STRUCT
 typedef struct UX_HOST_CLASS_VIDEO_FRAME_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubtype;
-    ULONG           bFrameIndex;
-    ULONG           bmCapabilities;
-    ULONG           wWidth;
-    ULONG           wHeight;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubtype;
+    UCHAR           bFrameIndex;
+    UCHAR           bmCapabilities;
+    UCHAR           _align_wWidth[1];
+    USHORT          wWidth;
+    USHORT          wHeight;
+    UCHAR           _align_dwMinBitRate[2];
     ULONG           dwMinBitRate;
     ULONG           dwMaxBitRate;
     ULONG           dwMaxVideoFrameBufferSize;
     ULONG           dwDefaultFrameInterval;
-    ULONG           bFrameIntervalType;
+    UCHAR           bFrameIntervalType;
+    UCHAR           _align_size[3];
 } UX_HOST_CLASS_VIDEO_FRAME_DESCRIPTOR;
 
 
@@ -482,16 +499,17 @@ typedef struct UX_HOST_CLASS_VIDEO_FRAME_DESCRIPTOR_STRUCT
 typedef struct UX_HOST_CLASS_VIDEO_PROCESSING_UNIT_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubtype;
-    ULONG           bUnitID;
-    ULONG           bSourceID;
-    ULONG           wMaxMultiplier;
-    ULONG           bControlSize;
-    ULONG           bmControls;
-    ULONG           iProcessing;
-    ULONG           bmVideoStandards;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubtype;
+    UCHAR           bUnitID;
+    UCHAR           bSourceID;
+    UCHAR           _align_wMaxMultiplier[1];
+    USHORT          wMaxMultiplier;
+    UCHAR           bControlSize;
+    UCHAR           bmControls;
+    UCHAR           iProcessing;
+    UCHAR           bmVideoStandards;
 } UX_HOST_CLASS_VIDEO_PROCESSING_UNIT_DESCRIPTOR;
 
 
@@ -500,7 +518,7 @@ typedef struct UX_HOST_CLASS_VIDEO_PROCESSING_UNIT_DESCRIPTOR_STRUCT
 typedef struct UX_HOST_CLASS_VIDEO_STRUCT
 {
 
-    struct UX_HOST_CLASS_VIDEO_STRUCT                    
+    struct UX_HOST_CLASS_VIDEO_STRUCT
                     *ux_host_class_video_next_instance;
     UX_HOST_CLASS   *ux_host_class_video_class;
     UX_DEVICE       *ux_host_class_video_device;
@@ -547,7 +565,7 @@ typedef struct UX_HOST_CLASS_VIDEO_TRANSFER_REQUEST_STRUCT
     UX_SEMAPHORE    ux_host_class_video_transfer_request_semaphore;
     VOID            *ux_host_class_video_transfer_request_class_instance;
     UINT            ux_host_class_video_transfer_request_completion_code;
-    struct UX_HOST_CLASS_VIDEO_TRANSFER_REQUEST_STRUCT   
+    struct UX_HOST_CLASS_VIDEO_TRANSFER_REQUEST_STRUCT
                     *ux_host_class_video_transfer_request_next_video_transfer_request;
     UX_TRANSFER     ux_host_class_video_transfer_request;
 } UX_HOST_CLASS_VIDEO_TRANSFER_REQUEST;
@@ -591,6 +609,7 @@ typedef struct UX_HOST_CLASS_VIDEO_PARAMETER_FORMAT_DATA_STRUCT
 
     ULONG           ux_host_class_video_parameter_format_requested;
     ULONG           ux_host_class_video_parameter_format_subtype;
+    UCHAR           *ux_host_class_video_parameter_format_guid;         /* not NULL if GUID is available for the subtype.  */
     ULONG           ux_host_class_video_parameter_number_frame_descriptors;
 
 } UX_HOST_CLASS_VIDEO_PARAMETER_FORMAT_DATA;
@@ -603,7 +622,8 @@ typedef struct UX_HOST_CLASS_VIDEO_PARAMETER_FRAME_DATA_STRUCT
     ULONG           ux_host_class_video_parameter_frame_width;
     ULONG           ux_host_class_video_parameter_frame_height;
     ULONG           ux_host_class_video_parameter_default_frame_interval;
-    ULONG           ux_host_class_video_parameter_frame_interval_type;
+    ULONG           ux_host_class_video_parameter_frame_interval_type;  /* 0: continuous {min,max,step}, n: discrete  */
+    UCHAR           *ux_host_class_video_parameter_frame_intervals;     /* {dwMin,dwMax,dwStep},... or dw1,dw2,... depending on interval type.  */
 
 } UX_HOST_CLASS_VIDEO_PARAMETER_FRAME_DATA;
 
@@ -669,7 +689,48 @@ UINT    _ux_host_class_video_control_request(UX_HOST_CLASS_VIDEO *video,
                         UINT entity_id, UINT control_selector,
                         UCHAR *parameter, UINT parameter_size);
 
+UINT    _uxe_host_class_video_control_get(UX_HOST_CLASS_VIDEO *video, UX_HOST_CLASS_VIDEO_CONTROL *video_control);
+UINT    _uxe_host_class_video_control_value_get(UX_HOST_CLASS_VIDEO *video, UX_HOST_CLASS_VIDEO_CONTROL *video_control);
+UINT    _uxe_host_class_video_control_value_set(UX_HOST_CLASS_VIDEO *video, UX_HOST_CLASS_VIDEO_CONTROL *video_control);
+UINT    _uxe_host_class_video_read(UX_HOST_CLASS_VIDEO *video, UX_HOST_CLASS_VIDEO_TRANSFER_REQUEST *video_transfer_request);
+UINT    _uxe_host_class_video_ioctl(UX_HOST_CLASS_VIDEO *video, ULONG ioctl_function, VOID *parameter);
+UINT    _uxe_host_class_video_start(UX_HOST_CLASS_VIDEO *video);
+UINT    _uxe_host_class_video_stop(UX_HOST_CLASS_VIDEO *video);
+UINT    _uxe_host_class_video_frame_parameters_set(UX_HOST_CLASS_VIDEO *video, ULONG frame_format, ULONG width, ULONG height, ULONG frame_interval);
+ULONG   _uxe_host_class_video_max_payload_get(UX_HOST_CLASS_VIDEO *video);
+UINT    _uxe_host_class_video_transfer_buffer_add(UX_HOST_CLASS_VIDEO *video, UCHAR* buffer);
+UINT    _uxe_host_class_video_transfer_buffers_add(UX_HOST_CLASS_VIDEO *video, UCHAR** buffers, ULONG num_buffers);
+VOID    _uxe_host_class_video_transfer_callback_set(UX_HOST_CLASS_VIDEO *video, VOID (*callback_function)(UX_TRANSFER*));
+UINT    _uxe_host_class_video_entities_parse(UX_HOST_CLASS_VIDEO *video,
+                        UINT(*parse_function)(VOID  *arg,
+                                            UCHAR *packed_interface_descriptor,
+                                            UCHAR *packed_entity_descriptor),
+                        VOID* arg);
+UINT    _uxe_host_class_video_control_request(UX_HOST_CLASS_VIDEO *video,
+                        UINT request, UCHAR interface_index,
+                        UINT entity_id, UINT control_selector,
+                        UCHAR *parameter, UINT parameter_size);
+
 /* Define Video Class API prototypes.  */
+#if defined(UX_HOST_CLASS_VIDEO_ENABLE_ERROR_CHECKING)
+
+#define ux_host_class_video_entry                   _ux_host_class_video_entry
+#define ux_host_class_video_control_get             _uxe_host_class_video_control_get
+#define ux_host_class_video_control_value_get       _uxe_host_class_video_control_value_get
+#define ux_host_class_video_control_value_set       _uxe_host_class_video_control_value_set
+#define ux_host_class_video_read                    _uxe_host_class_video_read
+#define ux_host_class_video_ioctl                   _uxe_host_class_video_ioctl
+#define ux_host_class_video_start                   _uxe_host_class_video_start
+#define ux_host_class_video_stop                    _uxe_host_class_video_stop
+#define ux_host_class_video_frame_parameters_set    _uxe_host_class_video_frame_parameters_set
+#define ux_host_class_video_max_payload_get         _uxe_host_class_video_max_payload_get
+#define ux_host_class_video_transfer_buffer_add     _uxe_host_class_video_transfer_buffer_add
+#define ux_host_class_video_transfer_buffers_add    _uxe_host_class_video_transfer_buffers_add
+#define ux_host_class_video_transfer_callback_set   _uxe_host_class_video_transfer_callback_set
+#define ux_host_class_video_entities_parse          _uxe_host_class_video_entities_parse
+#define ux_host_class_video_control_request         _uxe_host_class_video_control_request
+
+#else
 
 #define ux_host_class_video_entry                   _ux_host_class_video_entry
 #define ux_host_class_video_control_get             _ux_host_class_video_control_get
@@ -687,11 +748,13 @@ UINT    _ux_host_class_video_control_request(UX_HOST_CLASS_VIDEO *video,
 #define ux_host_class_video_entities_parse          _ux_host_class_video_entities_parse
 #define ux_host_class_video_control_request         _ux_host_class_video_control_request
 
-/* Determine if a C++ compiler is being used.  If so, complete the standard 
-   C conditional started above.  */   
+#endif
+
+/* Determine if a C++ compiler is being used.  If so, complete the standard
+   C conditional started above.  */
 #ifdef __cplusplus
-} 
-#endif 
+}
+#endif
 
 #endif
 

@@ -1166,6 +1166,11 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_ipv6_util.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_link.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_link.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_md5.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_md5.c</locationURI>
@@ -1289,6 +1294,11 @@
 			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_packet_transmit_release.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_packet_transmit_release.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_packet_vlan_priority_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_packet_vlan_priority_set.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_rarp_disable.c</name>
@@ -1701,6 +1711,11 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_tcp_socket_transmit_queue_flush.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_tcp_socket_vlan_priority_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_tcp_socket_vlan_priority_set.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_tcp_socket_window_update_notify_set.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_tcp_socket_window_update_notify_set.c</locationURI>
@@ -1819,6 +1834,11 @@
 			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_udp_socket_unbind.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_udp_socket_unbind.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_udp_socket_vlan_priority_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nx_udp_socket_vlan_priority_set.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nx_udp_source_extract.c</name>
@@ -2561,6 +2581,11 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nxe_packet_transmit_release.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nxe_packet_vlan_priority_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nxe_packet_vlan_priority_set.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nxe_rarp_disable.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nxe_rarp_disable.c</locationURI>
@@ -2731,6 +2756,11 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nxe_tcp_socket_transmit_configure.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nxe_tcp_socket_vlan_priority_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nxe_tcp_socket_vlan_priority_set.c</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nxe_tcp_socket_window_update_notify_set.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nxe_tcp_socket_window_update_notify_set.c</locationURI>
@@ -2819,6 +2849,11 @@
 			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nxe_udp_socket_unbind.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nxe_udp_socket_unbind.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nxe_udp_socket_vlan_priority_set.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/ST/netxduo/common/src/nxe_udp_socket_vlan_priority_set.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/NetXDuo/Network/NetXDuo/NX Core/nxe_udp_source_extract.c</name>

@@ -99,9 +99,9 @@ UINT MX_USBX_Device_Init(VOID)
   /* Initialize USBX Memory */
   if (ux_system_initialize(pointer, USBX_DEVICE_MEMORY_STACK_SIZE, UX_NULL, 0) != UX_SUCCESS)
   {
-    /* USER CODE BEGIN USBX_SYSTEM_INITIALIZE_ERORR */
+    /* USER CODE BEGIN USBX_SYSTEM_INITIALIZE_ERROR */
     return UX_ERROR;
-    /* USER CODE END USBX_SYSTEM_INITIALIZE_ERORR */
+    /* USER CODE END USBX_SYSTEM_INITIALIZE_ERROR */
   }
 
   /* Get Device Framework High Speed and get the length */
@@ -129,9 +129,9 @@ UINT MX_USBX_Device_Init(VOID)
                                  language_id_framework_length,
                                  UX_NULL) != UX_SUCCESS)
   {
-    /* USER CODE BEGIN USBX_DEVICE_INITIALIZE_ERORR */
+    /* USER CODE BEGIN USBX_DEVICE_INITIALIZE_ERROR */
     return UX_ERROR;
-    /* USER CODE END USBX_DEVICE_INITIALIZE_ERORR */
+    /* USER CODE END USBX_DEVICE_INITIALIZE_ERROR */
   }
 
   /* Initialize the hid mouse class parameters for the device */
@@ -160,9 +160,9 @@ UINT MX_USBX_Device_Init(VOID)
                                      hid_mouse_interface_number,
                                      &hid_mouse_parameter) != UX_SUCCESS)
   {
-    /* USER CODE BEGIN USBX_DEVICE_HID_MOUSE_REGISTER_ERORR */
+    /* USER CODE BEGIN USBX_DEVICE_HID_MOUSE_REGISTER_ERROR */
     return UX_ERROR;
-    /* USER CODE END USBX_DEVICE_HID_MOUSE_REGISTER_ERORR */
+    /* USER CODE END USBX_DEVICE_HID_MOUSE_REGISTER_ERROR */
   }
 
   /* USER CODE BEGIN MX_USBX_Device_Init1 */

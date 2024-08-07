@@ -34,7 +34,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_device_class_hid_receiver_event_free             PORTABLE C     */
-/*                                                            6.1.11      */
+/*                                                            6.3.0       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -68,6 +68,9 @@
 /*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            fixed standalone compile,   */
 /*                                            resulting in version 6.1.11 */
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added zero copy support,    */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_device_class_hid_receiver_event_free(UX_SLAVE_CLASS_HID *hid)
@@ -95,10 +98,14 @@ UCHAR                                   *next_pos;
         return(UX_ERROR);
 
     /* Invalidate the event and advance position.  */
-    next_pos = (UCHAR *)pos + receiver -> ux_device_class_hid_receiver_event_buffer_size + sizeof(ULONG);
+
+    /* Calculate next item address.  */
+    next_pos = (UCHAR *)pos + UX_DEVICE_CLASS_HID_RECEIVED_QUEUE_ITEM_SIZE(receiver);
+
     if (next_pos >= (UCHAR *)receiver -> ux_device_class_hid_receiver_events_end)
         next_pos = (UCHAR *)receiver -> ux_device_class_hid_receiver_events;
     receiver -> ux_device_class_hid_receiver_event_read_pos = (UX_DEVICE_CLASS_HID_RECEIVED_EVENT *)next_pos;
+
     pos -> ux_device_class_hid_received_event_length = 0;
 
     /* Inform receiver thread to (re)start.  */
@@ -108,4 +115,54 @@ UCHAR                                   *next_pos;
     /* Return event status to the user.  */
     return(UX_SUCCESS);
 #endif
+}
+
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _uxe_device_class_hid_receiver_event_free           PORTABLE C      */
+/*                                                           6.3.0        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks errors in HID event free function call.        */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    hid                                   Pointer to hid instance       */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    None                                                                */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_device_class_hid_receiver_event_free                            */
+/*                                          Free a receiver event         */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Application                                                         */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  10-31-2023     Chaoqiong Xiao           Initial Version 6.3.0         */
+/*                                                                        */
+/**************************************************************************/
+UINT  _uxe_device_class_hid_receiver_event_free(UX_SLAVE_CLASS_HID *hid)
+{
+
+    /* Sanity check.  */
+    if (hid == UX_NULL)
+        return(UX_INVALID_PARAMETER);
+
+    /* Invoke function to free HID event.  */
+    return(_ux_device_class_hid_receiver_event_free(hid));
 }

@@ -34,7 +34,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_device_class_printer_write                      PORTABLE C      */
-/*                                                           6.1.12       */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -79,6 +79,10 @@
 /*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            added auto ZLP support,     */
 /*                                            resulting in version 6.1.12 */
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added a new mode to manage  */
+/*                                            endpoint buffer in classes, */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT _ux_device_class_printer_write(UX_DEVICE_CLASS_PRINTER *printer, UCHAR *buffer,
@@ -142,17 +146,39 @@ UINT                        status = 0;
         return(status);
     }
 
+#if (UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1) && defined(UX_DEVICE_CLASS_PRINTER_ZERO_COPY)
+
+    /* Check if device is configured.  */
+    if (device -> ux_slave_device_state == UX_DEVICE_CONFIGURED)
+    {
+
+#if defined(UX_DEVICE_CLASS_PRINTER_WRITE_AUTO_ZLP)
+
+        /* Issue with larger host length to append zlp if necessary.  */
+        local_host_length = requested_length + 1;
+#else
+        local_host_length = requested_length;
+#endif
+        local_requested_length = requested_length;
+
+        /* Issue the transfer request.  */
+        transfer_request -> ux_slave_transfer_request_data_pointer =  buffer;
+        status = _ux_device_stack_transfer_request(transfer_request, local_requested_length, local_host_length);
+        *actual_length = transfer_request -> ux_slave_transfer_request_actual_length;
+    }
+#else
+
     /* Check if we need more transactions.  */
-    local_host_length = UX_SLAVE_REQUEST_DATA_MAX_LENGTH;
+    local_host_length = UX_DEVICE_CLASS_PRINTER_WRITE_BUFFER_SIZE;
     while (device -> ux_slave_device_state == UX_DEVICE_CONFIGURED &&
             requested_length != 0)
     {
 
         /* Check if we have enough in the local buffer.  */
-        if (requested_length > UX_SLAVE_REQUEST_DATA_MAX_LENGTH)
+        if (requested_length > UX_DEVICE_CLASS_PRINTER_WRITE_BUFFER_SIZE)
 
             /* We have too much to transfer.  */
-            local_requested_length = UX_SLAVE_REQUEST_DATA_MAX_LENGTH;
+            local_requested_length = UX_DEVICE_CLASS_PRINTER_WRITE_BUFFER_SIZE;
 
         else
         {
@@ -167,7 +193,7 @@ UINT                        status = 0;
 #else
 
             /* Assume expected more so stack appends ZLP if needed.  */
-            local_host_length = UX_SLAVE_REQUEST_DATA_MAX_LENGTH + 1;
+            local_host_length = UX_DEVICE_CLASS_PRINTER_WRITE_BUFFER_SIZE + 1;
 #endif
         }
 
@@ -203,6 +229,7 @@ UINT                        status = 0;
             return(status);
         }
     }
+#endif
 
     /* Free Mutex resource.  */
     _ux_device_mutex_off(&printer -> ux_device_class_printer_endpoint_in_mutex);
@@ -231,7 +258,7 @@ UINT                        status = 0;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _uxe_device_class_printer_write                       PORTABLE C    */
-/*                                                           6.2.1        */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yajun Xia, Microsoft Corporation                                    */
@@ -267,6 +294,9 @@ UINT                        status = 0;
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  03-08-2023     Yajun Xia                Initial Version 6.2.1         */
+/*  10-31-2023     Yajun Xia                Modified comment(s),          */
+/*                                            fixed error checking issue, */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT _uxe_device_class_printer_write(UX_DEVICE_CLASS_PRINTER *printer, UCHAR *buffer,
@@ -274,7 +304,7 @@ UINT _uxe_device_class_printer_write(UX_DEVICE_CLASS_PRINTER *printer, UCHAR *bu
 {
 
     /* Sanity checks.  */
-    if ((printer == UX_NULL) || (buffer == UX_NULL) || (actual_length == UX_NULL))
+    if ((printer == UX_NULL) || ((buffer == UX_NULL) && (requested_length > 0)) || (actual_length == UX_NULL))
     {
         return (UX_INVALID_PARAMETER);
     }

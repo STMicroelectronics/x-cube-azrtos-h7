@@ -24,7 +24,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    nx_user.h                                           PORTABLE C      */
-/*                                                           6.1.11       */
+/*                                                           6.3.0        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -50,6 +50,9 @@
 /*                                            resulting in version 6.1.8  */
 /*  04-25-2022     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1.11 */
+/*  10-31-2023     Tiejun Zhou              Modified comment(s),          */
+/*                                            supported random IP id,     */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -315,6 +318,9 @@
 /*
 #define NX_IP_ROUTING_TABLE_SIZE            8
 */
+
+/* Defined, this option enables random IP id. By default IP id is increased by one for each packet. */
+/* #define NX_ENABLE_IP_ID_RANDOMIZATION */
 
 /* This define specifies the maximum time of IP reassembly.  The default value
    is 60. By default this option is not defined.  */
@@ -900,9 +906,8 @@
    license 'state' including time remaining on the lease, and restore this
    state between DHCP Client application reboots.
    The default value is disabled. */
-/*
+
 #define NX_DHCP_CLIENT_RESTORE_STATE
-*/
 
 /* If set, the DHCP Client will not create its own packet pool. The host
    application must use the nx_dhcp_packet_pool_set service to set the DHCP
@@ -2305,6 +2310,13 @@
 /* Defined, the TCP/IP offload feature is enabled.
    NX_ENABLE_INTERFACE_CAPABILITY must be defined to enable this feature.  */
 /* #define NX_ENABLE_TCPIP_OFFLOAD */
+
+/* Defined, the VLAN feature is enabled.
+   Note: Require driver support to use APIs from this file.
+         A quick check in driver is to search for
+         NX_LINK_RAW_PACKET_SEND. VLAN APIs are not supported if not found. */
+
+/* #define NX_ENABLE_VLAN */
 
 #ifdef NX_DISABLE_IPV6
 #ifdef NX_DISABLE_IPV4

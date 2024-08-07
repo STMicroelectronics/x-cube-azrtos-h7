@@ -44,7 +44,7 @@ extern ETH_DMADescTypeDef  DMARxDscrTab[ETH_RX_DESC_CNT]; /* Ethernet Rx DMA Des
 extern ETH_DMADescTypeDef  DMATxDscrTab[ETH_TX_DESC_CNT]; /* Ethernet Tx DMA Descriptors */
 
 
-ETH_TxPacketConfig TxPacketCfg;
+ETH_TxPacketConfigTypeDef TxPacketCfg;
 ETH_MACFilterConfigTypeDef FilterConfig;
 
 /****** DRIVER SPECIFIC ****** Start of part/vendor specific data area.  Include hardware-specific data here!  */
@@ -145,8 +145,21 @@ VOID  nx_stm32_eth_driver(NX_IP_DRIVER *driver_req_ptr)
 /****** DRIVER SPECIFIC ****** End of part/vendor specific global driver entry function name.  */
 {
 
+#ifdef NX_ENABLE_VLAN
+NX_INTERFACE *interface_ptr;
+#endif /* NX_ENABLE_VLAN */
+
   /* Default to successful return.  */
   driver_req_ptr -> nx_ip_driver_status =  NX_SUCCESS;
+
+#ifdef NX_ENABLE_VLAN
+    /* Let link layer to preprocess the driver request and return actual interface.  */
+  if (nx_link_driver_request_preprocess(driver_req_ptr, &interface_ptr) != NX_SUCCESS)
+  {
+      driver_req_ptr -> nx_ip_driver_status =  NX_DRIVER_ERROR;
+      return;
+  }
+#endif /* NX_ENABLE_VLAN */
 
   /* Process according to the driver request type in the IP control
   block.  */
@@ -260,8 +273,6 @@ VOID  nx_stm32_eth_driver(NX_IP_DRIVER *driver_req_ptr)
     /* Return the unhandled command status.  */
     driver_req_ptr -> nx_ip_driver_status =  NX_UNHANDLED_COMMAND;
 
-    /* Default to successful return.  */
-    driver_req_ptr -> nx_ip_driver_status =  NX_DRIVER_ERROR;
   }
 }
 
@@ -1441,7 +1452,11 @@ static UINT  _nx_driver_hardware_initialize(NX_IP_DRIVER *driver_req_ptr)
 #endif /* NX_DRIVER_ETH_HW_IP_INIT */
 
   ETH_DMAConfigTypeDef dmaDefaultConf;
+#if defined(ETH_DMASBMR_BLEN4) /* ETH AXI support*/
+  dmaDefaultConf.DMAArbitration = ETH_DMAARBITRATION_TX;
+#else
   dmaDefaultConf.DMAArbitration = ETH_DMAARBITRATION_RX1_TX1;
+#endif
   dmaDefaultConf.AddressAlignedBeats = ENABLE;
   dmaDefaultConf.BurstMode = ETH_BURSTLENGTH_FIXED;
   dmaDefaultConf.TxDMABurstLength = ETH_TXDMABURSTLENGTH_32BEAT;
@@ -1490,7 +1505,7 @@ static UINT  _nx_driver_hardware_initialize(NX_IP_DRIVER *driver_req_ptr)
   FilterConfig.ControlPacketsFilter = 0x00;
 
   /* Set Tx packet config common parameters */
-  memset(&TxPacketCfg, 0, sizeof(ETH_TxPacketConfig));
+  memset(&TxPacketCfg, 0, sizeof(ETH_TxPacketConfigTypeDef));
   TxPacketCfg.Attributes = ETH_TX_PACKETS_FEATURES_CSUM ;
   TxPacketCfg.CRCPadCtrl = ETH_CRC_PAD_DISABLE;
 
@@ -1680,9 +1695,7 @@ static UINT  _nx_driver_hardware_packet_send(NX_PACKET *packet_ptr)
     }
 
     i++;
-#if defined (__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1U)
-    SCB_CleanDCache_by_Addr((uint32_t*)(pktIdx -> nx_packet_data_start), pktIdx -> nx_packet_data_end - pktIdx -> nx_packet_data_start);
-#endif
+    clean_cache_by_addr((uint32_t*)(pktIdx -> nx_packet_data_start), pktIdx -> nx_packet_data_end - pktIdx -> nx_packet_data_start);
   }
 
 #ifdef NX_ENABLE_INTERFACE_CAPABILITY
@@ -1921,9 +1934,7 @@ void HAL_ETH_RxAllocateCallback(uint8_t ** buff)
   {
     /* Adjust the packet.  */
     packet_ptr -> nx_packet_prepend_ptr += 2;
-#if defined (__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1U)
-    SCB_InvalidateDCache_by_Addr((uint32_t*)packet_ptr -> nx_packet_data_start, packet_ptr -> nx_packet_data_end - packet_ptr -> nx_packet_data_start);
-#endif
+    invalidate_cache_by_addr((uint32_t*)packet_ptr -> nx_packet_data_start, packet_ptr -> nx_packet_data_end - packet_ptr -> nx_packet_data_start);
     *buff = packet_ptr -> nx_packet_prepend_ptr;
   }
   else

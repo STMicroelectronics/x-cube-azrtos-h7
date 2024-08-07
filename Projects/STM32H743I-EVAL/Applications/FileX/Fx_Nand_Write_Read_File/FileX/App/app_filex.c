@@ -146,7 +146,7 @@ UINT MX_FileX_Init(VOID *memory_ptr)
                          FX_APP_THREAD_PRIO, FX_APP_PREEMPTION_THRESHOLD, FX_APP_THREAD_TIME_SLICE, FX_APP_THREAD_AUTO_START);
 
   /* Check main thread creation */
-  if (ret != FX_SUCCESS)
+  if (ret != TX_SUCCESS)
   {
     return TX_THREAD_ERROR;
   }

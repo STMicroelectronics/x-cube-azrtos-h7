@@ -24,7 +24,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    tx_user.h                                           PORTABLE C      */
-/*                                                           6.1.11       */
+/*                                                           6.3.0        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -60,6 +60,10 @@
 /*                                            optimized the definition of */
 /*                                            TX_TIMER_TICKS_PER_SECOND,  */
 /*                                            resulting in version 6.1.11 */
+/*  10-31-2023      Xiuwen Cai              Modified comment(s),          */
+/*                                            added option for random     */
+/*                                            number stack filling,       */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -141,6 +145,12 @@
    logic.  */
 
 /*#define TX_ENABLE_STACK_CHECKING*/
+
+/* Determine if random number is used for stack filling. By default, ThreadX uses a fixed pattern
+   for stack filling. When the following is defined, ThreadX uses a random number for stack filling.
+   This is effective only when TX_ENABLE_STACK_CHECKING is defined.  */
+
+/*#define TX_ENABLE_RANDOM_NUMBER_STACK_FILLING*/
 
 /* Determine if preemption-threshold should be disabled. By default, preemption-threshold is
    enabled. If the application does not use preemption-threshold, it may be disabled to reduce
@@ -245,18 +255,6 @@
 */
 
 /*#define TX_NO_FILEX_POINTER*/
-
-/* Determinate if the basic alignment type is defined. */
-
-/*#define ALIGN_TYPE_DEFINED*/
-
-/* Define basic alignment type used in block and byte pool operations. */
-
-/*#define ALIGN_TYPE  ULONG*/
-
-/* Define the TX_MEMSET macro to the standard library function. */
-
-/*#define TX_MEMSET  memset((a),(b),(c))*/
 
 #ifdef __ICCARM__
 /* Define if the IAR library is supported. */

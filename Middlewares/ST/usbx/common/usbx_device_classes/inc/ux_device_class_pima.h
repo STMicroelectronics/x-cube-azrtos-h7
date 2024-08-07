@@ -26,7 +26,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */ 
 /*                                                                        */ 
 /*    ux_device_class_pima.h                              PORTABLE C      */ 
-/*                                                           6.1.11       */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -58,6 +58,12 @@
 /*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            fixed standalone compile,   */
 /*                                            resulting in version 6.1.11 */
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            optimized PIMA data sets,   */
+/*                                            added a new mode to manage  */
+/*                                            endpoint buffer in classes, */
+/*                                            added error checks support, */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -74,9 +80,22 @@ extern   "C" {
 
 #endif  
 
+
+/* Internal option: enable the basic USBX error checking. This define is typically used
+   while debugging application.  */
+#if defined(UX_ENABLE_ERROR_CHECKING) && !defined(UX_DEVICE_CLASS_PIMA_ENABLE_ERROR_CHECKING)
+#define UX_DEVICE_CLASS_PIMA_ENABLE_ERROR_CHECKING
+#endif
+
+#define UX_DEVICE_CLASS_PIMA_BULK_BUFFER_LENGTH                                     UX_DEVICE_CLASS_PIMA_TRANSFER_BUFFER_LENGTH
+#define UX_DEVICE_CLASS_PIMA_INTERRUPT_BUFFER_LENGTH                                32 /* >=UX_DEVICE_CLASS_PIMA_AEI_MAX_LENGTH  */
+
+
 /* Define PIMA Class constants.  */
 
+#ifndef UX_DEVICE_CLASS_PIMA_TRANSFER_BUFFER_LENGTH
 #define UX_DEVICE_CLASS_PIMA_TRANSFER_BUFFER_LENGTH                                 UX_SLAVE_REQUEST_DATA_MAX_LENGTH
+#endif
 #define UX_DEVICE_CLASS_PIMA_MAX_PAYLOAD                                            (UX_DEVICE_CLASS_PIMA_TRANSFER_BUFFER_LENGTH - UX_DEVICE_CLASS_PIMA_DATA_HEADER_SIZE)
 #define UX_DEVICE_CLASS_PIMA_OBJECT_INFO_BUFFER_SIZE                                (UX_DEVICE_CLASS_PIMA_MAX_PAYLOAD)
 #define UX_DEVICE_CLASS_PIMA_DEVICE_INFO_BUFFER_SIZE                                (UX_DEVICE_CLASS_PIMA_MAX_PAYLOAD)
@@ -711,10 +730,11 @@ typedef struct UX_SLAVE_CLASS_PIMA_OBJECT_STRUCT
 {
 
     ULONG                   ux_device_class_pima_object_storage_id;
-    ULONG                   ux_device_class_pima_object_format;
-    ULONG                   ux_device_class_pima_object_protection_status;
+    USHORT                  ux_device_class_pima_object_format;
+    USHORT                  ux_device_class_pima_object_protection_status;
     ULONG                   ux_device_class_pima_object_compressed_size;
-    ULONG                   ux_device_class_pima_object_thumb_format;
+    USHORT                  ux_device_class_pima_object_thumb_format;
+    USHORT                  _align_thumb_compressed_size;
     ULONG                   ux_device_class_pima_object_thumb_compressed_size;
     ULONG                   ux_device_class_pima_object_thumb_pix_width;
     ULONG                   ux_device_class_pima_object_thumb_pix_height;
@@ -722,7 +742,8 @@ typedef struct UX_SLAVE_CLASS_PIMA_OBJECT_STRUCT
     ULONG                   ux_device_class_pima_object_image_pix_height;
     ULONG                   ux_device_class_pima_object_image_bit_depth;
     ULONG                   ux_device_class_pima_object_parent_object;
-    ULONG                   ux_device_class_pima_object_association_type;
+    USHORT                  ux_device_class_pima_object_association_type;
+    USHORT                  _align_association_desc;
     ULONG                   ux_device_class_pima_object_association_desc;
     ULONG                   ux_device_class_pima_object_sequence_number;
     UCHAR                   ux_device_class_pima_object_filename[UX_DEVICE_CLASS_PIMA_UNICODE_MAX_LENGTH];
@@ -780,9 +801,10 @@ typedef struct UX_SLAVE_CLASS_PIMA_DEVICE_STRUCT
 typedef struct UX_SLAVE_CLASS_PIMA_STORAGE_STRUCT                                        
 {                                                                                       
                                                                                         
-    ULONG                   ux_device_class_pima_storage_type;                                               
-    ULONG                   ux_device_class_pima_storage_file_system_type;                                   
-    ULONG                   ux_device_class_pima_storage_access_capability;                                  
+    USHORT                  ux_device_class_pima_storage_type;                                               
+    USHORT                  ux_device_class_pima_storage_file_system_type;                                   
+    USHORT                  ux_device_class_pima_storage_access_capability;                                  
+    USHORT                  _align_max_capacity_low;
     ULONG                   ux_device_class_pima_storage_max_capacity_low;                                   
     ULONG                   ux_device_class_pima_storage_max_capacity_high;                                  
     ULONG                   ux_device_class_pima_storage_free_space_bytes_low;                               
@@ -802,6 +824,9 @@ typedef struct UX_SLAVE_CLASS_PIMA_STRUCT
     UX_SLAVE_ENDPOINT       *ux_device_class_pima_bulk_in_endpoint;
     UX_SLAVE_ENDPOINT       *ux_device_class_pima_bulk_out_endpoint;
     UX_SLAVE_ENDPOINT       *ux_device_class_pima_interrupt_endpoint;
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+    UCHAR                   *ux_device_class_pima_endpoint_buffer;
+#endif
     UINT                    ux_device_class_pima_state;
     USHORT                  ux_device_class_pima_device_status;
     ULONG                   ux_device_class_pima_session_id;
@@ -872,6 +897,17 @@ typedef struct UX_SLAVE_CLASS_PIMA_STRUCT
     
                                                                 
 } UX_SLAVE_CLASS_PIMA;
+
+/* Define PIMA endpoint buffer settings (when PIMA owns buffer).  */
+#define UX_DEVICE_CLASS_PIMA_ENDPOINT_BUFFER_SIZE_CALC_OVERFLOW                 \
+    (UX_OVERFLOW_CHECK_MULC_ULONG(UX_DEVICE_CLASS_PIMA_BULK_BUFFER_LENGTH, 2) ||\
+     UX_OVERFLOW_CHECK_ADD_ULONG(UX_DEVICE_CLASS_PIMA_BULK_BUFFER_LENGTH * 2,   \
+                                 UX_DEVICE_CLASS_PIMA_INTERRUPT_BUFFER_LENGTH))
+#define UX_DEVICE_CLASS_PIMA_ENDPOINT_BUFFER_SIZE       (UX_DEVICE_CLASS_PIMA_BULK_BUFFER_LENGTH * 2 + UX_DEVICE_CLASS_PIMA_INTERRUPT_BUFFER_LENGTH)
+#define UX_DEVICE_CLASS_PIMA_BULKOUT_BUFFER(pima)       ((pima)->ux_device_class_pima_endpoint_buffer)
+#define UX_DEVICE_CLASS_PIMA_BULKIN_BUFFER(pima)        (UX_DEVICE_CLASS_PIMA_BULKOUT_BUFFER(pima) + UX_DEVICE_CLASS_PIMA_BULK_BUFFER_LENGTH)
+#define UX_DEVICE_CLASS_PIMA_INTERRUPTIN_BUFFER(pima)   (UX_DEVICE_CLASS_PIMA_BULKIN_BUFFER(pima) + UX_DEVICE_CLASS_PIMA_BULK_BUFFER_LENGTH)
+
 
 /* Define PIMA initialization command structure.  */
 
@@ -1015,6 +1051,10 @@ UINT  _ux_device_class_pima_object_prop_value_set(UX_SLAVE_CLASS_PIMA *pima,
                                                     ULONG object_property_code);
 UINT  _ux_device_class_pima_storage_format(UX_SLAVE_CLASS_PIMA *pima, ULONG storage_id);
 UINT  _ux_device_class_pima_device_reset(UX_SLAVE_CLASS_PIMA *pima);
+
+
+UINT  _uxe_device_class_pima_initialize(UX_SLAVE_CLASS_COMMAND *command);
+
 
 /* Define Device PIMA Class API prototypes.  */
 

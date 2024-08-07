@@ -26,7 +26,7 @@
 /*  APPLICATION INTERFACE DEFINITION                       RELEASE        */
 /*                                                                        */
 /*    lx_api.h                                            PORTABLE C      */
-/*                                                           6.2.1       */
+/*                                                           6.4.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -79,7 +79,16 @@
 /*                                            modified NAND logic,        */
 /*                                            added new driver interface  */
 /*                                            and user extension,         */
-/*                                            resulting in version 6.2.1 */
+/*                                            resulting in version 6.2.1  */
+/*  10-31-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            made LX_NOR_SECTOR_SIZE     */
+/*                                            configurable, added mapping */
+/*                                            bitmap and obsolete count   */
+/*                                            cache for NOR flash,        */
+/*                                            resulting in version 6.3.0  */
+/*  12-31-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            added configuration checks, */
+/*                                            resulting in version 6.4.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -191,8 +200,8 @@ typedef unsigned long long                      ULONG64;
 /* Define basic constants for the LevelX Stack.  */
 #define AZURE_RTOS_LEVELX
 #define LEVELX_MAJOR_VERSION                        6
-#define LEVELX_MINOR_VERSION                        2
-#define LEVELX_PATCH_VERSION                        1
+#define LEVELX_MINOR_VERSION                        4
+#define LEVELX_PATCH_VERSION                        0
 
 
 /* Define general LevelX Constants.  */
@@ -233,7 +242,9 @@ typedef unsigned long long                      ULONG64;
 
 #define LX_NOR_FLASH_OPENED                         ((ULONG) 0x4E4F524F)
 #define LX_NOR_FLASH_CLOSED                         ((ULONG) 0x4E4F5244)
+#ifndef LX_NOR_SECTOR_SIZE
 #define LX_NOR_SECTOR_SIZE                          (512/sizeof(ULONG))
+#endif
 #define LX_NOR_FLASH_MIN_LOGICAL_SECTOR_OFFSET      1
 #define LX_NOR_FLASH_MAX_LOGICAL_SECTOR_OFFSET      2
 #ifndef LX_NOR_FLASH_MAX_ERASE_COUNT_DELTA
@@ -245,6 +256,11 @@ typedef unsigned long long                      ULONG64;
 #endif
 #ifndef LX_NOR_EXTENDED_CACHE_SIZE
 #define LX_NOR_EXTENDED_CACHE_SIZE                  8           /* Maximum number of extended cache sectors.            */
+#endif
+#ifdef LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
+#ifndef LX_NOR_OBSOLETE_COUNT_CACHE_TYPE
+#define LX_NOR_OBSOLETE_COUNT_CACHE_TYPE            UCHAR
+#endif
 #endif
 
 
@@ -265,6 +281,19 @@ typedef unsigned long long                      ULONG64;
 #define LX_NOR_LOGICAL_SECTOR_MASK                  0x1FFFFFFF
 #define LX_NOR_PHYSICAL_SECTOR_FREE                 0xFFFFFFFF
 
+
+/* Check extended cache configurations.  */
+#ifdef LX_NOR_DISABLE_EXTENDED_CACHE
+
+#ifdef LX_NOR_ENABLE_MAPPING_BITMAP
+#error "To enable mapping bitmap, you need to undefine LX_NOR_DISABLE_EXTENDED_CACHE."
+#endif
+
+#ifdef LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
+#error "To enable obsolete count cache, you need to undefine LX_NOR_DISABLE_EXTENDED_CACHE."
+#endif
+
+#endif
 
 /* Define NAND flash constants.  */
 
@@ -566,6 +595,7 @@ typedef struct LX_NOR_FLASH_STRUCT
     ULONG                           lx_nor_flash_mapped_physical_sectors;
     ULONG                           lx_nor_flash_obsolete_physical_sectors;
     ULONG                           lx_nor_flash_minimum_erase_count;
+    ULONG                           lx_nor_flash_minimum_erased_blocks;
     ULONG                           lx_nor_flash_maximum_erase_count;
 
     ULONG                           lx_nor_flash_free_block_search;
@@ -616,6 +646,15 @@ typedef struct LX_NOR_FLASH_STRUCT
                                     lx_nor_flash_extended_cache[LX_NOR_EXTENDED_CACHE_SIZE];
     ULONG                           lx_nor_flash_extended_cache_hits;
     ULONG                           lx_nor_flash_extended_cache_misses;
+#ifdef LX_NOR_ENABLE_MAPPING_BITMAP
+    ULONG                           *lx_nor_flash_extended_cache_mapping_bitmap;
+    ULONG                           lx_nor_flash_extended_cache_mapping_bitmap_max_logical_sector;
+#endif
+#ifdef LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
+    LX_NOR_OBSOLETE_COUNT_CACHE_TYPE
+                                    *lx_nor_flash_extended_cache_obsolete_count;
+    ULONG                           lx_nor_flash_extended_cache_obsolete_count_max_block;
+#endif      
 #endif
 
 #ifdef LX_THREAD_SAFE_ENABLE

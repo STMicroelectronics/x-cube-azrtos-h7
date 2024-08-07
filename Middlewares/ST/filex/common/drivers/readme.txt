@@ -6,6 +6,12 @@
   *          FileX low level drivers for STM32 devices.
   ******************************************************************************
   */
+### V3.2.0 / 17-May-2024 ###
+=================================
+Main changes
+-------------
+-Add support to NOR extended cache to enhance read/write performance
+-Fix issue when calling fx_media_format() followed by fx_media_open()
 
 ### V3.1.0 / 17-November-2023 ###
 =================================

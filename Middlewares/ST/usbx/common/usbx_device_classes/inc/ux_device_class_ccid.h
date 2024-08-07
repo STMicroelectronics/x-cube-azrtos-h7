@@ -24,7 +24,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */
 /*                                                                        */
 /*    ux_device_class_ccid.h                              PORTABLE C      */
-/*                                                           6.2.1        */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -42,6 +42,9 @@
 /*  03-08-2023     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            added standalone support,   */
 /*                                            resulting in version 6.2.1  */
+/*  10-31-2023     Yajun xia, CQ Xiao       Modified comment(s),          */
+/*                                            added error checks support, */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -56,6 +59,20 @@
 /* Yes, C++ compiler is present.  Use standard C.  */
 extern   "C" {
 #endif
+
+/* Internal option: enable the basic USBX error checking. This define is typically used
+   while debugging application.  */
+#if defined(UX_ENABLE_ERROR_CHECKING) && !defined(UX_DEVICE_CLASS_CCID_ENABLE_ERROR_CHECKING)
+#define UX_DEVICE_CLASS_CCID_ENABLE_ERROR_CHECKING
+#endif
+
+
+/* Notification/interrupt endpoint buffer size, must be larger than max packet size in framework, and aligned in 4-bytes.  */
+#define UX_DEVICE_CLASS_CCID_INTERRUPT_BUFFER_SIZE                          16
+
+/* Bulk endpoints buffer size, must be larger than dwMaxCCIDMessageLength and wMaxPacketSize in framework, and aligned in 4-bytes.  */
+#define UX_DEVICE_CLASS_CCID_BULK_BUFFER_SIZE                               UX_SLAVE_REQUEST_DATA_MAX_LENGTH
+
 
 #if !defined(UX_DEVICE_STANDALONE)
 
@@ -1001,6 +1018,10 @@ typedef struct UX_DEVICE_CLASS_CCID_STRUCT
     UX_SLAVE_ENDPOINT       *ux_device_class_ccid_endpoint_in;
     UX_SLAVE_ENDPOINT       *ux_device_class_ccid_endpoint_notify;
 
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+    UCHAR                   *ux_device_class_ccid_endpoint_buffer;
+#endif
+
     UX_DEVICE_CLASS_CCID_PARAMETER
                             ux_device_class_ccid_parameter;
 
@@ -1032,6 +1053,16 @@ typedef struct UX_DEVICE_CLASS_CCID_STRUCT
     UCHAR                   ux_device_class_ccid_notify_state;
 #endif
 } UX_DEVICE_CLASS_CCID;
+
+/* Device CCID endpoint buffer settings (when CCID owns buffer).  */
+#define UX_DEVICE_CLASS_CCID_ENDPOINT_BUFFER_SIZE_CALC_OVERFLOW                 \
+    (UX_OVERFLOW_CHECK_MULC_ULONG(UX_DEVICE_CLASS_CCID_BULK_BUFFER_SIZE, 2) ||  \
+     UX_OVERFLOW_CHECK_ADD_ULONG(UX_DEVICE_CLASS_CCID_BULK_BUFFER_SIZE * 2,     \
+                                 UX_DEVICE_CLASS_CCID_INTERRUPT_BUFFER_SIZE))
+#define UX_DEVICE_CLASS_CCID_ENDPOINT_BUFFER_SIZE (UX_DEVICE_CLASS_CCID_BULK_BUFFER_SIZE * 2 + UX_DEVICE_CLASS_CCID_INTERRUPT_BUFFER_SIZE)
+#define UX_DEVICE_CLASS_CCID_BULKOUT_BUFFER(ccid)       ((ccid) -> ux_device_class_ccid_endpoint_buffer)
+#define UX_DEVICE_CLASS_CCID_BULKIN_BUFFER(ccid)        (UX_DEVICE_CLASS_CCID_BULKOUT_BUFFER(ccid) + UX_DEVICE_CLASS_CCID_BULK_BUFFER_SIZE)
+#define UX_DEVICE_CLASS_CCID_INTERRUPTIN_BUFFER(ccid)   (UX_DEVICE_CLASS_CCID_BULKIN_BUFFER(ccid) + UX_DEVICE_CLASS_CCID_BULK_BUFFER_SIZE)
 
 /* Device CCID flags.  */
 #define UX_DEVICE_CLASS_CCID_FLAG_LOCK          0x0001u
@@ -1161,9 +1192,25 @@ UINT  _ux_device_class_ccid_auto_seq_done(UX_DEVICE_CLASS_CCID *ccid, ULONG slot
 UINT  _ux_device_class_ccid_time_extension(UX_DEVICE_CLASS_CCID *ccid, ULONG slot, ULONG wt);
 UINT  _ux_device_class_ccid_hardware_error(UX_DEVICE_CLASS_CCID *ccid, ULONG slot, ULONG error);
 
+UINT  _uxe_device_class_ccid_icc_insert(UX_DEVICE_CLASS_CCID *ccid, ULONG slot, ULONG seq_start);
+UINT  _uxe_device_class_ccid_icc_remove(UX_DEVICE_CLASS_CCID *ccid, ULONG slot);
+UINT  _uxe_device_class_ccid_auto_seq_done(UX_DEVICE_CLASS_CCID *ccid, ULONG slot, ULONG icc_status);
+UINT  _uxe_device_class_ccid_time_extension(UX_DEVICE_CLASS_CCID *ccid, ULONG slot, ULONG wt);
+UINT  _uxe_device_class_ccid_hardware_error(UX_DEVICE_CLASS_CCID *ccid, ULONG slot, ULONG error);
+
 /* Define Device CCID Class API prototypes.  */
 
 #define ux_device_class_ccid_entry               _ux_device_class_ccid_entry
+
+#if defined(UX_DEVICE_CLASS_CCID_ENABLE_ERROR_CHECKING)
+
+#define ux_device_class_ccid_icc_insert          _uxe_device_class_ccid_icc_insert
+#define ux_device_class_ccid_icc_remove          _uxe_device_class_ccid_icc_remove
+#define ux_device_class_ccid_auto_seq_done       _uxe_device_class_ccid_auto_seq_done
+#define ux_device_class_ccid_time_extension      _uxe_device_class_ccid_time_extension
+#define ux_device_class_ccid_hardware_error      _uxe_device_class_ccid_hardware_error
+
+#else
 
 #define ux_device_class_ccid_icc_insert          _ux_device_class_ccid_icc_insert
 #define ux_device_class_ccid_icc_remove          _ux_device_class_ccid_icc_remove
@@ -1171,6 +1218,7 @@ UINT  _ux_device_class_ccid_hardware_error(UX_DEVICE_CLASS_CCID *ccid, ULONG slo
 #define ux_device_class_ccid_time_extension      _ux_device_class_ccid_time_extension
 #define ux_device_class_ccid_hardware_error      _ux_device_class_ccid_hardware_error
 
+#endif
 
 /* Determine if a C++ compiler is being used.  If so, complete the standard
    C conditional started above.  */

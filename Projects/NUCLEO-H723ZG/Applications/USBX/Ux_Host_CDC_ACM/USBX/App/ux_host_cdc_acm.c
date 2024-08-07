@@ -215,6 +215,13 @@ VOID cdc_acm_recieve_app_thread_entry(ULONG thread_inputg)
     }
     else
     {
+      if (cdc_acm_reception.ux_host_class_cdc_acm_reception_state == UX_HOST_CLASS_CDC_ACM_RECEPTION_STATE_STOPPED)
+      {
+        read_data_pointer = cdc_acm_reception.ux_host_class_cdc_acm_reception_data_buffer;
+
+        /* Reinitialize block reception size index */
+        read_data_block_count = 0;
+      }
       tx_thread_sleep(MS_TO_TICK(10));
     }
   }

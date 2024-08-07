@@ -69,6 +69,8 @@ typedef enum
   CLASS_TYPE_CCID     = 8,
   CLASS_TYPE_PRINTER  = 9,
   CLASS_TYPE_RNDIS    = 10,
+  CLASS_TYPE_AUDIO_10 = 11,
+  CLASS_TYPE_AUDIO_20 = 12,
 } USBD_CompositeClassTypeDef;
 
 /* Enum HID Interface Type */
@@ -227,11 +229,6 @@ typedef struct
   uint16_t wDescriptorLength;
 } __PACKED USBD_HIDDescTypedef;
 #endif /* USBD_HID_CLASS_ACTIVATED == 1U */
-
-/* Private defines -----------------------------------------------------------*/
-/* USER CODE BEGIN Private_defines */
-
-/* USER CODE END Private_defines */
 
 /* Exported functions prototypes ---------------------------------------------*/
 /* USER CODE BEGIN EFP */

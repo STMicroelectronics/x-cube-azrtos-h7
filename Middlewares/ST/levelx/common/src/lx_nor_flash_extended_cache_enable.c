@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nor_flash_extended_cache_enable                 PORTABLE C      */ 
-/*                                                           6.1.9        */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -84,6 +84,10 @@
 /*                                            added check for out of      */
 /*                                            bound memory access,        */
 /*                                            resulting in version 6.1.9  */
+/*  10-31-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            added mapping bitmap cache, */
+/*                                            added obsolete count cache, */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nor_flash_extended_cache_enable(LX_NOR_FLASH *nor_flash, VOID *memory, ULONG size)
@@ -93,6 +97,22 @@ UINT  _lx_nor_flash_extended_cache_enable(LX_NOR_FLASH *nor_flash, VOID *memory,
 UINT    i;
 ULONG   cache_size;
 ULONG   *cache_memory;
+#ifdef LX_NOR_ENABLE_MAPPING_BITMAP
+ULONG   mapping_bitmap_words;
+ULONG   mapping_bitmap_word;
+ULONG   logical_sector;
+ULONG   *mapping_bitmap_ptr;
+#endif
+#ifdef LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
+ULONG   obsolete_count_words;
+ULONG   obsolete_sectors;
+#endif
+#if defined(LX_NOR_ENABLE_MAPPING_BITMAP) || defined(LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE)
+ULONG   *block_word_ptr;
+UINT    j;
+UINT    status;
+ULONG   block_word;
+#endif
 
 
     /* Determine if memory was specified but with an invalid size (less than one NOR sector).  */
@@ -118,6 +138,157 @@ ULONG   *cache_memory;
     /* Setup cache memory pointer.  */
     cache_memory =  (ULONG *) memory;
 
+#if defined(LX_NOR_ENABLE_MAPPING_BITMAP) || defined(LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE)
+
+    /* Check if the NOR flash is opened.  */
+    if (nor_flash -> lx_nor_flash_state == LX_NOR_FLASH_OPENED)
+    {
+#if defined(LX_NOR_ENABLE_MAPPING_BITMAP)
+
+        /* Get the mapping bitmap cache size.  */
+        mapping_bitmap_words = (nor_flash -> lx_nor_flash_total_physical_sectors + 31) / 32;
+        
+        /* Check if the mapping bitmap cache fits in the suppiled cache memory.  */
+        if (cache_size < mapping_bitmap_words)
+        {
+
+            /* Update the cache size.  */
+            mapping_bitmap_words = cache_size;
+        }
+        
+        /* Setup the mapping bitmap cache.  */
+        nor_flash -> lx_nor_flash_extended_cache_mapping_bitmap =  cache_memory;
+
+        /* Setup the mapping bitmap cache size.  */
+        nor_flash -> lx_nor_flash_extended_cache_mapping_bitmap_max_logical_sector =  mapping_bitmap_words * 32;
+        
+        /* Clear the mapping bitmap cache.  */
+        for (i = 0; i < mapping_bitmap_words; i++)
+        {
+            cache_memory[i] =  0;
+        }
+
+        /* Update the cache memory pointer.  */
+        mapping_bitmap_ptr =  cache_memory;
+
+        /* Update the cache size.  */
+        cache_size =  cache_size - mapping_bitmap_words;
+
+        /* Update the cache memory pointer.  */
+        cache_memory =  cache_memory + mapping_bitmap_words;
+#endif
+        
+#if defined(LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE)
+
+        /* Get the obsolete count cache size.  */
+        obsolete_count_words = nor_flash -> lx_nor_flash_total_blocks * sizeof(LX_NOR_OBSOLETE_COUNT_CACHE_TYPE) / 4;
+        
+        /* Check if the obsolete count cache fits in the suppiled cache memory.  */
+        if (cache_size < obsolete_count_words)
+        {
+
+            /* Update the cache size.  */
+            obsolete_count_words = cache_size;
+        }
+        
+        /* Setup the obsolete count cache.  */
+        nor_flash -> lx_nor_flash_extended_cache_obsolete_count =  (LX_NOR_OBSOLETE_COUNT_CACHE_TYPE*)cache_memory;
+
+        /* Setup the obsolete count cache size.  */
+        nor_flash -> lx_nor_flash_extended_cache_obsolete_count_max_block =  obsolete_count_words * 4 / sizeof(LX_NOR_OBSOLETE_COUNT_CACHE_TYPE);
+
+        /* Update the cache size.  */
+        cache_size =  cache_size - obsolete_count_words;
+
+        /* Update the cache memory pointer.  */
+        cache_memory =  cache_memory + obsolete_count_words;
+#endif
+
+        /* Loop through the blocks.  */
+        for (i = 0; i < nor_flash -> lx_nor_flash_total_blocks; i++)
+        {
+            /* Setup the block word pointer to the first word of the block.  */
+            block_word_ptr =  (nor_flash -> lx_nor_flash_base_address + (i * nor_flash -> lx_nor_flash_words_per_block));
+
+#if defined(LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE)
+
+            /* Initialize the obsolete count cache.  */
+            obsolete_sectors = 0;
+#endif
+
+            /* Now walk the list of logical-physical sector mapping.  */
+            for (j = 0; j < nor_flash ->lx_nor_flash_physical_sectors_per_block; j++)
+            {
+                
+                /* Read this word of the sector mapping list.  */
+#ifdef LX_DIRECT_READ
+    
+                /* Read the word directly.  */
+                block_word =  *(block_word_ptr + nor_flash -> lx_nor_flash_block_physical_sector_mapping_offset + j);
+#else
+                status =  _lx_nor_flash_driver_read(nor_flash, (block_word_ptr + nor_flash -> lx_nor_flash_block_physical_sector_mapping_offset + j), &block_word, 1);
+
+                /* Check for an error from flash driver. Drivers should never return an error..  */
+                if (status)
+                {
+    
+                    /* Call system error handler.  */
+                    _lx_nor_flash_system_error(nor_flash, status);
+
+                    /* Return an error.  */
+                    return(LX_ERROR);
+                }
+#endif
+                /* Determine if the entry hasn't been used.  */
+                if (block_word == LX_NOR_PHYSICAL_SECTOR_FREE)
+                {
+                    break;
+                }
+                
+                /* Is this entry valid?  */
+                if ((block_word & (LX_NOR_PHYSICAL_SECTOR_VALID | LX_NOR_PHYSICAL_SECTOR_MAPPING_NOT_VALID)) == LX_NOR_PHYSICAL_SECTOR_VALID)
+                {
+#if defined(LX_NOR_ENABLE_MAPPING_BITMAP)
+
+                    /* Yes, get the logical sector.  */
+                    logical_sector = block_word & LX_NOR_LOGICAL_SECTOR_MASK;
+                    
+                    /* Get the mapping bitmap word.  */
+                    mapping_bitmap_word = logical_sector >> 5;
+                    
+                    /* Check if the mapping bitmap word is within the cache.  */
+                    if (mapping_bitmap_word < mapping_bitmap_words)
+                    {
+
+                        /* Set the bit in the mapping bitmap.  */
+                        mapping_bitmap_ptr[mapping_bitmap_word] |=  (ULONG)(1 << (logical_sector & 31));
+                    }
+#endif
+                    
+                }
+                else
+                {
+#if defined(LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE)
+
+                    /* Increment the obsolete sector count.  */
+                    obsolete_sectors++;
+#endif
+                }
+            }
+#if defined(LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE)
+
+            /* Check if the block is cached by obsolete count cache.  */
+            if (i < nor_flash -> lx_nor_flash_extended_cache_obsolete_count_max_block)
+            {
+
+                /* Yes, cache the obsolete sector count.  */
+                nor_flash -> lx_nor_flash_extended_cache_obsolete_count[i] = (LX_NOR_OBSOLETE_COUNT_CACHE_TYPE)obsolete_sectors;
+            }
+#endif
+        }
+    }
+#endif
+    
     /* Loop through the memory supplied and assign to cache entries.  */
     i =  0;
     while (cache_size >= LX_NOR_SECTOR_SIZE)

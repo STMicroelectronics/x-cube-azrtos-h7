@@ -81,7 +81,7 @@
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>0</RunUserProg1>
-            <RunUserProg2>0</RunUserProg2>
+            <RunUserProg2>1</RunUserProg2>
             <UserProg1Name></UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
@@ -1105,9 +1105,14 @@
               <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_memory_free.c</FilePath>
             </File>
             <File>
-              <FileName>ux_utility_memory_free_block_best_get.c</FileName>
+              <FileName>ux_utility_memory_byte_pool_create.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_memory_free_block_best_get.c</FilePath>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_memory_byte_pool_create.c</FilePath>
+            </File>
+            <File>
+              <FileName>ux_utility_memory_byte_pool_search.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../../../../../../Middlewares/ST/usbx/common/core/src/ux_utility_memory_byte_pool_search.c</FilePath>
             </File>
             <File>
               <FileName>ux_utility_memory_set.c</FileName>

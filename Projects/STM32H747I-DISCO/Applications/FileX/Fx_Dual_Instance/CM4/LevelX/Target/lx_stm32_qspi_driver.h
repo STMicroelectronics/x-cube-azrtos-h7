@@ -42,6 +42,9 @@ extern TX_SEMAPHORE qspi_rx_semaphore;
 
 /* the QuadSPI instance, default value set to 0 */
 #define LX_STM32_QSPI_INSTANCE                           0
+
+#define LX_STM32_QSPI_BASE_ADDRESS                       0
+
 #define LX_STM32_QSPI_DEFAULT_TIMEOUT                    10 * TX_TIMER_TICKS_PER_SECOND
 #define LX_STM32_DEFAULT_SECTOR_SIZE                     LX_STM32_QSPI_SECTOR_SIZE
 

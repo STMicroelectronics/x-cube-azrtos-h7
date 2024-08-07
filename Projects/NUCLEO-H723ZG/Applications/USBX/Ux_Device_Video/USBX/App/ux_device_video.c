@@ -46,6 +46,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
+uint32_t payload_count;
 ULONG uvc_state;
 UX_DEVICE_CLASS_VIDEO *video;
 UX_DEVICE_CLASS_VIDEO_STREAM *stream_write;
@@ -201,13 +202,27 @@ VOID USBD_VIDEO_StreamPayloadDone(UX_DEVICE_CLASS_VIDEO_STREAM *video_stream,
   /* Check length is not NULL */
   if (length != 0U)
   {
+    payload_count = 0;
+
     /* Update state machine */
     uvc_state = UVC_PLAY_STATUS_STREAMING;
 
     /* Prepare next payload */
     video_write_payload(video_stream);
   }
+  else
+  {
+    payload_count++ ;
+  }
 
+  if (payload_count == USBD_VIDEO_IMAGE_LAPS)
+  {
+    /* Update state machine */
+    uvc_state = UVC_PLAY_STATUS_READY;
+
+    /* Prepare next payload */
+    video_write_payload(video_stream);
+  }
   /* USER CODE END USBD_VIDEO_StreamPayloadDone */
 
   return;
@@ -393,6 +408,16 @@ VOID video_write_payload(UX_DEVICE_CLASS_VIDEO_STREAM *stream)
 
       length = 2U;
 
+      /* Add the packet header */
+      video_frame_buffer[0] = payload_header[0];
+      video_frame_buffer[1] = payload_header[1];
+
+      /* Copy video buffer in video frame buffer */
+      ux_utility_memory_copy(buffer, video_frame_buffer, length);
+
+      /* Commit payload buffer */
+      ux_device_class_video_write_payload_commit(stream, length);
+
       break;
 
     case UVC_PLAY_STATUS_STREAMING:
@@ -420,7 +445,7 @@ VOID video_write_payload(UX_DEVICE_CLASS_VIDEO_STREAM *stream)
       else
       {
         /* New image to be started, send only the packet header */
-        length = 2;
+        length = 0;
       }
 
       if (length > 2U)
@@ -455,22 +480,24 @@ VOID video_write_payload(UX_DEVICE_CLASS_VIDEO_STREAM *stream)
           img_count = 0U;
         }
       }
+      else
+      {
+        /* Add the packet header */
+        video_frame_buffer[0] = payload_header[0];
+        video_frame_buffer[1] = payload_header[1];
+
+        /* Copy video buffer in video frame buffer */
+        ux_utility_memory_copy(buffer, video_frame_buffer, length);
+
+        /* Commit payload buffer */
+        ux_device_class_video_write_payload_commit(stream, length);
+      }
       break;
 
     case UVC_PLAY_STATUS_STOP:
     default:
       return;
   }
-
-  /* Add the packet header */
-  video_frame_buffer[0] = payload_header[0];
-  video_frame_buffer[1] = payload_header[1];
-
-  /* Copy video buffer in video frame buffer */
-  ux_utility_memory_copy(buffer, video_frame_buffer, length);
-
-  /* Commit payload buffer */
-  ux_device_class_video_write_payload_commit(stream, length);
 }
 
 /* USER CODE END 1 */

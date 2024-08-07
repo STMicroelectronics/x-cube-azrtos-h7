@@ -33,7 +33,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_device_class_pima_initialize                    PORTABLE C      */ 
-/*                                                           6.1.12       */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -81,6 +81,10 @@
 /*                                            fixed parameter/variable    */
 /*                                            names conflict C++ keyword, */
 /*                                            resulting in version 6.1.12 */
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added a new mode to manage  */
+/*                                            endpoint buffer in classes, */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_device_class_pima_initialize(UX_SLAVE_CLASS_COMMAND *command)
@@ -106,6 +110,20 @@ UX_SLAVE_CLASS                          *class_ptr;
 
     /* Save the address of the PIMA instance inside the PIMA container.  */
     class_ptr -> ux_slave_class_instance = (VOID *) pima;
+
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+
+    /* Allocate some memory for endpoints.  */
+    UX_ASSERT(!UX_DEVICE_CLASS_PIMA_ENDPOINT_BUFFER_SIZE_CALC_OVERFLOW);
+    pima -> ux_device_class_pima_endpoint_buffer =  
+        _ux_utility_memory_allocate(UX_NO_ALIGN, UX_CACHE_SAFE_MEMORY,
+                                    UX_DEVICE_CLASS_PIMA_ENDPOINT_BUFFER_SIZE);
+    if (pima -> ux_device_class_pima_endpoint_buffer == UX_NULL)
+    {
+        _ux_utility_memory_free(pima);
+        return(UX_MEMORY_INSUFFICIENT);
+    }
+#endif
 
     /* Allocate some memory for the thread stack. */
     class_ptr -> ux_slave_class_thread_stack =  
@@ -147,6 +165,9 @@ UX_SLAVE_CLASS                          *class_ptr;
 
         /* Detach instance and free memory.  */
         class_ptr -> ux_slave_class_instance = UX_NULL;
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+        _ux_utility_memory_free(pima -> ux_device_class_pima_endpoint_buffer);
+#endif
         _ux_utility_memory_free(pima);
 
         /* Return completion status.  */
@@ -236,3 +257,87 @@ UX_SLAVE_CLASS                          *class_ptr;
 #endif
 }
 
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _uxe_device_class_pima_initialize                   PORTABLE C      */
+/*                                                           6.3.0        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks errors in PIMA initialization function call.   */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    command                               Pointer to pima command       */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    Completion Status                                                   */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_device_class_pima_initialize      Initialize pima instance      */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Device PIMA Class                                                   */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  10-31-2023     Chaoqiong Xiao           Initial Version 6.3.0         */
+/*                                                                        */
+/**************************************************************************/
+UINT  _uxe_device_class_pima_initialize(UX_SLAVE_CLASS_COMMAND *command)
+{
+
+UX_SLAVE_CLASS_PIMA_PARAMETER           *pima_parameter;
+
+    /* Get the pointer to the application parameters for the pima class.  */
+    pima_parameter =  command -> ux_slave_class_command_parameter;
+
+    /* Sanity checks.  */
+    if (
+        /* Property lists check.  */
+        /* pima_parameter -> ux_device_class_pima_parameter_device_properties_list can be UX_NULL  */
+        /* pima_parameter -> ux_device_class_pima_parameter_supported_capture_formats_list can be UX_NULL  */
+        /* pima_parameter -> ux_device_class_pima_parameter_supported_image_formats_list can be UX_NULL  */
+
+        /* Callback functions check.  */
+        /* pima_parameter -> ux_device_class_pima_parameter_cancel can be NULL */
+        (pima_parameter -> ux_device_class_pima_parameter_device_reset == UX_NULL) ||
+        (pima_parameter -> ux_device_class_pima_parameter_device_prop_desc_get == UX_NULL) ||
+        (pima_parameter -> ux_device_class_pima_parameter_device_prop_value_get == UX_NULL) ||
+        (pima_parameter -> ux_device_class_pima_parameter_device_prop_value_set == UX_NULL) ||
+        (pima_parameter -> ux_device_class_pima_parameter_storage_format == UX_NULL) ||
+        /* pima_parameter -> ux_device_class_pima_parameter_storage_info_get can be UX_NULL  */
+        (pima_parameter -> ux_device_class_pima_parameter_object_number_get == UX_NULL) ||
+        (pima_parameter -> ux_device_class_pima_parameter_object_handles_get == UX_NULL) ||
+        (pima_parameter -> ux_device_class_pima_parameter_object_info_get == UX_NULL) ||
+        (pima_parameter -> ux_device_class_pima_parameter_object_data_get == UX_NULL) ||
+        (pima_parameter -> ux_device_class_pima_parameter_object_info_send == UX_NULL) ||
+        (pima_parameter -> ux_device_class_pima_parameter_object_data_send == UX_NULL) ||
+        (pima_parameter -> ux_device_class_pima_parameter_object_delete == UX_NULL)
+#ifdef UX_PIMA_WITH_MTP_SUPPORT
+        || (pima_parameter -> ux_device_class_pima_parameter_object_properties_list == UX_NULL)
+        || (pima_parameter -> ux_device_class_pima_parameter_object_prop_desc_get == UX_NULL)
+        || (pima_parameter -> ux_device_class_pima_parameter_object_prop_value_get == UX_NULL)
+        || (pima_parameter -> ux_device_class_pima_parameter_object_prop_value_set == UX_NULL)
+        || (pima_parameter -> ux_device_class_pima_parameter_object_references_get == UX_NULL)
+        || (pima_parameter -> ux_device_class_pima_parameter_object_references_set == UX_NULL)
+#endif
+        )
+    {
+        return(UX_INVALID_PARAMETER);
+    }
+
+    /* Invoke PIMA initialize function.  */
+    return(_ux_device_class_pima_initialize(command));
+}

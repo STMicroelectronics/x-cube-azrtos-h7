@@ -25,8 +25,8 @@
 
 
 #ifdef __cplusplus
-/* Yes, C++ compiler is present.  Use standard C. */
-extern   "C" {
+/* Yes, C++ compiler is present. Use standard C. */
+extern "C" {
 #endif /* __cplusplus */
 
 
@@ -62,7 +62,7 @@ struct NX_DRIVER_INFORMATION_STRUCT;
 
 /**
   * Determine if the driver's source file is being compiled.
-  * The constants and typdefs are only valid within
+  * The constants and typedefs are only valid within
   * the driver's source file compilation.
   */
 
@@ -130,11 +130,10 @@ typedef struct NX_DRIVER_INFORMATION_STRUCT
 
 
 /* Define default driver entry function. */
-
 VOID nx_driver_framework_default_entry(NX_IP_DRIVER *driver_req_ptr);
 
 #ifdef __cplusplus
-/* Yes, C++ compiler is present.  Use standard C. */
+/* Yes, C++ compiler is present. Use standard C. */
 }
 #endif /* __cplusplus */
 

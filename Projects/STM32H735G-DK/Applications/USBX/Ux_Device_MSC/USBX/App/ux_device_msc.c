@@ -82,9 +82,9 @@ VOID USBD_STORAGE_Activate(VOID *storage_instance)
   */
 VOID USBD_STORAGE_Deactivate(VOID *storage_instance)
 {
-  /* USER CODE BEGIN USBD_STORAGE_Activate */
+  /* USER CODE BEGIN USBD_STORAGE_Desactivate */
   UX_PARAMETER_NOT_USED(storage_instance);
-  /* USER CODE END USBD_STORAGE_Activate */
+  /* USER CODE END USBD_STORAGE_Desactivate */
 
   return;
 }

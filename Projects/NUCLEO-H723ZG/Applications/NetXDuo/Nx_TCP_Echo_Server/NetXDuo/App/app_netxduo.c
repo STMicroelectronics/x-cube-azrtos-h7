@@ -49,6 +49,7 @@ TX_SEMAPHORE   DHCPSemaphore;
 NX_DHCP        DHCPClient;
 /* USER CODE BEGIN PV */
 
+TX_SEMAPHORE   TCPSemaphore;
 TX_THREAD AppTCPThread;
 TX_THREAD AppLinkThread;
 
@@ -225,6 +226,9 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
   tx_semaphore_create(&DHCPSemaphore, "DHCP Semaphore", 0);
 
   /* USER CODE BEGIN MX_NetXDuo_Init */
+  /* set DHCP notification callback  */
+  tx_semaphore_create(&TCPSemaphore, "TCP Semaphore", 0);
+
   /* Allocate the memory for Link thread   */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,NX_APP_THREAD_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
@@ -254,11 +258,18 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
 static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr)
 {
   /* USER CODE BEGIN ip_address_change_notify_callback */
-
-  /* USER CODE END ip_address_change_notify_callback */
-
   /* release the semaphore as soon as an IP address is available */
-  tx_semaphore_put(&DHCPSemaphore);
+  if (nx_ip_address_get(&NetXDuoEthIpInstance, &IpAddress, &NetMask) != NX_SUCCESS)
+  {
+    /* USER CODE BEGIN IP address change callback error */
+    Error_Handler();
+    /* USER CODE END IP address change callback error */
+  }
+  if(IpAddress != NULL_ADDRESS)
+  {
+    tx_semaphore_put(&DHCPSemaphore);
+  }
+  /* USER CODE END ip_address_change_notify_callback */
 }
 
 /**
@@ -295,9 +306,9 @@ static VOID nx_app_thread_entry (ULONG thread_input)
     Error_Handler();
     /* USER CODE END DHCP client start error */
   }
-
+  printf("Looking for DHCP server ..\n");
   /* wait until an IP address is ready */
-  if(tx_semaphore_get(&DHCPSemaphore, NX_APP_DEFAULT_TIMEOUT) != TX_SUCCESS)
+  if(tx_semaphore_get(&DHCPSemaphore, TX_WAIT_FOREVER) != TX_SUCCESS)
   {
     /* USER CODE BEGIN DHCPSemaphore get error */
     Error_Handler();
@@ -305,13 +316,6 @@ static VOID nx_app_thread_entry (ULONG thread_input)
   }
 
   /* USER CODE BEGIN Nx_App_Thread_Entry 2 */
-  ret = nx_ip_address_get(&NetXDuoEthIpInstance, &IpAddress, &NetMask);
-
-  if (ret != TX_SUCCESS)
-  {
-    Error_Handler();
-  }
-
   PRINT_IP_ADDRESS(IpAddress);
 
   /* the network is correctly initialized, start the TCP server thread */
@@ -333,7 +337,7 @@ static VOID nx_app_thread_entry (ULONG thread_input)
 */
 static VOID tcp_listen_callback(NX_TCP_SOCKET *socket_ptr, UINT port)
 {
-  tx_semaphore_put(&DHCPSemaphore);
+  tx_semaphore_put(&TCPSemaphore);
 }
 
 /**
@@ -375,7 +379,7 @@ static VOID App_TCP_Thread_Entry(ULONG thread_input)
     printf("TCP Server listening on PORT %d ..\n", DEFAULT_PORT);
   }
 
-  if(tx_semaphore_get(&DHCPSemaphore, TX_WAIT_FOREVER) != TX_SUCCESS)
+  if(tx_semaphore_get(&TCPSemaphore, TX_WAIT_FOREVER) != TX_SUCCESS)
   {
     Error_Handler();
   }
@@ -458,7 +462,7 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
 
   while(1)
   {
-    /* Get Physical Link status. */
+    /* Send request to check if the Ethernet cable is connected. */
     status = nx_ip_interface_status_check(&NetXDuoEthIpInstance, 0, NX_IP_LINK_ENABLED,
                                       &actual_status, 10);
 
@@ -467,25 +471,42 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
       if(linkdown == 1)
       {
         linkdown = 0;
+
+        /* The network cable is connected. */
+        printf("The network cable is connected.\n");
+
+        /* Send request to enable PHY Link. */
+        nx_ip_driver_direct_command(&NetXDuoEthIpInstance, NX_LINK_ENABLE,
+                                      &actual_status);
+
+        /* Send request to check if an address is resolved. */
         status = nx_ip_interface_status_check(&NetXDuoEthIpInstance, 0, NX_IP_ADDRESS_RESOLVED,
                                       &actual_status, 10);
         if(status == NX_SUCCESS)
         {
-          /* The network cable is connected again. */
-          printf("The network cable is connected again.\n");
-          /* Print TCP Echo Server is available again. */
-          printf("TCP Echo Server is available again.\n");
+          /* Stop DHCP */
+          nx_dhcp_stop(&DHCPClient);
+
+          /* Reinitialize DHCP */
+          nx_dhcp_reinitialize(&DHCPClient);
+
+          /* Start DHCP */
+          nx_dhcp_start(&DHCPClient);
+
+          /* wait until an IP address is ready */
+          if(tx_semaphore_get(&DHCPSemaphore, TX_WAIT_FOREVER) != TX_SUCCESS)
+          {
+            /* USER CODE BEGIN DHCPSemaphore get error */
+            Error_Handler();
+            /* USER CODE END DHCPSemaphore get error */
+          }
+
+          PRINT_IP_ADDRESS(IpAddress);
         }
         else
         {
-          /* The network cable is connected. */
-          printf("The network cable is connected.\n");
-          /* Send command to Enable Nx driver. */
-          nx_ip_driver_direct_command(&NetXDuoEthIpInstance, NX_LINK_ENABLE,
-                                      &actual_status);
-          /* Restart DHCP Client. */
-          nx_dhcp_stop(&DHCPClient);
-          nx_dhcp_start(&DHCPClient);
+          /* Set the DHCP Client's remaining lease time to 0 seconds to trigger an immediate renewal request for a DHCP address. */
+          nx_dhcp_client_update_time_remaining(&DHCPClient, 0);
         }
       }
     }
@@ -496,6 +517,8 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
         linkdown = 1;
         /* The network cable is not connected. */
         printf("The network cable is not connected.\n");
+        nx_ip_driver_direct_command(&NetXDuoEthIpInstance, NX_LINK_DISABLE,
+                                      &actual_status);
       }
     }
 

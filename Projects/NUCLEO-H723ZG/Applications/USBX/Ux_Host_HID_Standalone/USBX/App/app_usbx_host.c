@@ -92,17 +92,17 @@ UINT MX_USBX_Host_Init(VOID)
   /* Initialize USBX Memory */
   if (ux_system_initialize(pointer, USBX_HOST_MEMORY_STACK_SIZE, UX_NULL, 0) != UX_SUCCESS)
   {
-    /* USER CODE BEGIN USBX_SYSTEM_INITIALIZE_ERORR */
+    /* USER CODE BEGIN USBX_SYSTEM_INITIALIZE_ERROR */
     return UX_ERROR;
-    /* USER CODE END USBX_SYSTEM_INITIALIZE_ERORR */
+    /* USER CODE END USBX_SYSTEM_INITIALIZE_ERROR */
   }
 
   /* Install the host portion of USBX */
   if (ux_host_stack_initialize(ux_host_event_callback) != UX_SUCCESS)
   {
-    /* USER CODE BEGIN USBX_HOST_INITIALIZE_ERORR */
+    /* USER CODE BEGIN USBX_HOST_INITIALIZE_ERROR */
     return UX_ERROR;
-    /* USER CODE END USBX_HOST_INITIALIZE_ERORR */
+    /* USER CODE END USBX_HOST_INITIALIZE_ERROR */
   }
 
   /* Register a callback error function */
@@ -112,27 +112,27 @@ UINT MX_USBX_Host_Init(VOID)
   if (ux_host_stack_class_register(_ux_system_host_class_hid_name,
                                    ux_host_class_hid_entry) != UX_SUCCESS)
   {
-    /* USER CODE BEGIN USBX_HSOT_HID_REGISTER_ERORR */
+    /* USER CODE BEGIN USBX_HSOT_HID_REGISTER_ERROR */
     return UX_ERROR;
-    /* USER CODE END USBX_HSOT_HID_REGISTER_ERORR */
+    /* USER CODE END USBX_HSOT_HID_REGISTER_ERROR */
   }
 
   /* Initialize the host hid mouse client */
   if (ux_host_class_hid_client_register(_ux_system_host_class_hid_client_mouse_name,
                                         ux_host_class_hid_mouse_entry) != UX_SUCCESS)
   {
-    /* USER CODE BEGIN USBX_HOST_HID_MOUSE_REGISTER_ERORR */
+    /* USER CODE BEGIN USBX_HOST_HID_MOUSE_REGISTER_ERROR */
     return UX_ERROR;
-    /* USER CODE END USBX_HOST_HID_MOUSE_REGISTER_ERORR */
+    /* USER CODE END USBX_HOST_HID_MOUSE_REGISTER_ERROR */
   }
 
   /* Initialize the host hid keyboard client */
   if (ux_host_class_hid_client_register(_ux_system_host_class_hid_client_keyboard_name,
                                         ux_host_class_hid_keyboard_entry) != UX_SUCCESS)
   {
-    /* USER CODE BEGIN USBX_HOST_HID_KEYBOARD_REGISTER_ERORR */
+    /* USER CODE BEGIN USBX_HOST_HID_KEYBOARD_REGISTER_ERROR */
     return UX_ERROR;
-    /* USER CODE END USBX_HOST_HID_KEYBOARD_REGISTER_ERORR */
+    /* USER CODE END USBX_HOST_HID_KEYBOARD_REGISTER_ERROR */
   }
 
   /* USER CODE BEGIN MX_USBX_Host_Init1 */

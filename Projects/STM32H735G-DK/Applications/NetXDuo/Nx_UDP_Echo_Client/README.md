@@ -36,7 +36,7 @@ The **AppUDPThread**, once started:
  + If the [echotool](https://github.com/PavelBansky/EchoTool/releases/tag/v1.5.0.0) utility is used the message sent by the client are displayed on the PC console.
  + A summary message similar to the following is printed on the HyperTerminal and the green LED is toggling.
  ```
-  SUCCESS : 10 / 10 packets sent
+  SUCCESS : 100 / 100 packets sent
 ```
 
 #### <b>Error behaviors</b>

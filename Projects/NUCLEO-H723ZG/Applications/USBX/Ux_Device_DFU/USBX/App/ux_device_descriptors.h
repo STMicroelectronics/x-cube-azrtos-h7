@@ -67,6 +67,8 @@ typedef enum
   CLASS_TYPE_CCID     = 8,
   CLASS_TYPE_PRINTER  = 9,
   CLASS_TYPE_RNDIS    = 10,
+  CLASS_TYPE_AUDIO_10 = 11,
+  CLASS_TYPE_AUDIO_20 = 12,
 } USBD_CompositeClassTypeDef;
 
 /* USB Endpoint handle structure */
@@ -215,11 +217,6 @@ typedef struct
   uint16_t bcdDFUVersion;
 }__PACKED USBD_DFUFuncDescTypedef;
 #endif /* USBD_DFU_CLASS_ACTIVATED */
-
-/* Private defines -----------------------------------------------------------*/
-/* USER CODE BEGIN Private_defines */
-
-/* USER CODE END Private_defines */
 
 /* Exported functions prototypes ---------------------------------------------*/
 /* USER CODE BEGIN EFP */

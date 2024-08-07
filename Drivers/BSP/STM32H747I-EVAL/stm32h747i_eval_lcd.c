@@ -38,7 +38,7 @@
      o Initialize the display with HDMI using BSP_LCD_InitHDMI(). Two display formats
        are supported: HDMI_FORMAT_720_480 or HDMI_FORMAT_720_576
 
-     o Select the LCD layer to be used using the BSP_LCD_SelectLayer() function.
+     o Select the LCD layer to be activated using the BSP_LCD_SetActiveLayer() function.
      o Enable the LCD display using the BSP_LCD_DisplayOn() function.
      o Disable the LCD display using the BSP_LCD_DisplayOff() function.
      o Set the display brightness using the BSP_LCD_SetBrightness() function.

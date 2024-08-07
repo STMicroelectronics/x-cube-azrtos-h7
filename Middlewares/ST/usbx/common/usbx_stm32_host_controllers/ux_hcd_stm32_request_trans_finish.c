@@ -96,6 +96,9 @@ UX_TRANSFER *transfer = ed -> ux_stm32_ed_transfer_request;
     }
 
     /* Free the aligned memory.  */
-    _ux_utility_memory_free(ed -> ux_stm32_ed_data);
-    ed -> ux_stm32_ed_data = UX_NULL;
+    if (ed -> ux_stm32_ed_data != ed -> ux_stm32_ed_setup)
+    {
+      _ux_utility_memory_free(ed -> ux_stm32_ed_data);
+      ed -> ux_stm32_ed_data = UX_NULL;
+    }
 }

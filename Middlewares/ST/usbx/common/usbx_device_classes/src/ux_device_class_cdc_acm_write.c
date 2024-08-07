@@ -35,7 +35,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_device_class_cdc_acm_write                      PORTABLE C      */ 
-/*                                                           6.1.12       */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -69,7 +69,7 @@
 /*                                                                        */ 
 /*  CALLED BY                                                             */ 
 /*                                                                        */ 
-/*    ThreadX                                                             */ 
+/*    Application                                                         */
 /*                                                                        */ 
 /*  RELEASE HISTORY                                                       */ 
 /*                                                                        */ 
@@ -92,6 +92,11 @@
 /*                                            names conflict C++ keyword, */
 /*                                            added auto ZLP support,     */
 /*                                            resulting in version 6.1.12 */
+/*  10-31-2023     Yajun Xia, CQ Xiao       Modified comment(s),          */
+/*                                            added zero copy support,    */
+/*                                            added a new mode to manage  */
+/*                                            endpoint buffer in classes, */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT _ux_device_class_cdc_acm_write(UX_SLAVE_CLASS_CDC_ACM *cdc_acm, UCHAR *buffer, 
@@ -151,9 +156,18 @@ UINT                        status = 0;
 
     /* Protect this thread.  */
     _ux_device_mutex_on(&cdc_acm -> ux_slave_class_cdc_acm_endpoint_in_mutex);
-        
+
     /* We are writing to the IN endpoint.  */
     transfer_request =  &endpoint -> ux_slave_endpoint_transfer_request;
+
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+#if !defined(UX_DEVICE_CLASS_CDC_ACM_ZERO_COPY)
+    transfer_request -> ux_slave_transfer_request_data_pointer =
+                                UX_DEVICE_CLASS_CDC_ACM_WRITE_BUFFER(cdc_acm);
+#else
+    transfer_request -> ux_slave_transfer_request_data_pointer = buffer;
+#endif
+#endif
 
     /* Reset the actual length.  */
     *actual_length =  0;
@@ -174,17 +188,40 @@ UINT                        status = 0;
 
     }
     else
-    {    
+    {
+
+#if (UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1) && defined(UX_DEVICE_CLASS_CDC_ACM_ZERO_COPY)
+
+    /* Check if device is configured.  */
+    if (device -> ux_slave_device_state == UX_DEVICE_CONFIGURED)
+    {
+
+#if defined(UX_DEVICE_CLASS_CDC_ACM_WRITE_AUTO_ZLP)
+
+        /* Issue with larger host length to append zlp if necessary.  */
+        local_host_length = requested_length + 1;
+#else
+        local_host_length = requested_length;
+#endif
+        local_requested_length = requested_length;
+
+        /* Issue the transfer request.  */
+        status = _ux_device_stack_transfer_request(transfer_request, local_requested_length, local_host_length);
+        if (status == UX_SUCCESS)
+            *actual_length = transfer_request -> ux_slave_transfer_request_actual_length;
+    }
+#else
+
         /* Check if we need more transactions.  */
-        local_host_length = UX_SLAVE_REQUEST_DATA_MAX_LENGTH;
+        local_host_length = UX_DEVICE_CLASS_CDC_ACM_WRITE_BUFFER_SIZE;
         while (device -> ux_slave_device_state == UX_DEVICE_CONFIGURED && requested_length != 0)
         { 
     
             /* Check if we have enough in the local buffer.  */
-            if (requested_length > UX_SLAVE_REQUEST_DATA_MAX_LENGTH)
+            if (requested_length > UX_DEVICE_CLASS_CDC_ACM_WRITE_BUFFER_SIZE)
     
                 /* We have too much to transfer.  */
-                local_requested_length = UX_SLAVE_REQUEST_DATA_MAX_LENGTH;
+                local_requested_length = UX_DEVICE_CLASS_CDC_ACM_WRITE_BUFFER_SIZE;
                 
             else
             {
@@ -199,7 +236,7 @@ UINT                        status = 0;
 #else
 
                 /* Assume expecting more, so ZLP is appended in stack.  */
-                local_host_length = UX_SLAVE_REQUEST_DATA_MAX_LENGTH + 1;
+                local_host_length = UX_DEVICE_CLASS_CDC_ACM_WRITE_BUFFER_SIZE + 1;
 #endif
             }
                             
@@ -236,6 +273,7 @@ UINT                        status = 0;
                 return(status);
             }
         }
+#endif /* _BUFF_OWNER && _ZERO_COPY */
     }
 
     
@@ -261,4 +299,61 @@ UINT                        status = 0;
         return(status);        
           
 }
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _uxe_device_class_cdc_acm_write                     PORTABLE C      */
+/*                                                           6.3.0        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Yajun Xia, Microsoft Corporation                                    */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks errors in CDC ACM class write function.        */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    cdc_acm                               Address of cdc_acm class      */
+/*                                                instance                */
+/*    buffer                                Pointer to data to write      */
+/*    requested_length                      Length of bytes to write,     */
+/*                                                set to 0 to issue ZLP   */
+/*    actual_length                         Pointer to save number of     */
+/*                                                bytes written           */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    None                                                                */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_device_class_cdc_acm_write        CDC ACM class write function  */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Application                                                         */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  10-31-2023     Yajun Xia                Initial Version 6.3.0         */
+/*                                                                        */
+/**************************************************************************/
+UINT _uxe_device_class_cdc_acm_write(UX_SLAVE_CLASS_CDC_ACM *cdc_acm, UCHAR *buffer,
+                                    ULONG requested_length, ULONG *actual_length)
+{
+
+    /* Sanity checks.  */
+    if ((cdc_acm == UX_NULL) || ((buffer == UX_NULL) && (requested_length > 0)) || (actual_length == UX_NULL))
+    {
+        return (UX_INVALID_PARAMETER);
+    }
+
+    return (_ux_device_class_cdc_acm_write(cdc_acm, buffer, requested_length, actual_length));
+}
+
 #endif

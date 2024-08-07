@@ -189,7 +189,7 @@ INT lx_stm32_ospi_get_info(UINT instance, ULONG *block_size, ULONG *total_blocks
 
   *block_size = LX_STM32_OSPI_SECTOR_SIZE;
 
-  *total_blocks = (LX_STM32_OSPI_FLASH_SIZE / LX_STM32_OSPI_SECTOR_SIZE);
+  *total_blocks = ((LX_STM32_OSPI_FLASH_SIZE - LX_STM32_OSPI_BASE_ADDRESS) / LX_STM32_OSPI_SECTOR_SIZE);
 
   /* USER CODE BEGIN POST_OSPI_GET_INFO */
 

@@ -179,6 +179,8 @@ UCHAR device_friendly_name_data_buffer[1024];
 
 extern uint32_t media_memory[FX_STM32_SD_DEFAULT_SECTOR_SIZE / sizeof(uint32_t)];
 extern HAL_SD_CardInfoTypeDef sdcard_info;
+
+ULONG references_array;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -1630,7 +1632,6 @@ UINT USBD_MTP_GetObjectReferences(struct UX_SLAVE_CLASS_PIMA_STRUCT *pima_instan
   /* USER CODE BEGIN USBD_MTP_GetObjectReferences */
   UX_PARAMETER_NOT_USED(pima_instance);
   ULONG handle_index;
-  ULONG references_array;
 
   /* Check the object handle exist */
   if (Object_HandleCheck(object_handle, &handle_index) == UX_SUCCESS)

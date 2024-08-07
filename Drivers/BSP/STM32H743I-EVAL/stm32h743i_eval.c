@@ -98,10 +98,14 @@ static GPIO_TypeDef* LED_PORT[LEDn] = {
 static const  uint32_t LED_PIN[LEDn] = {LED1_PIN,
 #if (USE_BSP_IO_CLASS > 0)
                                         LED2_PIN,
+#else
+                                        0,
 #endif
                                         LED3_PIN,
 #if (USE_BSP_IO_CLASS > 0)
                                         LED4_PIN
+#else
+                                        0
 #endif
                                        };
 

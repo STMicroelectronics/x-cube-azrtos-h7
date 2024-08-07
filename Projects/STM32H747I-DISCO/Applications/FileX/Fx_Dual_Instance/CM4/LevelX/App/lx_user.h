@@ -24,7 +24,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    lx_user.h                                           PORTABLE C      */
-/*                                                           6.2.1        */
+/*                                                           6.3.0        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -48,7 +48,12 @@
 /*                                            resulting in version 6.1.7  */
 /*  03-08-2023     Xiuwen Cai               Modified comment(s), and      */
 /*                                            added new NAND options,     */
-/*                                            resulting in version 6.2.1 */
+/*                                            resulting in version 6.2.1  */
+/*  10-31-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            added options for mapping , */
+/*                                            bitmap cache and obsolete   */
+/*                                            count cache,                */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -88,16 +93,27 @@
 
 /* #define LX_NOR_SECTOR_MAPPING_CACHE_SIZE         16 */
 
-/* By default this value is 4, which represents a maximum of 4 blocks that
-   can be allocated for metadata.
+/* Determine if logical sector mapping bitmap should be enabled in extended cache.
+   Cache memory will be allocated to sector mapping bitmap first. One bit can be allocated for each physical sector.
 */
 
-/* #define LX_NAND_FLASH_MAX_METADATA_BLOCKS         4 */
+#define LX_NOR_ENABLE_MAPPING_BITMAP
 
-/* By default this value is 128 and defines the logical sector mapping cache size.
-   Large values improve performance, but cost memory. The minimum size is 8 and
-   all values must be a power of 2.
+/* Determine if obsolete count cache should be enabled in extended cache.
+   Cache memory will be allocated to obsolete count cache after the mapping bitmap if enabled,
+   and the rest of the cache memory is allocated to sector cache.
 */
+
+#define LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
+
+/* Defines obsolete count cache element size. If number of sectors per block is greater than 256, use USHORT instead of UCHAR. */
+
+/* #define LX_NOR_OBSOLETE_COUNT_CACHE_TYPE            UCHAR */
+
+/* Define the logical sector size for NOR flash. The sector size is in units of 32-bit words.
+   This sector size should match the sector size used in file system.  */
+
+/* #define LX_NOR_SECTOR_SIZE         (512/sizeof(ULONG)) */
 
 /* Defined, this makes LevelX thread-safe by using a ThreadX mutex object
    throughout the API.
@@ -114,10 +130,6 @@
 /* Define user extension for NOR flash control block.  */
 
 /* #define LX_NOR_FLASH_USER_EXTENSION    ???? */
-
-/* Define user extension for NAND flash control block.  */
-
-/* #define LX_NAND_FLASH_USER_EXTENSION   ???? */
 
 /* USER CODE END 2 */
 

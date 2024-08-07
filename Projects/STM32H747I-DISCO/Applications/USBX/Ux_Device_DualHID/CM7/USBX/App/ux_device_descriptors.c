@@ -241,7 +241,7 @@ uint8_t *USBD_Get_Device_Framework_Speed(uint8_t Speed, ULONG *Length)
   uint8_t *pFrameWork = NULL;
   /* USER CODE BEGIN Device_Framework0 */
 
-  /* USER TAG BEGIN Device_Framework0 */
+  /* USER CODE END Device_Framework0 */
 
   if (USBD_FULL_SPEED == Speed)
   {
@@ -263,9 +263,9 @@ uint8_t *USBD_Get_Device_Framework_Speed(uint8_t Speed, ULONG *Length)
 
     pFrameWork = pDevFrameWorkDesc_HS;
   }
-  /* USER CODE Device_Framework1 */
+  /* USER CODE BEGIN Device_Framework1 */
 
-  /* USER CODE Device_Framework1 */
+  /* USER CODE END Device_Framework1 */
   return pFrameWork;
 }
 
@@ -280,9 +280,9 @@ uint8_t *USBD_Get_String_Framework(ULONG *Length)
   uint16_t len = 0U;
   uint8_t count = 0U;
 
-  /* USER CODE String_Framework0 */
+  /* USER CODE BEGIN String_Framework0 */
 
-  /* USER CODE String_Framework0 */
+  /* USER CODE END String_Framework0 */
 
   /* Set the Manufacturer language Id and index in USBD_string_framework */
   USBD_string_framework[count++] = USBD_LANGID_STRING & 0xFF;
@@ -310,9 +310,9 @@ uint8_t *USBD_Get_String_Framework(ULONG *Length)
   /* Set the Serial number in USBD_string_framework */
   USBD_Desc_GetString((uint8_t *)USBD_SERIAL_NUMBER, USBD_string_framework + count, &len);
 
-  /* USER CODE String_Framework1 */
+  /* USER CODE BEGIN String_Framework1 */
 
-  /* USER CODE String_Framework1 */
+  /* USER CODE END String_Framework1 */
 
   /* Get the length of USBD_string_framework */
   *Length = strlen((const char *)USBD_string_framework);
@@ -354,7 +354,7 @@ uint16_t USBD_Get_Interface_Number(uint8_t class_type, uint8_t interface_type)
 
   /* USER CODE BEGIN USBD_Get_Interface_Number0 */
 
-  /* USER CODE BEGIN USBD_Get_Interface_Number0 */
+  /* USER CODE END USBD_Get_Interface_Number0 */
 
   for(idx = 0; idx < USBD_MAX_SUPPORTED_CLASS; idx++)
   {
@@ -367,7 +367,7 @@ uint16_t USBD_Get_Interface_Number(uint8_t class_type, uint8_t interface_type)
 
   /* USER CODE BEGIN USBD_Get_Interface_Number1 */
 
-  /* USER CODE BEGIN USBD_Get_Interface_Number1 */
+  /* USER CODE END USBD_Get_Interface_Number1 */
 
   return itf_num;
 }
@@ -385,11 +385,11 @@ uint16_t USBD_Get_Configuration_Number(uint8_t class_type, uint8_t interface_typ
 
   /* USER CODE BEGIN USBD_Get_CONFIGURATION_Number0 */
 
-  /* USER CODE BEGIN USBD_Get_CONFIGURATION_Number0 */
+  /* USER CODE END USBD_Get_CONFIGURATION_Number0 */
 
   /* USER CODE BEGIN USBD_Get_CONFIGURATION_Number1 */
 
-  /* USER CODE BEGIN USBD_Get_CONFIGURATION_Number1 */
+  /* USER CODE END USBD_Get_CONFIGURATION_Number1 */
 
   return cfg_num;
 }
@@ -405,9 +405,9 @@ uint8_t *USBD_HID_ReportDesc(uint8_t hid_type)
 {
   uint8_t *pHidReportDesc = NULL;
 
-  /* USER CODE HidReportDesc0 */
+  /* USER CODE BEGIN HidReportDesc0 */
 
-  /* USER CODE HidReportDesc0 */
+  /* USER CODE END HidReportDesc0 */
 
   switch(hid_type)
   {
@@ -423,9 +423,9 @@ uint8_t *USBD_HID_ReportDesc(uint8_t hid_type)
       break;
   }
 
-  /* USER CODE HidReportDesc1 */
+  /* USER CODE BEGIN HidReportDesc1 */
 
-  /* USER CODE HidReportDesc1 */
+  /* USER CODE END HidReportDesc1 */
 
   return pHidReportDesc;
 }
@@ -440,9 +440,9 @@ uint16_t USBD_HID_ReportDesc_length(uint8_t hid_type)
 {
   uint16_t ReportDesc_Size = 0;
 
-  /* USER CODE ReportDesc_Size0 */
+  /* USER CODE BEGIN ReportDesc_Size0 */
 
-  /* USER CODE ReportDesc_Size0 */
+  /* USER CODE END ReportDesc_Size0 */
 
   switch(hid_type)
   {
@@ -458,9 +458,9 @@ uint16_t USBD_HID_ReportDesc_length(uint8_t hid_type)
       break;
   }
 
-  /* USER CODE ReportDesc_Size1 */
+  /* USER CODE BEGIN ReportDesc_Size1 */
 
-  /* USER CODE ReportDesc_Size1 */
+  /* USER CODE END ReportDesc_Size1 */
 
   return ReportDesc_Size;
 }
@@ -678,9 +678,9 @@ uint8_t  USBD_FrameWork_AddToConfDesc(USBD_DevClassHandleTypeDef *pdev, uint8_t 
 {
   uint8_t interface = 0U;
 
-  /* USER CODE FrameWork_AddToConfDesc_0 */
+  /* USER CODE BEGIN FrameWork_AddToConfDesc_0 */
 
-  /* USER CODE FrameWork_AddToConfDesc_0 */
+  /* USER CODE END FrameWork_AddToConfDesc_0 */
 
   /* The USB drivers do not set the speed value, so set it here before starting */
   pdev->Speed = Speed;
@@ -775,14 +775,14 @@ uint8_t  USBD_FrameWork_AddToConfDesc(USBD_DevClassHandleTypeDef *pdev, uint8_t 
       break;
 #endif /* USBD_HID_CLASS_ACTIVATED == 1U */
 
-    /* USER CODE FrameWork_AddToConfDesc_1 */
+    /* USER CODE BEGIN FrameWork_AddToConfDesc_1 */
 
-    /* USER CODE FrameWork_AddToConfDesc_1 */
+    /* USER CODE END FrameWork_AddToConfDesc_1 */
 
     default:
-      /* USER CODE FrameWork_AddToConfDesc_2 */
+      /* USER CODE BEGIN FrameWork_AddToConfDesc_2 */
 
-      /* USER CODE FrameWork_AddToConfDesc_2 */
+      /* USER CODE END FrameWork_AddToConfDesc_2 */
       break;
   }
 

@@ -33,7 +33,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_device_class_video_initialize                   PORTABLE C      */
-/*                                                           6.2.0        */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -70,6 +70,11 @@
 /*  10-31-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            added standalone support,   */
 /*                                            resulting in version 6.2.0  */
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added a new mode to manage  */
+/*                                            endpoint buffer in classes  */
+/*                                            with zero copy enabled,     */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_device_class_video_initialize(UX_SLAVE_CLASS_COMMAND *command)
@@ -149,7 +154,11 @@ ULONG                                   i;
                             stream_parameter -> ux_device_class_video_stream_parameter_max_payload_buffer_nb;
 
         /* Create block of buffer buffer is cache safe for USB transfer.  */
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+        stream -> ux_device_class_video_stream_buffer = (UCHAR *)_ux_utility_memory_allocate(UX_NO_ALIGN, UX_CACHE_SAFE_MEMORY, memory_size);
+#else
         stream -> ux_device_class_video_stream_buffer = (UCHAR *)_ux_utility_memory_allocate(UX_NO_ALIGN, UX_REGULAR_MEMORY, memory_size);
+#endif
 
         /* Check for successful allocation.  */
         if (stream -> ux_device_class_video_stream_buffer == UX_NULL)
@@ -161,7 +170,6 @@ ULONG                                   i;
         stream -> ux_device_class_video_stream_buffer_size = memory_size;
         stream -> ux_device_class_video_stream_transfer_pos = (UX_DEVICE_CLASS_VIDEO_PAYLOAD *)stream -> ux_device_class_video_stream_buffer;
         stream -> ux_device_class_video_stream_access_pos = stream -> ux_device_class_video_stream_transfer_pos;
-
 
 #if !defined(UX_DEVICE_STANDALONE)
 
@@ -248,7 +256,6 @@ ULONG                                   i;
         if (stream -> ux_device_class_video_stream_thread_stack)
             _ux_utility_memory_free(stream -> ux_device_class_video_stream_thread_stack);
 #endif
-
         if (stream -> ux_device_class_video_stream_buffer)
             _ux_utility_memory_free(stream -> ux_device_class_video_stream_buffer);
         stream ++;
@@ -256,4 +263,69 @@ ULONG                                   i;
     _ux_utility_memory_free(video);
 
     return(status);
+}
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _uxe_device_class_video_initialize                  PORTABLE C      */
+/*                                                           6.3.0        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Yajun Xia, Microsoft Corporation                                    */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks errors in video initialization function call.  */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    command                               Pointer to video command      */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    Completion Status                                                   */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_device_class_video_initialize     Initialize video instance     */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Device Video Class                                                  */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  10-31-2023     Yajun Xia                Initial Version 6.3.0         */
+/*                                                                        */
+/**************************************************************************/
+UINT  _uxe_device_class_video_initialize(UX_SLAVE_CLASS_COMMAND *command)
+{
+UX_DEVICE_CLASS_VIDEO_PARAMETER         *video_parameter;
+ULONG i;
+
+    /* Get the pointer to the application parameters for the video class.  */
+    video_parameter = (UX_DEVICE_CLASS_VIDEO_PARAMETER *)command -> ux_slave_class_command_parameter;
+
+    /* Sanity checks.  */
+    if (video_parameter == UX_NULL)
+        return(UX_INVALID_PARAMETER);
+
+    /* There must be at least one stream.  */
+    if ((video_parameter -> ux_device_class_video_parameter_streams_nb == 0) ||
+        (video_parameter -> ux_device_class_video_parameter_streams == UX_NULL))
+        return(UX_INVALID_PARAMETER);
+
+    for (i = 0; i < video_parameter -> ux_device_class_video_parameter_streams_nb; i ++)
+    {
+        if ((video_parameter -> ux_device_class_video_parameter_streams[i].ux_device_class_video_stream_parameter_max_payload_buffer_size == 0) ||
+            (video_parameter -> ux_device_class_video_parameter_streams[i].ux_device_class_video_stream_parameter_max_payload_buffer_nb == 0))
+            return(UX_INVALID_PARAMETER);
+    }
+
+    /* Do initialize.  */
+    return(_ux_device_class_video_initialize(command));
 }

@@ -191,11 +191,11 @@ typedef struct
 #define USE_STM32H743I_EVAL
 #endif
 /**
-  * @brief STM32H743I EVAL BSP Driver version number V3.3.1
+  * @brief STM32H743I EVAL BSP Driver version number V3.3.2
   */
 #define STM32H743I_EVAL_BSP_VERSION_MAIN   (0x03) /*!< [31:24] main version   */
 #define STM32H743I_EVAL_BSP_VERSION_SUB1   (0x03) /*!< [23:16] sub1 version   */
-#define STM32H743I_EVAL_BSP_VERSION_SUB2   (0x01) /*!< [15:8]  sub2 version   */
+#define STM32H743I_EVAL_BSP_VERSION_SUB2   (0x02) /*!< [15:8]  sub2 version   */
 #define STM32H743I_EVAL_BSP_VERSION_RC     (0x00) /*!< [7:0]  release candidate   */
 #define STM32H743I_EVAL_BSP_VERSION        ((STM32H743I_EVAL_BSP_VERSION_MAIN << 24)\
                                             |(STM32H743I_EVAL_BSP_VERSION_SUB1 << 16)\

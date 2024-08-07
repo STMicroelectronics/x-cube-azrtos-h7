@@ -7,7 +7,6 @@ project(netxduo
 
 option(NXD_ENABLE_FILE_SERVERS "Includes a dependency on FileX to support 'server' protocol handlers" ON)
 option(NXD_ENABLE_AZURE_IOT "Enable Azure IoT" OFF)
-option(NX_AZURE_DISABLE_IOT_SECURITY_MODULE "Disable Azure IoT Security Module" OFF)
 
 if(NOT DEFINED THREADX_ARCH)
     message(FATAL_ERROR "Error: THREADX_ARCH not defined")
@@ -31,9 +30,6 @@ endif()
 if(NXD_ENABLE_AZURE_IOT)
     message(STATUS "NXD_ENABLE_AZURE_IOT - defined")
     target_link_libraries(${PROJECT_NAME} PUBLIC az_iot_hub az_iot_provisioning)
-    if(NOT NX_AZURE_DISABLE_IOT_SECURITY_MODULE)
-        target_link_libraries(${PROJECT_NAME} PUBLIC iot_security_module)
-    endif()
 endif()
 
 # A place for generated/copied include files (no need to change)
@@ -58,6 +54,9 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/nx_secure)
 
 # Utility components
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/utility)
+
+# Link layer
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/tsn)
 
 # If the user provided an override, copy it to the custom directory
 if (NOT NX_USER_FILE)

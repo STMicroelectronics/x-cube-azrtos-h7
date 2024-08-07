@@ -60,12 +60,12 @@ void MX_ETH_Init(void)
 
   /* USER CODE END ETH_Init 1 */
   heth.Instance = ETH;
-  heth.Init.MACAddr[0] =   0x00;
-  heth.Init.MACAddr[1] =   0x11;
-  heth.Init.MACAddr[2] =   0x83;
-  heth.Init.MACAddr[3] =   0x45;
-  heth.Init.MACAddr[4] =   0x26;
-  heth.Init.MACAddr[5] =   0x11;
+  MACAddr[0] = 0x00;
+  MACAddr[1] = 0x80;
+  MACAddr[2] = 0xE1;
+  MACAddr[3] = 0x00;
+  MACAddr[4] = 0x30;
+  MACAddr[5] = 0x20;
 
 ```
 

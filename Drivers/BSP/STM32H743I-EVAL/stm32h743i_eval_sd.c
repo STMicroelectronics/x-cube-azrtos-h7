@@ -426,7 +426,7 @@ int32_t BSP_SD_DetectITConfig(uint32_t Instance)
     io_init_structure.Pin  = PinDetect[Instance];
     io_init_structure.Pull = IO_PULLUP;
     /* Configure IO interrupt acquisition mode   */
-    if(((uint32_t)BSP_IO_ReadPin(0, PinDetect[Instance]) && PinDetect[Instance]) != PinDetect[Instance])
+    if(((uint32_t)BSP_IO_ReadPin(0, PinDetect[Instance]) & PinDetect[Instance]) != PinDetect[Instance])
     {
       io_init_structure.Mode = IO_MODE_IT_RISING_EDGE;
     }

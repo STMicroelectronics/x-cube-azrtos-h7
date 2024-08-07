@@ -7,6 +7,14 @@
   ******************************************************************************
   */
 
+### V6.4.0 (19-04-2024) ###
+============================
+- Upgrade to Azure RTOS NetXDuo 6.4.0
+
+### V6.2.1 (15-12-2023) ###
+============================
+- Add STM32U0 series to Azure RTOS licensed hardware list
+
 ### V6.2.1 (22-09-2023) ###
 ============================
 - iperf utility: fix regression introduced with Azure RTOS NetXDuo 6.2.1

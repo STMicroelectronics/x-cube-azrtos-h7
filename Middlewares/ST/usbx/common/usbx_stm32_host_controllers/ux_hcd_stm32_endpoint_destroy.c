@@ -161,8 +161,8 @@ UINT                   endpoint_type;
     HAL_HCD_HC_ClearHubInfo(hcd_stm32->hcd_handle, ed -> ux_stm32_ed_channel);
 #endif /* USBH_HAL_HUB_SPLIT_SUPPORTED */
 
-    /* Finish current transfer.  */
-    _ux_hcd_stm32_request_trans_finish(hcd_stm32, ed);
+    /* Finish current transfer and reset the endpoint  */
+    _ux_hcd_stm32_endpoint_reset(hcd_stm32, endpoint);
 
 #if defined(UX_HOST_STANDALONE)
 

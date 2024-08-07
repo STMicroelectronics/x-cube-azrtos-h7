@@ -91,7 +91,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr);
 #define DEFAULT_PORT                          6000
 #define MAX_TCP_CLIENTS                       1
 
-#define NX_APP_CABLE_CONNECTION_CHECK_PERIOD  (6 * NX_IP_PERIODIC_RATE)
+#define NX_APP_CABLE_CONNECTION_CHECK_PERIOD  (1 * NX_IP_PERIODIC_RATE)
 /* USER CODE END PD */
 
 #define NX_APP_DEFAULT_TIMEOUT               (10 * NX_IP_PERIODIC_RATE)

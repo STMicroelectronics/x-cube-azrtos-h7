@@ -98,7 +98,7 @@ extern "C" {
 
 #define DEFAULT_TIMEOUT             5 * NX_IP_PERIODIC_RATE
 
-#define NX_APP_CABLE_CONNECTION_CHECK_PERIOD      (6 * NX_IP_PERIODIC_RATE)
+#define NX_APP_CABLE_CONNECTION_CHECK_PERIOD      (1 * NX_IP_PERIODIC_RATE)
 /* USER CODE END EC */
 /* The DEFAULT_PAYLOAD_SIZE should match with RxBuffLen configured via MX_ETH_Init */
 #ifndef DEFAULT_PAYLOAD_SIZE

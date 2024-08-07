@@ -20,6 +20,8 @@
 /**************************************************************************/
 /**************************************************************************/
 
+#include <inttypes.h>
+
 /* Check that this file is included by the driver source and not compiled directly  */
 #ifndef NX_DRIVER_SOURCE
 #error This file is included by the driver source, not compiled directly.
@@ -61,24 +63,25 @@ static NX_PACKET   *nx_driver_transmit_packet_dequeue(VOID)
 
 
 /* Define the pointers for the hardware implementation of this driver. */
-static UINT         (*nx_driver_hardware_initialize)(NX_IP_DRIVER *driver_req_ptr)      = NULL;
-static UINT         (*nx_driver_hardware_enable)(NX_IP_DRIVER *driver_req_ptr)          = NULL;
-static UINT         (*nx_driver_hardware_disable)(NX_IP_DRIVER *driver_req_ptr)         = NULL;
-static UINT         (*nx_driver_hardware_packet_send)(NX_PACKET *packet_ptr)            = NULL;
-static UINT         (*nx_driver_hardware_multicast_join)(NX_IP_DRIVER *driver_req_ptr)  = NULL;
-static UINT         (*nx_driver_hardware_multicast_leave)(NX_IP_DRIVER *driver_req_ptr) = NULL;
-static UINT         (*nx_driver_hardware_get_status)(NX_IP_DRIVER *driver_req_ptr)      = NULL;
-static VOID         (*nx_driver_hardware_packet_transmitted)(VOID)                      = NULL;
-static VOID         (*nx_driver_hardware_packet_received)(VOID)                         = NULL;
+static UINT(*nx_driver_hardware_initialize)(NX_IP_DRIVER *driver_req_ptr)      = NULL;
+static UINT(*nx_driver_hardware_enable)(NX_IP_DRIVER *driver_req_ptr)          = NULL;
+static UINT(*nx_driver_hardware_disable)(NX_IP_DRIVER *driver_req_ptr)         = NULL;
+static UINT(*nx_driver_hardware_packet_send)(NX_PACKET *packet_ptr)            = NULL;
+static UINT(*nx_driver_hardware_multicast_join)(NX_IP_DRIVER *driver_req_ptr)  = NULL;
+static UINT(*nx_driver_hardware_multicast_leave)(NX_IP_DRIVER *driver_req_ptr) = NULL;
+static UINT(*nx_driver_hardware_get_status)(NX_IP_DRIVER *driver_req_ptr)      = NULL;
+static VOID(*nx_driver_hardware_packet_transmitted)(VOID)                      = NULL;
+static VOID(*nx_driver_hardware_packet_received)(VOID)                         = NULL;
+
 #ifdef NX_ENABLE_INTERFACE_CAPABILITY
-static UINT         (*nx_driver_hardware_capability_set)(NX_IP_DRIVER *driver_req_ptr)  = NULL;
+static UINT(*nx_driver_hardware_capability_set)(NX_IP_DRIVER *driver_req_ptr)  = NULL;
 #endif /* NX_ENABLE_INTERFACE_CAPABILITY */
 
 
 
-#ifdef NX_DEBUG
+#if !defined(REMOVE_DEBUG_FUNC)
 static const char *nx_driver_operation_to_string(UINT operation);
-#endif /* NX_DEBUG */
+#endif /* REMOVE_DEBUG_FUNC */
 
 
 /**************************************************************************/
@@ -129,19 +132,10 @@ static const char *nx_driver_operation_to_string(UINT operation);
 /*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
-VOID  nx_driver_framework_entry_default(NX_IP_DRIVER *driver_req_ptr)
+static VOID nx_driver_framework_entry_default(NX_IP_DRIVER *driver_req_ptr)
 {
-#ifdef NX_DEBUG
-  NX_IP *ip_ptr;
-#endif /* NX_DEBUG */
-
-#ifdef NX_DEBUG
-  /* Setup the IP pointer from the driver request.  */
-  ip_ptr =  driver_req_ptr -> nx_ip_driver_ptr;
-
-  printf("\n[%06"PRIu32"] > %s\n", HAL_GetTick(),
-         nx_driver_operation_to_string(driver_req_ptr -> nx_ip_driver_command));
-#endif /* NX_DEBUG */
+  NX_DEBUG_DRIVER_SOURCE_LOG("\n[%06" PRIu32 "] > %s\n", HAL_GetTick(),
+                             nx_driver_operation_to_string(driver_req_ptr -> nx_ip_driver_command));
 
   /* Default to successful return.  */
   driver_req_ptr -> nx_ip_driver_status =  NX_SUCCESS;
@@ -159,10 +153,10 @@ VOID  nx_driver_framework_entry_default(NX_IP_DRIVER *driver_req_ptr)
 
     case NX_LINK_INITIALIZE:
     {
-#ifdef NX_DEBUG
-      printf("\nNetX WiFi Driver Initialization - \"%s\"\n", ip_ptr -> nx_ip_name);
-      printf("  IP Address = %08"PRIX32"\n", (uint32_t)ip_ptr -> nx_ip_address);
-#endif /* NX_DEBUG */
+      NX_DEBUG_DRIVER_SOURCE_LOG("\nNetX WiFi Driver Initialization - \"%s\"\n",
+                                 driver_req_ptr -> nx_ip_driver_ptr -> nx_ip_name);
+      NX_DEBUG_DRIVER_SOURCE_LOG("  IP Address = %08" PRIX32 "\n",
+                                 (uint32_t)driver_req_ptr -> nx_ip_driver_ptr -> nx_ip_address);
 
       /* Process link initialize requests.  */
       nx_driver_initialize(driver_req_ptr);
@@ -173,9 +167,9 @@ VOID  nx_driver_framework_entry_default(NX_IP_DRIVER *driver_req_ptr)
     {
       /* Process link enable requests.  */
       nx_driver_enable(driver_req_ptr);
-#ifdef NX_DEBUG
-      printf("\nNetX WiFi Driver Link Enabled - \"%s\"\n", ip_ptr -> nx_ip_name);
-#endif /* NX_DEBUG */
+
+      NX_DEBUG_DRIVER_SOURCE_LOG("\nNetX WiFi Driver Link Enabled - \"%s\"\n",
+                                 driver_req_ptr -> nx_ip_driver_ptr -> nx_ip_name);
       break;
     }
 
@@ -184,9 +178,9 @@ VOID  nx_driver_framework_entry_default(NX_IP_DRIVER *driver_req_ptr)
       /* Process link disable requests.  */
       nx_driver_disable(driver_req_ptr);
 
-#ifdef NX_DEBUG
-      printf("\nNetX WiFi Driver Link Disabled - \"%s\"\n", ip_ptr -> nx_ip_name);
-#endif /* NX_DEBUG */
+
+      NX_DEBUG_DRIVER_SOURCE_LOG("\nNetX WiFi Driver Link Disabled - \"%s\"\n",
+                                 driver_req_ptr -> nx_ip_driver_ptr -> nx_ip_name);
       break;
     }
 
@@ -259,9 +253,8 @@ VOID  nx_driver_framework_entry_default(NX_IP_DRIVER *driver_req_ptr)
       /* Default to successful return.  */
       driver_req_ptr -> nx_ip_driver_status =  NX_DRIVER_ERROR;
 
-#ifdef NX_DEBUG
-      printf("\nNetX WiFi Driver Received invalid request - \"%s\"\n", ip_ptr -> nx_ip_name);
-#endif /* NX_DEBUG */
+      NX_DEBUG_DRIVER_SOURCE_LOG("\nNetX WiFi Driver Received invalid request - \"%s\"\n",
+                                 driver_req_ptr -> nx_ip_driver_ptr -> nx_ip_name);
   }
 }
 
@@ -306,11 +299,11 @@ VOID  nx_driver_framework_entry_default(NX_IP_DRIVER *driver_req_ptr)
 /**************************************************************************/
 static VOID nx_driver_interface_attach(NX_IP_DRIVER *driver_req_ptr)
 {
-  /*
-   * Setup the driver's interface.
-   * This default implementation is for a simple one-interface driver.
-   * Additional logic is necessary for multiple port devices.
-   */
+  /**
+    * Setup the driver's interface.
+    * This default implementation is for a simple one-interface driver.
+    * Additional logic is necessary for multiple port devices.
+    */
   nx_driver_information.nx_driver_information_interface = driver_req_ptr -> nx_ip_driver_interface;
 
 #ifdef NX_ENABLE_INTERFACE_CAPABILITY
@@ -402,7 +395,7 @@ static VOID  nx_driver_initialize(NX_IP_DRIVER *driver_req_ptr)
   }
   else
   {
-    status =  nx_driver_hardware_initialize(driver_req_ptr);
+    status = nx_driver_hardware_initialize(driver_req_ptr);
   }
 
   /* Determine if the request was successful.  */
@@ -474,13 +467,13 @@ static VOID  nx_driver_initialize(NX_IP_DRIVER *driver_req_ptr)
 /*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
-static VOID  nx_driver_enable(NX_IP_DRIVER *driver_req_ptr)
+static VOID nx_driver_enable(NX_IP_DRIVER *driver_req_ptr)
 {
-  NX_IP           *ip_ptr;
-  UINT            status;
+  NX_IP *ip_ptr;
+  UINT   status;
 
   /* Setup the IP pointer from the driver request.  */
-  ip_ptr =  driver_req_ptr -> nx_ip_driver_ptr;
+  ip_ptr = driver_req_ptr -> nx_ip_driver_ptr;
 
   /* See if we can honor the NX_LINK_ENABLE request.  */
   if (nx_driver_information.nx_driver_information_state < NX_DRIVER_STATE_INITIALIZED)
@@ -522,7 +515,7 @@ static VOID  nx_driver_enable(NX_IP_DRIVER *driver_req_ptr)
   }
   else
   {
-    /* Enable failed.  Indicate that the request failed.  */
+    /* Enable failed. Indicate that the request failed.  */
     driver_req_ptr -> nx_ip_driver_status = NX_DRIVER_ERROR;
   }
 }
@@ -570,17 +563,17 @@ static VOID  nx_driver_enable(NX_IP_DRIVER *driver_req_ptr)
 /**************************************************************************/
 static VOID nx_driver_disable(NX_IP_DRIVER *driver_req_ptr)
 {
-  NX_IP           *ip_ptr;
-  UINT            status;
+  NX_IP *ip_ptr;
+  UINT   status;
 
   /* Setup the IP pointer from the driver request.  */
-  ip_ptr =  driver_req_ptr -> nx_ip_driver_ptr;
+  ip_ptr = driver_req_ptr -> nx_ip_driver_ptr;
 
   /* Check if the link is enabled.  */
   if (nx_driver_information.nx_driver_information_state != NX_DRIVER_STATE_LINK_ENABLED)
   {
     /* The link is not enabled, so just return an error.  */
-    driver_req_ptr -> nx_ip_driver_status =  NX_DRIVER_ERROR;
+    driver_req_ptr -> nx_ip_driver_status = NX_DRIVER_ERROR;
     return;
   }
 
@@ -667,7 +660,7 @@ static VOID nx_driver_packet_send(NX_IP_DRIVER *driver_req_ptr)
   /* Check to make sure the link is up.  */
   if (nx_driver_information.nx_driver_information_state != NX_DRIVER_STATE_LINK_ENABLED)
   {
-    /* Inidate an unsuccessful packet send.  */
+    /* Indicate an unsuccessful packet send.  */
     driver_req_ptr -> nx_ip_driver_status = NX_DRIVER_ERROR;
 
     /* Link is not up, simply free the packet.  */
@@ -677,13 +670,13 @@ static VOID nx_driver_packet_send(NX_IP_DRIVER *driver_req_ptr)
 
   /* Process driver send packet.  */
 
-  /* Place the ethernet frame at the front of the packet.  */
+  /* Place the Ethernet frame at the front of the packet.  */
   packet_ptr = driver_req_ptr -> nx_ip_driver_packet;
 
-#ifdef NX_DEBUG
-  printf("\n[%06"PRIu32"] nx_driver_packet_send() with 0x%"PRIX32" bytes\n", HAL_GetTick(),
-         (uint32_t)packet_ptr -> nx_packet_length);
-#endif /* NX_DEBUG */
+
+  NX_DEBUG_DRIVER_SOURCE_LOG("\n[%06" PRIu32 "] nx_driver_packet_send() with 0x%" PRIX32 " bytes\n",
+                             HAL_GetTick(), (uint32_t)packet_ptr -> nx_packet_length);
+
 
   /* Adjust the prepend pointer.  */
   packet_ptr -> nx_packet_prepend_ptr =
@@ -692,9 +685,10 @@ static VOID nx_driver_packet_send(NX_IP_DRIVER *driver_req_ptr)
   /* Adjust the packet length.  */
   packet_ptr -> nx_packet_length = packet_ptr -> nx_packet_length + NX_DRIVER_PHYSICAL_FRAME_SIZE;
 
-  /* Setup the ethernet frame pointer to build the ethernet frame.
-   * Backup another 2 * bytes to get 32-bit word alignment.
-   */
+  /**
+    * Setup the ethernet frame pointer to build the ethernet frame.
+    * Backup another 2 * bytes to get 32-bit word alignment.
+    */
   ethernet_frame_ptr = (ULONG *)(packet_ptr -> nx_packet_prepend_ptr - 2);
 
   /* Set up the hardware addresses in the Ethernet header. */
@@ -755,10 +749,10 @@ static VOID nx_driver_packet_send(NX_IP_DRIVER *driver_req_ptr)
   }
   else
   {
-#ifdef NX_DEBUG
-    printf("\n* %"PRIX32" %"PRIX32" %"PRIX32" %"PRIX32" *\n",
-           ethernet_frame_ptr[0], ethernet_frame_ptr[1], ethernet_frame_ptr[2], ethernet_frame_ptr[3]);
-#endif /* NX_DEBUG */
+    NX_DEBUG_DRIVER_SOURCE_LOG("\n* %" PRIX32 " %" PRIX32 " %" PRIX32 " %" PRIX32 " *\n",
+                               (uint32_t)ethernet_frame_ptr[0], (uint32_t)ethernet_frame_ptr[1],
+                               (uint32_t)ethernet_frame_ptr[2], (uint32_t)ethernet_frame_ptr[3]);
+
 
     status = nx_driver_hardware_packet_send(packet_ptr);
   }
@@ -827,7 +821,7 @@ static VOID nx_driver_packet_send(NX_IP_DRIVER *driver_req_ptr)
 /**************************************************************************/
 static VOID nx_driver_multicast_join(NX_IP_DRIVER *driver_req_ptr)
 {
-  UINT        status;
+  UINT status;
 
   /* Call hardware specific multicast join function. */
   if (!nx_driver_hardware_multicast_join)
@@ -844,9 +838,9 @@ static VOID nx_driver_multicast_join(NX_IP_DRIVER *driver_req_ptr)
   {
     /* Indicate an unsuccessful request.  */
     driver_req_ptr -> nx_ip_driver_status = NX_DRIVER_ERROR;
-#ifdef NX_DEBUG
-    printf("\nNetX WiFi Driver multicast join returns: NX_DRIVER_ERROR\n");
-#endif /* NX_DEBUG */    /* Call hardware specific multicast join function. */
+
+    NX_DEBUG_DRIVER_SOURCE_LOG("\nNetX WiFi Driver multicast join returns: NX_DRIVER_ERROR\n");
+    /* Call hardware specific multicast join function. */
   }
   else
   {
@@ -898,7 +892,7 @@ static VOID nx_driver_multicast_join(NX_IP_DRIVER *driver_req_ptr)
 /**************************************************************************/
 static VOID nx_driver_multicast_leave(NX_IP_DRIVER *driver_req_ptr)
 {
-  UINT        status;
+  UINT status;
 
   /* Call hardware specific multicast leave function. */
   if (!nx_driver_hardware_multicast_leave)
@@ -915,9 +909,8 @@ static VOID nx_driver_multicast_leave(NX_IP_DRIVER *driver_req_ptr)
   {
     /* Indicate an unsuccessful request.  */
     driver_req_ptr -> nx_ip_driver_status = NX_DRIVER_ERROR;
-#ifdef NX_DEBUG
-    printf("\nNetX WiFi Driver multicast leave returns: NX_DRIVER_ERROR\n");
-#endif /* NX_DEBUG */
+
+    NX_DEBUG_DRIVER_SOURCE_LOG("\nNetX WiFi Driver multicast leave returns: NX_DRIVER_ERROR\n");
   }
   else
   {
@@ -969,28 +962,25 @@ static VOID nx_driver_multicast_leave(NX_IP_DRIVER *driver_req_ptr)
 /**************************************************************************/
 static VOID nx_driver_get_status(NX_IP_DRIVER *driver_req_ptr)
 {
-  UINT        status;
-
   /* Call hardware specific get status function. */
   if (!nx_driver_hardware_get_status)
   {
-    status = NX_SUCCESS;
+    driver_req_ptr -> nx_ip_driver_status = NX_UNHANDLED_COMMAND;
   }
   else
   {
-    status = nx_driver_hardware_get_status(driver_req_ptr);
-  }
+    UINT status = nx_driver_hardware_get_status(driver_req_ptr);
 
-  /* Determine if there was an error.  */
-  if (status != NX_SUCCESS)
-  {
-    /* Indicate an unsuccessful request.  */
-    driver_req_ptr -> nx_ip_driver_status = NX_DRIVER_ERROR;
-  }
-  else
-  {
-    /* Indicate the request was successful.   */
-    driver_req_ptr -> nx_ip_driver_status = NX_SUCCESS;
+    if (status == NX_SUCCESS)
+    {
+      /* Indicate the request was successful. */
+      driver_req_ptr -> nx_ip_driver_status = NX_SUCCESS;
+    }
+    else
+    {
+      /* Indicate an unsuccessful request. */
+      driver_req_ptr -> nx_ip_driver_status = NX_DRIVER_ERROR;
+    }
   }
 }
 
@@ -1034,13 +1024,13 @@ static VOID nx_driver_get_status(NX_IP_DRIVER *driver_req_ptr)
 /*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
-static VOID  nx_driver_capability_get(NX_IP_DRIVER *driver_req_ptr)
+static VOID nx_driver_capability_get(NX_IP_DRIVER *driver_req_ptr)
 {
-  /* Return the capability of the WiFi controller.  */
+  /* Return the capability of the WiFi controller. */
   *(driver_req_ptr -> nx_ip_driver_return_ptr) = NX_DRIVER_CAPABILITY;
 
   /* Return the success status.  */
-  driver_req_ptr -> nx_ip_driver_status =  NX_SUCCESS;
+  driver_req_ptr -> nx_ip_driver_status = NX_SUCCESS;
 }
 
 
@@ -1082,9 +1072,9 @@ static VOID  nx_driver_capability_get(NX_IP_DRIVER *driver_req_ptr)
 /*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
-static VOID  nx_driver_capability_set(NX_IP_DRIVER *driver_req_ptr)
+static VOID nx_driver_capability_set(NX_IP_DRIVER *driver_req_ptr)
 {
-  UINT        status;
+  UINT status;
 
   /* Call hardware specific get status function. */
   if (!nx_driver_hardware_capability_set)
@@ -1093,19 +1083,19 @@ static VOID  nx_driver_capability_set(NX_IP_DRIVER *driver_req_ptr)
   }
   else
   {
-    status =  nx_driver_hardware_capability_set(driver_req_ptr);
+    status = nx_driver_hardware_capability_set(driver_req_ptr);
   }
 
   /* Determine if there was an error.  */
   if (status != NX_SUCCESS)
   {
     /* Indicate an unsuccessful request.  */
-    driver_req_ptr -> nx_ip_driver_status =  NX_DRIVER_ERROR;
+    driver_req_ptr -> nx_ip_driver_status = NX_DRIVER_ERROR;
   }
   else
   {
     /* Indicate the request was successful.   */
-    driver_req_ptr -> nx_ip_driver_status =  NX_SUCCESS;
+    driver_req_ptr -> nx_ip_driver_status = NX_SUCCESS;
   }
 }
 #endif /* NX_ENABLE_INTERFACE_CAPABILITY */
@@ -1152,18 +1142,18 @@ static VOID  nx_driver_capability_set(NX_IP_DRIVER *driver_req_ptr)
 /*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
-static VOID  nx_driver_deferred_processing(NX_IP_DRIVER *driver_req_ptr)
+static VOID nx_driver_deferred_processing(NX_IP_DRIVER *driver_req_ptr)
 {
   TX_INTERRUPT_SAVE_AREA
 
-  ULONG       deferred_events;
+  ULONG deferred_events;
 
   /* Disable interrupts.  */
   TX_DISABLE
 
   /* Pickup deferred events.  */
-  deferred_events =  nx_driver_information.nx_driver_information_deferred_events;
-  nx_driver_information.nx_driver_information_deferred_events =  0;
+  deferred_events = nx_driver_information.nx_driver_information_deferred_events;
+  nx_driver_information.nx_driver_information_deferred_events = 0;
 
   /* Restore interrupts.  */
   TX_RESTORE
@@ -1240,19 +1230,17 @@ static VOID  nx_driver_deferred_processing(NX_IP_DRIVER *driver_req_ptr)
 /**************************************************************************/
 static VOID nx_driver_transfer_to_netx(NX_IP *ip_ptr, NX_PACKET *packet_ptr)
 {
-  /* Pickup the packet header to determine where the packet needs to be sent.  */
-  const USHORT packet_type = (USHORT)(((UINT)(*(packet_ptr -> nx_packet_prepend_ptr + 12))) << 8) |
-                             ((UINT)(*(packet_ptr -> nx_packet_prepend_ptr + 13)));
+  /* Pickup the packet header to determine where the packet needs to be sent. */
+  const USHORT packet_type = (USHORT)((USHORT)(((USHORT)(*(packet_ptr -> nx_packet_prepend_ptr + 12))) << 8) |
+                                      (USHORT)(*(packet_ptr -> nx_packet_prepend_ptr + 13)));
 
-#ifdef NX_DEBUG
-  /* printf("\n%s() 0x%"PRIx32"\n", __FUNCTION__, (uint32_t)packet_type); */
-#endif /* NX_DEBUG */
+  /* NX_DEBUG_DRIVER_SOURCE_LOG("\n%s() 0x%" PRIx32 "\n", __FUNCTION__, (uint32_t)packet_type); */
 
   /* Set the interface for the incoming packet.  */
   packet_ptr -> nx_packet_ip_interface = nx_driver_information.nx_driver_information_interface;
 
-  /* Route the incoming packet according to its ethernet type.  */
-  if (packet_type == NX_DRIVER_ETHERNET_IP || packet_type == NX_DRIVER_ETHERNET_IPV6)
+  /* Route the incoming packet according to its Ethernet type. */
+  if ((packet_type == NX_DRIVER_ETHERNET_IP) || (packet_type == NX_DRIVER_ETHERNET_IPV6))
   {
     /* Note:  The length reported by some Ethernet hardware includes
        bytes after the packet as well as the Ethernet header.  In some
@@ -1268,13 +1256,16 @@ static VOID nx_driver_transfer_to_netx(NX_IP *ip_ptr, NX_PACKET *packet_ptr)
     packet_ptr -> nx_packet_length =
       packet_ptr -> nx_packet_length - NX_DRIVER_PHYSICAL_FRAME_SIZE;
 
+    NX_DEBUG_DRIVER_SOURCE_LOG("\n[%06" PRIu32 "] < NX_DRIVER_ETHERNET_IP(V6) with (%p) %" PRIu32 " bytes\n",
+                               HAL_GetTick(), (void *)packet_ptr, (uint32_t)packet_ptr -> nx_packet_length);
+
 #ifdef NX_DEBUG
-    printf("\n[%06"PRIu32"] < NX_DRIVER_ETHERNET_IP(V6) with %"PRIu32" bytes\n", HAL_GetTick(),
-           (uint32_t)packet_ptr -> nx_packet_length);
-    const ULONG ip_tcp_headers_size = 40;
-    for (ULONG i = ip_tcp_headers_size ; i < (packet_ptr -> nx_packet_length - ip_tcp_headers_size); i++)
     {
-      printf("%c", packet_ptr -> nx_packet_prepend_ptr[i]);
+      const ULONG ip_tcp_headers_size = 40;
+      for (ULONG i = ip_tcp_headers_size ; i < (packet_ptr -> nx_packet_length - ip_tcp_headers_size); i++)
+      {
+        NX_DEBUG_DRIVER_SOURCE_LOG("%02X", packet_ptr -> nx_packet_prepend_ptr[i]);
+      }
     }
 #endif /* NX_DEBUG */
 
@@ -1313,7 +1304,7 @@ static VOID nx_driver_transfer_to_netx(NX_IP *ip_ptr, NX_PACKET *packet_ptr)
   }
   else
   {
-    /* Invalid ethernet header... release the packet.  */
+    /* Invalid Ethernet header... release the packet. */
     nx_packet_release(packet_ptr);
   }
 }
@@ -1358,24 +1349,26 @@ static VOID nx_driver_transfer_to_netx(NX_IP *ip_ptr, NX_PACKET *packet_ptr)
 /*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
-VOID nx_driver_update_hardware_address(UCHAR hardware_address[6])
+static VOID nx_driver_update_hardware_address(UCHAR hardware_address[6])
 {
-  NX_INTERFACE    *interface_ptr;
+  NX_INTERFACE *interface_ptr;
 
   /* Setup interface pointer.  */
   interface_ptr = nx_driver_information.nx_driver_information_interface;
 
-  /* Setup the physical address of this IP instance.  Increment the
-     physical address lsw to simulate multiple nodes hanging on the
-     ethernet.  */
+  /**
+    * Setup the physical address of this IP instance. Increment the
+    * physical address lsw to simulate multiple nodes hanging on the
+    * Ethernet.
+    */
   interface_ptr -> nx_interface_physical_address_msw =
-    (ULONG)((hardware_address[0] << 8) |
-            (hardware_address[1]));
+    ((ULONG)(((ULONG)hardware_address[0]) << 8)) |
+    ((ULONG)hardware_address[1]);
   interface_ptr -> nx_interface_physical_address_lsw =
-    (ULONG)((hardware_address[2] << 24) |
-            (hardware_address[3] << 16) |
-            (hardware_address[4] << 8) |
-            (hardware_address[5]));
+    ((ULONG)(((ULONG)hardware_address[2]) << 24)) |
+    ((ULONG)((ULONG)(hardware_address[3]) << 16)) |
+    ((ULONG)((ULONG)(hardware_address[4]) <<  8)) |
+    ((ULONG)hardware_address[5]);
 }
 
 
@@ -1431,22 +1424,22 @@ static VOID nx_driver_transmit_packet_enqueue(NX_PACKET *packet_ptr)
   /* Determine if there is anything on the queue.  */
   if (nx_driver_information.nx_driver_transmit_queue_tail)
   {
-    /* Yes, something is on the transmit queue. Simply add the new packet to the tail.  */
-    nx_driver_information.nx_driver_transmit_queue_tail -> nx_packet_queue_next  =  packet_ptr;
+    /* Yes, something is on the transmit queue. Simply add the new packet to the tail. */
+    nx_driver_information.nx_driver_transmit_queue_tail -> nx_packet_queue_next = packet_ptr;
 
     /* Update the tail pointer.  */
-    nx_driver_information.nx_driver_transmit_queue_tail =  packet_ptr;
+    nx_driver_information.nx_driver_transmit_queue_tail = packet_ptr;
   }
   else
   {
     /* First packet on the transmit queue.  */
 
     /* Setup head pointers.  */
-    nx_driver_information.nx_driver_transmit_queue_head =  packet_ptr;
-    nx_driver_information.nx_driver_transmit_queue_tail =  packet_ptr;
+    nx_driver_information.nx_driver_transmit_queue_head = packet_ptr;
+    nx_driver_information.nx_driver_transmit_queue_tail = packet_ptr;
 
     /* Set the packet's next pointer to NULL.  */
-    packet_ptr -> nx_packet_queue_next =  NX_NULL;
+    packet_ptr -> nx_packet_queue_next = NX_NULL;
   }
 
   /* Increment the total packets queued.  */
@@ -1457,15 +1450,15 @@ static VOID nx_driver_transmit_packet_enqueue(NX_PACKET *packet_ptr)
   if (nx_driver_information.nx_driver_transmit_packets_queued > NX_DRIVER_MAX_TRANSMIT_QUEUE_DEPTH)
   {
     /* Yes, remove the head packet (oldest) packet in the transmit queue and release it.  */
-    packet_ptr =  nx_driver_information.nx_driver_transmit_queue_head;
+    packet_ptr = nx_driver_information.nx_driver_transmit_queue_head;
 
     /* Adjust the head pointer to the next packet.  */
-    nx_driver_information.nx_driver_transmit_queue_head =  packet_ptr -> nx_packet_queue_next;
+    nx_driver_information.nx_driver_transmit_queue_head = packet_ptr -> nx_packet_queue_next;
 
     /* Decrement the transmit packet queued count.  */
     nx_driver_information.nx_driver_transmit_packets_queued--;
 
-    /* Remove the ethernet header.  */
+    /* Remove the Ethernet header. */
     NX_DRIVER_PHYSICAL_HEADER_REMOVE(packet_ptr);
 
     /* Release the packet.  */
@@ -1521,8 +1514,8 @@ static NX_PACKET *nx_driver_transmit_packet_dequeue(VOID)
 {
   NX_PACKET   *packet_ptr;
 
-  /* Pickup the head pointer of the tranmit packet queue.  */
-  packet_ptr =  nx_driver_information.nx_driver_transmit_queue_head;
+  /* Pickup the head pointer of the transmit packet queue. */
+  packet_ptr = nx_driver_information.nx_driver_transmit_queue_head;
 
   /* Determine if there is anything on the queue.  */
   if (packet_ptr)
@@ -1530,10 +1523,10 @@ static NX_PACKET *nx_driver_transmit_packet_dequeue(VOID)
     /* Yes, something is on the transmit queue. Simply the packet from the head of the queue.  */
 
     /* Update the head pointer.  */
-    nx_driver_information.nx_driver_transmit_queue_head =  packet_ptr -> nx_packet_queue_next;
+    nx_driver_information.nx_driver_transmit_queue_head = packet_ptr -> nx_packet_queue_next;
 
     /* Clear the next pointer in the packet.  */
-    packet_ptr -> nx_packet_queue_next =  NX_NULL;
+    packet_ptr -> nx_packet_queue_next = NX_NULL;
 
     /* Decrement the transmit packet queued count.  */
     nx_driver_information.nx_driver_transmit_packets_queued--;
@@ -1544,7 +1537,7 @@ static NX_PACKET *nx_driver_transmit_packet_dequeue(VOID)
 }
 #endif /* NX_DRIVER_INTERNAL_TRANSMIT_QUEUE */
 
-#ifdef NX_DEBUG
+#if !defined(REMOVE_DEBUG_FUNC)
 #define CASE(x) case x: return #x
 #define DEFAULT default: return "UNKNOWN"
 static const char *nx_driver_operation_to_string(UINT operation)
@@ -1584,4 +1577,4 @@ static const char *nx_driver_operation_to_string(UINT operation)
       DEFAULT;
   }
 }
-#endif /* NX_DEBUG */
+#endif /* REMOVE_DEBUG_FUNC */

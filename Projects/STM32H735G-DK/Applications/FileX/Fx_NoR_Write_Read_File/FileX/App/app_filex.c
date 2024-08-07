@@ -103,7 +103,7 @@ UINT MX_FileX_Init(VOID *memory_ptr)
                          FX_APP_THREAD_PRIO, FX_APP_PREEMPTION_THRESHOLD, FX_APP_THREAD_TIME_SLICE, FX_APP_THREAD_AUTO_START);
 
   /* Check main thread creation */
-  if (ret != FX_SUCCESS)
+  if (ret != TX_SUCCESS)
   {
     return TX_THREAD_ERROR;
   }
@@ -172,9 +172,9 @@ void fx_app_thread_entry(ULONG thread_input)
   /* Check the media open nor_ospi_status */
   if (nor_ospi_status != FX_SUCCESS)
   {
-    /* USER CODE BEGIN OCTO-SPI NOR format error */
+    /* USER CODE BEGIN OCTO-SPI NOR open error */
     while(1);
-    /* USER CODE END OCTO-SPI NOR format error */
+    /* USER CODE END OCTO-SPI NOR open error */
   }
 
   /* USER CODE BEGIN fx_app_thread_entry 1 */

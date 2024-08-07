@@ -116,6 +116,21 @@ ULONG                       local_requested_length;
     /* All Printer reading  are on the endpoint OUT, from the host.  */
     transfer_request =  &endpoint -> ux_slave_endpoint_transfer_request;
 
+#if (UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1) && defined(UX_DEVICE_CLASS_PRINTER_ZERO_COPY)
+
+    /* Check if device is configured.  */
+    if (device -> ux_slave_device_state == UX_DEVICE_CONFIGURED)
+    {
+
+        /* Issue the transfer request.  */
+        local_requested_length = requested_length;
+        transfer_request -> ux_slave_transfer_request_data_pointer = buffer;
+        status =  _ux_device_stack_transfer_request(transfer_request,
+                                local_requested_length, local_requested_length);
+        *actual_length = transfer_request -> ux_slave_transfer_request_actual_length;
+    }
+#else
+
     /* Reset the actual length.  */
     *actual_length =  0;
 
@@ -179,6 +194,7 @@ ULONG                       local_requested_length;
             return(status);
         }
     }
+#endif
 
     /* Free Mutex resource.  */
     _ux_device_mutex_off(&printer -> ux_device_class_printer_endpoint_out_mutex);
@@ -207,7 +223,7 @@ ULONG                       local_requested_length;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _uxe_device_class_printer_read                       PORTABLE C     */
-/*                                                           6.2.1        */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yajun Xia, Microsoft Corporation                                    */
@@ -243,6 +259,9 @@ ULONG                       local_requested_length;
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  03-08-2023     Yajun Xia                Initial Version 6.2.1         */
+/*  10-31-2023     Yajun Xia                Modified comment(s),          */
+/*                                            fixed error checking issue, */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT _uxe_device_class_printer_read(UX_DEVICE_CLASS_PRINTER *printer, UCHAR *buffer,
@@ -250,7 +269,7 @@ UINT _uxe_device_class_printer_read(UX_DEVICE_CLASS_PRINTER *printer, UCHAR *buf
 {
 
     /* Sanity checks.  */
-    if ((printer == UX_NULL) || (buffer == UX_NULL) || (actual_length == UX_NULL))
+    if ((printer == UX_NULL) || ((buffer == UX_NULL) && (requested_length > 0)) || (actual_length == UX_NULL))
     {
         return (UX_INVALID_PARAMETER);
     }

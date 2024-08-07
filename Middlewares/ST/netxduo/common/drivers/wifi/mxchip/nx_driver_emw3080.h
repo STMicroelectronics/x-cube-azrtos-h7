@@ -23,7 +23,9 @@
 #ifndef NX_DRIVER_EMW3080_H
 #define NX_DRIVER_EMW3080_H
 
+
 #ifdef __cplusplus
+/* Yes, C++ compiler is present. Use standard C. */
 extern "C" {
 #endif /* __cplusplus */
 
@@ -34,12 +36,14 @@ extern "C" {
 #include "nx_driver_framework.h"
 
 /* Public API */
+/* Define global driver entry function. */
 void nx_driver_emw3080_entry(NX_IP_DRIVER *driver_req_ptr);
 void nx_driver_emw3080_interrupt(void);
 
 extern uint8_t WifiMode;
 
-#ifdef   __cplusplus
+#ifdef __cplusplus
+/* Yes, C++ compiler is present. Use standard C. */
 }
 #endif /* __cplusplus */
 

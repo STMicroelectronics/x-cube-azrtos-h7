@@ -63,6 +63,7 @@ extern MDMA_HandleTypeDef hmdma_quadspi_fifo_th;
   */
 void HAL_MspInit(void)
 {
+
   /* USER CODE BEGIN MspInit 0 */
 
   /* USER CODE END MspInit 0 */

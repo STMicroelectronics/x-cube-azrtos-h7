@@ -11,23 +11,31 @@ The scope of this package covers the following Azure RTOS middleware: RTOS (***T
 ![](_htmresc/OverviewAzureRTOS_in_STM32Cube.png)
 
 Azure RTOS is a professional grade, highly reliable and market proven Middleware suite:
- - **Integrated** and full featured **RTOS**. Learn more [_ThreadX_](https://aka.ms/threadx).
- - **Industrial grade** networking stack: optimized for performance coming with **many IoT protocols.** Learn more [_Netx Duo_](https://aka.ms/netxduo)
- - Advanced FS/FTL: **fully featured** to support **NAND/NOR Flash** memories. Learn more [_FileX_](https://aka.ms/filex)  _and_  [_LevelX_](https://docs.microsoft.com/en-us/azure/rtos/levelx/)
- - USB **Host** and **Device** stacks coming with **multiple classes.** Learn more [_USBX_](https://aka.ms/usbx)
+ - **Integrated** and full featured **RTOS**. Learn more [_ThreadX_](https://github.com/eclipse-threadx/rtos-docs/blob/main/rtos-docs/threadx/index.md).
+ - **Industrial grade** networking stack: optimized for performance coming with **many IoT protocols.** Learn more [_Netx Duo_](https://github.com/eclipse-threadx/rtos-docs/blob/main/rtos-docs/netx-duo/index.md)
+ - Advanced FS/FTL: **fully featured** to support **NAND/NOR Flash** memories. Learn more [_FileX_](https://github.com/eclipse-threadx/rtos-docs/blob/main/rtos-docs/filex/index.md)  _and_  [_LevelX_](https://github.com/eclipse-threadx/rtos-docs/blob/main/rtos-docs/levelx/index.md)
+ - USB **Host** and **Device** stacks coming with **multiple classes.** Learn more [_USBX_](https://github.com/eclipse-threadx/rtos-docs/blob/main/rtos-docs/usbx/index.md)
  - **Safety pre-certifications (from Microsoft)**: IEC 61508 SIL4, IEC 62304 Class C and ISO 26262 ASIL D
  - **Security pre-certifications (from Microsoft)**: EAL4+ for TLS/DTLS, FIPS 140-2 for SW crypto lib
  - STM32 **granted production license:** [_here_](https://github.com/azure-rtos/threadx/blob/master/LICENSED-HARDWARE.txt)
 
+> [!NOTE]
+> ## Some middleware libraries and projects are unavailable in this repository
+> 
+> In this repository, the middleware libraries listed below **along with** [this](Projects/README.md#list-of-unavailable-projects) list of projects (demos, applications, and examples) using them, are **not available** as they (the middleware libraries) are subject to some restrictive license terms requiring the user's approval via a "click thru" procedure.
+> * `./Middlewares/ST/STM32_Audio`
+> 
+> If needed, they can be found inside the full firmware package available on our website `st.com` and downloadable from [here](https://www.st.com/en/embedded-software/x-cube-azrtos-h7.html#get-software). You will be prompted to login or to register in case you have no account.
+
 ### Prerequisites
-- USBX, FileX and NetXDuo building require ThreadX as they are based on RTOS model.
+- USBX, FileX and NetXDuo building requires ThreadX as they are based on RTOS model.
 - USBX Host MSC requires FileX Middleware usage
 - USBX Device ECM/RNDIS classes require NetXDuo usage
 
 One of the following toolchains:
 
 - IAR Embedded Workbench for ARM (EWARM) toolchain 8.50.9 + ST-LINKV3
-- [STM32CubeIDE V1.13.1](https://www.st.com/en/development-tools/stm32cubeide.html) + ST-LINKV3
+- [STM32CubeIDE V1.15.0](https://www.st.com/en/development-tools/stm32cubeide.html) + ST-LINKV3
 - RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.37 + ST-LINKV3
 
 ## Supported Devices and Boards by applications
@@ -98,6 +106,8 @@ Details about the content of this release are available in the release note [her
 |USBX    | Ux_Device_Printer             | It demonstrates how to develop USB Device Printer Class based application. The application is designed to emulate a USB Printer device, the code provides all required device descriptors framework and the associated Class descriptor report to build a compliant USB Printer device. [readme](./Projects/STM32H735G-DK/Applications/USBX/Ux_Device_Printer/README.md) |
 |USBX    | Ux_Device_HID_Standalone      | It demonstrates how to develop USB Device Human Interface “HID” mouse based bare metal application. The application is designed to emulate an USB HID mouse device, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB HID mouse device. [readme](./Projects/NUCLEO-H723ZG/Applications/USBX/Ux_Device_HID_Standalone/README.md) |
 |USBX    | Ux_Host_HID_Standalone        | It demonstrates how to develop bare metal USB Host Human Interface “HID” able to enumerate and communicates with a mouse or a keyboard. The application is designed to behave as an USB HID Host, the code provides required requests to properly enumerate HID devices , HID Class APIs to decode HID reports received from a mouse or a keyboard and display data on uart HyperTerminal. [readme](./Projects/NUCLEO-H723ZG/Applications/USBX/Ux_Host_HID_Standalone/README.md) |
+|USBX    | Ux_Host_HUB_HID_MSC           | It demonstrates how to develop a USB Host Hub application supporting Human Interface “HID” and Mass Storage “MSC” class drivers to be able to enumerate and communicate with: - An USB hub. - A mouse. - A keyboard. - An USB removable flash disk. [readme](./Projects/STM32H747I-DISCO/Applications/USBX/Ux_Host_HUB_HID_MSC/README.md) |
+|USBX    | Ux_Host_Audio                 | It demonstrates how to develop AUDIO" able to enumerate and communicates with a device audio speaker 1.0/2.0. [readme](./Projects/STM32H747I-DISCO/Applications/USBX/Ux_Host_Audio/README.md) |
 |FileX   | Fx_uSD_File_Edit              | It demonstrates how to develop a basic SD card file operations application. The application is designed to handle SD card insertion/removal events, and depending on that state, it starts and stops file operations from and into the SD card. [readme](./Projects/STM32H735G-DK/Applications/FileX/Fx_uSD_File_Edit/README.md)  |
 |FileX   | Fx_MultiAccess                | It demonstrates how the FileX's concurrent file access capabilities. The application is designed to execute file operations on the SD card device, the code provides all required software code for handling SD card I/O operations. [readme](./Projects/STM32H735G-DK/Applications/FileX/Fx_MultiAccess/README.md) |
 |FileX   | Fx_NoR_Write_Read_File        | It demonstrates how to create a Fat File system on the NOR flash using FileX alongside LevelX. The application is designed to execute file operations on the MX25LM51245G NOR flash device, the code provides all required software code for properly managing it. [readme](./Projects/STM32H735G-DK/Applications/FileX/Fx_NoR_Write_Read_File/README.md) |
@@ -124,4 +134,5 @@ Details about the content of this release are available in the release note [her
 **Caution**  : The issues are  **strictly limited**  to submit problems or suggestions related to the software delivered in this repository.
 
 **For any other question**  related to the product, the hardware performance or characteristics, the tools, the environment, you can submit it to the  **ST Community**  on the STM32 MCUs related  [page](https://community.st.com/s/topic/0TO0X000000BSqSWAW/stm32-mcus).
+
 

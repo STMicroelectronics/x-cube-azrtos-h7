@@ -24,7 +24,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    lx_user.h                                           PORTABLE C      */
-/*                                                           6.2.1        */
+/*                                                           6.3.0        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -48,7 +48,12 @@
 /*                                            resulting in version 6.1.7  */
 /*  03-08-2023     Xiuwen Cai               Modified comment(s), and      */
 /*                                            added new NAND options,     */
-/*                                            resulting in version 6.2.1 */
+/*                                            resulting in version 6.2.1  */
+/*  10-31-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            added options for mapping , */
+/*                                            bitmap cache and obsolete   */
+/*                                            count cache,                */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -59,30 +64,11 @@
 
 /* USER CODE END 1 */
 
-/* Defined, this option bypasses the NOR flash driver read routine in favor or reading
-   the NOR memory directly, resulting in a significant performance increase.
-*/
-
 /* By default this value is 4, which represents a maximum of 4 blocks that
    can be allocated for metadata.
 */
 
 /* #define LX_NAND_FLASH_MAX_METADATA_BLOCKS         4 */
-
-/* By default this value is 128 and defines the logical sector mapping cache size.
-   Large values improve performance, but cost memory. The minimum size is 8 and
-   all values must be a power of 2.
-*/
-
-/* #define LX_NAND_SECTOR_MAPPING_CACHE_SIZE         128 */
-
-/* Defined, this creates a direct mapping cache, such that there are no cache misses.
-   It also requires that LX_NAND_SECTOR_MAPPING_CACHE_SIZE represents the exact number
-   of total pages in your flash device.
-*/
-
-/* #define LX_NAND_FLASH_DIRECT_MAPPING_CACHE */
-
 /* Defined, this makes LevelX thread-safe by using a ThreadX mutex object
    throughout the API.
 */
@@ -94,6 +80,10 @@
 /* #define LX_STANDALONE_ENABLE */
 
 /* USER CODE BEGIN 2 */
+
+/* Define user extension for NAND flash control block.  */
+
+/* #define LX_NAND_FLASH_USER_EXTENSION   ???? */
 
 /* USER CODE END 2 */
 

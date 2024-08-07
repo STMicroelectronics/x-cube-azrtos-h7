@@ -55,6 +55,9 @@ UX_HOST_CLASS_CDC_ACM      *cdc_acm;
 UX_HOST_CLASS_HID          *hid_instance;
 UX_HOST_CLASS_HID_MOUSE    *mouse;
 UX_HOST_CLASS_HID_KEYBOARD *keyboard;
+
+extern uint16_t                        RxSzeIdx;
+extern UX_HOST_CLASS_CDC_ACM_RECEPTION cdc_acm_reception;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -84,25 +87,25 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
                        USBX_HOST_MEMORY_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
-    /* USER CODE BEGIN USBX_ALLOCATE_STACK_ERORR */
+    /* USER CODE BEGIN USBX_ALLOCATE_STACK_ERROR */
     return TX_POOL_ERROR;
-    /* USER CODE END USBX_ALLOCATE_STACK_ERORR */
+    /* USER CODE END USBX_ALLOCATE_STACK_ERROR */
   }
 
   /* Initialize USBX Memory */
   if (ux_system_initialize(pointer, USBX_HOST_MEMORY_STACK_SIZE, UX_NULL, 0) != UX_SUCCESS)
   {
-    /* USER CODE BEGIN USBX_SYSTEM_INITIALIZE_ERORR */
+    /* USER CODE BEGIN USBX_SYSTEM_INITIALIZE_ERROR */
     return UX_ERROR;
-    /* USER CODE END USBX_SYSTEM_INITIALIZE_ERORR */
+    /* USER CODE END USBX_SYSTEM_INITIALIZE_ERROR */
   }
 
   /* Install the host portion of USBX */
   if (ux_host_stack_initialize(ux_host_event_callback) != UX_SUCCESS)
   {
-    /* USER CODE BEGIN USBX_HOST_INITIALIZE_ERORR */
+    /* USER CODE BEGIN USBX_HOST_INITIALIZE_ERROR */
     return UX_ERROR;
-    /* USER CODE END USBX_HOST_INITIALIZE_ERORR */
+    /* USER CODE END USBX_HOST_INITIALIZE_ERROR */
   }
 
   /* Register a callback error function */
@@ -112,45 +115,45 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
   if (ux_host_stack_class_register(_ux_system_host_class_hid_name,
                                    ux_host_class_hid_entry) != UX_SUCCESS)
   {
-    /* USER CODE BEGIN USBX_HSOT_HID_REGISTER_ERORR */
+    /* USER CODE BEGIN USBX_HSOT_HID_REGISTER_ERROR */
     return UX_ERROR;
-    /* USER CODE END USBX_HSOT_HID_REGISTER_ERORR */
+    /* USER CODE END USBX_HSOT_HID_REGISTER_ERROR */
   }
 
   /* Initialize the host hid mouse client */
   if (ux_host_class_hid_client_register(_ux_system_host_class_hid_client_mouse_name,
                                         ux_host_class_hid_mouse_entry) != UX_SUCCESS)
   {
-    /* USER CODE BEGIN USBX_HOST_HID_MOUSE_REGISTER_ERORR */
+    /* USER CODE BEGIN USBX_HOST_HID_MOUSE_REGISTER_ERROR */
     return UX_ERROR;
-    /* USER CODE END USBX_HOST_HID_MOUSE_REGISTER_ERORR */
+    /* USER CODE END USBX_HOST_HID_MOUSE_REGISTER_ERROR */
   }
 
   /* Initialize the host hid keyboard client */
   if (ux_host_class_hid_client_register(_ux_system_host_class_hid_client_keyboard_name,
                                         ux_host_class_hid_keyboard_entry) != UX_SUCCESS)
   {
-    /* USER CODE BEGIN USBX_HOST_HID_KEYBOARD_REGISTER_ERORR */
+    /* USER CODE BEGIN USBX_HOST_HID_KEYBOARD_REGISTER_ERROR */
     return UX_ERROR;
-    /* USER CODE END USBX_HOST_HID_KEYBOARD_REGISTER_ERORR */
+    /* USER CODE END USBX_HOST_HID_KEYBOARD_REGISTER_ERROR */
   }
 
   /* Initialize the host cdc acm class */
   if ((ux_host_stack_class_register(_ux_system_host_class_cdc_acm_name,
                                     ux_host_class_cdc_acm_entry)) != UX_SUCCESS)
   {
-    /* USER CODE BEGIN USBX_HOST_CDC_ACM_REGISTER_ERORR */
+    /* USER CODE BEGIN USBX_HOST_CDC_ACM_REGISTER_ERROR */
     return UX_ERROR;
-    /* USER CODE END USBX_HOST_CDC_ACM_REGISTER_ERORR */
+    /* USER CODE END USBX_HOST_CDC_ACM_REGISTER_ERROR */
   }
 
   /* Allocate the stack for host application main thread */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer, UX_HOST_APP_THREAD_STACK_SIZE,
                        TX_NO_WAIT) != TX_SUCCESS)
   {
-    /* USER CODE BEGIN MAIN_THREAD_ALLOCATE_STACK_ERORR */
+    /* USER CODE BEGIN MAIN_THREAD_ALLOCATE_STACK_ERROR */
     return TX_POOL_ERROR;
-    /* USER CODE END MAIN_THREAD_ALLOCATE_STACK_ERORR */
+    /* USER CODE END MAIN_THREAD_ALLOCATE_STACK_ERROR */
   }
 
   /* Create the host application main thread */
@@ -159,9 +162,9 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
                        UX_HOST_APP_THREAD_PREEMPTION_THRESHOLD, UX_HOST_APP_THREAD_TIME_SLICE,
                        UX_HOST_APP_THREAD_START_OPTION) != TX_SUCCESS)
   {
-    /* USER CODE BEGIN MAIN_THREAD_CREATE_ERORR */
+    /* USER CODE BEGIN MAIN_THREAD_CREATE_ERROR */
     return TX_THREAD_ERROR;
-    /* USER CODE END MAIN_THREAD_CREATE_ERORR */
+    /* USER CODE END MAIN_THREAD_CREATE_ERROR */
   }
 
   /* USER CODE BEGIN MX_USBX_Host_Init1 */
@@ -319,9 +322,12 @@ UINT ux_host_event_callback(ULONG event, UX_HOST_CLASS *current_class, VOID *cur
         /* Clear cdc instance */
         cdc_acm = UX_NULL;
 
+        /* Reinitialize reception block size index */
+        RxSzeIdx=0;
+
         USBH_UsrLog("\nUSB CDC ACM Device Removal");
 
-        /* Set NEW_RECEIVED_DATA flag */
+        /* Set REMOVED_CDC_INSTANCE flag */
         if (tx_event_flags_set(&ux_app_EventFlag, REMOVED_CDC_INSTANCE, TX_OR) != TX_SUCCESS)
         {
           Error_Handler();

@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nand_flash_data_page_copy                       PORTABLE C      */ 
-/*                                                           6.2.1       */
+/*                                                           6.4.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Xiuwen Cai, Microsoft Corporation                                   */
@@ -78,7 +78,11 @@
 /*                                                                        */ 
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  03-08-2023     Xiuwen Cai               Initial Version 6.2.1        */
+/*  03-08-2023     Xiuwen Cai               Initial Version 6.2.1         */
+/*  12-31-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            fixed sequential checking   */
+/*                                            logic,                      */
+/*                                            resulting in version 6.4.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nand_flash_data_page_copy(LX_NAND_FLASH* nand_flash, ULONG logical_sector, ULONG source_block, USHORT src_block_status,
@@ -168,7 +172,7 @@ ULONG   number_of_pages;
                         }
 
                         /* Check if the pages in destination block is still sequential.  */
-                        if ((destination_page) != (logical_sector + i % nand_flash -> lx_nand_flash_pages_per_block))
+                        if (destination_page != ((logical_sector + i) % nand_flash -> lx_nand_flash_pages_per_block))
                         {
                             /* Mark the block status as non sequential.  */
                             dest_block_status |= LX_NAND_BLOCK_STATUS_NON_SEQUENTIAL;

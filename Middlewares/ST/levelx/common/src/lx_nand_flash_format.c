@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nand_flash_format                               PORTABLE C      */ 
-/*                                                           6.2.1       */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Xiuwen Cai, Microsoft Corporation                                   */
@@ -87,7 +87,12 @@
 /*                                                                        */ 
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  03-08-2023     Xiuwen Cai               Initial Version 6.2.1        */
+/*  03-08-2023     Xiuwen Cai               Initial Version 6.2.1         */
+/*  10-31-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            avoided clearing user       */
+/*                                            extension in flash control  */
+/*                                            block,                      */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nand_flash_format(LX_NAND_FLASH* nand_flash, CHAR* name,
@@ -102,8 +107,8 @@ UCHAR                       *page_buffer_ptr;
 
     LX_PARAMETER_NOT_USED(name);
 
-    /* Clear the NAND flash control block.  */
-    LX_MEMSET(nand_flash, 0, sizeof(LX_NAND_FLASH));
+    /* Clear the NAND flash control block. User extension is not cleared.  */
+    LX_MEMSET(nand_flash, 0, (ULONG)((UCHAR*)&(nand_flash -> lx_nand_flash_open_previous) - (UCHAR*)nand_flash) + sizeof(nand_flash -> lx_nand_flash_open_previous));
 
     /* Call the flash driver's initialization function.  */
     (nand_driver_initialize)(nand_flash);

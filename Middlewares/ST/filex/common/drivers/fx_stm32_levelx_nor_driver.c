@@ -17,27 +17,122 @@ struct fx_lx_nor_driver_instance
     LX_NOR_FLASH flash_instance;
 
     CHAR name[32];
+#ifndef LX_NOR_DISABLE_EXTENDED_CACHE
+#if defined(LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE) || defined(LX_NOR_ENABLE_MAPPING_BITMAP)
+    UCHAR *extended_nor_cache;
 
+    ULONG extended_nor_cache_size;
+#endif
+#endif
     UINT id;
 
     UINT (*nor_driver_initialize)(LX_NOR_FLASH *);
 
-    UINT initialized;
-
 };
+
+#ifndef LX_NOR_DISABLE_EXTENDED_CACHE
+
+#ifdef LX_NOR_SIMULATOR_DRIVER
+
+#ifdef LX_NOR_ENABLE_MAPPING_BITMAP
+#define LX_STM32_SIMULATOR_MAPPING_BITMAP_CACHE_SIZE ((LX_NOR_SIMULATOR_FLASH_SIZE / LX_NOR_SECTOR_SIZE) + 31) / 32
+#else
+#define LX_STM32_SIMULATOR_MAPPING_BITMAP_CACHE_SIZE   0
+#endif
+
+#ifdef LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
+#define LX_STM32_SIMULATOR_OBSOLETE_COUNT_CACHE_SIZE (LX_NOR_SIMULATOR_FLASH_SIZE / LX_NOR_SIMULATOR_SECTOR_SIZE) * sizeof(LX_NOR_OBSOLETE_COUNT_CACHE_TYPE) / 4
+#else
+#define LX_STM32_SIMULATOR_OBSOLETE_COUNT_CACHE_SIZE  0
+#endif
+
+#if defined(LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE) || defined(LX_NOR_ENABLE_MAPPING_BITMAP)
+UCHAR lx_stm32_nor_simulator_extended_cache_memory[LX_STM32_SIMULATOR_OBSOLETE_COUNT_CACHE_SIZE + LX_STM32_SIMULATOR_MAPPING_BITMAP_CACHE_SIZE];
+#endif
+
+#endif //LX_NOR_SIMULATOR_DRIVER
+
+#ifdef LX_NOR_OSPI_DRIVER
+
+#ifdef LX_NOR_ENABLE_MAPPING_BITMAP
+#define LX_STM32_OSPI_MAPPING_BITMAP_CACHE_SIZE ((LX_STM32_OSPI_FLASH_SIZE / LX_NOR_SECTOR_SIZE) + 31) / 32
+#else
+#define LX_STM32_OSPI_MAPPING_BITMAP_CACHE_SIZE   0
+#endif
+
+#ifdef LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
+#define LX_STM32_OSPI_OBSOLETE_COUNT_CACHE_SIZE (LX_STM32_OSPI_FLASH_SIZE / LX_STM32_OSPI_SECTOR_SIZE) * sizeof(LX_NOR_OBSOLETE_COUNT_CACHE_TYPE) / 4
+#else
+#define LX_STM32_OSPI_OBSOLETE_COUNT_CACHE_SIZE  0
+#endif
+
+#if defined(LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE) || defined(LX_NOR_ENABLE_MAPPING_BITMAP)
+UCHAR lx_stm32_nor_ospi_extended_cache_memory[LX_STM32_OSPI_OBSOLETE_COUNT_CACHE_SIZE + LX_STM32_OSPI_MAPPING_BITMAP_CACHE_SIZE];
+#endif
+
+#endif //LX_NOR_OSPI_DRIVER
+
+#ifdef LX_NOR_QSPI_DRIVER
+
+#ifdef LX_NOR_ENABLE_MAPPING_BITMAP
+#define LX_STM32_QSPI_MAPPING_BITMAP_CACHE_SIZE ((LX_STM32_QSPI_FLASH_SIZE / LX_NOR_SECTOR_SIZE) + 31) / 32
+#else
+#define LX_STM32_QSPI_MAPPING_BITMAP_CACHE_SIZE   0
+#endif
+
+#ifdef LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
+#define LX_STM32_QSPI_OBSOLETE_COUNT_CACHE_SIZE (LX_STM32_QSPI_FLASH_SIZE / LX_STM32_QSPI_SECTOR_SIZE) * sizeof(LX_NOR_OBSOLETE_COUNT_CACHE_TYPE) / 4
+#else
+#define LX_STM32_QSPI_OBSOLETE_COUNT_CACHE_SIZE  0
+#endif
+
+#if defined(LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE) || defined(LX_NOR_ENABLE_MAPPING_BITMAP)
+UCHAR lx_stm32_nor_qspi_extended_cache_memory[LX_STM32_QSPI_OBSOLETE_COUNT_CACHE_SIZE + LX_STM32_QSPI_MAPPING_BITMAP_CACHE_SIZE];
+#endif
+
+#endif //LX_NOR_QSPI_DRIVER
+
+#endif //LX_NOR_DISABLE_EXTENDED_CACHE
 
 static struct fx_lx_nor_driver_instance  fx_lx_nor_drivers[MAX_LX_NOR_DRIVERS] =
 {
 #ifdef LX_NOR_SIMULATOR_DRIVER
-    { .name = LX_NOR_SIMULATOR_DRIVER_NAME, .id = LX_NOR_SIMULATOR_DRIVER_ID, .nor_driver_initialize = lx_stm32_nor_simulator_initialize},
+    { .name = LX_NOR_SIMULATOR_DRIVER_NAME,
+      .id = LX_NOR_SIMULATOR_DRIVER_ID,
+      .nor_driver_initialize = lx_stm32_nor_simulator_initialize,
+      #ifndef LX_NOR_DISABLE_EXTENDED_CACHE
+      #if defined(LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE) || defined(LX_NOR_ENABLE_MAPPING_BITMAP)
+      .extended_nor_cache = lx_stm32_nor_simulator_extended_cache_memory,
+      .extended_nor_cache_size = sizeof(lx_stm32_nor_simulator_extended_cache_memory),
+      #endif
+      #endif
+    }
 #endif
 
 #ifdef LX_NOR_OSPI_DRIVER
-    { .name = LX_NOR_OSPI_DRIVER_NAME, .id = LX_NOR_OSPI_DRIVER_ID, .nor_driver_initialize = lx_stm32_ospi_initialize},
+    { .name = LX_NOR_OSPI_DRIVER_NAME,
+      .id = LX_NOR_OSPI_DRIVER_ID,
+      .nor_driver_initialize = lx_stm32_ospi_initialize,
+      #ifndef LX_NOR_DISABLE_EXTENDED_CACHE
+      #if defined(LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE) || defined(LX_NOR_ENABLE_MAPPING_BITMAP)
+      .extended_nor_cache = lx_stm32_nor_ospi_extended_cache_memory,
+      .extended_nor_cache_size = sizeof(lx_stm32_nor_ospi_extended_cache_memory),
+      #endif
+      #endif
+    }
 #endif
 
 #ifdef LX_NOR_QSPI_DRIVER
-    { .name = LX_NOR_QSPI_DRIVER_NAME, .id = LX_NOR_QSPI_DRIVER_ID, .nor_driver_initialize = lx_stm32_qspi_initialize},
+    { .name = LX_NOR_QSPI_DRIVER_NAME,
+      .id = LX_NOR_QSPI_DRIVER_ID,
+      .nor_driver_initialize = lx_stm32_qspi_initialize,
+      #ifndef LX_NOR_DISABLE_EXTENDED_CACHE
+      #if defined(LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE) || defined(LX_NOR_ENABLE_MAPPING_BITMAP)
+      .extended_nor_cache = lx_stm32_nor_qspi_extended_cache_memory,
+      .extended_nor_cache_size = sizeof(lx_stm32_nor_qspi_extended_cache_memory),
+      #endif
+      #endif
+    }
 #endif
 
 #ifdef LX_NOR_CUSTOM_DRIVER
@@ -105,31 +200,35 @@ VOID  fx_stm32_levelx_nor_driver(FX_MEDIA *media_ptr)
 
         case FX_DRIVER_INIT:
             {
-                if (current_driver->initialized == FX_FALSE)
-                {
                     /* Open flash instance*/
                     status = lx_nor_flash_open(&current_driver->flash_instance, current_driver->name, current_driver->nor_driver_initialize);
+#ifndef LX_NOR_DISABLE_EXTENDED_CACHE
 
+#if defined(LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE) || defined(LX_NOR_ENABLE_MAPPING_BITMAP)
+
+                    if (status == LX_SUCCESS)
+                    {
+                   /* Enable the NOR flash cache for the flash_instance */
+                    status = lx_nor_flash_extended_cache_enable(&current_driver->flash_instance,  current_driver->extended_nor_cache, current_driver->extended_nor_cache_size);
+                    }
+#endif //(LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE) || defined(LX_NOR_ENABLE_MAPPING_BITMAP)
+
+#endif //LX_NOR_DISABLE_EXTENDED_CACHE
                     /* LevelX driver correctly initialized */
                     if (status == LX_SUCCESS)
                     {
-                        current_driver->initialized = FX_TRUE;
                         media_ptr->fx_media_driver_status = FX_SUCCESS;
 
                         media_ptr->fx_media_driver_free_sector_update = FX_TRUE;
+
                         break;
                     }
                     else
                     {
-                        media_ptr->fx_media_driver_status = FX_IO_ERROR;
+                       media_ptr->fx_media_driver_status = FX_IO_ERROR;
                     }
-                }
-                else
-                {
-                    media_ptr->fx_media_driver_status = FX_SUCCESS;
-                }
 
-                break;
+                    break;
             }
 
         case FX_DRIVER_UNINIT:

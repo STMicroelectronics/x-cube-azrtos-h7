@@ -33,7 +33,7 @@ TX_SEMAPHORE qspi_tx_semaphore;
 TX_SEMAPHORE qspi_rx_semaphore;
 
 /* USER CODE BEGIN DUAL_BANK_FLAG */
-/* USER CODE BEGIN DUAL_BANK_FLAG */
+/* USER CODE END DUAL_BANK_FLAG */
 
 #define QSPI_WRITE_ENABLE_SPI_MODE            0
 #define QSPI_WRITE_ENABLE_QPI_MODE            1
@@ -204,7 +204,7 @@ INT lx_stm32_qspi_get_info(UINT instance, ULONG *block_size, ULONG *total_blocks
   /* USER CODE END PRE_QSPI_Get_Info */
 
   *block_size = LX_STM32_QSPI_SECTOR_SIZE;
-  *total_blocks = (LX_STM32_QSPI_FLASH_SIZE / LX_STM32_QSPI_SECTOR_SIZE);
+  *total_blocks = ((LX_STM32_QSPI_FLASH_SIZE - LX_STM32_QSPI_BASE_ADDRESS) / LX_STM32_QSPI_SECTOR_SIZE);
 
   /* USER CODE BEGIN POST_QSPI_Get_Info */
 

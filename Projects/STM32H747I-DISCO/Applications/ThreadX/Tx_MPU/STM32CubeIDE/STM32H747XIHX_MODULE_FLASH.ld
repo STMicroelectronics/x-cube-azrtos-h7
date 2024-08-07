@@ -15,7 +15,7 @@ SECTIONS
   __HEAPSIZE__ = 128;
 
   __preamble_load_start__ = __FLASH_segment_start__;
-  .preamble __FLASH_segment_start__ : AT(__FLASH_segment_start__)
+  .preamble __FLASH_segment_start__ (READONLY) : AT(__FLASH_segment_start__) /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
     __preamble_start__ = .;
     *preamble*
@@ -43,7 +43,7 @@ SECTIONS
   __dynstr_end__ = __dynstr_load_start__ + SIZEOF(.dynstr);
 
   __reldyn_load_start__ =  ALIGN(__dynstr_end__ , 4);
-  .rel.dyn ALIGN(__reldyn_load_start__ , 4) : AT(ALIGN(__reldyn_load_start__ , 4))
+  .rel.dyn ALIGN(__reldyn_load_start__ , 4) (READONLY) : AT(ALIGN(__reldyn_load_start__ , 4)) /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
     . = ALIGN(4);
     KEEP (*(.rel.dyn))
@@ -117,7 +117,7 @@ SECTIONS
   __ctors_end__ = __ctors_start__ + SIZEOF(.ctors);
 
   __got_load_start__ = ALIGN(__ctors_end__ , 4);
-  .got ALIGN(__ctors_end__ , 4) : AT(ALIGN(__ctors_end__ , 4))
+  .got ALIGN(__ctors_end__ , 4) (READONLY) : AT(ALIGN(__ctors_end__ , 4)) /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
     . = ALIGN(4);
     _sgot = .;
@@ -129,7 +129,7 @@ SECTIONS
   __got_end__ =  __got_load_start__ + SIZEOF(.got);
 
   __rodata_load_start__ = ALIGN(__got_end__ , 4);
-  .rodata ALIGN(__got_end__ , 4) : AT(ALIGN(__got_end__ , 4))
+  .rodata ALIGN(__got_end__ , 4) (READONLY) : AT(ALIGN(__got_end__ , 4)) /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
     __rodata_start__ = .;
     *(.rodata .rodata.* .gnu.linkonce.r.*)

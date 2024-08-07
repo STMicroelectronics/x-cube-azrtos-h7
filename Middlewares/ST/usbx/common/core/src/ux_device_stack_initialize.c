@@ -54,7 +54,7 @@ UX_SYSTEM_SLAVE *_ux_system_slave;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_device_stack_initialize                         PORTABLE C      */
-/*                                                           6.1.11       */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -109,6 +109,10 @@ UX_SYSTEM_SLAVE *_ux_system_slave;
 /*                                            added CCID support,         */
 /*                                            added video support,        */
 /*                                            resulting in version 6.1.11 */
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added a new mode to manage  */
+/*                                            endpoint buffer in classes, */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_device_stack_initialize(UCHAR * device_framework_high_speed, ULONG device_framework_length_high_speed,
@@ -383,6 +387,8 @@ UCHAR                           *memory;
             while (endpoints_pool < (device -> ux_slave_device_endpoints_pool + endpoints_found))
             {
 
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 0
+
                 /* Obtain some memory.  */
                 endpoints_pool -> ux_slave_endpoint_transfer_request.ux_slave_transfer_request_data_pointer = 
                                 _ux_utility_memory_allocate(UX_NO_ALIGN, UX_CACHE_SAFE_MEMORY, UX_SLAVE_REQUEST_DATA_MAX_LENGTH);
@@ -393,7 +399,8 @@ UCHAR                           *memory;
                     status = UX_MEMORY_INSUFFICIENT;
                     break;
                 }
-        
+#endif
+
                 /* Create the semaphore for the endpoint.  */
                 status =  _ux_device_semaphore_create(&endpoints_pool -> ux_slave_endpoint_transfer_request.ux_slave_transfer_request_semaphore,
                                                     "ux_transfer_request_semaphore", 0);
@@ -432,9 +439,12 @@ UCHAR                           *memory;
             if (_ux_device_semaphore_created(&endpoints_pool -> ux_slave_endpoint_transfer_request.ux_slave_transfer_request_semaphore))
                 _ux_device_semaphore_delete(&endpoints_pool -> ux_slave_endpoint_transfer_request.ux_slave_transfer_request_semaphore);
 
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 0
+
             /* Free ux_slave_transfer_request_data_pointer buffer.  */
             if (endpoints_pool -> ux_slave_endpoint_transfer_request.ux_slave_transfer_request_data_pointer)
                 _ux_utility_memory_free(endpoints_pool -> ux_slave_endpoint_transfer_request.ux_slave_transfer_request_data_pointer);
+#endif
 
             /* Move to previous endpoint.  */
             endpoints_pool --;
@@ -458,3 +468,64 @@ UCHAR                           *memory;
     return(status);
 }
 
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _uxe_device_stack_initialize                        PORTABLE C      */
+/*                                                           6.3.0        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks errors in device stack initialization          */
+/*    function call.                                                      */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    class_name                            Name of class                 */
+/*    class_function_entry                  Class entry function          */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    None                                                                */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_device_stack_initialize           Device Stack Initialize       */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Application                                                         */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  10-31-2023     Chaoqiong Xiao           Initial Version 6.3.0         */
+/*                                                                        */
+/**************************************************************************/
+UINT  _uxe_device_stack_initialize(UCHAR * device_framework_high_speed, ULONG device_framework_length_high_speed,
+                                  UCHAR * device_framework_full_speed, ULONG device_framework_length_full_speed,
+                                  UCHAR * string_framework, ULONG string_framework_length,
+                                  UCHAR * language_id_framework, ULONG language_id_framework_length,
+                                  UINT (*ux_system_slave_change_function)(ULONG))
+{
+
+    /* Sanity checks.  */
+    if (((device_framework_high_speed == UX_NULL) && (device_framework_length_high_speed != 0)) ||
+        (device_framework_full_speed == UX_NULL) || (device_framework_length_full_speed == 0) ||
+        ((string_framework == UX_NULL) && (string_framework_length != 0)) ||
+        (language_id_framework == UX_NULL) || (language_id_framework_length == 0))
+        return(UX_INVALID_PARAMETER);
+
+    /* Invoke stack initialize function.  */
+    return(_ux_device_stack_initialize(device_framework_high_speed, device_framework_length_high_speed,
+                                       device_framework_full_speed, device_framework_length_full_speed,
+                                       string_framework, string_framework_length,
+                                       language_id_framework, language_id_framework_length,
+                                       ux_system_slave_change_function));
+}

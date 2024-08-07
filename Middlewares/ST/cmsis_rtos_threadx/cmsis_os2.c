@@ -267,11 +267,13 @@ static osStatus_t MemInit(void)
 /* Initialize the Heap BytePool address */
 #ifdef USE_DYNAMIC_MEMORY_ALLOCATION
   unused_memory = (CHAR *)_tx_initialize_unused_memory;
-#elif  USE_MEMORY_POOL_ALLOCATION
-  static CHAR freememStack[RTOS2_BYTE_POOL_STACK_SIZE + RTOS2_INTERNAL_BYTE_POOL_SIZE];
-  static CHAR freememHeap[RTOS2_BYTE_POOL_HEAP_SIZE + RTOS2_INTERNAL_BYTE_POOL_SIZE];
-  unused_memory_Stack = (CHAR *)freememStack;
-  unused_memory_Heap = (CHAR *)freememHeap;
+#else
+  #ifdef USE_MEMORY_POOL_ALLOCATION
+    static CHAR freememStack[RTOS2_BYTE_POOL_STACK_SIZE + RTOS2_INTERNAL_BYTE_POOL_SIZE];
+    static CHAR freememHeap[RTOS2_BYTE_POOL_HEAP_SIZE + RTOS2_INTERNAL_BYTE_POOL_SIZE];
+    unused_memory_Stack = (CHAR *)freememStack;
+    unused_memory_Heap = (CHAR *)freememHeap;
+  #endif
 #endif
 
 #ifdef USE_DYNAMIC_MEMORY_ALLOCATION

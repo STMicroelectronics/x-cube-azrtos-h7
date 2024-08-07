@@ -6,6 +6,26 @@
   *          LevelX low level drivers for STM32 devices.
   ******************************************************************************
   */
+## V3.1.0 / 17-May-2024 ###
+=================================
+Main changes
+-------------
+- Make the NOR flash base address start from a custom offset
+ + lx_stm32_ospi_driver.c
+ + lx_stm32_qspi_driver.c
+ + template/lx_stm32_ospi_driver.h
+ + template/lx_stm32_qspi_driver.h
+
+- Fix issues when calling fx_media_format() followed by fx_media_open()
+  + lx_stm32_ospi_driver.c
+  + lx_stm32_qspi_driver.c
+
+- Add missing PHYSICAL_PAGES_PER_BLOCK define in NAND driver header
+  + template/lx_stm32_nand_driver.h
+
+Dependencies:
+-------------
+- Azure RTOS LevelX V6.2.1 or higher
 
 ### V3.0.0 / 17-November-2023 ###
 =================================

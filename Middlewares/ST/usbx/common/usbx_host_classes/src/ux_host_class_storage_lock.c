@@ -158,4 +158,54 @@ UX_DEVICE       *device;
     UX_RESTORE
     return(UX_SUCCESS);
 }
+
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _uxe_host_class_storage_lock                         PORTABLE C     */
+/*                                                           6.3.0        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks errors in storage lock function call.          */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    storage                               Pointer to storage to operate */
+/*    wait                                  Wait option                   */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    Status                                                              */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_host_class_storage_lock           Lock storage                  */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Application                                                         */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  10-31-2023     Chaoqiong Xiao           Initial Version 6.3.0         */
+/*                                                                        */
+/**************************************************************************/
+UINT    _uxe_host_class_storage_lock(UX_HOST_CLASS_STORAGE *storage, ULONG wait)
+{
+
+    /* Sanity check.  */
+    if (storage == UX_NULL)
+        return(UX_INVALID_PARAMETER);
+
+    /* Invoke storage lock function.  */
+    return(_ux_host_class_storage_lock(storage, wait));
+}
 #endif

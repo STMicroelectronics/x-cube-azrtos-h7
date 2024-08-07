@@ -41,7 +41,7 @@ UCHAR _ux_system_slave_class_storage_product_serial[] =                     "123
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_device_class_storage_initialize                 PORTABLE C      */
-/*                                                           6.1.10       */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -82,6 +82,10 @@ UCHAR _ux_system_slave_class_storage_product_serial[] =                     "123
 /*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            added standalone support,   */
 /*                                            resulting in version 6.1.10 */
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added a new mode to manage  */
+/*                                            endpoint buffer in classes, */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_device_class_storage_initialize(UX_SLAVE_CLASS_COMMAND *command)
@@ -112,30 +116,41 @@ ULONG                                   lun_index;
     if (storage == UX_NULL)
         return(UX_MEMORY_INSUFFICIENT);
 
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+
+    /* Allocate bulk endpoint buffer.  */
+    UX_ASSERT(!UX_DEVICE_CLASS_STORAGE_ENDPOINT_BUFFER_SIZE_CALC_OVERFLOW);
+    storage -> ux_device_class_storage_endpoint_buffer = _ux_utility_memory_allocate(UX_NO_ALIGN,
+                UX_CACHE_SAFE_MEMORY, UX_DEVICE_CLASS_STORAGE_ENDPOINT_BUFFER_SIZE);
+#else
+    status = UX_SUCCESS;
+#endif
+
 #if !defined(UX_DEVICE_STANDALONE)
 
     /* Allocate some memory for the thread stack. */
-    class_inst -> ux_slave_class_thread_stack = _ux_utility_memory_allocate(UX_NO_ALIGN, UX_REGULAR_MEMORY, UX_THREAD_STACK_SIZE);
+    if (status == UX_SUCCESS)
+    {
+        class_inst -> ux_slave_class_thread_stack = _ux_utility_memory_allocate(UX_NO_ALIGN, UX_REGULAR_MEMORY, UX_THREAD_STACK_SIZE);
 
-    /* If it's OK, create thread.  */
-    if (class_inst -> ux_slave_class_thread_stack != UX_NULL)
+        /* If it's OK, create thread.  */
+        if (class_inst -> ux_slave_class_thread_stack != UX_NULL)
 
-        /* This instance needs to be running in a different thread. So start
-           a new thread. We pass a pointer to the class to the new thread.  This thread
-           does not start until we have a instance of the class. */
-        status =  _ux_device_thread_create(&class_inst -> ux_slave_class_thread, "ux_slave_storage_thread",
-                    _ux_device_class_storage_thread,
-                    (ULONG) (ALIGN_TYPE) class_inst, (VOID *) class_inst -> ux_slave_class_thread_stack,
-                    UX_THREAD_STACK_SIZE, UX_THREAD_PRIORITY_CLASS,
-                    UX_THREAD_PRIORITY_CLASS, UX_NO_TIME_SLICE, UX_DONT_START);
-    else
-        status = UX_MEMORY_INSUFFICIENT;
+            /* This instance needs to be running in a different thread. So start
+            a new thread. We pass a pointer to the class to the new thread.  This thread
+            does not start until we have a instance of the class. */
+            status =  _ux_device_thread_create(&class_inst -> ux_slave_class_thread, "ux_slave_storage_thread",
+                        _ux_device_class_storage_thread,
+                        (ULONG) (ALIGN_TYPE) class_inst, (VOID *) class_inst -> ux_slave_class_thread_stack,
+                        UX_THREAD_STACK_SIZE, UX_THREAD_PRIORITY_CLASS,
+                        UX_THREAD_PRIORITY_CLASS, UX_NO_TIME_SLICE, UX_DONT_START);
+        else
+            status = UX_MEMORY_INSUFFICIENT;
+    }
 #else
 
     /* Save tasks run entry.  */
     class_inst -> ux_slave_class_task_function = _ux_device_class_storage_tasks_run;
-
-    status = UX_SUCCESS;
 #endif
 
     /* If thread resources allocated, go on.  */
@@ -216,6 +231,11 @@ ULONG                                   lun_index;
         _ux_utility_memory_free(&class_inst -> ux_slave_class_thread_stack);
 #endif
 
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+    if (storage -> ux_device_class_storage_endpoint_buffer != UX_NULL)
+        _ux_utility_memory_free(storage -> ux_device_class_storage_endpoint_buffer);
+#endif
+
     /* Free instance.  */
     _ux_utility_memory_free(storage);
 
@@ -223,3 +243,74 @@ ULONG                                   lun_index;
     return(status);
 }
 
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _uxe_device_class_storage_initialize                PORTABLE C      */
+/*                                                           6.3.0        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks errors in storage initialization function call.*/
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    command                               Pointer to storage command    */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    Completion Status                                                   */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_device_class_storage_initialize     Initialize storage instance */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Application                                                         */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  10-31-2023     Chaoqiong Xiao           Initial Version 6.3.0         */
+/*                                                                        */
+/**************************************************************************/
+UINT  _uxe_device_class_storage_initialize(UX_SLAVE_CLASS_COMMAND *command)
+{
+
+UX_SLAVE_CLASS_STORAGE_PARAMETER        *storage_parameter;
+UINT                                    i;
+
+    /* Get the pointer to the application parameters for the storage class.  */
+    storage_parameter =  command -> ux_slave_class_command_parameter;
+
+    /* Sanity checks.  */
+    if (storage_parameter -> ux_slave_class_storage_parameter_number_lun > UX_MAX_SLAVE_LUN)
+        return(UX_INVALID_PARAMETER);
+    for (i = 0; i < storage_parameter -> ux_slave_class_storage_parameter_number_lun; i ++)
+    {
+        if ((storage_parameter -> ux_slave_class_storage_parameter_lun[i].
+                            ux_slave_class_storage_media_read == UX_NULL) ||
+            (storage_parameter -> ux_slave_class_storage_parameter_lun[i].
+                            ux_slave_class_storage_media_write == UX_NULL) ||
+            (storage_parameter -> ux_slave_class_storage_parameter_lun[i].
+                            ux_slave_class_storage_media_status == UX_NULL)
+#if defined(UX_SLAVE_CLASS_STORAGE_INCLUDE_MMC)
+            || (storage_parameter -> ux_slave_class_storage_parameter_lun[i].
+                            ux_slave_class_storage_media_notification == UX_NULL)
+#endif
+           )
+        {
+            return(UX_INVALID_PARAMETER);
+        }
+    }
+
+    /* Invoke storage initialize function.  */
+    return(_ux_device_class_storage_initialize(command));
+}

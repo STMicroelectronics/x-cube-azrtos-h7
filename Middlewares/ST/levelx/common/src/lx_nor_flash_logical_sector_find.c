@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nor_flash_logical_sector_find                   PORTABLE C      */ 
-/*                                                           6.1.7        */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -70,6 +70,7 @@
 /*  CALLS                                                                 */ 
 /*                                                                        */ 
 /*    _lx_nor_flash_driver_read             Driver flash sector read      */ 
+/*    _lx_nor_flash_driver_write            Driver flash sector write     */ 
 /*    _lx_nor_flash_system_error            Internal system error handler */ 
 /*                                                                        */ 
 /*  CALLED BY                                                             */ 
@@ -85,6 +86,12 @@
 /*                                            resulting in version 6.1    */
 /*  06-02-2021     Bhupendra Naphade        Modified comment(s),          */
 /*                                            resulting in version 6.1.7  */
+/*  10-31-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            added mapping bitmap cache, */
+/*                                            added obsolete count cache, */
+/*                                            optimized full obsoleted    */
+/*                                            block searching logic,      */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nor_flash_logical_sector_find(LX_NOR_FLASH *nor_flash, ULONG logical_sector, ULONG superceded_check, ULONG **physical_sector_map_entry, ULONG **physical_sector_address)
@@ -102,7 +109,10 @@ ULONG                               i, j;
 ULONG                               search_start;
 LX_NOR_SECTOR_MAPPING_CACHE_ENTRY   *sector_mapping_cache_entry_ptr = LX_NULL;
 LX_NOR_SECTOR_MAPPING_CACHE_ENTRY   temp_sector_mapping_cache_entry;
-#ifndef LX_DIRECT_READ
+#ifndef LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
+ULONG                               valid_sector_found;
+#endif
+#if !defined(LX_DIRECT_READ)  || !defined(LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE)
 UINT                                status;
 #endif
 
@@ -118,6 +128,24 @@ UINT                                status;
         /* No mapped sector so nothing can be found!.  */
         return(LX_SECTOR_NOT_FOUND);
     }
+    
+#ifndef LX_NOR_DISABLE_EXTENDED_CACHE
+#ifdef LX_NOR_ENABLE_MAPPING_BITMAP
+
+    /* Determine if the logical sector is in the range of mapping bitmap cache.  */
+    if (logical_sector < nor_flash -> lx_nor_flash_extended_cache_mapping_bitmap_max_logical_sector)
+    {
+
+        /* Determine if the logical sector is mapped.  */
+        if ((nor_flash -> lx_nor_flash_extended_cache_mapping_bitmap[logical_sector >> 5] & (ULONG)(1 << (logical_sector & 31))) == 0)
+        {
+            
+            /* Not mapped, return not found.  */
+            return(LX_SECTOR_NOT_FOUND);
+        }
+    }
+#endif
+#endif
 
     /* Determine if the sector mapping cache is enabled.  */
     if (nor_flash -> lx_nor_flash_sector_mapping_cache_enabled)
@@ -223,6 +251,36 @@ UINT                                status;
     /* Loop through the blocks to attempt to find the mapped logical sector.  */
     while (total_blocks--) 
     {
+        
+#ifdef LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
+        /* Determine if the obsolete sector count is available in the cache.  */
+        if (i < nor_flash -> lx_nor_flash_extended_cache_obsolete_count_max_block)
+        {
+
+            /* Check if the block contains obsolete sectors only.  */
+            if ((ULONG)nor_flash -> lx_nor_flash_extended_cache_obsolete_count[i] == nor_flash -> lx_nor_flash_physical_sectors_per_block)
+            {
+
+                /* Move to the next block.  */
+                i++;
+                
+                /* Determine if we have wrapped.  */
+                if (i >= nor_flash -> lx_nor_flash_total_blocks)
+                {
+                    
+                    /* Yes, we have wrapped, set to block 0.  */
+                    i =  0;
+                }
+                
+                /* Start at the first sector in the next block.  */
+                j =  0;
+                
+                /* No point in looking further into this block, just continue the loop.  */
+                continue;            
+
+            }
+        }
+#endif
 
         /* Setup the block word pointer to the first word of the search block.  */
         block_word_ptr =  (nor_flash -> lx_nor_flash_base_address + (i * nor_flash -> lx_nor_flash_words_per_block));
@@ -249,52 +307,68 @@ UINT                                status;
             return(status);
         }
 #endif
+        
+        /* Is the value valid?  */
+        if (min_logical_sector != LX_ALL_ONES)
+        {
 #ifdef LX_DIRECT_READ
         
-        /* Read the word directly.  */
-        max_logical_sector =  *(block_word_ptr + LX_NOR_FLASH_MAX_LOGICAL_SECTOR_OFFSET);
+            /* Read the word directly.  */
+            max_logical_sector =  *(block_word_ptr + LX_NOR_FLASH_MAX_LOGICAL_SECTOR_OFFSET);
 #else
-        status =  _lx_nor_flash_driver_read(nor_flash, block_word_ptr + LX_NOR_FLASH_MAX_LOGICAL_SECTOR_OFFSET, &max_logical_sector, 1);
+            status =  _lx_nor_flash_driver_read(nor_flash, block_word_ptr + LX_NOR_FLASH_MAX_LOGICAL_SECTOR_OFFSET, &max_logical_sector, 1);
 
-        /* Check for an error from flash driver. Drivers should never return an error..  */
-        if (status)
-        {
-        
-            /* Call system error handler.  */
-            _lx_nor_flash_system_error(nor_flash, status);
+            /* Check for an error from flash driver. Drivers should never return an error..  */
+            if (status)
+            {
+            
+                /* Call system error handler.  */
+                _lx_nor_flash_system_error(nor_flash, status);
 
-            /* Return the error.  */
-            return(status);
-        }
+                /* Return the error.  */
+                return(status);
+            }
 #endif
 
-        /* Are the values valid?  */
-        if ((min_logical_sector != LX_ALL_ONES) && (max_logical_sector != LX_ALL_ONES))
-        {
-
-            /* Now let's check to see if the search sector is within this range.  */
-            if ((logical_sector < min_logical_sector) || (logical_sector > max_logical_sector))
+            /* Is the value valid?  */
+            if (max_logical_sector != LX_ALL_ONES)
             {
 
-                /* Move to the next block.  */
-                i++;
-      
-                /* Determine if we have wrapped.  */
-                if (i >= nor_flash -> lx_nor_flash_total_blocks)
+                /* Now let's check to see if the search sector is within this range.  */
+                if ((logical_sector < min_logical_sector) || (logical_sector > max_logical_sector))
                 {
-        
-                    /* Yes, we have wrapped, set to block 0.  */
-                    i =  0;
-                }
 
-                /* Start at the first sector in the next block.  */
-                j =  0;
-              
-                /* No point in looking further into this block, just continue the loop.  */
-                continue;            
+                    /* Move to the next block.  */
+                    i++;
+          
+                    /* Determine if we have wrapped.  */
+                    if (i >= nor_flash -> lx_nor_flash_total_blocks)
+                    {
+            
+                        /* Yes, we have wrapped, set to block 0.  */
+                        i =  0;
+                    }
+
+                    /* Start at the first sector in the next block.  */
+                    j =  0;
+                  
+                    /* No point in looking further into this block, just continue the loop.  */
+                    continue;            
+                }
             }
         }
-       
+        else
+        {
+
+            /* Set the max logical sector to all ones.  */
+            max_logical_sector = LX_ALL_ONES;
+        }
+#ifndef LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
+        
+        /* Clear the valid sector found flag.  */
+        valid_sector_found = LX_FALSE;
+#endif
+
         /* Setup the total number of sectors.  */
         total_sectors =  nor_flash -> lx_nor_flash_physical_sectors_per_block;
         
@@ -440,6 +514,11 @@ UINT                                status;
                         return(LX_SUCCESS);                     
                     }
                 }
+#ifndef LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
+
+                /* Set the valid sector found flag.  */
+                valid_sector_found = LX_TRUE;
+#endif
             }
 
             /* Move to the next list entry.  */
@@ -453,6 +532,29 @@ UINT                                status;
                 j =  0;
             }
         }
+#ifndef LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
+        /* Check if the block contains no valid sectors.  */
+        if ((valid_sector_found == LX_FALSE) && (max_logical_sector != LX_ALL_ONES))
+        {
+
+                /* Clear max logical sector to indicate sectors are all obsoleted.  */
+                max_logical_sector = 0;
+
+                /* Write the max logical sector to the block header.  */
+                status =  _lx_nor_flash_driver_write(nor_flash, block_word_ptr + LX_NOR_FLASH_MAX_LOGICAL_SECTOR_OFFSET, &max_logical_sector, 1);
+                
+                /* Check for an error from flash driver. Drivers should never return an error..  */
+                if (status)
+                {
+                    
+                    /* Call system error handler.  */
+                    _lx_nor_flash_system_error(nor_flash, status);
+                    
+                    /* Return the error.  */
+                    return(status);
+                }
+        }
+#endif
 
         /* Determine if there are any more mapped sectors.  */
         if (mapped_sectors == 0)

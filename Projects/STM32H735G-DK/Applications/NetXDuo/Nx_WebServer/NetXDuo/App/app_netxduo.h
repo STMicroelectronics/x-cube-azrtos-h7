@@ -110,9 +110,9 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr);
 /* SD Driver information pointer */
 #define SD_DRIVER_INFO_POINTER           0
 
-#define NULL_IP_ADDRESS                  IP_ADDRESS(0,0,0,0)
+#define NULL_ADDRESS                     IP_ADDRESS(0,0,0,0)
 
-#define NX_APP_CABLE_CONNECTION_CHECK_PERIOD  (6 * NX_IP_PERIODIC_RATE)
+#define NX_APP_CABLE_CONNECTION_CHECK_PERIOD  (1 * NX_IP_PERIODIC_RATE)
 /* USER CODE END PD */
 
 #define NX_APP_DEFAULT_TIMEOUT               (10 * NX_IP_PERIODIC_RATE)

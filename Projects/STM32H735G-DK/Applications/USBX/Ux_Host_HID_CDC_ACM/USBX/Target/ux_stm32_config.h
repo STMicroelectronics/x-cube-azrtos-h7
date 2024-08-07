@@ -30,7 +30,7 @@ extern "C" {
 
 /* USER CODE BEGIN Private Includes */
 
-/* USER CODE BEGIN Private Includes */
+/* USER CODE END Private Includes */
 
 /* Private defines -----------------------------------------------------------*/
 

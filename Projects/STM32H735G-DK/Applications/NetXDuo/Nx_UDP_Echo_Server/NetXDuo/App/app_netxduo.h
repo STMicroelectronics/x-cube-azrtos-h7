@@ -84,9 +84,12 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr);
 #define QUEUE_MAX_SIZE                        512
 
 #define LINK_PRIORITY                         11
+
+#define NULL_ADDRESS                          0
+
 #define DEFAULT_PORT                          6000
 
-#define NX_APP_CABLE_CONNECTION_CHECK_PERIOD  (6 * NX_IP_PERIODIC_RATE)
+#define NX_APP_CABLE_CONNECTION_CHECK_PERIOD  (1 * NX_IP_PERIODIC_RATE)
 /* USER CODE END PD */
 
 #define NX_APP_DEFAULT_TIMEOUT               (10 * NX_IP_PERIODIC_RATE)

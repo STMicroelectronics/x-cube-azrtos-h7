@@ -2493,6 +2493,9 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_ipv6_util.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_link.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_md5.c</name>
                 </file>
                 <file>
@@ -2566,6 +2569,9 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_packet_transmit_release.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_packet_vlan_priority_set.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_rarp_disable.c</name>
@@ -2814,6 +2820,9 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_socket_transmit_queue_flush.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_socket_vlan_priority_set.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_tcp_socket_window_update_notify_set.c</name>
                 </file>
                 <file>
@@ -2884,6 +2893,9 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_udp_socket_unbind.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_udp_socket_vlan_priority_set.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nx_udp_source_extract.c</name>
@@ -3330,6 +3342,9 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxe_packet_transmit_release.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxe_packet_vlan_priority_set.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxe_rarp_disable.c</name>
                 </file>
                 <file>
@@ -3432,6 +3447,9 @@
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxe_tcp_socket_transmit_configure.c</name>
                 </file>
                 <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxe_tcp_socket_vlan_priority_set.c</name>
+                </file>
+                <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxe_tcp_socket_window_update_notify_set.c</name>
                 </file>
                 <file>
@@ -3484,6 +3502,9 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxe_udp_socket_unbind.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxe_udp_socket_vlan_priority_set.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\..\..\..\..\..\Middlewares\ST\netxduo\common\src\nxe_udp_source_extract.c</name>

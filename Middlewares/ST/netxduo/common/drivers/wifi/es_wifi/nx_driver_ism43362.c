@@ -11,27 +11,30 @@
 
 
 /**************************************************************************/
-/**************************************************************************/
-/**                                                                       */
-/** NetX Component                                                        */
-/**                                                                       */
-/**   ES-WiFi driver for STM32 family of microprocessors                  */
-/**                                                                       */
-/**************************************************************************/
+/*                                                                        */
+/*                                                                        */
+/*  NetX Component                                                        */
+/*                                                                        */
+/*   ES-WiFi driver for the STM32 family of microprocessors               */
+/*                                                                        */
+/*                                                                        */
 /**************************************************************************/
 
-
-/* Include necessary system files.  */
-#include <stdio.h>
-#include <inttypes.h>
 #include <stdbool.h>
+#include <stddef.h>
+#include <inttypes.h>
 
-/* Indicate that driver source is being compiled.  */
+#include "nx_api.h"
+#include "es_wifi_conf.h"
+
+
+#if !defined(NX_DEBUG_DRIVER_SOURCE_LOG)
+#define NX_DEBUG_DRIVER_SOURCE_LOG(...)   /* ; */
+#define REMOVE_DEBUG_FUNC
+#endif /*NX_DEBUG_DRIVER_SOURCE_LOG*/
 
 #include "nx_driver_ism43362.h"
 #include "wifi.h"
-#include "main.h" /* Inherit some hardware platform specific declarations. */
-
 
 #ifndef NX_ENABLE_TCPIP_OFFLOAD
 #error "NX_ENABLE_TCPIP_OFFLOAD must be defined to use this driver"
@@ -48,9 +51,6 @@
 #ifndef NX_DRIVER_RECEIVE_QUEUE_SIZE
 #define NX_DRIVER_RECEIVE_QUEUE_SIZE            10
 #endif /* NX_DRIVER_RECEIVE_QUEUE_SIZE */
-
-#define NX_DRIVER_THREAD_NAME                   "Nx Driver Thread"
-
 
 #ifndef NX_DRIVER_STACK_SIZE
 #define NX_DRIVER_STACK_SIZE                    1024
@@ -116,64 +116,65 @@ typedef struct NX_DRIVER_SOCKET_STRUCT
 
 } NX_DRIVER_SOCKET;
 
+/* Private variables ---------------------------------------------------------*/
 static NX_DRIVER_INFORMATION nx_driver_information;
 static NX_DRIVER_SOCKET nx_driver_sockets[NX_DRIVER_SOCKETS_MAXIMUM];
 static TX_THREAD nx_driver_thread;
+static CHAR NX_DRIVER_THREAD_NAME[] = "Nx Driver Thread";
+
 static UCHAR nx_driver_thread_stack[NX_DRIVER_STACK_SIZE];
 
-/* Define the routines for processing each driver entry request.  The contents of these routines will change with
-   each driver. However, the main driver entry function will not change, except for the entry function name.  */
+/* Define the routines for processing each driver entry request. The contents of these routines will change with
+   each driver. However, the main driver entry function will not change, except for the entry function name. */
 
-static VOID         nx_driver_interface_attach(NX_IP_DRIVER *driver_req_ptr);
-static VOID         nx_driver_initialize(NX_IP_DRIVER *driver_req_ptr);
-static VOID         nx_driver_enable(NX_IP_DRIVER *driver_req_ptr);
-static VOID         nx_driver_disable(NX_IP_DRIVER *driver_req_ptr);
-static VOID         nx_driver_multicast_join(NX_IP_DRIVER *driver_req_ptr);
-static VOID         nx_driver_multicast_leave(NX_IP_DRIVER *driver_req_ptr);
-static VOID         nx_driver_get_status(NX_IP_DRIVER *driver_req_ptr);
+static VOID nx_driver_interface_attach(NX_IP_DRIVER *driver_req_ptr);
+static VOID nx_driver_initialize(NX_IP_DRIVER *driver_req_ptr);
+static VOID nx_driver_enable(NX_IP_DRIVER *driver_req_ptr);
+static VOID nx_driver_disable(NX_IP_DRIVER *driver_req_ptr);
+static VOID nx_driver_multicast_join(NX_IP_DRIVER *driver_req_ptr);
+static VOID nx_driver_multicast_leave(NX_IP_DRIVER *driver_req_ptr);
+static VOID nx_driver_get_status(NX_IP_DRIVER *driver_req_ptr);
 #ifdef NX_ENABLE_INTERFACE_CAPABILITY
-static VOID         nx_driver_capability_get(NX_IP_DRIVER *driver_req_ptr);
-static VOID         nx_driver_capability_set(NX_IP_DRIVER *driver_req_ptr);
+static VOID nx_driver_capability_get(NX_IP_DRIVER *driver_req_ptr);
+static VOID nx_driver_capability_set(NX_IP_DRIVER *driver_req_ptr);
 #endif /* NX_ENABLE_INTERFACE_CAPABILITY */
 #ifdef NX_DRIVER_ENABLE_DEFERRED
-static VOID         nx_driver_deferred_processing(NX_IP_DRIVER *driver_req_ptr);
+static VOID nx_driver_deferred_processing(NX_IP_DRIVER *driver_req_ptr);
 #endif /* NX_DRIVER_ENABLE_DEFERRED */
-static VOID         nx_driver_thread_entry(ULONG thread_input);
-static UINT         nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
-                                            struct NX_INTERFACE_STRUCT *interface_ptr,
-                                            VOID *socket_ptr, UINT operation, NX_PACKET *packet_ptr,
-                                            NXD_ADDRESS *local_ip, NXD_ADDRESS *remote_ip,
-                                            UINT local_port, UINT *remote_port, UINT wait_option);
+static VOID nx_driver_thread_entry(ULONG thread_input);
+static UINT nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
+                                    struct NX_INTERFACE_STRUCT *interface_ptr,
+                                    VOID *socket_ptr, UINT operation, NX_PACKET *packet_ptr,
+                                    NXD_ADDRESS *local_ip, NXD_ADDRESS *remote_ip,
+                                    UINT local_port, UINT *remote_port, UINT wait_option);
 
 
 /* Define the pointers for the hardware implementation of this driver. */
-static UINT         (*nx_driver_hardware_initialize)(NX_IP_DRIVER *driver_req_ptr)      = NULL;
-static UINT         (*nx_driver_hardware_enable)(NX_IP_DRIVER *driver_req_ptr)          = NULL;
-static UINT         (*nx_driver_hardware_disable)(NX_IP_DRIVER *driver_req_ptr)         = NULL;
-/*static UINT       (*nx_driver_hardware_packet_send)(NX_PACKET *packet_ptr)            = NULL;*/
-static UINT         (*nx_driver_hardware_multicast_join)(NX_IP_DRIVER *driver_req_ptr)  = NULL;
-static UINT         (*nx_driver_hardware_multicast_leave)(NX_IP_DRIVER *driver_req_ptr) = NULL;
-static UINT         (*nx_driver_hardware_get_status)(NX_IP_DRIVER *driver_req_ptr)      = NULL;
-/* static VOID         (*nx_driver_hardware_packet_transmitted)(VOID)                      = NULL;*/
-/* static VOID         (*nx_driver_hardware_packet_received)(VOID)                         = NULL;*/
+static UINT(*nx_driver_hardware_initialize)(NX_IP_DRIVER *driver_req_ptr)      = NULL;
+static UINT(*nx_driver_hardware_enable)(NX_IP_DRIVER *driver_req_ptr)          = NULL;
+static UINT(*nx_driver_hardware_disable)(NX_IP_DRIVER *driver_req_ptr)         = NULL;
+static UINT(*nx_driver_hardware_multicast_join)(NX_IP_DRIVER *driver_req_ptr)  = NULL;
+static UINT(*nx_driver_hardware_multicast_leave)(NX_IP_DRIVER *driver_req_ptr) = NULL;
+static UINT(*nx_driver_hardware_get_status)(NX_IP_DRIVER *driver_req_ptr)      = NULL;
 #ifdef NX_ENABLE_INTERFACE_CAPABILITY
-static UINT         (*nx_driver_hardware_capability_set)(NX_IP_DRIVER *driver_req_ptr)  = NULL;
+static UINT(*nx_driver_hardware_capability_set)(NX_IP_DRIVER *driver_req_ptr)  = NULL;
 #endif /* NX_ENABLE_INTERFACE_CAPABILITY */
 
 
 /* Define the prototypes for the hardware implementation of this driver. */
 /* The contents of these routines are driver-specific.                   */
-static UINT         _nx_driver_hardware_initialize(NX_IP_DRIVER *driver_req_ptr);
-static UINT         _nx_driver_hardware_enable(NX_IP_DRIVER *driver_req_ptr);
-static UINT         _nx_driver_hardware_disable(NX_IP_DRIVER *driver_req_ptr);
-static UINT         _nx_driver_hardware_get_status(NX_IP_DRIVER *driver_req_ptr);
+static UINT _nx_driver_hardware_initialize(NX_IP_DRIVER *driver_req_ptr);
+static UINT _nx_driver_hardware_enable(NX_IP_DRIVER *driver_req_ptr);
+static UINT _nx_driver_hardware_disable(NX_IP_DRIVER *driver_req_ptr);
+static UINT _nx_driver_hardware_get_status(NX_IP_DRIVER *driver_req_ptr);
 #ifdef NX_ENABLE_INTERFACE_CAPABILITY
-static UINT         _nx_driver_hardware_capability_set(NX_IP_DRIVER *driver_req_ptr);
+static UINT _nx_driver_hardware_capability_set(NX_IP_DRIVER *driver_req_ptr);
 #endif /* NX_ENABLE_INTERFACE_CAPABILITY */
 
-#ifdef NX_DEBUG
+#if !defined(REMOVE_DEBUG_FUNC)
 static const char *nx_driver_offload_operation_to_string(UINT operation);
-#endif /* NX_DEBUG */
+static const char *nx_driver_operation_to_string(UINT operation);
+#endif /* REMOVE_DEBUG_FUNC */
 
 /**************************************************************************/
 /*                                                                        */
@@ -227,12 +228,8 @@ static const char *nx_driver_offload_operation_to_string(UINT operation);
 /**************************************************************************/
 VOID nx_driver_ism43362_entry(NX_IP_DRIVER *driver_req_ptr)
 {
-#ifdef NX_DEBUG
-  NX_IP        *ip_ptr;
-#endif /* NX_DEBUG */
-
-  static bool start = false;
-  if (!start)
+  static bool started = false;
+  if (!started)
   {
     nx_driver_hardware_initialize         = _nx_driver_hardware_initialize;
     nx_driver_hardware_enable             = _nx_driver_hardware_enable;
@@ -242,13 +239,11 @@ VOID nx_driver_ism43362_entry(NX_IP_DRIVER *driver_req_ptr)
     nx_driver_hardware_capability_set     = _nx_driver_hardware_capability_set;
 #endif /* NX_ENABLE_INTERFACE_CAPABILITY */
 
-    start = true;
+    started = true;
   }
 
-#ifdef NX_DEBUG
-  /* Setup the IP pointer from the driver request.  */
-  ip_ptr =  driver_req_ptr -> nx_ip_driver_ptr;
-#endif /* NX_DEBUG */
+  NX_DEBUG_DRIVER_SOURCE_LOG("\n[%06" PRIu32 "] > %s\n", HAL_GetTick(),
+                             nx_driver_operation_to_string(driver_req_ptr -> nx_ip_driver_command));
 
   /* Default to successful return.  */
   driver_req_ptr -> nx_ip_driver_status =  NX_SUCCESS;
@@ -266,10 +261,10 @@ VOID nx_driver_ism43362_entry(NX_IP_DRIVER *driver_req_ptr)
 
     case NX_LINK_INITIALIZE:
     {
-#ifdef NX_DEBUG
-      printf("\nNetX WiFi Driver Initialization - \"%s\"\n", ip_ptr -> nx_ip_name);
-      printf("  IP Address = %08"PRIX32"\n", (uint32_t)ip_ptr -> nx_ip_address);
-#endif /* NX_DEBUG */
+      NX_DEBUG_DRIVER_SOURCE_LOG("\nNetX WiFi Driver Initialization - \"%s\"\n",
+                                 driver_req_ptr -> nx_ip_driver_ptr -> nx_ip_name);
+      NX_DEBUG_DRIVER_SOURCE_LOG("  IP Address = %08" PRIX32 "\n",
+                                 (uint32_t)driver_req_ptr -> nx_ip_driver_ptr -> nx_ip_address);
 
       /* Process link initialize requests.  */
       nx_driver_initialize(driver_req_ptr);
@@ -280,9 +275,9 @@ VOID nx_driver_ism43362_entry(NX_IP_DRIVER *driver_req_ptr)
     {
       /* Process link enable requests.  */
       nx_driver_enable(driver_req_ptr);
-#ifdef NX_DEBUG
-      printf("\nNetX WiFi Driver Link Enabled - \"%s\"\n", ip_ptr -> nx_ip_name);
-#endif /* NX_DEBUG */
+
+      NX_DEBUG_DRIVER_SOURCE_LOG("\nNetX WiFi Driver Link Enabled - \"%s\"\n",
+                                 driver_req_ptr -> nx_ip_driver_ptr -> nx_ip_name);
       break;
     }
 
@@ -291,9 +286,8 @@ VOID nx_driver_ism43362_entry(NX_IP_DRIVER *driver_req_ptr)
       /* Process link disable requests.  */
       nx_driver_disable(driver_req_ptr);
 
-#ifdef NX_DEBUG
-      printf("\nNetX WiFi Driver Link Disabled - \"%s\"\n", ip_ptr -> nx_ip_name);
-#endif /* NX_DEBUG */
+      NX_DEBUG_DRIVER_SOURCE_LOG("\nNetX WiFi Driver Link Disabled - \"%s\"\n",
+                                 driver_req_ptr -> nx_ip_driver_ptr -> nx_ip_name);
       break;
     }
 
@@ -367,9 +361,8 @@ VOID nx_driver_ism43362_entry(NX_IP_DRIVER *driver_req_ptr)
       /* Default to successful return.  */
       driver_req_ptr -> nx_ip_driver_status =  NX_DRIVER_ERROR;
 
-#ifdef NX_DEBUG
-      printf("\nNetX WiFi Driver Received invalid request - \"%s\"\n", ip_ptr -> nx_ip_name);
-#endif /* NX_DEBUG */
+      NX_DEBUG_DRIVER_SOURCE_LOG("\nNetX WiFi Driver Received invalid request - \"%s\"\n",
+                                 driver_req_ptr -> nx_ip_driver_ptr -> nx_ip_name);
   }
 }
 
@@ -419,7 +412,7 @@ static VOID  nx_driver_interface_attach(NX_IP_DRIVER *driver_req_ptr)
 #endif /* NX_ENABLE_INTERFACE_CAPABILITY */
 
   /* Return successful status.  */
-  driver_req_ptr -> nx_ip_driver_status =  NX_SUCCESS;
+  driver_req_ptr -> nx_ip_driver_status = NX_SUCCESS;
 }
 
 
@@ -463,14 +456,14 @@ static VOID  nx_driver_interface_attach(NX_IP_DRIVER *driver_req_ptr)
 /*  xx-xx-xxxx     Yuxin Zhou               Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
-static VOID  nx_driver_initialize(NX_IP_DRIVER *driver_req_ptr)
+static VOID nx_driver_initialize(NX_IP_DRIVER *driver_req_ptr)
 {
   NX_IP        *ip_ptr;
   NX_INTERFACE *interface_ptr;
   UINT          status;
 
   /* Setup the IP pointer from the driver request.  */
-  ip_ptr =  driver_req_ptr -> nx_ip_driver_ptr;
+  ip_ptr = driver_req_ptr -> nx_ip_driver_ptr;
 
   /* Setup interface pointer.  */
   interface_ptr = driver_req_ptr -> nx_ip_driver_interface;
@@ -493,7 +486,7 @@ static VOID  nx_driver_initialize(NX_IP_DRIVER *driver_req_ptr)
   }
   else
   {
-    status =  nx_driver_hardware_initialize(driver_req_ptr);
+    status = nx_driver_hardware_initialize(driver_req_ptr);
   }
 
   /* Determine if the request was successful.  */
@@ -524,7 +517,7 @@ static VOID  nx_driver_initialize(NX_IP_DRIVER *driver_req_ptr)
   }
   else
   {
-    /* Initialization failed.  Indicate that the request failed.  */
+    /* Initialization failed. Indicate that the request failed.  */
     driver_req_ptr -> nx_ip_driver_status = NX_DRIVER_ERROR;
   }
 }
@@ -557,7 +550,7 @@ static VOID  nx_driver_initialize(NX_IP_DRIVER *driver_req_ptr)
 /*                                                                        */
 /*  CALLS                                                                 */
 /*                                                                        */
-/*    nx_driver_hardware_enable            Process enable request        */
+/*    nx_driver_hardware_enable             Process enable request        */
 /*                                                                        */
 /*  CALLED BY                                                             */
 /*                                                                        */
@@ -570,9 +563,9 @@ static VOID  nx_driver_initialize(NX_IP_DRIVER *driver_req_ptr)
 /*  xx-xx-xxxx     Yuxin Zhou               Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
-static VOID  nx_driver_enable(NX_IP_DRIVER *driver_req_ptr)
+static VOID nx_driver_enable(NX_IP_DRIVER *driver_req_ptr)
 {
-  UINT            status;
+  UINT   status;
 
   /* See if we can honor the NX_LINK_ENABLE request.  */
   if (nx_driver_information.nx_driver_information_state < NX_DRIVER_STATE_INITIALIZED)
@@ -665,13 +658,13 @@ static VOID  nx_driver_enable(NX_IP_DRIVER *driver_req_ptr)
 /**************************************************************************/
 static VOID  nx_driver_disable(NX_IP_DRIVER *driver_req_ptr)
 {
-  UINT            status;
+  UINT status;
 
   /* Check if the link is enabled.  */
   if (nx_driver_information.nx_driver_information_state != NX_DRIVER_STATE_LINK_ENABLED)
   {
     /* The link is not enabled, so just return an error.  */
-    driver_req_ptr -> nx_ip_driver_status =  NX_DRIVER_ERROR;
+    driver_req_ptr -> nx_ip_driver_status = NX_DRIVER_ERROR;
     return;
   }
 
@@ -741,9 +734,9 @@ static VOID  nx_driver_disable(NX_IP_DRIVER *driver_req_ptr)
 /*  xx-xx-xxxx     Yuxin Zhou               Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
-static VOID  nx_driver_multicast_join(NX_IP_DRIVER *driver_req_ptr)
+static VOID nx_driver_multicast_join(NX_IP_DRIVER *driver_req_ptr)
 {
-  UINT        status;
+  UINT status;
 
   /* Call hardware specific multicast join function. */
   if (!nx_driver_hardware_multicast_join)
@@ -760,9 +753,9 @@ static VOID  nx_driver_multicast_join(NX_IP_DRIVER *driver_req_ptr)
   {
     /* Indicate an unsuccessful request.  */
     driver_req_ptr -> nx_ip_driver_status = NX_DRIVER_ERROR;
-#ifdef NX_DEBUG
-    printf("\nNetX WiFi Driver multicast join returns: NX_DRIVER_ERROR\n");
-#endif /* NX_DEBUG */    /* Call hardware specific multicast join function. */
+
+    NX_DEBUG_DRIVER_SOURCE_LOG("\nNetX WiFi Driver multicast join returns: NX_DRIVER_ERROR\n");
+    /* Call hardware specific multicast join function. */
   }
   else
   {
@@ -812,9 +805,9 @@ static VOID  nx_driver_multicast_join(NX_IP_DRIVER *driver_req_ptr)
 /*  xx-xx-xxxx     Yuxin Zhou               Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
-static VOID  nx_driver_multicast_leave(NX_IP_DRIVER *driver_req_ptr)
+static VOID nx_driver_multicast_leave(NX_IP_DRIVER *driver_req_ptr)
 {
-  UINT        status;
+  UINT status;
 
   /* Call hardware specific multicast leave function. */
   if (!nx_driver_hardware_multicast_leave)
@@ -831,9 +824,8 @@ static VOID  nx_driver_multicast_leave(NX_IP_DRIVER *driver_req_ptr)
   {
     /* Indicate an unsuccessful request.  */
     driver_req_ptr -> nx_ip_driver_status = NX_DRIVER_ERROR;
-#ifdef NX_DEBUG
-    printf("\nNetX WiFi Driver multicast leave returns: NX_DRIVER_ERROR\n");
-#endif /* NX_DEBUG */
+
+    NX_DEBUG_DRIVER_SOURCE_LOG("\nNetX WiFi Driver multicast leave returns: NX_DRIVER_ERROR\n");
   }
   else
   {
@@ -883,23 +875,27 @@ static VOID  nx_driver_multicast_leave(NX_IP_DRIVER *driver_req_ptr)
 /*  xx-xx-xxxx     Yuxin Zhou               Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
-static VOID  nx_driver_get_status(NX_IP_DRIVER *driver_req_ptr)
+static VOID nx_driver_get_status(NX_IP_DRIVER *driver_req_ptr)
 {
-  UINT        status;
-
   /* Call hardware specific get status function. */
-  status = nx_driver_hardware_get_status(driver_req_ptr);
-
-  /* Determine if there was an error.  */
-  if (status != NX_SUCCESS)
+  if (!nx_driver_hardware_get_status)
   {
-    /* Indicate an unsuccessful request.  */
-    driver_req_ptr -> nx_ip_driver_status = NX_DRIVER_ERROR;
+    driver_req_ptr -> nx_ip_driver_status = NX_UNHANDLED_COMMAND;
   }
   else
   {
-    /* Indicate the request was successful.   */
-    driver_req_ptr -> nx_ip_driver_status = NX_SUCCESS;
+    UINT status = nx_driver_hardware_get_status(driver_req_ptr);
+
+    if (status == NX_SUCCESS)
+    {
+      /* Indicate the request was successful. */
+      driver_req_ptr -> nx_ip_driver_status = NX_SUCCESS;
+    }
+    else
+    {
+      /* Indicate an unsuccessful request. */
+      driver_req_ptr -> nx_ip_driver_status = NX_DRIVER_ERROR;
+    }
   }
 }
 
@@ -943,9 +939,9 @@ static VOID  nx_driver_get_status(NX_IP_DRIVER *driver_req_ptr)
 /*  xx-xx-xxxx     Yuxin Zhou               Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
-static VOID  nx_driver_capability_get(NX_IP_DRIVER *driver_req_ptr)
+static VOID nx_driver_capability_get(NX_IP_DRIVER *driver_req_ptr)
 {
-  /* Return the capability of the WiFi controller.  */
+  /* Return the capability of the WiFi controller. */
   *(driver_req_ptr -> nx_ip_driver_return_ptr) = NX_DRIVER_CAPABILITY;
 
   /* Return the success status.  */
@@ -991,9 +987,9 @@ static VOID  nx_driver_capability_get(NX_IP_DRIVER *driver_req_ptr)
 /*  xx-xx-xxxx     Yuxin Zhou               Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
-static VOID  nx_driver_capability_set(NX_IP_DRIVER *driver_req_ptr)
+static VOID nx_driver_capability_set(NX_IP_DRIVER *driver_req_ptr)
 {
-  UINT        status;
+  UINT status;
 
   /* Call hardware specific get status function. */
   if (!nx_driver_hardware_capability_set)
@@ -1002,7 +998,7 @@ static VOID  nx_driver_capability_set(NX_IP_DRIVER *driver_req_ptr)
   }
   else
   {
-    status =  nx_driver_hardware_capability_set(driver_req_ptr);
+    status = nx_driver_hardware_capability_set(driver_req_ptr);
   }
 
   /* Determine if there was an error.  */
@@ -1060,7 +1056,7 @@ static VOID  nx_driver_capability_set(NX_IP_DRIVER *driver_req_ptr)
 /*  xx-xx-xxxx     Yuxin Zhou               Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
-static VOID  nx_driver_deferred_processing(NX_IP_DRIVER *driver_req_ptr)
+static VOID nx_driver_deferred_processing(NX_IP_DRIVER *driver_req_ptr)
 {
 
 }
@@ -1115,7 +1111,6 @@ static VOID  nx_driver_deferred_processing(NX_IP_DRIVER *driver_req_ptr)
 /**************************************************************************/
 static VOID nx_driver_thread_entry(ULONG thread_input)
 {
-
   UINT packet_type;
   UINT status;
   uint16_t data_length;
@@ -1152,11 +1147,10 @@ static VOID nx_driver_thread_entry(ULONG thread_input)
         if ((nx_driver_sockets[i].tcp_connected == NX_FALSE) && (nx_driver_sockets[i].is_client == NX_FALSE))
         {
           /* TCP server. Try accept. */
-          if (_nx_tcp_socket_driver_establish(nx_driver_sockets[i].socket_ptr, interface_ptr, 0))
+          if (_nx_tcp_socket_driver_establish((NX_TCP_SOCKET *)nx_driver_sockets[i].socket_ptr, interface_ptr, 0))
           {
-#ifdef NX_DEBUG
-            /* printf("\n%s: Sleeping (%04"PRIu32")\n", NX_DRIVER_THREAD_NAME, (uint32_t)__LINE__); */
-#endif /* NX_DEBUG */
+            /* NX_DEBUG_DRIVER_SOURCE_LOG("\n%s: Sleeping (%04" PRIu32 ")\n", NX_DRIVER_THREAD_NAME, (uint32_t)__LINE__); */
+
             /* NetX TCP socket is not ready to accept. Just sleep to avoid starving.  */
             tx_thread_sleep(NX_DRIVER_THREAD_INTERVAL / 2);
             continue;
@@ -1175,11 +1169,8 @@ static VOID nx_driver_thread_entry(ULONG thread_input)
 
         if (nx_packet_allocate(pool_ptr, &packet_ptr, packet_type, NX_NO_WAIT))
         {
-#ifdef NX_DEBUG
-          printf("\n\"%s\": TCP (%"PRIu32") No packet (%04"PRIu32")\n",
-                 NX_DRIVER_THREAD_NAME, (uint32_t)i, (uint32_t)__LINE__);
-#endif /* NX_DEBUG */
-
+          NX_DEBUG_DRIVER_SOURCE_LOG("\n\"%s\": TCP (%" PRIu32 ") No packet (%04" PRIu32 ")\n",
+                                     NX_DRIVER_THREAD_NAME, (uint32_t)i, (uint32_t)__LINE__);
           /* Packet not available.  */
           break;
         }
@@ -1203,16 +1194,13 @@ static VOID nx_driver_thread_entry(ULONG thread_input)
           /* Connection error. Notify upper layer with Null packet.  */
           if (nx_driver_sockets[i].protocol == NX_PROTOCOL_TCP)
           {
-#ifdef NX_DEBUG
-            printf("\n[%06"PRIu32"] \"%s\" TCP (%"PRIu32") (:%"PRIu32") received data with: %04"PRIu32"\n",
-                   HAL_GetTick(), NX_DRIVER_THREAD_NAME,
-                   (uint32_t)i, (uint32_t)nx_driver_sockets[i].local_port, (uint32_t)status);
-#endif /* NX_DEBUG */
-
+            NX_DEBUG_DRIVER_SOURCE_LOG("\n[%06" PRIu32 "] \"%s\" TCP (%" PRIu32 ") (:%" PRIu32 ") received data with: %04" PRIu32 "\n",
+                                       HAL_GetTick(), NX_DRIVER_THREAD_NAME,
+                                       (uint32_t)i, (uint32_t)nx_driver_sockets[i].local_port, (uint32_t)status);
 
             if (nx_driver_sockets[i].is_client == NX_FALSE)
             {
-              _nx_tcp_socket_driver_packet_receive(nx_driver_sockets[i].socket_ptr, NX_NULL);
+              _nx_tcp_socket_driver_packet_receive((NX_TCP_SOCKET *)nx_driver_sockets[i].socket_ptr, NX_NULL);
 
               /* The remote side client has disconnected. */
               nx_driver_sockets[i].tcp_connected = NX_FALSE;
@@ -1228,7 +1216,7 @@ static VOID nx_driver_thread_entry(ULONG thread_input)
           }
           else
           {
-            _nx_udp_socket_driver_packet_receive(nx_driver_sockets[i].socket_ptr, NX_NULL,
+            _nx_udp_socket_driver_packet_receive((NX_UDP_SOCKET *)nx_driver_sockets[i].socket_ptr, NX_NULL,
                                                  NX_NULL, NX_NULL, 0);
           }
           nx_packet_release(packet_ptr);
@@ -1250,13 +1238,12 @@ static VOID nx_driver_thread_entry(ULONG thread_input)
         /* Pass it to NetXDuo.  */
         if (nx_driver_sockets[i].protocol == NX_PROTOCOL_TCP)
         {
-#ifdef NX_DEBUG
-          printf("\n[%06"PRIu32"] \"%s\" TCP (%"PRIu32") (:%"PRIu32") received data with %04"PRIu32" bytes\n",
-                 HAL_GetTick(), NX_DRIVER_THREAD_NAME,
-                 (uint32_t)i, (uint32_t)nx_driver_sockets[i].local_port,
-                 (uint32_t)data_length);
-#endif /* NX_DEBUG */
-          _nx_tcp_socket_driver_packet_receive(nx_driver_sockets[i].socket_ptr, packet_ptr);
+          NX_DEBUG_DRIVER_SOURCE_LOG("\n[%06" PRIu32 "] \"%s\" TCP (%" PRIu32 ") (:%" PRIu32 ") received data with %04" PRIu32 " bytes\n",
+                                     HAL_GetTick(), NX_DRIVER_THREAD_NAME,
+                                     (uint32_t)i, (uint32_t)nx_driver_sockets[i].local_port,
+                                     (uint32_t)data_length);
+
+          _nx_tcp_socket_driver_packet_receive((NX_TCP_SOCKET *)nx_driver_sockets[i].socket_ptr, packet_ptr);
         }
         else
         {
@@ -1268,7 +1255,7 @@ static VOID nx_driver_thread_entry(ULONG thread_input)
           local_ip.nxd_ip_version = NX_IP_VERSION_V4;
           local_ip.nxd_ip_address.v4 = nx_driver_sockets[i].local_ip;
 
-          _nx_udp_socket_driver_packet_receive(nx_driver_sockets[i].socket_ptr,
+          _nx_udp_socket_driver_packet_receive((NX_UDP_SOCKET *)nx_driver_sockets[i].socket_ptr,
                                                packet_ptr, &local_ip, &remote_ip,
                                                nx_driver_sockets[i].remote_port);
         }
@@ -1339,9 +1326,10 @@ static UINT nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
   UINT status = NX_NOT_SUCCESSFUL;
   UINT i;
 
-#ifdef NX_DEBUG
-  printf("\n[%06"PRIu32"] > %s\n", HAL_GetTick(), nx_driver_offload_operation_to_string(operation));
-#endif /* NX_DEBUG */
+  (void)(ip_ptr);
+  (void)(interface_ptr);
+
+  NX_DEBUG_DRIVER_SOURCE_LOG("\n[%06" PRIu32 "] > %s\n", HAL_GetTick(), nx_driver_offload_operation_to_string(operation));
 
   if (operation == NX_TCPIP_OFFLOAD_TCP_SERVER_SOCKET_LISTEN)
   {
@@ -1353,9 +1341,7 @@ static UINT nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
       {
         if (nx_driver_sockets[i].tcp_connected == NX_TRUE)
         {
-#ifdef NX_DEBUG
-          printf("\n< NX_NOT_SUPPORTED (%"PRIu32"):\n\n", (uint32_t)i);
-#endif /* NX_DEBUG */
+          NX_DEBUG_DRIVER_SOURCE_LOG("\n< NX_NOT_SUPPORTED (%" PRIu32 "):\n\n", (uint32_t)i);
 
           /* Previous connection not closed. Multiple connection is not supported.  */
           return (NX_NOT_SUPPORTED);
@@ -1381,9 +1367,8 @@ static UINT nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
       {
         /* Find an empty entry.  */
         nx_driver_sockets[i].socket_ptr = socket_ptr;
-#ifdef NX_DEBUG
-        printf("\n Driver socket -> (%"PRIu32"):\n\n", (uint32_t)i);
-#endif /* NX_DEBUG */
+
+        NX_DEBUG_DRIVER_SOURCE_LOG("\n Driver socket -> (%" PRIu32 "):\n\n", (uint32_t)i);
         break;
       }
     }
@@ -1405,31 +1390,29 @@ static UINT nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
       ((NX_TCP_SOCKET *)socket_ptr) -> nx_tcp_socket_tcpip_offload_context = (VOID *)i;
 
       /* Convert remote IP to byte array.  */
-      remote_ip_bytes[0] = (remote_ip -> nxd_ip_address.v4 >> 24) & 0xFF;
+      remote_ip_bytes[0] = (UCHAR)((remote_ip -> nxd_ip_address.v4 >> 24) & 0xFF);
       remote_ip_bytes[1] = (remote_ip -> nxd_ip_address.v4 >> 16) & 0xFF;
       remote_ip_bytes[2] = (remote_ip -> nxd_ip_address.v4 >> 8) & 0xFF;
       remote_ip_bytes[3] = (remote_ip -> nxd_ip_address.v4) & 0xFF;
 
       /* Connect.  */
       status = WIFI_OpenClientConnection(i, WIFI_TCP_PROTOCOL, "",
-                                         remote_ip_bytes, *remote_port, local_port);
+                                         remote_ip_bytes, (uint16_t)(*remote_port), (uint16_t)(local_port));
 
       if (status)
       {
         return (NX_NOT_SUCCESSFUL);
       }
 
-#ifdef NX_DEBUG
-      printf("\n### TCP client socket %"PRIu32" connect to: %u.%u.%u.%u:%u\n",
-             (uint32_t)i,
-             remote_ip_bytes[0], remote_ip_bytes[1], remote_ip_bytes[2], remote_ip_bytes[3],
-             *remote_port);
-#endif /* NX_DEBUG */
+      NX_DEBUG_DRIVER_SOURCE_LOG("\n### TCP client socket %" PRIu32 " connect to: %u.%u.%u.%u:%u\n",
+                                 (uint32_t)i,
+                                 remote_ip_bytes[0], remote_ip_bytes[1], remote_ip_bytes[2], remote_ip_bytes[3],
+                                 *remote_port);
 
       /* Store address and port.  */
       nx_driver_sockets[i].remote_ip = remote_ip -> nxd_ip_address.v4;
-      nx_driver_sockets[i].local_port = local_port;
-      nx_driver_sockets[i].remote_port = *remote_port;
+      nx_driver_sockets[i].local_port = (USHORT)local_port;
+      nx_driver_sockets[i].remote_port = (USHORT)(*remote_port);
       nx_driver_sockets[i].protocol = NX_PROTOCOL_TCP;
       nx_driver_sockets[i].is_client = NX_TRUE;
     }
@@ -1441,21 +1424,18 @@ static UINT nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
       ((NX_TCP_SOCKET *)socket_ptr) -> nx_tcp_socket_tcpip_offload_context = (VOID *)i;
 
       /* Start TCP server.  */
-      status = WIFI_StartServer(i, WIFI_TCP_PROTOCOL, NX_DRIVER_SERVER_LISTEN_COUNT, "", local_port);
+      status = WIFI_StartServer(i, WIFI_TCP_PROTOCOL, NX_DRIVER_SERVER_LISTEN_COUNT, "", (uint16_t)local_port);
       if (status)
       {
-#ifdef NX_DEBUG
-        printf("\n< NX_NOT_SUCCESSFUL (%"PRIu32")\n", (uint32_t)i);
-#endif /* NX_DEBUG */
+        NX_DEBUG_DRIVER_SOURCE_LOG("\n< NX_NOT_SUCCESSFUL (%" PRIu32 ")\n", (uint32_t)i);
+
         return (NX_NOT_SUCCESSFUL);
       }
 
-#ifdef NX_DEBUG
-      printf("\n### TCP server socket %"PRIu32" listen to port: %u\n", (uint32_t)i, local_port);
-#endif /* NX_DEBUG */
+      NX_DEBUG_DRIVER_SOURCE_LOG("\n### TCP server socket %" PRIu32 " listen to port: %u\n", (uint32_t)i, local_port);
 
       /* Store address and port.  */
-      nx_driver_sockets[i].local_port = local_port;
+      nx_driver_sockets[i].local_port = (USHORT)local_port;
       nx_driver_sockets[i].remote_port = 0;
       nx_driver_sockets[i].protocol = NX_PROTOCOL_TCP;
       nx_driver_sockets[i].tcp_connected = NX_FALSE;
@@ -1469,22 +1449,19 @@ static UINT nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
       i = (UINT)(((NX_TCP_SOCKET *)socket_ptr) -> nx_tcp_socket_tcpip_offload_context);
       /* Accept connection.  */
       status = WIFI_WaitServerConnection(i, NX_DRIVER_SOCKET_SERVER_WAIT_TIMEOUT,
-                                         remote_ip_bytes, &nx_driver_sockets[i].remote_port);
+                                         remote_ip_bytes, sizeof(remote_ip_bytes), &nx_driver_sockets[i].remote_port);
 
       if (status)
       {
-#ifdef NX_DEBUG
-        /* printf("\nNX_TCPIP_OFFLOAD_TCP_SERVER_SOCKET_ACCEPT: NX_NOT_SUCCESSFUL\n"); */
-#endif /* NX_DEBUG */
+        /* NX_DEBUG_DRIVER_SOURCE_LOG("\nNX_TCPIP_OFFLOAD_TCP_SERVER_SOCKET_ACCEPT: NX_NOT_SUCCESSFUL\n"); */
+
         return (NX_NOT_SUCCESSFUL);
       }
 
-#ifdef NX_DEBUG
-      printf("\n### TCP server socket (%"PRIu32") (:%"PRIu32") accept from: %u.%u.%u.%u:%u\n",
-             (uint32_t)i, (uint32_t)nx_driver_sockets[i].local_port,
-             remote_ip_bytes[0], remote_ip_bytes[1], remote_ip_bytes[2], remote_ip_bytes[3],
-             nx_driver_sockets[i].remote_port);
-#endif /* NX_DEBUG */
+      NX_DEBUG_DRIVER_SOURCE_LOG("\n### TCP server socket (%" PRIu32 ") (:%" PRIu32 ") accept from: %u.%u.%u.%u:%u\n",
+                                 (uint32_t)i, (uint32_t)nx_driver_sockets[i].local_port,
+                                 remote_ip_bytes[0], remote_ip_bytes[1], remote_ip_bytes[2], remote_ip_bytes[3],
+                                 nx_driver_sockets[i].remote_port);
 
       /* Store address and port.  */
       remote_ip -> nxd_ip_version = NX_IP_VERSION_V4;
@@ -1509,11 +1486,8 @@ static UINT nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
         }
         if ((nx_driver_sockets[i].local_port == local_port) && (nx_driver_sockets[i].protocol == NX_PROTOCOL_TCP))
         {
-
-#ifdef NX_DEBUG
-          printf("\n### TCP server socket (%"PRIu32") unlisten port: %u (%"PRIu32")\n",
-                 (uint32_t)i, local_port, (uint32_t)listenee_count);
-#endif /* NX_DEBUG */
+          NX_DEBUG_DRIVER_SOURCE_LOG("\n### TCP server socket (%" PRIu32 ") unlisten port: %u (%" PRIu32 ")\n",
+                                     (uint32_t)i, local_port, (uint32_t)listenee_count);
 
           nx_driver_sockets[i].socket_ptr = NX_NULL;
           nx_driver_sockets[i].protocol = 0;
@@ -1547,19 +1521,15 @@ static UINT nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
       {
         if (nx_driver_sockets[i].is_client)
         {
-#ifdef NX_DEBUG
-          printf("\n### TCP client socket %"PRIu32" disconnect\n", (uint32_t)i);
-#endif /* NX_DEBUG */
+          NX_DEBUG_DRIVER_SOURCE_LOG("\n### TCP client socket %" PRIu32 " disconnect\n", (uint32_t)i);
 
           /* Disconnect.  */
           status = WIFI_CloseClientConnection(i);
         }
         else
         {
-#ifdef NX_DEBUG
-          printf("\n### TCP server socket %"PRIu32" (:%"PRIu32") disconnect\n",
-                 (uint32_t)i, (uint32_t)nx_driver_sockets[i].local_port);
-#endif /* NX_DEBUG */
+          NX_DEBUG_DRIVER_SOURCE_LOG("\n### TCP server socket %" PRIu32 " (:%" PRIu32 ") disconnect\n",
+                                     (uint32_t)i, (uint32_t)nx_driver_sockets[i].local_port);
 
           /* Close server connection.  */
           status = WIFI_CloseServerConnection(i);
@@ -1584,9 +1554,7 @@ static UINT nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
       /* Reset the remote port to indicate the socket is not connected yet.  */
       nx_driver_sockets[i].remote_port = 0;
 
-#ifdef NX_DEBUG
-      printf("\n### UDP socket %"PRIu32" bind to port: %u\n", (uint32_t)i, local_port);
-#endif /* NX_DEBUG */
+      NX_DEBUG_DRIVER_SOURCE_LOG("\n### UDP socket %" PRIu32 " bind to port: %u\n", (uint32_t)i, local_port);
 
       status = NX_SUCCESS;
     }
@@ -1600,9 +1568,7 @@ static UINT nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
         /* Disconnect.  */
         status = WIFI_CloseClientConnection(i);
 
-#ifdef NX_DEBUG
-        printf("\n### UDP socket %"PRIu32" unbind port: %u\n", (uint32_t)i, local_port);
-#endif /* NX_DEBUG */
+        NX_DEBUG_DRIVER_SOURCE_LOG("\n### UDP socket %" PRIu32 " unbind port: %u\n", (uint32_t)i, local_port);
       }
 
       /* Reset socket to free this entry.  */
@@ -1619,7 +1585,7 @@ static UINT nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
 
         /* Do connection once. */
         /* Convert remote IP to byte array.  */
-        remote_ip_bytes[0] = (remote_ip -> nxd_ip_address.v4 >> 24) & 0xFF;
+        remote_ip_bytes[0] = (UCHAR)((remote_ip -> nxd_ip_address.v4 >> 24) & 0xFF);
         remote_ip_bytes[1] = (remote_ip -> nxd_ip_address.v4 >> 16) & 0xFF;
         remote_ip_bytes[2] = (remote_ip -> nxd_ip_address.v4 >> 8) & 0xFF;
         remote_ip_bytes[3] = (remote_ip -> nxd_ip_address.v4) & 0xFF;
@@ -1632,12 +1598,10 @@ static UINT nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
           return (NX_NOT_SUCCESSFUL);
         }
 
-#ifdef NX_DEBUG
-        printf("\n### UDP socket %"PRIu32" connect to: %u.%u.%u.%u:%u\n",
-               (uint32_t)i,
-               remote_ip_bytes[0], remote_ip_bytes[1], remote_ip_bytes[2], remote_ip_bytes[3],
-               *remote_port);
-#endif /* NX_DEBUG */
+        NX_DEBUG_DRIVER_SOURCE_LOG("\n### UDP socket %" PRIu32 " connect to: %u.%u.%u.%u:%u\n",
+                                   (uint32_t)i,
+                                   remote_ip_bytes[0], remote_ip_bytes[1], remote_ip_bytes[2], remote_ip_bytes[3],
+                                   *remote_port);
 
         /* Store address and port.  */
         nx_driver_sockets[i].protocol = NX_PROTOCOL_UDP;
@@ -1645,7 +1609,6 @@ static UINT nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
         nx_driver_sockets[i].local_port = (USHORT)local_port;
         nx_driver_sockets[i].remote_ip = remote_ip -> nxd_ip_address.v4;
         nx_driver_sockets[i].remote_port = (USHORT)(*remote_port);
-        //nx_driver_sockets[i].tcp_connected = NX_FALSE;
         nx_driver_sockets[i].is_client = NX_TRUE;
       }
 
@@ -1682,11 +1645,9 @@ static UINT nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
         {
           return (NX_NOT_SUCCESSFUL);
         }
-#ifdef NX_DEBUG
-        printf("\n[%06"PRIu32"] ### UDP socket %"PRIu32" sent data with: %04"PRIu32" bytes\n",
-               HAL_GetTick(), (uint32_t)i, (uint32_t)sent_size);
-#endif /* NX_DEBUG */
 
+        NX_DEBUG_DRIVER_SOURCE_LOG("\n[%06" PRIu32 "] ### UDP socket %" PRIu32 " sent data with: %04" PRIu32 " bytes\n",
+                                   HAL_GetTick(), (uint32_t)i, (uint32_t)sent_size);
       }
       /* Release the packet.  */
       nx_packet_transmit_release(packet_ptr);
@@ -1738,16 +1699,13 @@ static UINT nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
         /* Check status.  */
         if ((status != WIFI_STATUS_OK) || (sent_size != packet_size))
         {
-#ifdef NX_DEBUG
-          printf("\nNX_TCPIP_OFFLOAD_TCP_SOCKET_SEND (%"PRIu32"): NX_NOT_SUCCESSFUL\n", (uint32_t)i);
-#endif /* NX_DEBUG */
+          NX_DEBUG_DRIVER_SOURCE_LOG("\nNX_TCPIP_OFFLOAD_TCP_SOCKET_SEND (%" PRIu32 "): NX_NOT_SUCCESSFUL\n", (uint32_t)i);
+
           return (NX_NOT_SUCCESSFUL);
         }
 
-#ifdef NX_DEBUG
-        printf("\n [%06"PRIu32"] NX_TCPIP_OFFLOAD_TCP_SOCKET_SEND (%"PRIu32"): TCP sent data with: %04"PRIu32" bytes\n",
-               HAL_GetTick(), (uint32_t)i, (uint32_t)sent_size);
-#endif /* NX_DEBUG */
+        NX_DEBUG_DRIVER_SOURCE_LOG("\n [%06" PRIu32 "] NX_TCPIP_OFFLOAD_TCP_SOCKET_SEND (%" PRIu32 "): TCP sent data with: %04" PRIu32 " bytes\n",
+                                   HAL_GetTick(), (uint32_t)i, (uint32_t)sent_size);
 
         /* Calculate current packet size. */
         packet_size = (ULONG)(current_packet -> nx_packet_append_ptr - current_packet -> nx_packet_prepend_ptr);
@@ -1831,6 +1789,8 @@ static UINT _nx_driver_hardware_initialize(NX_IP_DRIVER *driver_req_ptr)
   UINT status;
   UINT priority = 0;
 
+  (void)(driver_req_ptr);
+
   /* Get priority of IP thread.  */
   tx_thread_info_get(tx_thread_identify(), NX_NULL, NX_NULL, NX_NULL, &priority,
                      NX_NULL, NX_NULL, NX_NULL, NX_NULL);
@@ -1885,8 +1845,10 @@ static UINT _nx_driver_hardware_initialize(NX_IP_DRIVER *driver_req_ptr)
 /*  xx-xx-xxxx     Yuxin Zhou               Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
-static UINT  _nx_driver_hardware_enable(NX_IP_DRIVER *driver_req_ptr)
+static UINT _nx_driver_hardware_enable(NX_IP_DRIVER *driver_req_ptr)
 {
+  (void)(driver_req_ptr);
+
   tx_thread_reset(&nx_driver_thread);
   tx_thread_resume(&nx_driver_thread);
 
@@ -1933,9 +1895,11 @@ static UINT  _nx_driver_hardware_enable(NX_IP_DRIVER *driver_req_ptr)
 /*  xx-xx-xxxx     Yuxin Zhou               Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
-static UINT  _nx_driver_hardware_disable(NX_IP_DRIVER *driver_req_ptr)
+static UINT _nx_driver_hardware_disable(NX_IP_DRIVER *driver_req_ptr)
 {
   UINT i;
+
+  (void)(driver_req_ptr);
 
   /* Reset all sockets.  */
   for (i = 0; i < NX_DRIVER_SOCKETS_MAXIMUM; i++)
@@ -2000,10 +1964,23 @@ static UINT  _nx_driver_hardware_disable(NX_IP_DRIVER *driver_req_ptr)
 /*  xx-xx-xxxx     Yuxin Zhou               Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
-static UINT  _nx_driver_hardware_get_status(NX_IP_DRIVER *driver_req_ptr)
+static UINT _nx_driver_hardware_get_status(NX_IP_DRIVER *driver_req_ptr)
 {
-  /* Return success.  */
-  return (NX_SUCCESS);
+  UINT status = NX_PTR_ERROR;
+
+  if (NULL != driver_req_ptr -> nx_ip_driver_return_ptr)
+  {
+    ULONG return_value = NX_FALSE;
+    if (nx_driver_information.nx_driver_information_state >= NX_DRIVER_STATE_LINK_ENABLED)
+    {
+      return_value = NX_TRUE;
+    }
+
+    *driver_req_ptr -> nx_ip_driver_return_ptr = return_value;
+    status = NX_SUCCESS;
+  }
+
+  return status;
 }
 
 
@@ -2047,12 +2024,14 @@ static UINT  _nx_driver_hardware_get_status(NX_IP_DRIVER *driver_req_ptr)
 /**************************************************************************/
 static UINT _nx_driver_hardware_capability_set(NX_IP_DRIVER *driver_req_ptr)
 {
+  (void)(driver_req_ptr);
+
   return NX_SUCCESS;
 }
 #endif /* NX_ENABLE_INTERFACE_CAPABILITY */
 
 
-#ifdef NX_DEBUG
+#if !defined(REMOVE_DEBUG_FUNC)
 #define CASE(x) case x: return #x
 #define DEFAULT default: return "UNKNOWN"
 static const char *nx_driver_offload_operation_to_string(UINT operation)
@@ -2071,6 +2050,46 @@ static const char *nx_driver_offload_operation_to_string(UINT operation)
       DEFAULT;
   }
 }
-#endif /* NX_DEBUG */
 
-/****** DRIVER SPECIFIC ****** Start of part/vendor specific internal driver functions.  */
+
+#define CASE(x) case x: return #x
+#define DEFAULT default: return "UNKNOWN"
+static const char *nx_driver_operation_to_string(UINT operation)
+{
+  switch (operation)
+  {
+      CASE(NX_LINK_PACKET_SEND);
+      CASE(NX_LINK_INITIALIZE);
+      CASE(NX_LINK_ENABLE);
+      CASE(NX_LINK_DISABLE);
+      CASE(NX_LINK_PACKET_BROADCAST);
+      CASE(NX_LINK_ARP_SEND);
+      CASE(NX_LINK_ARP_RESPONSE_SEND);
+      CASE(NX_LINK_RARP_SEND);
+      CASE(NX_LINK_MULTICAST_JOIN);
+      CASE(NX_LINK_MULTICAST_LEAVE);
+      CASE(NX_LINK_GET_STATUS);
+      CASE(NX_LINK_GET_SPEED);
+      CASE(NX_LINK_GET_DUPLEX_TYPE);
+      CASE(NX_LINK_GET_ERROR_COUNT);
+      CASE(NX_LINK_GET_RX_COUNT);
+      CASE(NX_LINK_GET_TX_COUNT);
+      CASE(NX_LINK_GET_ALLOC_ERRORS);
+      CASE(NX_LINK_UNINITIALIZE);
+      CASE(NX_LINK_DEFERRED_PROCESSING);
+      CASE(NX_LINK_INTERFACE_ATTACH);
+      CASE(NX_LINK_SET_PHYSICAL_ADDRESS);
+      CASE(NX_INTERFACE_CAPABILITY_GET);
+      CASE(NX_INTERFACE_CAPABILITY_SET);
+      CASE(NX_LINK_INTERFACE_DETACH);
+      CASE(NX_LINK_FACTORY_ADDRESS_GET);
+      CASE(NX_LINK_RX_ENABLE);
+      CASE(NX_LINK_RX_DISABLE);
+      CASE(NX_LINK_6LOWPAN_COMMAND);
+      CASE(NX_LINK_GET_INTERFACE_TYPE);
+
+      DEFAULT;
+  }
+}
+#endif /* REMOVE_DEBUG_FUNC */
+

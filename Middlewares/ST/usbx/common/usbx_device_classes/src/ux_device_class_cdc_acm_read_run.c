@@ -37,7 +37,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_device_class_cdc_acm_read_run                   PORTABLE C      */
-/*                                                           6.2.0        */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -63,6 +63,7 @@
 /*    State machine Status to check                                       */
 /*    UX_STATE_NEXT                         Transfer done, to next state  */
 /*    UX_STATE_EXIT                         Abnormal, to reset state      */
+/*    UX_STATE_ERROR                        Error occurred                */
 /*    (others)                              Keep running, waiting         */
 /*                                                                        */
 /*  CALLS                                                                 */
@@ -82,6 +83,12 @@
 /*  10-31-2022     Yajun Xia                Modified comment(s),          */
 /*                                            fixed return code,          */
 /*                                            resulting in version 6.2.0  */
+/*  10-31-2023     Yajun Xia, CQ Xiao       Modified comment(s),          */
+/*                                            added zero copy support,    */
+/*                                            added a new mode to manage  */
+/*                                            endpoint buffer in classes, */
+/*                                            fixed return code,          */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT _ux_device_class_cdc_acm_read_run(UX_SLAVE_CLASS_CDC_ACM *cdc_acm,
@@ -102,7 +109,7 @@ UINT                        status = UX_SUCCESS;
     if (cdc_acm -> ux_slave_class_cdc_acm_transmission_status == UX_TRUE)
 
         /* Not allowed. */
-        return(UX_ERROR);
+        return(UX_STATE_ERROR);
 #endif
 
     /* Get the pointer to the device.  */
@@ -143,6 +150,57 @@ UINT                        status = UX_SUCCESS;
     /* All CDC reading  are on the endpoint OUT, from the host.  */
     transfer_request =  &endpoint -> ux_slave_endpoint_transfer_request;
 
+#if (UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1) && !defined(UX_DEVICE_CLASS_CDC_ACM_ZERO_COPY)
+    transfer_request -> ux_slave_transfer_request_data_pointer =
+                                UX_DEVICE_CLASS_CDC_ACM_READ_BUFFER(cdc_acm);
+#endif
+
+#if (UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1) && defined(UX_DEVICE_CLASS_CDC_ACM_ZERO_COPY)
+
+    /* Run the transfer state machine.  */
+    if(cdc_acm -> ux_device_class_cdc_acm_read_state == UX_STATE_RESET)
+    {
+
+        /* If trace is enabled, insert this event into the trace buffer.  */
+        UX_TRACE_IN_LINE_INSERT(UX_TRACE_DEVICE_CLASS_CDC_ACM_READ, cdc_acm, buffer, requested_length, 0, UX_TRACE_DEVICE_CLASS_EVENTS, 0, 0)
+
+        cdc_acm -> ux_device_class_cdc_acm_read_state = UX_DEVICE_CLASS_CDC_ACM_READ_WAIT;
+        cdc_acm -> ux_device_class_cdc_acm_read_status = UX_TRANSFER_NO_ANSWER;
+        transfer_request -> ux_slave_transfer_request_data_pointer = buffer;
+        UX_SLAVE_TRANSFER_STATE_RESET(transfer_request);
+    }
+
+    /* Issue the transfer request.  */
+    max_transfer_length = requested_length;
+    status = _ux_device_stack_transfer_run(transfer_request, max_transfer_length, max_transfer_length);
+
+    /* Error case.  */
+    if (status < UX_STATE_NEXT)
+    {
+        cdc_acm -> ux_device_class_cdc_acm_read_state = UX_STATE_RESET;
+        cdc_acm -> ux_device_class_cdc_acm_read_status =
+            transfer_request -> ux_slave_transfer_request_completion_code;
+        return(UX_STATE_ERROR);
+    }
+
+    /* Success case.  */
+    if (status == UX_STATE_NEXT)
+    {
+
+        /* Last transfer status.  */
+        cdc_acm -> ux_device_class_cdc_acm_read_status =
+            transfer_request -> ux_slave_transfer_request_completion_code;
+
+        /* Update actual length.  */
+        *actual_length = transfer_request -> ux_slave_transfer_request_actual_length;
+
+        /* It's done.  */
+        cdc_acm -> ux_device_class_cdc_acm_read_state = UX_STATE_RESET;
+    }
+
+    return(status);
+#else
+
     /* Handle state cases.  */
     switch(cdc_acm -> ux_device_class_cdc_acm_read_state)
     {
@@ -174,7 +232,7 @@ UINT                        status = UX_SUCCESS;
         }
 
         /* Check if we have enough in the local buffer.  */
-        /* Use wMaxPacketSize for faster action, UX_SLAVE_REQUEST_DATA_MAX_LENGTH for better performance.  */
+        /* Use wMaxPacketSize for faster action, UX_DEVICE_CLASS_CDC_ACM_READ_BUFFER_SIZE for better performance.  */
         max_transfer_length = endpoint -> ux_slave_endpoint_descriptor.wMaxPacketSize;
         if (requested_length > max_transfer_length)
         {
@@ -252,8 +310,73 @@ UINT                        status = UX_SUCCESS;
         cdc_acm -> ux_device_class_cdc_acm_read_status = UX_INVALID_STATE;
         break;
     }
+    
 
     /* Error cases.  */
     return(UX_STATE_EXIT);
+#endif
 }
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _uxe_device_class_cdc_acm_read_run                  PORTABLE C      */
+/*                                                           6.3.0        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Yajun Xia, Microsoft Corporation                                    */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks errors in CDC ACM class read process.          */
+/*                                                                        */
+/*    It's for standalone mode.                                           */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    cdc_acm                                   Address of cdc_acm class  */
+/*                                              instance                  */
+/*    buffer                                    Pointer to buffer to save */
+/*                                              received data             */
+/*    requested_length                          Length of bytes to read   */
+/*    actual_length                             Pointer to save number of */
+/*                                              bytes read                */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    State machine Status to check                                       */
+/*    UX_STATE_NEXT                         Transfer done, to next state  */
+/*    UX_STATE_EXIT                         Abnormal, to reset state      */
+/*    UX_STATE_ERROR                        Error occurred                */
+/*    (others)                              Keep running, waiting         */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_device_class_cdc_acm_read_run     CDC ACM class read process    */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Application                                                         */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  10-31-2023     Yajun Xia                Initial Version 6.3.0         */
+/*                                                                        */
+/**************************************************************************/
+UINT _uxe_device_class_cdc_acm_read_run(UX_SLAVE_CLASS_CDC_ACM *cdc_acm,
+                    UCHAR *buffer, ULONG requested_length, ULONG *actual_length)
+{
+
+    /* Sanity checks.  */
+    if ((cdc_acm == UX_NULL) || ((buffer == UX_NULL) && (requested_length > 0)) || (actual_length == UX_NULL))
+    {
+        return(UX_STATE_ERROR);
+    }
+
+    return (_ux_device_class_cdc_acm_read_run(cdc_acm, buffer, requested_length, actual_length));
+}
+
 #endif

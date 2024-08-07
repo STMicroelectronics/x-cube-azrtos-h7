@@ -185,106 +185,121 @@
 <td>It demonstrates how to develop bare metal USB Host Human Interface “HID” able to enumerate and communicates with a mouse or a keyboard. The application is designed to behave as an USB HID Host, the code provides required requests to properly enumerate HID devices , HID Class APIs to decode HID reports received from a mouse or a keyboard and display data on uart HyperTerminal. <a href="./NUCLEO-H723ZG/Applications/USBX/Ux_Host_HID_Standalone/readme.html">more …</a></td>
 </tr>
 <tr class="even">
+<td>USBX</td>
+<td>Ux_Host_HUB_HID_MSC</td>
+<td>It demonstrates how to develop a USB Host Hub application supporting Human Interface “HID” and Mass Storage “MSC” class drivers to be able to enumerate and communicate with: - An USB hub. - A mouse. - A keyboard. - An USB removable flash disk. <a href="./STM32H747I-DISCO/Applications/USBX/Ux_Host_HUB_HID_MSC/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
+<td>USBX</td>
+<td>Ux_Device_Audio2.0_PlayBack</td>
+<td>It demonstrates how to develop USB Device communication Class "AUDIO" based application.The application is designed to emulate an USB (Out: Speaker/Headset), the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB AUDIO device <a href="./STM32H743I-EVAL/Applications/USBX/Ux_Device_Audio2.0_PlayBack/readme.html">more …</a></td>
+</tr>
+<tr class="even">
+<td>FileX</td>
+<td>Ux_Host_Audio</td>
+<td>It demonstrates  how to develop AUDIO" able to enumerate and communicates with a device audio speaker 1.0/2.0. <a href="./STM32H747I-DISCO/Applications/USBX/Ux_Host_Audio/readme.html">more …</a></td>
+</tr>
+<tr class="odd">
 <td>FileX</td>
 <td>Fx_uSD_File_Edit</td>
 <td>It demonstrates how to develop a basic SD card file operations application. The application is designed to handle SD card insertion/removal oddts, and depending on that state, it starts and stops file operations from and into the SD card. <a href="./STM32H735G-DK/Applications/FileX/Fx_uSD_File_Edit/readme.html">more …</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>FileX</td>
 <td>Fx_MultiAccess</td>
 <td>It demonstrates the FileX’s concurrent file access capabilities. The application is designed to execute file operations on the SD card device, the code provides all required software code for handling SD card I/O operations. <a href="./STM32H735G-DK/Applications/FileX/Fx_MultiAccess/readme.html">more …</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>FileX</td>
 <td>Fx_NoR_Write_Read_File</td>
 <td>It demonstrates how to create a Fat File system on the NOR flash using FileX alongside LevelX. The application is designed to execute file operations on the MX25LM51245G NOR flash device, the code provides all required software code for properly managing it. <a href="./STM32H735G-DK/Applications/FileX/Fx_NoR_Write_Read_File/readme.html">more …</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>FileX</td>
 <td>Fx_DualInstance</td>
 <td>It demonstrates the coexistence capability of two FileX/LevelX stacks running independently on each core. <a href="./STM32H747I-DISCO/Applications/FileX/Fx_Dual_Instance/readme.html">more …</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>FileX</td>
 <td>Fx_IAP</td>
 <td>It demonstrates how to implement an In-Application programming (IAP) using FileX’s SD file access capabilities. The application is designed to erase and write to on-chip flash memory, it provides all required software code for handling SD card and flash memory I/O operations. This is a typical application on how to use the SD card peripheral for firmware upgrade application or IAP, allowing user to erase and write to on-chip flash memory. <a href="./STM32H735G-DK/Applications/FileX/FX_IAP/IAP_main/readme.html">more …</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>FileX</td>
 <td>Fx_NAND_Write_Read_File</td>
 <td>It demonstrates create a Fat File system on the NAND flash using FileX alongside LevelX. The application is designed to execute file operations on the Micron MT29F2G16ABAEAWP NAND flash device, the code provides all required software code for properly managing it. <a href="./STM32H743I-EVAL/Applications/FileX/Fx_Nand_Write_Read_File/readme.html">more …</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>FileX</td>
 <td>Fx_File_Edit_Standalone</td>
 <td>It demonstrates how to create a Fat File system on the SD card memory using FileX running in standalone mode without ThreadX. <a href="./STM32H735G-DK/Applications/FileX/Fx_File_Edit_Standalone/readme.html">more …</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>NetXDuo</td>
 <td>Nx_TCP_Echo_Server</td>
 <td>It demonstrates how to develop a NetX TCP server to communicate with a remote client using the NetX TCP socket API. <a href="./NUCLEO-H723ZG/Applications/NetXDuo/Nx_TCP_Echo_Server/readme.html">more …</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>NetXDuo</td>
 <td>Nx_TCP_Echo_Client</td>
 <td>It demonstrates how to develop a NetX TCP client to communicate with a remote sever using the NetX TCP socket API. <a href="./NUCLEO-H723ZG/Applications/NetXDuo/Nx_TCP_Echo_Client/readme.html">more …</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>NetXDuo</td>
 <td>Nx_UDP_Echo_Server</td>
 <td>It demonstrates how to develop a NetX UDP server to communicate with a remote client using the NetX UDP socket API. <a href="./STM32H735G-DK/Applications/NetXDuo/Nx_UDP_Echo_Server/readme.html">more …</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>NetXDuo</td>
 <td>Nx_UDP_Echo_Client</td>
 <td>It demonstrates how to develop a NetX UDP client to communicate with a remote sever using the NetX UDP socket API. <a href="./STM32H735G-DK/Applications/NetXDuo/Nx_UDP_Echo_Client/readme.html">more …</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>NetXDuo</td>
 <td>Nx_WebServer</td>
 <td>It demonstrates how to develop Web HTTP server based application.It is designed to load files and static web pages stored in SD card using a Web HTTP server, the code provides all required features to build a compliant Web HTTP Server. <a href="./STM32H735G-DK/Applications/NetXDuo/Nx_WebServer/readme.html">more …</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>NetXDuo</td>
 <td>Nx_MQTT_Client</td>
 <td>It demonstrates how to exchange data between client and server using MQTT protocol in an encrypted mode supporting TLS v1.2. <a href="./STM32H735G-DK/Applications/NetXDuo/Nx_MQTT_Client/readme.html">more …</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>NetXDuo</td>
 <td>Nx_Iperf</td>
 <td>It shows the performance of NetX IPerf stack when using different modes: TCP_server, UDP_server, TCP_client and UDP_client. <a href="./STM32H735G-DK/Applications/NetXDuo/Nx_Iperf/readme.html">more …</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>NetXDuo</td>
 <td>Nx_SNTP_Client</td>
 <td>It demonstrates how to develop a NetX SNTP client and connect with an STNP server to get a time update. <a href="./STM32H747I-DISCO/Applications/NetXDuo/Nx_SNTP_Client/readme.html">more …</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>NetXDuo</td>
 <td>Nx_HTTP_SSE_wifi</td>
 <td>It runs a HTTP server application where the client browser page is updated each time events are sent by the server. <a href="./STM32H747I-DISCO/Applications/NetXDuo/Nx_HTTP_SSE_wifi/readme.html">more …</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>NetXDuo</td>
 <td>Nx_IAP_Client_wifi</td>
 <td>It shows how to use the WiFi module to perform an IAP ("In Application Programming") from a remote HTTP server. <a href="./STM32H747I-DISCO/Applications/NetXDuo/Nx_IAP_Client_wifi/readme.html">more …</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>NetXDuo</td>
 <td>Nx_Iperf_wifi</td>
 <td>It is a network traffic tool for measuring TCP and UDP performance with metrics around both throughput and latency. <a href="./STM32H747I-DISCO/Applications/NetXDuo/Nx_Iperf_wifi/readme.html">more …</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>NetXDuo</td>
 <td>Nx_MDNS_wifi</td>
 <td>It demonstrates mDNS protocole on Cypress module. <a href="./STM32H747I-DISCO/Applications/NetXDuo/Nx_MDNS_wifi/readme.html">more …</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>NetXDuo</td>
 <td>Nx_MQTT_Client_wifi</td>
 <td>It demonstrates how to exchange data between client and server using MQTT protocol in an encrypted mode supporting TLS v1.2. <a href="./STM32H747I-DISCO/Applications/NetXDuo/Nx_MQTT_Client_wifi/readme.html">more …</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>NetXDuo</td>
 <td>Nx_Network_Basics_wifi</td>
 <td>It demonstrates WiFi connectivity with scan, ping, HTTP download and TCP echo server. <a href="./STM32H747I-DISCO/Applications/NetXDuo/Nx_Network_Basics_wifi/readme.html">more …</a></td>
@@ -305,7 +320,7 @@
 <ul>
 <li>Depending on the use case it is also possible to configure the cache attributes using the MPU.</li>
 <li>Please refer to the <strong>AN4838</strong> “Managing memory protection unit (MPU) in STM32 MCUs”.</li>
-<li>Please refer to the <strong>AN4839</strong> “Level 1 cache on STM32F7 Series”</li>
+<li>Please refer to the <strong>AN4839</strong> “Level 1 cache on STM32F7 Series and STM32H7 Series”</li>
 </ul></li>
 </ol>
 <h4 id="threadx-usage-hints"><b>ThreadX usage hints</b></h4>

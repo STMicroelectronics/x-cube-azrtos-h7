@@ -78,15 +78,14 @@ extern "C" {
 
 #ifdef LX_NAND_DEFAULT_DRIVER
 
-/* USER CODE BEGIN DEFAULT_DRIVER */
-
+/* USER CODE BEGIN NAND_DEFAULT_DRIVER */
 /* uncomment the define below to enabled the default driver usage */
 /* #define USE_LX_NAND_DEFAULT_DRIVER */
 
 #ifdef USE_LX_NAND_DEFAULT_DRIVER
 #define NAND_DEFAULT_DRIVER    /* add Driver ID from the defines above (for example LX_NAND_SIMULATOR_DRIVER_ID) */
 #endif
-/* USER CODE END DEFAULT_DRIVER */
+/* USER CODE END NAND_DEFAULT_DRIVER */
 #endif
 
 /* USER CODE BEGIN EC */

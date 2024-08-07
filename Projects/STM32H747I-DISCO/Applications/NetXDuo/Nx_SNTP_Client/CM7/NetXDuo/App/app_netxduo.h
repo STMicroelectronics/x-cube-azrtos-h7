@@ -96,6 +96,8 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr);
 #define MAIN_THREAD_MEMORY           2 * 1024
 
 #define LINK_PRIORITY                11
+#define NULL_ADDRESS                 0
+
 /* Define how often the demo checks for SNTP updates. */
 #define PERIODIC_CHECK_INTERVAL      (60 * NX_IP_PERIODIC_RATE)
 
@@ -111,7 +113,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr);
    Epoch converter (referenced to 1970) and SNTP (referenced to 1900) */
 #define EPOCH_TIME_DIFF             2208988800
 
-#define NX_APP_CABLE_CONNECTION_CHECK_PERIOD      (6 * NX_IP_PERIODIC_RATE)
+#define NX_APP_CABLE_CONNECTION_CHECK_PERIOD      (1 * NX_IP_PERIODIC_RATE)
 
 /* USER CODE END PD */
 

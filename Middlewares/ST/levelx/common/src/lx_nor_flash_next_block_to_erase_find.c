@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nor_flash_next_block_to_erase_find              PORTABLE C      */ 
-/*                                                           6.1.7        */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -81,6 +81,12 @@
 /*                                            resulting in version 6.1    */
 /*  06-02-2021     Bhupendra Naphade        Modified comment(s),          */
 /*                                            resulting in version 6.1.7  */
+/*  10-31-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            added mapping bitmap cache, */
+/*                                            added obsolete count cache, */
+/*                                            optimized full obsoleted    */
+/*                                            block searching logic,      */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nor_flash_next_block_to_erase_find(LX_NOR_FLASH *nor_flash, ULONG *return_erase_block, ULONG *return_erase_count, ULONG *return_mapped_sectors, ULONG *return_obsolete_sectors)
@@ -97,16 +103,23 @@ ULONG   min_block_erase = 0;
 ULONG   min_block_erase_count;
 ULONG   min_block_obsolete_count = 0;
 ULONG   min_block_mapped_count = 0;
+ULONG   min_block_mapped_count_available = LX_FALSE;
 ULONG   max_obsolete_sectors;
 ULONG   max_obsolete_block = 0;
 ULONG   max_obsolete_erase_count = 0;
 ULONG   max_obsolete_mapped_count = 0;
+ULONG   max_obsolete_mapped_count_available = LX_FALSE;
 ULONG   min_system_block_erase_count;
+ULONG   system_min_erased_blocks;
 ULONG   max_system_block_erase_count;
 ULONG   erase_count_threshold;
+ULONG   min_logical_sector;
+ULONG   max_logical_sector;
 #ifndef LX_DIRECT_READ
 UINT    status;
 #endif
+UINT    obsolete_sectors_available;
+UINT    mapped_sectors_available;
 
 
     /* Setup the block word pointer to the first word of the search block.  */
@@ -117,6 +130,7 @@ UINT    status;
     
     /* Initialize the system minimum and maximum erase counts.  */
     min_system_block_erase_count =  LX_ALL_ONES;
+    system_min_erased_blocks = 0;
     max_system_block_erase_count =  0;
         
     /* Initialize the maximum obsolete sector count.  */
@@ -161,34 +175,71 @@ UINT    status;
 #endif
 
         /* Update the system minimum and maximum erase counts.  */
+        if (erase_count == min_system_block_erase_count)
+        {
+            system_min_erased_blocks ++;
+        }
         if (erase_count < min_system_block_erase_count)
+        {
             min_system_block_erase_count =  erase_count;
+            system_min_erased_blocks = 1;
+        }
         if (erase_count > max_system_block_erase_count)
             max_system_block_erase_count =  erase_count;
 
-        /* Compute the number of obsolete and mapped sectors for this block.  */
-        obsolete_sectors =  0;
-        mapped_sectors =    0;
+        /* Initialize the obsolete and mapped sector count available flags.  */
+        obsolete_sectors_available =  LX_FALSE;
+        mapped_sectors_available =  LX_FALSE;
         
-        /* Setup a pointer to the mapped list.  */
-        list_word_ptr =  block_word_ptr + nor_flash -> lx_nor_flash_block_physical_sector_mapping_offset;
+#ifdef LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
 
-        /* Loop through the mapped list for this block.  */
-        for (j = 0; j < nor_flash -> lx_nor_flash_physical_sectors_per_block; j++)
+        /* Determine if the obsolete sector count is available in the cache.  */
+        if (i < nor_flash -> lx_nor_flash_extended_cache_obsolete_count_max_block)
+        {
+
+            /* Yes, the obsolete sector count is available.  */
+            obsolete_sectors_available =  LX_TRUE;
+
+            /* Pickup the obsolete sector count from the cache.  */
+            obsolete_sectors = (ULONG)nor_flash -> lx_nor_flash_extended_cache_obsolete_count[i];
+        }
+        else
+        {
+#endif
+        /* Read the minimum and maximum logical sector values in this block.  */
+#ifdef LX_DIRECT_READ
+        
+        /* Read the word directly.  */
+        min_logical_sector =  *(block_word_ptr + LX_NOR_FLASH_MIN_LOGICAL_SECTOR_OFFSET);
+#else
+        status =  _lx_nor_flash_driver_read(nor_flash, block_word_ptr + LX_NOR_FLASH_MIN_LOGICAL_SECTOR_OFFSET, &min_logical_sector, 1);
+
+        /* Check for an error from flash driver. Drivers should never return an error..  */
+        if (status)
         {
         
-            /* Read the current mapping entry.  */
+            /* Call system error handler.  */
+            _lx_nor_flash_system_error(nor_flash, status);
+
+            /* Return the error.  */
+            return(status);
+        }
+#endif
+        
+        /* Determine if the minimum logical sector is valid.  */
+        if (min_logical_sector != LX_ALL_ONES)
+        {
 #ifdef LX_DIRECT_READ
         
             /* Read the word directly.  */
-            list_word =  *(list_word_ptr);
+            max_logical_sector =  *(block_word_ptr + LX_NOR_FLASH_MAX_LOGICAL_SECTOR_OFFSET);
 #else
-            status =  _lx_nor_flash_driver_read(nor_flash, list_word_ptr, &list_word, 1);
+            status =  _lx_nor_flash_driver_read(nor_flash, block_word_ptr + LX_NOR_FLASH_MAX_LOGICAL_SECTOR_OFFSET, &max_logical_sector, 1);
 
             /* Check for an error from flash driver. Drivers should never return an error..  */
             if (status)
             {
-        
+            
                 /* Call system error handler.  */
                 _lx_nor_flash_system_error(nor_flash, status);
 
@@ -196,33 +247,104 @@ UINT    status;
                 return(status);
             }
 #endif
-            
-            /* Determine if the entry hasn't been used.  */
-            if (list_word == LX_NOR_PHYSICAL_SECTOR_FREE)
-            {
-                
-                /* Since allocations are done sequentially in the block, we know nothing
-                   else exists after this point.  */
-                break;
-            }
-            
-            /* Is this entry obsolete?  */
-            if ((list_word & LX_NOR_PHYSICAL_SECTOR_VALID) == 0)
-            {
-                
-                /* Increment the number of obsolete sectors.  */
-                obsolete_sectors++;    
-            }
-            else
-            {
-                
-                /* Increment the number of mapped sectors.  */
-                mapped_sectors++;
-            }
 
-            /* Move the list pointer ahead.  */
-            list_word_ptr++;
+            /* Are the values valid?  */
+            /* Now let's check to see if all the sector are obsoleted.  */
+            if ((max_logical_sector != LX_ALL_ONES) && (max_logical_sector < min_logical_sector))
+            {
+                
+                obsolete_sectors_available =  LX_TRUE;
+                obsolete_sectors =  nor_flash -> lx_nor_flash_physical_sectors_per_block;
+            }
         }
+#ifdef LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
+        }
+#endif
+
+        /* Determine if the mapped sector count is available.  */
+        if (obsolete_sectors_available == LX_FALSE)
+        {
+
+            /* Compute the number of obsolete and mapped sectors for this block.  */
+
+            /* Initialize the obsolete and mapped sector counts.  */
+            obsolete_sectors =  0;
+            mapped_sectors =    0;
+
+            /* Set the mapped sector count and obsolete sector count available flags.  */
+            mapped_sectors_available =  LX_TRUE;
+            obsolete_sectors_available =  LX_TRUE;
+
+            /* Setup a pointer to the mapped list.  */
+            list_word_ptr =  block_word_ptr + nor_flash -> lx_nor_flash_block_physical_sector_mapping_offset;
+
+            /* Loop through the mapped list for this block.  */
+            for (j = 0; j < nor_flash -> lx_nor_flash_physical_sectors_per_block; j++)
+            {
+            
+                /* Read the current mapping entry.  */
+#ifdef LX_DIRECT_READ
+            
+                /* Read the word directly.  */
+                list_word =  *(list_word_ptr);
+#else
+                status =  _lx_nor_flash_driver_read(nor_flash, list_word_ptr, &list_word, 1);
+
+                /* Check for an error from flash driver. Drivers should never return an error..  */
+                if (status)
+                {
+            
+                    /* Call system error handler.  */
+                    _lx_nor_flash_system_error(nor_flash, status);
+
+                    /* Return the error.  */
+                    return(status);
+                }
+#endif
+                
+                /* Determine if the entry hasn't been used.  */
+                if (list_word == LX_NOR_PHYSICAL_SECTOR_FREE)
+                {
+                    
+                    /* Since allocations are done sequentially in the block, we know nothing
+                       else exists after this point.  */
+                    break;
+                }
+                
+                /* Is this entry obsolete?  */
+                if ((list_word & LX_NOR_PHYSICAL_SECTOR_VALID) == 0)
+                {
+                    
+                    /* Increment the number of obsolete sectors.  */
+                    obsolete_sectors++;    
+                }
+                else
+                {
+                    
+                    /* Increment the number of mapped sectors.  */
+                    mapped_sectors++;
+                }
+
+                /* Move the list pointer ahead.  */
+                list_word_ptr++;
+            }
+        }
+        
+        /* Determine if this block contains full obsoleted sectors and the erase count is minimum.  */
+        if ((obsolete_sectors == nor_flash -> lx_nor_flash_physical_sectors_per_block) && 
+            (erase_count == nor_flash -> lx_nor_flash_minimum_erase_count) &&
+            (nor_flash -> lx_nor_flash_minimum_erased_blocks > 0))
+        {
+
+            /* Yes, we have a full obsoleted block with minimum erase count.  */
+            *return_erase_block =       i;
+            *return_erase_count =       erase_count;
+            *return_obsolete_sectors =  obsolete_sectors;
+            *return_mapped_sectors =    mapped_sectors;
+
+            break;
+        }
+                
 
         /* Determine if we have a block with a new maximum number of obsolete sectors.  */
         if ((obsolete_sectors > max_obsolete_sectors) && (erase_count <= erase_count_threshold))
@@ -233,6 +355,8 @@ UINT    status;
             max_obsolete_block =        i;
             max_obsolete_erase_count =  erase_count;
             max_obsolete_mapped_count = mapped_sectors;
+            max_obsolete_mapped_count_available = mapped_sectors_available;
+            
         }
         else if ((max_obsolete_sectors) && (obsolete_sectors == max_obsolete_sectors) && (erase_count <= erase_count_threshold))
         {
@@ -247,6 +371,7 @@ UINT    status;
                 max_obsolete_block =        i;
                 max_obsolete_erase_count =  erase_count;
                 max_obsolete_mapped_count = mapped_sectors;
+                max_obsolete_mapped_count_available = mapped_sectors_available;
             }
         }
         
@@ -259,36 +384,105 @@ UINT    status;
             min_block_erase =           i;
             min_block_obsolete_count =  obsolete_sectors;
             min_block_mapped_count =    mapped_sectors;
+            min_block_mapped_count_available = mapped_sectors_available;
         }
           
         /* Move to the next block.  */
         block_word_ptr =  block_word_ptr + nor_flash -> lx_nor_flash_words_per_block;
     }
 
-    /* Determine if we can erase the block with the most obsolete sectors.  */
-    if (max_obsolete_sectors)
+    /* Determine if we found a block with full obsoleted sector and the erase count is minimum.  */
+    if (i == nor_flash -> lx_nor_flash_total_blocks)
     {
-    
-        /* Erase the block with the most obsolete sectors.  */
-        *return_erase_block =       max_obsolete_block;
-        *return_erase_count =       max_obsolete_erase_count;
-        *return_obsolete_sectors =  max_obsolete_sectors;
-        *return_mapped_sectors =    max_obsolete_mapped_count;
-    }
-    else
-    {
-      
-        /* Otherwise, choose the block with the smallest erase count.  */
-        *return_erase_block =       min_block_erase;
-        *return_erase_count =       min_block_erase_count;
-        *return_obsolete_sectors =  min_block_obsolete_count;
-        *return_mapped_sectors =    min_block_mapped_count;
+
+        /* Determine if we can erase the block with the most obsolete sectors.  */
+        if (max_obsolete_sectors)
+        {
+        
+            /* Erase the block with the most obsolete sectors.  */
+            *return_erase_block =       max_obsolete_block;
+            *return_erase_count =       max_obsolete_erase_count;
+            *return_obsolete_sectors =  max_obsolete_sectors;
+            *return_mapped_sectors =    max_obsolete_mapped_count;
+            mapped_sectors_available =  max_obsolete_mapped_count_available;
+        }
+        else
+        {
+          
+            /* Otherwise, choose the block with the smallest erase count.  */
+            *return_erase_block =       min_block_erase;
+            *return_erase_count =       min_block_erase_count;
+            *return_obsolete_sectors =  min_block_obsolete_count;
+            *return_mapped_sectors =    min_block_mapped_count;
+            mapped_sectors_available =  min_block_mapped_count_available;
+        }
+
+        /* Update the overall minimum and maximum erase count.  */
+        nor_flash -> lx_nor_flash_minimum_erase_count =  min_system_block_erase_count;
+        nor_flash -> lx_nor_flash_minimum_erased_blocks =  system_min_erased_blocks;
+        nor_flash -> lx_nor_flash_maximum_erase_count =  max_system_block_erase_count;
     }
 
-    /* Update the overall minimum and maximum erase count.  */
-    nor_flash -> lx_nor_flash_minimum_erase_count =  min_system_block_erase_count;
-    nor_flash -> lx_nor_flash_maximum_erase_count =  max_system_block_erase_count;
-    
+    /* Determine if the mapped sector count is available.  */
+    if (mapped_sectors_available == LX_FALSE)
+    {
+
+        /* Compute the number of obsolete and mapped sectors for this block.  */
+        mapped_sectors =  0;
+
+        /* Setup a pointer to the mapped list.  */
+        block_word_ptr =  nor_flash -> lx_nor_flash_base_address + *return_erase_block * nor_flash -> lx_nor_flash_words_per_block;
+        list_word_ptr =  block_word_ptr + nor_flash -> lx_nor_flash_block_physical_sector_mapping_offset;
+        
+        /* Loop through the mapped list for this block.  */
+        for (j = 0; j < nor_flash -> lx_nor_flash_physical_sectors_per_block; j++)
+        {
+            
+            /* Read the current mapping entry.  */
+#ifdef LX_DIRECT_READ
+            
+            /* Read the word directly.  */
+            list_word =  *(list_word_ptr);
+#else
+            status =  _lx_nor_flash_driver_read(nor_flash, list_word_ptr, &list_word, 1);
+            
+            /* Check for an error from flash driver. Drivers should never return an error..  */
+            if (status)
+            {
+                
+                /* Call system error handler.  */
+                _lx_nor_flash_system_error(nor_flash, status);
+                
+                /* Return the error.  */
+                return(status);
+            }
+#endif
+            
+            /* Determine if the entry hasn't been used.  */
+            if (list_word == LX_NOR_PHYSICAL_SECTOR_FREE)
+            {
+                
+                /* Since allocations are done sequentially in the block, we know nothing
+                       else exists after this point.  */
+                break;
+            }
+            
+            /* Is this entry mapped?  */
+            if ((list_word & LX_NOR_PHYSICAL_SECTOR_VALID) != 0)
+            {
+                
+                /* Increment the number of mapped sectors.  */
+                mapped_sectors++;
+            }
+            
+            /* Move the list pointer ahead.  */
+            list_word_ptr++;
+        }
+        
+        /* Return the mapped sector count.  */
+        *return_mapped_sectors = mapped_sectors;
+        
+    }
     /* Return success.  */
     return(LX_SUCCESS);
 }
