@@ -12,8 +12,8 @@
 
 /**************************************************************************/
 /**************************************************************************/
-/**                                                                       */ 
-/** USBX Component                                                        */ 
+/**                                                                       */
+/** USBX Component                                                        */
 /**                                                                       */
 /**   Application Interface (API)                                         */
 /**                                                                       */
@@ -21,28 +21,28 @@
 /**************************************************************************/
 
 
-/**************************************************************************/ 
-/*                                                                        */ 
-/*  APPLICATION INTERFACE DEFINITION                       RELEASE        */ 
-/*                                                                        */ 
-/*    ux_api.h                                            PORTABLE C      */ 
-/*                                                           6.2.0        */
+/**************************************************************************/
+/*                                                                        */
+/*  APPLICATION INTERFACE DEFINITION                       RELEASE        */
+/*                                                                        */
+/*    ux_api.h                                            PORTABLE C      */
+/*                                                           6.4.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
 /*                                                                        */
 /*  DESCRIPTION                                                           */
-/*                                                                        */ 
-/*    This file defines the basic Application Interface (API) to the      */ 
-/*    high-performance USBX real-time USB stack.  All service prototypes  */ 
-/*    and data structure definitions are defined in this file.            */ 
-/*    Please note that basic data type definitions and other architecture-*/ 
-/*    specific information is contained in the file ux_port.h.            */ 
-/*                                                                        */ 
-/*  RELEASE HISTORY                                                       */ 
-/*                                                                        */ 
-/*    DATE              NAME                      DESCRIPTION             */ 
-/*                                                                        */ 
+/*                                                                        */
+/*    This file defines the basic Application Interface (API) to the      */
+/*    high-performance USBX real-time USB stack.  All service prototypes  */
+/*    and data structure definitions are defined in this file.            */
+/*    Please note that basic data type definitions and other architecture-*/
+/*    specific information is contained in the file ux_port.h.            */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            added query usage of device */
@@ -128,10 +128,24 @@
 /*                                            added interface instance    */
 /*                                            creation strategy control,  */
 /*                                            resulting in version 6.2.0  */
+/*  03-08-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            accepted UX_MAX_CLASSES as  */
+/*                                            max class driver configure, */
+/*                                            added a new error code,     */
+/*                                            resulting in version 6.2.1  */
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            refined memory management,  */
+/*                                            added a new mode to manage  */
+/*                                            endpoint buffer in classes, */
+/*                                            optimized USB descriptors,  */
+/*                                            added error checks support, */
+/*                                            resulting in version 6.3.0  */
+/*  12-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            resulting in version 6.4.0  */
 /*                                                                        */
 /**************************************************************************/
 
-#ifndef UX_API_H       
+#ifndef UX_API_H
 #define UX_API_H
 
 /* Determine if a C++ compiler is being used.  If so, ensure that standard
@@ -150,7 +164,7 @@ extern   "C" {
 
 /* Process compile options:
  *
- * - UX_HOST_SIDE_ONLY/UX_HOST_STANDALONE: 
+ * - UX_HOST_SIDE_ONLY/UX_HOST_STANDALONE:
  *   Must not be defined at the same time,
  *   When defined, only host/device side APIs are available.
  *
@@ -181,6 +195,33 @@ extern   "C" {
 #endif
 #endif
 
+/* Internal option: enable the basic USBX error checking. This define is typically used
+   while debugging application.  */
+#if defined(UX_ENABLE_ERROR_CHECKING) && !defined(UX_SYSTEM_ENABLE_ERROR_CHECKING)
+#define UX_SYSTEM_ENABLE_ERROR_CHECKING
+#endif
+
+/* Internal option: enable the basic USBX error checking. This define is typically used
+   while debugging application.  */
+#if defined(UX_ENABLE_ERROR_CHECKING) && !defined(UX_DEVICE_STACK_ENABLE_ERROR_CHECKING)
+#define UX_DEVICE_STACK_ENABLE_ERROR_CHECKING
+#endif
+
+/* Internal option: enable the basic USBX error checking. This define is typically used
+   while debugging application.  */
+#if defined(UX_ENABLE_ERROR_CHECKING) && !defined(UX_HOST_STACK_ENABLE_ERROR_CHECKING)
+#define UX_HOST_STACK_ENABLE_ERROR_CHECKING
+#endif
+
+/* Defined, this value represents the endpoint buffer owner.
+   0 - The default, endpoint buffer is managed by core stack. Each endpoint takes UX_SLAVE_REQUEST_DATA_MAX_LENGTH bytes.
+   1 - Endpoint buffer managed by classes. In this case not all endpoints consume UX_SLAVE_REQUEST_DATA_MAX_LENGTH bytes.
+*/
+#ifndef UX_DEVICE_ENDPOINT_BUFFER_OWNER
+#define UX_DEVICE_ENDPOINT_BUFFER_OWNER             0
+#endif
+#define UX_DEVICE_ENDPOINT_BUFFER_OWNER_CORE        0
+#define UX_DEVICE_ENDPOINT_BUFFER_OWNER_CLASS       1
 
 /* Define the maximum length for class names (exclude string null-terminator).  */
 #define UX_MAX_CLASS_NAME_LENGTH    63
@@ -251,10 +292,17 @@ typedef signed char               SCHAR;
 /* Define USBX device max bInterfaceNumber of interfaces (0 ~ n),
    it must be larger than max bInterfaceNumber in USB
    framework descriptors.  */
-#ifndef UX_MAX_SLAVE_INTERFACES  
+#ifndef UX_MAX_SLAVE_INTERFACES
 #define UX_MAX_SLAVE_INTERFACES                             16
 #endif
 
+/* Define USBX max number of classes (1 ~ n).  */
+#ifndef UX_MAX_CLASSES
+#define UX_MAX_CLASSES                                      2
+#endif
+#ifndef UX_MAX_CLASS_DRIVER
+#define UX_MAX_CLASS_DRIVER                                 UX_MAX_CLASSES
+#endif
 
 /* Define USBX max number of devices (1 ~ n).  */
 #ifndef UX_MAX_DEVICES
@@ -294,7 +342,7 @@ typedef signed char               SCHAR;
 /* Define basic constants for the USBX Stack.  */
 #define AZURE_RTOS_USBX
 #define USBX_MAJOR_VERSION            6
-#define USBX_MINOR_VERSION            2
+#define USBX_MINOR_VERSION            4
 #define USBX_PATCH_VERSION            0
 
 /* Macros for concatenating tokens, where UX_CONCATn concatenates n tokens.  */
@@ -383,7 +431,7 @@ typedef signed char               SCHAR;
 #ifndef UX_DEBUG_LOG_SIZE
 #define UX_DEBUG_LOG_SIZE                                   (1024 * 32)
 #endif
-   
+
 /* Map the error log macros to internal USBX function.  */
 
 #define UX_DEBUG_LOG(debug_location, debug_message, debug_code, debug_parameter_1, debug_parameter_2)  _ux_utility_debug_log((UCHAR *) debug_location, (UCHAR *) debug_message, (ULONG) debug_code, (ULONG) debug_parameter_1, (ULONG) debug_parameter_2);
@@ -399,8 +447,8 @@ VOID _ux_utility_debug_log(UCHAR *debug_location, UCHAR *debug_message, ULONG de
 
 /* If Log is not defined, map it to nothing so that debug messages can stay in the code.  */
 #define UX_DEBUG_LOG(debug_location, debug_message, debug_code, debug_parameter_1, debug_parameter_2)
-#endif    
-    
+#endif
+
 /* Determine if tracing is enabled.  */
 
 #if defined(TX_ENABLE_EVENT_TRACE) && !defined(UX_STANDALONE)
@@ -437,7 +485,7 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_TRACE_HOST_OBJECT_TYPE_INTERFACE                             (UX_TRACE_OBJECT_TYPE_BASE + 2)
 #define UX_TRACE_HOST_OBJECT_TYPE_ENDPOINT                              (UX_TRACE_OBJECT_TYPE_BASE + 3)
 #define UX_TRACE_HOST_OBJECT_TYPE_CLASS_INSTANCE                        (UX_TRACE_OBJECT_TYPE_BASE + 4)
-                                                                        
+
 #define UX_TRACE_DEVICE_OBJECT_TYPE_DEVICE                              (UX_TRACE_OBJECT_TYPE_BASE + 5)
 #define UX_TRACE_DEVICE_OBJECT_TYPE_INTERFACE                           (UX_TRACE_OBJECT_TYPE_BASE + 6)
 #define UX_TRACE_DEVICE_OBJECT_TYPE_ENDPOINT                            (UX_TRACE_OBJECT_TYPE_BASE + 7)
@@ -446,13 +494,13 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 /* Define event filters that can be used to selectively disable certain events or groups of events.  */
 
 #define UX_TRACE_ALL_EVENTS                                             0x7F000000  /* All USBX events                          */
-#define UX_TRACE_ERRORS                                                 0x01000000  /* USBX Errors events                       */ 
-#define UX_TRACE_HOST_STACK_EVENTS                                      0x02000000  /* USBX Host Class Events                   */ 
-#define UX_TRACE_DEVICE_STACK_EVENTS                                    0x04000000  /* USBX Device Class Events                 */ 
-#define UX_TRACE_HOST_CONTROLLER_EVENTS                                 0x08000000  /* USBX Host Controller Events              */ 
-#define UX_TRACE_DEVICE_CONTROLLER_EVENTS                               0x10000000  /* USBX Device Controllers Events           */ 
-#define UX_TRACE_HOST_CLASS_EVENTS                                      0x20000000  /* USBX Host Class Events                   */ 
-#define UX_TRACE_DEVICE_CLASS_EVENTS                                    0x40000000  /* USBX Device Class Events                 */ 
+#define UX_TRACE_ERRORS                                                 0x01000000  /* USBX Errors events                       */
+#define UX_TRACE_HOST_STACK_EVENTS                                      0x02000000  /* USBX Host Class Events                   */
+#define UX_TRACE_DEVICE_STACK_EVENTS                                    0x04000000  /* USBX Device Class Events                 */
+#define UX_TRACE_HOST_CONTROLLER_EVENTS                                 0x08000000  /* USBX Host Controller Events              */
+#define UX_TRACE_DEVICE_CONTROLLER_EVENTS                               0x10000000  /* USBX Device Controllers Events           */
+#define UX_TRACE_HOST_CLASS_EVENTS                                      0x20000000  /* USBX Host Class Events                   */
+#define UX_TRACE_DEVICE_CLASS_EVENTS                                    0x40000000  /* USBX Device Class Events                 */
 
 
 /* Define the trace events in USBX, if not defined.  */
@@ -460,219 +508,219 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 /* Define the USBX host stack events.  */
 
 #define UX_TRACE_HOST_STACK_EVENTS_BASE                                 600
-#define UX_TRACE_HOST_STACK_CLASS_INSTANCE_CREATE                       (UX_TRACE_HOST_STACK_EVENTS_BASE + 1)               /* I1 = class           , I2 = class instance                                                       */    
-#define UX_TRACE_HOST_STACK_CLASS_INSTANCE_DESTROY                      (UX_TRACE_HOST_STACK_EVENTS_BASE + 2)               /* I1 = class           , I2 = class instance                                                       */    
-#define UX_TRACE_HOST_STACK_CONFIGURATION_DELETE                        (UX_TRACE_HOST_STACK_EVENTS_BASE + 3)               /* I1 = configuration                                                                               */    
-#define UX_TRACE_HOST_STACK_CONFIGURATION_ENUMERATE                     (UX_TRACE_HOST_STACK_EVENTS_BASE + 4)               /* I1 = device                                                                                      */    
-#define UX_TRACE_HOST_STACK_CONFIGURATION_INSTANCE_CREATE               (UX_TRACE_HOST_STACK_EVENTS_BASE + 5)               /* I1 = configuration                                                                               */    
-#define UX_TRACE_HOST_STACK_CONFIGURATION_INSTANCE_DELETE               (UX_TRACE_HOST_STACK_EVENTS_BASE + 6)               /* I1 = configuration                                                                               */    
-#define UX_TRACE_HOST_STACK_CONFIGURATION_SET                           (UX_TRACE_HOST_STACK_EVENTS_BASE + 7)               /* I1 = configuration                                                                               */    
-#define UX_TRACE_HOST_STACK_DEVICE_ADDRESS_SET                          (UX_TRACE_HOST_STACK_EVENTS_BASE + 8)               /* I1 = device          , I2 = device address                                                       */    
-#define UX_TRACE_HOST_STACK_DEVICE_CONFIGURATION_GET                    (UX_TRACE_HOST_STACK_EVENTS_BASE + 9)               /* I1 = device          , I2 = configuration                                                        */    
-#define UX_TRACE_HOST_STACK_DEVICE_CONFIGURATION_SELECT                 (UX_TRACE_HOST_STACK_EVENTS_BASE + 10)              /* I1 = device          , I2 = configuration                                                        */    
-#define UX_TRACE_HOST_STACK_DEVICE_DESCRIPTOR_READ                      (UX_TRACE_HOST_STACK_EVENTS_BASE + 11)              /* I1 = device                                                                                      */    
-#define UX_TRACE_HOST_STACK_DEVICE_GET                                  (UX_TRACE_HOST_STACK_EVENTS_BASE + 12)              /* I1 = device index                                                                                */    
-#define UX_TRACE_HOST_STACK_DEVICE_REMOVE                               (UX_TRACE_HOST_STACK_EVENTS_BASE + 13)              /* I1 = hcd             , I2 = parent          , I3 = port index        , I4 = device               */    
-#define UX_TRACE_HOST_STACK_DEVICE_RESOURCE_FREE                        (UX_TRACE_HOST_STACK_EVENTS_BASE + 14)              /* I1 = device                                                                                      */    
-#define UX_TRACE_HOST_STACK_ENDPOINT_INSTANCE_CREATE                    (UX_TRACE_HOST_STACK_EVENTS_BASE + 15)              /* I1 = device          , I2 = endpoint                                                             */    
-#define UX_TRACE_HOST_STACK_ENDPOINT_INSTANCE_DELETE                    (UX_TRACE_HOST_STACK_EVENTS_BASE + 16)              /* I1 = device          , I2 = endpoint                                                             */    
-#define UX_TRACE_HOST_STACK_ENDPOINT_RESET                              (UX_TRACE_HOST_STACK_EVENTS_BASE + 17)              /* I1 = device          , I2 = endpoint                                                             */    
-#define UX_TRACE_HOST_STACK_ENDPOINT_TRANSFER_ABORT                     (UX_TRACE_HOST_STACK_EVENTS_BASE + 18)              /* I1 = endpoint                                                                                    */    
-#define UX_TRACE_HOST_STACK_HCD_REGISTER                                (UX_TRACE_HOST_STACK_EVENTS_BASE + 19)              /* I1 = hcd name        , I2 = parameter 1     , I3 = parameter 2                                   */    
-#define UX_TRACE_HOST_STACK_INITIALIZE                                  (UX_TRACE_HOST_STACK_EVENTS_BASE + 20)              /*                                                                                                  */       
-#define UX_TRACE_HOST_STACK_INTERFACE_ENDPOINT_GET                      (UX_TRACE_HOST_STACK_EVENTS_BASE + 21)              /* I1 = interface       , I2 = endpoint index                                                       */    
-#define UX_TRACE_HOST_STACK_INTERFACE_INSTANCE_CREATE                   (UX_TRACE_HOST_STACK_EVENTS_BASE + 22)              /* I1 = interface                                                                                   */    
-#define UX_TRACE_HOST_STACK_INTERFACE_INSTANCE_DELETE                   (UX_TRACE_HOST_STACK_EVENTS_BASE + 23)              /* I1 = interface                                                                                   */    
-#define UX_TRACE_HOST_STACK_INTERFACE_SET                               (UX_TRACE_HOST_STACK_EVENTS_BASE + 24)              /* I1 = interface                                                                                   */    
-#define UX_TRACE_HOST_STACK_INTERFACE_SETTING_SELECT                    (UX_TRACE_HOST_STACK_EVENTS_BASE + 25)              /* I1 = interface                                                                                   */    
-#define UX_TRACE_HOST_STACK_NEW_CONFIGURATION_CREATE                    (UX_TRACE_HOST_STACK_EVENTS_BASE + 26)              /* I1 = device          , I2 = configuration                                                        */    
-#define UX_TRACE_HOST_STACK_NEW_DEVICE_CREATE                           (UX_TRACE_HOST_STACK_EVENTS_BASE + 27)              /* I1 = hcd             , I2 = device owner    , I3 = port index        , I4 = device               */    
-#define UX_TRACE_HOST_STACK_NEW_ENDPOINT_CREATE                         (UX_TRACE_HOST_STACK_EVENTS_BASE + 28)              /* I1 = interface       , I2 = endpoint                                                             */    
-#define UX_TRACE_HOST_STACK_RH_CHANGE_PROCESS                           (UX_TRACE_HOST_STACK_EVENTS_BASE + 29)              /* I1 = port index                                                                                  */       
-#define UX_TRACE_HOST_STACK_RH_DEVICE_EXTRACTION                        (UX_TRACE_HOST_STACK_EVENTS_BASE + 30)              /* I1 = hcd             , I2 = port index                                                           */    
-#define UX_TRACE_HOST_STACK_RH_DEVICE_INSERTION                         (UX_TRACE_HOST_STACK_EVENTS_BASE + 31)              /* I1 = hcd             , I2 = port index                                                           */    
-#define UX_TRACE_HOST_STACK_TRANSFER_REQUEST                            (UX_TRACE_HOST_STACK_EVENTS_BASE + 32)              /* I1 = device          , I2 = endpoint        , I3 = transfer request                              */    
-#define UX_TRACE_HOST_STACK_TRANSFER_REQUEST_ABORT                      (UX_TRACE_HOST_STACK_EVENTS_BASE + 33)              /* I1 = device          , I2 = endpoint        , I3 = transfer request                              */    
-#define UX_TRACE_HOST_STACK_UNINITIALIZE                                (UX_TRACE_HOST_STACK_EVENTS_BASE + 34)              /*                                                                                                  */       
-#define UX_TRACE_HOST_STACK_HCD_UNREGISTER                              (UX_TRACE_HOST_STACK_EVENTS_BASE + 35)              /* I1 = hcd name        , I2 = parameter 1     , I3 = parameter 2                                   */    
-#define UX_TRACE_HOST_STACK_CLASS_REGISTER                              (UX_TRACE_HOST_STACK_EVENTS_BASE + 36)              /* I1 = class name      , I2 = entry function                                                       */    
-#define UX_TRACE_HOST_STACK_CLASS_UNREGISTER                            (UX_TRACE_HOST_STACK_EVENTS_BASE + 37)              /* I1 = class entry                                                                                 */    
-#define UX_TRACE_HOST_STACK_DEVICE_STRING_GET                           (UX_TRACE_HOST_STACK_EVENTS_BASE + 38)              /* I1 = device          , I2 = buffer          , I3 = length            , I4 = (langID<<16) | index */    
-#define UX_TRACE_HOST_STACK_DEVICE_CONFIGURATION_ACTIVATE               (UX_TRACE_HOST_STACK_EVENTS_BASE + 39)              /* I1 = device          , I2 = configuration                                                        */    
-#define UX_TRACE_HOST_STACK_DEVICE_CONFIGURATION_DEACTIVATE             (UX_TRACE_HOST_STACK_EVENTS_BASE + 40)              /* I1 = device          , I2 = configuration                                                        */    
-                                                                                                                                                                                                                    
-/* Define the USBX host class events.  */                                                                                                                                                                     
+#define UX_TRACE_HOST_STACK_CLASS_INSTANCE_CREATE                       (UX_TRACE_HOST_STACK_EVENTS_BASE + 1)               /* I1 = class           , I2 = class instance                                                       */
+#define UX_TRACE_HOST_STACK_CLASS_INSTANCE_DESTROY                      (UX_TRACE_HOST_STACK_EVENTS_BASE + 2)               /* I1 = class           , I2 = class instance                                                       */
+#define UX_TRACE_HOST_STACK_CONFIGURATION_DELETE                        (UX_TRACE_HOST_STACK_EVENTS_BASE + 3)               /* I1 = configuration                                                                               */
+#define UX_TRACE_HOST_STACK_CONFIGURATION_ENUMERATE                     (UX_TRACE_HOST_STACK_EVENTS_BASE + 4)               /* I1 = device                                                                                      */
+#define UX_TRACE_HOST_STACK_CONFIGURATION_INSTANCE_CREATE               (UX_TRACE_HOST_STACK_EVENTS_BASE + 5)               /* I1 = configuration                                                                               */
+#define UX_TRACE_HOST_STACK_CONFIGURATION_INSTANCE_DELETE               (UX_TRACE_HOST_STACK_EVENTS_BASE + 6)               /* I1 = configuration                                                                               */
+#define UX_TRACE_HOST_STACK_CONFIGURATION_SET                           (UX_TRACE_HOST_STACK_EVENTS_BASE + 7)               /* I1 = configuration                                                                               */
+#define UX_TRACE_HOST_STACK_DEVICE_ADDRESS_SET                          (UX_TRACE_HOST_STACK_EVENTS_BASE + 8)               /* I1 = device          , I2 = device address                                                       */
+#define UX_TRACE_HOST_STACK_DEVICE_CONFIGURATION_GET                    (UX_TRACE_HOST_STACK_EVENTS_BASE + 9)               /* I1 = device          , I2 = configuration                                                        */
+#define UX_TRACE_HOST_STACK_DEVICE_CONFIGURATION_SELECT                 (UX_TRACE_HOST_STACK_EVENTS_BASE + 10)              /* I1 = device          , I2 = configuration                                                        */
+#define UX_TRACE_HOST_STACK_DEVICE_DESCRIPTOR_READ                      (UX_TRACE_HOST_STACK_EVENTS_BASE + 11)              /* I1 = device                                                                                      */
+#define UX_TRACE_HOST_STACK_DEVICE_GET                                  (UX_TRACE_HOST_STACK_EVENTS_BASE + 12)              /* I1 = device index                                                                                */
+#define UX_TRACE_HOST_STACK_DEVICE_REMOVE                               (UX_TRACE_HOST_STACK_EVENTS_BASE + 13)              /* I1 = hcd             , I2 = parent          , I3 = port index        , I4 = device               */
+#define UX_TRACE_HOST_STACK_DEVICE_RESOURCE_FREE                        (UX_TRACE_HOST_STACK_EVENTS_BASE + 14)              /* I1 = device                                                                                      */
+#define UX_TRACE_HOST_STACK_ENDPOINT_INSTANCE_CREATE                    (UX_TRACE_HOST_STACK_EVENTS_BASE + 15)              /* I1 = device          , I2 = endpoint                                                             */
+#define UX_TRACE_HOST_STACK_ENDPOINT_INSTANCE_DELETE                    (UX_TRACE_HOST_STACK_EVENTS_BASE + 16)              /* I1 = device          , I2 = endpoint                                                             */
+#define UX_TRACE_HOST_STACK_ENDPOINT_RESET                              (UX_TRACE_HOST_STACK_EVENTS_BASE + 17)              /* I1 = device          , I2 = endpoint                                                             */
+#define UX_TRACE_HOST_STACK_ENDPOINT_TRANSFER_ABORT                     (UX_TRACE_HOST_STACK_EVENTS_BASE + 18)              /* I1 = endpoint                                                                                    */
+#define UX_TRACE_HOST_STACK_HCD_REGISTER                                (UX_TRACE_HOST_STACK_EVENTS_BASE + 19)              /* I1 = hcd name        , I2 = parameter 1     , I3 = parameter 2                                   */
+#define UX_TRACE_HOST_STACK_INITIALIZE                                  (UX_TRACE_HOST_STACK_EVENTS_BASE + 20)              /*                                                                                                  */
+#define UX_TRACE_HOST_STACK_INTERFACE_ENDPOINT_GET                      (UX_TRACE_HOST_STACK_EVENTS_BASE + 21)              /* I1 = interface       , I2 = endpoint index                                                       */
+#define UX_TRACE_HOST_STACK_INTERFACE_INSTANCE_CREATE                   (UX_TRACE_HOST_STACK_EVENTS_BASE + 22)              /* I1 = interface                                                                                   */
+#define UX_TRACE_HOST_STACK_INTERFACE_INSTANCE_DELETE                   (UX_TRACE_HOST_STACK_EVENTS_BASE + 23)              /* I1 = interface                                                                                   */
+#define UX_TRACE_HOST_STACK_INTERFACE_SET                               (UX_TRACE_HOST_STACK_EVENTS_BASE + 24)              /* I1 = interface                                                                                   */
+#define UX_TRACE_HOST_STACK_INTERFACE_SETTING_SELECT                    (UX_TRACE_HOST_STACK_EVENTS_BASE + 25)              /* I1 = interface                                                                                   */
+#define UX_TRACE_HOST_STACK_NEW_CONFIGURATION_CREATE                    (UX_TRACE_HOST_STACK_EVENTS_BASE + 26)              /* I1 = device          , I2 = configuration                                                        */
+#define UX_TRACE_HOST_STACK_NEW_DEVICE_CREATE                           (UX_TRACE_HOST_STACK_EVENTS_BASE + 27)              /* I1 = hcd             , I2 = device owner    , I3 = port index        , I4 = device               */
+#define UX_TRACE_HOST_STACK_NEW_ENDPOINT_CREATE                         (UX_TRACE_HOST_STACK_EVENTS_BASE + 28)              /* I1 = interface       , I2 = endpoint                                                             */
+#define UX_TRACE_HOST_STACK_RH_CHANGE_PROCESS                           (UX_TRACE_HOST_STACK_EVENTS_BASE + 29)              /* I1 = port index                                                                                  */
+#define UX_TRACE_HOST_STACK_RH_DEVICE_EXTRACTION                        (UX_TRACE_HOST_STACK_EVENTS_BASE + 30)              /* I1 = hcd             , I2 = port index                                                           */
+#define UX_TRACE_HOST_STACK_RH_DEVICE_INSERTION                         (UX_TRACE_HOST_STACK_EVENTS_BASE + 31)              /* I1 = hcd             , I2 = port index                                                           */
+#define UX_TRACE_HOST_STACK_TRANSFER_REQUEST                            (UX_TRACE_HOST_STACK_EVENTS_BASE + 32)              /* I1 = device          , I2 = endpoint        , I3 = transfer request                              */
+#define UX_TRACE_HOST_STACK_TRANSFER_REQUEST_ABORT                      (UX_TRACE_HOST_STACK_EVENTS_BASE + 33)              /* I1 = device          , I2 = endpoint        , I3 = transfer request                              */
+#define UX_TRACE_HOST_STACK_UNINITIALIZE                                (UX_TRACE_HOST_STACK_EVENTS_BASE + 34)              /*                                                                                                  */
+#define UX_TRACE_HOST_STACK_HCD_UNREGISTER                              (UX_TRACE_HOST_STACK_EVENTS_BASE + 35)              /* I1 = hcd name        , I2 = parameter 1     , I3 = parameter 2                                   */
+#define UX_TRACE_HOST_STACK_CLASS_REGISTER                              (UX_TRACE_HOST_STACK_EVENTS_BASE + 36)              /* I1 = class name      , I2 = entry function                                                       */
+#define UX_TRACE_HOST_STACK_CLASS_UNREGISTER                            (UX_TRACE_HOST_STACK_EVENTS_BASE + 37)              /* I1 = class entry                                                                                 */
+#define UX_TRACE_HOST_STACK_DEVICE_STRING_GET                           (UX_TRACE_HOST_STACK_EVENTS_BASE + 38)              /* I1 = device          , I2 = buffer          , I3 = length            , I4 = (langID<<16) | index */
+#define UX_TRACE_HOST_STACK_DEVICE_CONFIGURATION_ACTIVATE               (UX_TRACE_HOST_STACK_EVENTS_BASE + 39)              /* I1 = device          , I2 = configuration                                                        */
+#define UX_TRACE_HOST_STACK_DEVICE_CONFIGURATION_DEACTIVATE             (UX_TRACE_HOST_STACK_EVENTS_BASE + 40)              /* I1 = device          , I2 = configuration                                                        */
 
-#define UX_TRACE_HOST_CLASS_EVENTS_BASE                                 650                                                                                                                                            
-#define UX_TRACE_HOST_CLASS_ASIX_ACTIVATE                               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 1)               /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_ASIX_DEACTIVATE                             (UX_TRACE_HOST_CLASS_EVENTS_BASE + 2)               /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_ASIX_INTERRUPT_NOTIFICATION                 (UX_TRACE_HOST_CLASS_EVENTS_BASE + 3)               /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_ASIX_READ                                   (UX_TRACE_HOST_CLASS_EVENTS_BASE + 4)               /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */       
-#define UX_TRACE_HOST_CLASS_ASIX_WRITE                                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 5)               /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */                
-                                                                                                                                                                                                                       
-#define UX_TRACE_HOST_CLASS_AUDIO_ACTIVATE                              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 10)              /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_AUDIO_CONTROL_VALUE_GET                     (UX_TRACE_HOST_CLASS_EVENTS_BASE + 11)              /* I1 = class instance                                                                              */                                      
-#define UX_TRACE_HOST_CLASS_AUDIO_CONTROL_VALUE_SET                     (UX_TRACE_HOST_CLASS_EVENTS_BASE + 12)              /* I1 = class instance  , I2 = audio control                                                        */                               
-#define UX_TRACE_HOST_CLASS_AUDIO_DEACTIVATE                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 13)              /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_AUDIO_READ                                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 14)              /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */       
-#define UX_TRACE_HOST_CLASS_AUDIO_STREAMING_SAMPLING_GET                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 15)              /* I1 = class instance                                                                              */                                      
-#define UX_TRACE_HOST_CLASS_AUDIO_STREAMING_SAMPLING_SET                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 16)              /* I1 = class instance  , I2 = audio sampling                                                       */                                                              
-#define UX_TRACE_HOST_CLASS_AUDIO_WRITE                                 (UX_TRACE_HOST_CLASS_EVENTS_BASE + 17)              /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */       
-                                                                                                                                                                                                                          
-#define UX_TRACE_HOST_CLASS_CDC_ACM_ACTIVATE                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 20)              /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_CDC_ACM_DEACTIVATE                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 21)              /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_CDC_ACM_IOCTL_SET_LINE_CODING               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 22)              /* I1 = class instance  , I2 = parameter                                                            */                               
-#define UX_TRACE_HOST_CLASS_CDC_ACM_IOCTL_GET_LINE_CODING               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 23)              /* I1 = class instance  , I2 = parameter                                                            */                               
-#define UX_TRACE_HOST_CLASS_CDC_ACM_IOCTL_SET_LINE_STATE                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 24)              /* I1 = class instance  , I2 = parameter                                                            */                               
-#define UX_TRACE_HOST_CLASS_CDC_ACM_IOCTL_SEND_BREAK                    (UX_TRACE_HOST_CLASS_EVENTS_BASE + 25)              /* I1 = class instance  , I2 = parameter                                                            */                               
-#define UX_TRACE_HOST_CLASS_CDC_ACM_IOCTL_ABORT_IN_PIPE                 (UX_TRACE_HOST_CLASS_EVENTS_BASE + 26)              /* I1 = class instance  , I2 = endpoint                                                             */                               
-#define UX_TRACE_HOST_CLASS_CDC_ACM_IOCTL_ABORT_OUT_PIPE                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 27)              /* I1 = class instance  , I2 = endpointr                                                            */                               
-#define UX_TRACE_HOST_CLASS_CDC_ACM_IOCTL_NOTIFICATION_CALLBACK         (UX_TRACE_HOST_CLASS_EVENTS_BASE + 28)              /* I1 = class instance  , I2 = parameter                                                            */                               
-#define UX_TRACE_HOST_CLASS_CDC_ACM_IOCTL_GET_DEVICE_STATUS             (UX_TRACE_HOST_CLASS_EVENTS_BASE + 29)              /* I1 = class instance  , I2 = device status                                                        */                               
+/* Define the USBX host class events.  */
+
+#define UX_TRACE_HOST_CLASS_EVENTS_BASE                                 650
+#define UX_TRACE_HOST_CLASS_ASIX_ACTIVATE                               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 1)               /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_ASIX_DEACTIVATE                             (UX_TRACE_HOST_CLASS_EVENTS_BASE + 2)               /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_ASIX_INTERRUPT_NOTIFICATION                 (UX_TRACE_HOST_CLASS_EVENTS_BASE + 3)               /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_ASIX_READ                                   (UX_TRACE_HOST_CLASS_EVENTS_BASE + 4)               /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
+#define UX_TRACE_HOST_CLASS_ASIX_WRITE                                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 5)               /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
+
+#define UX_TRACE_HOST_CLASS_AUDIO_ACTIVATE                              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 10)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_AUDIO_CONTROL_VALUE_GET                     (UX_TRACE_HOST_CLASS_EVENTS_BASE + 11)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_AUDIO_CONTROL_VALUE_SET                     (UX_TRACE_HOST_CLASS_EVENTS_BASE + 12)              /* I1 = class instance  , I2 = audio control                                                        */
+#define UX_TRACE_HOST_CLASS_AUDIO_DEACTIVATE                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 13)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_AUDIO_READ                                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 14)              /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
+#define UX_TRACE_HOST_CLASS_AUDIO_STREAMING_SAMPLING_GET                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 15)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_AUDIO_STREAMING_SAMPLING_SET                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 16)              /* I1 = class instance  , I2 = audio sampling                                                       */
+#define UX_TRACE_HOST_CLASS_AUDIO_WRITE                                 (UX_TRACE_HOST_CLASS_EVENTS_BASE + 17)              /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
+
+#define UX_TRACE_HOST_CLASS_CDC_ACM_ACTIVATE                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 20)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_CDC_ACM_DEACTIVATE                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 21)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_CDC_ACM_IOCTL_SET_LINE_CODING               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 22)              /* I1 = class instance  , I2 = parameter                                                            */
+#define UX_TRACE_HOST_CLASS_CDC_ACM_IOCTL_GET_LINE_CODING               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 23)              /* I1 = class instance  , I2 = parameter                                                            */
+#define UX_TRACE_HOST_CLASS_CDC_ACM_IOCTL_SET_LINE_STATE                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 24)              /* I1 = class instance  , I2 = parameter                                                            */
+#define UX_TRACE_HOST_CLASS_CDC_ACM_IOCTL_SEND_BREAK                    (UX_TRACE_HOST_CLASS_EVENTS_BASE + 25)              /* I1 = class instance  , I2 = parameter                                                            */
+#define UX_TRACE_HOST_CLASS_CDC_ACM_IOCTL_ABORT_IN_PIPE                 (UX_TRACE_HOST_CLASS_EVENTS_BASE + 26)              /* I1 = class instance  , I2 = endpoint                                                             */
+#define UX_TRACE_HOST_CLASS_CDC_ACM_IOCTL_ABORT_OUT_PIPE                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 27)              /* I1 = class instance  , I2 = endpointr                                                            */
+#define UX_TRACE_HOST_CLASS_CDC_ACM_IOCTL_NOTIFICATION_CALLBACK         (UX_TRACE_HOST_CLASS_EVENTS_BASE + 28)              /* I1 = class instance  , I2 = parameter                                                            */
+#define UX_TRACE_HOST_CLASS_CDC_ACM_IOCTL_GET_DEVICE_STATUS             (UX_TRACE_HOST_CLASS_EVENTS_BASE + 29)              /* I1 = class instance  , I2 = device status                                                        */
 #define UX_TRACE_HOST_CLASS_CDC_ACM_READ                                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 30)              /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
-#define UX_TRACE_HOST_CLASS_CDC_ACM_RECEPTION_START                     (UX_TRACE_HOST_CLASS_EVENTS_BASE + 31)              /* I1 = class instance                                                                              */                               
-#define UX_TRACE_HOST_CLASS_CDC_ACM_RECEPTION_STOP                      (UX_TRACE_HOST_CLASS_EVENTS_BASE + 32)              /* I1 = class instance                                                                              */                               
+#define UX_TRACE_HOST_CLASS_CDC_ACM_RECEPTION_START                     (UX_TRACE_HOST_CLASS_EVENTS_BASE + 31)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_CDC_ACM_RECEPTION_STOP                      (UX_TRACE_HOST_CLASS_EVENTS_BASE + 32)              /* I1 = class instance                                                                              */
 #define UX_TRACE_HOST_CLASS_CDC_ACM_WRITE                               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 33)              /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
-                                                                                                                                                                                                                          
-#define UX_TRACE_HOST_CLASS_CDC_ECM_ACTIVATE                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 35)              /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_CDC_ECM_DEACTIVATE                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 36)              /* I1 = class instance                                                                              */       
+
+#define UX_TRACE_HOST_CLASS_CDC_ECM_ACTIVATE                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 35)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_CDC_ECM_DEACTIVATE                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 36)              /* I1 = class instance                                                                              */
 #define UX_TRACE_HOST_CLASS_CDC_ECM_READ                                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 37)              /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
 #define UX_TRACE_HOST_CLASS_CDC_ECM_WRITE                               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 38)              /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
-#define UX_TRACE_HOST_CLASS_CDC_ECM_INTERRUPT_NOTIFICATION              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 39)              /* I1 = class instance                                                                              */                               
-                                 
-#define UX_TRACE_HOST_CLASS_HID_ACTIVATE                                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 40)              /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_HID_CLIENT_REGISTER                         (UX_TRACE_HOST_CLASS_EVENTS_BASE + 41)              /* I1 = hid client name                                                                             */                               
-#define UX_TRACE_HOST_CLASS_HID_DEACTIVATE                              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 42)              /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_HID_IDLE_GET                                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 43)              /* I1 = class instance                                                                              */                               
-#define UX_TRACE_HOST_CLASS_HID_IDLE_SET                                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 44)              /* I1 = class instance                                                                              */                               
-#define UX_TRACE_HOST_CLASS_HID_KEYBOARD_ACTIVATE                       (UX_TRACE_HOST_CLASS_EVENTS_BASE + 45)              /* I1 = class instance  , I2 = hid client instance                                                  */                               
-#define UX_TRACE_HOST_CLASS_HID_KEYBOARD_DEACTIVATE                     (UX_TRACE_HOST_CLASS_EVENTS_BASE + 46)              /* I1 = class instance  , I2 = hid client instance                                                  */                               
-#define UX_TRACE_HOST_CLASS_HID_MOUSE_ACTIVATE                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 47)              /* I1 = class instance  , I2 = hid client instance                                                  */                               
-#define UX_TRACE_HOST_CLASS_HID_MOUSE_DEACTIVATE                        (UX_TRACE_HOST_CLASS_EVENTS_BASE + 48)              /* I1 = class instance  , I2 = hid client instance                                                  */                               
-#define UX_TRACE_HOST_CLASS_HID_REMOTE_CONTROL_ACTIVATE                 (UX_TRACE_HOST_CLASS_EVENTS_BASE + 49)              /* I1 = class instance  , I2 = hid client instance                                                  */                               
-#define UX_TRACE_HOST_CLASS_HID_REMOTE_CONTROL_DEACTIVATE               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 50)              /* I1 = class instance  , I2 = hid client instance                                                  */                               
-#define UX_TRACE_HOST_CLASS_HID_REPORT_GET                              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 51)              /* I1 = class instance  , I2 = client report                                                        */                               
-#define UX_TRACE_HOST_CLASS_HID_REPORT_SET                              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 52)              /* I1 = class instance  , I2 = client report                                                        */                               
-#define UX_TRACE_HOST_CLASS_HID_REMOTE_CONTROL_CALLBACK                 (UX_TRACE_HOST_CLASS_EVENTS_BASE + 53)              /* I1 = client instance , I2 = remote control instance                                              */                               
-                                                                                                                                                                                                                       
-#define UX_TRACE_HOST_CLASS_HUB_ACTIVATE                                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 60)              /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_HUB_CHANGE_DETECT                           (UX_TRACE_HOST_CLASS_EVENTS_BASE + 62)              /* I1 = class instance                                                                              */                                      
+#define UX_TRACE_HOST_CLASS_CDC_ECM_INTERRUPT_NOTIFICATION              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 39)              /* I1 = class instance                                                                              */
+
+#define UX_TRACE_HOST_CLASS_HID_ACTIVATE                                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 40)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_HID_CLIENT_REGISTER                         (UX_TRACE_HOST_CLASS_EVENTS_BASE + 41)              /* I1 = hid client name                                                                             */
+#define UX_TRACE_HOST_CLASS_HID_DEACTIVATE                              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 42)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_HID_IDLE_GET                                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 43)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_HID_IDLE_SET                                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 44)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_HID_KEYBOARD_ACTIVATE                       (UX_TRACE_HOST_CLASS_EVENTS_BASE + 45)              /* I1 = class instance  , I2 = hid client instance                                                  */
+#define UX_TRACE_HOST_CLASS_HID_KEYBOARD_DEACTIVATE                     (UX_TRACE_HOST_CLASS_EVENTS_BASE + 46)              /* I1 = class instance  , I2 = hid client instance                                                  */
+#define UX_TRACE_HOST_CLASS_HID_MOUSE_ACTIVATE                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 47)              /* I1 = class instance  , I2 = hid client instance                                                  */
+#define UX_TRACE_HOST_CLASS_HID_MOUSE_DEACTIVATE                        (UX_TRACE_HOST_CLASS_EVENTS_BASE + 48)              /* I1 = class instance  , I2 = hid client instance                                                  */
+#define UX_TRACE_HOST_CLASS_HID_REMOTE_CONTROL_ACTIVATE                 (UX_TRACE_HOST_CLASS_EVENTS_BASE + 49)              /* I1 = class instance  , I2 = hid client instance                                                  */
+#define UX_TRACE_HOST_CLASS_HID_REMOTE_CONTROL_DEACTIVATE               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 50)              /* I1 = class instance  , I2 = hid client instance                                                  */
+#define UX_TRACE_HOST_CLASS_HID_REPORT_GET                              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 51)              /* I1 = class instance  , I2 = client report                                                        */
+#define UX_TRACE_HOST_CLASS_HID_REPORT_SET                              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 52)              /* I1 = class instance  , I2 = client report                                                        */
+#define UX_TRACE_HOST_CLASS_HID_REMOTE_CONTROL_CALLBACK                 (UX_TRACE_HOST_CLASS_EVENTS_BASE + 53)              /* I1 = client instance , I2 = remote control instance                                              */
+
+#define UX_TRACE_HOST_CLASS_HUB_ACTIVATE                                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 60)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_HUB_CHANGE_DETECT                           (UX_TRACE_HOST_CLASS_EVENTS_BASE + 62)              /* I1 = class instance                                                                              */
 #define UX_TRACE_HOST_CLASS_HUB_PORT_CHANGE_CONNECTION_PROCESS          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 63)              /* I1 = class instance  , I2 = port            , I3 = port status                                   */
-#define UX_TRACE_HOST_CLASS_HUB_PORT_CHANGE_ENABLE_PROCESS              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 64)              /* I1 = class instance  , I2 = port            , I3 = port status                                   */                                      
+#define UX_TRACE_HOST_CLASS_HUB_PORT_CHANGE_ENABLE_PROCESS              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 64)              /* I1 = class instance  , I2 = port            , I3 = port status                                   */
 #define UX_TRACE_HOST_CLASS_HUB_PORT_CHANGE_OVER_CURRENT_PROCESS        (UX_TRACE_HOST_CLASS_EVENTS_BASE + 65)              /* I1 = class instance  , I2 = port            , I3 = port status                                   */
 #define UX_TRACE_HOST_CLASS_HUB_PORT_CHANGE_RESET_PROCESS               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 66)              /* I1 = class instance  , I2 = port            , I3 = port status                                   */
 #define UX_TRACE_HOST_CLASS_HUB_PORT_CHANGE_SUSPEND_PROCESS             (UX_TRACE_HOST_CLASS_EVENTS_BASE + 67)              /* I1 = class instance  , I2 = port            , I3 = port status                                   */
-#define UX_TRACE_HOST_CLASS_HUB_DEACTIVATE                              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 68)              /* I1 = class instance                                                                              */       
-                                                                                                                                                                                                                            
-#define UX_TRACE_HOST_CLASS_PIMA_ACTIVATE                               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 70)              /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_PIMA_DEACTIVATE                             (UX_TRACE_HOST_CLASS_EVENTS_BASE + 71)              /* I1 = class instance                                                                              */                               
-#define UX_TRACE_HOST_CLASS_PIMA_DEVICE_INFO_GET                        (UX_TRACE_HOST_CLASS_EVENTS_BASE + 72)              /* I1 = class instance  , I2 = pima device                                                          */       
-#define UX_TRACE_HOST_CLASS_PIMA_DEVICE_RESET                           (UX_TRACE_HOST_CLASS_EVENTS_BASE + 73)              /* I1 = class instance                                                                              */                               
-#define UX_TRACE_HOST_CLASS_PIMA_NOTIFICATION                           (UX_TRACE_HOST_CLASS_EVENTS_BASE + 74)              /* I1 = class instance  , I2 = event code      , I3 = transaction ID    , I4 = parameter1           */                               
-#define UX_TRACE_HOST_CLASS_PIMA_NUM_OBJECTS_GET                        (UX_TRACE_HOST_CLASS_EVENTS_BASE + 75)              /* I1 = class instance                                                                              */                                      
-#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_CLOSE                           (UX_TRACE_HOST_CLASS_EVENTS_BASE + 76)              /* I1 = class instance  , I2 = object                                                               */                                      
-#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_COPY                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 77)              /* I1 = class instance  , I2 = object handle                                                        */                                      
-#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_DELETE                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 78)              /* I1 = class instance  , I2 = object handle                                                        */                                                                     
-#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_GET                             (UX_TRACE_HOST_CLASS_EVENTS_BASE + 79)              /* I1 = class instance  , I2 = object handle   , I3 = object                                        */                                                                                                    
-#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_INFO_GET                        (UX_TRACE_HOST_CLASS_EVENTS_BASE + 80)              /* I1 = class instance  , I2 = object handle   , I3 = object                                        */                                                                                                                                   
-#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_INFO_SEND                       (UX_TRACE_HOST_CLASS_EVENTS_BASE + 81)              /* I1 = class instance  , I2 = object                                                               */                               
-#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_MOVE                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 82)              /* I1 = class instance  , I2 = object handle                                                        */                               
-#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_SEND                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 83)              /* I1 = class instance  , I2 = object          , I3 = object_buffer     , I4 = object length        */                               
-#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_TRANSFER_ABORT                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 84)              /* I1 = class instance  , I2 = object handle   , I3 = object                                        */                               
-#define UX_TRACE_HOST_CLASS_PIMA_READ                                   (UX_TRACE_HOST_CLASS_EVENTS_BASE + 85)              /* I1 = class instance  , I2 = data pointer    , I3 = data length                                   */                               
+#define UX_TRACE_HOST_CLASS_HUB_DEACTIVATE                              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 68)              /* I1 = class instance                                                                              */
+
+#define UX_TRACE_HOST_CLASS_PIMA_ACTIVATE                               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 70)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_PIMA_DEACTIVATE                             (UX_TRACE_HOST_CLASS_EVENTS_BASE + 71)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_PIMA_DEVICE_INFO_GET                        (UX_TRACE_HOST_CLASS_EVENTS_BASE + 72)              /* I1 = class instance  , I2 = pima device                                                          */
+#define UX_TRACE_HOST_CLASS_PIMA_DEVICE_RESET                           (UX_TRACE_HOST_CLASS_EVENTS_BASE + 73)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_PIMA_NOTIFICATION                           (UX_TRACE_HOST_CLASS_EVENTS_BASE + 74)              /* I1 = class instance  , I2 = event code      , I3 = transaction ID    , I4 = parameter1           */
+#define UX_TRACE_HOST_CLASS_PIMA_NUM_OBJECTS_GET                        (UX_TRACE_HOST_CLASS_EVENTS_BASE + 75)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_CLOSE                           (UX_TRACE_HOST_CLASS_EVENTS_BASE + 76)              /* I1 = class instance  , I2 = object                                                               */
+#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_COPY                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 77)              /* I1 = class instance  , I2 = object handle                                                        */
+#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_DELETE                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 78)              /* I1 = class instance  , I2 = object handle                                                        */
+#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_GET                             (UX_TRACE_HOST_CLASS_EVENTS_BASE + 79)              /* I1 = class instance  , I2 = object handle   , I3 = object                                        */
+#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_INFO_GET                        (UX_TRACE_HOST_CLASS_EVENTS_BASE + 80)              /* I1 = class instance  , I2 = object handle   , I3 = object                                        */
+#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_INFO_SEND                       (UX_TRACE_HOST_CLASS_EVENTS_BASE + 81)              /* I1 = class instance  , I2 = object                                                               */
+#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_MOVE                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 82)              /* I1 = class instance  , I2 = object handle                                                        */
+#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_SEND                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 83)              /* I1 = class instance  , I2 = object          , I3 = object_buffer     , I4 = object length        */
+#define UX_TRACE_HOST_CLASS_PIMA_OBJECT_TRANSFER_ABORT                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 84)              /* I1 = class instance  , I2 = object handle   , I3 = object                                        */
+#define UX_TRACE_HOST_CLASS_PIMA_READ                                   (UX_TRACE_HOST_CLASS_EVENTS_BASE + 85)              /* I1 = class instance  , I2 = data pointer    , I3 = data length                                   */
 #define UX_TRACE_HOST_CLASS_PIMA_REQUEST_CANCEL                         (UX_TRACE_HOST_CLASS_EVENTS_BASE + 86)              /* I1 = class instance                                                                              */
-#define UX_TRACE_HOST_CLASS_PIMA_SESSION_CLOSE                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 87)              /* I1 = class instance  , I2 = pima session                                                         */                                                              
-#define UX_TRACE_HOST_CLASS_PIMA_SESSION_OPEN                           (UX_TRACE_HOST_CLASS_EVENTS_BASE + 88)              /* I1 = class instance  , I2 = pima session                                                         */                                                                                             
-#define UX_TRACE_HOST_CLASS_PIMA_STORAGE_IDS_GET                        (UX_TRACE_HOST_CLASS_EVENTS_BASE + 89)              /* I1 = class instance  , I2 = storage ID array, I3 = storage ID length                             */                               
-#define UX_TRACE_HOST_CLASS_PIMA_STORAGE_INFO_GET                       (UX_TRACE_HOST_CLASS_EVENTS_BASE + 90)              /* I1 = class instance  , I2 = storage ID      , I3 = storage                                       */                               
-#define UX_TRACE_HOST_CLASS_PIMA_THUMB_GET                              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 91)              /* I1 = class instance  , I2 = object handle                                                        */                               
-#define UX_TRACE_HOST_CLASS_PIMA_WRITE                                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 92)              /* I1 = class instance  , I2 = data pointer    , I3 = data length                                   */                               
-                                                                                                                                                                                                                            
-#define UX_TRACE_HOST_CLASS_PRINTER_ACTIVATE                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 100)             /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_PRINTER_DEACTIVATE                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 101)             /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_PRINTER_NAME_GET                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 102)             /* I1 = class instance                                                                              */                                      
-#define UX_TRACE_HOST_CLASS_PRINTER_READ                                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 103)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */                                      
-#define UX_TRACE_HOST_CLASS_PRINTER_WRITE                               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 104)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */                                      
-#define UX_TRACE_HOST_CLASS_PRINTER_SOFT_RESET                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 105)             /* I1 = class instance                                                                              */                                      
-#define UX_TRACE_HOST_CLASS_PRINTER_STATUS_GET                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 106)             /* I1 = class instance  , I2 = printer status                                                       */                                      
-#define UX_TRACE_HOST_CLASS_PRINTER_DEVICE_ID_GET                       (UX_TRACE_HOST_CLASS_EVENTS_BASE + 107)             /* I1 = class instance  , I2 = printer         , I3 = data pointer      , I4 = buffer length        */                                      
-                                                                                                                                                                                                                              
-#define UX_TRACE_HOST_CLASS_PROLIFIC_ACTIVATE                           (UX_TRACE_HOST_CLASS_EVENTS_BASE + 110)             /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_PROLIFIC_DEACTIVATE                         (UX_TRACE_HOST_CLASS_EVENTS_BASE + 111)             /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_SET_LINE_CODING              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 112)             /* I1 = class instance  , I2 = parameter                                                            */                             
-#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_GET_LINE_CODING              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 113)             /* I1 = class instance  , I2 = parameter                                                            */                                      
-#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_SET_LINE_STATE               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 114)             /* I1 = class instance  , I2 = parameter                                                            */                                      
-#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_PURGE                        (UX_TRACE_HOST_CLASS_EVENTS_BASE + 115)             /* I1 = class instance  , I2 = parameter                                                            */                                      
-#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_SEND_BREAK                   (UX_TRACE_HOST_CLASS_EVENTS_BASE + 116)             /* I1 = class instance                                                                              */                                      
-#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_ABORT_IN_PIPE                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 117)             /* I1 = class instance  , I2 = endpoint                                                             */                                      
-#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_ABORT_OUT_PIPE               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 118)             /* I1 = class instance  , I2 = endpointr                                                            */                                      
-#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_REPORT_DEVICE_STATUS_CHANGE  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 119)             /* I1 = class instance  , I2 = parameter                                                            */                                      
-#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_GET_DEVICE_STATUS            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 120)             /* I1 = class instance  , I2 = device status                                                        */                                      
-#define UX_TRACE_HOST_CLASS_PROLIFIC_READ                               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 121)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */                                      
-#define UX_TRACE_HOST_CLASS_PROLIFIC_RECEPTION_START                    (UX_TRACE_HOST_CLASS_EVENTS_BASE + 122)             /* I1 = class instance                                                                              */                                      
-#define UX_TRACE_HOST_CLASS_PROLIFIC_RECEPTION_STOP                     (UX_TRACE_HOST_CLASS_EVENTS_BASE + 123)             /* I1 = class instance                                                                              */                                      
-#define UX_TRACE_HOST_CLASS_PROLIFIC_WRITE                              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 124)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */                                      
-                                                                                                                                                                                                                          
-#define UX_TRACE_HOST_CLASS_STORAGE_ACTIVATE                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 130)             /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_STORAGE_DEACTIVATE                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 131)             /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_STORAGE_MEDIA_CAPACITY_GET                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 132)             /* I1 = class instance                                                                              */                                      
-#define UX_TRACE_HOST_CLASS_STORAGE_MEDIA_FORMAT_CAPACITY_GET           (UX_TRACE_HOST_CLASS_EVENTS_BASE + 133)             /* I1 = class instance                                                                              */                                      
-#define UX_TRACE_HOST_CLASS_STORAGE_MEDIA_MOUNT                         (UX_TRACE_HOST_CLASS_EVENTS_BASE + 134)             /* I1 = class instance  , I2 = sector                                                               */                                      
-#define UX_TRACE_HOST_CLASS_STORAGE_MEDIA_OPEN                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 135)             /* I1 = class instance  , I2 = media                                                                */                                      
-#define UX_TRACE_HOST_CLASS_STORAGE_MEDIA_READ                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 136)             /* I1 = class instance  , I2 = sector start    , I3 = sector count      , I4 = data pointer         */                                      
-#define UX_TRACE_HOST_CLASS_STORAGE_MEDIA_WRITE                         (UX_TRACE_HOST_CLASS_EVENTS_BASE + 137)             /* I1 = class instance  , I2 = sector start    , I3 = sector count      , I4 = data pointer         */                                       
-#define UX_TRACE_HOST_CLASS_STORAGE_REQUEST_SENSE                       (UX_TRACE_HOST_CLASS_EVENTS_BASE + 138)             /* I1 = class instance                                                                              */                                      
-#define UX_TRACE_HOST_CLASS_STORAGE_START_STOP                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 139)             /* I1 = class instance  , I2 = start stop signal                                                    */                                      
-#define UX_TRACE_HOST_CLASS_STORAGE_UNIT_READY_TEST                     (UX_TRACE_HOST_CLASS_EVENTS_BASE + 140)             /* I1 = class instance                                                                              */                                      
-                                                                                                                                                                                                                              
-#define UX_TRACE_HOST_CLASS_DPUMP_ACTIVATE                              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 150)             /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_DPUMP_DEACTIVATE                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 151)             /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_DPUMP_READ                                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 152)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */                                      
-#define UX_TRACE_HOST_CLASS_DPUMP_WRITE                                 (UX_TRACE_HOST_CLASS_EVENTS_BASE + 153)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */                                      
-                                                                                                                                                                                                                              
-#define UX_TRACE_HOST_CLASS_SWAR_ACTIVATE                               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 160)              /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_SWAR_DEACTIVATE                             (UX_TRACE_HOST_CLASS_EVENTS_BASE + 161)              /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_SWAR_IOCTL_ABORT_IN_PIPE                    (UX_TRACE_HOST_CLASS_EVENTS_BASE + 162)              /* I1 = class instance  , I2 = endpoint                                                             */                               
-#define UX_TRACE_HOST_CLASS_SWAR_IOCTL_ABORT_OUT_PIPE                   (UX_TRACE_HOST_CLASS_EVENTS_BASE + 163)              /* I1 = class instance  , I2 = endpointr                                                            */                               
+#define UX_TRACE_HOST_CLASS_PIMA_SESSION_CLOSE                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 87)              /* I1 = class instance  , I2 = pima session                                                         */
+#define UX_TRACE_HOST_CLASS_PIMA_SESSION_OPEN                           (UX_TRACE_HOST_CLASS_EVENTS_BASE + 88)              /* I1 = class instance  , I2 = pima session                                                         */
+#define UX_TRACE_HOST_CLASS_PIMA_STORAGE_IDS_GET                        (UX_TRACE_HOST_CLASS_EVENTS_BASE + 89)              /* I1 = class instance  , I2 = storage ID array, I3 = storage ID length                             */
+#define UX_TRACE_HOST_CLASS_PIMA_STORAGE_INFO_GET                       (UX_TRACE_HOST_CLASS_EVENTS_BASE + 90)              /* I1 = class instance  , I2 = storage ID      , I3 = storage                                       */
+#define UX_TRACE_HOST_CLASS_PIMA_THUMB_GET                              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 91)              /* I1 = class instance  , I2 = object handle                                                        */
+#define UX_TRACE_HOST_CLASS_PIMA_WRITE                                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 92)              /* I1 = class instance  , I2 = data pointer    , I3 = data length                                   */
+
+#define UX_TRACE_HOST_CLASS_PRINTER_ACTIVATE                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 100)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_PRINTER_DEACTIVATE                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 101)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_PRINTER_NAME_GET                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 102)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_PRINTER_READ                                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 103)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
+#define UX_TRACE_HOST_CLASS_PRINTER_WRITE                               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 104)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
+#define UX_TRACE_HOST_CLASS_PRINTER_SOFT_RESET                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 105)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_PRINTER_STATUS_GET                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 106)             /* I1 = class instance  , I2 = printer status                                                       */
+#define UX_TRACE_HOST_CLASS_PRINTER_DEVICE_ID_GET                       (UX_TRACE_HOST_CLASS_EVENTS_BASE + 107)             /* I1 = class instance  , I2 = printer         , I3 = data pointer      , I4 = buffer length        */
+
+#define UX_TRACE_HOST_CLASS_PROLIFIC_ACTIVATE                           (UX_TRACE_HOST_CLASS_EVENTS_BASE + 110)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_PROLIFIC_DEACTIVATE                         (UX_TRACE_HOST_CLASS_EVENTS_BASE + 111)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_SET_LINE_CODING              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 112)             /* I1 = class instance  , I2 = parameter                                                            */
+#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_GET_LINE_CODING              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 113)             /* I1 = class instance  , I2 = parameter                                                            */
+#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_SET_LINE_STATE               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 114)             /* I1 = class instance  , I2 = parameter                                                            */
+#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_PURGE                        (UX_TRACE_HOST_CLASS_EVENTS_BASE + 115)             /* I1 = class instance  , I2 = parameter                                                            */
+#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_SEND_BREAK                   (UX_TRACE_HOST_CLASS_EVENTS_BASE + 116)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_ABORT_IN_PIPE                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 117)             /* I1 = class instance  , I2 = endpoint                                                             */
+#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_ABORT_OUT_PIPE               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 118)             /* I1 = class instance  , I2 = endpointr                                                            */
+#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_REPORT_DEVICE_STATUS_CHANGE  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 119)             /* I1 = class instance  , I2 = parameter                                                            */
+#define UX_TRACE_HOST_CLASS_PROLIFIC_IOCTL_GET_DEVICE_STATUS            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 120)             /* I1 = class instance  , I2 = device status                                                        */
+#define UX_TRACE_HOST_CLASS_PROLIFIC_READ                               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 121)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
+#define UX_TRACE_HOST_CLASS_PROLIFIC_RECEPTION_START                    (UX_TRACE_HOST_CLASS_EVENTS_BASE + 122)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_PROLIFIC_RECEPTION_STOP                     (UX_TRACE_HOST_CLASS_EVENTS_BASE + 123)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_PROLIFIC_WRITE                              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 124)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
+
+#define UX_TRACE_HOST_CLASS_STORAGE_ACTIVATE                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 130)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_STORAGE_DEACTIVATE                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 131)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_STORAGE_MEDIA_CAPACITY_GET                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 132)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_STORAGE_MEDIA_FORMAT_CAPACITY_GET           (UX_TRACE_HOST_CLASS_EVENTS_BASE + 133)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_STORAGE_MEDIA_MOUNT                         (UX_TRACE_HOST_CLASS_EVENTS_BASE + 134)             /* I1 = class instance  , I2 = sector                                                               */
+#define UX_TRACE_HOST_CLASS_STORAGE_MEDIA_OPEN                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 135)             /* I1 = class instance  , I2 = media                                                                */
+#define UX_TRACE_HOST_CLASS_STORAGE_MEDIA_READ                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 136)             /* I1 = class instance  , I2 = sector start    , I3 = sector count      , I4 = data pointer         */
+#define UX_TRACE_HOST_CLASS_STORAGE_MEDIA_WRITE                         (UX_TRACE_HOST_CLASS_EVENTS_BASE + 137)             /* I1 = class instance  , I2 = sector start    , I3 = sector count      , I4 = data pointer         */
+#define UX_TRACE_HOST_CLASS_STORAGE_REQUEST_SENSE                       (UX_TRACE_HOST_CLASS_EVENTS_BASE + 138)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_STORAGE_START_STOP                          (UX_TRACE_HOST_CLASS_EVENTS_BASE + 139)             /* I1 = class instance  , I2 = start stop signal                                                    */
+#define UX_TRACE_HOST_CLASS_STORAGE_UNIT_READY_TEST                     (UX_TRACE_HOST_CLASS_EVENTS_BASE + 140)             /* I1 = class instance                                                                              */
+
+#define UX_TRACE_HOST_CLASS_DPUMP_ACTIVATE                              (UX_TRACE_HOST_CLASS_EVENTS_BASE + 150)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_DPUMP_DEACTIVATE                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 151)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_DPUMP_READ                                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 152)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
+#define UX_TRACE_HOST_CLASS_DPUMP_WRITE                                 (UX_TRACE_HOST_CLASS_EVENTS_BASE + 153)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
+
+#define UX_TRACE_HOST_CLASS_SWAR_ACTIVATE                               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 160)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_SWAR_DEACTIVATE                             (UX_TRACE_HOST_CLASS_EVENTS_BASE + 161)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_SWAR_IOCTL_ABORT_IN_PIPE                    (UX_TRACE_HOST_CLASS_EVENTS_BASE + 162)              /* I1 = class instance  , I2 = endpoint                                                             */
+#define UX_TRACE_HOST_CLASS_SWAR_IOCTL_ABORT_OUT_PIPE                   (UX_TRACE_HOST_CLASS_EVENTS_BASE + 163)              /* I1 = class instance  , I2 = endpointr                                                            */
 #define UX_TRACE_HOST_CLASS_SWAR_READ                                   (UX_TRACE_HOST_CLASS_EVENTS_BASE + 164)              /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
-#define UX_TRACE_HOST_CLASS_SWAR_RECEPTION_START                        (UX_TRACE_HOST_CLASS_EVENTS_BASE + 165)              /* I1 = class instance                                                                              */                               
-#define UX_TRACE_HOST_CLASS_SWAR_RECEPTION_STOP                         (UX_TRACE_HOST_CLASS_EVENTS_BASE + 166)              /* I1 = class instance                                                                              */                               
+#define UX_TRACE_HOST_CLASS_SWAR_RECEPTION_START                        (UX_TRACE_HOST_CLASS_EVENTS_BASE + 165)              /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_SWAR_RECEPTION_STOP                         (UX_TRACE_HOST_CLASS_EVENTS_BASE + 166)              /* I1 = class instance                                                                              */
 #define UX_TRACE_HOST_CLASS_SWAR_WRITE                                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 167)              /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
 
-#define UX_TRACE_HOST_CLASS_GSER_ACTIVATE                               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 170)             /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_GSER_DEACTIVATE                             (UX_TRACE_HOST_CLASS_EVENTS_BASE + 171)             /* I1 = class instance                                                                              */       
-#define UX_TRACE_HOST_CLASS_GSER_IOCTL_SET_LINE_CODING                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 172)             /* I1 = class instance  , I2 = parameter                                                            */                             
-#define UX_TRACE_HOST_CLASS_GSER_IOCTL_GET_LINE_CODING                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 173)             /* I1 = class instance  , I2 = parameter                                                            */                                      
-#define UX_TRACE_HOST_CLASS_GSER_IOCTL_SET_LINE_STATE                   (UX_TRACE_HOST_CLASS_EVENTS_BASE + 174)             /* I1 = class instance  , I2 = parameter                                                            */                                      
-#define UX_TRACE_HOST_CLASS_GSER_IOCTL_PURGE                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 175)             /* I1 = class instance  , I2 = parameter                                                            */                                      
-#define UX_TRACE_HOST_CLASS_GSER_IOCTL_SEND_BREAK                       (UX_TRACE_HOST_CLASS_EVENTS_BASE + 176)             /* I1 = class instance                                                                              */                                      
-#define UX_TRACE_HOST_CLASS_GSER_IOCTL_ABORT_IN_PIPE                    (UX_TRACE_HOST_CLASS_EVENTS_BASE + 177)             /* I1 = class instance  , I2 = endpoint                                                             */                                      
-#define UX_TRACE_HOST_CLASS_GSER_IOCTL_ABORT_OUT_PIPE                   (UX_TRACE_HOST_CLASS_EVENTS_BASE + 178)             /* I1 = class instance  , I2 = endpointr                                                            */                                      
-#define UX_TRACE_HOST_CLASS_GSER_IOCTL_REPORT_DEVICE_STATUS_CHANGE      (UX_TRACE_HOST_CLASS_EVENTS_BASE + 179)             /* I1 = class instance  , I2 = parameter                                                            */                                      
-#define UX_TRACE_HOST_CLASS_GSER_IOCTL_GET_DEVICE_STATUS                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 180)             /* I1 = class instance  , I2 = device status                                                        */                                      
-#define UX_TRACE_HOST_CLASS_GSER_IOCTL_NOTIFICATION_CALLBACK            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 181)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */                                      
-#define UX_TRACE_HOST_CLASS_GSER_READ                                   (UX_TRACE_HOST_CLASS_EVENTS_BASE + 182)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */                                      
-#define UX_TRACE_HOST_CLASS_GSER_RECEPTION_START                        (UX_TRACE_HOST_CLASS_EVENTS_BASE + 183)             /* I1 = class instance                                                                              */                                      
-#define UX_TRACE_HOST_CLASS_GSER_RECEPTION_STOP                         (UX_TRACE_HOST_CLASS_EVENTS_BASE + 184)             /* I1 = class instance                                                                              */                                      
-#define UX_TRACE_HOST_CLASS_GSER_WRITE                                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 185)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */                                      
+#define UX_TRACE_HOST_CLASS_GSER_ACTIVATE                               (UX_TRACE_HOST_CLASS_EVENTS_BASE + 170)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_GSER_DEACTIVATE                             (UX_TRACE_HOST_CLASS_EVENTS_BASE + 171)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_GSER_IOCTL_SET_LINE_CODING                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 172)             /* I1 = class instance  , I2 = parameter                                                            */
+#define UX_TRACE_HOST_CLASS_GSER_IOCTL_GET_LINE_CODING                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 173)             /* I1 = class instance  , I2 = parameter                                                            */
+#define UX_TRACE_HOST_CLASS_GSER_IOCTL_SET_LINE_STATE                   (UX_TRACE_HOST_CLASS_EVENTS_BASE + 174)             /* I1 = class instance  , I2 = parameter                                                            */
+#define UX_TRACE_HOST_CLASS_GSER_IOCTL_PURGE                            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 175)             /* I1 = class instance  , I2 = parameter                                                            */
+#define UX_TRACE_HOST_CLASS_GSER_IOCTL_SEND_BREAK                       (UX_TRACE_HOST_CLASS_EVENTS_BASE + 176)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_GSER_IOCTL_ABORT_IN_PIPE                    (UX_TRACE_HOST_CLASS_EVENTS_BASE + 177)             /* I1 = class instance  , I2 = endpoint                                                             */
+#define UX_TRACE_HOST_CLASS_GSER_IOCTL_ABORT_OUT_PIPE                   (UX_TRACE_HOST_CLASS_EVENTS_BASE + 178)             /* I1 = class instance  , I2 = endpointr                                                            */
+#define UX_TRACE_HOST_CLASS_GSER_IOCTL_REPORT_DEVICE_STATUS_CHANGE      (UX_TRACE_HOST_CLASS_EVENTS_BASE + 179)             /* I1 = class instance  , I2 = parameter                                                            */
+#define UX_TRACE_HOST_CLASS_GSER_IOCTL_GET_DEVICE_STATUS                (UX_TRACE_HOST_CLASS_EVENTS_BASE + 180)             /* I1 = class instance  , I2 = device status                                                        */
+#define UX_TRACE_HOST_CLASS_GSER_IOCTL_NOTIFICATION_CALLBACK            (UX_TRACE_HOST_CLASS_EVENTS_BASE + 181)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
+#define UX_TRACE_HOST_CLASS_GSER_READ                                   (UX_TRACE_HOST_CLASS_EVENTS_BASE + 182)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
+#define UX_TRACE_HOST_CLASS_GSER_RECEPTION_START                        (UX_TRACE_HOST_CLASS_EVENTS_BASE + 183)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_GSER_RECEPTION_STOP                         (UX_TRACE_HOST_CLASS_EVENTS_BASE + 184)             /* I1 = class instance                                                                              */
+#define UX_TRACE_HOST_CLASS_GSER_WRITE                                  (UX_TRACE_HOST_CLASS_EVENTS_BASE + 185)             /* I1 = class instance  , I2 = data pointer    , I3 = requested length                              */
 
-/* Define the USBX device stack events.  */                                                                                                                                                                             
+/* Define the USBX device stack events.  */
 
-#define UX_TRACE_DEVICE_STACK_EVENTS_BASE                               850                                                                                                                                                   
-#define UX_TRACE_DEVICE_STACK_ALTERNATE_SETTING_GET                     (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 1)             /* I1 = interface value                                                                             */                                      
-#define UX_TRACE_DEVICE_STACK_ALTERNATE_SETTING_SET                     (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 2)             /* I1 = interface value , I2 = alternate setting value                                              */                                      
+#define UX_TRACE_DEVICE_STACK_EVENTS_BASE                               850
+#define UX_TRACE_DEVICE_STACK_ALTERNATE_SETTING_GET                     (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 1)             /* I1 = interface value                                                                             */
+#define UX_TRACE_DEVICE_STACK_ALTERNATE_SETTING_SET                     (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 2)             /* I1 = interface value , I2 = alternate setting value                                              */
 #define UX_TRACE_DEVICE_STACK_CLASS_REGISTER                            (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 3)             /* I1 = class name      , I2 = interface number, I3 = parameter                                     */
 #define UX_TRACE_DEVICE_STACK_CLEAR_FEATURE                             (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 4)             /* I1 = request type    , I2 = request value   , I3 = request index                                 */
 #define UX_TRACE_DEVICE_STACK_CONFIGURATION_GET                         (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 5)             /* I1 = configuration value                                                                         */
 #define UX_TRACE_DEVICE_STACK_CONFIGURATION_SET                         (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 6)             /* I1 = configuration value                                                                         */
-#define UX_TRACE_DEVICE_STACK_CONNECT                                   (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 7)             /*                                                                                                  */                                      
-#define UX_TRACE_DEVICE_STACK_DESCRIPTOR_SEND                           (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 8)             /* I1 = descriptor type , I2 = request index                                                        */                                      
+#define UX_TRACE_DEVICE_STACK_CONNECT                                   (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 7)             /*                                                                                                  */
+#define UX_TRACE_DEVICE_STACK_DESCRIPTOR_SEND                           (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 8)             /* I1 = descriptor type , I2 = request index                                                        */
 #define UX_TRACE_DEVICE_STACK_DISCONNECT                                (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 9)             /* I1 = device                                                                                      */
 #define UX_TRACE_DEVICE_STACK_ENDPOINT_STALL                            (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 10)            /* I1 = endpoint                                                                                    */
-#define UX_TRACE_DEVICE_STACK_GET_STATUS                                (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 11)            /* I1 = request type    , I2 = request value   , I3 = request index                                 */                                      
-#define UX_TRACE_DEVICE_STACK_HOST_WAKEUP                               (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 12)            /*                                                                                                  */                                      
-#define UX_TRACE_DEVICE_STACK_INITIALIZE                                (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 13)            /*                                                                                                  */                                      
-#define UX_TRACE_DEVICE_STACK_INTERFACE_DELETE                          (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 14)            /* I1 = interface                                                                                   */                                      
+#define UX_TRACE_DEVICE_STACK_GET_STATUS                                (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 11)            /* I1 = request type    , I2 = request value   , I3 = request index                                 */
+#define UX_TRACE_DEVICE_STACK_HOST_WAKEUP                               (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 12)            /*                                                                                                  */
+#define UX_TRACE_DEVICE_STACK_INITIALIZE                                (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 13)            /*                                                                                                  */
+#define UX_TRACE_DEVICE_STACK_INTERFACE_DELETE                          (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 14)            /* I1 = interface                                                                                   */
 #define UX_TRACE_DEVICE_STACK_INTERFACE_GET                             (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 15)            /* I1 = interface value                                                                             */
 #define UX_TRACE_DEVICE_STACK_INTERFACE_SET                             (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 16)            /* I1 = alternate setting value                                                                     */
 #define UX_TRACE_DEVICE_STACK_SET_FEATURE                               (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 17)            /* I1 = request value   , I2 = request index                                                        */
@@ -681,23 +729,23 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_TRACE_DEVICE_STACK_TRANSFER_REQUEST                          (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 20)            /* I1 = transfer request                                                                            */
 #define UX_TRACE_DEVICE_STACK_MICROSOFT_EXTENSION_REGISTER              (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 21)            /* I1 = transfer request                                                                            */
 #define UX_TRACE_DEVICE_STACK_CLASS_UNREGISTER                          (UX_TRACE_DEVICE_STACK_EVENTS_BASE + 22)            /* I1 = class name                                                                                  */
-                                                                                                                                                                                                                              
-/* Define the USBX device stack events first.  */                                                                                                                                                                             
 
-#define UX_TRACE_DEVICE_CLASS_EVENTS_BASE                               900                                                                                                                                                   
-#define UX_TRACE_DEVICE_CLASS_DPUMP_ACTIVATE                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 1)             /* I1 = class instance                                                                              */       
-#define UX_TRACE_DEVICE_CLASS_DPUMP_DEACTIVATE                          (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 2)             /* I1 = class instance                                                                              */       
+/* Define the USBX device stack events first.  */
+
+#define UX_TRACE_DEVICE_CLASS_EVENTS_BASE                               900
+#define UX_TRACE_DEVICE_CLASS_DPUMP_ACTIVATE                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 1)             /* I1 = class instance                                                                              */
+#define UX_TRACE_DEVICE_CLASS_DPUMP_DEACTIVATE                          (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 2)             /* I1 = class instance                                                                              */
 #define UX_TRACE_DEVICE_CLASS_DPUMP_READ                                (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 3)             /* I1 = class instance  , I2 = buffer          , I3 = requested_length                              */
 #define UX_TRACE_DEVICE_CLASS_DPUMP_WRITE                               (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 4)             /* I1 = class instance  , I2 = buffer          , I3 = requested_length                              */
 #define UX_TRACE_DEVICE_CLASS_DPUMP_CHANGE                              (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 5)             /* I1 = class instance  , I2 = buffer          , I3 = requested_length                              */
-                                                                                                                                                                                                                              
-#define UX_TRACE_DEVICE_CLASS_CDC_ACM_ACTIVATE                          (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 10)            /* I1 = class instance                                                                              */       
-#define UX_TRACE_DEVICE_CLASS_CDC_ACM_DEACTIVATE                        (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 11)            /* I1 = class instance                                                                              */       
+
+#define UX_TRACE_DEVICE_CLASS_CDC_ACM_ACTIVATE                          (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 10)            /* I1 = class instance                                                                              */
+#define UX_TRACE_DEVICE_CLASS_CDC_ACM_DEACTIVATE                        (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 11)            /* I1 = class instance                                                                              */
 #define UX_TRACE_DEVICE_CLASS_CDC_ACM_READ                              (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 12)            /* I1 = class instance  , I2 = buffer          , I3 = requested_length                              */
 #define UX_TRACE_DEVICE_CLASS_CDC_ACM_WRITE                             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 13)            /* I1 = class instance  , I2 = buffer          , I3 = requested_length                              */
-                                                                                                                                                                                                                              
-#define UX_TRACE_DEVICE_CLASS_HID_ACTIVATE                              (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 20)            /* I1 = class instance                                                                              */       
-#define UX_TRACE_DEVICE_CLASS_HID_DEACTIVATE                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 21)            /* I1 = class instance                                                                              */       
+
+#define UX_TRACE_DEVICE_CLASS_HID_ACTIVATE                              (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 20)            /* I1 = class instance                                                                              */
+#define UX_TRACE_DEVICE_CLASS_HID_DEACTIVATE                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 21)            /* I1 = class instance                                                                              */
 #define UX_TRACE_DEVICE_CLASS_HID_EVENT_GET                             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 22)            /* I1 = class instance  , I2 = hid event                                                            */
 #define UX_TRACE_DEVICE_CLASS_HID_EVENT_SET                             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 23)            /* I1 = class instance  , I2 = hid event                                                            */
 #define UX_TRACE_DEVICE_CLASS_HID_REPORT_GET                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 24)            /* I1 = class instance  , I2 = descriptor type , I3 = request index                                 */
@@ -706,13 +754,13 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_TRACE_DEVICE_CLASS_HID_READ                                  (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 27)            /* I1 = class instance  , I2 = buffer          , I3 = requested_length                              */
 #define UX_TRACE_DEVICE_CLASS_HID_RECEIVER_EVENT_GET                    (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 28)            /* I1 = class instance  , I2 = receiver event  , I3 = wait_option                                   */
 #define UX_TRACE_DEVICE_CLASS_HID_RECEIVER_EVENT_FREE                   (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 29)            /* I1 = class instance  , I2 = receiver event                                                       */
-                                                                                                                                                                                                                              
-#define UX_TRACE_DEVICE_CLASS_PIMA_ACTIVATE                             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 30)            /* I1 = class instance                                                                              */       
-#define UX_TRACE_DEVICE_CLASS_PIMA_DEACTIVATE                           (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 31)            /* I1 = class instance                                                                              */       
-#define UX_TRACE_DEVICE_CLASS_PIMA_DEVICE_INFO_SEND                     (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 32)            /* I1 = class instance                                                                              */       
-#define UX_TRACE_DEVICE_CLASS_PIMA_EVENT_GET                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 33)            /* I1 = class instance  , I2 = pima event                                                           */       
-#define UX_TRACE_DEVICE_CLASS_PIMA_EVENT_SET                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 34)            /* I1 = class instance  , I2 = pima event                                                           */       
-#define UX_TRACE_DEVICE_CLASS_PIMA_OBJECT_ADD                           (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 35)            /* I1 = class instance  , I2 = object handle                                                        */       
+
+#define UX_TRACE_DEVICE_CLASS_PIMA_ACTIVATE                             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 30)            /* I1 = class instance                                                                              */
+#define UX_TRACE_DEVICE_CLASS_PIMA_DEACTIVATE                           (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 31)            /* I1 = class instance                                                                              */
+#define UX_TRACE_DEVICE_CLASS_PIMA_DEVICE_INFO_SEND                     (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 32)            /* I1 = class instance                                                                              */
+#define UX_TRACE_DEVICE_CLASS_PIMA_EVENT_GET                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 33)            /* I1 = class instance  , I2 = pima event                                                           */
+#define UX_TRACE_DEVICE_CLASS_PIMA_EVENT_SET                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 34)            /* I1 = class instance  , I2 = pima event                                                           */
+#define UX_TRACE_DEVICE_CLASS_PIMA_OBJECT_ADD                           (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 35)            /* I1 = class instance  , I2 = object handle                                                        */
 #define UX_TRACE_DEVICE_CLASS_PIMA_OBJECT_DATA_GET                      (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 36)            /* I1 = class instance  , I2 = object handle                                                        */
 #define UX_TRACE_DEVICE_CLASS_PIMA_OBJECT_DATA_SEND                     (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 37)            /* I1 = class instance  , I2 = object handle                                                        */
 #define UX_TRACE_DEVICE_CLASS_PIMA_OBJECT_DELETE                        (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 38)            /* I1 = class instance  , I2 = object handle                                                        */
@@ -736,54 +784,54 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_TRACE_DEVICE_CLASS_PIMA_STORAGE_FORMAT                       (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 56)            /* I1 = class instance                                                                              */
 #define UX_TRACE_DEVICE_CLASS_PIMA_DEVICE_RESET                         (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 57)            /* I1 = class instance                                                                              */
 #define UX_TRACE_DEVICE_CLASS_PIMA_SET_OBJECT_PROP_VALUE                (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 58)            /* I1 = class instance                                                                              */
-                                                                                                                                                                                                                       
-#define UX_TRACE_DEVICE_CLASS_RNDIS_ACTIVATE                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 60)            /* I1 = class instance                                                                              */         
-#define UX_TRACE_DEVICE_CLASS_RNDIS_DEACTIVATE                          (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 61)            /* I1 = class instance                                                                              */       
+
+#define UX_TRACE_DEVICE_CLASS_RNDIS_ACTIVATE                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 60)            /* I1 = class instance                                                                              */
+#define UX_TRACE_DEVICE_CLASS_RNDIS_DEACTIVATE                          (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 61)            /* I1 = class instance                                                                              */
 #define UX_TRACE_DEVICE_CLASS_RNDIS_PACKET_RECEIVE                      (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 62)            /* I1 = class instance                                                                              */
 #define UX_TRACE_DEVICE_CLASS_RNDIS_PACKET_TRANSMIT                     (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 63)            /* I1 = class instance                                                                              */
 #define UX_TRACE_DEVICE_CLASS_RNDIS_MSG_QUERY                           (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 64)            /* I1 = class instance  , I2 = rndis OID                                                            */
 #define UX_TRACE_DEVICE_CLASS_RNDIS_MSG_KEEP_ALIVE                      (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 65)            /* I1 = class instance                                                                              */
 #define UX_TRACE_DEVICE_CLASS_RNDIS_MSG_RESET                           (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 66)            /* I1 = class instance                                                                              */
 #define UX_TRACE_DEVICE_CLASS_RNDIS_MSG_SET                             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 67)            /* I1 = class instance  , I2 = rndis OID                                                            */
-                                                                                                                                                                                                                       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_ACTIVATE                          (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 70)            /* I1 = class instance                                                                              */       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_DEACTIVATE                        (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 71)            /* I1 = class instance                                                                              */       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_FORMAT                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 72)            /* I1 = class instance  , I2 = lun                                                                  */       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_INQUIRY                           (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 73)            /* I1 = class instance  , I2 = lun                                                                  */       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_MODE_SELECT                       (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 74)            /* I1 = class instance  , I2 = lun                                                                  */       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_MODE_SENSE                        (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 75)            /* I1 = class instance  , I2 = lun                                                                  */       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_PREVENT_ALLOW_MEDIA_REMOVAL       (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 76)            /* I1 = class instance  , I2 = lun                                                                  */       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_READ                              (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 77)            /* I1 = class instance  , I2 = lun             , I3 = sector              , I4 = number sectors     */       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_READ_CAPACITY                     (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 78)            /* I1 = class instance  , I2 = lun                                                                  */       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_READ_FORMAT_CAPACITY              (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 79)            /* I1 = class instance  , I2 = lun                                                                  */       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_READ_TOC                          (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 80)            /* I1 = class instance  , I2 = lun                                                                  */       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_REQUEST_SENSE                     (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 81)            /* I1 = class instance  , I2 = lun             , I3 = sense key           , I4 = code               */       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_TEST_READY                        (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 82)            /* I1 = class instance  , I2 = lun                                                                  */       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_START_STOP                        (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 83)            /* I1 = class instance  , I2 = lun                                                                  */       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_VERIFY                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 84)            /* I1 = class instance  , I2 = lun                                                                  */       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_WRITE                             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 85)            /* I1 = class instance  , I2 = lun             , I3 = sector              , I4 = number sectors     */       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_GET_CONFIGURATION                 (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 86)            /* I1 = class instance  , I2 = lun                                                                  */       
-#define UX_TRACE_DEVICE_CLASS_STORAGE_SYNCHRONIZE_CACHE                 (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 87)            /* I1 = class instance  , I2 = lun             , I3 = sector              , I4 = number sectors     */
-#define UX_TRACE_DEVICE_CLASS_STORAGE_OTHER                             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 88)            /* I1 = class instance  , I2 = lun                                                                  */       
 
-#define UX_TRACE_DEVICE_CLASS_CDC_ECM_ACTIVATE                          (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 90)            /* I1 = class instance                                                                              */       
-#define UX_TRACE_DEVICE_CLASS_CDC_ECM_DEACTIVATE                        (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 91)            /* I1 = class instance                                                                              */       
-#define UX_TRACE_DEVICE_CLASS_CDC_ECM_CHANGE                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 92)            /* I1 = class instance                                                                              */       
+#define UX_TRACE_DEVICE_CLASS_STORAGE_ACTIVATE                          (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 70)            /* I1 = class instance                                                                              */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_DEACTIVATE                        (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 71)            /* I1 = class instance                                                                              */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_FORMAT                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 72)            /* I1 = class instance  , I2 = lun                                                                  */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_INQUIRY                           (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 73)            /* I1 = class instance  , I2 = lun                                                                  */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_MODE_SELECT                       (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 74)            /* I1 = class instance  , I2 = lun                                                                  */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_MODE_SENSE                        (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 75)            /* I1 = class instance  , I2 = lun                                                                  */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_PREVENT_ALLOW_MEDIA_REMOVAL       (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 76)            /* I1 = class instance  , I2 = lun                                                                  */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_READ                              (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 77)            /* I1 = class instance  , I2 = lun             , I3 = sector              , I4 = number sectors     */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_READ_CAPACITY                     (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 78)            /* I1 = class instance  , I2 = lun                                                                  */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_READ_FORMAT_CAPACITY              (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 79)            /* I1 = class instance  , I2 = lun                                                                  */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_READ_TOC                          (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 80)            /* I1 = class instance  , I2 = lun                                                                  */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_REQUEST_SENSE                     (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 81)            /* I1 = class instance  , I2 = lun             , I3 = sense key           , I4 = code               */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_TEST_READY                        (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 82)            /* I1 = class instance  , I2 = lun                                                                  */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_START_STOP                        (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 83)            /* I1 = class instance  , I2 = lun                                                                  */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_VERIFY                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 84)            /* I1 = class instance  , I2 = lun                                                                  */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_WRITE                             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 85)            /* I1 = class instance  , I2 = lun             , I3 = sector              , I4 = number sectors     */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_GET_CONFIGURATION                 (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 86)            /* I1 = class instance  , I2 = lun                                                                  */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_SYNCHRONIZE_CACHE                 (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 87)            /* I1 = class instance  , I2 = lun             , I3 = sector              , I4 = number sectors     */
+#define UX_TRACE_DEVICE_CLASS_STORAGE_OTHER                             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 88)            /* I1 = class instance  , I2 = lun                                                                  */
+
+#define UX_TRACE_DEVICE_CLASS_CDC_ECM_ACTIVATE                          (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 90)            /* I1 = class instance                                                                              */
+#define UX_TRACE_DEVICE_CLASS_CDC_ECM_DEACTIVATE                        (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 91)            /* I1 = class instance                                                                              */
+#define UX_TRACE_DEVICE_CLASS_CDC_ECM_CHANGE                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 92)            /* I1 = class instance                                                                              */
 #define UX_TRACE_DEVICE_CLASS_CDC_ECM_READ                              (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 93)            /* I1 = class instance  , I2 = buffer          , I3 = requested_length                              */
 #define UX_TRACE_DEVICE_CLASS_CDC_ECM_WRITE                             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 94)            /* I1 = class instance  , I2 = buffer          , I3 = requested_length                              */
 #define UX_TRACE_DEVICE_CLASS_CDC_ECM_PACKET_TRANSMIT                   (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 95)            /* I1 = class instance  , I2 = buffer          , I3 = requested_length                              */
 #define UX_TRACE_DEVICE_CLASS_CDC_ECM_PACKET_RECEIVE                    (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 96)            /* I1 = class instance  , I2 = buffer          , I3 = requested_length                              */
-                                                                                                                                                                                                                              
-#define UX_TRACE_DEVICE_CLASS_DFU_ACTIVATE                              (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 97)            /* I1 = class instance                                                                              */       
-#define UX_TRACE_DEVICE_CLASS_DFU_DEACTIVATE                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 98)            /* I1 = class instance                                                                              */       
 
-#define UX_TRACE_DEVICE_CLASS_PRINTER_ACTIVATE                          (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 100)           /* I1 = class instance                                                                              */       
-#define UX_TRACE_DEVICE_CLASS_PRINTER_DEACTIVATE                        (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 101)           /* I1 = class instance                                                                              */       
+#define UX_TRACE_DEVICE_CLASS_DFU_ACTIVATE                              (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 97)            /* I1 = class instance                                                                              */
+#define UX_TRACE_DEVICE_CLASS_DFU_DEACTIVATE                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 98)            /* I1 = class instance                                                                              */
+
+#define UX_TRACE_DEVICE_CLASS_PRINTER_ACTIVATE                          (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 100)           /* I1 = class instance                                                                              */
+#define UX_TRACE_DEVICE_CLASS_PRINTER_DEACTIVATE                        (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 101)           /* I1 = class instance                                                                              */
 #define UX_TRACE_DEVICE_CLASS_PRINTER_READ                              (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 102)           /* I1 = class instance  , I2 = buffer          , I3 = requested_length                              */
 #define UX_TRACE_DEVICE_CLASS_PRINTER_WRITE                             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 103)           /* I1 = class instance  , I2 = buffer          , I3 = requested_length                              */
 
-#define UX_TRACE_DEVICE_CLASS_CCID_ACTIVATE                             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 110)           /* I1 = class instance                                                                              */       
-#define UX_TRACE_DEVICE_CLASS_CCID_DEACTIVATE                           (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 111)           /* I1 = class instance                                                                              */       
+#define UX_TRACE_DEVICE_CLASS_CCID_ACTIVATE                             (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 110)           /* I1 = class instance                                                                              */
+#define UX_TRACE_DEVICE_CLASS_CCID_DEACTIVATE                           (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 111)           /* I1 = class instance                                                                              */
 #define UX_TRACE_DEVICE_CLASS_CCID_REQ_ABORT                            (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 112)           /* I1 = class instance  , I2 = slot                                                                 */
 #define UX_TRACE_DEVICE_CLASS_CCID_PC_TO_RDR_ICC_POWER_ON               (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 113)           /* I1 = class instance  , I2 = slot                                                                 */
 #define UX_TRACE_DEVICE_CLASS_CCID_PC_TO_RDR_ICC_POWER_OFF              (UX_TRACE_DEVICE_CLASS_EVENTS_BASE + 114)           /* I1 = class instance  , I2 = slot                                                                 */
@@ -814,10 +862,10 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 
 
 #else
-#define UX_TRACE_OBJECT_REGISTER(t,p,n,a,b)                 
-#define UX_TRACE_OBJECT_UNREGISTER(o)                       
-#define UX_TRACE_IN_LINE_INSERT(i,a,b,c,d,f,g,h)            
-#define UX_TRACE_EVENT_UPDATE(e,t,i,a,b,c,d)                
+#define UX_TRACE_OBJECT_REGISTER(t,p,n,a,b)
+#define UX_TRACE_OBJECT_UNREGISTER(o)
+#define UX_TRACE_IN_LINE_INSERT(i,a,b,c,d,f,g,h)
+#define UX_TRACE_EVENT_UPDATE(e,t,i,a,b,c,d)
 #endif
 
 
@@ -838,7 +886,7 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_SYSTEM_CONTEXT_HOST_STACK                                    10
 
 
-/* Defines the number of ThreadX timer ticks per seconds. By default, the ThreadX timer tick is 10ms, 
+/* Defines the number of ThreadX timer ticks per seconds. By default, the ThreadX timer tick is 10ms,
    so the default value for this constant is 100.  If TX_TIMER_TICKS_PER_SECOND is defined,
    this value is derived from TX_TIMER_TICKS_PER_SECOND.  */
 
@@ -1070,13 +1118,13 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_SETUP_INDEX                                                  4u
 #define UX_SETUP_LENGTH                                                 6u
 #define UX_SETUP_SIZE                                                   8u
-                                                                        
-                                                                        
-/* Define USBX standard commands.  */                                   
-                                                                        
+
+
+/* Define USBX standard commands.  */
+
 #define UX_GET_STATUS                                                   0u
 #define UX_CLEAR_FEATURE                                                1u
-#define UX_SET_FEATURE                                                  3u 
+#define UX_SET_FEATURE                                                  3u
 #define UX_SET_ADDRESS                                                  5u
 #define UX_GET_DESCRIPTOR                                               6u
 #define UX_SET_DESCRIPTOR                                               7u
@@ -1085,19 +1133,19 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_GET_INTERFACE                                                10u
 #define UX_SET_INTERFACE                                                11u
 #define UX_SYNCH_FRAME                                                  12u
-                                                                        
-                                                                        
-/* Define USBX command sub constants.  */                               
-                                                                        
+
+
+/* Define USBX command sub constants.  */
+
 #define UX_ENDPOINT_HALT                                                0u
-                                                                        
+
 /* Define USBX feature selector constants.  */
 #define UX_REQUEST_FEATURE_ENDPOINT_HALT                                0u
 #define UX_REQUEST_FEATURE_DEVICE_REMOTE_WAKEUP                         1u
 #define UX_REQUEST_FEATURE_TEST_MODE                                    2u
 
-/* Define Generic USBX constants.  */                                   
-                                                                        
+/* Define Generic USBX constants.  */
+
 #define UX_UNUSED                                                       0
 #define UX_USED                                                         1
 
@@ -1107,10 +1155,11 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_CACHE_SAFE_MEMORY                                            1
 
 #define UX_NO_ALIGN                                                     0u
+#define UX_ALIGN_8                                                      0x07u
 #define UX_ALIGN_16                                                     0x0fu
 #define UX_ALIGN_32                                                     0x1fu
 #define UX_ALIGN_64                                                     0x3fu
-#define UX_ALIGN_128                                                    0x7fu 
+#define UX_ALIGN_128                                                    0x7fu
 #define UX_ALIGN_256                                                    0xffu
 #define UX_ALIGN_512                                                    0x1ffu
 #define UX_ALIGN_1024                                                   0x3ffu
@@ -1119,28 +1168,28 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_SAFE_ALIGN                                                   0xffffffffu
 #define UX_MAX_SCATTER_GATHER_ALIGNMENT                                 4096
 #ifndef UX_ALIGN_MIN
-#define UX_ALIGN_MIN                                                    UX_ALIGN_16
+#define UX_ALIGN_MIN                                                    UX_ALIGN_8
 #endif
-                                                                        
+
 #define UX_MAX_USB_DEVICES                                              127
-                                                                        
+
 #define UX_ENDPOINT_DIRECTION                                           0x80u
 #define UX_ENDPOINT_IN                                                  0x80u
 #define UX_ENDPOINT_OUT                                                 0x00u
-                                                                        
+
 #define UX_MASK_ENDPOINT_TYPE                                           3u
 #define UX_CONTROL_ENDPOINT                                             0u
 #define UX_ISOCHRONOUS_ENDPOINT                                         1u
 #define UX_BULK_ENDPOINT                                                2u
 #define UX_INTERRUPT_ENDPOINT                                           3u
-                                                                        
+
 #define UX_ISOCHRONOUS_ENDPOINT_IN                                      0x81u
 #define UX_ISOCHRONOUS_ENDPOINT_OUT                                     0x01u
 #define UX_BULK_ENDPOINT_IN                                             0x82u
 #define UX_BULK_ENDPOINT_OUT                                            0x02u
 #define UX_INTERRUPT_ENDPOINT_IN                                        0x83u
 #define UX_INTERRUPT_ENDPOINT_OUT                                       0x03u
-                                                                        
+
 #define UX_MAX_PACKET_SIZE_MASK                                         0x7ffu
 #define UX_MAX_NUMBER_OF_TRANSACTIONS_MASK                              0x1800u
 #define UX_MAX_NUMBER_OF_TRANSACTIONS_SHIFT                             11
@@ -1151,18 +1200,18 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_REQUEST_DIRECTION                                            0x80u
 #define UX_REQUEST_IN                                                   0x80u
 #define UX_REQUEST_OUT                                                  0x00u
-                                                                        
+
 #define UX_REQUEST_TYPE                                                 0x60u
 #define UX_REQUEST_TYPE_STANDARD                                        0x00u
 #define UX_REQUEST_TYPE_CLASS                                           0x20u
 #define UX_REQUEST_TYPE_VENDOR                                          0x40u
-                                                                        
+
 #define UX_REQUEST_TARGET                                               0x03u
 #define UX_REQUEST_TARGET_DEVICE                                        0x00u
 #define UX_REQUEST_TARGET_INTERFACE                                     0x01u
 #define UX_REQUEST_TARGET_ENDPOINT                                      0x02u
 #define UX_REQUEST_TARGET_OTHER                                         0x03u
-                                                                        
+
 #define UX_DEVICE_RESET                                                 0
 #define UX_DEVICE_ATTACHED                                              1
 #define UX_DEVICE_ADDRESSED                                             2
@@ -1175,11 +1224,11 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_DEVICE_BUS_RESET_COMPLETED                                   9
 #define UX_DEVICE_REMOVED                                               10
 #define UX_DEVICE_FORCE_DISCONNECT                                      11
-                                                                        
+
 #define UX_ENDPOINT_RESET                                               0
 #define UX_ENDPOINT_RUNNING                                             1
 #define UX_ENDPOINT_HALTED                                              2
-                                                                        
+
 #define UX_DEVICE_DESCRIPTOR_ITEM                                       1u
 #define UX_CONFIGURATION_DESCRIPTOR_ITEM                                2u
 #define UX_STRING_DESCRIPTOR_ITEM                                       3u
@@ -1193,7 +1242,7 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_DEVICE_CAPABILITY_DESCRIPTOR_ITEM                            16u
 #define UX_DFU_FUNCTIONAL_DESCRIPTOR_ITEM                               0x21u
 #define UX_HUB_DESCRIPTOR_ITEM                                          0x29u
-                                                                        
+
 #define UX_CAPABILITY_WIRELESS_USB                                      0x01u
 #define UX_CAPABILITY_USB_2_0_EXTENSION                                 0x02u
 #define UX_CAPABILITY_SUPERSPEED_USB                                    0x03u
@@ -1219,7 +1268,7 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #ifndef UX_NON_CONTROL_TRANSFER_TIMEOUT
 #define UX_NON_CONTROL_TRANSFER_TIMEOUT                                 50000
 #endif
-#define UX_PORT_ENABLE_WAIT                                             50 
+#define UX_PORT_ENABLE_WAIT                                             50
 #define UX_DEVICE_ADDRESS_SET_WAIT                                      50
 #define UX_HIGH_SPEED_DETECTION_HANDSHAKE_SUSPEND_WAIT                  200
 #define UX_ENUMERATION_THREAD_WAIT                                      200
@@ -1236,35 +1285,35 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 
 /* USBX 5.8 BACKWARD COMPATIBILITY DEFINITIONS. THESE DEFINITIONS ARE NOW OBSOLETE
    BUT DEFINED HERE FOR COMPATIBILITY REASONS.  */
-   
+
 #ifndef UX_CONTROL_TRANSFER_TIMEOUT_IN_MS
 #define UX_CONTROL_TRANSFER_TIMEOUT_IN_MS                               10000
-#endif 
+#endif
 
 #ifndef UX_NON_CONTROL_TRANSFER_TIMEOUT_IN_MS
 #define UX_NON_CONTROL_TRANSFER_TIMEOUT_IN_MS                           50000
-#endif 
+#endif
 
-#ifndef UX_PORT_ENABLE_WAIT_IN_MS          
+#ifndef UX_PORT_ENABLE_WAIT_IN_MS
 #define UX_PORT_ENABLE_WAIT_IN_MS                                       500
 #endif
 
-#ifndef UX_DEVICE_ADDRESS_SET_WAIT_IN_MS                         
+#ifndef UX_DEVICE_ADDRESS_SET_WAIT_IN_MS
 #define UX_DEVICE_ADDRESS_SET_WAIT_IN_MS                                500
 #endif
 
-#ifndef UX_HIGH_SPEED_DETECTION_HANDSHAKE_SUSPEND_WAIT_IN_MS            
+#ifndef UX_HIGH_SPEED_DETECTION_HANDSHAKE_SUSPEND_WAIT_IN_MS
 #define UX_HIGH_SPEED_DETECTION_HANDSHAKE_SUSPEND_WAIT_IN_MS            2000
 #endif
 
 /* END OF 5.8 BACKWARD COMPATIBILITY DEFINITIONS. */
-                                                                        
+
 #define UX_TRANSFER_PHASE_SETUP                                         1
 #define UX_TRANSFER_PHASE_DATA_IN                                       2
 #define UX_TRANSFER_PHASE_DATA_OUT                                      3
 #define UX_TRANSFER_PHASE_STATUS_IN                                     4
 #define UX_TRANSFER_PHASE_STATUS_OUT                                    5
-                                                                        
+
 
 /* Host change callback events : _callback(event, *class, *instance)  */
 
@@ -1285,15 +1334,15 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_STANDALONE_WAIT_BACKGROUND_TASK                              0x00u
 
 
-/* Define USBX transfer request status constants.  */                   
-                                                                        
+/* Define USBX transfer request status constants.  */
+
 #define UX_TRANSFER_STATUS_NOT_PENDING                                  0
 #define UX_TRANSFER_STATUS_PENDING                                      1
-#define UX_TRANSFER_STATUS_COMPLETED                                    2 
+#define UX_TRANSFER_STATUS_COMPLETED                                    2
 #define UX_TRANSFER_STATUS_ABORT                                        4
-                                                                        
-/* Define USBX device power constants.  */                              
-                                                                        
+
+/* Define USBX device power constants.  */
+
 #define UX_DEVICE_BUS_POWERED                                           1u
 #define UX_DEVICE_SELF_POWERED                                          2u
 #define UX_MAX_SELF_POWER                                               (500u/2)
@@ -1309,49 +1358,49 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_OTG_HNP_SUPPORT                                              2u
 #define UX_HCD_OTG_CAPABLE                                              1u
 #define UX_DCD_OTG_CAPABLE                                              1u
-           
-#define UX_OTG_FEATURE_B_HNP_ENABLE                                     3u           
-#define UX_OTG_FEATURE_A_HNP_SUPPORT                                    4u           
-#define UX_OTG_FEATURE_A_ALT_HNP_SUPPORT                                5u           
+
+#define UX_OTG_FEATURE_B_HNP_ENABLE                                     3u
+#define UX_OTG_FEATURE_A_HNP_SUPPORT                                    4u
+#define UX_OTG_FEATURE_A_ALT_HNP_SUPPORT                                5u
 #define UX_OTG_STATUS_SELECTOR                                          0xF000u
 #define UX_OTG_HOST_REQUEST_FLAG                                        0x01u
-        
+
 #define UX_OTG_IDLE                                                     0u
-#define UX_OTG_IDLE_TO_HOST                                             1u        
-#define UX_OTG_IDLE_TO_SLAVE                                            2u        
-#define UX_OTG_HOST_TO_IDLE                                             3u        
-#define UX_OTG_HOST_TO_SLAVE                                            4u        
-#define UX_OTG_SLAVE_TO_IDLE                                            5u        
-#define UX_OTG_SLAVE_TO_HOST                                            6u        
-#define UX_OTG_SLAVE_SRP                                                7u        
-        
-#define UX_OTG_MODE_IDLE                                                0u        
-#define UX_OTG_MODE_SLAVE                                               1u        
-#define UX_OTG_MODE_HOST                                                2u        
+#define UX_OTG_IDLE_TO_HOST                                             1u
+#define UX_OTG_IDLE_TO_SLAVE                                            2u
+#define UX_OTG_HOST_TO_IDLE                                             3u
+#define UX_OTG_HOST_TO_SLAVE                                            4u
+#define UX_OTG_SLAVE_TO_IDLE                                            5u
+#define UX_OTG_SLAVE_TO_HOST                                            6u
+#define UX_OTG_SLAVE_SRP                                                7u
 
-#define UX_OTG_DEVICE_IDLE                                              0u        
-#define UX_OTG_DEVICE_A                                                 1u        
-#define UX_OTG_DEVICE_B                                                 2u        
+#define UX_OTG_MODE_IDLE                                                0u
+#define UX_OTG_MODE_SLAVE                                               1u
+#define UX_OTG_MODE_HOST                                                2u
 
-#define UX_OTG_VBUS_IDLE                                                0u        
-#define UX_OTG_VBUS_ON                                                  1u        
-#define UX_OTG_VBUS_OFF                                                 2u        
+#define UX_OTG_DEVICE_IDLE                                              0u
+#define UX_OTG_DEVICE_A                                                 1u
+#define UX_OTG_DEVICE_B                                                 2u
 
-                                                                        
+#define UX_OTG_VBUS_IDLE                                                0u
+#define UX_OTG_VBUS_ON                                                  1u
+#define UX_OTG_VBUS_OFF                                                 2u
+
+
 #define UX_OTG_HNP_THREAD_SLEEP_TIME                                    (2 * UX_PERIODIC_RATE)
 
-/* Define USBX device speed constants.  */                              
-                                                                        
+/* Define USBX device speed constants.  */
+
 #define UX_DEFAULT_HS_MPS                                               64
 #define UX_DEFAULT_MPS                                                  8
-                                                                        
+
 #define UX_LOW_SPEED_DEVICE                                             0
 #define UX_FULL_SPEED_DEVICE                                            1
-#define UX_HIGH_SPEED_DEVICE                                            2 
-                                                                        
-                                                                        
-/* Define USBX generic port status constants.  */                       
-                                                                        
+#define UX_HIGH_SPEED_DEVICE                                            2
+
+
+/* Define USBX generic port status constants.  */
+
 #define UX_PS_CCS                                                       0x01u
 #define UX_PS_CPE                                                       0x01u
 #define UX_PS_PES                                                       0x02u
@@ -1362,7 +1411,7 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_PS_DS_LS                                                     0x00u
 #define UX_PS_DS_FS                                                     0x40u
 #define UX_PS_DS_HS                                                     0x80u
-                                                                        
+
 #define UX_PS_DS                                                        6u
 
 
@@ -1389,23 +1438,23 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_STATE_IS_LOCKED(s)                           ((s) >= UX_STATE_LOCK)          /* Locked but not pendint  */
 
 
-/* Define USBX Error Code constants. The following format describes 
+/* Define USBX Error Code constants. The following format describes
    their meaning:
-                                                                           
-        0x00    : Success                                        
-        0x0x    : State machine return codes                                        
-        0x1x    : Configuration errors                                        
-        0x2x    : USB transport errors                                      
-        0x3x    : USB controller errors                                      
-        0x4x    : USB topology errors                                        
-        0x5x    : USB API errors                                              
-        0x6x    : USB Generic Class errors                                           
-        0x7x    : USB HID Class errors                                           
-        0x8x    : USB Audio Class errors                                           
-        0x9x    : USB CDC-ECM Class errors                                           
+
+        0x00    : Success
+        0x0x    : State machine return codes
+        0x1x    : Configuration errors
+        0x2x    : USB transport errors
+        0x3x    : USB controller errors
+        0x4x    : USB topology errors
+        0x5x    : USB API errors
+        0x6x    : USB Generic Class errors
+        0x7x    : USB HID Class errors
+        0x8x    : USB Audio Class errors
+        0x9x    : USB CDC-ECM Class errors
         ...
         0xfx    : General errors
-*/ 
+*/
 
 #define UX_SUCCESS                                                      0
 
@@ -1417,6 +1466,7 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_INVALID_PARAMETER                                            0xfa
 #define UX_ABORTED                                                      0xf9
 #define UX_MATH_OVERFLOW                                                0xf8
+#define UX_INVALID_BUILD_OPTION                                         0xf7
 
 #define UX_TOO_MANY_DEVICES                                             0x11
 #define UX_MEMORY_INSUFFICIENT                                          0x12
@@ -1430,7 +1480,7 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_MEMORY_ARRAY_FULL                                            0x1a
 #define UX_FATAL_ERROR                                                  0x1b
 #define UX_ALREADY_ACTIVATED                                            0x1c
-                                                                        
+
 #define UX_TRANSFER_STALLED                                             0x21
 #define UX_TRANSFER_NO_ANSWER                                           0x22
 #define UX_TRANSFER_ERROR                                               0x23
@@ -1440,17 +1490,17 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_TRANSFER_BUFFER_OVERFLOW                                     0x27
 #define UX_TRANSFER_APPLICATION_RESET                                   0x28
 #define UX_TRANSFER_DATA_LESS_THAN_EXPECTED                             0x29
-                                                                        
+
 #define UX_PORT_RESET_FAILED                                            0x31
 #define UX_CONTROLLER_INIT_FAILED                                       0x32
 #define UX_CONTROLLER_DEAD                                              0x33
-                                                                        
+
 #define UX_NO_BANDWIDTH_AVAILABLE                                       0x41
 #define UX_DESCRIPTOR_CORRUPTED                                         0x42
 #define UX_OVER_CURRENT_CONDITION                                       0x43
 #define UX_DEVICE_ENUMERATION_FAILURE                                   0x44
 #define UX_TOO_MANY_HUB_PORTS                                           0x45
-                                                                        
+
 #define UX_DEVICE_HANDLE_UNKNOWN                                        0x50
 #define UX_CONFIGURATION_HANDLE_UNKNOWN                                 0x51
 #define UX_INTERFACE_HANDLE_UNKNOWN                                     0x52
@@ -1467,7 +1517,7 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_BUFFER_OVERFLOW                                              0x5d
 #define UX_NO_ALTERNATE_SETTING                                         0x5e
 #define UX_NO_DEVICE_CONNECTED                                          0x5f
-                                                                        
+
 #define UX_HOST_CLASS_PROTOCOL_ERROR                                    0x60
 #define UX_HOST_CLASS_MEMORY_ERROR                                      0x61
 #define UX_HOST_CLASS_MEDIA_NOT_SUPPORTED                               0x62
@@ -1485,7 +1535,7 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_HOST_CLASS_HID_REPORT_ERROR                                  0x79
 #define UX_HOST_CLASS_HID_PERIODIC_REPORT_ERROR                         0x7A
 #define UX_HOST_CLASS_HID_UNKNOWN                                       0x7B
-                                                                        
+
 #define UX_HOST_CLASS_AUDIO_WRONG_TYPE                                  0x80
 #define UX_HOST_CLASS_AUDIO_WRONG_INTERFACE                             0x81
 #define UX_HOST_CLASS_AUDIO_WRONG_FREQUENCY                             0x82
@@ -1495,10 +1545,10 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_CLASS_ETH_PACKET_POOL_ERROR                                  0x91
 #define UX_CLASS_ETH_PACKET_ERROR                                       0x92
 #define UX_CLASS_ETH_SIZE_ERROR                                         0x93
-                                                                        
-                                                                        
-/* Define USBX HCD API function constants.  */                          
-                                                                        
+
+
+/* Define USBX HCD API function constants.  */
+
 #define UX_HCD_DISABLE_CONTROLLER                                       1
 #define UX_HCD_GET_PORT_STATUS                                          2
 #define UX_HCD_ENABLE_PORT                                              3
@@ -1519,9 +1569,9 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_HCD_PROCESS_DONE_QUEUE                                       17
 #define UX_HCD_TASKS_RUN                                                17
 #define UX_HCD_UNINITIALIZE                                             18
-                                                                        
-/* Define USBX DCD API function constants.  */                          
-                                                                        
+
+/* Define USBX DCD API function constants.  */
+
 #define UX_DCD_DISABLE_CONTROLLER                                       1
 #define UX_DCD_GET_PORT_STATUS                                          2
 #define UX_DCD_ENABLE_PORT                                              3
@@ -1545,35 +1595,35 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_DCD_CHANGE_STATE                                             19
 #define UX_DCD_STALL_ENDPOINT                                           20
 #define UX_DCD_ENDPOINT_STATUS                                          21
-                                                                        
-                                                                        
-/* Define USBX generic host controller constants.  */                   
-                                                                        
+
+
+/* Define USBX generic host controller constants.  */
+
 #define UX_HCD_STATUS_UNUSED                                            0
 #define UX_HCD_STATUS_HALTED                                            1
 #define UX_HCD_STATUS_OPERATIONAL                                       2
 #define UX_HCD_STATUS_DEAD                                              3
-                                                                        
-/* Define USBX generic SLAVE controller constants.  */                  
-                                                                        
+
+/* Define USBX generic SLAVE controller constants.  */
+
 #define UX_DCD_STATUS_HALTED                                            0
 #define UX_DCD_STATUS_OPERATIONAL                                       1
 #define UX_DCD_STATUS_DEAD                                              2
-                                                                        
-/* Define USBX  SLAVE controller VBUS constants.  */                    
-                                                                        
+
+/* Define USBX  SLAVE controller VBUS constants.  */
+
 #define UX_DCD_VBUS_RESET                                               0
 #define UX_DCD_VBUS_SET                                                 1
-                                                                        
-/* Define USBX class interface constants.  */                           
-                                                                        
+
+/* Define USBX class interface constants.  */
+
 #define UX_HOST_CLASS_COMMAND_QUERY                                     1
 #define UX_HOST_CLASS_COMMAND_ACTIVATE                                  2
 #define UX_HOST_CLASS_COMMAND_DEACTIVATE                                3
 #define UX_HOST_CLASS_COMMAND_DESTROY                                   4
 #define UX_HOST_CLASS_COMMAND_ACTIVATE_START                            UX_HOST_CLASS_COMMAND_ACTIVATE
 #define UX_HOST_CLASS_COMMAND_ACTIVATE_WAIT                             5
-                                                                        
+
 #define UX_SLAVE_CLASS_COMMAND_QUERY                                    1
 #define UX_SLAVE_CLASS_COMMAND_ACTIVATE                                 2
 #define UX_SLAVE_CLASS_COMMAND_DEACTIVATE                               3
@@ -1581,29 +1631,29 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_SLAVE_CLASS_COMMAND_INITIALIZE                               5
 #define UX_SLAVE_CLASS_COMMAND_CHANGE                                   6
 #define UX_SLAVE_CLASS_COMMAND_UNINITIALIZE                             7
-                                                                        
+
 #define UX_HOST_CLASS_COMMAND_USAGE_PIDVID                              1
 #define UX_HOST_CLASS_COMMAND_USAGE_CSP                                 2
 #define UX_HOST_CLASS_COMMAND_USAGE_DCSP                                3
-                                                                        
+
 #define UX_HOST_CLASS_INSTANCE_FREE                                     0
 #define UX_HOST_CLASS_INSTANCE_LIVE                                     1
 #define UX_HOST_CLASS_INSTANCE_SHUTDOWN                                 2
 #define UX_HOST_CLASS_INSTANCE_MOUNTING                                 3
 
 
-/* Define USBX root HUB constants.  */                                  
-                                                                        
+/* Define USBX root HUB constants.  */
+
 #define UX_RH_ENUMERATION_RETRY                                         3
 #define UX_RH_ENUMERATION_RETRY_DELAY                                   100
 
-                                                                        
-/* Define USBX PCI driver constants.  */                                
-                                                                        
+
+/* Define USBX PCI driver constants.  */
+
 #define UX_PCI_NB_FUNCTIONS                                             7
 #define UX_PCI_NB_DEVICE                                                32
 #define UX_PCI_NB_BUS                                                   0xff
-                                                                        
+
 #define UX_PCI_CMD_IO_ENABLE                                            0x0001u
 #define UX_PCI_CMD_MEM_ENABLE                                           0x0002u
 #define UX_PCI_CMD_MASTER_ENABLE                                        0x0004u
@@ -1614,10 +1664,10 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_PCI_CMD_WAIT_CYCLE_CTRL_ENABLE                               0x0080u
 #define UX_PCI_CMD_SERR_ENABLE                                          0x0100u
 #define UX_PCI_CMD_FBB_ENABLE                                           0x0200u
-                                                                        
+
 #define UX_PCI_CFG_CTRL_ADDRESS                                         0x0cf8u
 #define UX_PCI_CFG_DATA_ADDRESS                                         0x0cfcu
-                                                                        
+
 #define UX_PCI_CFG_VENDOR_ID                                            0x00
 #define UX_PCI_CFG_DEVICE_ID                                            0x02
 #define UX_PCI_CFG_COMMAND                                              0x04
@@ -1646,10 +1696,10 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_PCI_CFG_INT_PIN                                              0x3d
 #define UX_PCI_CFG_MIN_GNT                                              0x3e
 #define UX_PCI_CFG_MAX_LATENCY                                          0x3f
-                                                                        
+
 #define UX_PCI_CFG_SBRN                                                 0x60
 #define UX_PCI_CFG_FLADJ                                                0x61
-                                                                        
+
 /* Define DFU constants.  */
 #define UX_SYSTEM_DFU_STATE_APP_IDLE                                    0
 #define UX_SYSTEM_DFU_STATE_APP_DETACH                                  1
@@ -1657,14 +1707,14 @@ VOID    _ux_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, UL
 #define UX_SYSTEM_DFU_STATE_DFU_DNLOAD_SYNC                             3
 #define UX_SYSTEM_DFU_STATE_DFU_DNBUSY                                  4
 #define UX_SYSTEM_DFU_STATE_DFU_DNLOAD_IDLE                             5
-#define UX_SYSTEM_DFU_STATE_DFU_MANIFEST_SYNC                           6 
+#define UX_SYSTEM_DFU_STATE_DFU_MANIFEST_SYNC                           6
 #define UX_SYSTEM_DFU_STATE_DFU_MANIFEST                                7
-#define UX_SYSTEM_DFU_STATE_DFU_MANIFEST_WAIT_RESET                     8 
+#define UX_SYSTEM_DFU_STATE_DFU_MANIFEST_WAIT_RESET                     8
 #define UX_SYSTEM_DFU_STATE_DFU_UPLOAD_IDLE                             9
 #define UX_SYSTEM_DFU_STATE_DFU_ERROR                                   10
 
-/* Define basic class constants.  */                                    
-                                                                        
+/* Define basic class constants.  */
+
 #define UX_HOST_CLASS_PRINTER_NAME_LENGTH                               64
 
 
@@ -1695,8 +1745,8 @@ typedef struct UX_HOST_CLASS_COMMAND_STRUCT
     UINT            ux_host_class_command_iad_class;
     UINT            ux_host_class_command_iad_subclass;
     UINT            ux_host_class_command_iad_protocol;
-    
-    struct UX_HOST_CLASS_STRUCT     
+
+    struct UX_HOST_CLASS_STRUCT
                     *ux_host_class_command_class_ptr;
 } UX_HOST_CLASS_COMMAND;
 
@@ -1732,7 +1782,7 @@ typedef struct UX_TRANSFER_STRUCT
 {
 
     ULONG           ux_transfer_request_status;
-    struct UX_ENDPOINT_STRUCT               
+    struct UX_ENDPOINT_STRUCT
                     *ux_transfer_request_endpoint;
     UCHAR *         ux_transfer_request_data_pointer;
     ULONG           ux_transfer_request_requested_length;
@@ -1747,7 +1797,7 @@ typedef struct UX_TRANSFER_STRUCT
     ULONG           ux_transfer_request_timeout_value;
     UINT            ux_transfer_request_completion_code;
     ULONG           ux_transfer_request_packet_length;
-    struct UX_TRANSFER_STRUCT               
+    struct UX_TRANSFER_STRUCT
                     *ux_transfer_request_next_transfer_request;
     VOID            *ux_transfer_request_user_specific;
 #if !defined(UX_HOST_STANDALONE)
@@ -1780,12 +1830,13 @@ typedef struct UX_TRANSFER_STRUCT
 typedef struct UX_ENDPOINT_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bEndpointAddress;
-    ULONG           bmAttributes;
-    ULONG           wMaxPacketSize;
-    ULONG           bInterval;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bEndpointAddress;
+    UCHAR           bmAttributes;
+    USHORT          wMaxPacketSize;
+    UCHAR           bInterval;
+    UCHAR           _align_size[1];
 } UX_ENDPOINT_DESCRIPTOR;
 
 #define UX_ENDPOINT_DESCRIPTOR_ENTRIES                                  6
@@ -1799,16 +1850,16 @@ typedef struct UX_ENDPOINT_STRUCT
 
     ULONG           ux_endpoint;
     ULONG           ux_endpoint_state;
-    void            *ux_endpoint_ed;    
-    struct UX_ENDPOINT_DESCRIPTOR_STRUCT     
+    void            *ux_endpoint_ed;
+    struct UX_ENDPOINT_DESCRIPTOR_STRUCT
                     ux_endpoint_descriptor;
-    struct UX_ENDPOINT_STRUCT                
+    struct UX_ENDPOINT_STRUCT
                     *ux_endpoint_next_endpoint;
-    struct UX_INTERFACE_STRUCT               
+    struct UX_INTERFACE_STRUCT
                     *ux_endpoint_interface;
-    struct UX_DEVICE_STRUCT                  
+    struct UX_DEVICE_STRUCT
                     *ux_endpoint_device;
-    struct UX_TRANSFER_STRUCT                
+    struct UX_TRANSFER_STRUCT
                     ux_endpoint_transfer_request;
 } UX_ENDPOINT;
 
@@ -1818,39 +1869,42 @@ typedef struct UX_ENDPOINT_STRUCT
 typedef struct UX_DEVICE_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bcdUSB;
-    ULONG           bDeviceClass;
-    ULONG           bDeviceSubClass;
-    ULONG           bDeviceProtocol;
-    ULONG           bMaxPacketSize0;
-    ULONG           idVendor;
-    ULONG           idProduct;
-    ULONG           bcdDevice;
-    ULONG           iManufacturer;
-    ULONG           iProduct;
-    ULONG           iSerialNumber;
-    ULONG           bNumConfigurations;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    USHORT          bcdUSB;
+    UCHAR           bDeviceClass;
+    UCHAR           bDeviceSubClass;
+    UCHAR           bDeviceProtocol;
+    UCHAR           bMaxPacketSize0;
+    USHORT          idVendor;
+    USHORT          idProduct;
+    USHORT          bcdDevice;
+    UCHAR           iManufacturer;
+    UCHAR           iProduct;
+    UCHAR           iSerialNumber;
+    UCHAR           bNumConfigurations;
+    UCHAR           _align_size[2];
 } UX_DEVICE_DESCRIPTOR;
 
 #define UX_DEVICE_DESCRIPTOR_ENTRIES                                    14
 #define UX_DEVICE_DESCRIPTOR_LENGTH                                     18
+
 
 /* Define USBX Device Qualifier Descriptor structure.  */
 
 typedef struct UX_DEVICE_QUALIFIER_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bcdUSB;
-    ULONG           bDeviceClass;
-    ULONG           bDeviceSubClass;
-    ULONG           bDeviceProtocol;
-    ULONG           bMaxPacketSize0;
-    ULONG           bNumConfigurations;
-    ULONG           bReserved;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    USHORT          bcdUSB;
+    UCHAR           bDeviceClass;
+    UCHAR           bDeviceSubClass;
+    UCHAR           bDeviceProtocol;
+    UCHAR           bMaxPacketSize0;
+    UCHAR           bNumConfigurations;
+    UCHAR           bReserved;
+    UCHAR           _align_size[2];
 } UX_DEVICE_QUALIFIER_DESCRIPTOR;
 
 #define UX_DEVICE_QUALIFIER_DESCRIPTOR_ENTRIES                          9
@@ -1862,49 +1916,52 @@ typedef struct UX_DEVICE_QUALIFIER_DESCRIPTOR_STRUCT
 typedef struct UX_OTHER_SPEED_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           wTotalLength;
-    ULONG           bNumInterfaces;
-    ULONG           bConfigurationValue;
-    ULONG           iConfiguration;
-    ULONG           bmAttributes;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    USHORT          wTotalLength;
+    UCHAR           bNumInterfaces;
+    UCHAR           bConfigurationValue;
+    UCHAR           iConfiguration;
+    UCHAR           bmAttributes;
     ULONG           MaxPower;
 } UX_OTHER_SPEED_DESCRIPTOR;
 
 #define UX_OTHER_SPEED_DESCRIPTOR_ENTRIES                               8
 #define UX_OTHER_SPEED_DESCRIPTOR_LENGTH                                9
 
+
 /* Define USBX OTG Descriptor structure.  */
 
 typedef struct UX_OTG_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bmAttributes;
-    ULONG           bcdOTG;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bmAttributes;
+    UCHAR           _align_bcdOTG[1];
+    USHORT          bcdOTG;
+    UCHAR           _algin_size[2];
 } UX_OTG_DESCRIPTOR;
 
 #define UX_OTG_DESCRIPTOR_ENTRIES                          4
 #define UX_OTG_DESCRIPTOR_LENGTH                           5
+
 
 /* Define USBX Interface Association Descriptor structure.  */
 
 typedef struct UX_INTERFACE_ASSOCIATION_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bFirstInterface;
-    ULONG           bInterfaceCount;
-    ULONG           bFunctionClass;
-    ULONG           bFunctionSubClass;
-    ULONG           bFunctionProtocol;
-    ULONG           iFunction;
-
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bFirstInterface;
+    UCHAR           bInterfaceCount;
+    UCHAR           bFunctionClass;
+    UCHAR           bFunctionSubClass;
+    UCHAR           bFunctionProtocol;
+    UCHAR           iFunction;
 } UX_INTERFACE_ASSOCIATION_DESCRIPTOR;
-                                                            
+
 #define UX_INTERFACE_ASSOCIATION_DESCRIPTOR_ENTRIES         8
 #define UX_INTERFACE_ASSOCIATION_DESCRIPTOR_LENGTH          8
 
@@ -1927,25 +1984,25 @@ typedef struct UX_DEVICE_STRUCT
 #if !defined(UX_HOST_STANDALONE)
     UX_SEMAPHORE    ux_device_protection_semaphore;
 #endif
-    struct UX_HOST_CLASS_STRUCT                       
+    struct UX_HOST_CLASS_STRUCT
                     *ux_device_class;
     VOID            *ux_device_class_instance;
-    struct UX_CONFIGURATION_STRUCT               
+    struct UX_CONFIGURATION_STRUCT
                     *ux_device_first_configuration;
-    struct UX_DEVICE_DESCRIPTOR_STRUCT           
+    struct UX_DEVICE_DESCRIPTOR_STRUCT
                     ux_device_descriptor;
-    struct UX_ENDPOINT_STRUCT                    
+    struct UX_ENDPOINT_STRUCT
                     ux_device_control_endpoint;
     ULONG           ux_device_port_location;
 #if UX_MAX_HCD > 1
-    struct UX_HCD_STRUCT                         
+    struct UX_HCD_STRUCT
                     *ux_device_hcd;
 #endif
 #if UX_MAX_DEVICES > 1
     struct UX_DEVICE_STRUCT
                     *ux_device_parent;
     ULONG           ux_device_max_power;
-    struct UX_HUB_TT_STRUCT                      
+    struct UX_HUB_TT_STRUCT
                     ux_device_hub_tt[UX_MAX_TT];
 #endif
 
@@ -2026,15 +2083,16 @@ typedef struct UX_DEVICE_STRUCT
 typedef struct UX_CONFIGURATION_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           wTotalLength;
-    ULONG           bNumInterfaces;
-    ULONG           bConfigurationValue;
-    ULONG           iConfiguration;
-    ULONG           bmAttributes;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    USHORT          wTotalLength;
+    UCHAR           bNumInterfaces;
+    UCHAR           bConfigurationValue;
+    UCHAR           iConfiguration;
+    UCHAR           bmAttributes;
     ULONG           MaxPower;
 } UX_CONFIGURATION_DESCRIPTOR;
+
 
 #define UX_CONFIGURATION_DESCRIPTOR_ENTRIES                             8
 #define UX_CONFIGURATION_DESCRIPTOR_LENGTH                              9
@@ -2048,13 +2106,13 @@ typedef struct UX_CONFIGURATION_STRUCT
     ULONG           ux_configuration_handle;
     ULONG           ux_configuration_state;
     ULONG           ux_configuration_otg_capabilities;
-    struct UX_CONFIGURATION_DESCRIPTOR_STRUCT    
+    struct UX_CONFIGURATION_DESCRIPTOR_STRUCT
                     ux_configuration_descriptor;
-    struct UX_INTERFACE_STRUCT                   
+    struct UX_INTERFACE_STRUCT
                     *ux_configuration_first_interface;
-    struct UX_CONFIGURATION_STRUCT               
+    struct UX_CONFIGURATION_STRUCT
                     *ux_configuration_next_configuration;
-    struct UX_DEVICE_STRUCT                      
+    struct UX_DEVICE_STRUCT
                     *ux_configuration_device;
     ULONG           ux_configuration_iad_class;
     ULONG           ux_configuration_iad_subclass;
@@ -2073,17 +2131,18 @@ typedef struct UX_CONFIGURATION_STRUCT
 typedef struct UX_INTERFACE_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bInterfaceNumber;
-    ULONG           bAlternateSetting;
-    ULONG           bNumEndpoints;
-    ULONG           bInterfaceClass;
-    ULONG           bInterfaceSubClass;
-    ULONG           bInterfaceProtocol;
-    ULONG           iInterface;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bInterfaceNumber;
+    UCHAR           bAlternateSetting;
+    UCHAR           bNumEndpoints;
+    UCHAR           bInterfaceClass;
+    UCHAR           bInterfaceSubClass;
+    UCHAR           bInterfaceProtocol;
+    UCHAR           iInterface;
+    UCHAR           _align_size[3];
 } UX_INTERFACE_DESCRIPTOR;
-    
+
 #define UX_INTERFACE_DESCRIPTOR_ENTRIES                                 9
 #define UX_INTERFACE_DESCRIPTOR_LENGTH                                  9
 
@@ -2096,16 +2155,16 @@ typedef struct UX_INTERFACE_STRUCT
     ULONG           ux_interface_handle;
     ULONG           ux_interface_state;
     UINT            ux_interface_current_alternate_setting;
-    struct UX_INTERFACE_DESCRIPTOR_STRUCT        
+    struct UX_INTERFACE_DESCRIPTOR_STRUCT
                     ux_interface_descriptor;
-    struct UX_HOST_CLASS_STRUCT                       
+    struct UX_HOST_CLASS_STRUCT
                     *ux_interface_class;
     VOID            *ux_interface_class_instance;
-    struct UX_ENDPOINT_STRUCT                    
+    struct UX_ENDPOINT_STRUCT
                     *ux_interface_first_endpoint;
-    struct UX_INTERFACE_STRUCT                   
+    struct UX_INTERFACE_STRUCT
                     *ux_interface_next_interface;
-    struct UX_CONFIGURATION_STRUCT               
+    struct UX_CONFIGURATION_STRUCT
                     *ux_interface_configuration;
     ULONG           ux_interface_iad_class;
     ULONG           ux_interface_iad_subclass;
@@ -2119,9 +2178,9 @@ typedef struct UX_INTERFACE_STRUCT
 typedef struct UX_STRING_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bString[1];
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bString[2];
 } UX_STRING_DESCRIPTOR;
 
 #define UX_STRING_DESCRIPTOR_ENTRIES                                    3
@@ -2132,10 +2191,11 @@ typedef struct UX_STRING_DESCRIPTOR_STRUCT
 
 typedef struct UX_BOS_DESCRIPTOR_STRUCT
 {
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           wTotalLength;
-    ULONG           bNumDeviceCaps;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    USHORT          wTotalLength;
+    UCHAR           bNumDeviceCaps;
+    UCHAR           _align_size[3];
 } UX_BOS_DESCRIPTOR;
 
 #define UX_BOS_DESCRIPTOR_ENTRIES                                       4
@@ -2146,9 +2206,10 @@ typedef struct UX_BOS_DESCRIPTOR_STRUCT
 
 typedef struct UX_USB_2_0_EXTENSION_DESCRIPTOR_STRUCT
 {
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDevCapabilityType;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDevCapabilityType;
+    UCHAR           _align_bmAttributes[1];
     ULONG           bmAttributes;
 } UX_USB_2_0_EXTENSION_DESCRIPTOR;
 
@@ -2160,14 +2221,14 @@ typedef struct UX_USB_2_0_EXTENSION_DESCRIPTOR_STRUCT
 
 typedef struct UX_CONTAINER_ID_DESCRIPTOR_STRUCT
 {
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDevCapabilityType;
-    ULONG           bReserved;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDevCapabilityType;
+    UCHAR           bReserved;
     ULONG           ContainerID[4];
 } UX_CONTAINER_ID_DESCRIPTOR;
 
-#define UX_CONTAINER_ID_DESCRIPTOR_ENTRIES                              5
+#define UX_CONTAINER_ID_DESCRIPTOR_ENTRIES                              8
 #define UX_CONTAINER_ID_DESCRIPTOR_LENGTH                               20
 
 
@@ -2176,21 +2237,24 @@ typedef struct UX_CONTAINER_ID_DESCRIPTOR_STRUCT
 typedef struct UX_DFU_FUNCTIONAL_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bmAttributes;
-    ULONG           wDetachTimeOut;
-    ULONG           wTransferSize;
-    ULONG           bcdDFUVersion;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bmAttributes;
+    UCHAR           _align_wDetachTimeOut[1];
+    USHORT          wDetachTimeOut;
+    USHORT          wTransferSize;
+    USHORT          bcdDFUVersion;
+    UCHAR           _align_size[2];
 } UX_DFU_FUNCTIONAL_DESCRIPTOR;
-                                                                        
+
 #define UX_DFU_FUNCTIONAL_DESCRIPTOR_ENTRIES                            6
 #define UX_DFU_FUNCTIONAL_DESCRIPTOR_LENGTH                             9
+
 
 /* Define USBX Host Controller structure.  */
 
 typedef struct UX_HCD_STRUCT
-{                        
+{
 
 #if defined(UX_NAME_REFERENCED_BY_POINTER)
     const UCHAR     *ux_hcd_name;
@@ -2234,7 +2298,7 @@ typedef struct UX_SLAVE_TRANSFER_STRUCT
 
     ULONG           ux_slave_transfer_request_status;
     ULONG           ux_slave_transfer_request_type;
-    struct UX_SLAVE_ENDPOINT_STRUCT           
+    struct UX_SLAVE_ENDPOINT_STRUCT
                     *ux_slave_transfer_request_endpoint;
     UCHAR           *ux_slave_transfer_request_data_pointer;
     UCHAR           *ux_slave_transfer_request_current_data_pointer;
@@ -2264,20 +2328,20 @@ typedef struct UX_SLAVE_TRANSFER_STRUCT
 /* Define USBX Device Controller Endpoint structure.  */
 
 typedef struct UX_SLAVE_ENDPOINT_STRUCT
-{                        
+{
 
     ULONG           ux_slave_endpoint_status;
     ULONG           ux_slave_endpoint_state;
-    void            *ux_slave_endpoint_ed;  
-    struct UX_ENDPOINT_DESCRIPTOR_STRUCT      
+    void            *ux_slave_endpoint_ed;
+    struct UX_ENDPOINT_DESCRIPTOR_STRUCT
                     ux_slave_endpoint_descriptor;
-    struct UX_SLAVE_ENDPOINT_STRUCT             
+    struct UX_SLAVE_ENDPOINT_STRUCT
                     *ux_slave_endpoint_next_endpoint;
-    struct UX_SLAVE_INTERFACE_STRUCT            
+    struct UX_SLAVE_INTERFACE_STRUCT
                     *ux_slave_endpoint_interface;
-    struct UX_SLAVE_DEVICE_STRUCT               
+    struct UX_SLAVE_DEVICE_STRUCT
                     *ux_slave_endpoint_device;
-    struct UX_SLAVE_TRANSFER_STRUCT             
+    struct UX_SLAVE_TRANSFER_STRUCT
                     ux_slave_endpoint_transfer_request;
 } UX_SLAVE_ENDPOINT;
 
@@ -2285,17 +2349,17 @@ typedef struct UX_SLAVE_ENDPOINT_STRUCT
 /* Define USBX Device Controller Interface structure.  */
 
 typedef struct UX_SLAVE_INTERFACE_STRUCT
-{                        
+{
     ULONG           ux_slave_interface_status;
-    struct UX_SLAVE_CLASS_STRUCT                       
+    struct UX_SLAVE_CLASS_STRUCT
                     *ux_slave_interface_class;
     VOID            *ux_slave_interface_class_instance;
 
-    struct UX_INTERFACE_DESCRIPTOR_STRUCT        
+    struct UX_INTERFACE_DESCRIPTOR_STRUCT
                     ux_slave_interface_descriptor;
-    struct UX_SLAVE_INTERFACE_STRUCT              
+    struct UX_SLAVE_INTERFACE_STRUCT
                     *ux_slave_interface_next_interface;
-    struct UX_SLAVE_ENDPOINT_STRUCT               
+    struct UX_SLAVE_ENDPOINT_STRUCT
                     *ux_slave_interface_first_endpoint;
 } UX_SLAVE_INTERFACE;
 
@@ -2303,33 +2367,33 @@ typedef struct UX_SLAVE_INTERFACE_STRUCT
 /* Define USBX Device Controller structure.  */
 
 typedef struct UX_SLAVE_DEVICE_STRUCT
-{                        
+{
 
-    ULONG           ux_slave_device_state;   
-    struct UX_DEVICE_DESCRIPTOR_STRUCT           
+    ULONG           ux_slave_device_state;
+    struct UX_DEVICE_DESCRIPTOR_STRUCT
                     ux_slave_device_descriptor;
-    struct UX_SLAVE_ENDPOINT_STRUCT               
+    struct UX_SLAVE_ENDPOINT_STRUCT
                     ux_slave_device_control_endpoint;
     ULONG           ux_slave_device_configuration_selected;
-    struct UX_CONFIGURATION_DESCRIPTOR_STRUCT    
+    struct UX_CONFIGURATION_DESCRIPTOR_STRUCT
                     ux_slave_device_configuration_descriptor;
-    struct UX_SLAVE_INTERFACE_STRUCT               
+    struct UX_SLAVE_INTERFACE_STRUCT
                     *ux_slave_device_first_interface;
-    struct UX_SLAVE_INTERFACE_STRUCT               
+    struct UX_SLAVE_INTERFACE_STRUCT
                     *ux_slave_device_interfaces_pool;
     ULONG           ux_slave_device_interfaces_pool_number;
-    struct UX_SLAVE_ENDPOINT_STRUCT               
+    struct UX_SLAVE_ENDPOINT_STRUCT
                     *ux_slave_device_endpoints_pool;
     ULONG           ux_slave_device_endpoints_pool_number;
-    ULONG           ux_slave_device_power_state;                    
-    
+    ULONG           ux_slave_device_power_state;
+
 } UX_SLAVE_DEVICE;
 
 
 /* Define USBX Device Controller structure.  */
 
 typedef struct UX_SLAVE_DCD_STRUCT
-{                        
+{
 
     UINT            ux_slave_dcd_status;
     UINT            ux_slave_dcd_controller_type;
@@ -2359,11 +2423,11 @@ typedef struct UX_SLAVE_CLASS_COMMAND_STRUCT
     UINT            ux_slave_class_command_class;
     UINT            ux_slave_class_command_subclass;
     UINT            ux_slave_class_command_protocol;
-    struct UX_SLAVE_CLASS_STRUCT     
+    struct UX_SLAVE_CLASS_STRUCT
                     *ux_slave_class_command_class_ptr;
     VOID            *ux_slave_class_command_parameter;
     VOID            *ux_slave_class_command_interface_number;
-    
+
 } UX_SLAVE_CLASS_COMMAND;
 
 
@@ -2388,53 +2452,81 @@ typedef struct UX_SLAVE_CLASS_STRUCT
 #else
     UINT            (*ux_slave_class_task_function)(VOID *class_instance);
 #endif
-    VOID            *ux_slave_class_interface_parameter;                    
-    ULONG           ux_slave_class_interface_number;                    
-    ULONG           ux_slave_class_configuration_number;                    
-    struct UX_SLAVE_INTERFACE_STRUCT               
+    VOID            *ux_slave_class_interface_parameter;
+    ULONG           ux_slave_class_interface_number;
+    ULONG           ux_slave_class_configuration_number;
+    struct UX_SLAVE_INTERFACE_STRUCT
                     *ux_slave_class_interface;
 
 } UX_SLAVE_CLASS;
 
+#define UX_UCHAR_POINTER_ADD(a,b)                       (((UCHAR *) (a)) + ((UINT) (b)))
+#define UX_UCHAR_POINTER_SUB(a,b)                       (((UCHAR *) (a)) - ((UINT) (b)))
+#define UX_UCHAR_POINTER_DIF(a,b)                       ((ULONG)(((UCHAR *) (a)) - ((UCHAR *) (b))))
+#define UX_ULONG_POINTER_ADD(a,b)                       (((ULONG *) (a)) + ((UINT) (b)))
+#define UX_ULONG_POINTER_SUB(a,b)                       (((ULONG *) (a)) - ((UINT) (b)))
+#define UX_ULONG_POINTER_DIF(a,b)                       ((ULONG)(((ULONG *) (a)) - ((ULONG *) (b))))
+#define UX_POINTER_TO_ULONG_CONVERT(a)                  ((ULONG) ((VOID *) (a)))
+#define UX_ULONG_TO_POINTER_CONVERT(a)                  ((VOID *) ((ULONG) (a)))
+#define UX_POINTER_TO_ALIGN_TYPE_CONVERT(a)             ((ALIGN_TYPE) ((VOID *) (a)))
+#define UX_ALIGN_TYPE_TO_POINTER_CONVERT(a)             ((VOID *) ((ALIGN_TYPE) (a)))
+#define UX_LOOP_FOREVER                                 ((UINT) 1)
+#define UX_INDIRECT_VOID_TO_UCHAR_POINTER_CONVERT(a)    ((UCHAR **) ((VOID *) (a)))
+#define UX_UCHAR_TO_INDIRECT_UCHAR_POINTER_CONVERT(a)   ((UCHAR **) ((VOID *) (a)))
+#define UX_VOID_TO_UCHAR_POINTER_CONVERT(a)             ((UCHAR *) ((VOID *) (a)))
+#define UX_VOID_TO_INDIRECT_UCHAR_POINTER_CONVERT(a)    ((UCHAR **) ((VOID *) (a)))
+#define UX_VOID_TO_BYTE_POOL_POINTER_CONVERT(a)         ((UX_MEMORY_BYTE_POOL *) ((VOID *) (a)))
+#define UX_BYTE_POOL_TO_UCHAR_POINTER_CONVERT(a)        ((UCHAR *) ((VOID *) (a)))
+#ifndef UX_UCHAR_TO_ALIGN_TYPE_POINTER_CONVERT
+#define UX_UCHAR_TO_ALIGN_TYPE_POINTER_CONVERT(a)       ((ALIGN_TYPE *) ((VOID *) (a)))
+#endif
+#define UX_UCHAR_TO_INDIRECT_BYTE_POOL_POINTER(a)       ((UX_MEMORY_BYTE_POOL **) ((VOID *) (a)))
+#define UX_MEMORY_BLOCK_HEADER_SIZE                     (sizeof(UCHAR *) + sizeof(ALIGN_TYPE))
+
+#ifndef UX_BYTE_BLOCK_FREE
+#define UX_BYTE_BLOCK_FREE                              ((ULONG) 0xFFFFEEEEUL)
+#endif
+
+#ifndef UX_BYTE_BLOCK_MIN
+#define UX_BYTE_BLOCK_MIN                               ((ULONG) 20)
+#endif
+
 /* Define USBX Memory Management structure.  */
 
-typedef struct UX_MEMORY_BLOCK_STRUCT 
+typedef struct UX_MEMORY_BYTE_POOL_STRUCT
 {
 
-    ULONG           ux_memory_block_size;
-    ULONG           ux_memory_block_status;
-    struct  UX_MEMORY_BLOCK_STRUCT   
-                    *ux_memory_block_next;
-    struct  UX_MEMORY_BLOCK_STRUCT   
-                    *ux_memory_block_previous;
-} UX_MEMORY_BLOCK;
+    /* Define the number of available bytes in the pool.  */
+    ULONG           ux_byte_pool_available;
 
+    /* Define the number of fragments in the pool.  */
+    UINT            ux_byte_pool_fragments;
+
+    /* Define the search pointer used for initial searching for memory in a byte pool.  */
+    UCHAR           *ux_byte_pool_search;
+
+    /* Save the start address of the byte pool's memory area.  */
+    UCHAR           *ux_byte_pool_start;
+
+    /* Save the byte pool's size in bytes.  */
+    ULONG           ux_byte_pool_size;
+
+#ifdef UX_ENABLE_MEMORY_STATISTICS
+    ALIGN_TYPE      ux_byte_pool_min_free;
+    ULONG           ux_byte_pool_alloc_count;
+    ULONG           ux_byte_pool_alloc_total;
+    ULONG           ux_byte_pool_alloc_max_count;
+    ULONG           ux_byte_pool_alloc_max_total;
+#endif
+} UX_MEMORY_BYTE_POOL;
+
+#define UX_MEMORY_BYTE_POOL_REGULAR 0
+#define UX_MEMORY_BYTE_POOL_CACHE_SAFE 1
+#define UX_MEMORY_BYTE_POOL_NUM 2
 
 typedef struct UX_SYSTEM_STRUCT
-{                                        
-
-    UX_MEMORY_BLOCK *ux_system_regular_memory_pool_start;
-    ULONG           ux_system_regular_memory_pool_size;
-    ULONG           ux_system_regular_memory_pool_free;
-    UX_MEMORY_BLOCK *ux_system_cache_safe_memory_pool_start;
-    ULONG           ux_system_cache_safe_memory_pool_size;
-    ULONG           ux_system_cache_safe_memory_pool_free;
-#ifdef UX_ENABLE_MEMORY_STATISTICS
-    UCHAR           *ux_system_regular_memory_pool_base;
-    ALIGN_TYPE      ux_system_regular_memory_pool_max_start_offset;
-    ALIGN_TYPE      ux_system_regular_memory_pool_min_free;
-    UCHAR           *ux_system_cache_safe_memory_pool_base;
-    ALIGN_TYPE      ux_system_cache_safe_memory_pool_max_start_offset;
-    ALIGN_TYPE      ux_system_cache_safe_memory_pool_min_free;
-    ULONG           ux_system_regular_memory_pool_alloc_count;
-    ULONG           ux_system_regular_memory_pool_alloc_total;
-    ULONG           ux_system_regular_memory_pool_alloc_max_count;
-    ULONG           ux_system_regular_memory_pool_alloc_max_total;
-    ULONG           ux_system_cache_safe_memory_pool_alloc_count;
-    ULONG           ux_system_cache_safe_memory_pool_alloc_total;
-    ULONG           ux_system_cache_safe_memory_pool_alloc_max_count;
-    ULONG           ux_system_cache_safe_memory_pool_alloc_max_total;
-#endif
+{
+    UX_MEMORY_BYTE_POOL *ux_system_memory_byte_pool[UX_MEMORY_BYTE_POOL_NUM];
 
     UINT            ux_system_thread_lowest_priority;
 #if !defined(UX_STANDALONE)
@@ -2462,7 +2554,7 @@ typedef struct UX_SYSTEM_STRUCT
 /* Define USBX System Host Data structure.  */
 
 typedef struct UX_SYSTEM_HOST_STRUCT
-{                                        
+{
 
 #if UX_MAX_CLASS_DRIVER > 1
     UINT            ux_system_host_max_class;
@@ -2547,7 +2639,7 @@ typedef struct UX_SYSTEM_HOST_STRUCT
 
 
 typedef struct UX_SYSTEM_SLAVE_STRUCT
-{                                        
+{
 
     UX_SLAVE_DCD    ux_system_slave_dcd;
     UX_SLAVE_DEVICE ux_system_slave_device;
@@ -2592,7 +2684,7 @@ typedef struct UX_SYSTEM_SLAVE_STRUCT
 #endif
 
 typedef struct UX_SYSTEM_OTG_STRUCT
-{                                        
+{
 
 #if !defined(UX_OTG_STANDALONE)
     UX_THREAD       ux_system_otg_thread;
@@ -2618,7 +2710,7 @@ typedef struct UX_SYSTEM_OTG_STRUCT
 typedef struct UX_HOST_CLASS_DPUMP_STRUCT
 {
 
-    struct UX_HOST_CLASS_DPUMP_STRUCT  
+    struct UX_HOST_CLASS_DPUMP_STRUCT
                     *ux_host_class_dpump_next_instance;
     UX_HOST_CLASS   *ux_host_class_dpump_class;
     UX_DEVICE       *ux_host_class_dpump_device;
@@ -2635,8 +2727,8 @@ typedef struct UX_HOST_CLASS_DPUMP_STRUCT
 } UX_HOST_CLASS_DPUMP;
 
 
-/* Define the system API mappings based on the error checking 
-   selected by the user.  Note: this section is only applicable to 
+/* Define the system API mappings based on the error checking
+   selected by the user.  Note: this section is only applicable to
    application source code, hence the conditional that turns off this
    stuff when the include file is processed by the ThreadX source. */
 
@@ -2645,7 +2737,12 @@ typedef struct UX_HOST_CLASS_DPUMP_STRUCT
 
 /* Define USBX Services.  */
 
+#if defined(UX_SYSTEM_ENABLE_ERROR_CHECKING)
 #define ux_system_initialize                                    _ux_system_initialize
+#else
+#define ux_system_initialize                                    _uxe_system_initialize
+#endif
+
 #define ux_system_uninitialize                                  _ux_system_uninitialize
 #define ux_system_tasks_run                                     _ux_system_tasks_run
 
@@ -2653,31 +2750,54 @@ typedef struct UX_HOST_CLASS_DPUMP_STRUCT
 
 #define ux_host_class_storage_entry                             _ux_host_class_storage_entry
 
+#if defined(UX_HOST_STACK_ENABLE_ERROR_CHECKING)
+
+#define ux_host_stack_class_get                                 _uxe_host_stack_class_get
+#define ux_host_stack_class_instance_get                        _uxe_host_stack_class_instance_get
+#define ux_host_stack_class_register                            _uxe_host_stack_class_register
+#define ux_host_stack_device_configuration_activate             _uxe_host_stack_device_configuration_activate
+#define ux_host_stack_device_configuration_deactivate           _uxe_host_stack_device_configuration_deactivate
+#define ux_host_stack_device_configuration_get                  _uxe_host_stack_device_configuration_get
+#define ux_host_stack_device_get                                _uxe_host_stack_device_get
+#define ux_host_stack_device_string_get                         _uxe_host_stack_device_string_get
+#define ux_host_stack_endpoint_transfer_abort                   _uxe_host_stack_endpoint_transfer_abort
+#define ux_host_stack_hcd_register                              _uxe_host_stack_hcd_register
+#define ux_host_stack_hcd_unregister                            _uxe_host_stack_hcd_unregister
+#define ux_host_stack_interface_endpoint_get                    _uxe_host_stack_interface_endpoint_get
+#define ux_host_stack_interface_setting_select                  _uxe_host_stack_interface_setting_select
+#define ux_host_stack_transfer_request                          _uxe_host_stack_transfer_request
+#define ux_host_stack_transfer_request_abort                    _uxe_host_stack_transfer_request_abort
+
+#else
+
 #define ux_host_stack_class_get                                 _ux_host_stack_class_get
-#define ux_host_stack_class_instance_create                     _ux_host_stack_class_instance_create
-#define ux_host_stack_class_instance_destroy                    _ux_host_stack_class_instance_destroy
 #define ux_host_stack_class_instance_get                        _ux_host_stack_class_instance_get
 #define ux_host_stack_class_register                            _ux_host_stack_class_register
-#define ux_host_stack_class_unregister                          _ux_host_stack_class_unregister
-#define ux_host_stack_configuration_interface_get               _ux_host_stack_configuration_interface_get
 #define ux_host_stack_device_configuration_activate             _ux_host_stack_device_configuration_activate
 #define ux_host_stack_device_configuration_deactivate           _ux_host_stack_device_configuration_deactivate
 #define ux_host_stack_device_configuration_get                  _ux_host_stack_device_configuration_get
-#define ux_host_stack_device_configuration_select               _ux_host_stack_device_configuration_select
 #define ux_host_stack_device_get                                _ux_host_stack_device_get
 #define ux_host_stack_device_string_get                         _ux_host_stack_device_string_get
 #define ux_host_stack_endpoint_transfer_abort                   _ux_host_stack_endpoint_transfer_abort
 #define ux_host_stack_hcd_register                              _ux_host_stack_hcd_register
 #define ux_host_stack_hcd_unregister                            _ux_host_stack_hcd_unregister
-#define ux_host_stack_initialize                                _ux_host_stack_initialize
-#define ux_host_stack_uninitialize                              _ux_host_stack_uninitialize
 #define ux_host_stack_interface_endpoint_get                    _ux_host_stack_interface_endpoint_get
 #define ux_host_stack_interface_setting_select                  _ux_host_stack_interface_setting_select
 #define ux_host_stack_transfer_request                          _ux_host_stack_transfer_request
 #define ux_host_stack_transfer_request_abort                    _ux_host_stack_transfer_request_abort
+
+#endif
+
+#define ux_host_stack_class_instance_create                     _ux_host_stack_class_instance_create
+#define ux_host_stack_class_instance_destroy                    _ux_host_stack_class_instance_destroy
+#define ux_host_stack_class_unregister                          _ux_host_stack_class_unregister
+#define ux_host_stack_configuration_interface_get               _ux_host_stack_configuration_interface_get
+#define ux_host_stack_device_configuration_reset                _ux_host_stack_device_configuration_reset
+#define ux_host_stack_device_configuration_select               _ux_host_stack_device_configuration_select
+#define ux_host_stack_initialize                                _ux_host_stack_initialize
+#define ux_host_stack_uninitialize                              _ux_host_stack_uninitialize
 #define ux_host_stack_hnp_polling_thread_entry                  _ux_host_stack_hnp_polling_thread_entry
 #define ux_host_stack_role_swap                                 _ux_host_stack_role_swap
-#define ux_host_stack_device_configuration_reset                _ux_host_stack_device_configuration_reset
 
 #define ux_host_stack_tasks_run                                 _ux_host_stack_tasks_run
 #define ux_host_stack_transfer_run                              _ux_host_stack_transfer_run
@@ -2686,10 +2806,23 @@ typedef struct UX_HOST_CLASS_DPUMP_STRUCT
 #define ux_utility_pci_read                                     _ux_utility_pci_read
 #define ux_utility_pci_write                                    _ux_utility_pci_write
 
-#define ux_device_stack_alternate_setting_get                   _ux_device_stack_alternate_setting_get
-#define ux_device_stack_alternate_setting_set                   _ux_device_stack_alternate_setting_set
+#if defined(UX_DEVICE_STACK_ENABLE_ERROR_CHECKING)
+
+#define ux_device_stack_class_register                          _uxe_device_stack_class_register
+#define ux_device_stack_class_unregister                        _uxe_device_stack_class_unregister
+#define ux_device_stack_initialize                              _uxe_device_stack_initialize
+
+#else
+
 #define ux_device_stack_class_register                          _ux_device_stack_class_register
 #define ux_device_stack_class_unregister                        _ux_device_stack_class_unregister
+#define ux_device_stack_initialize                              _ux_device_stack_initialize
+
+#endif
+#define ux_device_stack_uninitialize                            _ux_device_stack_uninitialize
+
+#define ux_device_stack_alternate_setting_get                   _ux_device_stack_alternate_setting_get
+#define ux_device_stack_alternate_setting_set                   _ux_device_stack_alternate_setting_set
 #define ux_device_stack_configuration_get                       _ux_device_stack_configuration_get
 #define ux_device_stack_configuration_set                       _ux_device_stack_configuration_set
 #define ux_device_stack_descriptor_send                         _ux_device_stack_descriptor_send
@@ -2697,8 +2830,6 @@ typedef struct UX_HOST_CLASS_DPUMP_STRUCT
 #define ux_device_stack_disconnect                              _ux_device_stack_disconnect
 #define ux_device_stack_endpoint_stall                          _ux_device_stack_endpoint_stall
 #define ux_device_stack_host_wakeup                             _ux_device_stack_host_wakeup
-#define ux_device_stack_initialize                              _ux_device_stack_initialize
-#define ux_device_stack_uninitialize                            _ux_device_stack_uninitialize
 #define ux_device_stack_interface_delete                        _ux_device_stack_interface_delete
 #define ux_device_stack_interface_get                           _ux_device_stack_interface_get
 #define ux_device_stack_interface_set                           _ux_device_stack_interface_set
@@ -2715,17 +2846,21 @@ typedef struct UX_HOST_CLASS_DPUMP_STRUCT
 #define ux_hcd_sim_host_initialize                              _ux_hcd_sim_host_initialize
 #define ux_dcd_sim_slave_initialize                             _ux_dcd_sim_slave_initialize
 
-#define ux_network_driver_init                                  _ux_network_driver_init 
+#define ux_network_driver_init                                  _ux_network_driver_init
 
 #endif
 
 
 /* Define USBX API prototypes.  */
 
-UINT    ux_system_initialize(VOID *non_cached_memory_pool_start, ULONG non_cached_memory_size, 
+UINT    ux_system_initialize(VOID *non_cached_memory_pool_start, ULONG non_cached_memory_size,
                                 VOID *cached_memory_pool_start, ULONG cached_memory_size);
 UINT    ux_system_uninitialize(VOID);
 UINT    ux_system_tasks_run(VOID);
+
+UINT    uxe_system_initialize(VOID *non_cached_memory_pool_start, ULONG non_cached_memory_size,
+                                VOID *cached_memory_pool_start, ULONG cached_memory_size);
+
 
 /* Define USBX Host API prototypes.  */
 
@@ -2770,7 +2905,7 @@ UINT    ux_dcd_at91_initialize(ULONG dcd_io);
 UINT    ux_dcd_isp1181_initialize(ULONG dcd_io, ULONG dcd_irq, ULONG dcd_vbus_address);
 UINT    ux_dcd_ml6965_initialize(ULONG dcd_io, ULONG dcd_irq, ULONG dcd_vbus_address);
 UINT    ux_dcd_sim_slave_initialize(VOID);
-                                        
+
 UINT    ux_device_class_storage_entry(UX_SLAVE_CLASS_COMMAND *command);
 VOID    ux_device_class_storage_thread(ULONG);
 UINT    ux_device_stack_alternate_setting_get(ULONG interface_value);

@@ -67,7 +67,7 @@ typedef struct
 #define SD_INSTANCES_NBR         1UL
 
 #ifndef SD_WRITE_TIMEOUT
-#define SD_WRITE_TIMEOUT         100U
+#define SD_WRITE_TIMEOUT         500U
 #endif
 
 #ifndef SD_READ_TIMEOUT

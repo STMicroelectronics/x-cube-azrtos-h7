@@ -26,7 +26,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */
 /*                                                                        */
 /*    ux_device_class_audio10.h                           PORTABLE C      */
-/*                                                           6.1.12       */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -53,6 +53,13 @@
 /*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            added sampling control,     */
 /*                                            resulting in version 6.1.12 */
+/*  03-08-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added error checks support, */
+/*                                            fixed a macro name,         */
+/*                                            resulting in version 6.2.1  */
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            optimized USB descriptors,  */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -68,6 +75,13 @@
 extern   "C" { 
 
 #endif  
+
+
+/* Internal option: enable the basic USBX error checking. This define is typically used
+   while debugging application.  */
+#if defined(UX_ENABLE_ERROR_CHECKING) && !defined(UX_DEVICE_CLASS_AUDIO_ENABLE_ERROR_CHECKING)
+#define UX_DEVICE_CLASS_AUDIO_ENABLE_ERROR_CHECKING
+#endif
 
 
 /* Define Audio Class specific AC interface descriptor subclasses.  */
@@ -155,94 +169,105 @@ extern   "C" {
 typedef struct UX_DEVICE_CLASS_AUDIO10_AC_HEADER1_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubtype;
-    ULONG           bcdADC;
-    ULONG           wTotalLength;
-    ULONG           bInCollection;
-    ULONG           baInterfaceNr1;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubtype;
+    UCHAR           _align_bcdADC[1];
+    USHORT          bcdADC;
+    USHORT          wTotalLength;
+    UCHAR           bInCollection;
+    UCHAR           baInterfaceNr1;
+    UCHAR           _align_size[2];
 } UX_DEVICE_CLASS_AUDIO10_AC_HEADER1_DESCRIPTOR;
 
 typedef struct UX_DEVICE_CLASS_AUDIO10_AC_HEADER2_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubtype;
-    ULONG           bcdADC;
-    ULONG           wTotalLength;
-    ULONG           bInCollection;
-    ULONG           baInterfaceNr1;
-    ULONG           baInterfaceNr2;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubtype;
+    UCHAR           _align_bcdADC[1];
+    USHORT          bcdADC;
+    USHORT          wTotalLength;
+    UCHAR           bInCollection;
+    UCHAR           baInterfaceNr1;
+    UCHAR           baInterfaceNr2;
+    UCHAR           _align_size[1];
 } UX_DEVICE_CLASS_AUDIO10_AC_HEADER2_DESCRIPTOR;
 
 typedef struct UX_DEVICE_CLASS_AUDIO10_AC_HEADER3_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubtype;
-    ULONG           bcdADC;
-    ULONG           wTotalLength;
-    ULONG           bInCollection;
-    ULONG           baInterfaceNr1;
-    ULONG           baInterfaceNr2;
-    ULONG           baInterfaceNr3;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubtype;
+    UCHAR           _align_bcdADC[1];
+    USHORT          bcdADC;
+    USHORT          wTotalLength;
+    UCHAR           bInCollection;
+    UCHAR           baInterfaceNr1;
+    UCHAR           baInterfaceNr2;
+    UCHAR           baInterfaceNr3;
+    UCHAR           _align_size[2];
 } UX_DEVICE_CLASS_AUDIO10_AC_HEADER3_DESCRIPTOR;
 
 typedef struct UX_DEVICE_CLASS_AUDIO10_AC_HEADER6_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubtype;
-    ULONG           bcdADC;
-    ULONG           wTotalLength;
-    ULONG           bInCollection;
-    ULONG           baInterfaceNr1;
-    ULONG           baInterfaceNr2;
-    ULONG           baInterfaceNr3;
-    ULONG           baInterfaceNr4;
-    ULONG           baInterfaceNr5;
-    ULONG           baInterfaceNr6;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubtype;
+    UCHAR           _align_bcdADC[1];
+    USHORT          bcdADC;
+    USHORT          wTotalLength;
+    UCHAR           bInCollection;
+    UCHAR           baInterfaceNr1;
+    UCHAR           baInterfaceNr2;
+    UCHAR           baInterfaceNr3;
+    UCHAR           baInterfaceNr4;
+    UCHAR           baInterfaceNr5;
+    UCHAR           baInterfaceNr6;
+    UCHAR           _align_size[1];
 } UX_DEVICE_CLASS_AUDIO10_AC_HEADER6_DESCRIPTOR;
 
 typedef struct UX_DEVICE_CLASS_AUDIO10_AC_HEADER7_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubtype;
-    ULONG           bcdADC;
-    ULONG           wTotalLength;
-    ULONG           bInCollection;
-    ULONG           baInterfaceNr1;
-    ULONG           baInterfaceNr2;
-    ULONG           baInterfaceNr3;
-    ULONG           baInterfaceNr4;
-    ULONG           baInterfaceNr5;
-    ULONG           baInterfaceNr6;
-    ULONG           baInterfaceNr7;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubtype;
+    UCHAR           _align_bcdADC[1];
+    USHORT          bcdADC;
+    USHORT          wTotalLength;
+    UCHAR           bInCollection;
+    UCHAR           baInterfaceNr1;
+    UCHAR           baInterfaceNr2;
+    UCHAR           baInterfaceNr3;
+    UCHAR           baInterfaceNr4;
+    UCHAR           baInterfaceNr5;
+    UCHAR           baInterfaceNr6;
+    UCHAR           baInterfaceNr7;
 } UX_DEVICE_CLASS_AUDIO10_AC_HEADER7_DESCRIPTOR;
 
 typedef struct UX_DEVICE_CLASS_AUDIO10_AC_HEADER8_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubtype;
-    ULONG           bcdADC;
-    ULONG           wTotalLength;
-    ULONG           bInCollection;
-    ULONG           baInterfaceNr1;
-    ULONG           baInterfaceNr2;
-    ULONG           baInterfaceNr3;
-    ULONG           baInterfaceNr4;
-    ULONG           baInterfaceNr5;
-    ULONG           baInterfaceNr6;
-    ULONG           baInterfaceNr7;
-    ULONG           baInterfaceNr8;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubtype;
+    UCHAR           _align_bcdADC[1];
+    USHORT          bcdADC;
+    USHORT          wTotalLength;
+    UCHAR           bInCollection;
+    UCHAR           baInterfaceNr1;
+    UCHAR           baInterfaceNr2;
+    UCHAR           baInterfaceNr3;
+    UCHAR           baInterfaceNr4;
+    UCHAR           baInterfaceNr5;
+    UCHAR           baInterfaceNr6;
+    UCHAR           baInterfaceNr7;
+    UCHAR           baInterfaceNr8;
+    UCHAR           _align_size[3];
 } UX_DEVICE_CLASS_AUDIO10_AC_HEADER8_DESCRIPTOR;
 
 
@@ -251,16 +276,16 @@ typedef struct UX_DEVICE_CLASS_AUDIO10_AC_HEADER8_DESCRIPTOR_STRUCT
 typedef struct UX_DEVICE_CLASS_AUDIO10_AC_INPUT_TERMINAL_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubType;
-    ULONG           bTerminalID;
-    ULONG           wTerminalType;
-    ULONG           bAssocTerminal;
-    ULONG           bNrChannels;
-    ULONG           wChannelConfig;
-    ULONG           iChannelNames;
-    ULONG           iTerminal;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubType;
+    UCHAR           bTerminalID;
+    USHORT          wTerminalType;
+    UCHAR           bAssocTerminal;
+    UCHAR           bNrChannels;
+    USHORT          wChannelConfig;
+    UCHAR           iChannelNames;
+    UCHAR           iTerminal;
 } UX_DEVICE_CLASS_AUDIO10_AC_INPUT_TERMINAL_DESCRIPTOR;
 
 
@@ -269,14 +294,15 @@ typedef struct UX_DEVICE_CLASS_AUDIO10_AC_INPUT_TERMINAL_DESCRIPTOR_STRUCT
 typedef struct UX_DEVICE_CLASS_AUDIO10_AC_OUTPUT_TERMINAL_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubType;
-    ULONG           bTerminalID;
-    ULONG           wTerminalType;
-    ULONG           bAssocTerminal;
-    ULONG           bSourceID;
-    ULONG           iTerminal;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubType;
+    UCHAR           bTerminalID;
+    USHORT          wTerminalType;
+    UCHAR           bAssocTerminal;
+    UCHAR           bSourceID;
+    UCHAR           iTerminal;
+    UCHAR          _align_size[3];
 } UX_DEVICE_CLASS_AUDIO10_AC_OUTPUT_TERMINAL_DESCRIPTOR;
 
 
@@ -285,12 +311,13 @@ typedef struct UX_DEVICE_CLASS_AUDIO10_AC_OUTPUT_TERMINAL_DESCRIPTOR_STRUCT
 typedef struct UX_DEVICE_CLASS_AUDIO10_AC_FEATURE_UNIT_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubType;
-    ULONG           bUnitID;
-    ULONG           bSourceID;
-    ULONG           bControlSize;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubType;
+    UCHAR           bUnitID;
+    UCHAR           bSourceID;
+    UCHAR           bControlSize;
+    UCHAR           _align_bmaControls[2];
     ULONG           bmaControls;
 } UX_DEVICE_CLASS_AUDIO10_AC_FEATURE_UNIT_DESCRIPTOR;
 
@@ -300,12 +327,13 @@ typedef struct UX_DEVICE_CLASS_AUDIO10_AC_FEATURE_UNIT_DESCRIPTOR_STRUCT
 typedef struct UX_DEVICE_CLASS_AUDIO10_AS_INTERFACE_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubtype;
-    ULONG           bTerminalLink;
-    ULONG           bDelay;
-    ULONG           wFormatTag;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubtype;
+    UCHAR           bTerminalLink;
+    UCHAR           bDelay;
+    UCHAR           _align_wFormatTag[1];
+    USHORT          wFormatTag;
 } UX_DEVICE_CLASS_AUDIO10_AS_INTERFACE_DESCRIPTOR;
 
 
@@ -314,14 +342,14 @@ typedef struct UX_DEVICE_CLASS_AUDIO10_AS_INTERFACE_DESCRIPTOR_STRUCT
 typedef struct UX_DEVICE_CLASS_AUDIO10_AS_TYPE_I_FORMAT_TYPE_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubtype;
-    ULONG           bFormatType;
-    ULONG           bNrChannels;
-    ULONG           bSubframeSize;
-    ULONG           bBitResolution;
-    ULONG           bSamFreqType;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubtype;
+    UCHAR           bFormatType;
+    UCHAR           bNrChannels;
+    UCHAR           bSubframeSize;
+    UCHAR           bBitResolution;
+    UCHAR           bSamFreqType;
     ULONG           SamplingFrequency;
 } UX_DEVICE_CLASS_AUDIO10_AS_TYPE_I_FORMAT_TYPE_DESCRIPTOR;
 
@@ -338,25 +366,27 @@ typedef struct UX_DEVICE_CLASS_AUDIO10_AS_TYPE_I_FORMAT_TYPE_DESCRIPTOR_STRUCT
 typedef struct UX_DEVICE_CLASS_AUDIO10_AS_ENDPOINT_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubtype;
-    ULONG           bmAttributes;
-    ULONG           wMaxPacketSize;
-    ULONG           bInterval;
-    ULONG           bRefresh;
-    ULONG           bSynchAddress;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubtype;
+    UCHAR           bmAttributes;
+    USHORT          wMaxPacketSize;
+    UCHAR           bInterval;
+    UCHAR           bRefresh;
+    UCHAR           bSynchAddress;
+    UCHAR          _align_size[3];
 } UX_DEVICE_CLASS_AUDIO10_AS_ENDPOINT_DESCRIPTOR;
 
 typedef struct UX_DEVICE_CLASS_AUDIO10_AS_DATA_ENDPOINT_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubtype;
-    ULONG           bmAttributes;
-    ULONG           bLockDelayUnits;
-    ULONG           wLockDelay;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubtype;
+    UCHAR           bmAttributes;
+    UCHAR           bLockDelayUnits;
+    UCHAR          _align_wLockDelay[1];
+    USHORT          wLockDelay;
 } UX_DEVICE_CLASS_AUDIO10_AS_DATA_ENDPOINT_DESCRIPTOR;
 
 typedef struct UX_DEVICE_CLASS_AUDIO10_CONTROL_STRUCT
@@ -377,7 +407,7 @@ typedef struct UX_DEVICE_CLASS_AUDIO10_CONTROL_STRUCT
 
 #define UX_DEVICE_CLASS_AUDIO10_CONTROL_MUTE_CHANGED                1u
 #define UX_DEVICE_CLASS_AUDIO10_CONTROL_VOLUME_CHANGED              2u
-#define UX_DEVICE_CLASS_AUDIO20_CONTROL_FREQUENCY_CHANGED           4u
+#define UX_DEVICE_CLASS_AUDIO10_CONTROL_FREQUENCY_CHANGED           4u
 
 typedef struct UX_DEVICE_CLASS_AUDIO10_CONTROL_GROUP_STRUCT
 {
@@ -389,7 +419,19 @@ UINT _ux_device_class_audio10_control_process(UX_DEVICE_CLASS_AUDIO *audio,
                                               UX_SLAVE_TRANSFER *transfer_request,
                                               UX_DEVICE_CLASS_AUDIO10_CONTROL_GROUP *group);
 
+UINT _uxe_device_class_audio10_control_process(UX_DEVICE_CLASS_AUDIO *audio,
+                                              UX_SLAVE_TRANSFER *transfer_request,
+                                              UX_DEVICE_CLASS_AUDIO10_CONTROL_GROUP *group);
+
+#if defined(UX_DEVICE_CLASS_AUDIO_ENABLE_ERROR_CHECKING)
+
+#define ux_device_class_audio10_control_process _uxe_device_class_audio10_control_process
+
+#else
+
 #define ux_device_class_audio10_control_process _ux_device_class_audio10_control_process
+
+#endif
 
 /* Determine if a C++ compiler is being used.  If so, complete the standard 
    C conditional started above.  */   

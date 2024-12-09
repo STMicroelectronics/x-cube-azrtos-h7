@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nor_flash_driver_write                          PORTABLE C      */ 
-/*                                                           6.1.7        */
+/*                                                           6.2.1       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -77,6 +77,9 @@
 /*                                            resulting in version 6.1    */
 /*  06-02-2021     Bhupendra Naphade        Modified comment(s),          */
 /*                                            resulting in version 6.1.7  */
+/*  03-08-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            added new driver interface, */
+/*                                            resulting in version 6.2.1 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nor_flash_driver_write(LX_NOR_FLASH *nor_flash, ULONG *flash_address, ULONG *source, ULONG words)
@@ -126,8 +129,12 @@ ULONG   cache_offset;
     }
     
     /* In any case, call the actual driver write function.  */
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+    status =  (nor_flash -> lx_nor_flash_driver_write)(nor_flash, flash_address, source, words);
+#else
     status =  (nor_flash -> lx_nor_flash_driver_write)(flash_address, source, words);
-    
+#endif
+
     /* Return completion status.  */
     return(status);   
    
@@ -136,7 +143,11 @@ UINT    status;
 
 
     /* Call the actual driver write function.  */
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+    status =  (nor_flash -> lx_nor_flash_driver_write)(nor_flash, flash_address, source, words);
+#else
     status =  (nor_flash -> lx_nor_flash_driver_write)(flash_address, source, words);
+#endif
     
     /* Return completion status.  */
     return(status);   

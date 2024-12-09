@@ -39,8 +39,8 @@
 /*                                                                        */ 
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
-/*    _lx_nor_flash_extended_cache_read                  PORTABLE C      */ 
-/*                                                           6.1.7        */
+/*    _lx_nor_flash_extended_cache_read                  PORTABLE C       */ 
+/*                                                           6.2.1       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -77,6 +77,9 @@
 /*                                            resulting in version 6.1    */
 /*  06-02-2021     Bhupendra Naphade        Modified comment(s),          */
 /*                                            resulting in version 6.1.7  */
+/*  03-08-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            added new driver interface, */
+/*                                            resulting in version 6.2.1 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nor_flash_driver_read(LX_NOR_FLASH *nor_flash, ULONG *flash_address, ULONG *destination, ULONG words)
@@ -160,10 +163,16 @@ UINT    least_used_cache_entry;
             cache_entry_start =  nor_flash -> lx_nor_flash_base_address + cache_offset;
             
             /* Call the actual driver read function.  */
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+            status =  (nor_flash -> lx_nor_flash_driver_read)(nor_flash, cache_entry_start, 
+                            nor_flash -> lx_nor_flash_extended_cache[least_used_cache_entry].lx_nor_flash_extended_cache_entry_sector_memory, 
+                            LX_NOR_SECTOR_SIZE);
+#else
             status =  (nor_flash -> lx_nor_flash_driver_read)(cache_entry_start, 
                             nor_flash -> lx_nor_flash_extended_cache[least_used_cache_entry].lx_nor_flash_extended_cache_entry_sector_memory, 
                             LX_NOR_SECTOR_SIZE);
-            
+#endif
+
             /* Determine if there was an error.  */
             if (status != LX_SUCCESS)
             {
@@ -191,7 +200,11 @@ UINT    least_used_cache_entry;
     {
     
         /* Call the actual driver read function.  */
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+        status =  (nor_flash -> lx_nor_flash_driver_read)(nor_flash, flash_address, destination, words);
+#else
         status =  (nor_flash -> lx_nor_flash_driver_read)(flash_address, destination, words);
+#endif
 
         /* Return completion status.  */
         return(status);   
@@ -201,7 +214,11 @@ UINT    status;
 
 
     /* Call the actual driver read function.  */
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+    status =  (nor_flash -> lx_nor_flash_driver_read)(nor_flash, flash_address, destination, words);
+#else
     status =  (nor_flash -> lx_nor_flash_driver_read)(flash_address, destination, words);
+#endif
 
     /* Return completion status.  */
     return(status);   

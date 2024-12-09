@@ -33,7 +33,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_device_class_ccid_activate                      PORTABLE C      */
-/*                                                           6.1.12       */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -67,6 +67,13 @@
 /*                                            fixed parameter/variable    */
 /*                                            names conflict C++ keyword, */
 /*                                            resulting in version 6.1.12 */
+/*  03-08-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.2.1  */
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added a new mode to manage  */
+/*                                            endpoint buffer in classes, */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_device_class_ccid_activate(UX_SLAVE_CLASS_COMMAND *command)
@@ -77,7 +84,9 @@ UX_SLAVE_CLASS                          *ccid_class;
 UX_DEVICE_CLASS_CCID                    *ccid;
 UX_SLAVE_ENDPOINT                       *endpoint;
 ULONG                                   endpoint_type;
+#if !defined(UX_DEVICE_STANDALONE)
 UINT                                    i;
+#endif
 
     /* Get the class container.  */
     ccid_class =  command -> ux_slave_class_command_class_ptr;
@@ -104,16 +113,51 @@ UINT                                    i;
         if (endpoint_type == UX_INTERRUPT_ENDPOINT)
         {
             ccid -> ux_device_class_ccid_endpoint_notify = endpoint;
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+            endpoint -> ux_slave_endpoint_transfer_request.
+                ux_slave_transfer_request_data_pointer =
+                                UX_DEVICE_CLASS_CCID_INTERRUPTIN_BUFFER(ccid);
+#endif
         }
         if (endpoint_type == UX_BULK_ENDPOINT)
         {
             if (endpoint -> ux_slave_endpoint_descriptor.bEndpointAddress & UX_ENDPOINT_IN)
+            {
                 ccid -> ux_device_class_ccid_endpoint_in = endpoint;
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+                endpoint -> ux_slave_endpoint_transfer_request.
+                    ux_slave_transfer_request_data_pointer =
+                                UX_DEVICE_CLASS_CCID_BULKIN_BUFFER(ccid);
+#endif
+            }
             else
+            {
                 ccid -> ux_device_class_ccid_endpoint_out = endpoint;
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+                endpoint -> ux_slave_endpoint_transfer_request.
+                    ux_slave_transfer_request_data_pointer =
+                                UX_DEVICE_CLASS_CCID_BULKOUT_BUFFER(ccid);
+#endif
+            }
         }
         endpoint = endpoint -> ux_slave_endpoint_next_endpoint;
     }
+
+#if defined(UX_DEVICE_STANDALONE)
+
+    /* Initialize slots (optimized for 1 slot).  */
+    ccid -> ux_device_class_ccid_slots -> ux_device_class_ccid_slot_runner = -1;
+    ccid -> ux_device_class_ccid_slots -> ux_device_class_ccid_slot_icc_status =
+                                    UX_DEVICE_CLASS_CCID_ICC_NOT_PRESENT;
+
+    /* Initialize task states.  */
+    ccid -> ux_device_class_ccid_cmd_state = UX_DEVICE_CLASS_CCID_CMD_START;
+    ccid -> ux_device_class_ccid_rsp_state = UX_DEVICE_CLASS_CCID_RSP_IDLE;
+    ccid -> ux_device_class_ccid_notify_state = UX_DEVICE_CLASS_CCID_NOTIFY_IDLE;
+
+    /* Initialize runner task state (optimized for 1 slot).  */
+    ccid -> ux_device_class_ccid_runners -> ux_device_class_ccid_runner_state = UX_DEVICE_CLASS_CCID_RUNNER_IDLE;
+#else
 
     /* Initialize slots.  */
     for (i = 0;
@@ -139,6 +183,7 @@ UINT                                    i;
         _ux_device_thread_resume(&ccid -> ux_device_class_ccid_runners[i].
                                            ux_device_class_ccid_runner_thread);
     }
+#endif
 
     /* If there is a activate function call it.  */
     if (ccid -> ux_device_class_ccid_parameter.ux_device_class_ccid_instance_activate != UX_NULL)

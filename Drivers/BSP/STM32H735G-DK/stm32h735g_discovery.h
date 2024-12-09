@@ -139,11 +139,11 @@ typedef struct
 #endif
 
 /**
- * @brief STM32H735G_DK BSP Driver version number V1.2.1
+ * @brief STM32H735G_DK BSP Driver version number V1.2.2
    */
 #define	STM32H735G_DK_BSP_VERSION_MAIN   (uint32_t)(0x01) /*!< [31:24] main version */
 #define	STM32H735G_DK_BSP_VERSION_SUB1   (uint32_t)(0x02) /*!< [23:16] sub1 version */
-#define	STM32H735G_DK_BSP_VERSION_SUB2   (uint32_t)(0x01) /*!< [15:8]  sub2 version */
+#define	STM32H735G_DK_BSP_VERSION_SUB2   (uint32_t)(0x02) /*!< [15:8]  sub2 version */
 #define	STM32H735G_DK_BSP_VERSION_RC     (uint32_t)(0x00) /*!< [7:0]  release candidate */
 #define	STM32H735G_DK_BSP_VERSION        ((STM32H735G_DK_BSP_VERSION_MAIN << 24)\
                                                 |(STM32H735G_DK_BSP_VERSION_SUB1 << 16)\

@@ -62,7 +62,7 @@ typedef struct
   */
 #define SDRAM_INSTANCES_NBR       1U
 #define SDRAM_DEVICE_ADDR         0xD0000000U
-#define SDRAM_DEVICE_SIZE         0x800000U
+#define SDRAM_DEVICE_SIZE         0x01000000U   /* IS42S16800F (128Mb) = 2M x16 bit x4 Banks */
 
 /* MDMA definitions for SDRAM DMA transfer */
 #define SDRAM_MDMAx_CLK_ENABLE             __HAL_RCC_MDMA_CLK_ENABLE

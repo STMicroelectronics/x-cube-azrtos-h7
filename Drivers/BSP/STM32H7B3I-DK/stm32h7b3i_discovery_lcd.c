@@ -28,7 +28,7 @@
 
      o Initialize the LCD with required parameters using the BSP_LCD_InitEx() function.
 
-     o Select the LCD layer to be used using the BSP_LCD_SelectLayer() function.
+     o Select the LCD layer to be activated using the BSP_LCD_SetActiveLayer() function.
      o Enable the LCD display using the BSP_LCD_DisplayOn() function.
      o Disable the LCD display using the BSP_LCD_DisplayOff() function.
      o Set the display brightness using the BSP_LCD_SetBrightness() function. Not that

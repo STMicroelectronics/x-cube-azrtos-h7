@@ -1,0 +1,199 @@
+<!doctype html>
+<!-- 
+* Bootstrap Simple Admin Template
+* Version: 2.1
+* Author: Alexis Luna
+* Website: https://github.com/alexis-luna/bootstrap-simple-admin-template
+-->
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>NetXDuo WebServer Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css"
+        integrity="sha512-OdEXQYCOldjqUEsuMKsZRj93Ht23QRlhIb8E/X0sbwZhme8eUw6g8q7AdxGJKakcBbv7+/PX0Gc2btf7Ru8cZA=="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/v4-shims.min.css"
+        integrity="sha512-iaLhEHW3p+ZNgkDKBi4zEfH+aWAMGJ7I7njqD3jKnbN0ux4Gkumu2vjuI71YUov20OIPl3R32v8HO+V+6OgbvQ=="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css"
+        integrity="sha512-jQqzj2vHVxA/yCojT8pVZjKGOe9UmoYvnOuM/2sQ110vxiajBU+4WkyRs1ODMmd4AfntwUEV4J+VfM6DkfjLRg=="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css"
+        integrity="sha512-Ez0cGzNzHR1tYAv56860NLspgUGuQw16GiOOp/I2LuTmpSK9xDXlgJz3XN4cnpXWDmkNBKXR/VDMTCnAaEooxA=="
+        crossorigin="anonymous" />
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato'>
+
+    <link rel="stylesheet" href="assets/master.css" type="text/css">
+
+</head>
+
+<body onload="loadData()">
+<div style="background-image: url(assets/background.jpg); width: 100%">
+    <div class="wrapper" ;>
+        <nav id="sidebar" class="active">
+            <div class="sidebar-header">
+                <a href="https://www.st.com/content/st_com/en.html">
+                    <img src="assets/st_logo.svg" alt="ST_logo" class="app-logo" style="width: 90%; height: 90%;">
+                </a>
+            </div>
+            <ul class="list-unstyled components text-secondary">
+                <li>
+                    <a href="about.html"><i class="fa fa-home"></i> Home</a>
+                </li>
+                <li>
+                    <a href="dashboard.html"><i class="fa fa-tachometer"></i> Dashboard</a>
+                </li>
+            </ul>
+        </nav>
+        <div id="body" class="active">
+            <nav class="navbar navbar-expand-lg navbar-white bg-white">
+                <button type="button" id="sidebarCollapse" class="btn btn-light"><i class="fas fa-bars"></i><span></span></button>
+                <label style=" top: 10%; right: 40%; position: absolute; font-size:x-large;font-weight: bold; color:darkblue;">NetXDuo WebServer Demo</label>
+            </nav>
+            <div class="content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 page-header" >
+                            <h2 class="page-title" style="margin-left: 10px; color: white;">
+                            System Performance</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="card" style="  background-color: white; opacity: 0.9;">
+                                <div class="content">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="icon-big text-left">
+                                                <img src="assets/cpu.svg"
+                                                    style="color: darkblue; width: 80px ; height: 80px;">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="detail">
+                                                <p class="detail-subtitle" style="text-align: left;">RTOS Info</p>
+                                                <span class="number" id="tx_active" style="font-size:medium">Resumptions : 0</span><br>
+                                                <span class="number" id="tx_suspended" style="font-size:medium">Suspentions : 0</span><br>
+                                                <span class="number" id="idle_returns" style="font-size:medium">Idle Returns : 0</span><br>
+                                                <span class="number" id="non_idle_returns" style="font-size:medium">Non Idle returns : 0</span><br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="footer">
+                                        <hr />
+                                        <div class="stats">
+                                            <i class="fas fa-microchip"></i> ThreadX
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card" style="  background-color: white; opacity: 0.9;">
+                                <div class="content">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="icon-big text-left">
+                                                <i class="violet fas fa-wifi fa-lg"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="detail">
+                                                <p class="detail-subtitle">TCP traffic</p>
+                                                <span class="number" id="nx_sent" style="font-size:medium">Total Bytes Sent : 0</span><br>
+                                                <span class="number" id="nx_received" style="font-size:medium">Total Bytes received : 0</span> <br>
+                                                <span class="number" id="nx_connect" style="font-size:medium">Total Connections : 0</span><br>
+                                                <span class="number" id="nx_disconnect" style="font-size:medium">Total Disconnections : 0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="footer">
+                                        <hr />
+                                        <div class="stats">
+                                            <i class="fas fa-network-wired"></i> NetXDuo
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card" style="  background-color: white; opacity: 0.9;">
+                                <div class="content">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="icon-big text-left">
+                                                <i class="fas fa-network-wired"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="detail">
+                                                <p class="detail-subtitle">CONNECTION info</p><br><br>
+                                                <span class="number" id="net_ip" style="font-size:medium">IP ADDRESS : 0</span><br>
+                                                <span class="number" id="net_port" style="font-size:medium">CONNECTION PORT : 0</span> <br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="footer">
+                                        <hr />
+                                        <div class="stats">
+                                            <i class="fas fa-network-wired"></i> Network
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div id="threadcountchart" style="height: 370px; width: 100%; background-color: white; opacity: 0.9;"></div>
+                        </div>
+                        <div class="col">
+                            <div id="packetpoolchart" style="height: 370px; width: 100%; background-color: white; opacity: 0.9;"></div>
+                        </div>
+
+                    </div>    
+                </div>
+            </div>
+            <!-- toggle button -->
+            <div class="content">
+                <div class="container">
+                    <div class="page-title">
+                        <h2 class="page-title" style="margin-left: 10px; color: white;">
+                        Actions</h2>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card" style="  background-color: white; opacity: 0.9;">
+                                <div class="card-body" style="top: 50%;left: 50%;width: 50%;">
+                                    <h5 class="card-title">LEDs</h5>
+                                    <p class="card-text" id="ledpannel"> toggle the green led on the board</p>
+                                    <div class="form-check form-switch">
+                                       <input class="form-check-input" type="checkbox" id="greenLed" style="width: 35px; height: 20px;" onclick="toggleLed()">
+                                       <label class="form-check-label" id="buttonLabel" for="buttonActive">  Off</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.min.js"
+        integrity="sha512-EKWWs1ZcA2ZY9lbLISPz8aGR2+L7JVYqBAYTq5AXgBkSjRSuQEGqWx8R1zAX16KdXPaCjOCaKE8MCpU0wcHlHA=="
+        crossorigin="anonymous"></script>
+    <script src="assets/script.js"></script> 
+    <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+</body>
+
+</html>

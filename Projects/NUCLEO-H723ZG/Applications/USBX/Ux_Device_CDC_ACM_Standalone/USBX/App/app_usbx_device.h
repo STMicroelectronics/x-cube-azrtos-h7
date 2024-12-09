@@ -27,17 +27,14 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "ux_api.h"
+#include "ux_device_descriptors.h"
+#include "ux_device_cdc_acm.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <intrinsics.h>
+#include "usart.h"
 #include "usb_otg.h"
-#include "ux_system.h"
-#include "ux_utility.h"
-#include "ux_device_stack.h"
 #include "ux_dcd_stm32.h"
-#include "ux_device_descriptors.h"
-#include "ux_device_cdc_acm.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -46,6 +43,9 @@ extern "C" {
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
+#define USBX_DEVICE_APP_MEMORY_BUFFER_SIZE  6*1024
+#define USBX_DEVICE_MEMORY_STACK_SIZE       6*1024
+
 /* USER CODE BEGIN EC */
 
 /* USER CODE END EC */
@@ -59,8 +59,9 @@ extern "C" {
 UINT MX_USBX_Device_Init(VOID);
 
 /* USER CODE BEGIN EFP */
-VOID MX_USBX_Device_Process(VOID *arg);
-VOID MX_USB_Device_Init(VOID);
+VOID USBX_APP_Device_Init(VOID);
+VOID USBX_APP_UART_Init(UART_HandleTypeDef **huart);
+VOID USBX_Device_Process(VOID *arg);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

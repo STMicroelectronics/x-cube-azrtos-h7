@@ -26,7 +26,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */ 
 /*                                                                        */ 
 /*    fx_port.h                                          Win32/Visual     */ 
-/*                                                           6.1.8        */
+/*                                                           6.3.0        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -50,6 +50,9 @@
 /*                                            resulting in version 6.1.5  */
 /*  08-02-2021     William E. Lamie         Modified comment(s),          */
 /*                                            resulting in version 6.1.8  */
+/*  10-31-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            added basic types guards,   */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -89,6 +92,7 @@ typedef unsigned long long  ULONG64;
 #include <stdint.h>
 #include <stdlib.h>
 
+#ifndef VOID
 #define VOID                                    void
 typedef char                                    CHAR;
 typedef char                                    BOOL;
@@ -99,6 +103,8 @@ typedef long                                    LONG;
 typedef unsigned long                           ULONG;
 typedef short                                   SHORT;
 typedef unsigned short                          USHORT;
+#endif
+
 #ifndef ULONG64_DEFINED
 #define ULONG64_DEFINED
 typedef unsigned long long                      ULONG64;
@@ -204,7 +210,7 @@ typedef unsigned long long                      ULONG64;
 
 #ifdef FX_SYSTEM_INIT
 CHAR                            _fx_version_id[] = 
-                                    "Copyright (c) Microsoft Corporation. All rights reserved.  *  FileX Win32/Version 6.2.0 *";
+                                    "Copyright (c) Microsoft Corporation. All rights reserved.  *  FileX Win32/Version 6.4.0 *";
 #else
 extern  CHAR                    _fx_version_id[];
 #endif

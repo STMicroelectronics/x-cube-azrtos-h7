@@ -34,7 +34,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_device_class_hid_event_set                      PORTABLE C      */ 
-/*                                                           6.1.11       */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -79,36 +79,34 @@
 /*                                            resulting in version 6.1.10 */
 /*  04-25-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            resulting in version 6.1.11 */
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added zero copy support,    */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_device_class_hid_event_set(UX_SLAVE_CLASS_HID *hid, 
                                       UX_SLAVE_CLASS_HID_EVENT *hid_event)
 {
 
-UX_SLAVE_CLASS_HID_EVENT   *current_hid_event;
-UX_SLAVE_CLASS_HID_EVENT   *next_hid_event;
+UX_DEVICE_CLASS_HID_EVENT   *current_hid_event;
+UX_DEVICE_CLASS_HID_EVENT   *next_hid_event;
+UCHAR                       *next_position;
 
     /* If trace is enabled, insert this event into the trace buffer.  */
     UX_TRACE_IN_LINE_INSERT(UX_TRACE_DEVICE_CLASS_HID_EVENT_SET, hid, hid_event, 0, 0, UX_TRACE_DEVICE_CLASS_EVENTS, 0, 0)
 
     /* Current position of the head.  */
     current_hid_event =  hid -> ux_device_class_hid_event_array_head;
-    
+
     /* If the pointer is NULL, the round robin buffer has not been activated.  */
     if (current_hid_event == UX_NULL)
         return (UX_ERROR);
     
     /* Calculate the next position.  */
-    if ((current_hid_event + 1) == hid -> ux_device_class_hid_event_array_end)
-
-        /* We are at the end, go back to the beginning.  */
-        next_hid_event =  hid -> ux_device_class_hid_event_array;
-        
-    else        
-
-        /* We are not at the end, increment the head position.  */
-        next_hid_event = current_hid_event + 1;
-    
+    next_position = (UCHAR *)current_hid_event + UX_DEVICE_CLASS_HID_EVENT_QUEUE_ITEM_SIZE(hid);
+    if (next_position >= (UCHAR *)hid -> ux_device_class_hid_event_array_end)
+        next_position = (UCHAR *)hid -> ux_device_class_hid_event_array;
+    next_hid_event = (UX_DEVICE_CLASS_HID_EVENT *)next_position;
 
     /* Any place left for this event ? */
     if (next_hid_event == hid -> ux_device_class_hid_event_array_tail)
@@ -126,7 +124,7 @@ UX_SLAVE_CLASS_HID_EVENT   *next_hid_event;
 
         /* Yes, there's a report ID. Check to see if our event buffer can also
            fit the extra byte.  */
-        if (hid_event -> ux_device_class_hid_event_length + 1 > UX_DEVICE_CLASS_HID_EVENT_BUFFER_LENGTH)
+        if (hid_event -> ux_device_class_hid_event_length + 1 > UX_DEVICE_CLASS_HID_EVENT_MAX_LENGTH(hid))
         {
 
             /* Error trap. */
@@ -140,10 +138,11 @@ UX_SLAVE_CLASS_HID_EVENT   *next_hid_event;
         }
 
         /* Store the report ID.  */
-        *current_hid_event -> ux_device_class_hid_event_buffer =  (UCHAR)(hid_event -> ux_device_class_hid_event_report_id);  
-                
+        *UX_DEVICE_CLASS_HID_EVENT_BUFFER(current_hid_event) =  (UCHAR)(hid_event -> ux_device_class_hid_event_report_id);
+
         /* Store the data itself.  */
-        _ux_utility_memory_copy(current_hid_event -> ux_device_class_hid_event_buffer + 1, hid_event -> ux_device_class_hid_event_buffer,
+        _ux_utility_memory_copy(UX_DEVICE_CLASS_HID_EVENT_BUFFER(current_hid_event) + 1,
+                                hid_event -> ux_device_class_hid_event_buffer,
                                 hid_event -> ux_device_class_hid_event_length); /* Use case of memcpy is verified. */
     
         /* fill in the event structure from the user.  */
@@ -153,7 +152,10 @@ UX_SLAVE_CLASS_HID_EVENT   *next_hid_event;
     {
     
         /* No report ID to consider.  */
-        _ux_utility_memory_copy(current_hid_event -> ux_device_class_hid_event_buffer, hid_event -> ux_device_class_hid_event_buffer,
+
+        /* Store copy of data so application can free event there (easier use).  */
+        _ux_utility_memory_copy(UX_DEVICE_CLASS_HID_EVENT_BUFFER(current_hid_event),
+                                hid_event -> ux_device_class_hid_event_buffer,
                                 hid_event -> ux_device_class_hid_event_length); /* Use case of memcpy is verified. */
 
         /* fill in the event structure from the user.  */
@@ -176,3 +178,53 @@ UX_SLAVE_CLASS_HID_EVENT   *next_hid_event;
     return(UX_SUCCESS);
 }
 
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _uxe_device_class_hid_event_set                     PORTABLE C      */
+/*                                                           6.3.0        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks errors in HID event set function call.         */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    hid                                   Pointer to hid instance       */
+/*    hid_event                             Pointer to hid event          */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    None                                                                */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_device_class_hid_event_set        Set an HID event              */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Application                                                         */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  10-31-2023     Chaoqiong Xiao           Initial Version 6.3.0         */
+/*                                                                        */
+/**************************************************************************/
+UINT  _uxe_device_class_hid_event_set(UX_SLAVE_CLASS_HID *hid, 
+                                      UX_SLAVE_CLASS_HID_EVENT *hid_event)
+{
+
+    /* Sanity checks.  */
+    if ((hid == UX_NULL) || (hid_event == UX_NULL))
+        return(UX_INVALID_PARAMETER);
+
+    /* Invoke function to get event.  */
+    return(_ux_device_class_hid_event_set(hid, hid_event));
+}

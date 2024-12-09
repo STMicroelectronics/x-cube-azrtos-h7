@@ -33,7 +33,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_device_class_ccid_initialize                    PORTABLE C      */
-/*                                                           6.1.11       */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -72,14 +72,17 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  04-25-2022     Chaoqiong Xiao           Initial Version 6.1.11        */
+/*  03-08-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.2.1  */
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added a new mode to manage  */
+/*                                            endpoint buffer in classes, */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_device_class_ccid_initialize(UX_SLAVE_CLASS_COMMAND *command)
 {
-#if defined(UX_DEVICE_STANDALONE)
-    UX_PARAMETER_NOT_USED(command);
-    return(UX_FUNCTION_NOT_SUPPORTED);
-#else
 UX_DEVICE_CLASS_CCID                    *ccid;
 UX_DEVICE_CLASS_CCID_RUNNER             *runner;
 UX_DEVICE_CLASS_CCID_SLOT               *slot;
@@ -89,9 +92,11 @@ UINT                                    status;
 ULONG                                   memory_size;
 ULONG                                   ccid_size, runners_size, slots_size;
 ULONG                                   buffer_size, buffers_size;
-ULONG                                   stacks_size;
 UCHAR                                   *memory;
 ULONG                                   i;
+#if !defined(UX_DEVICE_STANDALONE)
+ULONG                                   stacks_size;
+#endif
 
     /* Get the class container.  */
     ccid_class =  command -> ux_slave_class_command_class_ptr;
@@ -104,12 +109,22 @@ ULONG                                   i;
         - number busy <= number slots
         - message length < max request buffer size
       */
+
+#if !defined(UX_DEVICE_STANDALONE)
+
     UX_ASSERT(ccid_parameter -> ux_device_class_ccid_max_n_slots <= UX_DEVICE_CLASS_CCID_MAX_N_SLOTS);
     UX_ASSERT(ccid_parameter -> ux_device_class_ccid_max_n_busy_slots != 0);
     UX_ASSERT(ccid_parameter -> ux_device_class_ccid_max_n_busy_slots <=
                 ccid_parameter -> ux_device_class_ccid_max_n_slots)
+#else
+
+    /* To optimize only support 1 slot.  */
+    ccid_parameter -> ux_device_class_ccid_max_n_slots = 1;
+    ccid_parameter -> ux_device_class_ccid_max_n_busy_slots = 1;
+#endif
+
     UX_ASSERT(ccid_parameter -> ux_device_class_ccid_max_transfer_length <=
-                UX_SLAVE_REQUEST_DATA_MAX_LENGTH);
+                UX_DEVICE_CLASS_CCID_BULK_BUFFER_SIZE);
     UX_ASSERT(ccid_parameter->ux_device_class_ccid_handles != UX_NULL);
 
     /* Calculate size for instance (structures already aligned).  */
@@ -154,6 +169,9 @@ ULONG                                   i;
     }
     memory_size = (memory_size + buffers_size) & 0xFFFFFFFFu;
 
+#if !defined(UX_DEVICE_STANDALONE)
+
+    /* Calculate memory size for stackes.  */
     stacks_size = ccid_parameter->ux_device_class_ccid_max_n_busy_slots;
     if (UX_OVERFLOW_CHECK_MULC_ULONG(stacks_size, UX_DEVICE_CLASS_CCID_RUNNER_THREAD_STACK_SIZE))
     {
@@ -187,6 +205,7 @@ ULONG                                   i;
         return(UX_ERROR);
     }
     memory_size = (memory_size + stacks_size) & 0xFFFFFFFFu;
+#endif
 
     /* Allocate memory for instance and other resources of the device ccid class.  */
     memory = _ux_utility_memory_allocate(UX_NO_ALIGN, UX_REGULAR_MEMORY, memory_size);
@@ -200,6 +219,8 @@ ULONG                                   i;
     /* CCID.  */
     ccid = (UX_DEVICE_CLASS_CCID *)memory;
     memory += ccid_size;
+
+#if !defined(UX_DEVICE_STANDALONE)
 
     /* CCID thread.  */
     status =  _ux_utility_thread_create(
@@ -239,6 +260,14 @@ ULONG                                   i;
             UX_THREAD_EXTENSION_PTR_SET(&(ccid -> ux_device_class_ccid_notify_thread), ccid);
         }
     }
+#else
+
+    /* Set task function.  */
+    ccid_class -> ux_slave_class_task_function = _ux_device_class_ccid_tasks_run;
+
+    /* By default status is OK.  */
+    status = UX_SUCCESS;
+#endif
 
     /* CCID runners.  */
     if (status == UX_SUCCESS)
@@ -268,6 +297,8 @@ ULONG                                   i;
             runner -> ux_device_class_ccid_runner_response = memory;
             memory += buffer_size;
 
+#if !defined(UX_DEVICE_STANDALONE)
+
             /* CCID runners threads.  */
             status = _ux_utility_thread_create(
                 &runner -> ux_device_class_ccid_runner_thread,
@@ -288,6 +319,7 @@ ULONG                                   i;
                 memory += UX_DEVICE_CLASS_CCID_RUNNER_THREAD_STACK_SIZE;
                 UX_THREAD_EXTENSION_PTR_SET(&(runner -> ux_device_class_ccid_runner_thread), runner);
             }
+#endif
 
             /* Next runner.  */
             runner ++;
@@ -314,6 +346,18 @@ ULONG                                   i;
             slot ++;
         }
     }
+
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+
+    /* Create endpoint buffers.  */
+    UX_ASSERT(!UX_DEVICE_CLASS_CCID_ENDPOINT_BUFFER_SIZE_CALC_OVERFLOW);
+    ccid -> ux_device_class_ccid_endpoint_buffer = _ux_utility_memory_allocate(UX_NO_ALIGN,
+        UX_CACHE_SAFE_MEMORY, UX_DEVICE_CLASS_CCID_INTERRUPT_BUFFER_SIZE + UX_DEVICE_CLASS_CCID_BULK_BUFFER_SIZE * 2);
+    if (ccid -> ux_device_class_ccid_endpoint_buffer == UX_NULL)
+        status = UX_MEMORY_INSUFFICIENT;
+#endif
+
+#if !defined(UX_DEVICE_STANDALONE)
 
     /* CCID mutexes, semaphore and event flags.  */
     if (status == UX_SUCCESS)
@@ -364,6 +408,7 @@ ULONG                                   i;
         else
             status = UX_EVENT_ERROR;
     }
+#endif
 
     /* Success case.  */
     if (status == UX_SUCCESS)
@@ -384,6 +429,8 @@ ULONG                                   i;
 
     /* In this case, mutexes and events are not created or has been handled.  */
 
+#if !defined(UX_DEVICE_STANDALONE)
+
     /* Check thread states and free them.  */
     if (ccid -> ux_device_class_ccid_thread_stack)
         _ux_utility_thread_delete(&ccid -> ux_device_class_ccid_thread);
@@ -395,13 +442,20 @@ ULONG                                   i;
     }
     if (ccid -> ux_device_class_ccid_notify_thread_stack)
         _ux_utility_thread_delete(&ccid -> ux_device_class_ccid_notify_thread);
+#endif
+
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+
+    /* Free the endpoint buffers.  */
+    if (ccid -> ux_device_class_ccid_endpoint_buffer)
+        _ux_utility_memory_free(ccid -> ux_device_class_ccid_endpoint_buffer);
+#endif
 
     /* Free the memory.  */
     _ux_utility_memory_free(ccid);
 
     /* Return completion status.  */
     return(status);
-#endif
 }
 
 const UX_DEVICE_CLASS_CCID_COMMAND_SETT

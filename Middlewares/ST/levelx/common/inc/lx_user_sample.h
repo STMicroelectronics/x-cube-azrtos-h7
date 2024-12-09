@@ -26,7 +26,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */
 /*                                                                        */
 /*    lx_user.h                                           PORTABLE C      */
-/*                                                           6.1.7        */
+/*                                                           6.3.0        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -48,6 +48,14 @@
 /*  06-02-2021     Bhupendra Naphade        Modified comment(s), and      */
 /*                                            added standalone support,   */
 /*                                            resulting in version 6.1.7  */
+/*  03-08-2023     Xiuwen Cai               Modified comment(s), and      */
+/*                                            added new NAND options,     */
+/*                                            resulting in version 6.2.1  */
+/*  10-31-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            added options for mapping , */
+/*                                            bitmap cache and obsolete   */
+/*                                            count cache,                */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -71,22 +79,12 @@
 #define LX_FREE_SECTOR_DATA_VERIFY 
 */
 
-/* By default this value is 128 and defines the logical sector mapping cache size. 
-   Large values improve performance, but cost memory. The minimum size is 8 and 
-   all values must be a power of 2.
+/* By default this value is 4, which represents a maximum of 4 blocks that 
+   can be allocated for metadata.
 */
 /*
-#define LX_NAND_SECTOR_MAPPING_CACHE_SIZE   128
+#define LX_NAND_FLASH_MAX_METADATA_BLOCKS 4
 */
-
-/* Defined, this creates a direct mapping cache, such that there are no cache misses. 
-   It also requires that LX_NAND_SECTOR_MAPPING_CACHE_SIZE represents the exact number 
-   of total pages in your flash device. 
-*/
-/* 
-#define LX_NAND_FLASH_DIRECT_MAPPING_CACHE
-*/
-
 
 /* Defined, this disabled the extended NOR cache.  */
 /*
@@ -120,7 +118,39 @@
 
 /* #define LX_STANDALONE_ENABLE */
 
+/* Define user extension for NOR flash control block. User extension is placed at the end of flash control block and it is not cleared on opening flash. */
+/* 
+#define LX_NOR_FLASH_USER_EXTENSION    ????
+*/
 
+/* Define user extension for NAND flash control block. User extension is placed at the end of flash control block and it is not cleared on opening flash.  */
+/* 
+#define LX_NAND_FLASH_USER_EXTENSION   ????
+*/
+
+/* Determine if logical sector mapping bitmap should be enabled in extended cache. 
+   Cache memory will be allocated to sector mapping bitmap first. One bit can be allocated for each physical sector.  */
+/* 
+#define LX_NOR_ENABLE_MAPPING_BITMAP
+*/
+
+/* Determine if obsolete count cache should be enabled in extended cache.  
+   Cache memory will be allocated to obsolete count cache after the mapping bitmap if enabled, 
+   and the rest of the cache memory is allocated to sector cache.  */
+/* 
+#define LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
+*/
+
+/* Defines obsolete count cache element size. If number of sectors per block is greater than 256, use USHORT instead of UCHAR.  */
+/* 
+#define LX_NOR_OBSOLETE_COUNT_CACHE_TYPE            UCHAR
+*/
+
+/* Define the logical sector size for NOR flash. The sector size is in units of 32-bit words. 
+   This sector size should match the sector size used in file system.  */
+/*
+#define LX_NOR_SECTOR_SIZE                          (512/sizeof(ULONG))
+*/
 
 #endif
 

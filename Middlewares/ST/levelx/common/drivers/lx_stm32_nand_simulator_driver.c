@@ -87,7 +87,7 @@ NAND_BLOCK_DIAG    nand_block_diag[TOTAL_BLOCKS];
 
 /* Define NAND flash buffer for LevelX.  */
 
-ULONG  nand_flash_simulator_buffer[WORDS_PER_PHYSICAL_PAGE];
+UCHAR  nand_flash_simulator_buffer[WORDS_PER_PHYSICAL_PAGE];
 ULONG  *nand_flash_memory;
 
 

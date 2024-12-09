@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nor_flash_open                                  PORTABLE C      */ 
-/*                                                           6.1.7        */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -92,6 +92,17 @@
 /*  06-02-2021     Bhupendra Naphade        Modified comment(s), and      */
 /*                                            updated product constants   */
 /*                                            resulting in version 6.1.7  */
+/*  03-08-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            added new driver interface, */
+/*                                            resulting in version 6.2.1  */
+/*  10-31-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            added count for minimum     */
+/*                                            erased blocks, added        */
+/*                                            obsolete count cache,       */
+/*                                            avoided clearing user       */
+/*                                            extension in flash control  */
+/*                                            block,                      */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nor_flash_open(LX_NOR_FLASH  *nor_flash, CHAR *name, UINT (*nor_driver_initialize)(LX_NOR_FLASH *))
@@ -109,7 +120,7 @@ ULONG           free_sectors;
 ULONG           used_sectors;
 ULONG           *new_map_entry;
 ULONG           *new_sector_address;
-ULONG           erased_count, min_erased_count, max_erased_count, temp_erased_count;
+ULONG           erased_count, min_erased_count, max_erased_count, temp_erased_count, min_erased_blocks;
 ULONG           j, k, l;    
 UINT            status;
 #ifdef LX_FREE_SECTOR_DATA_VERIFY
@@ -121,8 +132,8 @@ LX_INTERRUPT_SAVE_AREA
 
     LX_PARAMETER_NOT_USED(name);
 
-    /* Clear the NOR flash control block.  */
-    LX_MEMSET(nor_flash, 0, sizeof(LX_NOR_FLASH));
+    /* Clear the NOR flash control block. User extension is not cleared.  */
+    LX_MEMSET(nor_flash, 0, (ULONG)((UCHAR*)&(nor_flash -> lx_nor_flash_open_previous) - (UCHAR*)nor_flash) + sizeof(nor_flash -> lx_nor_flash_open_previous));
    
     /* Call the flash driver's initialization function.  */
     (nor_driver_initialize)(nor_flash);
@@ -210,6 +221,7 @@ LX_INTERRUPT_SAVE_AREA
     
     /* Setup default values for the max/min erased counts.  */
     min_erased_count =  LX_ALL_ONES;
+    min_erased_blocks = 0;
     max_erased_count =  0;
     
     /* Setup the block word pointer to the first word of the first block, which is effectively the 
@@ -251,13 +263,24 @@ LX_INTERRUPT_SAVE_AREA
         
             /* No, valid block.  Isolate the erased count.  */
             erased_count =  (block_word & LX_BLOCK_ERASE_COUNT_MASK);
-            
+
+            /* Is the erased count the minimum?  */
+            if (erased_count == min_erased_count)
+            {
+
+                /* Yes, increment the minimum erased block count.  */
+                min_erased_blocks++;
+            }
+
             /* Is this the new minimum?  */
             if (erased_count < min_erased_count)
             {
                 
                 /* Yes, remember the new minimum.  */
                 min_erased_count =  erased_count;
+
+                /* Reset the minimum erased block count.  */
+                min_erased_blocks =  1;
             }
             
             /* Is this the new maximum?  */
@@ -324,6 +347,7 @@ LX_INTERRUPT_SAVE_AREA
 
             /* Update the overall minimum and maximum erase count.  */
             nor_flash -> lx_nor_flash_minimum_erase_count =  1;
+            nor_flash -> lx_nor_flash_minimum_erased_blocks =  nor_flash -> lx_nor_flash_total_blocks;
             nor_flash -> lx_nor_flash_maximum_erase_count =  1;
 
             /* Update the number of free physical sectors.  */
@@ -393,7 +417,11 @@ LX_INTERRUPT_SAVE_AREA
                 nor_flash -> lx_nor_flash_diagnostic_erased_block++;
 
                 /* Check to see if the block is erased. */
+#ifdef LX_NOR_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+                status =  (nor_flash -> lx_nor_flash_driver_block_erased_verify)(nor_flash, l);
+#else
                 status =  (nor_flash -> lx_nor_flash_driver_block_erased_verify)(l);
+#endif
 
                 /* Is the block completely erased?  */
                 if (status != LX_SUCCESS)
@@ -799,6 +827,7 @@ LX_INTERRUPT_SAVE_AREA
 
         /* Update the overall minimum and maximum erase count.  */
         nor_flash -> lx_nor_flash_minimum_erase_count =  min_erased_count;
+        nor_flash -> lx_nor_flash_minimum_erased_blocks =  min_erased_blocks;
         nor_flash -> lx_nor_flash_maximum_erase_count =  max_erased_count;
 
         /* Determine if we need to update the free sector search pointer.  */

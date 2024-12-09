@@ -1,15 +1,13 @@
 #include <stdbool.h>
+#include <stddef.h>
 #include <string.h>
-
-#ifdef NX_DEBUG
-#include <stdio.h>
 #include <stdint.h>
 #include <inttypes.h>
-#endif /* NX_DEBUG */
 
 #include "nx_api.h"
 #include "mx_wifi.h"
 #include "core/mx_address.h"
+#include "mx_wifi_conf.h"
 
 
 #ifndef NX_DRIVER_DEFERRED_PROCESSING
@@ -29,6 +27,11 @@
 /* Indicate that driver source is being compiled. */
 #define NX_DRIVER_SOURCE
 
+#if !defined(NX_DEBUG_DRIVER_SOURCE_LOG)
+#define NX_DEBUG_DRIVER_SOURCE_LOG(...)   /* ; */
+#define REMOVE_DEBUG_FUNC
+#endif /*NX_DEBUG_DRIVER_SOURCE_LOG*/
+
 #include "nx_driver_emw3080.h"
 #include "nx_driver_framework.c"
 #include "io_pattern/mx_wifi_io.h"
@@ -46,9 +49,9 @@ static UINT _nx_driver_emw3080_packet_send(NX_PACKET *packet_ptr);
 static UINT _nx_driver_emw3080_interface_status(NX_IP_DRIVER *driver_req_ptr);
 static VOID _nx_driver_emw3080_packet_received(VOID);
 
-#if defined(NX_DEBUG)
+#if !defined(REMOVE_DEBUG_FUNC)
 static const char *nx_driver_mx_wifi_status_to_string(uint8_t status);
-#endif /* NX_DEBUG */
+#endif /* REMOVE_DEBUG_FUNC */
 
 static volatile bool nx_driver_interface_up = false;
 static volatile bool nx_driver_ip_acquired = false;
@@ -57,20 +60,22 @@ static volatile bool nx_driver_ip_acquired = false;
 void nx_driver_emw3080_entry(NX_IP_DRIVER *driver_req_ptr)
 {
   static bool started = false;
+
   if (!started)
   {
-    nx_driver_hardware_initialize         = _nx_driver_emw3080_initialize;
-    nx_driver_hardware_enable             = _nx_driver_emw3080_enable;
-    nx_driver_hardware_disable            = _nx_driver_emw3080_disable;
-    nx_driver_hardware_packet_send        = _nx_driver_emw3080_packet_send;
-    nx_driver_hardware_get_status         = _nx_driver_emw3080_interface_status;
-    nx_driver_hardware_packet_received    = _nx_driver_emw3080_packet_received;
+    nx_driver_hardware_initialize      = _nx_driver_emw3080_initialize;
+    nx_driver_hardware_enable          = _nx_driver_emw3080_enable;
+    nx_driver_hardware_disable         = _nx_driver_emw3080_disable;
+    nx_driver_hardware_packet_send     = _nx_driver_emw3080_packet_send;
+    nx_driver_hardware_get_status      = _nx_driver_emw3080_interface_status;
+    nx_driver_hardware_packet_received = _nx_driver_emw3080_packet_received;
 
     started = true;
   }
 
   nx_driver_framework_entry_default(driver_req_ptr);
 }
+
 
 void nx_driver_emw3080_interrupt(void)
 {
@@ -92,8 +97,11 @@ void nx_driver_emw3080_interrupt(void)
   }
 }
 
+
 static UINT _nx_driver_emw3080_initialize(NX_IP_DRIVER *driver_req_ptr)
 {
+  (void)(driver_req_ptr);
+
   if (mx_wifi_alloc_init())
   {
     return NX_DRIVER_ERROR;
@@ -127,13 +135,14 @@ static UINT _nx_driver_emw3080_initialize(NX_IP_DRIVER *driver_req_ptr)
   return NX_SUCCESS;
 }
 
+
 UINT _nx_driver_emw3080_enable(NX_IP_DRIVER *driver_req_ptr)
 {
+  (void)(driver_req_ptr);
+
   if (WifiMode == MC_STATION)
   {
-#if defined(NX_DEBUG)
-    printf("Joining ... \"%s\"\n", WIFI_SSID);
-#endif /* NX_DEBUG */
+    NX_DEBUG_DRIVER_SOURCE_LOG("Joining ... \"%s\"\n", WIFI_SSID);
 
     if (MX_WIFI_STATUS_OK != MX_WIFI_Connect(wifi_obj_get(), WIFI_SSID, WIFI_PASSWORD, MX_WIFI_SEC_AUTO))
     {
@@ -142,7 +151,7 @@ UINT _nx_driver_emw3080_enable(NX_IP_DRIVER *driver_req_ptr)
   }
   else
   {
-    MX_WIFI_APSettings_t ApSettings = {0};
+    MX_WIFI_APSettings_t ApSettings = {{0},{0},0,{{0},{0},{0},{0}}};
 
     strncpy(ApSettings.SSID, WIFI_SSID, sizeof(ApSettings.SSID));
     strncpy(ApSettings.pswd, WIFI_PASSWORD, sizeof(ApSettings.pswd));
@@ -150,24 +159,26 @@ UINT _nx_driver_emw3080_enable(NX_IP_DRIVER *driver_req_ptr)
 
     {
       const mx_ip_addr_t ip_addr = { htonl(IP_ADDRESS(0, 0, 0, 0)) };
-      strncpy(ApSettings.ip.localip, mx_ntoa(&ip_addr), sizeof(ApSettings.ip.localip));
+      strncpy(ApSettings.ip.localip, mx_ntoa(&ip_addr), sizeof(ApSettings.ip.localip) - 1);
+      ApSettings.ip.localip[sizeof(ApSettings.ip.localip) - 1] = '\0';
     }
     {
       const mx_ip_addr_t network_mask = { htonl(IP_ADDRESS(0, 0, 0, 0)) };
-      strncpy(ApSettings.ip.netmask, mx_ntoa(&network_mask), sizeof(ApSettings.ip.netmask));
+      strncpy(ApSettings.ip.netmask, mx_ntoa(&network_mask), sizeof(ApSettings.ip.netmask) - 1);
+      ApSettings.ip.netmask[sizeof(ApSettings.ip.netmask) - 1] = '\0';
     }
     {
       const mx_ip_addr_t dns_server_addr = { htonl(IP_ADDRESS(0, 0, 0, 0)) };
-      strncpy(ApSettings.ip.dnserver, mx_ntoa(&dns_server_addr), sizeof(ApSettings.ip.dnserver));
+      strncpy(ApSettings.ip.dnserver, mx_ntoa(&dns_server_addr), sizeof(ApSettings.ip.dnserver) - 1);
+      ApSettings.ip.dnserver[sizeof(ApSettings.ip.dnserver) - 1] = '\0';
     }
     {
       const mx_ip_addr_t gateway_addr = { htonl(IP_ADDRESS(0, 0, 0, 0)) };
-      strncpy(ApSettings.ip.gateway, mx_ntoa(&gateway_addr), sizeof(ApSettings.ip.gateway));
+      strncpy(ApSettings.ip.gateway, mx_ntoa(&gateway_addr), sizeof(ApSettings.ip.gateway) - 1);
+      ApSettings.ip.gateway[sizeof(ApSettings.ip.gateway) - 1] = '\0';
     }
 
-#if defined(NX_DEBUG)
-    printf("Init Access Point ... \"%s\" with %s\n", ApSettings.SSID, ApSettings.ip.localip);
-#endif /* NX_DEBUG */
+    NX_DEBUG_DRIVER_SOURCE_LOG("Init Access Point ... \"%s\" with %s\n", ApSettings.SSID, ApSettings.ip.localip);
 
     if (MX_WIFI_STATUS_OK != MX_WIFI_StartAP(wifi_obj_get(), &ApSettings))
     {
@@ -203,6 +214,8 @@ UINT _nx_driver_emw3080_enable(NX_IP_DRIVER *driver_req_ptr)
 
 UINT _nx_driver_emw3080_disable(NX_IP_DRIVER *driver_req_ptr)
 {
+  (void)(driver_req_ptr);
+
   MX_WIFI_Network_bypass_mode_set(wifi_obj_get(), 0 /* disable */, NULL, NULL);
 
   if (MX_WIFI_Disconnect(wifi_obj_get()))
@@ -224,7 +237,7 @@ UINT _nx_driver_emw3080_packet_send(NX_PACKET *packet_ptr)
   static int errors = 0;
 
   /* Verify that the length matches the size between the pointers. */
-  if (packet_ptr->nx_packet_length != (packet_ptr->nx_packet_append_ptr - packet_ptr->nx_packet_prepend_ptr))
+  if (((ptrdiff_t)packet_ptr->nx_packet_length) != (packet_ptr->nx_packet_append_ptr - packet_ptr->nx_packet_prepend_ptr))
   {
     return NX_DRIVER_ERROR;
   }
@@ -233,14 +246,17 @@ UINT _nx_driver_emw3080_packet_send(NX_PACKET *packet_ptr)
   {
     NX_DRIVER_PHYSICAL_HEADER_REMOVE(packet_ptr);
     nx_packet_transmit_release(packet_ptr);
+
+    MX_STAT(free);
+
     return NX_DRIVER_ERROR;
   }
 
 #if defined(NX_DEBUG)
   if ((packet_ptr->nx_packet_prepend_ptr - packet_ptr->nx_packet_data_start) < 28)
   {
-    printf("Incorrect NX packet, need at least 28 byte in front of payload, got %d\n",
-           packet_ptr->nx_packet_prepend_ptr - packet_ptr->nx_packet_data_start);
+    NX_DEBUG_DRIVER_SOURCE_LOG("Incorrect NX packet, need at least 28 byte in front of payload, got %d\n",
+                               packet_ptr->nx_packet_prepend_ptr - packet_ptr->nx_packet_data_start);
   }
 #endif /* NX_DEBUG */
 
@@ -248,7 +264,7 @@ UINT _nx_driver_emw3080_packet_send(NX_PACKET *packet_ptr)
     int32_t interface = (WifiMode == MC_STATION) ? STATION_IDX : SOFTAP_IDX;
 
     if (MX_WIFI_Network_bypass_netlink_output(wifi_obj_get(),
-                                              packet_ptr->nx_packet_prepend_ptr, packet_ptr->nx_packet_length,
+                                              packet_ptr->nx_packet_prepend_ptr, (int32_t)packet_ptr->nx_packet_length,
                                               interface))
     {
       errors++;
@@ -258,6 +274,8 @@ UINT _nx_driver_emw3080_packet_send(NX_PACKET *packet_ptr)
   NX_DRIVER_PHYSICAL_HEADER_REMOVE(packet_ptr);
   nx_packet_transmit_release(packet_ptr);
 
+  MX_STAT(free);
+
   return NX_SUCCESS;
 }
 
@@ -266,10 +284,15 @@ static void _nx_netlink_input_callback(mx_buf_t *buffer, void *user_args)
 {
   NX_PACKET *packet_ptr = buffer;
 
+  (void)(user_args);
+
   /* Avoid starving. */
   if (packet_ptr -> nx_packet_pool_owner -> nx_packet_pool_available == 0)
   {
     nx_packet_release(packet_ptr);
+
+    MX_STAT(free);
+
     return;
   }
 
@@ -300,10 +323,10 @@ static UINT _nx_driver_emw3080_interface_status(NX_IP_DRIVER *driver_req_ptr)
 
 static void _nx_mx_wifi_status_changed(uint8_t cate, uint8_t status, void *arg)
 {
+  (void)(arg);
 
-#if defined(NX_DEBUG)
-  printf("\n[%06"PRIu32"] > %s\n", HAL_GetTick(), nx_driver_mx_wifi_status_to_string(status));
-#endif /* NX_DEBUG */
+  NX_DEBUG_DRIVER_SOURCE_LOG("\n[%06" PRIu32 "] > %s\n",
+                             HAL_GetTick(), nx_driver_mx_wifi_status_to_string(status));
 
   if ((uint8_t)MC_STATION == cate)
   {
@@ -348,7 +371,7 @@ static void _nx_mx_wifi_status_changed(uint8_t cate, uint8_t status, void *arg)
 }
 
 
-#if defined(NX_DEBUG)
+#if !defined(REMOVE_DEBUG_FUNC)
 #define CASE(x) case x: return #x
 #define DEFAULT default: return "UNKNOWN"
 static const char *nx_driver_mx_wifi_status_to_string(uint8_t status)
@@ -364,5 +387,5 @@ static const char *nx_driver_mx_wifi_status_to_string(uint8_t status)
       DEFAULT;
   }
 }
-#endif /* NX_DEBUG */
+#endif /* REMOVE_DEBUG_FUNC */
 

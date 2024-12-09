@@ -37,8 +37,6 @@
 /** @defgroup LAN8742_Private_Defines LAN8742 Private Defines
   * @{
   */
-#define LAN8742_SW_RESET_TO    ((uint32_t)500U)
-#define LAN8742_INIT_TO        ((uint32_t)2000U)
 #define LAN8742_MAX_DEV_ADDR   ((uint32_t)31U)
 /**
   * @}
@@ -81,12 +79,10 @@ int32_t  LAN8742_RegisterBusIO(lan8742_Object_t *pObj, lan8742_IOCtx_t *ioctx)
   * @retval LAN8742_STATUS_OK  if OK
   *         LAN8742_STATUS_ADDRESS_ERROR if cannot find device address
   *         LAN8742_STATUS_READ_ERROR if cannot read register
-  *         LAN8742_STATUS_WRITE_ERROR if cannot write to register
-  *         LAN8742_STATUS_RESET_TIMEOUT if cannot perform a software reset
   */
  int32_t LAN8742_Init(lan8742_Object_t *pObj)
  {
-   uint32_t tickstart = 0, regvalue = 0, addr = 0;
+   uint32_t regvalue = 0, addr = 0;
    int32_t status = LAN8742_STATUS_OK;
 
    if(pObj->Is_Initialized == 0)
@@ -127,53 +123,8 @@ int32_t  LAN8742_RegisterBusIO(lan8742_Object_t *pObj, lan8742_IOCtx_t *ioctx)
      /* if device address is matched */
      if(status == LAN8742_STATUS_OK)
      {
-       /* set a software reset  */
-       if(pObj->IO.WriteReg(pObj->DevAddr, LAN8742_BCR, LAN8742_BCR_SOFT_RESET) >= 0)
-       {
-         /* get software reset status */
-         if(pObj->IO.ReadReg(pObj->DevAddr, LAN8742_BCR, &regvalue) >= 0)
-         {
-           tickstart = pObj->IO.GetTick();
-
-           /* wait until software reset is done or timeout occurred */
-           while(regvalue & LAN8742_BCR_SOFT_RESET)
-           {
-             if((pObj->IO.GetTick() - tickstart) <= LAN8742_SW_RESET_TO)
-             {
-               if(pObj->IO.ReadReg(pObj->DevAddr, LAN8742_BCR, &regvalue) < 0)
-               {
-                 status = LAN8742_STATUS_READ_ERROR;
-                 break;
-               }
-             }
-             else
-             {
-               status = LAN8742_STATUS_RESET_TIMEOUT;
-               break;
-             }
-           }
-         }
-         else
-         {
-           status = LAN8742_STATUS_READ_ERROR;
-         }
-       }
-       else
-       {
-         status = LAN8742_STATUS_WRITE_ERROR;
-       }
+       pObj->Is_Initialized = 1;
      }
-   }
-
-   if(status == LAN8742_STATUS_OK)
-   {
-     tickstart =  pObj->IO.GetTick();
-
-     /* Wait for 2s to perform initialization */
-     while((pObj->IO.GetTick() - tickstart) <= LAN8742_INIT_TO)
-     {
-     }
-     pObj->Is_Initialized = 1;
    }
 
    return status;

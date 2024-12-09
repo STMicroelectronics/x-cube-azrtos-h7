@@ -26,7 +26,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */
 /*                                                                        */
 /*    ux_host_class_audio.h                               PORTABLE C      */
-/*                                                           6.1.12       */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -57,6 +57,10 @@
 /*                                            added feedback support,     */
 /*                                            added Audio 2.0 support,    */
 /*                                            resulting in version 6.1.12 */
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            improved AC AS management,  */
+/*                                            optimized USB descriptors,  */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -84,6 +88,13 @@ extern   "C" {
 
 /* Defined, it disables control_get/value_get/value_set and related code (to optimize code size).  */
 /* #define UX_HOST_CLASS_AUDIO_DISABLE_CONTROLS  */
+
+/* Internal option: enable the basic USBX error checking. This define is typically used
+   while debugging application.  */
+#if defined(UX_ENABLE_ERROR_CHECKING) && !defined(UX_HOST_CLASS_AUDIO_ENABLE_ERROR_CHECKING)
+#define UX_HOST_CLASS_AUDIO_ENABLE_ERROR_CHECKING
+#endif
+
 
 #include "ux_class_audio10.h"
 #if defined(UX_HOST_CLASS_AUDIO_2_SUPPORT)
@@ -301,14 +312,14 @@ extern   "C" {
 typedef struct UX_HOST_CLASS_AUDIO_INTERFACE_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubType;
-    ULONG           bFormatType;
-    ULONG           bNrChannels;
-    ULONG           bSubframeSize;
-    ULONG           bBitResolution;
-    ULONG           bSamFreqType;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubType;
+    UCHAR           bFormatType;
+    UCHAR           bNrChannels;
+    UCHAR           bSubframeSize;
+    UCHAR           bBitResolution;
+    UCHAR           bSamFreqType;
 } UX_HOST_CLASS_AUDIO_INTERFACE_DESCRIPTOR;
 
 
@@ -317,16 +328,16 @@ typedef struct UX_HOST_CLASS_AUDIO_INTERFACE_DESCRIPTOR_STRUCT
 typedef struct UX_HOST_CLASS_AUDIO_INPUT_TERMINAL_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubType;
-    ULONG           bTerminalID;
-    ULONG           wTerminalType;
-    ULONG           bAssocTerminal;
-    ULONG           bNrChannels;
-    ULONG           wChannelConfig;
-    ULONG           iChannelNames;
-    ULONG           iTerminal;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubType;
+    UCHAR           bTerminalID;
+    USHORT          wTerminalType;
+    UCHAR           bAssocTerminal;
+    UCHAR           bNrChannels;
+    USHORT          wChannelConfig;
+    UCHAR           iChannelNames;
+    UCHAR           iTerminal;
 } UX_HOST_CLASS_AUDIO_INPUT_TERMINAL_DESCRIPTOR;
 
 
@@ -335,14 +346,15 @@ typedef struct UX_HOST_CLASS_AUDIO_INPUT_TERMINAL_DESCRIPTOR_STRUCT
 typedef struct UX_HOST_CLASS_AUDIO_OUTPUT_TERMINAL_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubType;
-    ULONG           bTerminalID;
-    ULONG           wTerminalType;
-    ULONG           bAssocTerminal;
-    ULONG           bSourceID;
-    ULONG           iTerminal;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubType;
+    UCHAR           bTerminalID;
+    USHORT          wTerminalType;
+    UCHAR           bAssocTerminal;
+    UCHAR           bSourceID;
+    UCHAR           iTerminal;
+    UCHAR           _align_size[3];
 } UX_HOST_CLASS_AUDIO_OUTPUT_TERMINAL_DESCRIPTOR;
 
 
@@ -351,13 +363,14 @@ typedef struct UX_HOST_CLASS_AUDIO_OUTPUT_TERMINAL_DESCRIPTOR_STRUCT
 typedef struct UX_HOST_CLASS_AUDIO_FEATURE_UNIT_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubType;
-    ULONG           bUnitID;
-    ULONG           bSourceID;
-    ULONG           bControlSize;
-    ULONG           bmaControls;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubType;
+    UCHAR           bUnitID;
+    UCHAR           bSourceID;
+    UCHAR           bControlSize;
+    UCHAR           bmaControls;
+    UCHAR           _align_size[1];
 } UX_HOST_CLASS_AUDIO_FEATURE_UNIT_DESCRIPTOR;
 
 
@@ -366,12 +379,13 @@ typedef struct UX_HOST_CLASS_AUDIO_FEATURE_UNIT_DESCRIPTOR_STRUCT
 typedef struct UX_HOST_CLASS_AUDIO_STREAMING_INTERFACE_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubtype;
-    ULONG           bTerminalLink;
-    ULONG           bDelay;
-    ULONG           wFormatTag;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubtype;
+    UCHAR           bTerminalLink;
+    UCHAR           bDelay;
+    UCHAR           _align_wFormatTag[1];
+    USHORT          wFormatTag;
 } UX_HOST_CLASS_AUDIO_STREAMING_INTERFACE_DESCRIPTOR;
 
 
@@ -380,12 +394,13 @@ typedef struct UX_HOST_CLASS_AUDIO_STREAMING_INTERFACE_DESCRIPTOR_STRUCT
 typedef struct UX_HOST_CLASS_AUDIO_STREAMING_ENDPOINT_DESCRIPTOR_STRUCT
 {
 
-    ULONG           bLength;
-    ULONG           bDescriptorType;
-    ULONG           bDescriptorSubtype;
-    ULONG           bmAttributes;
-    ULONG           bLockDelayUnits;
-    ULONG           wLockDelay;
+    UCHAR           bLength;
+    UCHAR           bDescriptorType;
+    UCHAR           bDescriptorSubtype;
+    UCHAR           bmAttributes;
+    UCHAR           bLockDelayUnits;
+    UCHAR           _align_wLockDelay[1];
+    USHORT          wLockDelay;
 } UX_HOST_CLASS_AUDIO_STREAMING_ENDPOINT_DESCRIPTOR;
 
 
@@ -444,6 +459,7 @@ typedef struct UX_HOST_CLASS_AUDIO_STRUCT
 #if defined(UX_HOST_CLASS_AUDIO_INTERRUPT_SUPPORT)
     UX_HOST_CLASS_AUDIO_AC
                     *ux_host_class_audio_ac;
+    ULONG           ux_host_class_audio_ac_as;
 #endif
     struct UX_HOST_CLASS_AUDIO_TRANSFER_REQUEST_STRUCT
                     *ux_host_class_audio_head_transfer_request;
@@ -618,17 +634,102 @@ UINT    _ux_host_class_audio_interrupt_start(UX_HOST_CLASS_AUDIO_AC *audio,
                         VOID *arg);
 VOID    _ux_host_class_audio_interrupt_notification(UX_TRANSFER *transfer_request);
 
+UINT    _uxe_host_class_audio_control_get(UX_HOST_CLASS_AUDIO *audio, UX_HOST_CLASS_AUDIO_CONTROL *audio_control);
+UINT    _uxe_host_class_audio_control_value_get(UX_HOST_CLASS_AUDIO *audio, UX_HOST_CLASS_AUDIO_CONTROL *audio_control);
+UINT    _uxe_host_class_audio_control_value_set(UX_HOST_CLASS_AUDIO *audio, UX_HOST_CLASS_AUDIO_CONTROL *audio_control);
+UINT    _uxe_host_class_audio_read(UX_HOST_CLASS_AUDIO *audio, UX_HOST_CLASS_AUDIO_TRANSFER_REQUEST *audio_transfer_request);
+UINT    _uxe_host_class_audio_streaming_sampling_get(UX_HOST_CLASS_AUDIO *audio, UX_HOST_CLASS_AUDIO_SAMPLING_CHARACTERISTICS *audio_sampling);
+UINT    _uxe_host_class_audio_streaming_sampling_set(UX_HOST_CLASS_AUDIO *audio, UX_HOST_CLASS_AUDIO_SAMPLING *audio_sampling);
+UINT    _uxe_host_class_audio_write(UX_HOST_CLASS_AUDIO *audio, UX_HOST_CLASS_AUDIO_TRANSFER_REQUEST *audio_transfer_request);
+UINT    _uxe_host_class_audio_control_request(UX_HOST_CLASS_AUDIO *audio,
+                        UINT streaming_control,
+                        UINT request_type, UINT request,
+                        UINT request_value,
+                        UINT spec_id,
+                        UCHAR *parameter, ULONG parameter_size, ULONG *actual_size);
+UINT    _uxe_host_class_audio_descriptors_parse(UX_HOST_CLASS_AUDIO *audio,
+                        UINT(*parse_function)(VOID  *arg,
+                                            UCHAR *packed_interface_descriptor,
+                                            UCHAR *packed_endpoint_descriptor,
+                                            UCHAR *packed_audio_descriptor),
+                        VOID* arg);
+UINT    _uxe_host_class_audio_raw_sampling_parse(UX_HOST_CLASS_AUDIO *audio,
+                        UINT(*parse_function)(VOID  *arg,
+                                              UCHAR *packed_interface_descriptor,
+                                              UX_HOST_CLASS_AUDIO_SAMPLING_CHARACTERISTICS *sam_attr),
+                        VOID* arg);
+UINT    _uxe_host_class_audio_stop(UX_HOST_CLASS_AUDIO *audio);
+UINT    _uxe_host_class_audio_feedback_get(UX_HOST_CLASS_AUDIO *audio, UCHAR *feedback);
+UINT    _uxe_host_class_audio_feedback_set(UX_HOST_CLASS_AUDIO *audio, UCHAR *feedback);
+UINT    _uxe_host_class_audio_entity_control_get(UX_HOST_CLASS_AUDIO *audio, UX_HOST_CLASS_AUDIO_CONTROL *audio_control);
+UINT    _uxe_host_class_audio_entity_control_value_get(UX_HOST_CLASS_AUDIO *audio, UX_HOST_CLASS_AUDIO_CONTROL *audio_control);
+UINT    _uxe_host_class_audio_entity_control_value_set(UX_HOST_CLASS_AUDIO *audio, UX_HOST_CLASS_AUDIO_CONTROL *audio_control);
+UINT    _uxe_host_class_audio_interrupt_start(UX_HOST_CLASS_AUDIO_AC *audio,
+                        VOID(*callback_function)(UX_HOST_CLASS_AUDIO_AC *audio,
+                                                 UCHAR *message, ULONG length,
+                                                 VOID *arg),
+                        VOID *arg);
+
+
 /* Define Audio Class API prototypes.  */
 
-#define ux_host_class_audio_entry                   _ux_host_class_audio_entry
-#define ux_host_class_audio_control_get             _ux_host_class_audio_control_get
-#define ux_host_class_audio_control_value_get       _ux_host_class_audio_control_value_get
-#define ux_host_class_audio_control_value_set       _ux_host_class_audio_control_value_set
-#define ux_host_class_audio_read                    _ux_host_class_audio_read
-#define ux_host_class_audio_streaming_sampling_get  _ux_host_class_audio_streaming_sampling_get
-#define ux_host_class_audio_streaming_sampling_set  _ux_host_class_audio_streaming_sampling_set
-#define ux_host_class_audio_streaming_terminal_get  _ux_host_class_audio_streaming_terminal_get
-#define ux_host_class_audio_write                   _ux_host_class_audio_write
+#if defined(UX_HOST_CLASS_AUDIO_ENABLE_ERROR_CHECKING)
+
+#define ux_host_class_audio_entry                       _ux_host_class_audio_entry
+
+#define ux_host_class_audio_control_get                 _uxe_host_class_audio_control_get
+#define ux_host_class_audio_control_value_get           _uxe_host_class_audio_control_value_get
+#define ux_host_class_audio_control_value_set           _uxe_host_class_audio_control_value_set
+#define ux_host_class_audio_read                        _uxe_host_class_audio_read
+#define ux_host_class_audio_streaming_sampling_get      _uxe_host_class_audio_streaming_sampling_get
+#define ux_host_class_audio_streaming_sampling_set      _uxe_host_class_audio_streaming_sampling_set
+#define ux_host_class_audio_write                       _uxe_host_class_audio_write
+
+#define ux_host_class_audio_type_get                    _ux_host_class_audio_type_get
+#define ux_host_class_audio_speed_get                   _ux_host_class_audio_speed_get
+#define ux_host_class_audio_protocol_get                _ux_host_class_audio_protocol_get
+#define ux_host_class_audio_subclass_get                _ux_host_class_audio_subclass_get
+#define ux_host_class_audio_feedback_supported          _ux_host_class_audio_feedback_supported
+
+#define ux_host_class_audio_interface_get               _ux_host_class_audio_interface_get
+#define ux_host_class_audio_control_interface_get       _ux_host_class_audio_control_interface_get
+#define ux_host_class_audio_terminal_link_get           _ux_host_class_audio_terminal_link_get
+
+#define ux_host_class_audio_max_packet_size_get         _ux_host_class_audio_max_packet_size_get
+#define ux_host_class_audio_packet_size_get             _ux_host_class_audio_packet_size_get
+#define ux_host_class_audio_packet_freq_get             _ux_host_class_audio_packet_freq_get
+#define ux_host_class_audio_packet_fraction_get         _ux_host_class_audio_packet_fraction_get
+
+#define ux_host_class_audio_feedback_get                _uxe_host_class_audio_feedback_get
+#define ux_host_class_audio_feedback_set                _uxe_host_class_audio_feedback_set
+
+#define ux_host_class_audio_control_request             _uxe_host_class_audio_control_request
+
+#define ux_host_class_audio_descriptors_parse           _uxe_host_class_audio_descriptors_parse
+
+#define ux_host_class_audio_entity_control_get          _uxe_host_class_audio_entity_control_get
+#define ux_host_class_audio_entity_control_value_get    _uxe_host_class_audio_entity_control_value_get
+#define ux_host_class_audio_entity_control_value_set    _uxe_host_class_audio_entity_control_value_set
+
+#define ux_host_class_audio_raw_sampling_parse          _uxe_host_class_audio_raw_sampling_parse
+#define ux_host_class_audio_raw_sampling_start          _uxe_host_class_audio_streaming_sampling_set
+
+#define ux_host_class_audio_stop                        _uxe_host_class_audio_stop
+
+#define ux_host_class_audio_interrupt_start             _uxe_host_class_audio_interrupt_start
+
+
+#else
+
+#define ux_host_class_audio_entry                       _ux_host_class_audio_entry
+#define ux_host_class_audio_control_get                 _ux_host_class_audio_control_get
+#define ux_host_class_audio_control_value_get           _ux_host_class_audio_control_value_get
+#define ux_host_class_audio_control_value_set           _ux_host_class_audio_control_value_set
+#define ux_host_class_audio_read                        _ux_host_class_audio_read
+#define ux_host_class_audio_streaming_sampling_get      _ux_host_class_audio_streaming_sampling_get
+#define ux_host_class_audio_streaming_sampling_set      _ux_host_class_audio_streaming_sampling_set
+#define ux_host_class_audio_streaming_terminal_get      _ux_host_class_audio_streaming_terminal_get
+#define ux_host_class_audio_write                       _ux_host_class_audio_write
 
 #define ux_host_class_audio_type_get                    _ux_host_class_audio_type_get
 #define ux_host_class_audio_speed_get                   _ux_host_class_audio_speed_get
@@ -662,6 +763,9 @@ VOID    _ux_host_class_audio_interrupt_notification(UX_TRANSFER *transfer_reques
 #define ux_host_class_audio_stop                        _ux_host_class_audio_stop
 
 #define ux_host_class_audio_interrupt_start             _ux_host_class_audio_interrupt_start
+
+#endif
+
 
 /* Determine if a C++ compiler is being used.  If so, complete the standard
    C conditional started above.  */

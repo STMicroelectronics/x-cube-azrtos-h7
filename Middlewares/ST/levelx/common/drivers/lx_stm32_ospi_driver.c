@@ -80,6 +80,9 @@ UINT lx_stm32_ospi_initialize(LX_NOR_FLASH *nor_flash)
       return LX_ERROR;
     }
 
+    is_initialized = LX_TRUE;
+  }
+
     ret = lx_stm32_ospi_get_info(LX_STM32_OSPI_INSTANCE, &block_size, &total_blocks);
 
     if (ret != 0)
@@ -88,7 +91,7 @@ UINT lx_stm32_ospi_initialize(LX_NOR_FLASH *nor_flash)
     }
 
     /* Setup the base address of the flash memory.  */
-    nor_flash->lx_nor_flash_base_address = 0;
+    nor_flash->lx_nor_flash_base_address = (ULONG*) LX_STM32_OSPI_BASE_ADDRESS;
 
     /* Setup geometry of the flash.  */
     nor_flash->lx_nor_flash_total_blocks = total_blocks;
@@ -106,8 +109,6 @@ UINT lx_stm32_ospi_initialize(LX_NOR_FLASH *nor_flash)
     /* Setup local buffer for NOR flash operation. This buffer must be the sector size of the NOR flash memory.  */
     nor_flash->lx_nor_flash_sector_buffer =  &ospi_sector_buffer[0];
 #endif
-    is_initialized = LX_TRUE;
-  }
 
   /* call post init routine*/
   LX_STM32_OSPI_POST_INIT();

@@ -1,7 +1,12 @@
 #include "mx_wifi.h"
 #define NX_DRIVER_SOURCE
 #include "nx_driver_emw3080.h"
+#include "nx_user.h"
+#include <inttypes.h>
 
+#if !defined(NX_DEBUG_DRIVER_SOURCE_LOG)
+#define NX_DEBUG_DRIVER_SOURCE_LOG(...)   /* ; */
+#endif /*NX_DEBUG_DRIVER_SOURCE_LOG*/
 
 extern TX_THREAD *_tx_thread_current_ptr;
 
@@ -13,12 +18,12 @@ extern NX_DRIVER_INFORMATION nx_driver_information;
 static ULONG mx_wifi_byte_pool_buffer[MX_WIFI_BYTE_POOL_SIZE / sizeof(ULONG)];
 
 static TX_BYTE_POOL mx_wifi_byte_pool;
-
+static CHAR mx_wifi_byte_pool_name[] = "MX WiFi byte pool";
 
 UINT mx_wifi_alloc_init(void)
 {
   if (tx_byte_pool_create(&mx_wifi_byte_pool,
-                          "MX WiFi byte pool",
+                          mx_wifi_byte_pool_name,
                           mx_wifi_byte_pool_buffer,
                           MX_WIFI_BYTE_POOL_SIZE))
   {
@@ -45,6 +50,8 @@ void *mx_wifi_malloc(size_t size)
 
   MX_ASSERT(p);
 
+  NX_DEBUG_DRIVER_SOURCE_LOG("\n mx_wifi_malloc(): %p (%" PRIu32 ")\n", p, (uint32_t)size);
+
   return p;
 }
 
@@ -57,6 +64,8 @@ void mx_wifi_free(void *p)
 
   status = tx_byte_release(p);
   MX_ASSERT(status == NX_SUCCESS);
+
+  NX_DEBUG_DRIVER_SOURCE_LOG("\n mx_wifi_free()  : %p\n", p);
 }
 
 
@@ -88,6 +97,16 @@ NX_PACKET *mx_net_buffer_alloc(uint32_t n)
   MX_ASSERT(packet_ptr);
 
   MX_STAT(alloc);
+
+#if defined(NX_DEBUG) && defined(NX_ENABLE_PACKET_DEBUG_INFO)
+  {
+    const struct NX_PACKET_POOL_STRUCT *const pool_owner = packet_ptr->nx_packet_pool_owner;
+
+    NX_DEBUG_DRIVER_SOURCE_LOG("\n mx_net_buffer_alloc(): allocated %p -> %" PRIu32 ", allocated by \"%s\"\n",
+                               (void *)packet_ptr, (uint32_t)pool_owner->nx_packet_pool_available, packet_ptr->nx_packet_debug_thread);
+  }
+#endif /* NX_DEBUG && NX_ENABLE_PACKET_DEBUG_INFO*/
+
   packet_ptr->nx_packet_next = NULL;
   packet_ptr->nx_packet_prepend_ptr += 2;
   packet_ptr->nx_packet_append_ptr = packet_ptr->nx_packet_prepend_ptr + n;
@@ -104,7 +123,27 @@ void mx_net_buffer_free(NX_PACKET *packet_ptr)
 
   MX_ASSERT(packet_ptr);
   MX_STAT(free);
-  status = nx_packet_release(packet_ptr);
+
+#if defined(NX_DEBUG) && defined(NX_ENABLE_PACKET_DEBUG_INFO)
+  {
+    const struct NX_PACKET_POOL_STRUCT *const pool_owner = packet_ptr->nx_packet_pool_owner;
+
+    NX_DEBUG_DRIVER_SOURCE_LOG("\n mx_net_buffer_free() : releasing %p, allocated by \"%s\"\n", (void *)packet_ptr, packet_ptr->nx_packet_debug_thread);
+
+    for (UCHAR *p = packet_ptr->nx_packet_data_start; p < packet_ptr->nx_packet_data_end; p++)
+    {
+      *p = (UCHAR)'D';
+    }
+#endif /* NX_DEBUG && NX_ENABLE_PACKET_DEBUG_INFO*/
+
+    status = nx_packet_release(packet_ptr);
+
+#if defined(NX_DEBUG) && defined(NX_ENABLE_PACKET_DEBUG_INFO)
+    NX_DEBUG_DRIVER_SOURCE_LOG("\n mx_net_buffer_free() : -> %" PRIu32 "\n",
+                               (uint32_t)pool_owner->nx_packet_pool_available);
+  }
+#endif /* NX_DEBUG && NX_ENABLE_PACKET_DEBUG_INFO*/
+
   MX_ASSERT(status == NX_SUCCESS);
 }
 
@@ -182,6 +221,8 @@ UINT mx_wifi_fifo_push(TX_QUEUE *queue_ptr, void *source_ptr, ULONG wait_option)
 {
   MX_ASSERT(queue_ptr);
 
+  NX_DEBUG_DRIVER_SOURCE_LOG("\n mx_wifi_fifo_push(): pushing %p\n", source_ptr);
+
   return tx_queue_send(queue_ptr, source_ptr, wait_option);
 }
 
@@ -197,6 +238,8 @@ void *mx_wifi_fifo_pop(TX_QUEUE *queue_ptr, ULONG wait_option)
   {
     return NULL;
   }
+
+  NX_DEBUG_DRIVER_SOURCE_LOG("\n mx_wifi_fifo_pop() : popping %p\n", destination_ptr);
 
   return destination_ptr;
 }

@@ -82,7 +82,7 @@ ULONG       command_length;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_host_class_storage_media_read                   PORTABLE C      */ 
-/*                                                           6.1.10       */
+/*                                                           6.2.1        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -123,6 +123,9 @@ ULONG       command_length;
 /*  01-31-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            added standalone support,   */
 /*                                            resulting in version 6.1.10 */
+/*  03-08-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            checked device removal,     */
+/*                                            resulting in version 6.2.1  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_host_class_storage_media_read(UX_HOST_CLASS_STORAGE *storage, ULONG sector_start,
@@ -134,6 +137,8 @@ UINT            status;
         status = _ux_host_class_storage_read_write_run(storage, UX_TRUE,
                                     sector_start, sector_count, data_pointer);
     } while(status == UX_STATE_WAIT);
+    if (status < UX_STATE_IDLE)
+        return(UX_HOST_CLASS_INSTANCE_UNKNOWN);
     return(storage -> ux_host_class_storage_status);
 #else
 UINT            status;
@@ -187,4 +192,57 @@ UINT            media_retry;
        we have to tell UX_MEDIA (default FileX) that the media is closed.  */
     return(UX_HOST_CLASS_STORAGE_SENSE_ERROR);                                            
 #endif
+}
+
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _ux_host_class_storage_media_read                   PORTABLE C      */
+/*                                                           6.3.0        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks errors in storage media read function call.    */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    storage                               Pointer to storage class      */
+/*    sector_start                          Starting sector               */
+/*    sector_count                          Number of sectors to read     */
+/*    data_pointer                          Pointer to data to read       */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    Status                                                              */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_host_class_storage_media_read     Read storage media            */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Application                                                         */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  10-31-2023     Chaoqiong Xiao           Initial Version 6.3.0         */
+/*                                                                        */
+/**************************************************************************/
+UINT  _uxe_host_class_storage_media_read(UX_HOST_CLASS_STORAGE *storage, ULONG sector_start,
+                                    ULONG sector_count, UCHAR *data_pointer)
+{
+
+    /* Sanity checks.  */
+    if ((storage == UX_NULL) || (data_pointer == UX_NULL))
+        return(UX_INVALID_PARAMETER);
+
+    /* Invoke storage media read function.  */
+    return(_ux_host_class_storage_media_read(storage, sector_start, sector_count, data_pointer));
 }

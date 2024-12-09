@@ -86,6 +86,8 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 
+/* #define FX_NAND_FORMAT_FLASH_BEFORE_OPEN */
+
 /* USER CODE END EM */
 #if !defined(LX_NAND_DEFAULT_DRIVER) && !defined (LX_NAND_CUSTOM_DRIVERS) && !defined(LX_NAND_SIMULATOR_DRIVER)
 #error "[This error was thrown on purpose] : No NAND lowlevel driver defined"

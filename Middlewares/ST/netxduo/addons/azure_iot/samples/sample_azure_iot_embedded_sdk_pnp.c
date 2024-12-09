@@ -43,7 +43,7 @@
 #define SAMPLE_COMMAND_SUCCESS_STATUS                                   (200)
 #define SAMPLE_COMMAND_ERROR_STATUS                                     (500)
 
-#define SAMPLE_PNP_MODEL_ID                                             "dtmi:com:example:Thermostat;3"
+#define SAMPLE_PNP_MODEL_ID                                             "dtmi:com:example:Thermostat;4"
 #define SAMPLE_PNP_DPS_PAYLOAD                                          "{\"modelId\":\"" SAMPLE_PNP_MODEL_ID "\"}"
 
 /* Generally, IoTHub Client and DPS Client do not run at the same time, user can use union as below to
@@ -67,7 +67,7 @@ static SAMPLE_CLIENT                                client;
 #define prov_client client.prov_client
 #endif /* ENABLE_DPS_SAMPLE */
 
-void sample_entry(NX_IP *ip_ptr, NX_PACKET_POOL *pool_ptr, NX_DNS *dns_ptr, UINT (*unix_time_callback)(ULONG *unix_time));
+void sample_entry(NX_IP *ip_ptr, NX_PACKET_POOL *pool_ptr, VOID *dns_ptr, UINT (*unix_time_callback)(ULONG *unix_time));
 
 #ifdef ENABLE_DPS_SAMPLE
 static UINT sample_dps_entry(NX_AZURE_IOT_PROVISIONING_CLIENT *prov_client_ptr,
@@ -348,6 +348,14 @@ static VOID connection_status_callback(NX_AZURE_IOT_HUB_CLIENT *hub_client_ptr, 
     sample_connection_status = status;
 }
 
+static VOID telemetry_ack_callback(NX_AZURE_IOT_HUB_CLIENT *hub_client_ptr, USHORT packet_id)
+{
+    NX_PARAMETER_NOT_USED(hub_client_ptr);
+
+    printf("Telemetry message ack received with packet id %d.\r\n", packet_id);
+
+}
+
 static VOID message_receive_callback_properties(NX_AZURE_IOT_HUB_CLIENT *hub_client_ptr, VOID *context)
 {
 
@@ -486,6 +494,11 @@ UINT iothub_device_id_length = sizeof(DEVICE_ID) - 1;
                                                                               connection_status_callback)))
     {
         printf("Failed on connection_status_callback!\r\n");
+    }
+    else if ((status = nx_azure_iot_hub_client_telemetry_ack_callback_set(iothub_client_ptr,
+                                                                          telemetry_ack_callback)))
+    {
+        printf("telemetry ack callback set!: error code = 0x%08x\r\n", status);
     }
     else if ((status = nx_azure_iot_hub_client_receive_callback_set(iothub_client_ptr,
                                                                     NX_AZURE_IOT_HUB_COMMAND,
@@ -781,6 +794,7 @@ UINT status = 0;
 NX_PACKET *packet_ptr;
 NX_AZURE_IOT_JSON_WRITER json_writer;
 UINT buffer_length;
+USHORT packet_id;
 
     if (sample_connection_status != NX_SUCCESS)
     {
@@ -818,16 +832,16 @@ UINT buffer_length;
     }
 
     buffer_length = nx_azure_iot_json_writer_get_bytes_used(&json_writer);
-    if ((status = nx_azure_iot_hub_client_telemetry_send(hub_client_ptr, packet_ptr,
-                                                         (UCHAR *)scratch_buffer, buffer_length,
-                                                         SAMPLE_WAIT_OPTION)))
+    if ((status = nx_azure_iot_hub_client_telemetry_send_extended(hub_client_ptr, packet_ptr,
+                                                                  (UCHAR *)scratch_buffer, buffer_length,
+                                                                  &packet_id, SAMPLE_WAIT_OPTION)))
     {
         printf("Telemetry message send failed!: error code = 0x%08x\r\n", status);
         nx_azure_iot_hub_client_telemetry_message_delete(packet_ptr);
         return;
     }
 
-    printf("Telemetry message send: %.*s.\r\n", buffer_length, scratch_buffer);
+    printf("Telemetry message send with packet id %d : %.*s.\r\n", packet_id, buffer_length, scratch_buffer);
 }
 
 #ifdef ENABLE_DPS_SAMPLE
@@ -984,7 +998,7 @@ static void log_callback(az_log_classification classification, UCHAR *msg, UINT 
     }
 }
 
-void sample_entry(NX_IP *ip_ptr, NX_PACKET_POOL *pool_ptr, NX_DNS *dns_ptr, UINT (*unix_time_callback)(ULONG *unix_time))
+void sample_entry(NX_IP *ip_ptr, NX_PACKET_POOL *pool_ptr, VOID *dns_ptr, UINT (*unix_time_callback)(ULONG *unix_time))
 {
 UINT status = 0;
 UINT loop = NX_TRUE;
@@ -993,7 +1007,7 @@ ULONG app_events;
     nx_azure_iot_log_init(log_callback);
 
     /* Create Azure IoT handler.  */
-    if ((status = nx_azure_iot_create(&nx_azure_iot, (UCHAR *)"Azure IoT", ip_ptr, pool_ptr, dns_ptr,
+    if ((status = nx_azure_iot_create(&nx_azure_iot, (UCHAR *)"Azure IoT", ip_ptr, pool_ptr, (NX_DNS *)dns_ptr,
                                       nx_azure_iot_thread_stack, sizeof(nx_azure_iot_thread_stack),
                                       NX_AZURE_IOT_THREAD_PRIORITY, unix_time_callback)))
     {

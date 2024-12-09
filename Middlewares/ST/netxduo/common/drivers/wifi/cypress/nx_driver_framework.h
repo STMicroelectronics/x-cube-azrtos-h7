@@ -24,13 +24,13 @@
 #define NX_DRIVER_FRAMEWORK_H
 
 
-#ifdef   __cplusplus
-/* Yes, C++ compiler is present.  Use standard C.  */
+#ifdef __cplusplus
+/* Yes, C++ compiler is present.  Use standard C. */
 extern   "C" {
-#endif
+#endif /* __cplusplus */
 
 
-/* Include ThreadX header file, if not already.  */
+/* Include ThreadX header file, if not already. */
 
 #ifndef TX_API_H
 #include "tx_api.h"
@@ -63,22 +63,25 @@ extern   "C" {
 #define NX_DRIVER_PACKET_SIZE                   (WHD_LINK_MTU)
 
 
-#define NX_DRIVER_PHYSICAL_HEADER_REMOVE(p)                         \
-  do {                                                              \
-    p -> nx_packet_prepend_ptr +=  NX_DRIVER_PHYSICAL_FRAME_SIZE;   \
-    p -> nx_packet_length -=  NX_DRIVER_PHYSICAL_FRAME_SIZE;        \
+#define NX_DRIVER_PHYSICAL_HEADER_REMOVE(p)                        \
+  do {                                                             \
+    p -> nx_packet_prepend_ptr += NX_DRIVER_PHYSICAL_FRAME_SIZE;   \
+    p -> nx_packet_length -= NX_DRIVER_PHYSICAL_FRAME_SIZE;        \
   } while (0)
 
 struct NX_DRIVER_INFORMATION_STRUCT;
 
 
-/* Determine if the driver's source file is being compiled. The constants and typdefs are only valid within
-   the driver's source file compilation.  */
+/**
+  * Determine if the driver's source file is being compiled.
+  * The constants and typedefs are only valid within
+  * the driver's source file compilation.
+  */
 
 #ifdef NX_DRIVER_SOURCE
 
 
-/* Define generic constants and macros for all NetX drivers.  */
+/* Define generic constants and macros for all NetX drivers. */
 
 #define NX_DRIVER_STATE_NOT_INITIALIZED         1
 #define NX_DRIVER_STATE_INITIALIZE_FAILED       2
@@ -88,8 +91,8 @@ struct NX_DRIVER_INFORMATION_STRUCT;
 #ifdef NX_DRIVER_INTERNAL_TRANSMIT_QUEUE
 #ifndef NX_DRIVER_MAX_TRANSMIT_QUEUE_DEPTH
 #define NX_DRIVER_MAX_TRANSMIT_QUEUE_DEPTH      10
-#endif
-#endif
+#endif /* NX_DRIVER_MAX_TRANSMIT_QUEUE_DEPTH */
+#endif /* NX_DRIVER_INTERNAL_TRANSMIT_QUEUE */
 
 #define NX_DRIVER_DEFERRED_PACKET_RECEIVED      1
 #define NX_DRIVER_DEFERRED_DEVICE_RESET         2
@@ -101,7 +104,7 @@ struct NX_DRIVER_INFORMATION_STRUCT;
 #define NX_DRIVER_CAPABILITY ( 0 )
 #endif /* NX_DRIVER_CAPABILITY */
 
-/* Define generic constants and macros for all NetX Ethernet drivers.  */
+/* Define generic constants and macros for all NetX Ethernet drivers. */
 
 #define NX_DRIVER_ETHERNET_IP                   0x0800
 #define NX_DRIVER_ETHERNET_IPV6                 0x86dd
@@ -109,8 +112,11 @@ struct NX_DRIVER_INFORMATION_STRUCT;
 #define NX_DRIVER_ETHERNET_RARP                 0x8035
 
 
-/* Define basic Ethernet driver information typedef. Note that this typedefs is designed to be used only
-   in the driver's C file. */
+/**
+  * Define basic Ethernet driver information typedef.
+  * Note that this typedefs is designed to be used only
+  * in the driver's C file.
+  */
 
 typedef struct NX_DRIVER_INFORMATION_STRUCT
 {
@@ -130,19 +136,18 @@ typedef struct NX_DRIVER_INFORMATION_STRUCT
      deferred from the ISR for processing in the thread context.  */
   ULONG               nx_driver_information_deferred_events;
 
+} NX_DRIVER_INFORMATION;
 
-}   NX_DRIVER_INFORMATION;
-
-#endif
+#endif /* NX_DRIVER_SOURCE */
 
 
 /* Define default driver entry function. */
 
-VOID  nx_driver_framework_default_entry(NX_IP_DRIVER *driver_req_ptr);
+VOID nx_driver_framework_default_entry(NX_IP_DRIVER *driver_req_ptr);
 
-#ifdef   __cplusplus
-/* Yes, C++ compiler is present.  Use standard C.  */
+#ifdef __cplusplus
+/* Yes, C++ compiler is present.  Use standard C. */
 }
-#endif
+#endif /* __cplusplus */
 
 #endif /* NX_DRIVER_FRAMEWORK_H */

@@ -3,7 +3,7 @@
   ******************************************************************************
   * @file    ux_device_cdc_acm.h
   * @author  MCD Application Team
-  * @brief   USBX Device CDC ACM interface header file
+  * @brief   USBX Device CDC ACM applicative header file
   ******************************************************************************
   * @attention
   *
@@ -27,10 +27,11 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "ux_api.h"
+#include "ux_device_class_cdc_acm.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "ux_device_class_cdc_acm.h"
+#include "main.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -49,13 +50,13 @@ extern "C" {
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
+VOID USBD_CDC_ACM_Activate(VOID *cdc_acm_instance);
+VOID USBD_CDC_ACM_Deactivate(VOID *cdc_acm_instance);
+VOID USBD_CDC_ACM_ParameterChange(VOID *cdc_acm_instance);
 
 /* USER CODE BEGIN EFP */
-VOID CDC_ACM_Init(VOID *cdc_acm);
-VOID CDC_ACM_DeInit(VOID *cdc_acm);
-VOID CDC_ACM_Control(VOID *cdc_acm);
-VOID CDC_ACM_Read_Task(VOID);
-VOID CDC_ACM_Write_Task(VOID);
+VOID USBX_DEVICE_CDC_ACM_Write_Task(VOID);
+VOID USBX_DEVICE_CDC_ACM_Read_Task(VOID);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

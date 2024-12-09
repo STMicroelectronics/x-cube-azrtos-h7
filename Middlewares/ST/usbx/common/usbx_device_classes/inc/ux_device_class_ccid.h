@@ -24,7 +24,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */
 /*                                                                        */
 /*    ux_device_class_ccid.h                              PORTABLE C      */
-/*                                                           6.1.11       */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -39,6 +39,12 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  04-25-2022     Chaoqiong Xiao           Initial Version 6.1.11        */
+/*  03-08-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.2.1  */
+/*  10-31-2023     Yajun xia, CQ Xiao       Modified comment(s),          */
+/*                                            added error checks support, */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -52,13 +58,33 @@
 
 /* Yes, C++ compiler is present.  Use standard C.  */
 extern   "C" {
+#endif
 
+/* Internal option: enable the basic USBX error checking. This define is typically used
+   while debugging application.  */
+#if defined(UX_ENABLE_ERROR_CHECKING) && !defined(UX_DEVICE_CLASS_CCID_ENABLE_ERROR_CHECKING)
+#define UX_DEVICE_CLASS_CCID_ENABLE_ERROR_CHECKING
 #endif
 
 
-/* Define CCID max number of slots, 32 for 32 bit data width.  */
-#define UX_DEVICE_CLASS_CCID_MAX_N_SLOTS                                    (sizeof(ALIGN_TYPE)*8)
+/* Notification/interrupt endpoint buffer size, must be larger than max packet size in framework, and aligned in 4-bytes.  */
+#define UX_DEVICE_CLASS_CCID_INTERRUPT_BUFFER_SIZE                          16
 
+/* Bulk endpoints buffer size, must be larger than dwMaxCCIDMessageLength and wMaxPacketSize in framework, and aligned in 4-bytes.  */
+#define UX_DEVICE_CLASS_CCID_BULK_BUFFER_SIZE                               UX_SLAVE_REQUEST_DATA_MAX_LENGTH
+
+
+#if !defined(UX_DEVICE_STANDALONE)
+
+/* Define CCID max number of slots, 32 for 32 bit data width.  */
+#define UX_DEVICE_CLASS_CCID_MAX_N_SLOTS                                    (4*8)
+#else
+
+/* To optimize the max number of slots fixed to 1.  */
+#define UX_DEVICE_CLASS_CCID_MAX_N_SLOTS                                    1
+#endif
+
+/* Thread stack size, for RTOS mode only.  */
 #define UX_DEVICE_CLASS_CCID_THREAD_STACK_SIZE                              UX_THREAD_STACK_SIZE
 #define UX_DEVICE_CLASS_CCID_NOTIFY_THREAD_STACK_SIZE                       UX_THREAD_STACK_SIZE
 #define UX_DEVICE_CLASS_CCID_RUNNER_THREAD_STACK_SIZE                       UX_THREAD_STACK_SIZE
@@ -893,7 +919,9 @@ typedef struct UX_DEVICE_CLASS_CCID_RDR_TO_PC_DATA_RATE_AND_CLOCK_FREQUENCY_STRU
 
 
 /* Define CCID message command handles, if command handle is not defined device
-   reports command not supported to host.  */
+   reports command not supported to host.
+   In RTOS mode return normal status code (_SUCCESS/_ERROR/...).
+   In standalone mode return task state status code (_STATE_NEXT/_STATE_ERROR/...).  */
 typedef UINT (*UX_DEVICE_CLASS_CCID_HANDLE)(ULONG slot, UX_DEVICE_CLASS_CCID_MESSAGES*);
 typedef struct UX_DEVICE_CLASS_CCID_HANDLES_STRUCT
 {
@@ -949,11 +977,18 @@ typedef struct UX_DEVICE_CLASS_CCID_RUNNER_STRUCT
     CHAR                    ux_device_class_ccid_runner_slot;
     CHAR                    ux_device_class_ccid_runner_id;
     CHAR                    ux_device_class_ccid_runner_command_index;
+#if !defined(UX_DEVICE_STANDALONE)
     UCHAR                   reserved;
 
-#if !defined(UX_DEVICE_STANDALONE)
     UX_THREAD               ux_device_class_ccid_runner_thread;
     UCHAR                   *ux_device_class_ccid_runner_thread_stack;
+#else
+    UCHAR                   ux_device_class_ccid_runner_state;
+
+    UX_DEVICE_CLASS_CCID_HANDLE
+                            ux_device_class_ccid_runner_handle;
+    UX_DEVICE_CLASS_CCID_MESSAGES
+                            ux_device_class_ccid_runner_messages;
 #endif
 } UX_DEVICE_CLASS_CCID_RUNNER;
 
@@ -983,6 +1018,10 @@ typedef struct UX_DEVICE_CLASS_CCID_STRUCT
     UX_SLAVE_ENDPOINT       *ux_device_class_ccid_endpoint_in;
     UX_SLAVE_ENDPOINT       *ux_device_class_ccid_endpoint_notify;
 
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+    UCHAR                   *ux_device_class_ccid_endpoint_buffer;
+#endif
+
     UX_DEVICE_CLASS_CCID_PARAMETER
                             ux_device_class_ccid_parameter;
 
@@ -1005,8 +1044,122 @@ typedef struct UX_DEVICE_CLASS_CCID_STRUCT
     UX_MUTEX                ux_device_class_ccid_mutex;
     UX_MUTEX                ux_device_class_ccid_response_mutex;
     UX_SEMAPHORE            ux_device_class_ccid_notify_semaphore;
+#else
+    ULONG                   ux_device_class_ccid_flags;
+
+    UCHAR                   ux_device_class_ccid_cmd_state;
+    CHAR                    ux_device_class_ccid_cmd_index;
+    UCHAR                   ux_device_class_ccid_rsp_state;
+    UCHAR                   ux_device_class_ccid_notify_state;
 #endif
 } UX_DEVICE_CLASS_CCID;
+
+/* Device CCID endpoint buffer settings (when CCID owns buffer).  */
+#define UX_DEVICE_CLASS_CCID_ENDPOINT_BUFFER_SIZE_CALC_OVERFLOW                 \
+    (UX_OVERFLOW_CHECK_MULC_ULONG(UX_DEVICE_CLASS_CCID_BULK_BUFFER_SIZE, 2) ||  \
+     UX_OVERFLOW_CHECK_ADD_ULONG(UX_DEVICE_CLASS_CCID_BULK_BUFFER_SIZE * 2,     \
+                                 UX_DEVICE_CLASS_CCID_INTERRUPT_BUFFER_SIZE))
+#define UX_DEVICE_CLASS_CCID_ENDPOINT_BUFFER_SIZE (UX_DEVICE_CLASS_CCID_BULK_BUFFER_SIZE * 2 + UX_DEVICE_CLASS_CCID_INTERRUPT_BUFFER_SIZE)
+#define UX_DEVICE_CLASS_CCID_BULKOUT_BUFFER(ccid)       ((ccid) -> ux_device_class_ccid_endpoint_buffer)
+#define UX_DEVICE_CLASS_CCID_BULKIN_BUFFER(ccid)        (UX_DEVICE_CLASS_CCID_BULKOUT_BUFFER(ccid) + UX_DEVICE_CLASS_CCID_BULK_BUFFER_SIZE)
+#define UX_DEVICE_CLASS_CCID_INTERRUPTIN_BUFFER(ccid)   (UX_DEVICE_CLASS_CCID_BULKIN_BUFFER(ccid) + UX_DEVICE_CLASS_CCID_BULK_BUFFER_SIZE)
+
+/* Device CCID flags.  */
+#define UX_DEVICE_CLASS_CCID_FLAG_LOCK          0x0001u
+#define UX_DEVICE_CLASS_CCID_FLAG_CMD_RSP       0x0010u
+
+#if defined(UX_DEVICE_STANDALONE)
+#define _ux_device_class_ccid_lock(ccid)    do {                                \
+        UX_INTERRUPT_SAVE_AREA                                                  \
+        UX_DISABLE                                                              \
+        if (ccid->ux_device_class_ccid_flags & UX_DEVICE_CLASS_CCID_FLAG_LOCK)  \
+        {                                                                       \
+            UX_RESTORE                                                          \
+            return(UX_BUSY);                                                    \
+        }                                                                       \
+        ccid->ux_device_class_ccid_flags |= UX_DEVICE_CLASS_CCID_FLAG_LOCK;     \
+        UX_RESTORE                                                              \
+    } while(0)
+#define _ux_device_class_ccid_unlock(ccid)  do {                                \
+        ccid->ux_device_class_ccid_flags &= ~UX_DEVICE_CLASS_CCID_FLAG_LOCK;    \
+    } while(0)
+#else
+#define _ux_device_class_ccid_lock(ccid)    _ux_device_mutex_on(&ccid -> ux_device_class_ccid_mutex)
+#define _ux_device_class_ccid_unlock(ccid)  _ux_device_mutex_off(&ccid -> ux_device_class_ccid_mutex)
+#endif
+
+/* Device CCID states.  */
+#define UX_DEVICE_CLASS_CCID_CMD_IDLE                               (UX_STATE_STEP + 0)
+#define UX_DEVICE_CLASS_CCID_CMD_START                              (UX_STATE_STEP + 1)
+#define UX_DEVICE_CLASS_CCID_CMD_WAIT                               (UX_STATE_STEP + 2)
+#define UX_DEVICE_CLASS_CCID_CMD_LOCK                               (UX_STATE_STEP + 3)
+#define UX_DEVICE_CLASS_CCID_CMD_PROCESS                            (UX_STATE_STEP + 4)
+#define UX_DEVICE_CLASS_CCID_CMD_RSP_START                          (UX_STATE_STEP + 5)
+static inline const char *ccidCmdStateName(const UINT s)
+{
+    switch(s)
+    {
+    case UX_DEVICE_CLASS_CCID_CMD_IDLE:     return("cmdIDLE");
+    case UX_DEVICE_CLASS_CCID_CMD_START:    return("cmdSTART");
+    case UX_DEVICE_CLASS_CCID_CMD_WAIT:     return("cmdWAIT");
+    case UX_DEVICE_CLASS_CCID_CMD_LOCK:     return("cmdLOCK");
+    case UX_DEVICE_CLASS_CCID_CMD_PROCESS:  return("cmdPROCESS");
+    case UX_DEVICE_CLASS_CCID_CMD_RSP_START:return("cmdRSP_START");
+    default: return("cmd?");
+    }
+}
+
+#define UX_DEVICE_CLASS_CCID_RUNNER_IDLE                            (UX_STATE_STEP + 0)
+#define UX_DEVICE_CLASS_CCID_RUNNER_START                           (UX_STATE_STEP + 1)
+#define UX_DEVICE_CLASS_CCID_RUNNER_HANDLE                          (UX_STATE_STEP + 2)
+#define UX_DEVICE_CLASS_CCID_RUNNER_RSP_START                       (UX_STATE_STEP + 3)
+static inline const char *ccidRunnerStateName(const UINT s)
+{
+    switch(s)
+    {
+    case UX_DEVICE_CLASS_CCID_RUNNER_IDLE:          return("runnerIDLE");
+    case UX_DEVICE_CLASS_CCID_RUNNER_START:         return("runnerSTART");
+    case UX_DEVICE_CLASS_CCID_RUNNER_HANDLE:        return("runnerHANDLE");
+    case UX_DEVICE_CLASS_CCID_RUNNER_RSP_START:     return("runnerRSP_START");
+    default: return("runner?");
+    }
+}
+
+#define UX_DEVICE_CLASS_CCID_RSP_IDLE                               (UX_STATE_STEP + 0)
+#define UX_DEVICE_CLASS_CCID_RSP_START                              (UX_STATE_STEP + 1)
+#define UX_DEVICE_CLASS_CCID_RSP_WAIT                               (UX_STATE_STEP + 2)
+#define UX_DEVICE_CLASS_CCID_RSP_LOCK                               (UX_STATE_STEP + 3)
+#define UX_DEVICE_CLASS_CCID_RSP_UPDATE                             (UX_STATE_STEP + 4)
+#define UX_DEVICE_CLASS_CCID_RSP_DONE                               (UX_STATE_STEP + 5)
+static inline const char *ccidRspStateName(const UINT s)
+{
+    switch(s)
+    {
+    case UX_DEVICE_CLASS_CCID_RSP_IDLE:     return("rspIDLE");
+    case UX_DEVICE_CLASS_CCID_RSP_START:    return("rspSTART");
+    case UX_DEVICE_CLASS_CCID_RSP_WAIT:     return("rspWAIT");
+    case UX_DEVICE_CLASS_CCID_RSP_LOCK:     return("rspLOCK");
+    case UX_DEVICE_CLASS_CCID_RSP_UPDATE:   return("rspUPDATE");
+    case UX_DEVICE_CLASS_CCID_RSP_DONE:     return("rspDONE");
+    default: return("rsp?");
+    }
+}
+
+#define UX_DEVICE_CLASS_CCID_NOTIFY_IDLE                            (UX_STATE_STEP + 0)
+#define UX_DEVICE_CLASS_CCID_NOTIFY_LOCK                            (UX_STATE_STEP + 1)
+#define UX_DEVICE_CLASS_CCID_NOTIFY_START                           (UX_STATE_STEP + 2)
+#define UX_DEVICE_CLASS_CCID_NOTIFY_WAIT                            (UX_STATE_STEP + 3)
+static inline const char *ccidNotifyStateName(const UINT s)
+{
+    switch(s)
+    {
+    case UX_DEVICE_CLASS_CCID_NOTIFY_IDLE:     return("notifyIDLE");
+    case UX_DEVICE_CLASS_CCID_NOTIFY_LOCK:     return("notifyLOCK");
+    case UX_DEVICE_CLASS_CCID_NOTIFY_START:    return("notifySTART");
+    case UX_DEVICE_CLASS_CCID_NOTIFY_WAIT:     return("notifyWAIT");
+    default: return("notify?");
+    }
+}
 
 /* Define Device CCID command settings.  */
 extern const UX_DEVICE_CLASS_CCID_COMMAND_SETT _ux_device_class_ccid_command_sett[];
@@ -1022,6 +1175,10 @@ VOID  _ux_device_class_ccid_thread_entry(ULONG ccid_instance);
 VOID  _ux_device_class_ccid_notify_thread_entry(ULONG ccid_instance);
 VOID  _ux_device_class_ccid_runner_thread_entry(ULONG runner_instance);
 
+UINT  _ux_device_class_ccid_tasks_run(VOID *instance);
+UINT  _ux_device_class_ccid_notify_task_run(UX_DEVICE_CLASS_CCID *ccid);
+UINT  _ux_device_class_ccid_runner_task_run(UX_DEVICE_CLASS_CCID *ccid);
+
 UINT  _ux_device_class_ccid_control_abort(UX_DEVICE_CLASS_CCID *ccid, ULONG slot, ULONG seq);
 
 UINT  _ux_device_class_ccid_response(UX_DEVICE_CLASS_CCID *ccid, UCHAR *buffer, ULONG length);
@@ -1035,9 +1192,25 @@ UINT  _ux_device_class_ccid_auto_seq_done(UX_DEVICE_CLASS_CCID *ccid, ULONG slot
 UINT  _ux_device_class_ccid_time_extension(UX_DEVICE_CLASS_CCID *ccid, ULONG slot, ULONG wt);
 UINT  _ux_device_class_ccid_hardware_error(UX_DEVICE_CLASS_CCID *ccid, ULONG slot, ULONG error);
 
+UINT  _uxe_device_class_ccid_icc_insert(UX_DEVICE_CLASS_CCID *ccid, ULONG slot, ULONG seq_start);
+UINT  _uxe_device_class_ccid_icc_remove(UX_DEVICE_CLASS_CCID *ccid, ULONG slot);
+UINT  _uxe_device_class_ccid_auto_seq_done(UX_DEVICE_CLASS_CCID *ccid, ULONG slot, ULONG icc_status);
+UINT  _uxe_device_class_ccid_time_extension(UX_DEVICE_CLASS_CCID *ccid, ULONG slot, ULONG wt);
+UINT  _uxe_device_class_ccid_hardware_error(UX_DEVICE_CLASS_CCID *ccid, ULONG slot, ULONG error);
+
 /* Define Device CCID Class API prototypes.  */
 
 #define ux_device_class_ccid_entry               _ux_device_class_ccid_entry
+
+#if defined(UX_DEVICE_CLASS_CCID_ENABLE_ERROR_CHECKING)
+
+#define ux_device_class_ccid_icc_insert          _uxe_device_class_ccid_icc_insert
+#define ux_device_class_ccid_icc_remove          _uxe_device_class_ccid_icc_remove
+#define ux_device_class_ccid_auto_seq_done       _uxe_device_class_ccid_auto_seq_done
+#define ux_device_class_ccid_time_extension      _uxe_device_class_ccid_time_extension
+#define ux_device_class_ccid_hardware_error      _uxe_device_class_ccid_hardware_error
+
+#else
 
 #define ux_device_class_ccid_icc_insert          _ux_device_class_ccid_icc_insert
 #define ux_device_class_ccid_icc_remove          _ux_device_class_ccid_icc_remove
@@ -1045,6 +1218,7 @@ UINT  _ux_device_class_ccid_hardware_error(UX_DEVICE_CLASS_CCID *ccid, ULONG slo
 #define ux_device_class_ccid_time_extension      _ux_device_class_ccid_time_extension
 #define ux_device_class_ccid_hardware_error      _ux_device_class_ccid_hardware_error
 
+#endif
 
 /* Determine if a C++ compiler is being used.  If so, complete the standard
    C conditional started above.  */

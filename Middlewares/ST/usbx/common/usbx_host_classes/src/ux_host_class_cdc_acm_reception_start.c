@@ -142,3 +142,54 @@ UINT            status;
     return(status); 
 }
 
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _uxe_host_class_cdc_acm_reception_start             PORTABLE C      */
+/*                                                           6.3.0        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks errors in CDC ACM reception function call.     */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    cdc_acm                               Pointer to CDC ACM class      */
+/*    cdc_acm_reception                     Pointer to reception struct   */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    Status                                                              */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_host_class_cdc_acm_reception_start                              */
+/*                                          CDC ACM reception start       */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Application                                                         */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  10-31-2023     Chaoqiong Xiao           Initial Version 6.3.0         */
+/*                                                                        */
+/**************************************************************************/
+UINT  _uxe_host_class_cdc_acm_reception_start (UX_HOST_CLASS_CDC_ACM *cdc_acm, 
+                                    UX_HOST_CLASS_CDC_ACM_RECEPTION *cdc_acm_reception)
+{
+
+    /* Sanity checks.  */
+    if ((cdc_acm == UX_NULL) || (cdc_acm_reception == UX_NULL))
+        return(UX_INVALID_PARAMETER);
+
+    /* Invoke CDC ACM reception start function.  */
+    return(_ux_host_class_cdc_acm_reception_start(cdc_acm, cdc_acm_reception));
+}

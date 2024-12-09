@@ -33,7 +33,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_device_class_audio_initialize                   PORTABLE C      */
-/*                                                           6.2.0        */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -87,6 +87,11 @@
 /*  10-31-2022     Yajun Xia                Modified comment(s),          */
 /*                                            added standalone support,   */
 /*                                            resulting in version 6.2.0  */
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            added a new mode to manage  */
+/*                                            endpoint buffer in classes  */
+/*                                            with zero copy enabled,     */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_device_class_audio_initialize(UX_SLAVE_CLASS_COMMAND *command)
@@ -226,6 +231,19 @@ ULONG                                   i;
     }
 #endif
 
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+
+    /* Allocate memory for interrupt endpoint buffer.  */
+    audio -> ux_device_class_audio_interrupt_buffer = _ux_utility_memory_allocate(UX_NO_ALIGN, UX_CACHE_SAFE_MEMORY,
+                    audio_parameter -> ux_device_class_audio_parameter_status_size);
+    if (audio -> ux_device_class_audio_interrupt_buffer == UX_NULL)
+    {
+        _ux_utility_memory_free(audio -> ux_device_class_audio_status_queue);
+        _ux_utility_memory_free(audio);
+        return(UX_MEMORY_INSUFFICIENT);
+    }
+#endif
+
 #endif
 
     /* Save streams.  */
@@ -240,6 +258,20 @@ ULONG                                   i;
     stream_parameter = audio_parameter -> ux_device_class_audio_parameter_streams;
     for (i = 0; i < audio -> ux_device_class_audio_streams_nb; i ++)
     {
+
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+#if defined(UX_DEVICE_CLASS_AUDIO_FEEDBACK_SUPPORT)
+
+        /* Allocate memory for feedback endpoint buffer.  */
+        stream -> ux_device_class_audio_stream_feedback_buffer = _ux_utility_memory_allocate(UX_NO_ALIGN, UX_CACHE_SAFE_MEMORY,
+                        UX_DEVICE_CLASS_AUDIO_FEEDBACK_BUFFER_SIZE);
+        if (stream -> ux_device_class_audio_stream_feedback_buffer == UX_NULL)
+        {
+            status = UX_MEMORY_INSUFFICIENT;
+            break;
+        }
+#endif
+#endif
 
         /* Create memory block based on max frame buffer size and max number of frames buffered.
            Each frame require some additional header memory (8 bytes).  */
@@ -262,7 +294,11 @@ ULONG                                   i;
                             stream_parameter -> ux_device_class_audio_stream_parameter_max_frame_buffer_nb;
 
         /* Create block of buffer buffer is cache safe for USB transfer.  */
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+        stream -> ux_device_class_audio_stream_buffer = (UCHAR *)_ux_utility_memory_allocate(UX_NO_ALIGN, UX_CACHE_SAFE_MEMORY, memory_size);
+#else
         stream -> ux_device_class_audio_stream_buffer = (UCHAR *)_ux_utility_memory_allocate(UX_NO_ALIGN, UX_REGULAR_MEMORY, memory_size);
+#endif
 
         /* Check for successful allocation.  */
         if (stream -> ux_device_class_audio_stream_buffer == UX_NULL)
@@ -406,6 +442,10 @@ ULONG                                   i;
     for (i = 0; i < audio -> ux_device_class_audio_streams_nb; i ++)
     {
 #if defined(UX_DEVICE_CLASS_AUDIO_FEEDBACK_SUPPORT)
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+        if (stream -> ux_device_class_audio_stream_feedback_buffer)
+            _ux_utility_memory_free(stream -> ux_device_class_audio_stream_feedback_buffer);
+#endif
 #if !defined(UX_DEVICE_STANDALONE)
         if (stream -> ux_device_class_audio_stream_feedback_thread_stack)
         {
@@ -426,6 +466,10 @@ ULONG                                   i;
         stream ++;
     }
 #if defined(UX_DEVICE_CLASS_AUDIO_INTERRUPT_SUPPORT)
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+    if (audio -> ux_device_class_audio_interrupt_buffer)
+        _ux_utility_memory_free(audio -> ux_device_class_audio_interrupt_buffer);
+#endif
 #if !defined(UX_DEVICE_STANDALONE)
     if (audio_class -> ux_slave_class_thread_stack)
     {
@@ -445,4 +489,81 @@ ULONG                                   i;
     _ux_utility_memory_free(audio);
 
     return(status);
+}
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _uxe_device_class_audio_initialize                  PORTABLE C      */
+/*                                                           6.3.0        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks errors in audio initialization function call.  */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    command                               Pointer to audio command      */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    Completion Status                                                   */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_device_class_audio_initialize     Initialize audio instance     */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Device Audio Class                                                  */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  03-08-2023     Chaoqiong Xiao           Initial Version 6.2.1         */
+/*  10-31-2023     Yajun Xia                Modified comment(s),          */
+/*                                            fixed error checking issue, */
+/*                                            resulting in version 6.3.0  */
+/*                                                                        */
+/**************************************************************************/
+UINT  _uxe_device_class_audio_initialize(UX_SLAVE_CLASS_COMMAND *command)
+{
+
+UX_DEVICE_CLASS_AUDIO_PARAMETER         *audio_parameter;
+ULONG                                   i;
+
+    /* Get the pointer to the application parameters for the audio class.  */
+    audio_parameter = (UX_DEVICE_CLASS_AUDIO_PARAMETER *)command -> ux_slave_class_command_parameter;
+
+    /* Sanity checks.  */
+    if (audio_parameter == UX_NULL)
+        return(UX_INVALID_PARAMETER);
+
+    /* There must be at least one stream.  */
+    if (audio_parameter -> ux_device_class_audio_parameter_streams == UX_NULL ||
+        audio_parameter -> ux_device_class_audio_parameter_streams_nb < 1)
+        return(UX_INVALID_PARAMETER);
+
+    for (i = 0; i < audio_parameter -> ux_device_class_audio_parameter_streams_nb; i ++)
+    {
+        if ((audio_parameter -> ux_device_class_audio_parameter_streams[i].ux_device_class_audio_stream_parameter_max_frame_buffer_size == 0) ||
+            (audio_parameter -> ux_device_class_audio_parameter_streams[i].ux_device_class_audio_stream_parameter_max_frame_buffer_nb == 0))
+            return(UX_INVALID_PARAMETER);
+    }
+
+#if defined(UX_DEVICE_CLASS_AUDIO_INTERRUPT_SUPPORT)
+
+    /* There must be status setting for event queue.  */
+    if (audio_parameter -> ux_device_class_audio_parameter_status_queue_size == 0 ||
+        audio_parameter -> ux_device_class_audio_parameter_status_size == 0)
+        return(UX_INVALID_PARAMETER);
+#endif
+
+    /* Do initialize.  */
+    return(_ux_device_class_audio_initialize(command));
 }

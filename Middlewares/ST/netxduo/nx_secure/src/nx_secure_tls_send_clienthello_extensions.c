@@ -26,6 +26,7 @@
 
 #ifndef NX_SECURE_TLS_CLIENT_DISABLED
 
+#ifndef NX_SECURE_DISABLE_X509
 static VOID _nx_secure_tls_get_signature_algorithm(NX_SECURE_TLS_SESSION *tls_session,
                                                    NX_SECURE_X509_CRYPTO *crypto_method,
                                                    USHORT *signature_algorithm);
@@ -34,6 +35,7 @@ static UINT _nx_secure_tls_send_clienthello_sig_extension(NX_SECURE_TLS_SESSION 
                                                           UCHAR *packet_buffer, ULONG *packet_offset,
                                                           USHORT *extension_length,
                                                           ULONG available_size);
+#endif
 #ifndef NX_SECURE_TLS_SNI_EXTENSION_DISABLED
 static UINT _nx_secure_tls_send_clienthello_sni_extension(NX_SECURE_TLS_SESSION *tls_session,
                                                           UCHAR *packet_buffer, ULONG *packet_offset,
@@ -84,7 +86,7 @@ static UINT _nx_secure_tls_send_clienthello_sec_reneg_extension(NX_SECURE_TLS_SE
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_secure_tls_send_clienthello_extensions          PORTABLE C      */
-/*                                                           6.1.11       */
+/*                                                           6.2.1        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -136,6 +138,10 @@ static UINT _nx_secure_tls_send_clienthello_sec_reneg_extension(NX_SECURE_TLS_SE
 /*  04-25-2022     Yajun Xia                Modified comment(s),          */
 /*                                            added exception case,       */
 /*                                            resulting in version 6.1.11 */
+/*  03-08-2023     Yanwu Cai                Modified comment(s),          */
+/*                                            fixed compiler errors when  */
+/*                                            x509 is disabled,           */
+/*                                            resulting in version 6.2.1  */
 /*                                                                        */
 /**************************************************************************/
 UINT _nx_secure_tls_send_clienthello_extensions(NX_SECURE_TLS_SESSION *tls_session,
@@ -227,6 +233,8 @@ UINT   status;
     }
 #endif
 
+#ifndef NX_SECURE_DISABLE_X509
+
     /* RFC 5246 7.4.1.4.1 Signature Algorithm:
        Note: this extension is not meaningful for TLS versions prior to 1.2.
        Clients MUST NOT offer it if they are offering prior versions. */
@@ -241,6 +249,7 @@ UINT   status;
         }
         total_extensions_length = (USHORT)(total_extensions_length + extension_length);
     }
+#endif
 
 #ifndef NX_SECURE_TLS_SNI_EXTENSION_DISABLED
     /* Send the server name indication extension. */
@@ -321,6 +330,7 @@ UINT   status;
 /*                                            resulting in version 6.1.11 */
 /*                                                                        */
 /**************************************************************************/
+#ifndef NX_SECURE_DISABLE_X509
 static UINT _nx_secure_tls_send_clienthello_sig_extension(NX_SECURE_TLS_SESSION *tls_session,
                                                           UCHAR *packet_buffer, ULONG *packet_offset,
                                                           USHORT *extension_length,
@@ -492,6 +502,8 @@ UCHAR sig_algo = 0;
         *signature_algorithm = (USHORT)((hash_algo << 8) + sig_algo);
     }
 }
+#endif
+
 
 /**************************************************************************/
 /*                                                                        */
@@ -499,7 +511,7 @@ UCHAR sig_algo = 0;
 /*                                                                        */
 /*    _nx_secure_tls_send_clienthello_supported_versions_extension        */
 /*                                                        PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.2.1        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -537,6 +549,9 @@ UCHAR sig_algo = 0;
 /*  05-19-2020     Timothy Stapko           Initial Version 6.0           */
 /*  09-30-2020     Timothy Stapko           Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  03-08-2023     Tiejun Zhou              Modified comment(s),          */
+/*                                            fixed compiler warnings,    */
+/*                                            resulting in version 6.2.1  */
 /*                                                                        */
 /**************************************************************************/
 #if (NX_SECURE_TLS_TLS_1_3_ENABLED)
@@ -550,8 +565,10 @@ ULONG  offset;
 USHORT ext;
 UINT   data_length;
 UINT   id = NX_SECURE_TLS;
+#ifndef NX_SECURE_TLS_DISABLE_PROTOCOL_VERSION_DOWNGRADE
 USHORT protocol_version;
 INT    i;
+#endif /* NX_SECURE_TLS_DISABLE_PROTOCOL_VERSION_DOWNGRADE */
 
     /* Supported Versions Extension structure:
      * |     2      |         2          |      1       | <list length> |

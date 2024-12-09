@@ -21,14 +21,16 @@
 /**************************************************************************/
 
 #include <stdbool.h>
-#include <stdio.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <inttypes.h>
 
 #include "nx_api.h"
 #include "whd.h"
 #include "whd_debug.h"
 #include "whd_types.h"
 #include "whd_int.h"
-#include "main.h"
+#include "cy_wifi_conf.h"
 
 #include "whd_config.h"
 
@@ -42,11 +44,13 @@
 /* Indicate that driver source is being compiled. */
 #define NX_DRIVER_SOURCE
 
+#if !defined(NX_DEBUG_DRIVER_SOURCE_LOG)
+#define NX_DEBUG_DRIVER_SOURCE_LOG(...)   /* ; */
+#define REMOVE_DEBUG_FUNC
+#endif /*NX_DEBUG_DRIVER_SOURCE_LOG*/
+
 #include "nx_stm32_cypress_whd_driver.h"
 #include "nx_driver_framework.c"
-
-/* Private macro -------------------------------------------------------------*/
-
 
 whd_interface_t *Ifp;
 
@@ -55,6 +59,7 @@ static uint32_t CypressAliveInterfaceCount = 0;
 static whd_driver_t WhdDriver;
 static uint16_t EventIndex = 0xFF;
 
+/* The station mode is the default. */
 wifi_mode_t WifiMode = WIFI_MODE_STA;
 
 static const whd_event_num_t sta_link_change_events[] =
@@ -80,6 +85,7 @@ static UINT _nx_driver_cypress_whd_initialize(NX_IP_DRIVER *driver_req_ptr);
 static UINT _nx_driver_cypress_whd_enable(NX_IP_DRIVER *driver_req_ptr);
 static UINT _nx_driver_cypress_whd_disable(NX_IP_DRIVER *driver_req_ptr);
 static UINT _nx_driver_cypress_whd_packet_send(NX_PACKET *packet_ptr);
+static UINT _nx_driver_cypress_whd_interface_status(NX_IP_DRIVER *driver_req_ptr);
 static VOID _nx_driver_cypress_whd_packet_received(VOID);
 
 static VOID *_nx_driver_cypress_whd_event_handler(whd_interface_t ifp,
@@ -87,9 +93,29 @@ static VOID *_nx_driver_cypress_whd_event_handler(whd_interface_t ifp,
                                                   const uint8_t *event_data, void *handler_user_data);
 
 
-#ifdef NX_DEBUG
+#if !defined(REMOVE_DEBUG_FUNC)
 static void HexDump(const void *pData, size_t Size);
-#endif /* NX_DEBUG */
+#endif /* REMOVE_DEBUG_FUNC */
+
+extern UINT cypress_whd_alloc_init(VOID);
+
+VOID nx_driver_cypress_whd_entry(NX_IP_DRIVER *driver_req_ptr)
+{
+  static bool started = false;
+  if (!started)
+  {
+    nx_driver_hardware_initialize      = _nx_driver_cypress_whd_initialize;
+    nx_driver_hardware_enable          = _nx_driver_cypress_whd_enable;
+    nx_driver_hardware_disable         = _nx_driver_cypress_whd_disable;
+    nx_driver_hardware_packet_send     = _nx_driver_cypress_whd_packet_send;
+    nx_driver_hardware_get_status      = _nx_driver_cypress_whd_interface_status;
+    nx_driver_hardware_packet_received = _nx_driver_cypress_whd_packet_received;
+
+    started = true;
+  }
+
+  nx_driver_framework_entry_default(driver_req_ptr);
+}
 
 
 void cy_network_process_ethernet_data(whd_interface_t interface, whd_buffer_t buffer)
@@ -110,30 +136,12 @@ void cy_network_process_ethernet_data(whd_interface_t interface, whd_buffer_t bu
 }
 
 
-VOID nx_driver_cypress_whd_entry(NX_IP_DRIVER *driver_req_ptr)
-{
-  static bool start = false;
-  if (!start)
-  {
-    nx_driver_hardware_initialize      = _nx_driver_cypress_whd_initialize;
-    nx_driver_hardware_enable          = _nx_driver_cypress_whd_enable;
-    nx_driver_hardware_disable         = _nx_driver_cypress_whd_disable;
-    nx_driver_hardware_packet_send     = _nx_driver_cypress_whd_packet_send;
-    nx_driver_hardware_packet_received = _nx_driver_cypress_whd_packet_received;
-
-    start = true;
-  }
-
-  nx_driver_framework_entry_default(driver_req_ptr);
-}
-
-
 UINT _nx_driver_cypress_whd_initialize(NX_IP_DRIVER *driver_req_ptr)
 {
   UINT ret = NX_SUCCESS;
   whd_mac_t mac;
 
-  (void)driver_req_ptr;
+  (void)(driver_req_ptr);
 
   if (cypress_whd_alloc_init())
   {
@@ -145,7 +153,7 @@ UINT _nx_driver_cypress_whd_initialize(NX_IP_DRIVER *driver_req_ptr)
     /* Boot cypress module and start whd driver for very first interface. */
     if (WHD_SUCCESS != whd_boot(&WhdDriver))
     {
-      WPRINT_WHD_ERROR(("can't perform initialization of whd driver and module\n"));
+      WPRINT_WHD_ERROR(("Can't perform initialization of the WHD driver and module\n"));
       ret = NX_DRIVER_ERROR;
     }
 
@@ -165,7 +173,7 @@ UINT _nx_driver_cypress_whd_initialize(NX_IP_DRIVER *driver_req_ptr)
       }
       else
       {
-        /* printf("WHD init interface done\n"); */
+        NX_DEBUG_DRIVER_SOURCE_LOG("WHD initialization interface done\n");
         CypressAliveInterfaceCount++;
         ret = NX_SUCCESS;
       }
@@ -181,7 +189,7 @@ UINT _nx_driver_cypress_whd_initialize(NX_IP_DRIVER *driver_req_ptr)
     }
     else
     {
-      /* printf("WHD init interface done\n"); */
+      NX_DEBUG_DRIVER_SOURCE_LOG("WHD initialization interface done\n");
       CypressAliveInterfaceCount++;
       ret = NX_SUCCESS;
     }
@@ -248,9 +256,7 @@ UINT _nx_driver_cypress_whd_enable(NX_IP_DRIVER *driver_req_ptr)
     whd_wifi_set_event_handler(*Ifp, (uint32_t const *) sta_link_change_events,
                                _nx_driver_cypress_whd_event_handler, NULL, &EventIndex);
 
-#ifdef NX_DEBUG
-    printf("Joining ... \"%s\"\n", myssid.value);
-#endif /* NX_DEBUG */
+    NX_DEBUG_DRIVER_SOURCE_LOG("Joining ... \"%s\"\n", myssid.value);
 
     ret = whd_wifi_join(*Ifp, (whd_ssid_t const *) &myssid, privacy,
                         (uint8_t const *) security_key, strlen(security_key));
@@ -262,9 +268,7 @@ UINT _nx_driver_cypress_whd_enable(NX_IP_DRIVER *driver_req_ptr)
   }
   else
   {
-#ifdef NX_DEBUG
-    printf("Init Access Point ... \"%s\"\n", myssid.value);
-#endif /* NX_DEBUG */
+    NX_DEBUG_DRIVER_SOURCE_LOG("Initialize the Access Point ... \"%s\"\n", myssid.value);
 
     ret = whd_wifi_init_ap(*Ifp, &myssid, WHD_SECURITY_OPEN,
                            (uint8_t const *) security_key, strlen(security_key),
@@ -312,16 +316,15 @@ UINT _nx_driver_cypress_whd_disable(NX_IP_DRIVER *driver_req_ptr)
 
 UINT _nx_driver_cypress_whd_packet_send(NX_PACKET *packet_ptr)
 {
-#ifdef NX_DEBUG
-  printf("\n\n>***\n");
+  NX_DEBUG_DRIVER_SOURCE_LOG("\n\n>***\n");
+
+#if !defined(REMOVE_DEBUG_FUNC)
   HexDump(packet_ptr->nx_packet_prepend_ptr, packet_ptr->nx_packet_length);
-#endif /* NX_DEBUG */
+#endif /* REMOVE_DEBUG_FUNC */
 
   whd_network_send_ethernet_data(*Ifp, packet_ptr);
 
-#ifdef NX_DEBUG
-  printf("\n<***\n\n");
-#endif /* NX_DEBUG */
+  NX_DEBUG_DRIVER_SOURCE_LOG("\n<***\n\n");
 
   return NX_SUCCESS;
 }
@@ -331,8 +334,21 @@ static VOID _nx_driver_cypress_whd_packet_received(VOID)
 
 }
 
+static UINT _nx_driver_cypress_whd_interface_status(NX_IP_DRIVER *driver_req_ptr)
+{
+  UINT status = NX_PTR_ERROR;
 
-#ifdef NX_DEBUG
+  if (NULL != driver_req_ptr -> nx_ip_driver_return_ptr)
+  {
+    *driver_req_ptr -> nx_ip_driver_return_ptr = (CypressAliveInterfaceCount > 0) ? NX_TRUE : NX_FALSE;
+    status = NX_SUCCESS;
+  }
+
+  return status;
+}
+
+
+#if !defined(REMOVE_DEBUG_FUNC)
 static void HexDump(const void *pData, size_t Size)
 {
   char ascii[17] = {0};
@@ -340,7 +356,7 @@ static void HexDump(const void *pData, size_t Size)
   for (size_t i = 0; i < Size; ++i)
   {
     const uint8_t data_byte = ((uint8_t *)pData)[i];
-    printf("%02"PRIx32" ", (uint32_t)data_byte);
+    NX_DEBUG_DRIVER_SOURCE_LOG("%02" PRIx32 " ", (uint32_t)data_byte);
 
     if ((data_byte >= ' ') && (data_byte <= '~'))
     {
@@ -353,25 +369,25 @@ static void HexDump(const void *pData, size_t Size)
 
     if (((i + 1) % 8 == 0) || ((i + 1) == Size))
     {
-      printf(" ");
+      NX_DEBUG_DRIVER_SOURCE_LOG(" ");
       if ((i + 1) % 16 == 0)
       {
-        printf("|  %s \n", ascii);
+        NX_DEBUG_DRIVER_SOURCE_LOG("|  %s \n", ascii);
       }
       else if (i + 1 == Size)
       {
         ascii[(i + 1) % 16] = '\0';
         if ((i + 1) % 16 <= 8)
         {
-          printf(" ");
+          NX_DEBUG_DRIVER_SOURCE_LOG(" ");
         }
         for (size_t j = (i + 1) % 16; j < 16; ++j)
         {
-          printf("   ");
+          NX_DEBUG_DRIVER_SOURCE_LOG("   ");
         }
-        printf("|  %s \n", ascii);
+        NX_DEBUG_DRIVER_SOURCE_LOG("|  %s \n", ascii);
       }
     }
   }
 }
-#endif /* NX_DEBUG */
+#endif /* REMOVE_DEBUG_FUNC */

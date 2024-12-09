@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nor_flash_block_reclaim                         PORTABLE C      */ 
-/*                                                           6.1.7        */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -83,6 +83,11 @@
 /*                                            resulting in version 6.1    */
 /*  06-02-2021     Bhupendra Naphade        Modified comment(s),          */
 /*                                            resulting in version 6.1.7  */
+/*  10-31-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            added count for minimum     */
+/*                                            erased blocks, added        */
+/*                                            obsolete count cache,       */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nor_flash_block_reclaim(LX_NOR_FLASH *nor_flash)
@@ -156,7 +161,15 @@ UINT    status;
             /* Return the error.  */
             return(status);
         }
-        
+
+        /* Determine if the erase count is at the minimum.  */
+        if (erase_count == nor_flash -> lx_nor_flash_minimum_erase_count)
+        {
+            
+            /* Yes, decrement the minimum erased block count.  */
+            nor_flash -> lx_nor_flash_minimum_erased_blocks--;
+        }
+
         /* Increment the erase count.  */
         erase_count++;            
 
@@ -225,6 +238,16 @@ UINT    status;
         /* Update parameters of this flash.  */
         nor_flash -> lx_nor_flash_free_physical_sectors =      nor_flash -> lx_nor_flash_free_physical_sectors + obsolete_sectors;
         nor_flash -> lx_nor_flash_obsolete_physical_sectors =  nor_flash -> lx_nor_flash_obsolete_physical_sectors - obsolete_sectors;
+#ifdef LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
+
+        /* Check if the block is cached by obsolete count cache.  */
+        if (erase_block < nor_flash -> lx_nor_flash_extended_cache_obsolete_count_max_block)
+        {
+
+            /* Yes, clear the obsolete count for this block.  */
+            nor_flash -> lx_nor_flash_extended_cache_obsolete_count[erase_block] =  0;
+        }
+#endif
     }
     else 
     {
@@ -489,6 +512,14 @@ UINT    status;
                 return(status);
             }
         
+            /* Determine if the erase count is at the minimum.  */
+            if (erase_count == nor_flash -> lx_nor_flash_minimum_erase_count)
+            {
+                
+                /* Yes, decrement the minimum erased block count.  */
+                nor_flash -> lx_nor_flash_minimum_erased_blocks--;
+            }
+
             /* Increment the erase count.  */
             erase_count++;            
 
@@ -557,6 +588,16 @@ UINT    status;
             /* Update parameters of this flash.  */
             nor_flash -> lx_nor_flash_free_physical_sectors =      nor_flash -> lx_nor_flash_free_physical_sectors + obsolete_sectors;
             nor_flash -> lx_nor_flash_obsolete_physical_sectors =  nor_flash -> lx_nor_flash_obsolete_physical_sectors - obsolete_sectors;
+#ifdef LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE
+
+            /* Check if the block is cached by obsolete count cache.  */
+            if (erase_block < nor_flash -> lx_nor_flash_extended_cache_obsolete_count_max_block)
+            {
+
+                /* Yes, clear the obsolete count for this block.  */
+                nor_flash -> lx_nor_flash_extended_cache_obsolete_count[erase_block] =  0;
+            }
+#endif
         }
     }
 

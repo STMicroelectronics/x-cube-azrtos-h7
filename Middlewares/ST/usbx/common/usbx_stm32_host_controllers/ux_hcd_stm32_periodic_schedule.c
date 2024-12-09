@@ -81,13 +81,11 @@ UINT  _ux_hcd_stm32_periodic_schedule(UX_HCD_STM32 *hcd_stm32)
 UX_HCD_STM32_ED     *ed;
 UX_TRANSFER         *transfer_request;
 ULONG               frame_index;
-#if defined (USBH_HAL_HUB_SPLIT_SUPPORTED)
 UX_DEVICE           *parent_device;
 UX_ENDPOINT         *endpoint;
 UX_ENDPOINT         *parent_endpoint;
 ULONG               ep_schedule = 1U;
 USHORT              port_status_change_bits;
-#endif /* defined (USBH_HAL_HUB_SPLIT_SUPPORTED) */
 
     /* Get the current frame number.  */
     frame_index = HAL_HCD_GetCurrentFrame(hcd_stm32 -> hcd_handle);
@@ -129,8 +127,8 @@ USHORT              port_status_change_bits;
             {
               /* If it's scheduled each SOF/uSOF, the request should be submitted
               * immediately after packet is done. This is performed in callback.  */
-              if (ed -> ux_stm32_ed_interval_mask == 0)
-                ed -> ux_stm32_ed_sch_mode = 0;
+              if (ed -> ux_stm32_ed_interval_mask == 0U)
+                ed -> ux_stm32_ed_sch_mode = 0U;
 
               /* For ISO OUT, packet size is from request variable,
               * otherwise, use request length.  */
@@ -160,7 +158,7 @@ USHORT              port_status_change_bits;
                     Usually, since HUBs can be bus powered the maximum number of ports is 4.
                     We must be taking precautions on how we read the buffer content for
                     big endian machines.  */
-                    if (parent_endpoint->ux_endpoint_transfer_request.ux_transfer_request_actual_length == 1)
+                    if (parent_endpoint->ux_endpoint_transfer_request.ux_transfer_request_actual_length == 1U)
                       port_status_change_bits = *(USHORT *) parent_endpoint->ux_endpoint_transfer_request.ux_transfer_request_data_pointer;
                     else
                       port_status_change_bits = (USHORT)_ux_utility_short_get(parent_endpoint->ux_endpoint_transfer_request.ux_transfer_request_data_pointer);
@@ -180,7 +178,7 @@ USHORT              port_status_change_bits;
                                          ed -> ux_stm32_ed_dir,
                                          ed -> ux_stm32_ed_type, USBH_PID_DATA,
                                          ed -> ux_stm32_ed_data + transfer_request -> ux_transfer_request_actual_length,
-                                         ed -> ux_stm32_ed_packet_length, 0);
+                                         ed -> ux_stm32_ed_packet_length, 0U);
               }
             }
           }
@@ -204,8 +202,8 @@ USHORT              port_status_change_bits;
 
             /* If it's scheduled each SOF/uSOF, the request should be submitted
             * immediately after packet is done. This is performed in callback.  */
-            if (ed -> ux_stm32_ed_interval_mask == 0)
-              ed -> ux_stm32_ed_sch_mode = 0;
+            if (ed -> ux_stm32_ed_interval_mask == 0U)
+              ed -> ux_stm32_ed_sch_mode = 0U;
 
             /* For ISO OUT, packet size is from request variable,
             * otherwise, use request length.  */
@@ -217,14 +215,46 @@ USHORT              port_status_change_bits;
             /* Prepare transactions.  */
             _ux_hcd_stm32_request_trans_prepare(hcd_stm32, ed, transfer_request);
 
+            /* Get the pointer to the Endpoint.  */
+            endpoint = (UX_ENDPOINT *) transfer_request -> ux_transfer_request_endpoint;
 
-            /* Call HAL driver to submit the transfer request.  */
-            HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel,
-                                     ed -> ux_stm32_ed_dir,
-                                     ed -> ux_stm32_ed_type, USBH_PID_DATA,
-                                     transfer_request -> ux_transfer_request_data_pointer +
-                                       transfer_request -> ux_transfer_request_actual_length,
-                                       ed -> ux_stm32_ed_packet_length, 0);
+            /* Check if device connected to hub  */
+            if (endpoint->ux_endpoint_device->ux_device_parent != NULL)
+            {
+              parent_device = endpoint->ux_endpoint_device->ux_device_parent;
+              if (parent_device->ux_device_current_configuration->ux_configuration_first_interface->ux_interface_descriptor.bInterfaceClass == 0x9U)
+              {
+                parent_endpoint = parent_device->ux_device_current_configuration->ux_configuration_first_interface->ux_interface_first_endpoint;
+
+                if (parent_endpoint->ux_endpoint_transfer_request.ux_transfer_request_actual_length != 0U)
+                {
+                  /* The interrupt pipe buffer contains the status change for each of the ports
+                  the length of the buffer can be 1 or 2 depending on the number of ports.
+                  Usually, since HUBs can be bus powered the maximum number of ports is 4.
+                  We must be taking precautions on how we read the buffer content for
+                  big endian machines.  */
+                  if (parent_endpoint->ux_endpoint_transfer_request.ux_transfer_request_actual_length == 1U)
+                    port_status_change_bits = *(USHORT *) parent_endpoint->ux_endpoint_transfer_request.ux_transfer_request_data_pointer;
+                  else
+                    port_status_change_bits = (USHORT)_ux_utility_short_get(parent_endpoint->ux_endpoint_transfer_request.ux_transfer_request_data_pointer);
+
+                  if ((port_status_change_bits & (0x1U << endpoint->ux_endpoint_device->ux_device_port_location)) != 0U)
+                  {
+                    ep_schedule = 0U;
+                  }
+                }
+              }
+            }
+
+            if ((endpoint->ux_endpoint_device->ux_device_state == UX_DEVICE_CONFIGURED) && (ep_schedule != 0U))
+            {
+              /* Call HAL driver to submit the transfer request.  */
+              HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel,
+                                       ed -> ux_stm32_ed_dir,
+                                       ed -> ux_stm32_ed_type, USBH_PID_DATA,
+                                       ed -> ux_stm32_ed_data + transfer_request -> ux_transfer_request_actual_length,
+                                       ed -> ux_stm32_ed_packet_length, 0U);
+            }
           }
         }
       }

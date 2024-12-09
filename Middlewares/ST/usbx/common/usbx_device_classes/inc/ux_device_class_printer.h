@@ -24,7 +24,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */
 /*                                                                        */
 /*    ux_device_class_printer.h                           PORTABLE C      */
-/*                                                           6.2.0        */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -47,6 +47,14 @@
 /*  10-31-2022     Yajun xia                Modified comment(s),          */
 /*                                            added standalone support,   */
 /*                                            resulting in version 6.2.0  */
+/*  03-08-2023     Yajun xia                Modified comment(s),          */
+/*                                            added error checks support, */
+/*                                            resulting in version 6.2.1  */
+/*  10-31-2023     Yajun Xia, CQ Xiao       Modified comment(s),          */
+/*                                            added a new mode to manage  */
+/*                                            endpoint buffer in classes, */
+/*                                            fixed error checking issue, */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -63,9 +71,43 @@ extern   "C" {
 
 #endif
 
+/* Internal option: enable the basic USBX error checking. This define is typically used
+   while debugging application.  */
+#if defined(UX_ENABLE_ERROR_CHECKING) && !defined(UX_DEVICE_CLASS_PRINTER_ENABLE_ERROR_CHECKING)
+#define UX_DEVICE_CLASS_PRINTER_ENABLE_ERROR_CHECKING
+#endif
+
+
+/* Option: defined, it enables zero copy support (works if PRINTER owns endpoint buffer).
+    Defined, it enables zero copy for bulk in/out endpoints (write/read). In this case, the endpoint
+    buffer is not allocated in class, application must provide the buffer for read/write, and the
+    buffer must meet device controller driver (DCD) buffer requirements (e.g., aligned and cache
+    safe if buffer is for DMA).
+ */
+/* #define UX_DEVICE_CLASS_PRINTER_ZERO_COPY  */
+
+
 /* Defined, _write is pending ZLP automatically (complete transfer) after buffer is sent.  */
 
 /* #define UX_DEVICE_CLASS_PRINTER_WRITE_AUTO_ZLP  */
+
+
+/* Option: bulk out endpoint / read buffer size, must be larger than max packet size in framework, and aligned in 4-bytes.  */
+#ifndef UX_DEVICE_CLASS_PRINTER_READ_BUFFER_SIZE
+#define UX_DEVICE_CLASS_PRINTER_READ_BUFFER_SIZE                         512
+#endif
+
+/* Option: bulk in endpoint / write buffer size, must be larger than max packet size in framework, and aligned in 4-bytes.  */
+#ifndef UX_DEVICE_CLASS_PRINTER_WRITE_BUFFER_SIZE
+#define UX_DEVICE_CLASS_PRINTER_WRITE_BUFFER_SIZE                        UX_SLAVE_REQUEST_DATA_MAX_LENGTH
+#endif
+
+
+/* Internal: check if class own endpoint buffer  */
+#if (UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1) &&                                   \
+    (!defined(UX_DEVICE_CLASS_PRINTER_ZERO_COPY))
+#define UX_DEVICE_CLASS_PRINTER_OWN_ENDPOINT_BUFFER
+#endif
 
 
 /* Define Printer Class USB Class constants.  */
@@ -124,6 +166,9 @@ typedef struct UX_DEVICE_CLASS_PRINTER_STRUCT
     UX_SLAVE_INTERFACE      *ux_device_class_printer_interface;
     UX_SLAVE_ENDPOINT       *ux_device_class_printer_endpoint_out;
     UX_SLAVE_ENDPOINT       *ux_device_class_printer_endpoint_in;
+#if UX_DEVICE_ENDPOINT_BUFFER_OWNER == 1
+    UCHAR                   *ux_device_class_printer_endpoint_buffer;
+#endif
     ULONG                   ux_device_class_printer_port_status;
     UX_DEVICE_CLASS_PRINTER_PARAMETER
                             ux_device_class_printer_parameter;
@@ -148,6 +193,14 @@ typedef struct UX_DEVICE_CLASS_PRINTER_STRUCT
 #endif
 } UX_DEVICE_CLASS_PRINTER;
 
+/* Define PRINTER endpoint buffer settings (when PRINTER owns buffer).  */
+#define UX_DEVICE_CLASS_PRINTER_ENDPOINT_BUFFER_SIZE_CALC_OVERFLOW \
+    (UX_OVERFLOW_CHECK_ADD_ULONG(UX_DEVICE_CLASS_PRINTER_READ_BUFFER_SIZE,      \
+                                 UX_DEVICE_CLASS_PRINTER_WRITE_BUFFER_SIZE))
+#define UX_DEVICE_CLASS_PRINTER_ENDPOINT_BUFFER_SIZE    (UX_DEVICE_CLASS_PRINTER_READ_BUFFER_SIZE + UX_DEVICE_CLASS_PRINTER_WRITE_BUFFER_SIZE)
+#define UX_DEVICE_CLASS_PRINTER_READ_BUFFER(ecm)        ((ecm)->ux_device_class_printer_endpoint_buffer)
+#define UX_DEVICE_CLASS_PRINTER_WRITE_BUFFER(ecm)       (UX_DEVICE_CLASS_PRINTER_READ_BUFFER(ecm) + UX_DEVICE_CLASS_PRINTER_READ_BUFFER_SIZE)
+
 
 /* Define Device Printer Class prototypes.  */
 
@@ -167,23 +220,43 @@ UINT  _ux_device_class_printer_read(UX_DEVICE_CLASS_PRINTER *printer, UCHAR *buf
 
 UINT  _ux_device_class_printer_ioctl(UX_DEVICE_CLASS_PRINTER *printer, ULONG ioctl_function,
                                     VOID *parameter);
-#if defined(UX_DEVICE_STANDALONE)
+
 UINT  _ux_device_class_printer_write_run(UX_DEVICE_CLASS_PRINTER *printer, UCHAR *buffer,
                                 ULONG requested_length, ULONG *actual_length);
 UINT  _ux_device_class_printer_read_run(UX_DEVICE_CLASS_PRINTER *printer, UCHAR *buffer,
                                 ULONG requested_length, ULONG *actual_length);
-#endif
+
+UINT  _uxe_device_class_printer_initialize(UX_SLAVE_CLASS_COMMAND *command);
+UINT  _uxe_device_class_printer_read(UX_DEVICE_CLASS_PRINTER *printer, UCHAR *buffer,
+                                ULONG requested_length, ULONG *actual_length);
+UINT  _uxe_device_class_printer_write(UX_DEVICE_CLASS_PRINTER *printer, UCHAR *buffer,
+                                ULONG requested_length, ULONG *actual_length);
+UINT  _uxe_device_class_printer_ioctl(UX_DEVICE_CLASS_PRINTER *printer, ULONG ioctl_function,
+                                    VOID *parameter);
+UINT  _uxe_device_class_printer_write_run(UX_DEVICE_CLASS_PRINTER *printer, UCHAR *buffer,
+                                ULONG requested_length, ULONG *actual_length);
+UINT  _uxe_device_class_printer_read_run(UX_DEVICE_CLASS_PRINTER *printer, UCHAR *buffer,
+                                ULONG requested_length, ULONG *actual_length);
 
 /* Define Device Printer Class API prototypes.  */
+#if defined(UX_DEVICE_CLASS_PRINTER_ENABLE_ERROR_CHECKING)
+
+#define ux_device_class_printer_entry               _ux_device_class_printer_entry
+#define ux_device_class_printer_read                _uxe_device_class_printer_read
+#define ux_device_class_printer_write               _uxe_device_class_printer_write
+#define ux_device_class_printer_ioctl               _uxe_device_class_printer_ioctl
+#define ux_device_class_printer_read_run            _uxe_device_class_printer_read_run
+#define ux_device_class_printer_write_run           _uxe_device_class_printer_write_run
+
+#else
 
 #define ux_device_class_printer_entry               _ux_device_class_printer_entry
 #define ux_device_class_printer_read                _ux_device_class_printer_read
 #define ux_device_class_printer_write               _ux_device_class_printer_write
 #define ux_device_class_printer_ioctl               _ux_device_class_printer_ioctl
-
-#if defined(UX_DEVICE_STANDALONE)
 #define ux_device_class_printer_read_run            _ux_device_class_printer_read_run
 #define ux_device_class_printer_write_run           _ux_device_class_printer_write_run
+
 #endif
 
 /* Determine if a C++ compiler is being used.  If so, complete the standard

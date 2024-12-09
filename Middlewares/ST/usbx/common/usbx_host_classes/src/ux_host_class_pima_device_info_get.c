@@ -35,7 +35,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_host_class_pima_device_info_get                 PORTABLE C      */
-/*                                                           6.1.12       */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -79,6 +79,9 @@
 /*  07-29-2022     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            fixed DeviceInfo extract,   */
 /*                                            resulting in version 6.1.12 */
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            fixed compile warnings,     */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT  _ux_host_class_pima_device_info_get(UX_HOST_CLASS_PIMA *pima,
@@ -169,7 +172,7 @@ UINT                                 status;
             else
             {
                 array_length <<= 1;
-                array_length += sizeof(ULONG);
+                array_length += (ULONG)sizeof(ULONG);
             }
         }
 
@@ -190,7 +193,7 @@ UINT                                 status;
             else
             {
                 array_length <<= 1;
-                array_length += sizeof(ULONG);
+                array_length += (ULONG)sizeof(ULONG);
             }
         }
 
@@ -211,7 +214,7 @@ UINT                                 status;
             else
             {
                 array_length <<= 1;
-                array_length += sizeof(ULONG);
+                array_length += (ULONG)sizeof(ULONG);
             }
         }
 
@@ -232,7 +235,7 @@ UINT                                 status;
             else
             {
                 array_length <<= 1;
-                array_length += sizeof(ULONG);
+                array_length += (ULONG)sizeof(ULONG);
             }
         }
 
@@ -253,7 +256,7 @@ UINT                                 status;
             else
             {
                 array_length <<= 1;
-                array_length += sizeof(ULONG);
+                array_length += (ULONG)sizeof(ULONG);
             }
         }
 
@@ -359,4 +362,54 @@ UINT                                 status;
 
     /* Return completion status.  */
     return(status);
+}
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _uxe_host_class_pima_device_info_get                PORTABLE C      */
+/*                                                           6.3.0        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Yajun Xia, Microsoft Corporation                                    */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks errors in pima device info get function call.  */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    pima                                  Pointer to pima class         */
+/*    pima_device                           Device structure to fill      */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    Completion Status                                                   */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_host_class_pima_device_info_get   Get pima device info          */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    USB application                                                     */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  10-31-2023        Yajun xia             Initial Version 6.3.0         */
+/*                                                                        */
+/**************************************************************************/
+UINT  _uxe_host_class_pima_device_info_get(UX_HOST_CLASS_PIMA *pima,
+                                          UX_HOST_CLASS_PIMA_DEVICE *pima_device)
+{
+
+    /* Sanity Checks.  */
+    if ((pima == UX_NULL) || (pima_device == UX_NULL))
+        return(UX_INVALID_PARAMETER);
+
+    /* Call the actual pima device info get function.  */
+    return(_ux_host_class_pima_device_info_get(pima, pima_device));
 }

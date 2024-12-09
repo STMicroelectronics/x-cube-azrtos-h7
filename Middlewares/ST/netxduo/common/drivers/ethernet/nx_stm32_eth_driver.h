@@ -35,6 +35,12 @@ extern   "C" {
 #endif
 
 
+/* Include NetX Link Layer header file, if not already.  */
+
+#ifndef _NX_LINK_H_
+#include "nx_link.h"
+#endif
+
 /* Determine if the driver's source file is being compiled. The constants and typdefs are only valid within
    the driver's source file compilation.  */
 
@@ -75,6 +81,47 @@ extern   "C" {
     p -> nx_packet_length =  p -> nx_packet_length - NX_DRIVER_ETHERNET_FRAME_SIZE;    \
 }
 
+/**************************************************************************/
+/* Cache maintenance. */
+/**************************************************************************/
+#if defined(__CORTEX_M)
+#if (defined (__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1U))
+#define invalidate_cache_by_addr(__ptr__, __size__)                  SCB_InvalidateDCache_by_Addr((void *)(__ptr__), (int32_t)(__size__))
+#define clean_cache_by_addr(__ptr__, __size__)                       SCB_CleanDCache_by_Addr((uint32_t *)(__ptr__), (int32_t)(__size__))
+#else
+#define invalidate_cache_by_addr(__ptr__, __size__)
+#define clean_cache_by_addr(__ptr__, __size__)
+#endif
+#else
+#if defined(DATA_CACHE_ENABLE) && (DATA_CACHE_ENABLE == 1U)
+__STATIC_FORCEINLINE void __invalidate_cache_by_addr(uint32_t start, uint32_t size)
+{
+  uint32_t current = start & ~31U;
+  uint32_t end = (start + size + 31U) & ~31U;
+  while (current < end)
+  {
+    L1C_CleanInvalidateDCacheMVA((void*)current); /* We clean also because buffers are not 32-byte aligned and read is done after this anyway. */
+    current += 32U;
+  }
+}
+
+__STATIC_FORCEINLINE void __clean_cache_by_addr(uint32_t start, uint32_t size)
+{
+  uint32_t current = start & ~31U;
+  uint32_t end = (start + size + 31U) & ~31U;
+  while (current < end)
+  {
+    L1C_CleanDCacheMVA((void*)current);
+    current += 32U;
+  }
+}
+#define invalidate_cache_by_addr(__ptr__, __size__) __invalidate_cache_by_addr((uint32_t)(__ptr__), (uint32_t)(__size__))
+#define clean_cache_by_addr(__ptr__, __size__) __clean_cache_by_addr((uint32_t)(__ptr__), (uint32_t)(__size__))
+#else
+#define invalidate_cache_by_addr(__ptr__, __size__)
+#define clean_cache_by_addr(__ptr__, __size__)
+#endif
+#endif
 
 /****** DRIVER SPECIFIC ****** Start of part/vendor specific constants area.  Include any such constants here!  */
 

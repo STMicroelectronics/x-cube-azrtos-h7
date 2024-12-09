@@ -398,7 +398,7 @@ USB_NETWORK_DEVICE_TYPE *usb_network_device;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_network_driver_entry                            PORTABLE C      */ 
-/*                                                           6.1.12       */
+/*                                                           6.2.1        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -438,6 +438,9 @@ USB_NETWORK_DEVICE_TYPE *usb_network_device;
 /*  07-29-2022     Yajun Xia                Modified comment(s),          */
 /*                                            fixed ipv6 support issue,   */
 /*                                            resulting in version 6.1.12 */
+/*  03-08-2023     Yajun Xia                Modified comment(s),          */
+/*                                            fixed build issue with NETX,*/
+/*                                            resulting in version 6.2.1  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -626,12 +629,13 @@ UINT                            i;
                 }
                 else
                 {
+#ifdef FEATURE_NX_IPV6
                     if (packet_ptr -> nx_packet_ip_version == NX_IP_VERSION_V4)
+#endif /* FEATURE_NX_IPV6 */
                         *(ethernet_frame_ptr+3) |= NX_ETHERNET_IP;
 #ifdef FEATURE_NX_IPV6
                     else if (packet_ptr -> nx_packet_ip_version == NX_IP_VERSION_V6)
                         *(ethernet_frame_ptr+3) |= NX_ETHERNET_IPV6;
-#endif /* FEATURE_NX_IPV6 */
                     else 
                     {
                         /* Unknown IP version */
@@ -640,6 +644,7 @@ UINT                            i;
                         nx_ip_driver  -> nx_ip_driver_status =  NX_NOT_SUCCESSFUL;        
                         break;
                     }
+#endif /* FEATURE_NX_IPV6 */
                 }
 
                 /* Endian swapping if NX_LITTLE_ENDIAN is defined.  */
@@ -738,7 +743,7 @@ UINT                            i;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _ux_network_driver_packet_received                  PORTABLE C      */ 
-/*                                                           6.1.12       */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -776,6 +781,10 @@ UINT                            i;
 /*  07-29-2022     Yajun Xia                Modified comment(s),          */
 /*                                            fixed ipv6 support issue,   */
 /*                                            resulting in version 6.1.12 */
+/*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            checked packet data length  */
+/*                                            before process the packet,  */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -795,6 +804,18 @@ NX_IP           *nx_ip;
         nx_packet_release(packet_ptr);
         return;
 
+    }
+
+    /* Check if the packet is valid for ethernet header process.  */
+    if (packet_ptr -> nx_packet_length < NX_ETHERNET_SIZE)
+    {
+
+        /* We received a malformed packet. Report to application.  */
+        _ux_system_error_handler(UX_SYSTEM_LEVEL_THREAD, UX_SYSTEM_CONTEXT_CLASS, UX_CLASS_MALFORMED_PACKET_RECEIVED_ERROR);
+
+        /* Invalid ethernet header... release the packet.  */
+        nx_packet_release(packet_ptr);
+        return;
     }
 
     /* Pickup the packet header to determine where the packet needs to be

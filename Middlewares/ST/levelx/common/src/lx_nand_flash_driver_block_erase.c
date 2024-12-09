@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nand_flash_driver_block_erase                   PORTABLE C      */ 
-/*                                                           6.1.7        */
+/*                                                           6.2.1       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -76,63 +76,27 @@
 /*                                            resulting in version 6.1    */
 /*  06-02-2021     Bhupendra Naphade        Modified comment(s),          */
 /*                                            resulting in version 6.1.7  */
+/*  03-08-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            removed cache support,      */
+/*                                            added new driver interface, */
+/*                                            resulting in version 6.2.1 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nand_flash_driver_block_erase(LX_NAND_FLASH *nand_flash, ULONG block, ULONG erase_count)
 {
 
-ULONG   cache_index;
-ULONG   i;
 UINT    status;
 
-
-    /* Determine if the block status cache is enabled.  */
-    if (nand_flash -> lx_nand_flash_block_status_cache != LX_NULL)
-    {
-    
-        /* Save the block status value in the cache.  */
-        nand_flash -> lx_nand_flash_block_status_cache[block] =  0xFF;       
-    }
-    
-    /* Determine if the page extra byte cache is enabled.  */
-    if (nand_flash -> lx_nand_flash_page_extra_bytes_cache != LX_NULL)
-    {
-    
-        /* Calculate the cache index.  */
-        cache_index =  (block * nand_flash -> lx_nand_flash_pages_per_block);
-
-        /* Loop to clear the entries in the page extra bytes cache.  */
-        for (i = 0; i < nand_flash -> lx_nand_flash_pages_per_block; i++)
-        {
-        
-            /* Clear each cache entry.  */
-            nand_flash -> lx_nand_flash_page_extra_bytes_cache[cache_index+i].lx_nand_page_extra_info_logical_sector =  (ULONG) 0xFFFFFFFF;
-        }
-    }
-
-    /* Determine if the page 0 cache is enabled.  */
-    if (nand_flash -> lx_nand_flash_page_0_cache != LX_NULL)
-    {
-        
-        /* Yes, the page 0 cache is enabled.  */
-
-        /* Build index to page 0 cache.  */
-        cache_index =  block * (nand_flash -> lx_nand_flash_pages_per_block + 1);
-
-        /* Clear the associated page 0 cache.  */
-        for (i = 0; i < (nand_flash -> lx_nand_flash_pages_per_block + 1); i++)
-        {
-
-            /* Clear each cache entry.  */
-            nand_flash -> lx_nand_flash_page_0_cache[cache_index+i] = (ULONG) 0xFFFFFFFF;
-        }   
-    }    
 
     /* Increment the block erases count.  */
     nand_flash -> lx_nand_flash_diagnostic_block_erases++;
 
     /* Call driver erase block function.  */
+#ifdef LX_NAND_ENABLE_CONTROL_BLOCK_FOR_DRIVER_INTERFACE
+    status =  (nand_flash -> lx_nand_flash_driver_block_erase)(nand_flash, block, erase_count);
+#else
     status =  (nand_flash -> lx_nand_flash_driver_block_erase)(block, erase_count);
+#endif
 
     /* Return status.  */
     return(status);

@@ -6,6 +6,55 @@
   *          LevelX low level drivers for STM32 devices.
   ******************************************************************************
   */
+## V3.1.0 / 17-May-2024 ###
+=================================
+Main changes
+-------------
+- Make the NOR flash base address start from a custom offset
+ + lx_stm32_ospi_driver.c
+ + lx_stm32_qspi_driver.c
+ + template/lx_stm32_ospi_driver.h
+ + template/lx_stm32_qspi_driver.h
+
+- Fix issues when calling fx_media_format() followed by fx_media_open()
+  + lx_stm32_ospi_driver.c
+  + lx_stm32_qspi_driver.c
+
+- Add missing PHYSICAL_PAGES_PER_BLOCK define in NAND driver header
+  + template/lx_stm32_nand_driver.h
+
+Dependencies:
+-------------
+- Azure RTOS LevelX V6.2.1 or higher
+
+### V3.0.0 / 17-November-2023 ###
+=================================
+Main changes
+-------------
+- Add new low level APIs for LevelX NAND template driver required by LevelX 6.2.1
+   + template/lx_stm32_nand_driver.c
+
+- Add LX_DRIVER_ERASES_FLASH_AFTER_INIT config flag to enabling NAND flash erasing by the driver
+  + template/lx_stm32_nand_driver.h
+
+- Add new config flags for LevelX NAND template driver to define NAND flash characteristics
+  + template/lx_stm32_nand_driver.h
+
+Dependencies:
+-------------
+- Azure RTOS LevelX V6.2.1
+
+### V2.1.4 / 06-October-2023 ###
+=================================
+Main changes
+-------------
+- Align LevelX NAND simulator driver against new Azure RTOS LevelX V6.2.1 version.
+
+Dependencies:
+-------------
+- Azure RTOS FileX V6.2.1
+- Azure RTOS LevelX V6.2.1
+- STM32Cube OCTOSPI and QuadSPI HAL drivers
 
 ### V2.1.3 / 28-January-2022 ###
 =================================

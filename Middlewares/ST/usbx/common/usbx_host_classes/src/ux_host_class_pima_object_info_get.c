@@ -12,8 +12,8 @@
 
 /**************************************************************************/
 /**************************************************************************/
-/**                                                                       */ 
-/** USBX Component                                                        */ 
+/**                                                                       */
+/** USBX Component                                                        */
 /**                                                                       */
 /**   PIMA Class                                                          */
 /**                                                                       */
@@ -30,55 +30,59 @@
 #include "ux_host_stack.h"
 
 
-/**************************************************************************/ 
-/*                                                                        */ 
-/*  FUNCTION                                               RELEASE        */ 
-/*                                                                        */ 
-/*    _ux_host_class_pima_object_info_get                 PORTABLE C      */ 
-/*                                                           6.1          */
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _ux_host_class_pima_object_info_get                 PORTABLE C      */
+/*                                                           6.3.0        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
 /*                                                                        */
 /*  DESCRIPTION                                                           */
-/*                                                                        */ 
-/*    This function gets the current object information block.            */ 
-/*                                                                        */ 
-/*  INPUT                                                                 */ 
-/*                                                                        */ 
-/*    pima                                       Pointer to pima class    */ 
-/*    pima_session                               Pointer to pima session  */ 
-/*    object_handle                              The object handle        */ 
-/*    object                                     Object structure to fill */ 
-/*                                                                        */ 
-/*  OUTPUT                                                                */ 
-/*                                                                        */ 
-/*    Completion Status                                                   */ 
-/*                                                                        */ 
-/*  CALLS                                                                 */ 
-/*                                                                        */ 
+/*                                                                        */
+/*    This function gets the current object information block.            */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    pima                                       Pointer to pima class    */
+/*    pima_session                               Pointer to pima session  */
+/*    object_handle                              The object handle        */
+/*    object                                     Object structure to fill */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    Completion Status                                                   */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
 /*    _ux_host_class_pima_command               Pima command function     */
-/*    _ux_utility_descriptor_parse              Unpack descriptor         */ 
-/*    _ux_utility_memory_allocate               Allocate memory           */ 
+/*    _ux_utility_descriptor_parse              Unpack descriptor         */
+/*    _ux_utility_memory_allocate               Allocate memory           */
 /*    _ux_utility_memory_copy                   Copy memory               */
-/*    _ux_utility_memory_free                   Free allocated memory     */ 
-/*                                                                        */ 
-/*  CALLED BY                                                             */ 
-/*                                                                        */ 
-/*    USB application                                                     */ 
-/*                                                                        */ 
-/*  RELEASE HISTORY                                                       */ 
-/*                                                                        */ 
-/*    DATE              NAME                      DESCRIPTION             */ 
-/*                                                                        */ 
+/*    _ux_utility_memory_free                   Free allocated memory     */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    USB application                                                     */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
 /*  05-19-2020     Chaoqiong Xiao           Initial Version 6.0           */
 /*  09-30-2020     Chaoqiong Xiao           Modified comment(s),          */
 /*                                            verified memset and memcpy  */
 /*                                            cases,                      */
 /*                                            resulting in version 6.1    */
+/*  10-31-2023     Yajun Xia                Modified comment(s),          */
+/*                                            fixed allocated buffer      */
+/*                                            pointer checking issue,     */
+/*                                            resulting in version 6.3.0  */
 /*                                                                        */
 /**************************************************************************/
-UINT  _ux_host_class_pima_object_info_get(UX_HOST_CLASS_PIMA *pima, 
+UINT  _ux_host_class_pima_object_info_get(UX_HOST_CLASS_PIMA *pima,
                                         UX_HOST_CLASS_PIMA_SESSION *pima_session,
                                         ULONG object_handle, UX_HOST_CLASS_PIMA_OBJECT *object)
 {
@@ -102,10 +106,10 @@ UINT                                 status;
 
     /* Issue command to get the object info.  1 parameter.  */
     command.ux_host_class_pima_command_nb_parameters =  1;
-    
+
     /* Parameter 1 is the Object Handle.  */
     command.ux_host_class_pima_command_parameter_1 =  object_handle;
-    
+
     /* Other parameters unused.  */
     command.ux_host_class_pima_command_parameter_2 =  0;
     command.ux_host_class_pima_command_parameter_3 =  0;
@@ -117,11 +121,11 @@ UINT                                 status;
 
     /* Allocate some DMA safe memory for receiving the object info block.  */
     object_buffer =  _ux_utility_memory_allocate(UX_SAFE_ALIGN, UX_CACHE_SAFE_MEMORY, UX_HOST_CLASS_PIMA_OBJECT_MAX_LENGTH);
-    if (object == UX_NULL)
+    if (object_buffer == UX_NULL)
         return(UX_MEMORY_INSUFFICIENT);
 
     /* Issue the command.  */
-    status = _ux_host_class_pima_command(pima, &command, UX_HOST_CLASS_PIMA_DATA_PHASE_IN , object_buffer, 
+    status = _ux_host_class_pima_command(pima, &command, UX_HOST_CLASS_PIMA_DATA_PHASE_IN , object_buffer,
                                         UX_HOST_CLASS_PIMA_OBJECT_MAX_LENGTH, UX_HOST_CLASS_PIMA_OBJECT_MAX_LENGTH);
 
     /* Check the result. If the result is OK, the object info block was read properly. */
@@ -135,7 +139,7 @@ UINT                                 status;
 
         /* Copy the object filename  field.  Point to the beginning of the object description string.  */
         object_pointer =  object_buffer + UX_HOST_CLASS_PIMA_OBJECT_VARIABLE_OFFSET;
-        
+
         /* Get the unicode string length.  */
         unicode_string_length =  ((ULONG) *object_pointer * 2) + 1;
 
@@ -144,7 +148,7 @@ UINT                                 status;
 
             /* Return error.  */
             status =  UX_MEMORY_INSUFFICIENT;
-        
+
         /* Is there enough space?  */
         if (status == UX_SUCCESS)
         {
@@ -154,7 +158,7 @@ UINT                                 status;
 
             /* Point to the next field.  */
             object_pointer += unicode_string_length;
-            
+
             /* Get the unicode string length.  */
             unicode_string_length =  ((ULONG) *object_pointer  * 2) + 1;
 
@@ -174,7 +178,7 @@ UINT                                 status;
 
             /* Point to the next field.  */
             object_pointer += unicode_string_length;
-            
+
             /* Get the unicode string length.  */
             unicode_string_length =  ((ULONG) *object_pointer  * 2) + 1;
 
@@ -194,7 +198,7 @@ UINT                                 status;
 
             /* Point to the next field.  */
             object_pointer += unicode_string_length;
-            
+
             /* Get the unicode string length.  */
             unicode_string_length =  ((ULONG) *object_pointer  * 2) + 1;
 
@@ -213,7 +217,7 @@ UINT                                 status;
             _ux_utility_memory_copy(object -> ux_host_class_pima_object_keywords, object_pointer, unicode_string_length); /* Use case of memcpy is verified. */
 
             /* Make the object closed.  */
-            object -> ux_host_class_pima_object_state = UX_HOST_CLASS_PIMA_OBJECT_STATE_CLOSED;        
+            object -> ux_host_class_pima_object_state = UX_HOST_CLASS_PIMA_OBJECT_STATE_CLOSED;
 
             /* Reset the reading\writing offset  */
             object -> ux_host_class_pima_object_offset = 0;
@@ -229,10 +233,62 @@ UINT                                 status;
         }
     }
 
-    /* Free the original object info buffer.  */                       
+    /* Free the original object info buffer.  */
     _ux_utility_memory_free(object_buffer);
-   
+
     /* Return completion status.  */
     return(status);
 }
 
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _uxe_host_class_pima_object_info_get                PORTABLE C      */
+/*                                                           6.3.0        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Yajun Xia, Microsoft Corporation                                    */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks errors in pima object info get function call.  */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    pima                                       Pointer to pima class    */
+/*    pima_session                               Pointer to pima session  */
+/*    object_handle                              The object handle        */
+/*    object                                     Object structure to fill */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    Completion Status                                                   */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_host_class_pima_object_info_get   Get pima object info          */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    USB application                                                     */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  10-31-2023        Yajun xia             Initial Version 6.3.0         */
+/*                                                                        */
+/**************************************************************************/
+UINT  _uxe_host_class_pima_object_info_get(UX_HOST_CLASS_PIMA *pima,
+                                            UX_HOST_CLASS_PIMA_SESSION *pima_session,
+                                            ULONG object_handle, UX_HOST_CLASS_PIMA_OBJECT *object)
+{
+
+    /* Sanity checks.  */
+    if ((pima == UX_NULL) || (pima_session == UX_NULL) || (object == UX_NULL))
+        return(UX_INVALID_PARAMETER);
+
+    /* Call the actual pima object info get function.  */
+    return(_ux_host_class_pima_object_info_get(pima, pima_session, object_handle, object));
+}

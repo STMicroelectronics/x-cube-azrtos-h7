@@ -6,6 +6,52 @@
   *          NetXDuo low level drivers for STM32 devices.
   ******************************************************************************
   */
+### V3.3.0 / 17-May-2024 ###
+=================================
+Main changes
+-------------
+- Use ETH_TxPacketConfigTypeDef instead of ETH_TxPacketConfig
+  + ethernet/nx_stm32_eth_driver.c
+
+- Support NX_ENABLE_VLAN flag in the ethernet driver
+  + ethernet/nx_stm32_eth_driver.c
+  + ethernet/nx_stm32_eth_driver.h
+
+- Support cache maintenance for Cortex-A7 in the ethernet driver
+  + ethernet/nx_stm32_eth_driver.c
+  + ethernet/nx_stm32_eth_driver.h
+
+- Fix default return value nx_stm32_eth_driver()
+  + ethernet/nx_stm32_eth_driver.c
+
+- Align eth driver interface with new HAL/ETH data types definition
+  + ethernet/nx_stm32_eth_driver.c
+
+- Make rtl8211xx driver generic
+  + ethernet/rtl8211/nx_stm32_phy_driver.c
+
+- Fix compile warning in netxduo wifi cypress driver
+  + wifi/cypress/nx_stm32_cypress_whd_driver.c
+
+- Remove explicit call to printf() in wifi drivers
+  + wifi/cypress/nx_driver_framework.c
+  + wifi/cypress/nx_stm32_cypress_whd_driver.c
+  + wifi/es_wifi/nx_driver_ism43362.c
+  + wifi/es_wifi/nx_driver_ism43362.h
+  + wifi/mxchip/mx_wifi_azure_rtos.c
+  + wifi/mxchip/nx_driver_emw3080.c
+  + wifi/mxchip/nx_driver_emw3080.h
+  + wifi/mxchip/nx_driver_framework.c
+  + wifi/mxchip/nx_driver_framework.h
+
+Dependencies:
+-------------
+- Azure RTOS NetXDuo V6.4.0
+- STM32CubeH7 Ethernet HAL driver V1.11.3
+- STM32CubeF4 Ethernet HAL driver V1.8.3
+- STM32CubeF7 Ethernet HAL driver V1.3.1
+- Cypress_WHD middleware 1.70.0
+- MX_WIFI component driver 2.3.4
 
 ### V3.2.0 / 09-December-2022 ###
 =================================

@@ -1,0 +1,204 @@
+
+## <b>Nx_SNTP_Client application description</b>
+
+This application provides an example of Azure RTOS NetX/NetXDuo stack usage.
+
+It shows how to develop a NetX SNTP client and connect with an STNP server to get a time update.
+
+The main entry function tx_application_define() is called by ThreadX during kernel start, at this stage, all NetX resources are created.
+
+ + A NX_PACKET_POOL is allocated.
+ + A NX_IP instance using that pool is initialized.
+ + The ARP, ICMP and UDP protocols are enabled for the NX_IP instance.
+ + An SNTP Client "SntpClient" is created.
+ + A DHCP client is created.
+
+The application then creates 2 threads with the same priorities:
+
+ + **NxAppThread** (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.
+ + **AppSNTPThread** (priority 5, PreemtionThreashold 5) : created with the TX_DONT_START flag to be started later.
+
+The **NxAppThread** starts and performs the following actions:
+
+  + Starts the DHCP client
+  + Waits for the IP address resolution
+  + Resumes the **AppSNTPThread**
+
+The **AppSNTPThread**, once started:
+
+  + Creates a dns_client with USER_DNS_ADDRESS used as DNS server.
+  + Initializes SntpClient in Unicast mode and set SNTP_SERVER_NAME predefined in app_netxduo.h.
+  + Runs SntpClient.
+  + Once a valid time update received, time will be displayed on the Hyperterminal and set to RTC.
+  + RTC time will be displayed each second on the Hyperterminal.
+
+#### <b>Expected success behavior</b>
+
+ + The board IP address is printed on the HyperTerminal.
+ + The time update sent by the SNTP server is printed on the HyperTerminal.
+ + Each second, time from RTC is printed on the HyperTerminal and the green LED is toggling.
+
+#### <b>Error behaviors</b>
+
++ The red LED is toggling to indicate any error that has occurred.
+
+#### <b>Assumptions if any</b>
+
+- The application is using the DHCP to acquire IP address, thus a DHCP server should be reachable by the board in the LAN used to test the application.
+- The application is configuring the Ethernet IP with a static predefined _MAC Address_, make sure to change it in case multiple boards are connected on the same LAN to avoid any potential network traffic issues.
+- The _MAC Address_ is defined in the `main.c`
+
+```
+void MX_ETH_Init(void)
+{
+
+  /* USER CODE BEGIN ETH_Init 0 */
+
+  /* USER CODE END ETH_Init 0 */
+
+  /* USER CODE BEGIN ETH_Init 1 */
+
+  /* USER CODE END ETH_Init 1 */
+  heth.Instance = ETH;
+  MACAddr[0] = 0x00;
+  MACAddr[1] = 0x80;
+  MACAddr[2] = 0xE1;
+  MACAddr[3] = 0x00;
+  MACAddr[4] = 0x30;
+  MACAddr[5] = 0x20;
+
+```
+
+#### <b>Known limitations</b>
+
+default NX_SNTP_CLIENT_MAX_ROOT_DISPERSION and NX_SNTP_CLIENT_MIN_SERVER_STRATUM values in "nx_user.h" may not work for some SNTP servers, they should be tuned. For example:
+
+#define NX_SNTP_CLIENT_MAX_ROOT_DISPERSION    500000
+#define NX_SNTP_CLIENT_MIN_SERVER_STRATUM     5
+
+### <b>Notes</b>
+
+ 1.  Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from Flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.
+ 2.  If the application is using the DTCM/ITCM memories (@0x20000000/ 0x0000000: not cacheable and only accessible by the Cortex M7 and the MDMA), no need for cache maintenance when the Cortex M7 and the MDMA access these RAMs. If the application needs to use DMA (or other masters) based access or requires more RAM, then the user has to:
+      - Use a non TCM SRAM. (example : D1 AXI-SRAM @ 0x24000000).
+      - Add a cache maintenance mechanism to ensure the cache coherence between CPU and other masters (DMAs,DMA2D,LTDC,MDMA).
+      - The addresses and the size of cacheable buffers (shared between CPU and other masters) must be properly defined to be aligned to L1-CACHE line size (32 bytes).
+ 3.  It is recommended to enable the cache and maintain its coherence:
+      - Depending on the use case it is also possible to configure the cache attributes using the MPU.
+      - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
+      - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
+
+#### <b>ThreadX usage hints</b>
+
+ - ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.
+ - ThreadX is configured with 100 ticks/sec by default, this should be taken into account when using delays or timeouts at application. It is always possible to reconfigure it, by updating the "TX_TIMER_TICKS_PER_SECOND" define in the "tx_user.h" file. The update should be reflected in "tx_initialize_low_level.S" file too.
+ - ThreadX is disabling all interrupts during kernel start-up to avoid any unexpected behavior, therefore all system related calls (HAL, BSP) should be done either at the beginning of the application or inside the thread entry functions.
+ - ThreadX offers the "tx_application_define()" function, that is automatically called by the tx_kernel_enter() API.
+   It is highly recommended to use it to create all applications ThreadX related resources (threads, semaphores, memory pools...)  but it should not in any way contain a system API call (HAL or BSP).
+ - Using dynamic memory allocation requires to apply some changes to the linker file.
+   ThreadX needs to pass a pointer to the first free memory location in RAM to the tx_application_define() function,
+   using the "first_unused_memory" argument.
+   This requires changes in the linker files to expose this memory location.
+    + For EWARM add the following section into the .icf file:
+     ```
+     place in RAM_region    { last section FREE_MEM };
+     ```
+    + For MDK-ARM:
+    ```
+    either define the RW_IRAM1 region in the ".sct" file
+    or modify the line below in "tx_initialize_low_level.S to match the memory region being used
+        LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
+    ```
+    + For STM32CubeIDE add the following section into the .ld file:
+    ```
+    ._threadx_heap :
+      {
+         . = ALIGN(8);
+         __RAM_segment_used_end__ = .;
+         . = . + 64K;
+         . = ALIGN(8);
+       } >RAM_D1 AT> RAM_D1
+    ```
+
+       The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
+       In the example above the ThreadX heap size is set to 64KBytes.
+       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
+       Read more in STM32CubeIDE User Guide, chapter: "Linker script".
+
+    + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
+
+#### <b>NetX Duo usage hints</b>
+
+- The ETH TX And RX descriptors are accessed by the CPU and the ETH DMA IP, thus they should not be allocated into the DTCM RAM "0x20000000".
+- Make sure to allocate them into a "Non-Cacheable" memory region to always ensure data coherency between the CPU and ETH DMA.
+- Depending on the application scenario, the total TX and RX descriptors may need to be increased by updating respectively  the "ETH_TX_DESC_CNT" and "ETH_RX_DESC_CNT" in the "stm32h7xx_hal_conf.h", to guarantee the application correct behaviour, but this will cost extra memory to allocate.
+- The NetXDuo application needs to allocate the <b> <i> NX_PACKET </i> </b> pool in a dedicated section that is  configured as either "Cacheable Write-through" for <i>STM32H72XX</i> and <i>STM32H73XX </i>,  <i>STM32H7AXX</i> and <i>STM32H7BXX </i> or non-cacheable for other STM32H7 families. Below is an example of the section declaration for different IDEs.
+   + For EWARM ".icf" file
+   ```
+   define symbol __ICFEDIT_region_NXDATA_start__  = 0x24032100;
+   define symbol __ICFEDIT_region_NXDATA_end__   = 0x2407FFFF;
+   define region NXApp_region  = mem:[from __ICFEDIT_region_NXDATA_start__ to __ICFEDIT_region_NXDATA_end__];
+   place in NXApp_region { section .NetXPoolSection};
+   ```
+   + For MDK-ARM
+   ```
+    RW_NXDriverSection 0x24032100 0x7E00  {
+  *(.NetXPoolSection)
+  }
+   ```
+   + For STM32CubeIDE ".ld" file
+   ```
+   .nx_section 0x24032100 (NOLOAD): {
+     *(.NetXPoolSection)
+     } >RAM_D1
+   ```
+  This section is then used in the <code> app_azure_rtos.c</code> file to force the <code>nx_byte_pool_buffer</code> allocation.
+
+```
+/* USER CODE BEGIN NX_Pool_Buffer */
+
+#if defined ( __ICCARM__ ) /* IAR Compiler */
+#pragma location = ".NetXPoolSection"
+
+#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
+__attribute__((section(".NetXPoolSection")))
+
+#elif defined ( __GNUC__ ) /* GNU Compiler */
+__attribute__((section(".NetXPoolSection")))
+#endif
+
+/* USER CODE END NX_Pool_Buffer */
+static UCHAR  nx_byte_pool_buffer[NX_APP_MEM_POOL_SIZE];
+static TX_BYTE_POOL nx_app_byte_pool;
+```
+
+For more details about the MPU configuration please refer to the [AN4838](https://www.st.com/resource/en/application_note/dm00272912-managing-memory-protection-unit-in-stm32-mcus-stmicroelectronics.pdf)
+
+### <b>Keywords</b>
+
+RTOS, Network, ThreadX, NetXDuo, SNTP, UART
+
+### Hardware and Software environment</b>
+
+  - This application runs on STM32H747xx devices
+  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards revision MB1520-H747I-B02
+    and can be easily tailored to any other supported device and development board.
+  - This application uses USART1 to display logs, the hyperterminal configuration is as follows:
+      - BaudRate = 115200 baud
+      - Word Length = 8 Bits
+      - Stop Bit = 1
+      - Parity = None
+      - Flow control = None
+
+###  <b>How to use it ?</b>
+
+In order to make the program work, you must do the following :
+
+ - Open your preferred toolchain
+ - Edit the file app_netxduo.h : define the USER_DNS_ADDRESS, define the SNTP server name to connect to.
+ - For each target configuration (Nx_SNTP_Client_CM4 first then Nx_SNTP_Client_CM7) :
+     - Rebuild all files
+     - Load images into target memory
+ - After loading the two images, you have to reset the board in order to boot (Cortex-M7) and CPU2 (Cortex-M4) at once.
+ - Run the application

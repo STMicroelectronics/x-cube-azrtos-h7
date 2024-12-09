@@ -9,17 +9,10 @@
 /*                                                                        */
 /**************************************************************************/
 
-/* Version: 6.1 */
 #include <stdio.h>
 #include <stdarg.h>
 
-
-#ifndef NX_AZURE_DISABLE_IOT_SECURITY_MODULE
-#include "nx_azure_iot_security_module.h"
-#endif /* NX_AZURE_DISABLE_IOT_SECURITY_MODULE */
-
 #include "nx_azure_iot.h"
-
 #include "azure/core/internal/az_log_internal.h"
 
 #ifndef NX_AZURE_IOT_WAIT_OPTION
@@ -35,6 +28,7 @@ NX_AZURE_IOT *_nx_azure_iot_created_ptr;
 /* Define the callback for logging.  */
 static VOID(*_nx_azure_iot_log_callback)(az_log_classification classification, UCHAR *msg, UINT msg_len);
 
+extern UINT _nxd_mqtt_client_packet_allocate(NXD_MQTT_CLIENT *client_ptr, NX_PACKET **packet_ptr, ULONG wait_option);
 extern UINT _nxd_mqtt_client_publish_packet_send(NXD_MQTT_CLIENT *client_ptr, NX_PACKET *packet_ptr,
                                                  USHORT packet_id, UINT QoS, ULONG wait_option);
 
@@ -276,17 +270,6 @@ UINT status;
     /* Set created IoT pointer.  */
     _nx_azure_iot_created_ptr = nx_azure_iot_ptr;
 
-#ifndef NX_AZURE_DISABLE_IOT_SECURITY_MODULE
-    /* Enable Azure IoT Security Module.  */
-    status = nx_azure_iot_security_module_enable(nx_azure_iot_ptr);
-    if (status)
-    {
-        LogError(LogLiteralArgs("IoT failed to enable IoT Security Module, status: %d"), status);
-        nx_azure_iot_delete(nx_azure_iot_ptr);
-        return(status);
-    }
-#endif /* NX_AZURE_DISABLE_IOT_SECURITY_MODULE */
-
     return(NX_AZURE_IOT_SUCCESS);
 }
 
@@ -305,16 +288,6 @@ UINT status;
         LogError(LogLiteralArgs("IoT delete fail: Resource NOT DELETED"));
         return(NX_AZURE_IOT_DELETE_ERROR);
     }
-
-#ifndef NX_AZURE_DISABLE_IOT_SECURITY_MODULE
-    /* Disable IoT Security Module.  */
-    status = nx_azure_iot_security_module_disable(nx_azure_iot_ptr);
-    if (status != NX_AZURE_IOT_SUCCESS)
-    {
-        LogError(LogLiteralArgs("IoT failed to disable IoT Security Module, status: %d"), status);
-        return(status);
-    }
-#endif /* NX_AZURE_DISABLE_IOT_SECURITY_MODULE */
 
     /* Deregister SDK module on cloud helper.  */
     nx_cloud_module_deregister(&(nx_azure_iot_ptr -> nx_azure_iot_cloud), &(nx_azure_iot_ptr -> nx_azure_iot_cloud_module));
@@ -363,9 +336,9 @@ UINT nx_azure_iot_publish_packet_get(NX_AZURE_IOT *nx_azure_iot_ptr, NXD_MQTT_CL
 {
 UINT status;
 
-    status = nx_secure_tls_packet_allocate(&(client_ptr -> nxd_mqtt_tls_session),
-                                           nx_azure_iot_ptr -> nx_azure_iot_pool_ptr,
-                                           packet_pptr, wait_option);
+    NX_PARAMETER_NOT_USED(nx_azure_iot_ptr);
+
+    status = _nxd_mqtt_client_packet_allocate(client_ptr, packet_pptr, wait_option);
     if (status)
     {
         LogError(LogLiteralArgs("Create publish packet failed"));
@@ -422,6 +395,7 @@ UINT status;
     /* Do nothing if the client is not connected.  */
     if (client_ptr -> nxd_mqtt_client_state != NXD_MQTT_CLIENT_STATE_CONNECTED)
     {
+        tx_mutex_put(client_ptr -> nxd_mqtt_client_mutex_ptr);
         LogError(LogLiteralArgs("MQTT NOT CONNECTED"));
         return(NX_AZURE_IOT_DISCONNECTED);
     }

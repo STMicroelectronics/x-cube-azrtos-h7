@@ -34,6 +34,11 @@ extern "C" {
 
 /* the OctoSPI instance, default value set to 0 */
 #define LX_STM32_OSPI_INSTANCE                           0
+
+/* define an offset from which to start accessing the NOR Flash memory.
+   It must be a multiple of LX_STM32_OSPI_SECTOR_SIZE, default value set to 0.
+ */
+#define LX_STM32_OSPI_BASE_ADDRESS                       0
 #define LX_STM32_OSPI_DEFAULT_TIMEOUT                    10 * TX_TIMER_TICKS_PER_SECOND
 #define LX_STM32_DEFAULT_SECTOR_SIZE                     LX_STM32_OSPI_SECTOR_SIZE
 

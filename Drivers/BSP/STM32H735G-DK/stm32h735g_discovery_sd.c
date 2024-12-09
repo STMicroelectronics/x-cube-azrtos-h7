@@ -469,7 +469,7 @@ int32_t BSP_SD_ReadBlocks(uint32_t Instance, uint32_t *pData, uint32_t BlockIdx,
   */
 int32_t BSP_SD_WriteBlocks(uint32_t Instance, uint32_t *pData, uint32_t BlockIdx, uint32_t BlocksNbr)
 {
-  uint32_t timeout = SD_READ_TIMEOUT*BlocksNbr;
+  uint32_t timeout = SD_WRITE_TIMEOUT*BlocksNbr;
   int32_t ret;
 
   if(Instance >= SD_INSTANCES_NBR)

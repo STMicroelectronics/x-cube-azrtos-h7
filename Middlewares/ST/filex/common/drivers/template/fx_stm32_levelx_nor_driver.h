@@ -54,8 +54,16 @@ extern "C" {
 
 #define CUSTOM_DRIVER_ID          0xABCDEF
 #define NOR_CUSTOM_DRIVER_NAME    "NOR CUSTOM DRIVER"
-#include "lx_nor_custom_driver.h"
-#define LX_NOR_CUSTOM_DRIVERS   {.name = "NOR CUSTOM DRIVER", .id = CUSTOM_DRIVER_ID, .nor_driver_initialize = lx_nor_custom_driver_initialize}
+#include "lx_stm32_nor_custom_driver.h"
+
+#if !defined(LX_NOR_DISABLE_EXTENDED_CACHE) && (defined(LX_NOR_ENABLE_OBSOLETE_COUNT_CACHE) || defined(LX_NOR_ENABLE_MAPPING_BITMAP))
+// if the extended cache feature is enabled, the extended cache buffer and cache size should be defined in driver implementation file
+extern UCHAR lx_stm32_nor_custom_extended_cache_memory[LX_STM32_CUSTOM_OBSOLETE_COUNT_CACHE_SIZE + LX_STM32_CUSTOM_MAPPING_BITMAP_CACHE_SIZE];
+#define LX_NOR_CUSTOM_DRIVERS   {.name = "NOR CUSTOM DRIVER", .id = CUSTOM_DRIVER_ID, .nor_driver_initialize = lx_stm32_nor_custom_driver_initialize, \
+                                 .extended_nor_cache = lx_stm32_nor_custom_extended_cache_memory, .extended_nor_cache_size = sizeof(lx_stm32_nor_custom_extended_cache_memory)}
+#else
+#define LX_NOR_CUSTOM_DRIVERS   {.name = "NOR CUSTOM DRIVER", .id = CUSTOM_DRIVER_ID, .nor_driver_initialize = lx_stm32_nor_custom_driver_initialize}
+#endif
  */
 
 /* USER CODE BEIGN NOR_CUSTOM_DRIVERS */

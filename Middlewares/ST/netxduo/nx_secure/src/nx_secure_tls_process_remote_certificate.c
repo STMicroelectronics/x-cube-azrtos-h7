@@ -31,7 +31,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_secure_tls_process_remote_certificate           PORTABLE C      */
-/*                                                           6.1.11       */
+/*                                                           6.2.1        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -87,12 +87,19 @@
 /*  04-25-2022     Timothy Stapko           Modified comment(s),          */
 /*                                            removed unnecessary code,   */
 /*                                            resulting in version 6.1.11 */
+/*  03-08-2023     Yanwu Cai                Modified comment(s),          */
+/*                                            fixed compiler errors when  */
+/*                                            x509 is disabled,           */
+/*                                            initialized metadata for    */
+/*                                            remote certificate,         */
+/*                                            resulting in version 6.2.1  */
 /*                                                                        */
 /**************************************************************************/
 UINT _nx_secure_tls_process_remote_certificate(NX_SECURE_TLS_SESSION *tls_session,
                                                UCHAR *packet_buffer, UINT message_length,
                                                UINT data_length)
 {
+#ifndef NX_SECURE_DISABLE_X509
 UINT                 length;
 UINT                 total_length;
 UINT                 cert_length = 0;
@@ -377,6 +384,17 @@ ULONG                cert_buf_size;
         /* Copy the certificate data to the end of the certificate buffer or use an allocated certificate. */
         certificate -> nx_secure_x509_certificate_raw_data_length = endpoint_length;
         NX_SECURE_MEMCPY(certificate->nx_secure_x509_certificate_raw_data, endpoint_raw_ptr, endpoint_length); /* Use case of memcpy is verified.  lgtm[cpp/banned-api-usage-required-any] */
+
+        /* Assign the TLS Session metadata areas to the certificate for later use. */
+        certificate -> nx_secure_x509_public_cipher_metadata_area = tls_session -> nx_secure_public_cipher_metadata_area;
+        certificate -> nx_secure_x509_public_cipher_metadata_size = tls_session -> nx_secure_public_cipher_metadata_size;
+
+        certificate -> nx_secure_x509_hash_metadata_area = tls_session -> nx_secure_hash_mac_metadata_area;
+        certificate -> nx_secure_x509_hash_metadata_size = tls_session -> nx_secure_hash_mac_metadata_size;
+
+        /* Assign the cipher table from the parent TLS session. */
+        certificate -> nx_secure_x509_cipher_table = tls_session -> nx_secure_tls_crypto_table -> nx_secure_tls_x509_cipher_table;
+        certificate -> nx_secure_x509_cipher_table_size = tls_session -> nx_secure_tls_crypto_table -> nx_secure_tls_x509_cipher_table_size;
         
         /* Release the protection. */
         tx_mutex_put(&_nx_secure_tls_protection);
@@ -407,6 +425,14 @@ ULONG                cert_buf_size;
     tls_session -> nx_secure_tls_client_state = NX_SECURE_TLS_CLIENT_STATE_SERVER_CERTIFICATE;
 
     return(status);
+#endif
+#else
+    NX_PARAMETER_NOT_USED(tls_session);
+    NX_PARAMETER_NOT_USED(packet_buffer);
+    NX_PARAMETER_NOT_USED(message_length);
+    NX_PARAMETER_NOT_USED(data_length);
+
+    return(NX_NOT_SUPPORTED);
 #endif
 }
 

@@ -33,7 +33,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define USBX_MEMORY_SIZE          (7 * 1024)
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -42,165 +42,250 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-/* USER CODE BEGIN PV */
+
+/* USER CODE BEGIN UX_Device_Memory_Buffer */
 #if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = 0x24029000
-#elif defined ( __CC_ARM ) /* MDK ARM Compiler */
+#pragma location = ".UsbxPoolSection"
+#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
 __attribute__((section(".UsbxPoolSection")))
 #elif defined ( __GNUC__ ) /* GNU Compiler */
 __attribute__((section(".UsbxPoolSection")))
 #endif
-static CHAR ux_system_memory_pool[USBX_MEMORY_SIZE];
-UX_SLAVE_CLASS_CDC_ACM_PARAMETER    cdc_acm_parameter;
+/* USER CODE END UX_Device_Memory_Buffer */
+#if defined ( __ICCARM__ )
+#pragma data_alignment=4
+#endif
+__ALIGN_BEGIN static UCHAR ux_device_memory_buffer[USBX_DEVICE_APP_MEMORY_BUFFER_SIZE] __ALIGN_END;
+
+static ULONG cdc_acm_interface_number;
+static ULONG cdc_acm_configuration_number;
+static UX_SLAVE_CLASS_CDC_ACM_PARAMETER cdc_acm_parameter;
+
+/* USER CODE BEGIN PV */
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-VOID *  _tx_thread_system_stack_ptr;
+
 /* USER CODE END PFP */
 
 /**
-  * @brief  Application FileX Initialization.
-  * @param  void
-  * @retval int
+  * @brief  Application USBX Device Initialization.
+  * @param  none
+  * @retval status
   */
 UINT MX_USBX_Device_Init(VOID)
 {
   UINT ret = UX_SUCCESS;
-
-  /* USER CODE BEGIN MX_USBX_Device_MEM_POOL */
-  /* USER CODE END MX_USBX_Device_MEM_POOL */
-
-  /* USER CODE BEGIN MX_USBX_Device_Init */
-  CHAR *pointer;
+  UCHAR *device_framework_high_speed;
+  UCHAR *device_framework_full_speed;
+  ULONG device_framework_hs_length;
   ULONG device_framework_fs_length;
   ULONG string_framework_length;
-  ULONG languge_id_framework_length;
-  UCHAR *device_framework_full_speed;
+  ULONG language_id_framework_length;
   UCHAR *string_framework;
   UCHAR *language_id_framework;
+  UCHAR *pointer;
 
-  /* Use static memory block.  */
-  pointer = ux_system_memory_pool;
+  /* USER CODE BEGIN MX_USBX_Device_Init0 */
+
+  /* USER CODE END MX_USBX_Device_Init0 */
+
+  pointer = ux_device_memory_buffer;
 
   /* Initialize USBX Memory */
-  if (ux_system_initialize(pointer, USBX_MEMORY_SIZE, UX_NULL, 0) != UX_SUCCESS)
+  if (ux_system_initialize(pointer, USBX_DEVICE_MEMORY_STACK_SIZE, UX_NULL, 0) != UX_SUCCESS)
   {
+    /* USER CODE BEGIN USBX_SYSTEM_INITIALIZE_ERROR */
     return UX_ERROR;
+    /* USER CODE END USBX_SYSTEM_INITIALIZE_ERROR */
   }
 
-  /* Get_Device_Framework_Full_Speed and get the length */
-  device_framework_full_speed = USBD_Get_Device_Framework_Speed(USBD_FULL_SPEED,
-                                &device_framework_fs_length);
+  /* Get Device Framework High Speed and get the length */
+  device_framework_high_speed = USBD_Get_Device_Framework_Speed(USBD_HIGH_SPEED,
+                                                                &device_framework_hs_length);
 
-  /* Get_String_Framework and get the length */
+  /* Get Device Framework Full Speed and get the length */
+  device_framework_full_speed = USBD_Get_Device_Framework_Speed(USBD_FULL_SPEED,
+                                                                &device_framework_fs_length);
+
+  /* Get String Framework and get the length */
   string_framework = USBD_Get_String_Framework(&string_framework_length);
 
-  /* Get_Language_Id_Framework and get the length */
-  language_id_framework = USBD_Get_Language_Id_Framework(&languge_id_framework_length);
+  /* Get Language Id Framework and get the length */
+  language_id_framework = USBD_Get_Language_Id_Framework(&language_id_framework_length);
 
-  /* The code below is required for installing the device portion of USBX.
-     In this application */
-  if (ux_device_stack_initialize(NULL,
-                                 0,
+  /* Install the device portion of USBX */
+  if (ux_device_stack_initialize(device_framework_high_speed,
+                                 device_framework_hs_length,
                                  device_framework_full_speed,
                                  device_framework_fs_length,
                                  string_framework,
                                  string_framework_length,
                                  language_id_framework,
-                                 languge_id_framework_length,
+                                 language_id_framework_length,
                                  UX_NULL) != UX_SUCCESS)
   {
-    Error_Handler();
+    /* USER CODE BEGIN USBX_DEVICE_INITIALIZE_ERROR */
+    return UX_ERROR;
+    /* USER CODE END USBX_DEVICE_INITIALIZE_ERROR */
   }
 
-  /* Initialize the cdc class parameters for the device. */
-  cdc_acm_parameter.ux_slave_class_cdc_acm_instance_activate    = CDC_ACM_Init;
-  cdc_acm_parameter.ux_slave_class_cdc_acm_instance_deactivate  = CDC_ACM_DeInit;
-  cdc_acm_parameter.ux_slave_class_cdc_acm_parameter_change     = CDC_ACM_Control;
+  /* Initialize the cdc acm class parameters for the device */
+  cdc_acm_parameter.ux_slave_class_cdc_acm_instance_activate   = USBD_CDC_ACM_Activate;
+  cdc_acm_parameter.ux_slave_class_cdc_acm_instance_deactivate = USBD_CDC_ACM_Deactivate;
+  cdc_acm_parameter.ux_slave_class_cdc_acm_parameter_change    = USBD_CDC_ACM_ParameterChange;
 
-  /* Registers a slave class to the slave stack. The class is connected with
-     interface 0 */
+  /* USER CODE BEGIN CDC_ACM_PARAMETER */
+
+  /* USER CODE END CDC_ACM_PARAMETER */
+
+  /* Get cdc acm configuration number */
+  cdc_acm_configuration_number = USBD_Get_Configuration_Number(CLASS_TYPE_CDC_ACM, 0);
+
+  /* Find cdc acm interface number */
+  cdc_acm_interface_number = USBD_Get_Interface_Number(CLASS_TYPE_CDC_ACM, 0);
+
+  /* Initialize the device cdc acm class */
   if (ux_device_stack_class_register(_ux_system_slave_class_cdc_acm_name,
-                                     ux_device_class_cdc_acm_entry, 1, 0,
-                                     (VOID *)&cdc_acm_parameter) != UX_SUCCESS)
+                                     ux_device_class_cdc_acm_entry,
+                                     cdc_acm_configuration_number,
+                                     cdc_acm_interface_number,
+                                     &cdc_acm_parameter) != UX_SUCCESS)
   {
-    Error_Handler();
+    /* USER CODE BEGIN USBX_DEVICE_CDC_ACM_REGISTER_ERROR */
+    return UX_ERROR;
+    /* USER CODE END USBX_DEVICE_CDC_ACM_REGISTER_ERROR */
   }
-  
-  MX_USB_Device_Init();
 
-  /* USER CODE END MX_USBX_Device_Init */
+  /* USER CODE BEGIN MX_USBX_Device_Init1 */
+
+  /* Initialization of USB device */
+  USBX_APP_Device_Init();
+  /* USER CODE END MX_USBX_Device_Init1 */
 
   return ret;
 }
 
-/* USER CODE BEGIN 1 */
 /**
-  * @brief MX_USBX_Device_Process
-  *        Run USBX state machine.
-  * @retval None
+  * @brief  _ux_utility_interrupt_disable
+  *         USB utility interrupt disable.
+  * @param  none
+  * @retval none
   */
-VOID MX_USBX_Device_Process(VOID *arg)
+ALIGN_TYPE _ux_utility_interrupt_disable(VOID)
+{
+  UINT interrupt_save;
+
+  /* USER CODE BEGIN _ux_utility_interrupt_disable */
+  interrupt_save = __get_PRIMASK();
+  __disable_irq();
+  /* USER CODE END _ux_utility_interrupt_disable */
+
+  return interrupt_save;
+}
+
+/**
+  * @brief  _ux_utility_interrupt_restore
+  *         USB utility interrupt restore.
+  * @param  flags
+  * @retval none
+  */
+VOID _ux_utility_interrupt_restore(ALIGN_TYPE flags)
+{
+  /* USER CODE BEGIN _ux_utility_interrupt_restore */
+  __set_PRIMASK(flags);
+  /* USER CODE END _ux_utility_interrupt_restore */
+}
+
+/**
+  * @brief  _ux_utility_time_get
+  *         Get Time Tick for host timing.
+  * @param  none
+  * @retval time tick
+  */
+ULONG _ux_utility_time_get(VOID)
+{
+  ULONG time_tick = 0U;
+
+  /* USER CODE BEGIN _ux_utility_time_get */
+  time_tick = HAL_GetTick();
+  /* USER CODE END _ux_utility_time_get */
+
+  return time_tick;
+}
+
+/* USER CODE BEGIN 1 */
+
+/**
+  * @brief  MX_USBX_Device_Process
+  *         Run USBX state machine.
+  * @param  arg: not used
+  * @retval none
+  */
+VOID USBX_Device_Process(VOID *arg)
 {
   ux_device_stack_tasks_run();
-  CDC_ACM_Read_Task();
-  CDC_ACM_Write_Task();
+  USBX_DEVICE_CDC_ACM_Write_Task();
+  USBX_DEVICE_CDC_ACM_Read_Task();
 }
+
 /**
-  * @brief MX_USB_Device_Init
-  *        Initialization of USB device.
-  * Init USB device Library, add supported class and start the library
-  * @retval None
+  * @brief  USBX_APP_Device_Init
+  *         Initialization of USB device.
+  * @param  none
+  * @retval none
   */
-VOID MX_USB_Device_Init(VOID)
+VOID USBX_APP_Device_Init(VOID)
 {
   /* USER CODE BEGIN USB_Device_Init_PreTreatment_0 */
-  /* USER CODE END USB_Device_Init_PreTreatment_0 */
 
-  /* Enable the USB voltage level detector */
-  HAL_PWREx_EnableUSBVoltageDetector();
+  /* USER CODE END USB_Device_Init_PreTreatment_0 */
 
   /* USB_OTG_HS init function */
   MX_USB_OTG_HS_PCD_Init();
 
   /* USER CODE BEGIN USB_Device_Init_PreTreatment_1 */
+
+  /* Set Rx FIFO */
   HAL_PCDEx_SetRxFiFo(&hpcd_USB_OTG_HS, 0x200);
+
+  /* Set Tx FIFO 0 */
   HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 0, 0x10);
-  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 1, 0x20);
-  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 2, 0x10);
+
+  /* Set Tx FIFO 1 */
+  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 1, 0x10);
+
+  /* Set Tx FIFO 2 */
+  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 2, 0x20);
   /* USER CODE END USB_Device_Init_PreTreatment_1 */
 
-  /* initialize the device controller driver */
+  /* Initialize and link controller HAL driver */
   ux_dcd_stm32_initialize((ULONG)USB_OTG_HS, (ULONG)&hpcd_USB_OTG_HS);
 
   /* Start the USB device */
   HAL_PCD_Start(&hpcd_USB_OTG_HS);
 
   /* USER CODE BEGIN USB_Device_Init_PostTreatment */
+
   /* USER CODE END USB_Device_Init_PostTreatment */
 }
-  
 
-ALIGN_TYPE _ux_utility_interrupt_disable(VOID)
+/**
+  * @brief  USBX_APP_UART_Init
+  *         Initialization of UART.
+  * @param  huart: Pointer to UART handler
+  * @retval none
+  */
+VOID USBX_APP_UART_Init(UART_HandleTypeDef **huart)
 {
-  __istate_t interrupt_save;
-  interrupt_save = __get_interrupt_state();
-  __disable_interrupt();
-  return interrupt_save;
-}
-VOID _ux_utility_interrupt_restore(ALIGN_TYPE flags)
-{
+  /* USER CODE BEGIN USBX_APP_UART_Init */
 
-  __set_interrupt_state(flags);
+  MX_USART3_UART_Init();
 
-}
-/* Time Tick Get for host timing  */
-ULONG _ux_utility_time_get(VOID)
-{
-#if UX_PERIODIC_RATE != 1000
-#warning UX_PERIODIC_RATE should be 1000 for 1ms tick
-#endif
-  return(HAL_GetTick());
+  *huart = &huart3;
+
+  /* USER CODE END USBX_APP_UART_Init */
 }
 /* USER CODE END 1 */

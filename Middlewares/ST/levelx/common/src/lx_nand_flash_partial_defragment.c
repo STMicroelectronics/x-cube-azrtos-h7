@@ -40,7 +40,7 @@
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _lx_nand_flash_partial_defragment                   PORTABLE C      */ 
-/*                                                           6.1.7        */
+/*                                                           6.2.1       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    William E. Lamie, Microsoft Corporation                             */
@@ -62,9 +62,7 @@
 /*                                                                        */ 
 /*  CALLS                                                                 */ 
 /*                                                                        */ 
-/*    _lx_nand_flash_block_reclaim          Reclaim a NAND flash block    */ 
-/*    tx_mutex_get                          Get thread protection         */ 
-/*    tx_mutex_put                          Release thread protection     */ 
+/*    None                                                                */ 
 /*                                                                        */ 
 /*  CALLED BY                                                             */ 
 /*                                                                        */ 
@@ -80,48 +78,19 @@
 /*                                            resulting in version 6.1    */
 /*  06-02-2021     Bhupendra Naphade        Modified comment(s),          */
 /*                                            resulting in version 6.1.7  */
+/*  03-08-2023     Xiuwen Cai               Modified comment(s),          */
+/*                                            deprecated this API,        */
+/*                                            resulting in version 6.2.1 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _lx_nand_flash_partial_defragment(LX_NAND_FLASH *nand_flash, UINT max_blocks)
 {
   
-ULONG    i;
+    LX_PARAMETER_NOT_USED(nand_flash);
+    LX_PARAMETER_NOT_USED(max_blocks);
 
-
-#ifdef LX_THREAD_SAFE_ENABLE
-
-    /* Obtain the thread safe mutex.  */
-    tx_mutex_get(&nand_flash -> lx_nand_flash_mutex, TX_WAIT_FOREVER);
-#endif
-
-    /* Determine if the maximum number of blocks exceeds the total blocks in this flash instance.  */
-    if (max_blocks >= nand_flash -> lx_nand_flash_total_blocks)
-    {
-    
-        /* Adjust the maximum to the total number of blocks.  */
-        max_blocks =  nand_flash -> lx_nand_flash_total_blocks;
-    }
-
-    /* Loop for max number of blocks, while there are obsolete count.  */
-    for (i = 0; i < max_blocks; i++)
-    {
-        
-        /* Determine if there is any more defragment work.  */
-        if (nand_flash -> lx_nand_flash_obsolete_pages == 0)
-            break; 
-    
-        /* Call the block reclaim function to defragment.  */
-        _lx_nand_flash_block_reclaim(nand_flash);
-    }
-
-#ifdef LX_THREAD_SAFE_ENABLE
-
-    /* Release the thread safe mutex.  */
-    tx_mutex_put(&nand_flash -> lx_nand_flash_mutex);
-#endif
-
-    /* Return successful completion.  */    
-    return(LX_SUCCESS);
+    /* Return not supported.  */
+    return(LX_NOT_SUPPORTED);
 }
 
 

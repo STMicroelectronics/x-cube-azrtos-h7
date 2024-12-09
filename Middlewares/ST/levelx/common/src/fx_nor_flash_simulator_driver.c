@@ -36,19 +36,19 @@ LX_NOR_FLASH       nor_flash;
    the fx_media_open call.   
 
         fx_media_format(&ram_disk, 
-                            _fx_nor_sim_driver,     // Driver entry
-                            FX_NULL,                // Unused
-                            media_memory,           // Media buffer pointer
-                            sizeof(media_memory),   // Media buffer size 
-                            "MY_NOR_DISK",          // Volume Name
-                            1,                      // Number of FATs
-                            32,                     // Directory Entries
-                            0,                      // Hidden sectors
-                            120,                    // Total sectors 
-                            512,                    // Sector size   
-                            1,                      // Sectors per cluster
-                            1,                      // Heads
-                            1);                     // Sectors per track 
+                            _fx_nor_sim_driver,                 // Driver entry
+                            FX_NULL,                            // Unused
+                            media_memory,                       // Media buffer pointer
+                            sizeof(media_memory),               // Media buffer size 
+                            "MY_NOR_DISK",                      // Volume Name
+                            1,                                  // Number of FATs
+                            32,                                 // Directory Entries
+                            0,                                  // Hidden sectors
+                            120,                                // Total sectors 
+                            LX_NOR_SECTOR_SIZE * sizeof(ULONG), // Sector size   
+                            1,                                  // Sectors per cluster
+                            1,                                  // Heads
+                            1);                                 // Sectors per track 
 
 */
 
@@ -231,7 +231,7 @@ UINT        status;
 
                 /* Move to the next entries.  */
                 logical_sector++;
-                destination_buffer =  destination_buffer + 512;
+                destination_buffer =  destination_buffer + media_ptr -> fx_media_bytes_per_sector;
             }
 
             /* Successful driver request.  */
@@ -265,7 +265,7 @@ UINT        status;
 
                 /* Move to the next entries.  */
                 logical_sector++;
-                source_buffer =  source_buffer + 512;
+                source_buffer =  source_buffer + media_ptr -> fx_media_bytes_per_sector;
             }
 
             /* Successful driver request.  */
@@ -427,6 +427,15 @@ UINT        status;
 
         case FX_DRIVER_BOOT_WRITE:
         {
+
+            /* Make sure the media bytes per sector equals to the LevelX logical sector size.  */
+            if (media_ptr -> fx_media_bytes_per_sector != (LX_NOR_SECTOR_SIZE) * sizeof(ULONG))
+            {
+
+                /* Sector size mismatch, return error.  */
+                media_ptr -> fx_media_driver_status =  FX_IO_ERROR;
+                break;
+            }
 
             /* Write the boot record and return to the caller.  */
 

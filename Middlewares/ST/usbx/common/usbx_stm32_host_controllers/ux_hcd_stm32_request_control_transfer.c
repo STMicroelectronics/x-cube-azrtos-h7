@@ -246,6 +246,7 @@ UX_HCD_STM32_ED         *ed;
 
     /* Free the resources.  */
     _ux_utility_memory_free(ed -> ux_stm32_ed_setup);
+    ed -> ux_stm32_ed_setup = UX_NULL;
 
     /* If the semaphore did not succeed we probably have a time out.  */
     if (status != UX_SUCCESS)

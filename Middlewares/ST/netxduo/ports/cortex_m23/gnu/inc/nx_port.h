@@ -26,7 +26,7 @@
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */ 
 /*                                                                        */ 
 /*    nx_port.h                                         Cortex-M23/GNU    */ 
-/*                                                           6.1.3        */
+/*                                                           6.2.1        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -43,6 +43,9 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  12-31-2020     Yuxin Zhou               Initial Version 6.1.3         */
+/*  03-08-2023     Yajun Xia                Modified comment(s),          */
+/*                                            removed duplicated macros,  */
+/*                                            resulting in version 6.2.1  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -65,16 +68,6 @@
 
 #define NX_LITTLE_ENDIAN    1
 
-
-/* By default IPv6 is enabled. */
-
-#ifndef FEATURE_NX_IPV6
-#define FEATURE_NX_IPV6
-#endif /* FEATURE_NX_IPV6 */
-
-#ifdef NX_DISABLE_IPV6 
-#undef FEATURE_NX_IPV6 
-#endif /* !NX_DISABLE_IPV6 */
 
 #include <stdio.h>
 #include <string.h>
@@ -190,7 +183,7 @@
 
 #ifdef NX_SYSTEM_INIT
 CHAR                            _nx_version_id[] = 
-                                    "Copyright (c) Microsoft Corporation. All rights reserved.  *  NetX Duo Cortex-M23/GNU Version 6.2.0 *";
+                                    "Copyright (c) Microsoft Corporation. All rights reserved.  *  NetX Duo Cortex-M23/GNU Version 6.4.0 *";
 #else
 extern  CHAR                    _nx_version_id[];
 #endif

@@ -23,9 +23,9 @@
 #ifndef NX_STM32_CYPRESS_WHD_DRIVER_H
 #define NX_STM32_CYPRESS_WHD_DRIVER_H
 
-#ifdef   __cplusplus
-extern   "C" {
-#endif
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 #include "whd.h"
 #include "nx_api.h"
@@ -40,13 +40,13 @@ typedef enum
 
 /* Public API */
 VOID nx_driver_cypress_whd_entry(NX_IP_DRIVER *driver_req_ptr);
-UINT cypress_whd_alloc_init(VOID);
+void cy_network_process_ethernet_data(whd_interface_t interface, whd_buffer_t buffer);
 
 extern whd_interface_t *Ifp;
 extern wifi_mode_t WifiMode;
 
-#ifdef   __cplusplus
+#ifdef __cplusplus
 }
-#endif
+#endif /* __cplusplus */
 
 #endif /* NX_STM32_CYPRESS_WHD_DRIVER_H */

@@ -1,0 +1,209 @@
+/**************************************************************************/
+/*                                                                        */
+/*       Copyright (c) Microsoft Corporation. All rights reserved.        */
+/*                                                                        */
+/*       This software is licensed under the Microsoft Software License   */
+/*       Terms for Microsoft Azure RTOS. Full text of the license can be  */
+/*       found in the LICENSE file at https://aka.ms/AzureRTOS_EULA       */
+/*       and in the root directory of this software.                      */
+/*                                                                        */
+/**************************************************************************/
+
+<<<<<<< HEAD
+
+=======
+>>>>>>> usbx_app_github_dev
+/**************************************************************************/
+/**************************************************************************/
+/**                                                                       */
+/** USBX Component                                                        */
+/**                                                                       */
+<<<<<<< HEAD
+/**   STM32 Controller Driver                                             */
+=======
+<<<<<<< HEAD:Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_printer_soft_reset.c
+/**   Device Printer Class                                                */
+=======
+/**   STM32 Controller Driver                                             */
+>>>>>>> usbx_app_github_dev:Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_transfer_abort.c
+>>>>>>> usbx_app_github_dev
+/**                                                                       */
+/**************************************************************************/
+/**************************************************************************/
+
+#define UX_SOURCE_CODE
+<<<<<<< HEAD
+#define UX_DCD_STM32_SOURCE_CODE
+=======
+<<<<<<< HEAD:Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_printer_soft_reset.c
+=======
+#define UX_DCD_STM32_SOURCE_CODE
+>>>>>>> usbx_app_github_dev:Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_transfer_abort.c
+>>>>>>> usbx_app_github_dev
+
+
+/* Include necessary system files.  */
+
+#include "ux_api.h"
+<<<<<<< HEAD
+#include "ux_dcd_stm32.h"
+#include "ux_utility.h"
+=======
+<<<<<<< HEAD:Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_printer_soft_reset.c
+#include "ux_device_class_printer.h"
+=======
+#include "ux_dcd_stm32.h"
+#include "ux_utility.h"
+>>>>>>> usbx_app_github_dev:Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_transfer_abort.c
+>>>>>>> usbx_app_github_dev
+#include "ux_device_stack.h"
+
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                                RELEASE       */
+/*                                                                        */
+<<<<<<< HEAD
+/*    _ux_dcd_stm32_transfer_request                       PORTABLE C     */
+/*                                                            6.1.10      */
+=======
+<<<<<<< HEAD:Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_printer_soft_reset.c
+/*    _ux_device_class_printer_soft_reset                 PORTABLE C      */
+/*                                                           6.2.0        */
+=======
+/*    _ux_dcd_stm32_transfer_request                       PORTABLE C     */
+/*                                                            6.1.10      */
+>>>>>>> usbx_app_github_dev:Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_transfer_abort.c
+>>>>>>> usbx_app_github_dev
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD:Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_printer_soft_reset.c
+/*    This function Perform Soft Reset on the Printer class.              */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    printer                               Address of printer class      */
+/*                                            instance                    */
+=======
+>>>>>>> usbx_app_github_dev
+/*    This function will initiate a transfer to a specific endpoint.      */
+/*    If the endpoint is IN, the endpoint register will be set to accept  */
+/*    the request.                                                        */
+/*                                                                        */
+/*    If the endpoint is IN, the endpoint FIFO will be filled with the    */
+/*    buffer and the endpoint register set.                               */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    dcd_stm32                             Pointer to device controller  */
+/*    transfer_request                      Pointer to transfer request   */
+<<<<<<< HEAD
+=======
+>>>>>>> usbx_app_github_dev:Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_transfer_abort.c
+>>>>>>> usbx_app_github_dev
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    Completion Status                                                   */
+/*                                                                        */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD:Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_printer_soft_reset.c
+/*    _ux_device_stack_transfer_all_request_abort                         */
+/*                                          Abort transfers on endpoint   */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Device Printer Class                                                */
+=======
+>>>>>>> usbx_app_github_dev
+/*    HAL_PCD_EP_Transmit                   Transmit data                 */
+/*    HAL_PCD_EP_Receive                    Receive data                  */
+/*    _ux_utility_semaphore_get             Get semaphore                 */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    STM32 Controller Driver                                             */
+<<<<<<< HEAD
+=======
+>>>>>>> usbx_app_github_dev:Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_transfer_abort.c
+>>>>>>> usbx_app_github_dev
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  01-31-2022     Chaoqiong Xiao           Initial Version 6.1.10        */
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD:Middlewares/ST/usbx/common/usbx_device_classes/src/ux_device_class_printer_soft_reset.c
+/*  10-31-2022     Yajun Xia                Modified comment(s),          */
+/*                                            added standalone support,   */
+/*                                            resulting in version 6.2.0  */
+/*                                                                        */
+/**************************************************************************/
+VOID _ux_device_class_printer_soft_reset(UX_DEVICE_CLASS_PRINTER *printer)
+{
+
+UX_SLAVE_ENDPOINT                       *endpoint;
+
+    /* Stop OUT.  */
+    endpoint = printer -> ux_device_class_printer_endpoint_out;
+    _ux_device_stack_transfer_all_request_abort(endpoint, UX_ENDPOINT_RESET);
+#if defined(UX_DEVICE_STANDALONE)
+    printer -> ux_device_class_printer_write_state = UX_STATE_RESET;
+#endif
+
+    /* Stop IN (optional).  */
+    endpoint = printer -> ux_device_class_printer_endpoint_in;
+    if (endpoint != UX_NULL)
+    {
+        _ux_device_stack_transfer_all_request_abort(endpoint, UX_ENDPOINT_RESET);
+#if defined(UX_DEVICE_STANDALONE)
+        printer -> ux_device_class_printer_read_state = UX_STATE_RESET;
+#endif
+    }
+=======
+>>>>>>> usbx_app_github_dev
+/*                                                                        */
+/**************************************************************************/
+UINT  _ux_dcd_stm32_transfer_abort(UX_DCD_STM32 *dcd_stm32, UX_SLAVE_TRANSFER *transfer_request)
+{
+
+<<<<<<< HEAD
+UX_SLAVE_ENDPOINT       *endpoint;
+=======
+#if !defined (USBD_HAL_TRANSFER_ABORT_NOT_SUPPORTED)
+
+   UX_SLAVE_ENDPOINT       *endpoint;
+>>>>>>> usbx_app_github_dev
+
+
+    /* Get the pointer to the logical endpoint from the transfer request.  */
+    endpoint =  transfer_request -> ux_slave_transfer_request_endpoint;
+
+    HAL_PCD_EP_Abort(dcd_stm32 -> pcd_handle, endpoint->ux_slave_endpoint_descriptor.bEndpointAddress);
+    HAL_PCD_EP_Flush(dcd_stm32 -> pcd_handle, endpoint->ux_slave_endpoint_descriptor.bEndpointAddress);
+
+    /* No semaphore put here since it's already done in stack.  */
+<<<<<<< HEAD
+
+    /* Return to caller with success.  */
+    return(UX_SUCCESS);
+=======
+#endif /* USBD_HAL_TRANSFER_ABORT_NOT_SUPPORTED */
+
+    /* Return to caller with success.  */
+    return(UX_SUCCESS);
+>>>>>>> usbx_app_github_dev:Middlewares/ST/usbx/common/usbx_stm32_device_controllers/ux_dcd_stm32_transfer_abort.c
+>>>>>>> usbx_app_github_dev
+}

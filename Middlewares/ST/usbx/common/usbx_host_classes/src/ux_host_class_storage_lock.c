@@ -36,7 +36,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _ux_host_class_storage_lock                         PORTABLE C      */
-/*                                                           6.1.10       */
+/*                                                           6.2.1        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Chaoqiong Xiao, Microsoft Corporation                               */
@@ -71,12 +71,19 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  01-31-2022     Chaoqiong Xiao           Initial Version 6.1.10        */
+/*  03-08-2023     Chaoqiong Xiao           Modified comment(s),          */
+/*                                            checked device state,       */
+/*                                            resulting in version 6.2.1  */
 /*                                                                        */
 /**************************************************************************/
 UINT    _ux_host_class_storage_lock(UX_HOST_CLASS_STORAGE *storage, ULONG wait)
 {
 UX_INTERRUPT_SAVE_AREA
 ULONG           t0, t1;
+UX_DEVICE       *device;
+
+    /* Get device.  */
+    device = storage -> ux_host_class_storage_device;
 
     t0 = _ux_utility_time_get();
     while(1)
@@ -129,6 +136,14 @@ ULONG           t0, t1;
 
         /* Run stack tasks.  */
         _ux_system_host_tasks_run();
+
+        /* Check if device is still available.  */
+        if (device -> ux_device_state != UX_DEVICE_CONFIGURED)
+        {
+
+            /* Instance should have been destroyed, just return.  */
+            return(UX_STATE_EXIT);
+        }
     }
 
     /* Lock storage.  */
@@ -142,5 +157,55 @@ ULONG           t0, t1;
 
     UX_RESTORE
     return(UX_SUCCESS);
+}
+
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _uxe_host_class_storage_lock                         PORTABLE C     */
+/*                                                           6.3.0        */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Chaoqiong Xiao, Microsoft Corporation                               */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks errors in storage lock function call.          */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    storage                               Pointer to storage to operate */
+/*    wait                                  Wait option                   */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    Status                                                              */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _ux_host_class_storage_lock           Lock storage                  */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Application                                                         */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  10-31-2023     Chaoqiong Xiao           Initial Version 6.3.0         */
+/*                                                                        */
+/**************************************************************************/
+UINT    _uxe_host_class_storage_lock(UX_HOST_CLASS_STORAGE *storage, ULONG wait)
+{
+
+    /* Sanity check.  */
+    if (storage == UX_NULL)
+        return(UX_INVALID_PARAMETER);
+
+    /* Invoke storage lock function.  */
+    return(_ux_host_class_storage_lock(storage, wait));
 }
 #endif
