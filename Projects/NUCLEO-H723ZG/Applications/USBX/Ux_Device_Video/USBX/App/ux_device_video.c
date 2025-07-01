@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_device_video.h"
 
@@ -377,7 +381,7 @@ ULONG USBD_VIDEO_StreamGetMaxPayloadBufferSize(VOID)
   return max_playload;
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief  video_write_payload
@@ -500,4 +504,4 @@ VOID video_write_payload(UX_DEVICE_CLASS_VIDEO_STREAM *stream)
   }
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

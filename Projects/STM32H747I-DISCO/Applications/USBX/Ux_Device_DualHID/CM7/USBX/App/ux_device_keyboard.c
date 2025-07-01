@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_device_keyboard.h"
 
@@ -138,7 +142,7 @@ UINT USBD_HID_Keyboard_GetReport(UX_SLAVE_CLASS_HID *hid_instance,
   return status;
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief  Function implementing usbx_hid_keyboard_thread_entry.
@@ -225,4 +229,4 @@ static VOID GetKeyData(UX_SLAVE_CLASS_HID_EVENT *hid_event)
   key_button++;
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

@@ -158,7 +158,7 @@ CAMERA_Ctx_t        Camera_Ctx[CAMERA_INSTANCES_NBR];
   * @{
   */
 static CAMERA_Drv_t *Camera_Drv = NULL;
-static CAMERA_Capabilities_t *CameraCap;
+static CAMERA_Capabilities_t *CameraCap = NULL;
 /**
   * @}
   */
@@ -203,7 +203,7 @@ int32_t BSP_CAMERA_Init(uint32_t Instance, uint32_t Resolution, uint32_t PixelFo
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -212,9 +212,9 @@ int32_t BSP_CAMERA_Init(uint32_t Instance, uint32_t Resolution, uint32_t PixelFo
     /* DCMI Initialization */
 #if (USE_HAL_DCMI_REGISTER_CALLBACKS == 1)
     /* Register the DCMI MSP Callbacks */
-    if(Camera_Ctx[Instance].IsMspCallbacksValid == 0U)
+    if (Camera_Ctx[Instance].IsMspCallbacksValid == 0U)
     {
-      if(BSP_CAMERA_RegisterDefaultMspCallbacks(Instance) != BSP_ERROR_NONE)
+      if (BSP_CAMERA_RegisterDefaultMspCallbacks(Instance) != BSP_ERROR_NONE)
       {
         return BSP_ERROR_MSP_FAILURE;
       }
@@ -224,69 +224,69 @@ int32_t BSP_CAMERA_Init(uint32_t Instance, uint32_t Resolution, uint32_t PixelFo
     DCMI_MspInit(&hcamera_dcmi);
 #endif
     /* Initialize the camera driver structure */
-    if(MX_DCMI_Init(&hcamera_dcmi) != HAL_OK)
+    if (MX_DCMI_Init(&hcamera_dcmi) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(BSP_CAMERA_PwrUp(0) != BSP_ERROR_NONE)
+    else if (BSP_CAMERA_PwrUp(0) != BSP_ERROR_NONE)
     {
       ret = BSP_ERROR_BUS_FAILURE;
     }
     else
     {
-       if(OV9655_Probe(Resolution, PixelFormat)!= BSP_ERROR_NONE)
-       {
-         ret = BSP_ERROR_UNKNOWN_COMPONENT;
-       }
-       else
-       {
-         if(Resolution == CAMERA_R480x272)
-         {
-           if(HAL_DCMI_ConfigCROP(&hcamera_dcmi,           /* Crop in the middle of the VGA picture */
-                               (CAMERA_VGA_RES_X - CAMERA_480x272_RES_X)/2,
-                               (CAMERA_VGA_RES_Y - CAMERA_480x272_RES_Y)/2,
-                               (CAMERA_480x272_RES_X * 2) - 1,
-                               CAMERA_480x272_RES_Y - 1) != HAL_OK)
-           {
-             ret = BSP_ERROR_PERIPH_FAILURE;
-           }
-           else
-           {
-             if(HAL_DCMI_EnableCROP(&hcamera_dcmi) != HAL_OK)
-             {
-               ret = BSP_ERROR_PERIPH_FAILURE;
-             }
-           }
-         }
+      if (OV9655_Probe(Resolution, PixelFormat) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_UNKNOWN_COMPONENT;
+      }
+      else
+      {
+        if (Resolution == CAMERA_R480x272)
+        {
+          if (HAL_DCMI_ConfigCROP(&hcamera_dcmi,          /* Crop in the middle of the VGA picture */
+                                  (CAMERA_VGA_RES_X - CAMERA_480x272_RES_X) / 2,
+                                  (CAMERA_VGA_RES_Y - CAMERA_480x272_RES_Y) / 2,
+                                  (CAMERA_480x272_RES_X * 2) - 1,
+                                  CAMERA_480x272_RES_Y - 1) != HAL_OK)
+          {
+            ret = BSP_ERROR_PERIPH_FAILURE;
+          }
+          else
+          {
+            if (HAL_DCMI_EnableCROP(&hcamera_dcmi) != HAL_OK)
+            {
+              ret = BSP_ERROR_PERIPH_FAILURE;
+            }
+          }
+        }
 #if (USE_HAL_DCMI_REGISTER_CALLBACKS == 1)
-         /* Register DCMI LineEvent, FrameEvent and Error callbacks */
-         if(HAL_DCMI_RegisterCallback(&hcamera_dcmi, HAL_DCMI_LINE_EVENT_CB_ID, DCMI_LineEventCallback) != HAL_OK)
-         {
-           ret = BSP_ERROR_PERIPH_FAILURE;
-         }
-         else if(HAL_DCMI_RegisterCallback(&hcamera_dcmi, HAL_DCMI_FRAME_EVENT_CB_ID, DCMI_FrameEventCallback) != HAL_OK)
-         {
-           ret = BSP_ERROR_PERIPH_FAILURE;
-         }
-         else if(HAL_DCMI_RegisterCallback(&hcamera_dcmi, HAL_DCMI_VSYNC_EVENT_CB_ID, DCMI_VsyncEventCallback) != HAL_OK)
-         {
-           ret = BSP_ERROR_PERIPH_FAILURE;
-         }
-         else if(HAL_DCMI_RegisterCallback(&hcamera_dcmi, HAL_DCMI_ERROR_CB_ID, DCMI_ErrorCallback) != HAL_OK)
-         {
-           ret = BSP_ERROR_PERIPH_FAILURE;
-         }
-         else
-         {
-           ret = BSP_ERROR_NONE;
-         }
+        /* Register DCMI LineEvent, FrameEvent and Error callbacks */
+        if (HAL_DCMI_RegisterCallback(&hcamera_dcmi, HAL_DCMI_LINE_EVENT_CB_ID, DCMI_LineEventCallback) != HAL_OK)
+        {
+          ret = BSP_ERROR_PERIPH_FAILURE;
+        }
+        else if (HAL_DCMI_RegisterCallback(&hcamera_dcmi, HAL_DCMI_FRAME_EVENT_CB_ID, DCMI_FrameEventCallback) != HAL_OK)
+        {
+          ret = BSP_ERROR_PERIPH_FAILURE;
+        }
+        else if (HAL_DCMI_RegisterCallback(&hcamera_dcmi, HAL_DCMI_VSYNC_EVENT_CB_ID, DCMI_VsyncEventCallback) != HAL_OK)
+        {
+          ret = BSP_ERROR_PERIPH_FAILURE;
+        }
+        else if (HAL_DCMI_RegisterCallback(&hcamera_dcmi, HAL_DCMI_ERROR_CB_ID, DCMI_ErrorCallback) != HAL_OK)
+        {
+          ret = BSP_ERROR_PERIPH_FAILURE;
+        }
+        else
+        {
+          ret = BSP_ERROR_NONE;
+        }
 #endif /* (USE_HAL_DCMI_REGISTER_CALLBACKS == 1) */
-         if(ret == BSP_ERROR_NONE)
-         {
-           Camera_Ctx[Instance].Resolution  = Resolution;
-           Camera_Ctx[Instance].PixelFormat = PixelFormat;
-         }
-       }
+        if (ret == BSP_ERROR_NONE)
+        {
+          Camera_Ctx[Instance].Resolution  = Resolution;
+          Camera_Ctx[Instance].PixelFormat = PixelFormat;
+        }
+      }
     }
   }
 
@@ -303,7 +303,7 @@ int32_t BSP_CAMERA_DeInit(uint32_t Instance)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -312,15 +312,15 @@ int32_t BSP_CAMERA_DeInit(uint32_t Instance)
     hcamera_dcmi.Instance = DCMI;
 
     /* First stop the camera to insure all data are transferred */
-    if(BSP_CAMERA_Stop(Instance) != BSP_ERROR_NONE)
+    if (BSP_CAMERA_Stop(Instance) != BSP_ERROR_NONE)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_DCMI_DisableCROP(&hcamera_dcmi) != HAL_OK)
+    else if (HAL_DCMI_DisableCROP(&hcamera_dcmi) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_DCMI_DeInit(&hcamera_dcmi) != HAL_OK)
+    else if (HAL_DCMI_DeInit(&hcamera_dcmi) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -330,11 +330,11 @@ int32_t BSP_CAMERA_DeInit(uint32_t Instance)
       DCMI_MspDeInit(&hcamera_dcmi);
 #endif /* (USE_HAL_DCMI_REGISTER_CALLBACKS == 0) */
 
-      if(Camera_Drv->DeInit(Camera_CompObj) != BSP_ERROR_NONE)
+      if (Camera_Drv->DeInit(Camera_CompObj) != BSP_ERROR_NONE)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }/* Set Camera in Power Down */
-      else if(BSP_CAMERA_PwrDown(0) != BSP_ERROR_NONE)
+      else if (BSP_CAMERA_PwrDown(0) != BSP_ERROR_NONE)
       {
         ret = BSP_ERROR_BUS_FAILURE;
       }
@@ -355,7 +355,7 @@ int32_t BSP_CAMERA_DeInit(uint32_t Instance)
   * @note   Being __weak it can be overwritten by the application
   * @retval HAL status
   */
-__weak HAL_StatusTypeDef MX_DCMI_Init(DCMI_HandleTypeDef* hdcmi)
+__weak HAL_StatusTypeDef MX_DCMI_Init(DCMI_HandleTypeDef *hdcmi)
 {
   /*** Configures the DCMI to interface with the camera module ***/
   /* DCMI configuration */
@@ -367,7 +367,7 @@ __weak HAL_StatusTypeDef MX_DCMI_Init(DCMI_HandleTypeDef* hdcmi)
   hdcmi->Init.ExtendedDataMode = DCMI_EXTEND_DATA_8B;
   hdcmi->Init.PCKPolarity      = DCMI_PCKPOLARITY_RISING;
 
-  if(HAL_DCMI_Init(hdcmi) != HAL_OK)
+  if (HAL_DCMI_Init(hdcmi) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -380,11 +380,11 @@ __weak HAL_StatusTypeDef MX_DCMI_Init(DCMI_HandleTypeDef* hdcmi)
   * @param Instance CAMERA Instance.
   * @retval BSP status
   */
-int32_t BSP_CAMERA_RegisterDefaultMspCallbacks (uint32_t Instance)
+int32_t BSP_CAMERA_RegisterDefaultMspCallbacks(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -393,11 +393,11 @@ int32_t BSP_CAMERA_RegisterDefaultMspCallbacks (uint32_t Instance)
     __HAL_DCMI_RESET_HANDLE_STATE(&hcamera_dcmi);
 
     /* Register MspInit/MspDeInit Callbacks */
-    if(HAL_DCMI_RegisterCallback(&hcamera_dcmi, HAL_DCMI_MSPINIT_CB_ID, DCMI_MspInit) != HAL_OK)
+    if (HAL_DCMI_RegisterCallback(&hcamera_dcmi, HAL_DCMI_MSPINIT_CB_ID, DCMI_MspInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_DCMI_RegisterCallback(&hcamera_dcmi, HAL_DCMI_MSPDEINIT_CB_ID, DCMI_MspDeInit) != HAL_OK)
+    else if (HAL_DCMI_RegisterCallback(&hcamera_dcmi, HAL_DCMI_MSPDEINIT_CB_ID, DCMI_MspDeInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -420,7 +420,7 @@ int32_t BSP_CAMERA_RegisterMspCallbacks(uint32_t Instance, BSP_CAMERA_Cb_t *Call
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -429,11 +429,11 @@ int32_t BSP_CAMERA_RegisterMspCallbacks(uint32_t Instance, BSP_CAMERA_Cb_t *Call
     __HAL_DCMI_RESET_HANDLE_STATE(&hcamera_dcmi);
 
     /* Register MspInit/MspDeInit Callbacks */
-    if(HAL_DCMI_RegisterCallback(&hcamera_dcmi, HAL_DCMI_MSPINIT_CB_ID, CallBacks->pMspInitCb) != HAL_OK)
+    if (HAL_DCMI_RegisterCallback(&hcamera_dcmi, HAL_DCMI_MSPINIT_CB_ID, CallBacks->pMspInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_DCMI_RegisterCallback(&hcamera_dcmi, HAL_DCMI_MSPDEINIT_CB_ID, CallBacks->pMspDeInitCb) != HAL_OK)
+    else if (HAL_DCMI_RegisterCallback(&hcamera_dcmi, HAL_DCMI_MSPDEINIT_CB_ID, CallBacks->pMspDeInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -458,11 +458,12 @@ int32_t BSP_CAMERA_Start(uint32_t Instance, uint8_t *pBff, uint32_t Mode)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_DCMI_Start_DMA(&hcamera_dcmi, Mode, (uint32_t)pBff, (uint32_t)GetSize(Camera_Ctx[Instance].Resolution, Camera_Ctx[Instance].PixelFormat)) != HAL_OK)
+  else if (HAL_DCMI_Start_DMA(&hcamera_dcmi, Mode, (uint32_t)pBff, (uint32_t)GetSize(Camera_Ctx[Instance].Resolution,
+                              Camera_Ctx[Instance].PixelFormat)) != HAL_OK)
   {
     return BSP_ERROR_PERIPH_FAILURE;
   }
@@ -484,13 +485,13 @@ int32_t BSP_CAMERA_Stop(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(HAL_DCMI_Stop(&hcamera_dcmi) != HAL_OK)
+    if (HAL_DCMI_Stop(&hcamera_dcmi) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -508,11 +509,11 @@ int32_t BSP_CAMERA_Suspend(uint32_t Instance)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_DCMI_Suspend(&hcamera_dcmi) != HAL_OK)
+  else if (HAL_DCMI_Suspend(&hcamera_dcmi) != HAL_OK)
   {
     return BSP_ERROR_PERIPH_FAILURE;
   }
@@ -533,11 +534,11 @@ int32_t BSP_CAMERA_Resume(uint32_t Instance)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_DCMI_Resume(&hcamera_dcmi) != HAL_OK)
+  else if (HAL_DCMI_Resume(&hcamera_dcmi) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -562,11 +563,11 @@ int32_t BSP_CAMERA_GetCapabilities(uint32_t Instance, CAMERA_Capabilities_t *Cap
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(Camera_Drv->GetCapabilities(Camera_CompObj, Capabilities) != BSP_ERROR_NONE)
+  else if (Camera_Drv->GetCapabilities(Camera_CompObj, Capabilities) != BSP_ERROR_NONE)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -589,11 +590,11 @@ int32_t BSP_CAMERA_SetPixelFormat(uint32_t Instance, uint32_t PixelFormat)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(Camera_Drv->SetPixelFormat(Camera_CompObj, PixelFormat) != BSP_ERROR_NONE)
+  else if (Camera_Drv->SetPixelFormat(Camera_CompObj, PixelFormat) != BSP_ERROR_NONE)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -617,7 +618,7 @@ int32_t BSP_CAMERA_GetPixelFormat(uint32_t Instance, uint32_t *PixelFormat)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -642,15 +643,15 @@ int32_t BSP_CAMERA_SetResolution(uint32_t Instance, uint32_t Resolution)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->Resolution == 0U)
+  else if (CameraCap->Resolution == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
-  else if(Camera_Drv->SetResolution(Camera_CompObj, Resolution) != BSP_ERROR_NONE)
+  else if (Camera_Drv->SetResolution(Camera_CompObj, Resolution) != BSP_ERROR_NONE)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -674,11 +675,11 @@ int32_t BSP_CAMERA_GetResolution(uint32_t Instance, uint32_t *Resolution)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->Resolution == 0U)
+  else if (CameraCap->Resolution == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
@@ -702,15 +703,15 @@ int32_t BSP_CAMERA_SetLightMode(uint32_t Instance, uint32_t LightMode)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->LightMode == 0U)
+  else if (CameraCap->LightMode == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
-  else if(Camera_Drv->SetLightMode(Camera_CompObj, LightMode) != BSP_ERROR_NONE)
+  else if (Camera_Drv->SetLightMode(Camera_CompObj, LightMode) != BSP_ERROR_NONE)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -734,11 +735,11 @@ int32_t BSP_CAMERA_GetLightMode(uint32_t Instance, uint32_t *LightMode)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->LightMode == 0U)
+  else if (CameraCap->LightMode == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
@@ -762,15 +763,15 @@ int32_t BSP_CAMERA_SetColorEffect(uint32_t Instance, uint32_t ColorEffect)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->ColorEffect == 0U)
+  else if (CameraCap->ColorEffect == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
-  else if(Camera_Drv->SetColorEffect(Camera_CompObj, ColorEffect) != BSP_ERROR_NONE)
+  else if (Camera_Drv->SetColorEffect(Camera_CompObj, ColorEffect) != BSP_ERROR_NONE)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -794,11 +795,11 @@ int32_t BSP_CAMERA_GetColorEffect(uint32_t Instance, uint32_t *ColorEffect)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->ColorEffect == 0U)
+  else if (CameraCap->ColorEffect == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
@@ -822,15 +823,16 @@ int32_t BSP_CAMERA_SetBrightness(uint32_t Instance, int32_t Brightness)
 {
   int32_t ret;
 
-  if((Instance >= CAMERA_INSTANCES_NBR) || ((Brightness < CAMERA_BRIGHTNESS_MIN) && (Brightness > CAMERA_BRIGHTNESS_MAX)))
+  if ((Instance >= CAMERA_INSTANCES_NBR) || ((Brightness < CAMERA_BRIGHTNESS_MIN)
+                                             && (Brightness > CAMERA_BRIGHTNESS_MAX)))
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->Brightness == 0U)
+  else if (CameraCap->Brightness == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
-  else if(Camera_Drv->SetBrightness(Camera_CompObj, Brightness) != BSP_ERROR_NONE)
+  else if (Camera_Drv->SetBrightness(Camera_CompObj, Brightness) != BSP_ERROR_NONE)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -854,11 +856,11 @@ int32_t BSP_CAMERA_GetBrightness(uint32_t Instance, int32_t *Brightness)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->Brightness == 0U)
+  else if (CameraCap->Brightness == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
@@ -882,15 +884,16 @@ int32_t BSP_CAMERA_SetSaturation(uint32_t Instance, int32_t Saturation)
 {
   int32_t ret;
 
-  if((Instance >= CAMERA_INSTANCES_NBR) || ((Saturation < CAMERA_SATURATION_MIN) && (Saturation > CAMERA_SATURATION_MAX)))
+  if ((Instance >= CAMERA_INSTANCES_NBR) || ((Saturation < CAMERA_SATURATION_MIN)
+                                             && (Saturation > CAMERA_SATURATION_MAX)))
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->Saturation == 0U)
+  else if (CameraCap->Saturation == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
-  else if(Camera_Drv->SetSaturation(Camera_CompObj, Saturation)  != BSP_ERROR_NONE)
+  else if (Camera_Drv->SetSaturation(Camera_CompObj, Saturation)  != BSP_ERROR_NONE)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -914,11 +917,11 @@ int32_t BSP_CAMERA_GetSaturation(uint32_t Instance, int32_t *Saturation)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->Saturation == 0U)
+  else if (CameraCap->Saturation == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
@@ -942,15 +945,15 @@ int32_t BSP_CAMERA_SetContrast(uint32_t Instance, int32_t Contrast)
 {
   int32_t ret;
 
-  if((Instance >= CAMERA_INSTANCES_NBR) || ((Contrast < CAMERA_CONTRAST_MIN) && (Contrast > CAMERA_CONTRAST_MAX)))
+  if ((Instance >= CAMERA_INSTANCES_NBR) || ((Contrast < CAMERA_CONTRAST_MIN) && (Contrast > CAMERA_CONTRAST_MAX)))
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->Contrast == 0U)
+  else if (CameraCap->Contrast == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
-  else if(Camera_Drv->SetContrast(Camera_CompObj, Contrast)  != BSP_ERROR_NONE)
+  else if (Camera_Drv->SetContrast(Camera_CompObj, Contrast)  != BSP_ERROR_NONE)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -974,11 +977,11 @@ int32_t BSP_CAMERA_GetContrast(uint32_t Instance, int32_t *Contrast)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->Contrast == 0U)
+  else if (CameraCap->Contrast == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
@@ -1002,15 +1005,15 @@ int32_t BSP_CAMERA_SetHueDegree(uint32_t Instance, int32_t HueDegree)
 {
   int32_t ret;
 
-  if((Instance >= CAMERA_INSTANCES_NBR) || ((HueDegree < CAMERA_HUEDEGREE_MIN) && (HueDegree > CAMERA_HUEDEGREE_MAX)))
+  if ((Instance >= CAMERA_INSTANCES_NBR) || ((HueDegree < CAMERA_HUEDEGREE_MIN) && (HueDegree > CAMERA_HUEDEGREE_MAX)))
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->HueDegree == 0U)
+  else if (CameraCap->HueDegree == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
-  else if(Camera_Drv->SetHueDegree(Camera_CompObj, HueDegree) != BSP_ERROR_NONE)
+  else if (Camera_Drv->SetHueDegree(Camera_CompObj, HueDegree) != BSP_ERROR_NONE)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -1034,11 +1037,11 @@ int32_t BSP_CAMERA_GetHueDegree(uint32_t Instance, int32_t *HueDegree)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->HueDegree == 0U)
+  else if (CameraCap->HueDegree == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
@@ -1063,15 +1066,15 @@ int32_t BSP_CAMERA_SetMirrorFlip(uint32_t Instance, uint32_t MirrorFlip)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->MirrorFlip == 0U)
+  else if (CameraCap->MirrorFlip == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
-  else if(Camera_Drv->MirrorFlipConfig(Camera_CompObj, MirrorFlip)  != BSP_ERROR_NONE)
+  else if (Camera_Drv->MirrorFlipConfig(Camera_CompObj, MirrorFlip)  != BSP_ERROR_NONE)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -1095,11 +1098,11 @@ int32_t BSP_CAMERA_GetMirrorFlip(uint32_t Instance, uint32_t *MirrorFlip)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->MirrorFlip == 0U)
+  else if (CameraCap->MirrorFlip == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
@@ -1123,15 +1126,15 @@ int32_t BSP_CAMERA_SetZoom(uint32_t Instance, uint32_t Zoom)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->Zoom == 0U)
+  else if (CameraCap->Zoom == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
-  else if(Camera_Drv->ZoomConfig(Camera_CompObj, Zoom) != BSP_ERROR_NONE)
+  else if (Camera_Drv->ZoomConfig(Camera_CompObj, Zoom) != BSP_ERROR_NONE)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -1155,11 +1158,11 @@ int32_t BSP_CAMERA_GetZoom(uint32_t Instance, uint32_t *Zoom)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->Zoom == 0U)
+  else if (CameraCap->Zoom == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
@@ -1182,15 +1185,15 @@ int32_t BSP_CAMERA_EnableNightMode(uint32_t Instance)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->NightMode == 0U)
+  else if (CameraCap->NightMode == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
-  else if(Camera_Drv->NightModeConfig(Camera_CompObj, CAMERA_NIGHT_MODE_SET) != BSP_ERROR_NONE)
+  else if (Camera_Drv->NightModeConfig(Camera_CompObj, CAMERA_NIGHT_MODE_SET) != BSP_ERROR_NONE)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -1212,15 +1215,15 @@ int32_t BSP_CAMERA_DisableNightMode(uint32_t Instance)
 {
   int32_t ret;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(CameraCap->NightMode == 0U)
+  else if (CameraCap->NightMode == 0U)
   {
     ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
   }
-  else if(Camera_Drv->NightModeConfig(Camera_CompObj, CAMERA_NIGHT_MODE_RESET) != BSP_ERROR_NONE)
+  else if (Camera_Drv->NightModeConfig(Camera_CompObj, CAMERA_NIGHT_MODE_RESET) != BSP_ERROR_NONE)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -1243,7 +1246,7 @@ int32_t BSP_CAMERA_PwrUp(uint32_t Instance)
   int32_t ret = BSP_ERROR_NONE;
   GPIO_InitTypeDef gpio_init_structure;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -1277,7 +1280,7 @@ int32_t BSP_CAMERA_PwrDown(uint32_t Instance)
   int32_t ret = BSP_ERROR_NONE;
   GPIO_InitTypeDef gpio_init_structure;
 
-  if(Instance >= CAMERA_INSTANCES_NBR)
+  if (Instance >= CAMERA_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -1344,7 +1347,7 @@ static int32_t GetSize(uint32_t Resolution, uint32_t PixelFormat)
 {
   uint32_t size = 0;
   uint32_t pf_div;
-  if(PixelFormat == CAMERA_PF_RGB888)
+  if (PixelFormat == CAMERA_PF_RGB888)
   {
     pf_div = 3; /* each pixel on 3 bytes so 3/4 words */
   }
@@ -1355,20 +1358,20 @@ static int32_t GetSize(uint32_t Resolution, uint32_t PixelFormat)
   /* Get capture size */
   switch (Resolution)
   {
-  case CAMERA_R160x120:
-    size =  ((uint32_t)(160*120)*pf_div)/4U;
-    break;
-  case CAMERA_R320x240:
-    size =  ((uint32_t)(320*240)*pf_div)/4U;
-    break;
-  case CAMERA_R480x272:
-    size =  ((uint32_t)(480*272)*pf_div)/4U;
-    break;
-  case CAMERA_R640x480:
-    size =  ((uint32_t)(640*480)*pf_div)/4U;
-    break;
-  default:
-    break;
+    case CAMERA_R160x120:
+      size = ((uint32_t)(160 * 120) * pf_div) / 4U;
+      break;
+    case CAMERA_R320x240:
+      size = ((uint32_t)(320 * 240) * pf_div) / 4U;
+      break;
+    case CAMERA_R480x272:
+      size = ((uint32_t)(480 * 272) * pf_div) / 4U;
+      break;
+    case CAMERA_R640x480:
+      size = ((uint32_t)(640 * 480) * pf_div) / 4U;
+      break;
+    default:
+      break;
   }
 
   return (int32_t)size;
@@ -1685,17 +1688,17 @@ static int32_t OV9655_Probe(uint32_t Resolution, uint32_t PixelFormat)
   IOCtx.WriteReg    = BSP_I2C4_WriteReg;
   IOCtx.GetTick     = BSP_GetTick;
 
-  if(OV9655_RegisterBusIO (&OV9655Obj, &IOCtx) != OV9655_OK)
+  if (OV9655_RegisterBusIO(&OV9655Obj, &IOCtx) != OV9655_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
-  else if(OV9655_ReadID(&OV9655Obj, &id) != OV9655_OK)
+  else if (OV9655_ReadID(&OV9655Obj, &id) != OV9655_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
   else
   {
-    if((id != OV9655_ID) && (id != OV9655_ID_2))
+    if ((id != OV9655_ID) && (id != OV9655_ID_2))
     {
       ret = BSP_ERROR_UNKNOWN_COMPONENT;
     }
@@ -1703,11 +1706,11 @@ static int32_t OV9655_Probe(uint32_t Resolution, uint32_t PixelFormat)
     {
       Camera_Drv = (CAMERA_Drv_t *) &OV9655_CAMERA_Driver;
       Camera_CompObj = &OV9655Obj;
-      if(Camera_Drv->Init(Camera_CompObj, Resolution, PixelFormat) != OV9655_OK)
+      if (Camera_Drv->Init(Camera_CompObj, Resolution, PixelFormat) != OV9655_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
-      else if(Camera_Drv->GetCapabilities(Camera_CompObj, CameraCap) != OV9655_OK)
+      else if (Camera_Drv->GetCapabilities(Camera_CompObj, CameraCap) != OV9655_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }

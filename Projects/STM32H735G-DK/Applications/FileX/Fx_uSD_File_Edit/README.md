@@ -1,5 +1,5 @@
 
-## <b>Fx_uSD_File_Edit application description</b>
+## <b>Fx_uSD_File_Edit Application Description</b>
 
 This application provides an example of Azure RTOS FileX stack usage on STM32H735G-DK, it shows how to develop a basic SD card file
 operations application. The application is designed to handle SD card insertion/removal events, and depending on that state, it starts
@@ -33,7 +33,7 @@ That is why MX_SDMMC1_SD_Init() should be public to initialize the newly plugged
 
 - A file named STM32.TXT should be visible in the root directory of the SD card.
 - A blinking green LED light marks the success of the file operations.
-
+- A red LED light is ON when the SD card is unplugged.
 #### <b>Error behaviors</b>
 
 - On failure, the red LED should start blinking.
@@ -73,16 +73,16 @@ Performing quick plug/unplug of SD card may trigger the Error_Handler() function
    This requires changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+     place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	```
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -90,7 +90,7 @@ Performing quick plug/unplug of SD card may trigger the Error_Handler() function
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	```
+    ```
 
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
@@ -120,6 +120,6 @@ RTOS, ThreadX, FileX, File system, SDMMC, FAT32
 
 In order to make the program work, you must do the following :
 
-  - Open your preferred toolchain
-  - Rebuild all files and load your image into target memory
-  - Run the application
+ - Open your preferred toolchain
+ - Rebuild all files and load your image into target memory
+ - Run the application

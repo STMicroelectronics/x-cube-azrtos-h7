@@ -22,7 +22,7 @@
 #define STM32H7B3I_EVAL_NOR_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -49,7 +49,7 @@ typedef struct
 {
   void (* pMspInitCb)(NOR_HandleTypeDef *);
   void (* pMspDeInitCb)(NOR_HandleTypeDef *);
-}BSP_NOR_Cb_t;
+} BSP_NOR_Cb_t;
 #endif /* (USE_HAL_NOR_REGISTER_CALLBACKS == 1) */
 /**
   * @}
@@ -93,8 +93,8 @@ extern NOR_HandleTypeDef hnor;
 int32_t BSP_NOR_Init(uint32_t Instance);
 int32_t BSP_NOR_DeInit(uint32_t Instance);
 #if (USE_HAL_NOR_REGISTER_CALLBACKS == 1)
-int32_t BSP_NOR_RegisterDefaultMspCallbacks (uint32_t Instance);
-int32_t BSP_NOR_RegisterMspCallbacks (uint32_t Instance, BSP_NOR_Cb_t *Callbacks);
+int32_t BSP_NOR_RegisterDefaultMspCallbacks(uint32_t Instance);
+int32_t BSP_NOR_RegisterMspCallbacks(uint32_t Instance, BSP_NOR_Cb_t *Callbacks);
 #endif /* (USE_HAL_NOR_REGISTER_CALLBACKS == 1) */
 int32_t BSP_NOR_ReadData(uint32_t Instance, uint32_t uwStartAddress, uint16_t *pData, uint32_t uwDataSize);
 int32_t BSP_NOR_WriteData(uint32_t Instance, uint32_t uwStartAddress, uint16_t *pData, uint32_t uwDataSize);

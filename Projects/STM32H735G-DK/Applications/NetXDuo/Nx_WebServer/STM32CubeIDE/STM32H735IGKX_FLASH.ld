@@ -168,10 +168,10 @@ SECTIONS
     .tcp_sec (NOLOAD) : {
 
     . = ABSOLUTE(0x24030000);
-    *(.RxDecripSection)
+    *(.RxDescripSection)
 
     . = ABSOLUTE(0x24030060);
-    *(.TxDecripSection)
+    *(.TxDescripSection)
 
   } >RAM_D1 AT> FLASH
 

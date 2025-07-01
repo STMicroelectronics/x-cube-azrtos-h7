@@ -22,7 +22,7 @@
 #define STM32H745I_DISCO_TS_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -30,6 +30,7 @@
 #include "stm32h745i_discovery_errno.h"
 
 #include "../Components/ft5336/ft5336.h"
+#include "../Components/gt911/gt911.h"
 
 /** @addtogroup BSP
   * @{
@@ -43,9 +44,9 @@
   * @{
   */
 
- /** @defgroup STM32H745I_DISCO_TS_Exported_Constants Exported Constants
-   * @{
-   */
+/** @defgroup STM32H745I_DISCO_TS_Exported_Constants Exported Constants
+  * @{
+  */
 #ifndef USE_TS_MULTI_TOUCH
 #define USE_TS_MULTI_TOUCH          1U
 #endif
@@ -62,7 +63,7 @@
 /* Maximum border values of the touchscreen pad */
 #define TS_MAX_WIDTH                480U     /* Touchscreen pad max width   */
 #define TS_MAX_HEIGHT               272U     /* Touchscreen pad max height  */
-   
+
 #define TS_SWAP_NONE                0x01U
 #define TS_SWAP_X                   0x02U
 #define TS_SWAP_Y                   0x04U
@@ -71,7 +72,9 @@
 /**
   * @brief TouchScreen Slave I2C address 1
   */
-#define TS_I2C_ADDRESS              0x70U
+#define TS_I2C_ADDRESS_GT           0xBAU     /* TouchScreen Slave I2C address for GT911 TP   */
+#define TS_I2C_ADDRESS_BACK         0x28U     /* TouchScreen Slave I2C address back for GT911 TP   */
+#define TS_I2C_ADDRESS              0x70U     /* TouchScreen Slave I2C address for FT5336 TP   */
 
 /**
   * @brief Touch screen interrupt signal
@@ -95,12 +98,12 @@ typedef struct
   uint32_t   Width;                  /* Screen Width */
   uint32_t   Height;                 /* Screen Height */
   uint32_t   Orientation;            /* Touch Screen orientation from the upper left position  */
-  uint32_t   Accuracy;               /* Expressed in pixel and means the x or y difference vs old 
+  uint32_t   Accuracy;               /* Expressed in pixel and means the x or y difference vs old
                                         position to consider the new values valid */
-}TS_Init_t;
+} TS_Init_t;
 
-typedef struct 
-{       
+typedef struct
+{
   uint32_t   Width;
   uint32_t   Height;
   uint32_t   Orientation;
@@ -111,13 +114,13 @@ typedef struct
   uint32_t   PreviousY[TS_TOUCH_NBR];
 } TS_Ctx_t;
 
-typedef struct 
-{  
-  uint8_t   MultiTouch;   
+typedef struct
+{
+  uint8_t   MultiTouch;
   uint8_t   Gesture;
   uint8_t   MaxTouch;
   uint32_t  MaxXl;
-  uint32_t  MaxYl;  
+  uint32_t  MaxYl;
 } TS_Capabilities_t;
 
 typedef struct
@@ -139,10 +142,10 @@ typedef struct
 
 #if (USE_TS_GESTURE > 0)
 /**
- *  @brief TS_Gesture_Id_t
- *  Define Possible managed gesture identification values returned by touch screen
- *  driver.
- */
+  *  @brief TS_Gesture_Id_t
+  *  Define Possible managed gesture identification values returned by touch screen
+  *  driver.
+  */
 #define GESTURE_ID_NO_GESTURE   0x00U /*!< Gesture not defined / recognized */
 #define GESTURE_ID_MOVE_UP      0x01U /*!< Gesture Move Up */
 #define GESTURE_ID_MOVE_RIGHT   0x02U /*!< Gesture Move Right */
@@ -153,22 +156,22 @@ typedef struct
 #define GESTURE_ID_NB_MAX       0x07U /*!< max number of gesture id */
 
 typedef struct
-{ 
+{
   uint32_t  Radian;
   uint32_t  OffsetLeftRight;
   uint32_t  OffsetUpDown;
   uint32_t  DistanceLeftRight;
   uint32_t  DistanceUpDown;
-  uint32_t  DistanceZoom;  
-}TS_Gesture_Config_t;
+  uint32_t  DistanceZoom;
+} TS_Gesture_Config_t;
 
 #endif /* (USE_TS_GESTURE > 0) */
 
 /**
- *  @brief TS_TouchEventTypeDef
- *  Define Possible touch events kind as returned values
- *  by touch screen IC Driver.
- */
+  *  @brief TS_TouchEventTypeDef
+  *  Define Possible touch events kind as returned values
+  *  by touch screen IC Driver.
+  */
 typedef enum
 {
   TOUCH_EVENT_NO_EVT        = 0x00, /*!< Touch Event : undetermined */
@@ -212,6 +215,8 @@ int32_t BSP_TS_Get_Orientation(uint32_t Instance, uint32_t *Orientation);
 int32_t BSP_TS_GetCapabilities(uint32_t Instance, TS_Capabilities_t *Capabilities);
 void    BSP_TS_Callback(uint32_t Instance);
 void    BSP_TS_IRQHandler(uint32_t Instance);
+int32_t GT911_Probe(uint32_t Instance);
+int32_t FT5336_Probe(uint32_t Instance);
 /**
   * @}
   */

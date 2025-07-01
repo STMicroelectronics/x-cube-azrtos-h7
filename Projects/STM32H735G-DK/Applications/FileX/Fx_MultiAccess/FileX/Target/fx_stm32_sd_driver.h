@@ -18,6 +18,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "fx_api.h"
 #include "stm32h7xx_hal.h"
@@ -42,7 +46,7 @@ extern TX_SEMAPHORE sd_rx_semaphore;
 #define FX_STM32_SD_DEFAULT_TIMEOUT                      (10 * TX_TIMER_TICKS_PER_SECOND)
 
 /* Let the filex low-level driver initialize the SD driver */
-#define FX_STM32_SD_INIT                                 0
+#define FX_STM32_SD_INIT                                 1
 
 /* Enable the cache mainatenance, required when using the SD DMA */
 #define FX_STM32_SD_CACHE_MAINTENANCE                    1
@@ -198,9 +202,9 @@ VOID fx_stm32_sd_driver(FX_MEDIA *media_ptr);
 
 /* USER CODE END PD */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

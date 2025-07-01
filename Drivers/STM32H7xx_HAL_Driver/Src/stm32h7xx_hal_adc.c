@@ -27,7 +27,7 @@
   ==============================================================================
   [..]
   (+) 16-bit, 14-bit, 12-bit, 10-bit or 8-bit configurable resolution.
-       Note: On devices STM32H72xx and STM32H73xx, these resolution are applicable to instances ADC1 and ADC2. 
+       Note: On devices STM32H72xx and STM32H73xx, these resolution are applicable to instances ADC1 and ADC2.
        ADC3 is featuring resolutions 12-bit, 10-bit, 8-bit, 6-bit.
 
   (+) Interrupt generation at the end of regular conversion and in case of
@@ -324,7 +324,7 @@
 #define ADC3_CFGR_FIELDS_1  ((ADC3_CFGR_RES    | ADC3_CFGR_ALIGN   |\
                              ADC_CFGR_CONT   | ADC_CFGR_OVRMOD  |\
                              ADC_CFGR_DISCEN | ADC_CFGR_DISCNUM |\
-                             ADC_CFGR_EXTEN  | ADC_CFGR_EXTSEL))   /*!< ADC_CFGR fields of parameters that can be updated 
+                             ADC_CFGR_EXTEN  | ADC_CFGR_EXTSEL))   /*!< ADC_CFGR fields of parameters that can be updated
                                                                         when no regular conversion is on-going */
 #endif
 
@@ -932,7 +932,7 @@ HAL_StatusTypeDef HAL_ADC_DeInit(ADC_HandleTypeDef *hadc)
 
 #if defined(ADC_VER_V5_V90)
   if (hadc->Instance == ADC3)
-  {  
+  {
     /* Reset register LTR1 and HTR1 */
     CLEAR_BIT(hadc->Instance->LTR1_TR1, ADC3_TR1_HT1 | ADC3_TR1_LT1);
     CLEAR_BIT(hadc->Instance->HTR1_TR2, ADC3_TR2_HT2 | ADC3_TR2_LT2);
@@ -941,7 +941,7 @@ HAL_StatusTypeDef HAL_ADC_DeInit(ADC_HandleTypeDef *hadc)
     CLEAR_BIT(hadc->Instance->RES1_TR3, ADC3_TR3_HT3 | ADC3_TR3_LT3);
   }
   else
-  {  
+  {
     CLEAR_BIT(hadc->Instance->LTR1_TR1, ADC_LTR_LT);
     CLEAR_BIT(hadc->Instance->HTR1_TR2, ADC_HTR_HT);
 
@@ -2341,7 +2341,7 @@ HAL_StatusTypeDef HAL_ADC_Stop_DMA(ADC_HandleTypeDef *hadc)
   * @param hadc ADC handle
   * @retval ADC group regular conversion data
   */
-uint32_t HAL_ADC_GetValue(ADC_HandleTypeDef *hadc)
+uint32_t HAL_ADC_GetValue(const ADC_HandleTypeDef *hadc)
 {
   /* Check the parameters */
   assert_param(IS_ADC_ALL_INSTANCE(hadc->Instance));
@@ -2933,7 +2933,7 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
       {
         tmpOffsetShifted = ADC_OFFSET_SHIFT_RESOLUTION(hadc, (uint32_t)sConfig->Offset);
       }
-      
+
       if (sConfig->OffsetNumber != ADC_OFFSET_NONE)
       {
         /* Set ADC selected offset number */
@@ -3006,7 +3006,7 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
             CLEAR_BIT(hadc->Instance->OFR4, ADC_OFR4_SSATE);
           }
         }
-        
+
      }
     }
 
@@ -3022,11 +3022,8 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
       /* Configuration of differential mode */
       if (sConfig->SingleDiff == ADC_DIFFERENTIAL_ENDED)
       {
-        /* Set sampling time of the selected ADC channel */
-        /* Note: ADC channel number masked with value "0x1F" to ensure shift value within 32 bits range */
-        LL_ADC_SetChannelSamplingTime(hadc->Instance,
-                                      (uint32_t)(__LL_ADC_DECIMAL_NB_TO_CHANNEL((__LL_ADC_CHANNEL_TO_DECIMAL_NB((uint32_t)sConfig->Channel) + 1UL) & 0x1FUL)),
-                                      sConfig->SamplingTime);
+        /* Set ADC channel preselection of corresponding negative channel */
+        LL_ADC_SetChannelPreselection(hadc->Instance, ADC_CHANNEL_DIFF_NEG_INPUT(hadc, sConfig->Channel));
       }
 
       /* Management of internal measurement channels: Vbat/VrefInt/TempSensor.  */
@@ -3494,7 +3491,7 @@ HAL_StatusTypeDef HAL_ADC_AnalogWDGConfig(ADC_HandleTypeDef *hadc, ADC_AnalogWDG
   * @param hadc ADC handle
   * @retval ADC handle state (bitfield on 32 bits)
   */
-uint32_t HAL_ADC_GetState(ADC_HandleTypeDef *hadc)
+uint32_t HAL_ADC_GetState(const ADC_HandleTypeDef *hadc)
 {
   /* Check the parameters */
   assert_param(IS_ADC_ALL_INSTANCE(hadc->Instance));
@@ -3508,7 +3505,7 @@ uint32_t HAL_ADC_GetState(ADC_HandleTypeDef *hadc)
   * @param hadc ADC handle
   * @retval ADC error code (bitfield on 32 bits)
   */
-uint32_t HAL_ADC_GetError(ADC_HandleTypeDef *hadc)
+uint32_t HAL_ADC_GetError(const ADC_HandleTypeDef *hadc)
 {
   /* Check the parameters */
   assert_param(IS_ADC_ALL_INSTANCE(hadc->Instance));

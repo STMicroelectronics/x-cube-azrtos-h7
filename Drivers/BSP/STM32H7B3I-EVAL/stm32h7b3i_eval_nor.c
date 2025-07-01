@@ -104,7 +104,7 @@ int32_t BSP_NOR_Init(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= NOR_INSTANCES_NBR)
+  if (Instance >= NOR_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
@@ -115,27 +115,27 @@ int32_t BSP_NOR_Init(uint32_t Instance)
     NOR_MspInit(&hnor);
 #else
     /* Register the NOR MSP Callbacks */
-    if(IsMspCallbacksValid == 0UL)
+    if (IsMspCallbacksValid == 0UL)
     {
-      if(BSP_NOR_RegisterDefaultMspCallbacks(Instance) != BSP_ERROR_NONE)
+      if (BSP_NOR_RegisterDefaultMspCallbacks(Instance) != BSP_ERROR_NONE)
       {
         ret = BSP_ERROR_PERIPH_FAILURE;
       }
     }
-    if(ret == BSP_ERROR_NONE)
+    if (ret == BSP_ERROR_NONE)
     {
 #endif /* USE_HAL_NOR_REGISTER_CALLBACKS */
-      /* __weak function can be rewritten by the application */
-      if(MX_NOR_Init(&hnor) != HAL_OK)
-      {
-        ret = BSP_ERROR_NO_INIT;
-      }
-#if (USE_HAL_NOR_REGISTER_CALLBACKS == 1)
+    /* __weak function can be rewritten by the application */
+    if (MX_NOR_Init(&hnor) != HAL_OK)
+    {
+      ret = BSP_ERROR_NO_INIT;
     }
-#endif
+#if (USE_HAL_NOR_REGISTER_CALLBACKS == 1)
   }
+#endif
+}
 
-  return ret;
+return ret;
 }
 
 
@@ -148,7 +148,7 @@ int32_t BSP_NOR_DeInit(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= NOR_INSTANCES_NBR)
+  if (Instance >= NOR_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
@@ -158,7 +158,7 @@ int32_t BSP_NOR_DeInit(uint32_t Instance)
     hnor.Instance = FMC_NORSRAM_DEVICE;
     hnor.Extended = FMC_NORSRAM_EXTENDED_DEVICE;
 
-    if(HAL_NOR_DeInit(&hnor) != HAL_OK)
+    if (HAL_NOR_DeInit(&hnor) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -215,7 +215,7 @@ __weak HAL_StatusTypeDef MX_NOR_Init(NOR_HandleTypeDef *hNor)
   Timing.AccessMode            = FMC_ACCESS_MODE_B;
 
   /* NOR controller initialization */
-  if(HAL_NOR_Init(hNor, &Timing, &Timing) != HAL_OK)
+  if (HAL_NOR_Init(hNor, &Timing, &Timing) != HAL_OK)
   {
     return  HAL_ERROR;
   }
@@ -238,11 +238,11 @@ int32_t BSP_NOR_RegisterDefaultMspCallbacks(uint32_t Instance)
   __HAL_NOR_RESET_HANDLE_STATE(&hnor);
 
   /* Register default MspInit/MspDeInit Callbacks */
-  if(HAL_NOR_RegisterCallback(&hnor, HAL_NOR_MSP_INIT_CB_ID, NOR_MspInit) != HAL_OK)
+  if (HAL_NOR_RegisterCallback(&hnor, HAL_NOR_MSP_INIT_CB_ID, NOR_MspInit) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
-  else if(HAL_NOR_RegisterCallback(&hnor, HAL_NOR_MSP_DEINIT_CB_ID, NOR_MspDeInit)!= HAL_OK)
+  else if (HAL_NOR_RegisterCallback(&hnor, HAL_NOR_MSP_DEINIT_CB_ID, NOR_MspDeInit) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -270,11 +270,11 @@ int32_t BSP_NOR_RegisterMspCallbacks(uint32_t Instance, BSP_NOR_Cb_t *Callbacks)
   __HAL_NOR_RESET_HANDLE_STATE(&hnor);
 
   /* Register MspInit/MspDeInit Callbacks */
-  if(HAL_NOR_RegisterCallback(&hnor, HAL_NOR_MSP_INIT_CB_ID, Callbacks->pMspInitCb)!= HAL_OK)
+  if (HAL_NOR_RegisterCallback(&hnor, HAL_NOR_MSP_INIT_CB_ID, Callbacks->pMspInitCb) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
-  else if(HAL_NOR_RegisterCallback(&hnor, HAL_NOR_MSP_DEINIT_CB_ID, Callbacks->pMspDeInitCb)!= HAL_OK)
+  else if (HAL_NOR_RegisterCallback(&hnor, HAL_NOR_MSP_DEINIT_CB_ID, Callbacks->pMspDeInitCb) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -294,15 +294,15 @@ int32_t BSP_NOR_RegisterMspCallbacks(uint32_t Instance, BSP_NOR_Cb_t *Callbacks)
   * @param  uwDataSize  Size of data to read
   * @retval BSP status
   */
-int32_t BSP_NOR_ReadData(uint32_t Instance, uint32_t uwStartAddress, uint16_t* pData, uint32_t uwDataSize)
+int32_t BSP_NOR_ReadData(uint32_t Instance, uint32_t uwStartAddress, uint16_t *pData, uint32_t uwDataSize)
 {
   int32_t ret;
 
-  if(Instance >= NOR_INSTANCES_NBR)
+  if (Instance >= NOR_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_NOR_ReadBuffer(&hnor, NOR_DEVICE_ADDR + uwStartAddress, pData, uwDataSize) != HAL_OK)
+  else if (HAL_NOR_ReadBuffer(&hnor, NOR_DEVICE_ADDR + uwStartAddress, pData, uwDataSize) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -323,11 +323,11 @@ int32_t BSP_NOR_ReturnToReadMode(uint32_t Instance)
 {
   int32_t ret;
 
-  if(Instance >= NOR_INSTANCES_NBR)
+  if (Instance >= NOR_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_NOR_ReturnToReadMode(&hnor) != HAL_OK)
+  else if (HAL_NOR_ReturnToReadMode(&hnor) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -347,14 +347,14 @@ int32_t BSP_NOR_ReturnToReadMode(uint32_t Instance)
   * @param  uwDataSize  Size of data to write
   * @retval BSP status
   */
-int32_t BSP_NOR_WriteData(uint32_t Instance, uint32_t uwStartAddress, uint16_t* pData, uint32_t uwDataSize)
+int32_t BSP_NOR_WriteData(uint32_t Instance, uint32_t uwStartAddress, uint16_t *pData, uint32_t uwDataSize)
 {
   int32_t ret = BSP_ERROR_NONE;
   uint32_t index = uwDataSize;
   uint32_t write_addr;
-  uint16_t* write_data;
+  uint16_t *write_data;
 
-  if(Instance >= NOR_INSTANCES_NBR)
+  if (Instance >= NOR_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
@@ -362,10 +362,10 @@ int32_t BSP_NOR_WriteData(uint32_t Instance, uint32_t uwStartAddress, uint16_t* 
   {
     write_data = pData;
     write_addr = uwStartAddress;
-    while((index > 0UL) && (ret == BSP_ERROR_NONE))
+    while ((index > 0UL) && (ret == BSP_ERROR_NONE))
     {
       /* Write data to NOR */
-      if(HAL_NOR_Program(&hnor, (uint32_t *)(NOR_DEVICE_ADDR + write_addr), write_data) != HAL_OK)
+      if (HAL_NOR_Program(&hnor, (uint32_t *)(NOR_DEVICE_ADDR + write_addr), write_data) != HAL_OK)
       {
         ret = BSP_ERROR_PERIPH_FAILURE;
       }
@@ -375,7 +375,7 @@ int32_t BSP_NOR_WriteData(uint32_t Instance, uint32_t uwStartAddress, uint16_t* 
         NOR_MspWait(&hnor, PROGRAM_TIMEOUT);
 
         /* Read NOR device status */
-        if(HAL_NOR_GetStatus(&hnor, NOR_DEVICE_ADDR, PROGRAM_TIMEOUT) != HAL_NOR_STATUS_SUCCESS)
+        if (HAL_NOR_GetStatus(&hnor, NOR_DEVICE_ADDR, PROGRAM_TIMEOUT) != HAL_NOR_STATUS_SUCCESS)
         {
           ret = BSP_ERROR_PERIPH_FAILURE;
         }
@@ -401,15 +401,15 @@ int32_t BSP_NOR_WriteData(uint32_t Instance, uint32_t uwStartAddress, uint16_t* 
   * @param  uwDataSize  Size of data to write
   * @retval BSP status
   */
-int32_t BSP_NOR_ProgramData(uint32_t Instance, uint32_t uwStartAddress, uint16_t* pData, uint32_t uwDataSize)
+int32_t BSP_NOR_ProgramData(uint32_t Instance, uint32_t uwStartAddress, uint16_t *pData, uint32_t uwDataSize)
 {
   int32_t ret;
 
-  if(Instance >= NOR_INSTANCES_NBR)
+  if (Instance >= NOR_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }/* Send NOR program buffer operation */
-  else if(HAL_NOR_ProgramBuffer(&hnor, uwStartAddress, pData, uwDataSize) != HAL_OK)
+  else if (HAL_NOR_ProgramBuffer(&hnor, uwStartAddress, pData, uwDataSize) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -419,7 +419,7 @@ int32_t BSP_NOR_ProgramData(uint32_t Instance, uint32_t uwStartAddress, uint16_t
     NOR_MspWait(&hnor, PROGRAM_TIMEOUT);
 
     /* Return the NOR memory status */
-    if(HAL_NOR_GetStatus(&hnor, NOR_DEVICE_ADDR, PROGRAM_TIMEOUT) != HAL_NOR_STATUS_SUCCESS)
+    if (HAL_NOR_GetStatus(&hnor, NOR_DEVICE_ADDR, PROGRAM_TIMEOUT) != HAL_NOR_STATUS_SUCCESS)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -442,11 +442,11 @@ int32_t BSP_NOR_EraseBlock(uint32_t Instance, uint32_t BlockAddress)
 {
   int32_t ret;
 
-  if(Instance >= NOR_INSTANCES_NBR)
+  if (Instance >= NOR_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }/* Send NOR erase block operation */
-  else if(HAL_NOR_Erase_Block(&hnor, BlockAddress, NOR_DEVICE_ADDR) != HAL_OK)
+  else if (HAL_NOR_Erase_Block(&hnor, BlockAddress, NOR_DEVICE_ADDR) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -456,7 +456,7 @@ int32_t BSP_NOR_EraseBlock(uint32_t Instance, uint32_t BlockAddress)
     NOR_MspWait(&hnor, PROGRAM_TIMEOUT);
 
     /* Return the NOR memory status */
-    if(HAL_NOR_GetStatus(&hnor, NOR_DEVICE_ADDR, BLOCKERASE_TIMEOUT) != HAL_NOR_STATUS_SUCCESS)
+    if (HAL_NOR_GetStatus(&hnor, NOR_DEVICE_ADDR, BLOCKERASE_TIMEOUT) != HAL_NOR_STATUS_SUCCESS)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -478,11 +478,11 @@ int32_t BSP_NOR_EraseChip(uint32_t Instance)
 {
   int32_t ret;
 
-  if(Instance >= NOR_INSTANCES_NBR)
+  if (Instance >= NOR_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }/* Send NOR Erase chip operation */
-  else if(HAL_NOR_Erase_Chip(&hnor, NOR_DEVICE_ADDR) != HAL_OK)
+  else if (HAL_NOR_Erase_Chip(&hnor, NOR_DEVICE_ADDR) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -492,7 +492,7 @@ int32_t BSP_NOR_EraseChip(uint32_t Instance)
     NOR_MspWait(&hnor, PROGRAM_TIMEOUT);
 
     /* Return the NOR memory status */
-    if(HAL_NOR_GetStatus(&hnor, NOR_DEVICE_ADDR, CHIPERASE_TIMEOUT) != HAL_NOR_STATUS_SUCCESS)
+    if (HAL_NOR_GetStatus(&hnor, NOR_DEVICE_ADDR, CHIPERASE_TIMEOUT) != HAL_NOR_STATUS_SUCCESS)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -515,11 +515,11 @@ int32_t BSP_NOR_ReadID(uint32_t Instance, NOR_IDTypeDef *pNOR_ID)
 {
   int32_t ret;
 
-  if(Instance >= NOR_INSTANCES_NBR)
+  if (Instance >= NOR_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_NOR_Read_ID(&hnor, pNOR_ID) != HAL_OK)
+  else if (HAL_NOR_Read_ID(&hnor, pNOR_ID) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -564,31 +564,31 @@ static void NOR_MspInit(NOR_HandleTypeDef *hNor)
   gpio_init_structure.Pull      = GPIO_PULLUP;
   gpio_init_structure.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
 
-    /* GPIOC configuration */
+  /* GPIOC configuration */
   gpio_init_structure.Alternate = GPIO_AF9_FMC;
   gpio_init_structure.Pin   = GPIO_PIN_6 | GPIO_PIN_7;
   HAL_GPIO_Init(GPIOC, &gpio_init_structure);
 
   /* GPIOD configuration */
   gpio_init_structure.Alternate = GPIO_AF12_FMC;
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5 |\
-                              GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5 | \
+                              GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | \
                               GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
   HAL_GPIO_Init(GPIOD, &gpio_init_structure);
 
   /* GPIOE configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 |\
-                              GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | \
+                              GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | \
                               GPIO_PIN_14 | GPIO_PIN_15;
   HAL_GPIO_Init(GPIOE, &gpio_init_structure);
 
   /* GPIOF configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2| GPIO_PIN_3 | GPIO_PIN_4     |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4     | \
                               GPIO_PIN_5 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
   HAL_GPIO_Init(GPIOF, &gpio_init_structure);
 
   /* GPIOG configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2| GPIO_PIN_3 | GPIO_PIN_4     |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4     | \
                               GPIO_PIN_5;
   HAL_GPIO_Init(GPIOG, &gpio_init_structure);
 }
@@ -610,28 +610,28 @@ static void NOR_MspDeInit(NOR_HandleTypeDef  *hNor)
   HAL_GPIO_DeInit(GPIOC, gpio_init_structure.Pin);
 
   /* GPIOD configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5|\
-                              GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5 | \
+                              GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | \
                               GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
   HAL_GPIO_DeInit(GPIOD, gpio_init_structure.Pin);
 
   /* GPIOE configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 |\
-                              GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | \
+                              GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | \
                               GPIO_PIN_14 | GPIO_PIN_15;
   HAL_GPIO_DeInit(GPIOE, gpio_init_structure.Pin);
 
   /* GPIOF configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2| GPIO_PIN_3 | GPIO_PIN_4     |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4     | \
                               GPIO_PIN_5 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
   HAL_GPIO_DeInit(GPIOF, gpio_init_structure.Pin);
 
   /* GPIOG configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2| GPIO_PIN_3 | GPIO_PIN_4     |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4     | \
                               GPIO_PIN_5;
   HAL_GPIO_DeInit(GPIOG, gpio_init_structure.Pin);
 
-    /* Disable FMC clock */
+  /* Disable FMC clock */
   __HAL_RCC_FMC_CLK_DISABLE();
 }
 
@@ -649,7 +649,7 @@ static void NOR_MspWait(NOR_HandleTypeDef *hNor, uint32_t Timeout)
   uint32_t timeout = Timeout;
 
   /* Polling on Ready/Busy signal */
-  while((HAL_GPIO_ReadPin(NOR_READY_BUSY_GPIO, NOR_READY_BUSY_PIN) != NOR_BUSY_STATE) && (timeout > 0U))
+  while ((HAL_GPIO_ReadPin(NOR_READY_BUSY_GPIO, NOR_READY_BUSY_PIN) != NOR_BUSY_STATE) && (timeout > 0U))
   {
     timeout--;
   }
@@ -657,7 +657,7 @@ static void NOR_MspWait(NOR_HandleTypeDef *hNor, uint32_t Timeout)
   timeout = Timeout;
 
   /* Polling on Ready/Busy signal */
-  while((HAL_GPIO_ReadPin(NOR_READY_BUSY_GPIO, NOR_READY_BUSY_PIN) != NOR_READY_STATE) && (timeout > 0U))
+  while ((HAL_GPIO_ReadPin(NOR_READY_BUSY_GPIO, NOR_READY_BUSY_PIN) != NOR_READY_STATE) && (timeout > 0U))
   {
     timeout--;
   }

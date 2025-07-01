@@ -27,7 +27,7 @@ vertical-align: middle;
 <body>
 <div class="row">
 <section id="ux_device_ccid-application-description" class="col-sm-12 col-lg-8">
-<h2><b>Ux_Device_CCID application description</b></h2>
+<h2><b>Ux_Device_CCID Application Description</b></h2>
 <p>This application provides an example of Azure RTOS USBX stack usage
 on NUCLEO-H723ZG board, it shows how to develop USB Device for
 Integrated Circuit Card Interface Device based application.</p>
@@ -62,23 +62,31 @@ provides host with the requested descriptors (device, configuration,
 string). Those descriptors are used by host driver to identify the
 device capabilities. Once the NUCLEO-H723ZG USB device successfully
 completed the enumeration phase, send and receive the CCID class
-commands through the bulk out, bulk in and interrupt endpoints: - CCID
-Events like card detection or removal are sent on the Interrupt
-Endpoint. - CCID Commands are sent on BULK-OUT Endpoint. - CCID
-Responses are sent on BULK-IN Endpoint.</p>
+commands through the bulk out, bulk in and interrupt endpoints: 
+<ul>
+<li>CCID Events like card detection or removal are sent on the Interrupt
+Endpoint.</li>
+<li>CCID Commands are sent on BULK-OUT Endpoint.</li>
+<li>CCID Responses are sent on BULK-IN Endpoint.</li>
+</ul>
+</p>
 <p>To start using pssc tool such as Cryptware Smart Card Console, Smart
-card ToolSet Pro or SpringCard PC/SC Diag, follow next steps: - Connect
-the board to the PC with the USB cable. - Open the PC/SC application
-tool, the card gets detected and the ATR appears. - Enter the following
-commands one by one in the command APDU area and check the response.</p>
-<p>APDU Supported: - ENABLE CHV1: A0 28 00 01 08 CHV1 value - success
-Message 90 00 is displayed. - SELECT: A0 A4 00 00 02 File ID - success
-Message 90 00 is displayed. - VERIFY: A0 20 00 xx 08 CHV Value - success
-Message 90 00 is displayed. - CHANGE: A0 24 00 xx 10 Old CHV, New CHV -
-success Message 90 00 is displayed. - GET RESPONSE: A0 C0 00 00 -
-success Message 90 00 is displayed and the written data is displayed -
-READ BINARY: A0 B0 xx xx - success Message 90 00 is displayed and the
-read data is displayed.</p>
+card ToolSet Pro or SpringCard PC/SC Diag, follow next steps: 
+<ul>
+<li>Connect the board to the PC with the USB cable.</li>
+<li>Open the PC/SC application tool, the card gets detected and the ATR appears.</li>
+<li>Enter the following commands one by one in the command APDU area and check the response.</li></p>
+</ul>
+<p>APDU Supported: 
+<ul>
+<li>ENABLE CHV1: A0 28 00 01 08 CHV1 value - success Message 90 00 is displayed.</li>
+<li>SELECT: A0 A4 00 00 02 File ID - success Message 90 00 is displayed.</li>
+<li>VERIFY: A0 20 00 xx 08 CHV Value - success Message 90 00 is displayed.</li>
+<li>CHANGE: A0 24 00 xx 10 Old CHV, New CHV - success Message 90 00 is displayed.</li>
+<li>GET RESPONSE: A0 C0 00 00 - success Message 90 00 is displayed and the written data is displayed.</li>
+<li>READ BINARY: A0 B0 xx xx - success Message 90 00 is displayed and the read data is displayed.</li>
+</ul>
+</p>
 <p>For warning processing, execution error or the unsupported command:
 message 69 99 - 63 C0 - 88 88 is displayed.</p>
 <h4 id="error-behaviors"><b>Error behaviors</b></h4>
@@ -186,10 +194,10 @@ DMA.</li>
 <h3 id="hardware-and-software-environment"><b>Hardware and Software
 environment</b></h3>
 <ul>
-<li>This example runs on STM32H723xx devices.</li>
-<li>This example has been tested with STMicroelectronics NUCLEO-H723ZG
-boards revision MB1364-H723ZG-E01 and can be easily tailored to any
-other supported device and development board.</li>
+<li>This application runs on STM32H723xx devices.</li>
+<li>This application has been tested with STMicroelectronics
+NUCLEO-H723ZG boards revision MB1364-H723ZG-E01 and can be easily
+tailored to any other supported device and development board.</li>
 </ul>
 <h3 id="how-to-use-it"><b>How to use it ?</b></h3>
 <p>In order to make the program work, you must do the following :</p>

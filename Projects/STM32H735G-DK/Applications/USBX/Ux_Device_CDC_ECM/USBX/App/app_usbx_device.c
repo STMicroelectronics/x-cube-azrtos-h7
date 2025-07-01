@@ -18,11 +18,16 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_usbx_device.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,6 +55,7 @@ static UX_SLAVE_CLASS_CDC_ECM_PARAMETER cdc_ecm_parameter;
 static TX_THREAD ux_device_app_thread;
 
 /* USER CODE BEGIN PV */
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -223,7 +229,7 @@ static VOID app_ux_device_thread_entry(ULONG thread_input)
   /* USER CODE END app_ux_device_thread_entry */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief  USBX_APP_Device_Init
@@ -256,7 +262,7 @@ VOID USBX_APP_Device_Init(VOID)
   /* Initialize and link controller HAL driver */
   ux_dcd_stm32_initialize((ULONG)USB_OTG_HS, (ULONG)&hpcd_USB_OTG_HS);
 
-  /* Start USB device */
+  /* Start the USB device */
   HAL_PCD_Start(&hpcd_USB_OTG_HS);
 
   /* USER CODE BEGIN USB_Device_Init_PostTreatment */
@@ -264,4 +270,4 @@ VOID USBX_APP_Device_Init(VOID)
   /* USER CODE END USB_Device_Init_PostTreatment */
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

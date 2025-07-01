@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_device_rndis.h"
 #include <stdlib.h>
@@ -116,6 +120,6 @@ VOID USBD_RNDIS_GetMacAdd(UCHAR *mac_add, UCHAR *mac_node)
   /* USER CODE END USBD_RNDIS_GetMacAdd */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

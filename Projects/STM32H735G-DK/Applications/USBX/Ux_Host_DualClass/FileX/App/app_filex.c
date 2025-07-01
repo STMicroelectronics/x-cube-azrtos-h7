@@ -19,6 +19,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_filex.h"
 
@@ -84,7 +88,7 @@ UINT MX_FileX_Init(VOID *memory_ptr)
   return ret;
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief  Application Write File process.
@@ -202,4 +206,4 @@ UINT App_File_Create(FX_MEDIA *fx_media)
   return status;
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

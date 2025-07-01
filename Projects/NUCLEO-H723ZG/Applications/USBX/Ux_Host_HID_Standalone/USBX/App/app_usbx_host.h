@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_api.h"
 #include "main.h"
@@ -74,7 +78,7 @@ VOID USBX_Host_Process(VOID *arg);
 
 /* USER CODE END PD */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 typedef enum
 {
@@ -82,7 +86,7 @@ typedef enum
   USB_VBUS_TRUE,
 } USB_VBUS_State;
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

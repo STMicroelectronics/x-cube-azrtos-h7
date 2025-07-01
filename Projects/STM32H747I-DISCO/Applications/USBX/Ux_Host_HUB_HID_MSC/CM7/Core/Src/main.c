@@ -86,9 +86,9 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
-  /* USER CODE BEGIN Boot_Mode_Sequence_0 */
+/* USER CODE BEGIN Boot_Mode_Sequence_0 */
   int32_t timeout;
-  /* USER CODE END Boot_Mode_Sequence_0 */
+/* USER CODE END Boot_Mode_Sequence_0 */
 
   /* MPU Configuration--------------------------------------------------------*/
   MPU_Config();
@@ -101,7 +101,7 @@ int main(void)
   /* Enable D-Cache---------------------------------------------------------*/
   SCB_EnableDCache();
 
-  /* USER CODE BEGIN Boot_Mode_Sequence_1 */
+/* USER CODE BEGIN Boot_Mode_Sequence_1 */
   /* Wait until CPU2 boots and enters in stop mode or timeout*/
   timeout = 0xFFFF;
   while((__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) != RESET) && (timeout-- > 0));
@@ -109,7 +109,7 @@ int main(void)
   {
   Error_Handler();
   }
-  /* USER CODE END Boot_Mode_Sequence_1 */
+/* USER CODE END Boot_Mode_Sequence_1 */
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
@@ -121,8 +121,7 @@ int main(void)
 
   /* Configure the system clock */
   SystemClock_Config();
-
-  /* USER CODE BEGIN Boot_Mode_Sequence_2 */
+/* USER CODE BEGIN Boot_Mode_Sequence_2 */
   /* When system initialization is finished, Cortex-M7 will release Cortex-M4 by means of
   HSEM notification */
   /*HW semaphore Clock enable*/
@@ -141,7 +140,7 @@ int main(void)
   {
   Error_Handler();
   }
-  /* USER CODE END Boot_Mode_Sequence_2 */
+/* USER CODE END Boot_Mode_Sequence_2 */
 
   /* USER CODE BEGIN SysInit */
   /* USER CODE END SysInit */
@@ -319,7 +318,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM6) {
+  if (htim->Instance == TIM6)
+  {
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
@@ -338,13 +338,12 @@ void Error_Handler(void)
 
   while (1)
   {
-    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+    HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
     HAL_Delay(200);
   }
   /* USER CODE END Error_Handler_Debug */
 }
-
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.

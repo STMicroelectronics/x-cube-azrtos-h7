@@ -1,5 +1,5 @@
 
-## <b>Nx_MQTT_Client application description</b>
+## <b>Nx_MQTT_Client Application Description</b>
 
 This application provides an example of Azure RTOS NetX/NetXDuo stack usage.
 It shows how to exchange data between client and server using MQTT protocol in an encrypted mode supporting TLS v1.2.
@@ -13,9 +13,9 @@ The main entry function tx_application_define() is called by ThreadX during kern
 
 The application then creates 3 threads with the different priorities:
 
- + **NxAppThread** (priority 10, PreemtionThreashold 10) : created with the <i>TX_AUTO_START</i> flag to start automatically.
- + **AppMQTTClientThread** (priority 3, PreemtionThreashold 3) : created with the <i>TX_DONT_START</i> flag to be started later.
- + **AppSNTPThread** (priority 5, PreemtionThreashold 5) : created with the <i>TX_DONT_START</i> flag to be started later.
+ + **NxAppThread** (priority 10, PreemptionThreshold 10) : created with the <i>TX_AUTO_START</i> flag to start automatically.
+ + **AppMQTTClientThread** (priority 3, PreemptionThreshold 3) : created with the <i>TX_DONT_START</i> flag to be started later.
+ + **AppSNTPThread** (priority 5, PreemptionThreshold 5) : created with the <i>TX_DONT_START</i> flag to be started later.
 
 The **NxAppThread** starts and performs the following actions:
 
@@ -81,10 +81,10 @@ void MX_ETH_Init(void)
   /* USER CODE END ETH_Init 1 */
   heth.Instance = ETH;
   heth.Init.MACAddr[0] =   0x00;
-  heth.Init.MACAddr[1] =   0x11;
-  heth.Init.MACAddr[2] =   0x83;
-  heth.Init.MACAddr[3] =   0x45;
-  heth.Init.MACAddr[4] =   0x26;
+  heth.Init.MACAddr[1] =   0x80;
+  heth.Init.MACAddr[2] =   0xE1;
+  heth.Init.MACAddr[3] =   0x00;
+  heth.Init.MACAddr[4] =   0x30;
   heth.Init.MACAddr[5] =   0x20;
 ```
 
@@ -107,12 +107,11 @@ void MX_ETH_Init(void)
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
       - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
-
  4. To make an encrypted connection with MQTT server, user should follow these steps to add an x509 certificate to the _mqtt\_client_ and use it to ensure server's authentication :
       - download certificate authority CA (in this application "mosquitto.org.der" downloaded from [test.mosquitto](https://test.mosquitto.org)
       - convert certificate downloaded by executing the following cmd from the file downloaded path :
 
-   		                xxd.exe -i mosquitto.org.der > mosquitto.cert.h
+                       xxd.exe -i mosquitto.org.der > mosquitto.cert.h
 
       - add the converted file under the application : NetXDuo/Nx_MQTT_Client/NetXDuo/App
       - configure MOSQUITTO_CERT_FILE with your certificate name.
@@ -130,16 +129,16 @@ void MX_ETH_Init(void)
    This requires changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+    place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	```
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -147,7 +146,7 @@ void MX_ETH_Init(void)
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	```
+    ```
 
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
@@ -172,7 +171,7 @@ void MX_ETH_Init(void)
    ```
    + For MDK-ARM
    ```
-    RW_NXDriverSection 0x24030200 0x14000  {
+    RW_NXDriverSection 0x24030200 0x14000 {
   *(.NetXPoolSection)
   }
    ```
@@ -215,12 +214,11 @@ RTOS, Network, ThreadX, NetXDuo, MQTT, TLS, UART
  - This application has been tested with STMicroelectronics STM32H735G-DK boards revision: MB1520-H735I-B02
    and can be easily tailored to any other supported device and development board.
  - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
-      - BaudRate = 115200 baud
-      - Word Length = 8 Bits
-      - Stop Bit = 1
-      - Parity = none
-      - Flow control = None
-
+   - BaudRate = 115200 baud
+   - Word Length = 8 Bits
+   - Stop Bit = 1
+   - Parity = None
+   - Flow control = None
 ###  <b>How to use it ?</b>
 
 In order to make the program work, you must do the following :

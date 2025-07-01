@@ -1,0 +1,211 @@
+"stm32h735g_discovery_ts - Copy.c",000 Severity-Normal: File names should contain only lower case letters, digits, underscores - Req#8
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.c",54 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.c",67 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.c",90 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.c",93 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.c",94 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.c",374 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.c",605 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",86 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",109 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",208 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",252 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",290 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",332 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",356 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",372 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",411 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",422 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",447 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",455 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",639 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",677 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",697 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",1207 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",1448 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",1536 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",1897 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",1925 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",1952 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",1954 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",1955 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",2028 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",2043 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",2048 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",2049 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",2050 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",2051 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",2052 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",2114 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",2295 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",2300 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",2697 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",2739 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",2789 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",2794 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",2952 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",2959 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",3005 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",3144 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",3318 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",3650 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",3652 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",3935 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",3937 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",4159 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",4160 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.c",4161 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",49 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",168 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",213 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",225 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",324 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",343 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",361 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",380 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",398 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",417 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",435 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",454 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",471 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",479 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",503 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",522 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",538 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",557 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",617 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",619 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",620 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",701 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",702 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.c",741 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_lcd.c",241 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_lcd.c",391 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_lcd.c",422 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_lcd.c",963 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_lcd.c",981 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_lcd.c",1034 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_lcd.c",1052 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_lcd.c",1062 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_lcd.c",1078 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_lcd.c",1098 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_lcd.c",1101 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_lcd.c",1121 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_lcd.c",1143 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_lcd.c",1148 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_lcd.c",1200 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_lcd.c",1409 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",384 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",420 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",450 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",493 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",522 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",563 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",1018 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",1033 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",1157 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",1232 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",1461 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",1787 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",1788 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",1821 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",1833 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",1898 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",1910 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",1972 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.c",2126 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.c",88 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.c",641 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ts - Copy.c",340 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ts - Copy.c",341 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ts - Copy.c",427 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ts - Copy.c",428 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ts.c",341 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ts.c",342 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ts.c",428 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ts.c",429 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.h",57 Severity-Normal: Only uppercase should be used in enum type. Rule-11
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.h",64 Severity-Normal: Only uppercase should be used in enum type. Rule-11
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.h",124 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.h",139 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.h",185 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.h",216 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.h",232 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.h",254 Severity-Normal: Invalid preprocessing directive - MISRA-R.20.13, or Preprocessor statements shall start at the first column. Rule-47
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.h",256 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery.h",263 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",35 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",107 Severity-Normal: Typedef struct name does not end with '_t' or 'TypeDef'. Rule-13
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",114 Severity-Normal: Typedef struct name does not end with '_t' or 'TypeDef'. Rule-13
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",122 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",126 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",145 Severity-Normal: Typedef struct name does not end with '_t' or 'TypeDef'. Rule-13
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",153 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",261 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",262 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",263 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",264 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",265 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",266 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",267 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",282 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",283 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",284 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",285 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",286 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",287 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",288 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",307 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",311 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",312 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",313 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",314 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",315 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",316 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",317 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",368 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",369 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",370 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",371 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",373 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",374 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",375 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",376 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",378 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",379 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",380 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",381 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",383 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",384 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",385 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",386 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",388 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",389 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_audio.h",546 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.h",34 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_bus.h",87 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_lcd.h",38 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.h",143 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.h",144 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.h",147 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.h",148 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.h",240 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ospi.h",241 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.h",51 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.h",71 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.h",75 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.h",93 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.h",97 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.h",98 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.h",99 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.h",100 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.h",101 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.h",102 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.h",103 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.h",104 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.h",105 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_sd.h",106 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ts.h",53 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ts.h",56 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ts.h",60 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H735G-DK\stm32h735g_discovery_ts.h",88 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12

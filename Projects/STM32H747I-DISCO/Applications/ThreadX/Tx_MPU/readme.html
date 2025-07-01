@@ -27,7 +27,7 @@ vertical-align: middle;
 <body>
 <div class="row">
 <section id="tx_mpu-application-description" class="col-sm-12 col-lg-8">
-<h2><b>Tx_MPU application description</b></h2>
+<h2><b>Tx_MPU Application Description</b></h2>
 <p>This application provides an example of Azure RTOS ThreadX stack
 usage, it shows how to develop an application using the ThreadX Module
 feature. It demonstrates how to load, start and unload modules. In
@@ -152,8 +152,8 @@ files to expose this memory location.
    } &gt;RAM_D1 AT&gt; RAM_D1</code></pre>
 <pre><code>The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
 In the example above the ThreadX heap size is set to 64KBytes.
-The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.  
-Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).  
+The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
 Read more in STM32CubeIDE User Guide, chapter: &quot;Linker script&quot;.</code></pre>
 <ul>
 <li>The “tx_initialize_low_level.S” should be also modified to enable
@@ -166,8 +166,8 @@ MPU</p>
 <h3 id="hardware-and-software-environment"><b>Hardware and Software
 environment</b></h3>
 <ul>
-<li>This example runs on STM32H747xx devices</li>
-<li>This example has been tested with STMicroelectronics
+<li>This application runs on STM32H747xx devices</li>
+<li>This application has been tested with STMicroelectronics
 STM32H747I-DISCO boards Revision: MB1248D-01. and can be easily tailored
 to any other supported device and development board.</li>
 <li>A virtual COM port appears in the HyperTerminal:

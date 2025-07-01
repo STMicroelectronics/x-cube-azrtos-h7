@@ -22,7 +22,7 @@
 #define STM32H7B3I_EVAL_ERRNO_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Common Error codes */

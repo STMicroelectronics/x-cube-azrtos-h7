@@ -22,11 +22,11 @@
 #define STM32H735G_DK_BUS_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 
- /* Includes ------------------------------------------------------------------*/
+/* Includes ------------------------------------------------------------------*/
 #include "stm32h735g_discovery_conf.h"
 
 #if defined(BSP_USE_CMSIS_OS)
@@ -52,7 +52,7 @@ typedef struct
 {
   pI2C_CallbackTypeDef  pMspI2cInitCb;
   pI2C_CallbackTypeDef  pMspI2cDeInitCb;
-}BSP_I2C_Cb_t;
+} BSP_I2C_Cb_t;
 #endif /* (USE_HAL_I2C_REGISTER_CALLBACKS == 1) */
 
 /**
@@ -83,7 +83,7 @@ typedef struct
 #define BUS_I2C4_SDA_AF                        GPIO_AF4_I2C4
 
 #ifndef BUS_I2C4_FREQUENCY
-   #define BUS_I2C4_FREQUENCY                  100000U /* Frequency of I2Cn = 100 KHz*/
+#define BUS_I2C4_FREQUENCY                  100000U /* Frequency of I2Cn = 100 KHz*/
 #endif
 
 /**
@@ -112,8 +112,8 @@ int32_t BSP_I2C4_Send(uint16_t DevAddr, uint16_t Reg, uint16_t MemAddSize, uint8
 int32_t BSP_I2C4_IsReady(uint16_t DevAddr, uint32_t Trials);
 int32_t BSP_GetTick(void);
 #if (USE_HAL_I2C_REGISTER_CALLBACKS == 1)
-int32_t BSP_I2C4_RegisterDefaultMspCallbacks (void);
-int32_t BSP_I2C4_RegisterMspCallbacks (BSP_I2C_Cb_t *Callback);
+int32_t BSP_I2C4_RegisterDefaultMspCallbacks(void);
+int32_t BSP_I2C4_RegisterMspCallbacks(BSP_I2C_Cb_t *Callback);
 #endif /* USE_HAL_I2C_REGISTER_CALLBACKS */
 HAL_StatusTypeDef MX_I2C4_Init(I2C_HandleTypeDef *phi2c, uint32_t timing);
 /**

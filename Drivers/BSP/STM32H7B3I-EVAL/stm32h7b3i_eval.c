@@ -43,7 +43,7 @@
 /** @defgroup STM32H7B3I_EVAL_LOW_LEVEL_Private_TypesDefinitions LOW LEVEL Private Types Definitions
   * @{
   */
-typedef void (* BSP_EXTI_LineCallback) (void);
+typedef void (* BSP_EXTI_LineCallback)(void);
 /**
   * @}
   */
@@ -80,7 +80,7 @@ static void JOY1_SEL_EXTI_Callback(void);
 EXTI_HandleTypeDef hpb_exti[BUTTONn];
 #if (USE_BSP_COM_FEATURE > 0)
 UART_HandleTypeDef hcom_uart[COMn];
-USART_TypeDef* COM_USART[COMn]   = {COM1_UART, COM1_UART};
+USART_TypeDef *COM_USART[COMn]   = {COM1_UART, COM1_UART};
 #endif
 #if (USE_BSP_POT_FEATURE > 0)
 ADC_HandleTypeDef hpot_adc[POTn];
@@ -92,14 +92,15 @@ ADC_HandleTypeDef hpot_adc[POTn];
 /** @defgroup STM32H7B3I_EVAL_LOW_LEVEL_Private_Variables LOW LEVEL Private Variables
   * @{
   */
-static GPIO_TypeDef* LED_PORT[LEDn] = {
-                                       LED1_GPIO_PORT,
+static GPIO_TypeDef *LED_PORT[LEDn] =
+{
+  LED1_GPIO_PORT,
 #if (USE_BSP_IO_CLASS > 0)
-                                       0,
-                                       0,
-                                       0
+  0,
+  0,
+  0
 #endif
-                                      };
+};
 
 static const uint32_t LED_PIN[LEDn] = {LED1_PIN,
 #if (USE_BSP_IO_CLASS > 0)
@@ -109,7 +110,7 @@ static const uint32_t LED_PIN[LEDn] = {LED1_PIN,
 #endif
                                       };
 
-static GPIO_TypeDef* BUTTON_PORT[BUTTONn] = {BUTTON_WAKEUP_GPIO_PORT,
+static GPIO_TypeDef *BUTTON_PORT[BUTTONn] = {BUTTON_WAKEUP_GPIO_PORT,
                                              BUTTON_TAMPER_GPIO_PORT,
                                              BUTTON_USER_GPIO_PORT
                                             };
@@ -123,25 +124,24 @@ static const IRQn_Type BUTTON_IRQn[BUTTONn] = {BUTTON_WAKEUP_EXTI_IRQn,
                                               };
 
 
-
 #if (USE_COM_LOG > 0)
 static COM_TypeDef COM_ActiveLogPort = COM1;
 #endif
 
 #if (USE_BSP_COM_FEATURE > 0)
-  #if (USE_HAL_UART_REGISTER_CALLBACKS == 1)
-     static uint32_t IsComMspCbValid[COMn] = {0};
-  #endif
+#if (USE_HAL_UART_REGISTER_CALLBACKS == 1)
+static uint32_t IsComMspCbValid[COMn] = {0};
+#endif
 #endif
 
 #if (USE_BSP_POT_FEATURE > 0)
-  #if (USE_HAL_ADC_REGISTER_CALLBACKS == 1)
-     static uint32_t IsPotMspCbValid[POTn] = {0};
-  #endif
+#if (USE_HAL_ADC_REGISTER_CALLBACKS == 1)
+static uint32_t IsPotMspCbValid[POTn] = {0};
+#endif
 #endif
 #if (USE_BSP_IO_CLASS > 0)
 static uint32_t JoyPinsMask;
-static GPIO_TypeDef* JOY1_PORT[JOY_KEY_NUMBER] = {JOY1_SEL_GPIO_PORT,
+static GPIO_TypeDef *JOY1_PORT[JOY_KEY_NUMBER] = {JOY1_SEL_GPIO_PORT,
                                                   JOY1_DOWN_GPIO_PORT,
                                                   JOY1_LEFT_GPIO_PORT,
                                                   JOY1_RIGHT_GPIO_PORT,
@@ -164,10 +164,10 @@ static EXTI_HandleTypeDef hExtiJoyHandle[JOY_KEY_NUMBER];
   * @{
   */
 
-  /**
+/**
   * @brief  This method returns the STM32H7B3I_EVAL BSP Driver revision
   * @retval version: 0xXYZR (8bits for each decimal, R for RC)
-  */
+*/
 int32_t BSP_GetVersion(void)
 {
   return (int32_t)STM32H7B3I_EVAL_BSP_VERSION;
@@ -177,18 +177,18 @@ int32_t BSP_GetVersion(void)
   * @brief  This method returns the board name
   * @retval pointer to the board name string
   */
-const uint8_t* BSP_GetBoardName(void)
+const uint8_t *BSP_GetBoardName(void)
 {
-  return (uint8_t*)STM32H7B3I_EVAL_BSP_BOARD_NAME;
+  return (uint8_t *)STM32H7B3I_EVAL_BSP_BOARD_NAME;
 }
 
 /**
   * @brief  This method returns the board ID
   * @retval pointer to the board name string
   */
-const uint8_t* BSP_GetBoardID(void)
+const uint8_t *BSP_GetBoardID(void)
 {
-  return (uint8_t*)STM32H7B3I_EVAL_BSP_BOARD_ID;
+  return (uint8_t *)STM32H7B3I_EVAL_BSP_BOARD_ID;
 }
 
 /**
@@ -210,38 +210,38 @@ int32_t BSP_LED_Init(Led_TypeDef Led)
 #endif /* (USE_BSP_IO_CLASS > 0) */
   GPIO_InitTypeDef  gpio_init_structure;
 
-  if(Led == LED1)
+  if (Led == LED1)
   {
-   /* Enable the GPIO_LED clock */
-   LED1_GPIO_CLK_ENABLE();
+    /* Enable the GPIO_LED clock */
+    LED1_GPIO_CLK_ENABLE();
 
-   /* Configure the GPIO_LED pin */
-   gpio_init_structure.Mode = GPIO_MODE_OUTPUT_PP;
-   gpio_init_structure.Pull = GPIO_PULLUP;
-   gpio_init_structure.Speed = GPIO_SPEED_FREQ_HIGH;
-   gpio_init_structure.Pin = LED_PIN [Led];
-   HAL_GPIO_Init(LED_PORT[Led], &gpio_init_structure);
-   HAL_GPIO_WritePin(LED_PORT [Led], (uint16_t)LED_PIN[Led], GPIO_PIN_SET);
+    /* Configure the GPIO_LED pin */
+    gpio_init_structure.Mode = GPIO_MODE_OUTPUT_PP;
+    gpio_init_structure.Pull = GPIO_PULLUP;
+    gpio_init_structure.Speed = GPIO_SPEED_FREQ_HIGH;
+    gpio_init_structure.Pin = LED_PIN [Led];
+    HAL_GPIO_Init(LED_PORT[Led], &gpio_init_structure);
+    HAL_GPIO_WritePin(LED_PORT [Led], (uint16_t)LED_PIN[Led], GPIO_PIN_SET);
   }
   else
   {
 #if (USE_BSP_IO_CLASS > 0)
 
-   io_init_structure.Pin  = LED_PIN[Led];
-   io_init_structure.Pull = IO_PULLUP;
-   io_init_structure.Mode = IO_MODE_OUTPUT_PP;
-   /* Initialize IO expander */
-   if(BSP_IO_Init(0, &io_init_structure) != BSP_ERROR_NONE)
-   {
-    ret = BSP_ERROR_NO_INIT;
-   }
-   else
-   {
-     if(BSP_IO_WritePin(0, LED_PIN[Led], IO_PIN_SET) != BSP_ERROR_NONE)
-     {
+    io_init_structure.Pin  = LED_PIN[Led];
+    io_init_structure.Pull = IO_PULLUP;
+    io_init_structure.Mode = IO_MODE_OUTPUT_PP;
+    /* Initialize IO expander */
+    if (BSP_IO_Init(0, &io_init_structure) != BSP_ERROR_NONE)
+    {
       ret = BSP_ERROR_NO_INIT;
-     }
-   }
+    }
+    else
+    {
+      if (BSP_IO_WritePin(0, LED_PIN[Led], IO_PIN_SET) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_NO_INIT;
+      }
+    }
 #endif /* (USE_BSP_IO_CLASS > 0) */
   }
 
@@ -266,32 +266,32 @@ int32_t BSP_LED_DeInit(Led_TypeDef Led)
 #endif /* (USE_BSP_IO_CLASS > 0) */
   GPIO_InitTypeDef  gpio_init_structure;
 
-  if(Led == LED1)
+  if (Led == LED1)
   {
-   /* Configure the GPIO_LED pin */
-   gpio_init_structure.Pin = LED_PIN [Led];
-   HAL_GPIO_WritePin(LED_PORT[Led], (uint16_t)LED_PIN[Led], GPIO_PIN_RESET);
+    /* Configure the GPIO_LED pin */
+    gpio_init_structure.Pin = LED_PIN [Led];
+    HAL_GPIO_WritePin(LED_PORT[Led], (uint16_t)LED_PIN[Led], GPIO_PIN_RESET);
 
-   HAL_GPIO_DeInit(LED_PORT[Led], gpio_init_structure.Pin);
+    HAL_GPIO_DeInit(LED_PORT[Led], gpio_init_structure.Pin);
   }
   else
   {
 #if (USE_BSP_IO_CLASS > 0)
-   if(BSP_IO_WritePin(0, LED_PIN[Led], IO_PIN_RESET) != BSP_ERROR_NONE)
-   {
-     ret = BSP_ERROR_NO_INIT;
-   }
-   else
-   {
-    io_init_structure.Pin  = LED_PIN[Led];
-    io_init_structure.Pull = IO_PULLUP;
-    io_init_structure.Mode = IO_MODE_OFF;
-
-    if(BSP_IO_Init(0, &io_init_structure) != BSP_ERROR_NONE)
+    if (BSP_IO_WritePin(0, LED_PIN[Led], IO_PIN_RESET) != BSP_ERROR_NONE)
     {
-     ret = BSP_ERROR_NO_INIT;
+      ret = BSP_ERROR_NO_INIT;
     }
-   }
+    else
+    {
+      io_init_structure.Pin  = LED_PIN[Led];
+      io_init_structure.Pull = IO_PULLUP;
+      io_init_structure.Mode = IO_MODE_OFF;
+
+      if (BSP_IO_Init(0, &io_init_structure) != BSP_ERROR_NONE)
+      {
+        ret = BSP_ERROR_NO_INIT;
+      }
+    }
 #endif /* (USE_BSP_IO_CLASS > 0) */
   }
   return ret;
@@ -311,17 +311,17 @@ int32_t BSP_LED_On(Led_TypeDef Led)
 {
   int32_t ret;
 
-  if(Led == LED1)
+  if (Led == LED1)
   {
-    HAL_GPIO_WritePin (LED_PORT [Led], (uint16_t)LED_PIN [Led], GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(LED_PORT [Led], (uint16_t)LED_PIN [Led], GPIO_PIN_RESET);
     ret = BSP_ERROR_NONE;
   }
   else
   {
 #if (USE_BSP_IO_CLASS > 0)
-   ret = BSP_IO_WritePin(0, LED_PIN[Led], IO_PIN_RESET);
+    ret = BSP_IO_WritePin(0, LED_PIN[Led], IO_PIN_RESET);
 #else
-   ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
+    ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
 #endif /* (USE_BSP_IO_CLASS > 0) */
   }
   return ret;
@@ -340,17 +340,17 @@ int32_t BSP_LED_On(Led_TypeDef Led)
 int32_t BSP_LED_Off(Led_TypeDef Led)
 {
   int32_t ret;
-  if(Led == LED1)
+  if (Led == LED1)
   {
-    HAL_GPIO_WritePin (LED_PORT [Led], (uint16_t)LED_PIN [Led], GPIO_PIN_SET);
+    HAL_GPIO_WritePin(LED_PORT [Led], (uint16_t)LED_PIN [Led], GPIO_PIN_SET);
     ret = BSP_ERROR_NONE;
   }
   else
   {
 #if (USE_BSP_IO_CLASS > 0)
-   ret = BSP_IO_WritePin(0, LED_PIN[Led], IO_PIN_SET);
+    ret = BSP_IO_WritePin(0, LED_PIN[Led], IO_PIN_SET);
 #else
-   ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
+    ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
 #endif /* (USE_BSP_IO_CLASS > 0) */
   }
   return ret;
@@ -369,7 +369,7 @@ int32_t BSP_LED_Off(Led_TypeDef Led)
 int32_t BSP_LED_Toggle(Led_TypeDef Led)
 {
   int32_t ret;
-  if(Led == LED1)
+  if (Led == LED1)
   {
     HAL_GPIO_TogglePin(LED_PORT[Led], (uint16_t)LED_PIN[Led]);
     ret = BSP_ERROR_NONE;
@@ -377,9 +377,9 @@ int32_t BSP_LED_Toggle(Led_TypeDef Led)
   else
   {
 #if (USE_BSP_IO_CLASS > 0)
-   ret = BSP_IO_TogglePin(0, LED_PIN[Led]);
+    ret = BSP_IO_TogglePin(0, LED_PIN[Led]);
 #else
-   ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
+    ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
 #endif /* (USE_BSP_IO_CLASS > 0) */
   }
   return ret;
@@ -395,20 +395,20 @@ int32_t BSP_LED_Toggle(Led_TypeDef Led)
   *            @arg  LED4
   * @retval LED status
   */
-int32_t BSP_LED_GetState (Led_TypeDef Led)
+int32_t BSP_LED_GetState(Led_TypeDef Led)
 {
   int32_t ret;
 
-  if(Led == LED1)
+  if (Led == LED1)
   {
-   ret = (int32_t)HAL_GPIO_ReadPin (LED_PORT [Led], (uint16_t)LED_PIN [Led]);
+    ret = (int32_t)HAL_GPIO_ReadPin(LED_PORT [Led], (uint16_t)LED_PIN [Led]);
   }
   else
   {
 #if (USE_BSP_IO_CLASS > 0)
-   ret = BSP_IO_ReadPin(0, LED_PIN[Led]);
+    ret = BSP_IO_ReadPin(0, LED_PIN[Led]);
 #else
-   ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
+    ret = BSP_ERROR_FEATURE_NOT_SUPPORTED;
 #endif /* (USE_BSP_IO_CLASS > 0) */
   }
 
@@ -432,27 +432,30 @@ int32_t BSP_LED_GetState (Led_TypeDef Led)
 int32_t BSP_PB_Init(Button_TypeDef Button, ButtonMode_TypeDef ButtonMode)
 {
   GPIO_InitTypeDef gpio_init_structure;
-  static BSP_EXTI_LineCallback ButtonCallback[BUTTONn] ={
-                                                         BUTTON_WAKEUP_EXTI_Callback,
-                                                         BUTTON_TAMPER_EXTI_Callback,
-                                                         BUTTON_USER_EXTI_Callback
-                                                        };
-  static uint32_t  BSP_BUTTON_PRIO [BUTTONn] ={
-                                               BSP_BUTTON_WAKEUP_IT_PRIORITY,
-                                               BSP_BUTTON_TAMPER_IT_PRIORITY,
-                                               BSP_BUTTON_USER_IT_PRIORITY,
-                                              };
-  static const uint32_t BUTTON_EXTI_LINE[BUTTONn] ={
-                                                    BUTTON_WAKEUP_EXTI_LINE,
-                                                    BUTTON_TAMPER_EXTI_LINE,
-                                                    BUTTON_USER_EXTI_LINE,
-                                                   };
-   /* Enable the BUTTON clock*/
-  if(Button == BUTTON_WAKEUP)
+  static BSP_EXTI_LineCallback ButtonCallback[BUTTONn] =
+  {
+    BUTTON_WAKEUP_EXTI_Callback,
+    BUTTON_TAMPER_EXTI_Callback,
+    BUTTON_USER_EXTI_Callback
+  };
+  static uint32_t  BSP_BUTTON_PRIO [BUTTONn] =
+  {
+    BSP_BUTTON_WAKEUP_IT_PRIORITY,
+    BSP_BUTTON_TAMPER_IT_PRIORITY,
+    BSP_BUTTON_USER_IT_PRIORITY,
+  };
+  static const uint32_t BUTTON_EXTI_LINE[BUTTONn] =
+  {
+    BUTTON_WAKEUP_EXTI_LINE,
+    BUTTON_TAMPER_EXTI_LINE,
+    BUTTON_USER_EXTI_LINE,
+  };
+  /* Enable the BUTTON clock*/
+  if (Button == BUTTON_WAKEUP)
   {
     BUTTON_WAKEUP_GPIO_CLK_ENABLE();
   }
-  else if(Button == BUTTON_TAMPER)
+  else if (Button == BUTTON_TAMPER)
   {
     BUTTON_TAMPER_GPIO_CLK_ENABLE();
   }
@@ -464,12 +467,12 @@ int32_t BSP_PB_Init(Button_TypeDef Button, ButtonMode_TypeDef ButtonMode)
   gpio_init_structure.Pull = GPIO_NOPULL;
   gpio_init_structure.Speed = GPIO_SPEED_FREQ_HIGH;
 
-  if(Button == BUTTON_TAMPER)
+  if (Button == BUTTON_TAMPER)
   {
     gpio_init_structure.Pull = GPIO_PULLUP;
   }
 
-  if(ButtonMode == BUTTON_MODE_GPIO)
+  if (ButtonMode == BUTTON_MODE_GPIO)
   {
     /* Configure Button pin as input */
     gpio_init_structure.Mode = GPIO_MODE_INPUT;
@@ -564,7 +567,7 @@ int32_t BSP_COM_Init(COM_TypeDef COM, COM_InitTypeDef *COM_Init)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(COM >= COMn)
+  if (COM >= COMn)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -574,16 +577,16 @@ int32_t BSP_COM_Init(COM_TypeDef COM, COM_InitTypeDef *COM_Init)
 #if (USE_HAL_UART_REGISTER_CALLBACKS == 0)
     USART1_MspInit(&hcom_uart[COM]);
 #else
-    if(IsComMspCbValid[COM] == 0U)
+    if (IsComMspCbValid[COM] == 0U)
     {
-      if(BSP_COM_RegisterDefaultMspCallbacks(COM) != BSP_ERROR_NONE)
+      if (BSP_COM_RegisterDefaultMspCallbacks(COM) != BSP_ERROR_NONE)
       {
         return BSP_ERROR_MSP_FAILURE;
       }
     }
 #endif
 
-    if(MX_USART1_Init(&hcom_uart[COM], COM_Init) != HAL_OK)
+    if (MX_USART1_Init(&hcom_uart[COM], COM_Init) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -602,7 +605,7 @@ int32_t BSP_COM_DeInit(COM_TypeDef COM)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(COM >= COMn)
+  if (COM >= COMn)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -615,7 +618,7 @@ int32_t BSP_COM_DeInit(COM_TypeDef COM)
     USART1_MspDeInit(&hcom_uart[COM]);
 #endif /* (USE_HAL_UART_REGISTER_CALLBACKS == 0) */
 
-    if(HAL_UART_DeInit(&hcom_uart[COM]) != HAL_OK)
+    if (HAL_UART_DeInit(&hcom_uart[COM]) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -656,7 +659,7 @@ int32_t BSP_COM_RegisterDefaultMspCallbacks(COM_TypeDef COM)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(COM >= COMn)
+  if (COM >= COMn)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -665,11 +668,11 @@ int32_t BSP_COM_RegisterDefaultMspCallbacks(COM_TypeDef COM)
     __HAL_UART_RESET_HANDLE_STATE(&hcom_uart[COM]);
 
     /* Register default MspInit/MspDeInit Callback */
-    if(HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPINIT_CB_ID, ) != HAL_OK)
+    if (HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPINIT_CB_ID,) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPDEINIT_CB_ID, USART1_MspDeInit) != HAL_OK)
+    else if (HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPDEINIT_CB_ID, USART1_MspDeInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -693,7 +696,7 @@ int32_t BSP_COM_RegisterMspCallbacks(COM_TypeDef COM, BSP_COM_Cb_t *Callback)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(COM >= COMn)
+  if (COM >= COMn)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -702,11 +705,11 @@ int32_t BSP_COM_RegisterMspCallbacks(COM_TypeDef COM, BSP_COM_Cb_t *Callback)
     __HAL_UART_RESET_HANDLE_STATE(&hcom_uart[COM]);
 
     /* Register MspInit/MspDeInit Callbacks */
-    if(HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPINIT_CB_ID, Callback->pMspInitCb) != HAL_OK)
+    if (HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPINIT_CB_ID, Callback->pMspInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPDEINIT_CB_ID, Callback->pMspDeInitCb) != HAL_OK)
+    else if (HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPDEINIT_CB_ID, Callback->pMspDeInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -730,20 +733,20 @@ int32_t BSP_COM_RegisterMspCallbacks(COM_TypeDef COM, BSP_COM_Cb_t *Callback)
   */
 int32_t BSP_COM_SelectLogPort(COM_TypeDef COM)
 {
-  if(COM_ActiveLogPort != COM)
+  if (COM_ActiveLogPort != COM)
   {
     COM_ActiveLogPort = COM;
   }
   return BSP_ERROR_NONE;
 }
 
- #ifdef __GNUC__
- int __io_putchar (int ch)
- #else
- int fputc (int ch, FILE *f)
- #endif /* __GNUC__ */
+#ifdef __GNUC__
+int __io_putchar(int ch)
+#else
+int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
 {
-  (void)HAL_UART_Transmit (&hcom_uart [COM_ActiveLogPort], (uint8_t *) &ch, 1, COM_POLL_TIMEOUT);
+  (void)HAL_UART_Transmit(&hcom_uart [COM_ActiveLogPort], (uint8_t *) &ch, 1, COM_POLL_TIMEOUT);
   return ch;
 }
 #endif /* USE_COM_LOG */
@@ -759,7 +762,7 @@ int32_t BSP_POT_Init(POT_TypeDef POT)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(POT >= POTn)
+  if (POT >= POTn)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -769,15 +772,15 @@ int32_t BSP_POT_Init(POT_TypeDef POT)
     /* Init the ADC Msp */
     ADC1_MspInit(&hpot_adc[POT]);
 #else
-    if(IsPotMspCbValid[POT] == 0U)
+    if (IsPotMspCbValid[POT] == 0U)
     {
-      if(BSP_POT_RegisterDefaultMspCallbacks(POT) != BSP_ERROR_NONE)
+      if (BSP_POT_RegisterDefaultMspCallbacks(POT) != BSP_ERROR_NONE)
       {
         return BSP_ERROR_MSP_FAILURE;
       }
     }
 #endif
-    if(MX_ADC1_Init(&hpot_adc[POT]) != HAL_OK)
+    if (MX_ADC1_Init(&hpot_adc[POT]) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -795,7 +798,7 @@ int32_t BSP_POT_DeInit(POT_TypeDef POT)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(POT >= POTn)
+  if (POT >= POTn)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -809,7 +812,7 @@ int32_t BSP_POT_DeInit(POT_TypeDef POT)
 
 #endif /* (USE_HAL_ADC_REGISTER_CALLBACKS == 0) */
 
-    if(HAL_ADC_DeInit(&hpot_adc[POT]) != HAL_OK)
+    if (HAL_ADC_DeInit(&hpot_adc[POT]) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -827,19 +830,19 @@ int32_t BSP_POT_GetLevel(POT_TypeDef POT)
 {
   int32_t ret = BSP_ERROR_PERIPH_FAILURE;
 
-  if(POT >= POTn)
+  if (POT >= POTn)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(HAL_ADC_Start(&hpot_adc[POT]) == HAL_OK)
+    if (HAL_ADC_Start(&hpot_adc[POT]) == HAL_OK)
     {
-      if(HAL_ADC_PollForConversion(&hpot_adc[POT], POT_ADC_POLL_TIMEOUT) == HAL_OK)
+      if (HAL_ADC_PollForConversion(&hpot_adc[POT], POT_ADC_POLL_TIMEOUT) == HAL_OK)
       {
-        if(HAL_ADC_GetValue(&hpot_adc[POT]) <= (uint32_t)0xFFF)
+        if (HAL_ADC_GetValue(&hpot_adc[POT]) <= (uint32_t)0xFFF)
         {
-          ret =(int32_t)POT_CONVERT2PERC((uint16_t)HAL_ADC_GetValue(&hpot_adc[POT]));
+          ret = (int32_t)POT_CONVERT2PERC((uint16_t)HAL_ADC_GetValue(&hpot_adc[POT]));
         }
       }
     }
@@ -880,7 +883,7 @@ __weak HAL_StatusTypeDef MX_ADC1_Init(ADC_HandleTypeDef *hadc)
   else
   {
     /**Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
-    */
+      */
     sConfig.Channel      = POT1_ADC_CHANNEL;
     sConfig.Rank         = 1;
     sConfig.SamplingTime = POT1_SAMPLING_TIME;
@@ -905,11 +908,11 @@ __weak HAL_StatusTypeDef MX_ADC1_Init(ADC_HandleTypeDef *hadc)
   * @param POT Potentiometer instance
   * @retval BSP status
   */
-int32_t BSP_POT_RegisterDefaultMspCallbacks (POT_TypeDef POT)
+int32_t BSP_POT_RegisterDefaultMspCallbacks(POT_TypeDef POT)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(POT >= POTn)
+  if (POT >= POTn)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -918,11 +921,11 @@ int32_t BSP_POT_RegisterDefaultMspCallbacks (POT_TypeDef POT)
     __HAL_ADC_RESET_HANDLE_STATE(&hpot_adc[POT]);
 
     /* Register default MspInit/MspDeInit Callback */
-    if(HAL_ADC_RegisterCallback(&hpot_adc[POT], HAL_ADC_MSPINIT_CB_ID, ADC1_MspInit) != HAL_OK)
+    if (HAL_ADC_RegisterCallback(&hpot_adc[POT], HAL_ADC_MSPINIT_CB_ID, ADC1_MspInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_ADC_RegisterCallback(&hpot_adc[POT], HAL_ADC_MSPDEINIT_CB_ID, ADC1_MspDeInit) != HAL_OK)
+    else if (HAL_ADC_RegisterCallback(&hpot_adc[POT], HAL_ADC_MSPDEINIT_CB_ID, ADC1_MspDeInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -942,11 +945,11 @@ int32_t BSP_POT_RegisterDefaultMspCallbacks (POT_TypeDef POT)
   * @param Callbacks     pointer to Potentiometer MspInit/MspDeInit callback functions
   * @retval BSP status
   */
-int32_t BSP_POT_RegisterMspCallbacks (POT_TypeDef POT, BSP_POT_Cb_t *Callback)
+int32_t BSP_POT_RegisterMspCallbacks(POT_TypeDef POT, BSP_POT_Cb_t *Callback)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(POT >= POTn)
+  if (POT >= POTn)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -955,11 +958,11 @@ int32_t BSP_POT_RegisterMspCallbacks (POT_TypeDef POT, BSP_POT_Cb_t *Callback)
     __HAL_ADC_RESET_HANDLE_STATE(&hpot_adc[POT]);
 
     /* Register MspInit/MspDeInit Callbacks */
-    if(HAL_ADC_RegisterCallback(&hpot_adc[POT], HAL_ADC_MSPINIT_CB_ID, Callback->pMspInitCb) != HAL_OK)
+    if (HAL_ADC_RegisterCallback(&hpot_adc[POT], HAL_ADC_MSPINIT_CB_ID, Callback->pMspInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_ADC_RegisterCallback(&hpot_adc[POT], HAL_ADC_MSPDEINIT_CB_ID, Callback->pMspDeInitCb) != HAL_OK)
+    else if (HAL_ADC_RegisterCallback(&hpot_adc[POT], HAL_ADC_MSPDEINIT_CB_ID, Callback->pMspDeInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -1006,50 +1009,50 @@ int32_t BSP_JOY_Init(JOY_TypeDef JOY, JOYMode_TypeDef JoyMode, JOYPin_TypeDef Jo
                                                            JOY1_RIGHT_EXTI_LINE,
                                                            JOY1_UP_EXTI_LINE
                                                           };
-  static uint32_t  BSP_JOY_PRIO [JOY_KEY_NUMBER] ={BSP_JOY1_SEL_IT_PRIORITY,
-                                                   BSP_JOY1_DOWN_IT_PRIORITY,
-                                                   BSP_JOY1_LEFT_IT_PRIORITY,
-                                                   BSP_JOY1_RIGHT_IT_PRIORITY,
-                                                   BSP_JOY1_UP_IT_PRIORITY
-                                                  };
-static const IRQn_Type JOY1_IRQn[JOY_KEY_NUMBER] = {JOY1_SEL_EXTI_IRQn,
-                                                    JOY1_DOWN_EXTI_IRQn,
-                                                    JOY1_LEFT_EXTI_IRQn,
-                                                    JOY1_RIGHT_EXTI_IRQn,
-                                                    JOY1_UP_EXTI_IRQn
+  static uint32_t  BSP_JOY_PRIO [JOY_KEY_NUMBER] = {BSP_JOY1_SEL_IT_PRIORITY,
+                                                    BSP_JOY1_DOWN_IT_PRIORITY,
+                                                    BSP_JOY1_LEFT_IT_PRIORITY,
+                                                    BSP_JOY1_RIGHT_IT_PRIORITY,
+                                                    BSP_JOY1_UP_IT_PRIORITY
                                                    };
+  static const IRQn_Type JOY1_IRQn[JOY_KEY_NUMBER] = {JOY1_SEL_EXTI_IRQn,
+                                                      JOY1_DOWN_EXTI_IRQn,
+                                                      JOY1_LEFT_EXTI_IRQn,
+                                                      JOY1_RIGHT_EXTI_IRQn,
+                                                      JOY1_UP_EXTI_IRQn
+                                                     };
 
   /* Store Joystick pins initialized */
   JoyPinsMask |= (uint32_t)JoyPins;
 
   /* Initialized the Joystick. */
-  for(joykey = 0U; joykey < JOY_KEY_NUMBER ; joykey++)
+  for (joykey = 0U; joykey < JOY_KEY_NUMBER ; joykey++)
   {
     key_pressed = 1UL << joykey;
-    if((key_pressed & (uint32_t)JoyPins) == key_pressed)
+    if ((key_pressed & (uint32_t)JoyPins) == key_pressed)
     {
-      if(JOY == JOY1)
+      if (JOY == JOY1)
       {
-      /* Enable the JOY clock */
-        if(key_pressed == (uint32_t)JOY_SEL)
+        /* Enable the JOY clock */
+        if (key_pressed == (uint32_t)JOY_SEL)
         {
           JOY1_SEL_GPIO_CLK_ENABLE();
         }
-        else if(key_pressed == (uint32_t)JOY_DOWN)
+        else if (key_pressed == (uint32_t)JOY_DOWN)
         {
           JOY1_DOWN_GPIO_CLK_ENABLE();
         }
-        else if(key_pressed == (uint32_t) JOY_LEFT)
+        else if (key_pressed == (uint32_t) JOY_LEFT)
         {
           JOY1_LEFT_GPIO_CLK_ENABLE();
         }
-        else if(key_pressed == (uint32_t) JOY_RIGHT)
+        else if (key_pressed == (uint32_t) JOY_RIGHT)
         {
           JOY1_RIGHT_GPIO_CLK_ENABLE();
         }
         else
         {
-          if(key_pressed == (uint32_t) JOY_UP)
+          if (key_pressed == (uint32_t) JOY_UP)
           {
             JOY1_UP_GPIO_CLK_ENABLE();
           }
@@ -1071,8 +1074,8 @@ static const IRQn_Type JOY1_IRQn[JOY_KEY_NUMBER] = {JOY1_SEL_EXTI_IRQn,
           gpio_init_structure.Mode = GPIO_MODE_IT_RISING;
           HAL_GPIO_Init(JOY1_PORT[joykey], &gpio_init_structure);
 
-         (void)HAL_EXTI_GetHandle(&hExtiJoyHandle[joykey], JOY_EXTI_LINE[joykey]);
-         (void)HAL_EXTI_RegisterCallback(&hExtiJoyHandle[joykey],  HAL_EXTI_COMMON_CB_ID, JoyCallback[joykey]);
+          (void)HAL_EXTI_GetHandle(&hExtiJoyHandle[joykey], JOY_EXTI_LINE[joykey]);
+          (void)HAL_EXTI_RegisterCallback(&hExtiJoyHandle[joykey],  HAL_EXTI_COMMON_CB_ID, JoyCallback[joykey]);
 
           /* Enable and set Joy EXTI Interrupt to the lowest priority */
           HAL_NVIC_SetPriority((IRQn_Type)(JOY1_IRQn[joykey]), BSP_JOY_PRIO[joykey], 0x00);
@@ -1101,37 +1104,37 @@ int32_t BSP_JOY_DeInit(JOY_TypeDef JOY, JOYPin_TypeDef JoyPins)
   JoyPinsMask &= (uint32_t)JoyPins;
 
   /* Initialized the Joystick. */
-  for(joykey = 0U; joykey < JOY_KEY_NUMBER ; joykey++)
+  for (joykey = 0U; joykey < JOY_KEY_NUMBER ; joykey++)
   {
     key_pressed = 1UL << joykey;
-    if((key_pressed & (uint32_t)JoyPins) == key_pressed)
+    if ((key_pressed & (uint32_t)JoyPins) == key_pressed)
     {
-      if(JOY == JOY1)
+      if (JOY == JOY1)
       {
         /* Disable the JOY clock */
-        switch(key_pressed)
+        switch (key_pressed)
         {
           case JOY_SEL:
-          JOY1_SEL_GPIO_CLK_DISABLE();
-          break;
+            JOY1_SEL_GPIO_CLK_DISABLE();
+            break;
 
           case JOY_DOWN:
-          JOY1_DOWN_GPIO_CLK_DISABLE();
-          break;
+            JOY1_DOWN_GPIO_CLK_DISABLE();
+            break;
 
           case JOY_LEFT:
-          JOY1_LEFT_GPIO_CLK_DISABLE();
-          break;
+            JOY1_LEFT_GPIO_CLK_DISABLE();
+            break;
 
           case JOY_RIGHT:
-          JOY1_RIGHT_GPIO_CLK_DISABLE();
-          break;
+            JOY1_RIGHT_GPIO_CLK_DISABLE();
+            break;
 
           case JOY_UP:
-          JOY1_UP_GPIO_CLK_DISABLE();
-          break;
+            JOY1_UP_GPIO_CLK_DISABLE();
+            break;
           default:
-          break;
+            break;
         }
         HAL_GPIO_DeInit(JOY1_PORT[joykey], JOY1_PIN[joykey]);
       }
@@ -1148,7 +1151,7 @@ int32_t BSP_JOY_DeInit(JOY_TypeDef JOY, JOYPin_TypeDef JoyPins)
   */
 void BSP_JOY_IRQHandler(JOY_TypeDef JOY, JOYPin_TypeDef JoyPin)
 {
-  if(JOY == JOY1)
+  if (JOY == JOY1)
   {
     HAL_EXTI_IRQHandler(&hExtiJoyHandle[POSITION_VAL((uint32_t)JoyPin)]);
   }
@@ -1187,9 +1190,9 @@ int32_t BSP_JOY_GetState(JOY_TypeDef JOY)
   for (joykey = 0U; joykey < JOY_KEY_NUMBER ; joykey++)
   {
     key_pressed = 1UL << joykey;
-    if((key_pressed & JoyPinsMask) == key_pressed)
+    if ((key_pressed & JoyPinsMask) == key_pressed)
     {
-      if(JOY == JOY1)
+      if (JOY == JOY1)
       {
         if (HAL_GPIO_ReadPin(JOY1_PORT[joykey], JOY1_PIN[joykey]) != GPIO_PIN_SET)
         {

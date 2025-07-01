@@ -27,7 +27,7 @@ vertical-align: middle;
 <body>
 <div class="row">
 <section id="ux_host_cdc_acm-application-description" class="col-sm-12 col-lg-8">
-<h2><b>Ux_Host_CDC_ACM application description </b></h2>
+<h2><b>Ux_Host_CDC_ACM Application Description </b></h2>
 <p>This application provides an example of Azure RTOS USBX stack usage
 .</p>
 <p>The application is designed to behave as a USB CDC_ACM Host, the code
@@ -39,7 +39,7 @@ ThreadX during kernel start, at this stage, all USBx resources are
 initialized. The application creates 3 threads with different
 priorities:</p>
 <ul>
-<li>usbx_app_thread_entry (Priority : 10; Preemption threshold : 10)
+<li>app_ux_host_thread_entry (Priority : 10; Preemption threshold : 10)
 used to initialize USB OTG HAL HCD driver and start the Host.</li>
 <li>cdc_acm_send_app_thread_entry (Priority : 30; Preemption threshold :
 30) used to send data from host to device.</li>

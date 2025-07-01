@@ -27,7 +27,7 @@ vertical-align: middle;
 <body>
 <div class="row">
 <section id="nx_sntp_client-application-description" class="col-sm-12 col-lg-8">
-<h2><b>Nx_SNTP_Client application description</b></h2>
+<h2><b>Nx_SNTP_Client Application Description</b></h2>
 <p>This application provides an example of Azure RTOS NetX/NetXDuo stack
 usage.</p>
 <p>It shows how to develop a NetX SNTP client and connect with an STNP
@@ -44,9 +44,9 @@ instance.</li>
 </ul>
 <p>The application then creates 2 threads with the same priorities:</p>
 <ul>
-<li><strong>NxAppThread</strong> (priority 10, PreemtionThreashold 10) :
+<li><strong>NxAppThread</strong> (priority 10, PreemptionThreshold 10) :
 created with the TX_AUTO_START flag to start automatically.</li>
-<li><strong>AppSNTPThread</strong> (priority 5, PreemtionThreashold 5) :
+<li><strong>AppSNTPThread</strong> (priority 5, PreemptionThreshold 5) :
 created with the TX_DONT_START flag to be started later.</li>
 </ul>
 <p>The <strong>NxAppThread</strong> starts and performs the following
@@ -101,12 +101,12 @@ traffic issues.</li>
 
   /* USER CODE END ETH_Init 1 */
   heth.Instance = ETH;
-  MACAddr[0] = 0x00;
-  MACAddr[1] = 0x80;
-  MACAddr[2] = 0xE1;
-  MACAddr[3] = 0x00;
-  MACAddr[4] = 0x30;
-  MACAddr[5] = 0x20;
+  heth.Init.MACAddr[0] =   0x00;
+  heth.Init.MACAddr[1] =   0x80;
+  heth.Init.MACAddr[2] =   0xE1;
+  heth.Init.MACAddr[3] =   0x00;
+  heth.Init.MACAddr[4] =   0x30;
+  heth.Init.MACAddr[5] =   0x20;
 </code></pre>
 <h4 id="known-limitations"><b>Known limitations</b></h4>
 <p>default NX_SNTP_CLIENT_MAX_ROOT_DISPERSION and
@@ -256,7 +256,7 @@ static TX_BYTE_POOL nx_app_byte_pool;</code></pre>
 <p>For more details about the MPU configuration please refer to the <a href="https://www.st.com/resource/en/application_note/dm00272912-managing-memory-protection-unit-in-stm32-mcus-stmicroelectronics.pdf">AN4838</a></p>
 <h3 id="keywords"><b>Keywords</b></h3>
 <p>RTOS, Network, ThreadX, NetXDuo, SNTP, UART</p>
-<h3 id="hardware-and-software-environment">Hardware and Software
+<h3 id="hardware-and-software-environment"><b>Hardware and Software
 environment</b></h3>
 <ul>
 <li>This application runs on STM32H747xx devices</li>

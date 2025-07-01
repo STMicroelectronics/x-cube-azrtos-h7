@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 
 #include "app_azure_rtos.h"
@@ -61,7 +65,7 @@ static TX_BYTE_POOL tx_app_byte_pool;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-void Error_Handler(void);
+
 /* USER CODE END PFP */
 
 /**
@@ -141,3 +145,7 @@ VOID tx_application_define(VOID *first_unused_memory)
 #endif
 
 }
+
+/* USER CODE BEGIN 2 */
+
+/* USER CODE END 2 */

@@ -27,9 +27,9 @@
        SD detection interrupt mode by calling the function BSP_SD_DetectITConfig().
        The interrupt is generated as an external interrupt whenever the micro SD card is
        plugged/unplugged in/from the evaluation board.
-	   The SD detection interrupt is handled by calling the function BSP_SD_DetectIT()
+     The SD detection interrupt is handled by calling the function BSP_SD_DetectIT()
        which is called in the IRQ handler file, the user callback is implemented in
-	   the function BSP_SD_DetectCallback().
+     the function BSP_SD_DetectCallback().
 
      o The function BSP_SD_GetCardInfo()are used to get the micro SD card information
        which is stored in the structure "HAL_SD_CardInfoTypedef".
@@ -92,7 +92,7 @@
 /* Is Msp Callbacks registered */
 static uint32_t   IsMspCallbacksValid[SD_INSTANCES_NBR] = {0};
 #endif
-typedef void (* BSP_EXTI_LineCallback) (void);
+typedef void (* BSP_EXTI_LineCallback)(void);
 /**
   * @}
   */
@@ -110,7 +110,7 @@ EXTI_HandleTypeDef hsd_exti[SD_INSTANCES_NBR];
   * @{
   */
 static uint32_t PinDetect[SD_INSTANCES_NBR]  = {SD1_DETECT_PIN, SD2_DETECT_PIN};
-static GPIO_TypeDef* SD_GPIO_PORT[SD_INSTANCES_NBR] = {SD1_DETECT_GPIO_PORT,SD2_DETECT_GPIO_PORT};
+static GPIO_TypeDef *SD_GPIO_PORT[SD_INSTANCES_NBR] = {SD1_DETECT_GPIO_PORT, SD2_DETECT_GPIO_PORT};
 /**
   * @}
   */
@@ -148,14 +148,14 @@ int32_t BSP_SD_Init(uint32_t Instance)
   int32_t ret = BSP_ERROR_NONE;
   GPIO_InitTypeDef gpio_init_structure;
 
-  if(Instance >= SD_INSTANCES_NBR)
+  if (Instance >= SD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* GPIO Detect pin configuration */
-    if(Instance == 0U)
+    if (Instance == 0U)
     {
       SD1_DETECT_GPIO_CLK_ENABLE();
     }
@@ -172,7 +172,7 @@ int32_t BSP_SD_Init(uint32_t Instance)
     HAL_GPIO_Init(SD_GPIO_PORT[Instance], &gpio_init_structure);
 
     /* Check if SD card is present */
-    if((uint32_t)BSP_SD_IsDetected(Instance) != SD_PRESENT)
+    if ((uint32_t)BSP_SD_IsDetected(Instance) != SD_PRESENT)
     {
       ret = BSP_ERROR_UNKNOWN_COMPONENT;
     }
@@ -183,62 +183,62 @@ int32_t BSP_SD_Init(uint32_t Instance)
       SD_MspInit(&hsd_sdmmc[Instance]);
 #else
       /* Register the SD MSP Callbacks */
-      if(IsMspCallbacksValid[Instance] == 0UL)
+      if (IsMspCallbacksValid[Instance] == 0UL)
       {
-        if(BSP_SD_RegisterDefaultMspCallbacks(Instance) != BSP_ERROR_NONE)
+        if (BSP_SD_RegisterDefaultMspCallbacks(Instance) != BSP_ERROR_NONE)
         {
           ret = BSP_ERROR_PERIPH_FAILURE;
         }
       }
-      if(ret == BSP_ERROR_NONE)
+      if (ret == BSP_ERROR_NONE)
       {
 #endif /* USE_HAL_SD_REGISTER_CALLBACKS */
 
-        /* HAL SD initialization and Enable wide operation */
-        if(MX_SD_Init(Instance) != HAL_OK)
+      /* HAL SD initialization and Enable wide operation */
+      if (MX_SD_Init(Instance) != HAL_OK)
+      {
+        ret = BSP_ERROR_PERIPH_FAILURE;
+      }
+      else if (HAL_SD_ConfigWideBusOperation(&hsd_sdmmc[Instance], SDMMC_BUS_WIDE_4B) != HAL_OK)
+      {
+        ret = BSP_ERROR_PERIPH_FAILURE;
+      }
+      else
+      {
+        /* Switch to High Speed mode if the card support this mode */
+        (void)HAL_SD_ConfigSpeedBusOperation(&hsd_sdmmc[Instance], SDMMC_SPEED_MODE_HIGH);
+
+#if (USE_HAL_SD_REGISTER_CALLBACKS == 1)
+        /* Register SD TC, HT and Abort callbacks */
+        if (HAL_SD_RegisterCallback(&hsd_sdmmc[Instance], HAL_SD_TX_CPLT_CB_ID, SD_TxCpltCallback) != HAL_OK)
         {
           ret = BSP_ERROR_PERIPH_FAILURE;
         }
-        else if(HAL_SD_ConfigWideBusOperation(&hsd_sdmmc[Instance], SDMMC_BUS_WIDE_4B) != HAL_OK)
+        else if (HAL_SD_RegisterCallback(&hsd_sdmmc[Instance], HAL_SD_RX_CPLT_CB_ID, SD_RxCpltCallback) != HAL_OK)
+        {
+          ret = BSP_ERROR_PERIPH_FAILURE;
+        }
+        else if (HAL_SD_RegisterCallback(&hsd_sdmmc[Instance], HAL_SD_ABORT_CB_ID, SD_AbortCallback) != HAL_OK)
         {
           ret = BSP_ERROR_PERIPH_FAILURE;
         }
         else
         {
-          /* Switch to High Speed mode if the card support this mode */
-          (void)HAL_SD_ConfigSpeedBusOperation(&hsd_sdmmc[Instance], SDMMC_SPEED_MODE_HIGH);
-
-#if (USE_HAL_SD_REGISTER_CALLBACKS == 1)
-          /* Register SD TC, HT and Abort callbacks */
-          if(HAL_SD_RegisterCallback(&hsd_sdmmc[Instance], HAL_SD_TX_CPLT_CB_ID, SD_TxCpltCallback) != HAL_OK)
-          {
-            ret = BSP_ERROR_PERIPH_FAILURE;
-          }
-          else if(HAL_SD_RegisterCallback(&hsd_sdmmc[Instance], HAL_SD_RX_CPLT_CB_ID, SD_RxCpltCallback) != HAL_OK)
-          {
-            ret = BSP_ERROR_PERIPH_FAILURE;
-          }
-          else if(HAL_SD_RegisterCallback(&hsd_sdmmc[Instance], HAL_SD_ABORT_CB_ID, SD_AbortCallback) != HAL_OK)
-          {
-            ret = BSP_ERROR_PERIPH_FAILURE;
-          }
-          else
-          {
 #if (USE_SD_TRANSCEIVER != 0U)
-            if(HAL_SD_RegisterTransceiverCallback(&hsd_sdmmc[Instance], SD_DriveTransceiver_1_8V_Callback) != HAL_OK)
-            {
-              ret = BSP_ERROR_PERIPH_FAILURE;
-            }
-#endif
+          if (HAL_SD_RegisterTransceiverCallback(&hsd_sdmmc[Instance], SD_DriveTransceiver_1_8V_Callback) != HAL_OK)
+          {
+            ret = BSP_ERROR_PERIPH_FAILURE;
           }
-#endif /* USE_HAL_SD_REGISTER_CALLBACKS */
+#endif
         }
-#if (USE_HAL_SD_REGISTER_CALLBACKS == 1)
-      }
 #endif /* USE_HAL_SD_REGISTER_CALLBACKS */
+      }
+#if (USE_HAL_SD_REGISTER_CALLBACKS == 1)
     }
+#endif /* USE_HAL_SD_REGISTER_CALLBACKS */
   }
-  return ret;
+}
+return ret;
 }
 
 /**
@@ -251,7 +251,7 @@ int32_t BSP_SD_DeInit(uint32_t Instance)
   int32_t ret = BSP_ERROR_NONE;
   GPIO_InitTypeDef gpio_init_structure;
 
-  if(Instance >= SD_INSTANCES_NBR)
+  if (Instance >= SD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -264,7 +264,7 @@ int32_t BSP_SD_DeInit(uint32_t Instance)
     HAL_GPIO_DeInit(SD_GPIO_PORT[Instance], gpio_init_structure.Pin);
 
     /* HAL SD de-initialization */
-    if(HAL_SD_DeInit(&hsd_sdmmc[Instance]) != HAL_OK)
+    if (HAL_SD_DeInit(&hsd_sdmmc[Instance]) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -298,7 +298,7 @@ __weak HAL_StatusTypeDef MX_SDMMC1_SD_Init(SD_HandleTypeDef *hsd)
   hsd->Init.TranceiverPresent   = SDMMC_TRANSCEIVER_NOT_PRESENT;
 
   /* HAL SD initialization */
-  if(HAL_SD_Init(hsd) != HAL_OK)
+  if (HAL_SD_Init(hsd) != HAL_OK)
   {
     ret = HAL_ERROR;
   }
@@ -324,7 +324,7 @@ __weak HAL_StatusTypeDef MX_SDMMC2_SD_Init(SD_HandleTypeDef *hsd)
   hsd->Init.TranceiverPresent   = SDMMC_TRANSCEIVER_PRESENT;
 
   /* HAL SD initialization */
-  if(HAL_SD_Init(hsd) != HAL_OK)
+  if (HAL_SD_Init(hsd) != HAL_OK)
   {
     ret = HAL_ERROR;
   }
@@ -342,18 +342,18 @@ int32_t BSP_SD_RegisterDefaultMspCallbacks(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= SD_INSTANCES_NBR)
+  if (Instance >= SD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Register MspInit/MspDeInit Callbacks */
-    if(HAL_SD_RegisterCallback(&hsd_sdmmc[Instance], HAL_SD_MSP_INIT_CB_ID, SD_MspInit) != HAL_OK)
+    if (HAL_SD_RegisterCallback(&hsd_sdmmc[Instance], HAL_SD_MSP_INIT_CB_ID, SD_MspInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_SD_RegisterCallback(&hsd_sdmmc[Instance], HAL_SD_MSP_DEINIT_CB_ID, SD_MspDeInit) != HAL_OK)
+    else if (HAL_SD_RegisterCallback(&hsd_sdmmc[Instance], HAL_SD_MSP_DEINIT_CB_ID, SD_MspDeInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -376,18 +376,18 @@ int32_t BSP_SD_RegisterMspCallbacks(uint32_t Instance, BSP_SD_Cb_t *CallBacks)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= SD_INSTANCES_NBR)
+  if (Instance >= SD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Register MspInit/MspDeInit Callbacks */
-    if(HAL_SD_RegisterCallback(&hsd_sdmmc[Instance], HAL_SD_MSP_INIT_CB_ID, CallBacks->pMspInitCb) != HAL_OK)
+    if (HAL_SD_RegisterCallback(&hsd_sdmmc[Instance], HAL_SD_MSP_INIT_CB_ID, CallBacks->pMspInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_SD_RegisterCallback(&hsd_sdmmc[Instance], HAL_SD_MSP_DEINIT_CB_ID, CallBacks->pMspDeInitCb) != HAL_OK)
+    else if (HAL_SD_RegisterCallback(&hsd_sdmmc[Instance], HAL_SD_MSP_DEINIT_CB_ID, CallBacks->pMspDeInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -413,15 +413,15 @@ int32_t BSP_SD_DetectITConfig(uint32_t Instance)
   GPIO_InitTypeDef gpio_init_structure;
   const uint32_t SD_EXTI_LINE[SD_INSTANCES_NBR]   = {SD1_DETECT_EXTI_LINE, SD2_DETECT_EXTI_LINE};
   static BSP_EXTI_LineCallback SdCallback[SD_INSTANCES_NBR] = {SD_EXTI_Callback, SD_EXTI_Callback};
-  static IRQn_Type SD_EXTI_IRQn[SD_INSTANCES_NBR] = {SD1_DETECT_EXTI_IRQn,SD2_DETECT_EXTI_IRQn};
+  static IRQn_Type SD_EXTI_IRQn[SD_INSTANCES_NBR] = {SD1_DETECT_EXTI_IRQn, SD2_DETECT_EXTI_IRQn};
 
-  if(Instance >= SD_INSTANCES_NBR)
+  if (Instance >= SD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(Instance == 0U)
+    if (Instance == 0U)
     {
       SD1_DETECT_GPIO_CLK_ENABLE();
     }
@@ -437,11 +437,11 @@ int32_t BSP_SD_DetectITConfig(uint32_t Instance)
     gpio_init_structure.Mode = GPIO_MODE_IT_RISING_FALLING;
     HAL_GPIO_Init(SD_GPIO_PORT[Instance], &gpio_init_structure);
 
-    if(HAL_EXTI_GetHandle(&hsd_exti[Instance], SD_EXTI_LINE[Instance]) != HAL_OK)
+    if (HAL_EXTI_GetHandle(&hsd_exti[Instance], SD_EXTI_LINE[Instance]) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_EXTI_RegisterCallback(&hsd_exti[Instance],  HAL_EXTI_COMMON_CB_ID, SdCallback[Instance]) != HAL_OK)
+    else if (HAL_EXTI_RegisterCallback(&hsd_exti[Instance],  HAL_EXTI_COMMON_CB_ID, SdCallback[Instance]) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -475,15 +475,15 @@ __weak void BSP_SD_DetectCallback(uint32_t Instance, uint32_t Status)
 }
 
 /**
- * @brief  Detects if SD card is correctly plugged in the memory slot or not.
+  * @brief  Detects if SD card is correctly plugged in the memory slot or not.
   * @param Instance  SD Instance
- * @retval Returns if SD is detected or not
- */
+  * @retval Returns if SD is detected or not
+  */
 int32_t BSP_SD_IsDetected(uint32_t Instance)
 {
   uint32_t ret;
 
-  if(Instance >= SD_INSTANCES_NBR)
+  if (Instance >= SD_INSTANCES_NBR)
   {
     return BSP_ERROR_WRONG_PARAM;
   }
@@ -500,7 +500,7 @@ int32_t BSP_SD_IsDetected(uint32_t Instance)
     }
   }
 
-  return(int32_t)ret;
+  return (int32_t)ret;
 }
 
 /**
@@ -513,14 +513,14 @@ int32_t BSP_SD_IsDetected(uint32_t Instance)
   */
 int32_t BSP_SD_ReadBlocks(uint32_t Instance, uint32_t *pData, uint32_t BlockIdx, uint32_t BlocksNbr)
 {
-  uint32_t timeout = SD_READ_TIMEOUT*BlocksNbr;
+  uint32_t timeout = SD_READ_TIMEOUT * BlocksNbr;
   int32_t ret;
 
-  if(Instance >= SD_INSTANCES_NBR)
+  if (Instance >= SD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_SD_ReadBlocks(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr, timeout) != HAL_OK)
+  else if (HAL_SD_ReadBlocks(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr, timeout) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -543,14 +543,14 @@ int32_t BSP_SD_ReadBlocks(uint32_t Instance, uint32_t *pData, uint32_t BlockIdx,
   */
 int32_t BSP_SD_WriteBlocks(uint32_t Instance, uint32_t *pData, uint32_t BlockIdx, uint32_t BlocksNbr)
 {
-  uint32_t timeout = SD_READ_TIMEOUT*BlocksNbr;
+  uint32_t timeout = SD_READ_TIMEOUT * BlocksNbr;
   int32_t ret;
 
-  if(Instance >= SD_INSTANCES_NBR)
+  if (Instance >= SD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_SD_WriteBlocks(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr, timeout) != HAL_OK)
+  else if (HAL_SD_WriteBlocks(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr, timeout) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -574,11 +574,11 @@ int32_t BSP_SD_ReadBlocks_DMA(uint32_t Instance, uint32_t *pData, uint32_t Block
 {
   int32_t ret;
 
-  if(Instance >= SD_INSTANCES_NBR)
+  if (Instance >= SD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_SD_ReadBlocks_DMA(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr) != HAL_OK)
+  else if (HAL_SD_ReadBlocks_DMA(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -602,11 +602,11 @@ int32_t BSP_SD_WriteBlocks_DMA(uint32_t Instance, uint32_t *pData, uint32_t Bloc
 {
   int32_t ret;
 
-  if(Instance >= SD_INSTANCES_NBR)
+  if (Instance >= SD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_SD_WriteBlocks_DMA(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr) != HAL_OK)
+  else if (HAL_SD_WriteBlocks_DMA(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -630,11 +630,11 @@ int32_t BSP_SD_ReadBlocks_IT(uint32_t Instance, uint32_t *pData, uint32_t BlockI
 {
   int32_t ret;
 
-  if(Instance >= SD_INSTANCES_NBR)
+  if (Instance >= SD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_SD_ReadBlocks_IT(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr) != HAL_OK)
+  else if (HAL_SD_ReadBlocks_IT(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -658,11 +658,11 @@ int32_t BSP_SD_WriteBlocks_IT(uint32_t Instance, uint32_t *pData, uint32_t Block
 {
   int32_t ret;
 
-  if(Instance >= SD_INSTANCES_NBR)
+  if (Instance >= SD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_SD_WriteBlocks_IT(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr) != HAL_OK)
+  else if (HAL_SD_WriteBlocks_IT(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -686,11 +686,11 @@ int32_t BSP_SD_Erase(uint32_t Instance, uint32_t BlockIdx, uint32_t BlocksNbr)
 {
   int32_t ret;
 
-  if(Instance >= SD_INSTANCES_NBR)
+  if (Instance >= SD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_SD_Erase(&hsd_sdmmc[Instance], BlockIdx, BlockIdx + BlocksNbr) != HAL_OK)
+  else if (HAL_SD_Erase(&hsd_sdmmc[Instance], BlockIdx, BlockIdx + BlocksNbr) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -712,7 +712,7 @@ int32_t BSP_SD_Erase(uint32_t Instance, uint32_t BlockIdx, uint32_t BlocksNbr)
   */
 int32_t BSP_SD_GetCardState(uint32_t Instance)
 {
-  return (int32_t)((HAL_SD_GetCardState(&hsd_sdmmc[Instance]) == HAL_SD_CARD_TRANSFER ) ? SD_TRANSFER_OK : SD_TRANSFER_BUSY);
+  return (int32_t)((HAL_SD_GetCardState(&hsd_sdmmc[Instance]) == HAL_SD_CARD_TRANSFER) ? SD_TRANSFER_OK : SD_TRANSFER_BUSY);
 }
 
 /**
@@ -725,11 +725,11 @@ int32_t BSP_SD_GetCardInfo(uint32_t Instance, BSP_SD_CardInfo *CardInfo)
 {
   int32_t ret;
 
-  if(Instance >= SD_INSTANCES_NBR)
+  if (Instance >= SD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_SD_GetCardInfo(&hsd_sdmmc[Instance], CardInfo) != HAL_OK)
+  else if (HAL_SD_GetCardInfo(&hsd_sdmmc[Instance], CardInfo) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -780,13 +780,13 @@ void HAL_SD_RxCpltCallback(SD_HandleTypeDef *hsd)
   */
 void HAL_SD_DriveTransceiver_1_8V_Callback(FlagStatus status)
 {
-  if(status == SET)
+  if (status == SET)
   {
-    HAL_GPIO_WritePin(GPIOG,SD_LDO_SEL_PIN, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOG, SD_LDO_SEL_PIN, GPIO_PIN_SET);
   }
   else
   {
-    HAL_GPIO_WritePin(GPIOG,SD_LDO_SEL_PIN, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOG, SD_LDO_SEL_PIN, GPIO_PIN_RESET);
   }
 }
 #endif
@@ -891,13 +891,13 @@ static void SD_RxCpltCallback(SD_HandleTypeDef *hsd)
   */
 static void SD_DriveTransceiver_1_8V_Callback(FlagStatus status)
 {
-  if(status == SET)
+  if (status == SET)
   {
-    HAL_GPIO_WritePin(GPIOG,SD_LDO_SEL_PIN, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOG, SD_LDO_SEL_PIN, GPIO_PIN_SET);
   }
   else
   {
-    HAL_GPIO_WritePin(GPIOG,SD_LDO_SEL_PIN, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOG, SD_LDO_SEL_PIN, GPIO_PIN_RESET);
   }
 }
 #endif
@@ -912,7 +912,7 @@ static HAL_StatusTypeDef MX_SD_Init(uint32_t Instance)
 {
   HAL_StatusTypeDef ret;
 
-  if(Instance == 0UL)
+  if (Instance == 0UL)
   {
     ret = MX_SDMMC1_SD_Init(&hsd_sdmmc[Instance]);
   }
@@ -929,7 +929,7 @@ static HAL_StatusTypeDef MX_SD_Init(uint32_t Instance)
   */
 static void SD_EXTI_Callback(void)
 {
-   uint32_t sd_status;
+  uint32_t sd_status;
 
   if (HAL_GPIO_ReadPin(SD_GPIO_PORT[0], (uint16_t)PinDetect[0]) == GPIO_PIN_SET)
   {
@@ -960,7 +960,7 @@ static void SD_MspInit(SD_HandleTypeDef *hsd)
 {
   GPIO_InitTypeDef gpio_init_structure;
 
-  if(hsd == &hsd_sdmmc[0])
+  if (hsd == &hsd_sdmmc[0])
   {
     /* Enable SDIO clock */
     __HAL_RCC_SDMMC1_CLK_ENABLE();
@@ -989,7 +989,7 @@ static void SD_MspInit(SD_HandleTypeDef *hsd)
     HAL_NVIC_EnableIRQ(SDMMC1_IRQn);
 
   }
-  else if(hsd == &hsd_sdmmc[1])
+  else if (hsd == &hsd_sdmmc[1])
   {
 #if (USE_BSP_IO_CLASS > 0)
     BSP_IO_Init_t  io_init_structure;
@@ -1062,7 +1062,7 @@ static void SD_MspDeInit(SD_HandleTypeDef *hsd)
 {
   GPIO_InitTypeDef gpio_init_structure;
 
-  if(hsd == &hsd_sdmmc[0])
+  if (hsd == &hsd_sdmmc[0])
   {
     /* Disable NVIC for SDIO interrupts */
     HAL_NVIC_DisableIRQ(SDMMC1_IRQn);
@@ -1078,7 +1078,7 @@ static void SD_MspDeInit(SD_HandleTypeDef *hsd)
     /* Disable SDMMC1 clock */
     __HAL_RCC_SDMMC1_CLK_DISABLE();
   }
-  else if(hsd == &hsd_sdmmc[1])
+  else if (hsd == &hsd_sdmmc[1])
   {
     /* Disable NVIC for SDIO interrupts */
     HAL_NVIC_DisableIRQ(SDMMC2_IRQn);
@@ -1091,7 +1091,7 @@ static void SD_MspDeInit(SD_HandleTypeDef *hsd)
     gpio_init_structure.Pin = GPIO_PIN_6 | GPIO_PIN_7;
     HAL_GPIO_DeInit(GPIOD, gpio_init_structure.Pin);
 
-   /* Disable SDMMC2 clock */
+    /* Disable SDMMC2 clock */
     __HAL_RCC_SDMMC2_CLK_DISABLE();
   }
   else

@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_api.h"
 #include "ux_device_descriptors.h"
@@ -67,9 +71,9 @@ VOID USBX_Device_Process(VOID *arg);
 
 /* USER CODE END PD */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

@@ -1,5 +1,5 @@
 
-## <b>Ux_Device_CCID application description</b>
+## <b>Ux_Device_CCID Application Description</b>
 
 This application provides an example of Azure RTOS USBX stack usage on NUCLEO-H723ZG board,
 it shows how to develop USB Device for Integrated Circuit Card Interface Device based application.
@@ -126,8 +126,8 @@ RTOS, ThreadX, USBXDevice, USB_OTG, Full Speed, CCID, ICC
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H723xx devices.
-  - This example has been tested with STMicroelectronics NUCLEO-H723ZG boards revision MB1364-H723ZG-E01 and can be easily tailored to any other supported device and development board.
+  - This application runs on STM32H723xx devices.
+  - This application has been tested with STMicroelectronics NUCLEO-H723ZG boards revision MB1364-H723ZG-E01 and can be easily tailored to any other supported device and development board.
 
 ### <b>How to use it ?</b>
 

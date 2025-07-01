@@ -22,7 +22,7 @@
 #define STM32H7B3I_EVAL_SRAM_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -49,7 +49,7 @@ typedef struct
 {
   void (* pMspInitCb)(SRAM_HandleTypeDef *);
   void (* pMspDeInitCb)(SRAM_HandleTypeDef *);
-}BSP_SRAM_Cb_t;
+} BSP_SRAM_Cb_t;
 #endif /* (USE_HAL_SRAM_REGISTER_CALLBACKS == 1) */
 /**
   * @}
@@ -91,8 +91,8 @@ extern SRAM_HandleTypeDef hsram[SRAM_INSTANCES_NBR];
 int32_t BSP_SRAM_Init(uint32_t Instance);
 int32_t BSP_SRAM_DeInit(uint32_t Instance);
 #if (USE_HAL_SRAM_REGISTER_CALLBACKS == 1)
-int32_t BSP_SRAM_RegisterDefaultMspCallbacks (uint32_t Instance);
-int32_t BSP_SRAM_RegisterMspCallbacks (uint32_t Instance, BSP_SRAM_Cb_t *CallBacks);
+int32_t BSP_SRAM_RegisterDefaultMspCallbacks(uint32_t Instance);
+int32_t BSP_SRAM_RegisterMspCallbacks(uint32_t Instance, BSP_SRAM_Cb_t *CallBacks);
 #endif /* (USE_HAL_SRAM_REGISTER_CALLBACKS == 1)  */
 
 void BSP_SRAM_IRQHandler(uint32_t Instance);

@@ -19,12 +19,15 @@
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __APP_THREADX_H
-#define __APP_THREADX_H
+#ifndef __APP_THREADX_H__
+#define __APP_THREADX_H__
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
 
 /* Includes ------------------------------------------------------------------*/
 
@@ -45,7 +48,18 @@
 
 /* USER CODE END EC */
 
+/* Private defines -----------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
+
+/* Main thread defines -------------------------------------------------------*/
+/* USER CODE BEGIN MTD */
+
+/* USER CODE END MTD */
+
 /* Exported macro ------------------------------------------------------------*/
+
 /* USER CODE BEGIN EM */
 
 /* USER CODE END EM */
@@ -64,9 +78,9 @@ void MX_AZURE_RTOS_Init(void);
 #define MODULE_MANAGER_THREAD_PREEMPTION_THRESHOLD         MODULE_MANAGER_THREAD_PRIO
 /* USER CODE END PD */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

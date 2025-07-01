@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_threadx.h"
 
@@ -171,7 +175,7 @@ void MainThread_Entry(ULONG thread_input)
   /* Infinite loop */
   while(1)
   {
-    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+    HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
 
     /* Thread sleep for 1s */
     tx_thread_sleep(100);
@@ -197,7 +201,7 @@ void MX_ThreadX_Init(void)
   /* USER CODE END  Kernel_Start_Error */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 /**
   * @brief  Function implementing the ThreadOne thread.
   * @param  thread_input: Not used
@@ -210,7 +214,7 @@ void ThreadOne_Entry(ULONG thread_input)
   /* Infinite loop */
   while(1)
   {
-    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+    HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
 
     /* Delay for 500ms (App_Delay is used to avoid context change). */
     App_Delay(50);
@@ -238,7 +242,7 @@ void ThreadTwo_Entry(ULONG thread_input)
   /* Infinite loop */
   while (1)
   {
-    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+    HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
     /* Delay for 200ms (App_Delay is used to avoid context change). */
     App_Delay(20);
     count ++;
@@ -263,4 +267,4 @@ void App_Delay(uint32_t Delay)
   UINT initial_time = tx_time_get();
   while ((tx_time_get() - initial_time) < Delay);
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

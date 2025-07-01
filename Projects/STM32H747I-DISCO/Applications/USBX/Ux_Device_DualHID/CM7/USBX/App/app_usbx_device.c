@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_usbx_device.h"
 
@@ -265,7 +269,7 @@ static VOID app_ux_device_thread_entry(ULONG thread_input)
   /* USER CODE END app_ux_device_thread_entry */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief  USBX_APP_Device_Init
@@ -354,4 +358,4 @@ void BSP_JOY_Callback(JOY_TypeDef JOY, uint32_t JoyPin)
   }
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

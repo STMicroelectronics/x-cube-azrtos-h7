@@ -104,7 +104,7 @@ int32_t BSP_MMC_Init(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= MMC_INSTANCES_NBR)
+  if (Instance >= MMC_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -115,43 +115,43 @@ int32_t BSP_MMC_Init(uint32_t Instance)
     MMC_MspInit(&hsd_sdmmc[Instance]);
 #else
     /* Register the MMC MSP Callbacks */
-    if(IsMspCallbacksValid[Instance] == 0UL)
+    if (IsMspCallbacksValid[Instance] == 0UL)
     {
-      if(BSP_MMC_RegisterDefaultMspCallbacks(Instance) != BSP_ERROR_NONE)
+      if (BSP_MMC_RegisterDefaultMspCallbacks(Instance) != BSP_ERROR_NONE)
       {
         ret = BSP_ERROR_PERIPH_FAILURE;
       }
     }
-    if(ret == BSP_ERROR_NONE)
+    if (ret == BSP_ERROR_NONE)
     {
 #endif
-      /* HAL MMC initialization */
-      if(MX_MMC_SD_Init(&hsd_sdmmc[Instance]) != HAL_OK)
-      {
-        ret = BSP_ERROR_PERIPH_FAILURE;
-      }
+    /* HAL MMC initialization */
+    if (MX_MMC_SD_Init(&hsd_sdmmc[Instance]) != HAL_OK)
+    {
+      ret = BSP_ERROR_PERIPH_FAILURE;
+    }
 #if (USE_HAL_MMC_REGISTER_CALLBACKS == 1)
-      /* Register MMC TC, HT and Abort callbacks */
-      else if(HAL_MMC_RegisterCallback(&hsd_sdmmc[Instance], HAL_MMC_TX_CPLT_CB_ID, MMC_TxCpltCallback) != HAL_OK)
+    /* Register MMC TC, HT and Abort callbacks */
+    else if (HAL_MMC_RegisterCallback(&hsd_sdmmc[Instance], HAL_MMC_TX_CPLT_CB_ID, MMC_TxCpltCallback) != HAL_OK)
+    {
+      ret = BSP_ERROR_PERIPH_FAILURE;
+    }
+    else if (HAL_MMC_RegisterCallback(&hsd_sdmmc[Instance], HAL_MMC_RX_CPLT_CB_ID, MMC_RxCpltCallback) != HAL_OK)
+    {
+      ret = BSP_ERROR_PERIPH_FAILURE;
+    }
+    else
+    {
+      if (HAL_MMC_RegisterCallback(&hsd_sdmmc[Instance], HAL_MMC_ABORT_CB_ID, MMC_AbortCallback) != HAL_OK)
       {
         ret = BSP_ERROR_PERIPH_FAILURE;
-      }
-      else if(HAL_MMC_RegisterCallback(&hsd_sdmmc[Instance], HAL_MMC_RX_CPLT_CB_ID, MMC_RxCpltCallback) != HAL_OK)
-      {
-        ret = BSP_ERROR_PERIPH_FAILURE;
-      }
-      else
-      {
-        if(HAL_MMC_RegisterCallback(&hsd_sdmmc[Instance], HAL_MMC_ABORT_CB_ID, MMC_AbortCallback) != HAL_OK)
-        {
-          ret = BSP_ERROR_PERIPH_FAILURE;
-        }
       }
     }
-#endif /* USE_HAL_MMC_REGISTER_CALLBACKS */
   }
+#endif /* USE_HAL_MMC_REGISTER_CALLBACKS */
+}
 
-  return  ret;
+return  ret;
 }
 
 /**
@@ -163,11 +163,11 @@ int32_t BSP_MMC_DeInit(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= MMC_INSTANCES_NBR)
+  if (Instance >= MMC_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }/* HAL MMC deinitialization */
-  else if(HAL_MMC_DeInit(&hsd_sdmmc[Instance]) != HAL_OK)
+  else if (HAL_MMC_DeInit(&hsd_sdmmc[Instance]) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -199,7 +199,7 @@ __weak HAL_StatusTypeDef MX_MMC_SD_Init(MMC_HandleTypeDef *hmmc)
   hmmc->Init.BusWide             = SDMMC_BUS_WIDE_8B;
 
   /* HAL SD initialization */
-  if(HAL_MMC_Init(hmmc) != HAL_OK)
+  if (HAL_MMC_Init(hmmc) != HAL_OK)
   {
     ret = HAL_ERROR;
   }
@@ -217,18 +217,18 @@ int32_t BSP_MMC_RegisterDefaultMspCallbacks(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= MMC_INSTANCES_NBR)
+  if (Instance >= MMC_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Register MspInit/MspDeInit Callbacks */
-    if(HAL_MMC_RegisterCallback(&hsd_sdmmc[Instance], HAL_MMC_MSP_INIT_CB_ID, MMC_MspInit) != HAL_OK)
+    if (HAL_MMC_RegisterCallback(&hsd_sdmmc[Instance], HAL_MMC_MSP_INIT_CB_ID, MMC_MspInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_MMC_RegisterCallback(&hsd_sdmmc[Instance], HAL_MMC_MSP_DEINIT_CB_ID, MMC_MspDeInit) != HAL_OK)
+    else if (HAL_MMC_RegisterCallback(&hsd_sdmmc[Instance], HAL_MMC_MSP_DEINIT_CB_ID, MMC_MspDeInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -251,18 +251,18 @@ int32_t BSP_MMC_RegisterMspCallbacks(uint32_t Instance, BSP_MMC_Cb_t *CallBacks)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= MMC_INSTANCES_NBR)
+  if (Instance >= MMC_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Register MspInit/MspDeInit Callbacks */
-    if(HAL_MMC_RegisterCallback(&hsd_sdmmc[Instance], HAL_MMC_MSP_INIT_CB_ID, CallBacks->pMspInitCb) != HAL_OK)
+    if (HAL_MMC_RegisterCallback(&hsd_sdmmc[Instance], HAL_MMC_MSP_INIT_CB_ID, CallBacks->pMspInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_MMC_RegisterCallback(&hsd_sdmmc[Instance], HAL_MMC_MSP_DEINIT_CB_ID, CallBacks->pMspDeInitCb) != HAL_OK)
+    else if (HAL_MMC_RegisterCallback(&hsd_sdmmc[Instance], HAL_MMC_MSP_DEINIT_CB_ID, CallBacks->pMspDeInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -287,14 +287,14 @@ int32_t BSP_MMC_RegisterMspCallbacks(uint32_t Instance, BSP_MMC_Cb_t *CallBacks)
   */
 int32_t BSP_MMC_ReadBlocks(uint32_t Instance, uint32_t *pData, uint32_t BlockIdx, uint32_t BlocksNbr)
 {
-  uint32_t timeout = MMC_READ_TIMEOUT*BlocksNbr;
+  uint32_t timeout = MMC_READ_TIMEOUT * BlocksNbr;
   int32_t ret;
 
-  if(Instance >= MMC_INSTANCES_NBR)
+  if (Instance >= MMC_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_MMC_ReadBlocks(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr, timeout) != HAL_OK)
+  else if (HAL_MMC_ReadBlocks(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr, timeout) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -316,14 +316,14 @@ int32_t BSP_MMC_ReadBlocks(uint32_t Instance, uint32_t *pData, uint32_t BlockIdx
   */
 int32_t BSP_MMC_WriteBlocks(uint32_t Instance, uint32_t *pData, uint32_t BlockIdx, uint32_t BlocksNbr)
 {
-  uint32_t timeout = MMC_READ_TIMEOUT*BlocksNbr;
+  uint32_t timeout = MMC_READ_TIMEOUT * BlocksNbr;
   int32_t ret;
 
-  if(Instance >= MMC_INSTANCES_NBR)
+  if (Instance >= MMC_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_MMC_WriteBlocks(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr, timeout) != HAL_OK)
+  else if (HAL_MMC_WriteBlocks(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr, timeout) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -347,11 +347,11 @@ int32_t BSP_MMC_ReadBlocks_DMA(uint32_t Instance, uint32_t *pData, uint32_t Bloc
 {
   int32_t ret;
 
-  if(Instance >= MMC_INSTANCES_NBR)
+  if (Instance >= MMC_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_MMC_ReadBlocks_DMA(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr) != HAL_OK)
+  else if (HAL_MMC_ReadBlocks_DMA(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -375,11 +375,11 @@ int32_t BSP_MMC_WriteBlocks_DMA(uint32_t Instance, uint32_t *pData, uint32_t Blo
 {
   int32_t ret;
 
-  if(Instance >= MMC_INSTANCES_NBR)
+  if (Instance >= MMC_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_MMC_WriteBlocks_DMA(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr) != HAL_OK)
+  else if (HAL_MMC_WriteBlocks_DMA(&hsd_sdmmc[Instance], (uint8_t *)pData, BlockIdx, BlocksNbr) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -402,11 +402,11 @@ int32_t BSP_MMC_Erase(uint32_t Instance, uint32_t StartAddr, uint32_t EndAddr)
 {
   int32_t ret;
 
-  if(Instance >= MMC_INSTANCES_NBR)
+  if (Instance >= MMC_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if( HAL_MMC_Erase(&hsd_sdmmc[Instance], StartAddr, EndAddr) != HAL_OK)
+  else if (HAL_MMC_Erase(&hsd_sdmmc[Instance], StartAddr, EndAddr) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -439,7 +439,7 @@ void BSP_MMC_IRQHandler(uint32_t Instance)
   */
 int32_t BSP_MMC_GetCardState(uint32_t Instance)
 {
-  return((HAL_MMC_GetCardState(&hsd_sdmmc[Instance]) == HAL_MMC_CARD_TRANSFER ) ? MMC_TRANSFER_OK : MMC_TRANSFER_BUSY);
+  return ((HAL_MMC_GetCardState(&hsd_sdmmc[Instance]) == HAL_MMC_CARD_TRANSFER) ? MMC_TRANSFER_OK : MMC_TRANSFER_BUSY);
 }
 
 /**
@@ -452,11 +452,11 @@ int32_t BSP_MMC_GetCardInfo(uint32_t Instance, BSP_MMC_CardInfo *CardInfo)
 {
   int32_t ret;
 
-  if(Instance >= MMC_INSTANCES_NBR)
+  if (Instance >= MMC_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(HAL_MMC_GetCardInfo(&hsd_sdmmc[Instance], CardInfo) != HAL_OK)
+  else if (HAL_MMC_GetCardInfo(&hsd_sdmmc[Instance], CardInfo) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }

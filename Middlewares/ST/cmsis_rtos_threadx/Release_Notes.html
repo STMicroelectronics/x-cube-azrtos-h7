@@ -45,7 +45,25 @@
 <h1>Update history</h1>
 
 <div class="collapse">
-<input type="checkbox" id="collapse-section8" checked aria-hidden="true"> <label for="collapse-section8" aria-hidden="true"><strong>V1.3.0 / 08-April-2024</strong></label>
+<input type="checkbox" id="collapse-section8" checked aria-hidden="true"> <label for="collapse-section8" aria-hidden="true"><strong>V1.3.1 / 18-April-2025</strong></label>
+<div>
+<h2 id="main-changes">Main changes</h2>
+<ul>
+<li>Fix the calculation of msg_size parameter in osMessageQueueNew API to ensure proper alignment of memory blocks</li>
+</ul>
+<ul>
+<li>Fix the issue with osSemaphoreRelease() to ensure it considers the max_count of available semaphores</li>
+</ul>
+
+<h2 id="dependencies">Dependencies:</h2>
+<ul>
+<li>Azure RTOS ThreadX V6.1.7 or higher</li>
+</ul>
+</div>
+</div>
+
+<div class="collapse">
+<input type="checkbox" id="collapse-section8" aria-hidden="true"> <label for="collapse-section8" aria-hidden="true"><strong>V1.3.0 / 08-April-2024</strong></label>
 <div>
 <h2 id="main-changes">Main changes</h2>
 <ul>

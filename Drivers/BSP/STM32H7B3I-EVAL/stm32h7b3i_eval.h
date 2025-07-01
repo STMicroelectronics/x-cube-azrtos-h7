@@ -27,7 +27,7 @@
 #define STM32H7B3I_EVAL_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -35,11 +35,11 @@
 #include "stm32h7b3i_eval_errno.h"
 
 #if (USE_BSP_COM_FEATURE > 0)
-  #if (USE_COM_LOG > 0)
-    #ifndef __GNUC__
-      #include "stdio.h"
-    #endif
-  #endif
+#if (USE_COM_LOG > 0)
+#ifndef __GNUC__
+#include "stdio.h"
+#endif
+#endif
 #endif
 
 /** @addtogroup BSP
@@ -70,7 +70,7 @@ typedef enum
   LED_ORANGE = LED4,
 #endif
   LEDn
-}Led_TypeDef;
+} Led_TypeDef;
 
 
 typedef enum
@@ -79,36 +79,36 @@ typedef enum
   BUTTON_TAMPER = 1U,
   BUTTON_USER = 2U,
   BUTTONn
-}Button_TypeDef;
+} Button_TypeDef;
 
 typedef enum
 {
   BUTTON_MODE_GPIO = 0U,
   BUTTON_MODE_EXTI = 1U
-}ButtonMode_TypeDef;
+} ButtonMode_TypeDef;
 
 typedef enum
 {
   JOY_MODE_GPIO = 0U,
   JOY_MODE_EXTI = 1U
-}JOYMode_TypeDef;
+} JOYMode_TypeDef;
 
 typedef enum
 {
   JOY1 = 0U,
   JOYn
-}JOY_TypeDef;
+} JOY_TypeDef;
 
 typedef enum
 {
- JOY_NONE  = 0x00U,
- JOY_SEL   = 0x01U,
- JOY_DOWN  = 0x02U,
- JOY_LEFT  = 0x04U,
- JOY_RIGHT = 0x08U,
- JOY_UP    = 0x10U,
- JOY_ALL   = 0x1FU
-}JOYPin_TypeDef;
+  JOY_NONE  = 0x00U,
+  JOY_SEL   = 0x01U,
+  JOY_DOWN  = 0x02U,
+  JOY_LEFT  = 0x04U,
+  JOY_RIGHT = 0x08U,
+  JOY_UP    = 0x10U,
+  JOY_ALL   = 0x1FU
+} JOYPin_TypeDef;
 
 #if (USE_BSP_COM_FEATURE > 0)
 typedef enum
@@ -116,20 +116,20 @@ typedef enum
   COM1 = 0U,
   COM2 = 1U,
   COMn
-}COM_TypeDef;
+} COM_TypeDef;
 
 typedef enum
 {
   COM_STOPBITS_1     =   UART_STOPBITS_1,
   COM_STOPBITS_2     =   UART_STOPBITS_2,
-}COM_StopBitsTypeDef;
+} COM_StopBitsTypeDef;
 
 typedef enum
 {
   COM_PARITY_NONE     =  UART_PARITY_NONE,
   COM_PARITY_EVEN     =  UART_PARITY_EVEN,
   COM_PARITY_ODD      =  UART_PARITY_ODD,
-}COM_ParityTypeDef;
+} COM_ParityTypeDef;
 
 typedef enum
 {
@@ -137,14 +137,14 @@ typedef enum
   COM_HWCONTROL_RTS     =  UART_HWCONTROL_RTS,
   COM_HWCONTROL_CTS     =  UART_HWCONTROL_CTS,
   COM_HWCONTROL_RTS_CTS =  UART_HWCONTROL_RTS_CTS,
-}COM_HwFlowCtlTypeDef;
+} COM_HwFlowCtlTypeDef;
 
 typedef enum
 {
   COM_WORDLENGTH_7B = UART_WORDLENGTH_7B,
   COM_WORDLENGTH_8B = UART_WORDLENGTH_8B,
   COM_WORDLENGTH_9B = UART_WORDLENGTH_9B,
-}COM_WordLengthTypeDef;
+} COM_WordLengthTypeDef;
 
 typedef struct
 {
@@ -153,14 +153,14 @@ typedef struct
   COM_StopBitsTypeDef   StopBits;
   COM_ParityTypeDef     Parity;
   COM_HwFlowCtlTypeDef  HwFlowCtl;
-}COM_InitTypeDef;
+} COM_InitTypeDef;
 
 #if (USE_HAL_UART_REGISTER_CALLBACKS == 1)
 typedef struct
 {
   void (* pMspInitCb)(UART_HandleTypeDef *);
   void (* pMspDeInitCb)(UART_HandleTypeDef *);
-}BSP_COM_Cb_t;
+} BSP_COM_Cb_t;
 #endif /* (USE_HAL_UART_REGISTER_CALLBACKS == 1) */
 
 #define MX_UART_InitTypeDef COM_InitTypeDef
@@ -170,14 +170,14 @@ typedef enum
 {
   POT1 = 0U,
   POTn
-}POT_TypeDef;
+} POT_TypeDef;
 
 #if (USE_HAL_ADC_REGISTER_CALLBACKS == 1)
 typedef struct
 {
   void (* pMspInitCb)(ADC_HandleTypeDef *);
   void (* pMspDeInitCb)(ADC_HandleTypeDef *);
-}BSP_POT_Cb_t;
+} BSP_POT_Cb_t;
 #endif /* (USE_HAL_ADC_REGISTER_CALLBACKS == 1) */
 
 /**
@@ -191,17 +191,17 @@ typedef struct
   * @brief  Define for STM32H7B3I_EVAL board
   */
 #if !defined (USE_STM32H7B3I_EVAL)
- #define USE_STM32H7B3I_EVAL
+#define USE_STM32H7B3I_EVAL
 #endif
 
 /**
-  * @brief STM32H7B3I_EVAL BSP Driver version number V2.3.2
+  * @brief STM32H7B3I_EVAL BSP Driver version number
   */
-#define	STM32H7B3I_EVAL_BSP_VERSION_MAIN   (uint32_t)(0x02) /*!< [31:24] main version */
-#define	STM32H7B3I_EVAL_BSP_VERSION_SUB1   (uint32_t)(0x03) /*!< [23:16] sub1 version */
-#define	STM32H7B3I_EVAL_BSP_VERSION_SUB2   (uint32_t)(0x02) /*!< [15:8]  sub2 version */
-#define	STM32H7B3I_EVAL_BSP_VERSION_RC     (uint32_t)(0x00) /*!< [7:0]  release candidate */
-#define	STM32H7B3I_EVAL_BSP_VERSION        ((STM32H7B3I_EVAL_BSP_VERSION_MAIN << 24)\
+#define STM32H7B3I_EVAL_BSP_VERSION_MAIN   (uint32_t)(0x02) /*!< [31:24] main version */
+#define STM32H7B3I_EVAL_BSP_VERSION_SUB1   (uint32_t)(0x03) /*!< [23:16] sub1 version */
+#define STM32H7B3I_EVAL_BSP_VERSION_SUB2   (uint32_t)(0x03) /*!< [15:8]  sub2 version */
+#define STM32H7B3I_EVAL_BSP_VERSION_RC     (uint32_t)(0x00) /*!< [7:0]  release candidate */
+#define STM32H7B3I_EVAL_BSP_VERSION        ((STM32H7B3I_EVAL_BSP_VERSION_MAIN << 24)\
                                             |(STM32H7B3I_EVAL_BSP_VERSION_SUB1 << 16)\
                                             |(STM32H7B3I_EVAL_BSP_VERSION_SUB2 << 8 )\
                                             |(STM32H7B3I_EVAL_BSP_VERSION_RC))
@@ -268,12 +268,12 @@ typedef struct
   * @{
   */
 #ifndef USE_BSP_COM_FEATURE
-  #define USE_BSP_COM_FEATURE    0U
+#define USE_BSP_COM_FEATURE    0U
 #endif
 #if (USE_BSP_COM_FEATURE > 0)
 /**
- * @brief Definition for COM port1, connected to USART1
- */
+  * @brief Definition for COM port1, connected to USART1
+  */
 #define COM1_UART                     USART1
 #define COM1_CLK_ENABLE()             __HAL_RCC_USART1_CLK_ENABLE()
 #define COM1_CLK_DISABLE()            __HAL_RCC_USART1_CLK_DISABLE()
@@ -298,11 +298,11 @@ typedef struct
   * @{
   */
 #ifndef USE_BSP_POT_FEATURE
-  #define USE_BSP_POT_FEATURE 0U
+#define USE_BSP_POT_FEATURE 0U
 #endif
 /**
- * @brief Definition for Potentiometer, connected to ADC1
- */
+  * @brief Definition for Potentiometer, connected to ADC1
+  */
 #define POT1_ADC                       ADC1
 #define POT1_CLK_ENABLE()               __HAL_RCC_ADC12_CLK_ENABLE()
 #define POT1_CLK_DISABLE()              __HAL_RCC_ADC12_CLK_DISABLE()
@@ -379,7 +379,7 @@ typedef struct
 extern EXTI_HandleTypeDef hpb_exti[BUTTONn];
 #if (USE_BSP_COM_FEATURE > 0)
 extern UART_HandleTypeDef hcom_uart[COMn];
-extern USART_TypeDef* COM_USART[COMn];
+extern USART_TypeDef *COM_USART[COMn];
 #endif
 #if (USE_BSP_POT_FEATURE > 0)
 extern ADC_HandleTypeDef hpot_adc[POTn];
@@ -392,15 +392,15 @@ extern ADC_HandleTypeDef hpot_adc[POTn];
   * @{
   */
 int32_t  BSP_GetVersion(void);
-const uint8_t* BSP_GetBoardName(void);
-const uint8_t* BSP_GetBoardID(void);
+const uint8_t *BSP_GetBoardName(void);
+const uint8_t *BSP_GetBoardID(void);
 
 int32_t  BSP_LED_Init(Led_TypeDef Led);
 int32_t  BSP_LED_DeInit(Led_TypeDef Led);
 int32_t  BSP_LED_On(Led_TypeDef Led);
 int32_t  BSP_LED_Off(Led_TypeDef Led);
 int32_t  BSP_LED_Toggle(Led_TypeDef Led);
-int32_t  BSP_LED_GetState (Led_TypeDef Led);
+int32_t  BSP_LED_GetState(Led_TypeDef Led);
 int32_t  BSP_PB_Init(Button_TypeDef Button, ButtonMode_TypeDef ButtonMode);
 int32_t  BSP_PB_DeInit(Button_TypeDef Button);
 int32_t  BSP_PB_GetState(Button_TypeDef Button);
@@ -411,7 +411,7 @@ void     BSP_PB_IRQHandler(Button_TypeDef Button);
 int32_t  BSP_COM_Init(COM_TypeDef COM, COM_InitTypeDef *COM_Init);
 int32_t  BSP_COM_DeInit(COM_TypeDef COM);
 #if (USE_COM_LOG > 0)
-int32_t  BSP_COM_SelectLogPort (COM_TypeDef COM);
+int32_t  BSP_COM_SelectLogPort(COM_TypeDef COM);
 #endif
 
 #if (USE_HAL_UART_REGISTER_CALLBACKS == 1)

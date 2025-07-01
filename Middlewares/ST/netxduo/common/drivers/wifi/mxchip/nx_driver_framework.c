@@ -246,9 +246,6 @@ static VOID nx_driver_framework_entry_default(NX_IP_DRIVER *driver_req_ptr)
       /* Return the unhandled command status.  */
       driver_req_ptr -> nx_ip_driver_status =  NX_UNHANDLED_COMMAND;
 
-      /* Default to successful return.  */
-      driver_req_ptr -> nx_ip_driver_status =  NX_DRIVER_ERROR;
-
       NX_DEBUG_DRIVER_SOURCE_LOG("\nNetX WiFi Driver Received invalid request - \"%s\"\n",
                                  driver_req_ptr -> nx_ip_driver_ptr -> nx_ip_name);
   }

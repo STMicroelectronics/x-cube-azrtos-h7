@@ -10,6 +10,10 @@
 /**************************************************************************/
 #include "lx_stm32_ospi_driver.h"
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* HAL DMA API based implementation for OctoSPI component MX25LM51245G
  * The present implementation assumes the following settings are set:
 
@@ -864,6 +868,6 @@ void HAL_OSPI_TxCpltCallback(OSPI_HandleTypeDef *hospi)
   /* USER CODE END POST_TX_CMPLT */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

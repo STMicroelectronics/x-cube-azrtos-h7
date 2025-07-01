@@ -6,6 +6,26 @@
   *          FileX low level drivers for STM32 devices.
   ******************************************************************************
   */
+### V3.3.1 / 14-February-2025 ###
+=================================
+Main changes
+-------------
+- Fix compiler issue when selecting multiple NOR interfaces
+  + fx_stm32_levelx_nor_driver.c
+
+### V3.3.0 / 09-September-2024 ###
+=================================
+Main changes
+-------------
+- Add support to NOR XSPI interface
+  + fx_stm32_levelx_nor_driver.c
+  + template/fx_stm32_levelx_nor_driver.h
+
+Dependencies:
+-------------
+- Azure RTOS FileX V6.4.0
+- Azure RTOS LevelX V6.4.0
+
 ### V3.2.0 / 17-May-2024 ###
 =================================
 Main changes

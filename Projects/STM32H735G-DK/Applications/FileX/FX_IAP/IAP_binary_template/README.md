@@ -1,4 +1,4 @@
-## <b>IAP_binary_template application description</b>
+## <b>IAP_binary_template Application Description</b>
 
 This is an example Application to be used with the IAP_main. This example is meant to demonstrate the base configuration 
 that need to be used in order to successfully deploy an application with the IAP_main bootloader.
@@ -15,10 +15,12 @@ This can be achieved by setting the offset to the defined name **VECT_TABLE_OFFS
 This application must be generated as raw binary, this can be achieved by setting the output format of the IDE to **Raw binary**.
 The name for the binary should also be specified there as defined by **FW_NAME_STRING** located in "FileX/FX_IAP/IAP_main/Core/Inc/main.h".
 
-### <b>Expacted behaviour:</b>
+### <b>Expected behaviour:</b>
+
 IAP_binary_template should toggle both LEDs.
 
 ### <b>Error behaviour:</b>
+
 On failure, red LED should toggle.
 
 ### <b>Keywords</b>
@@ -26,6 +28,7 @@ On failure, red LED should toggle.
 IAP, binary, template
 
 ### <b>Note</b>
+
 This application can be debugged using EWARM IDE by going into **Project** menu and click **Attach to Running Target**.
 
 A pre-built binary can be found under BIN directory.

@@ -1,5 +1,5 @@
 
-# <b>Ux_Device_HID application description</b>
+# <b>Ux_Device_HID Application Description</b>
 
 This application provides an example of Azure RTOS USBX stack usage on NUCLEO-H723ZG board,
 it shows how to develop USB Device Human Interface "HID" mouse based application.
@@ -22,7 +22,7 @@ To customize the HID application by sending the mouse position step by step ever
 When plugged to PC host, the NUCLEO-H723ZG must be properly enumerated as a USB HID mouse device.
 During the enumeration phase, device provides host with the requested descriptors (device, configuration, string).
 Those descriptors are used by host driver to identify the device capabilities.
-Once the NUCLEO-H723ZG USB device successfully completed the enumeration phase, the device sends an HID report after a user button press.
+Once the NUCLEO-H723ZG USB device successfully completed the enumeration phase, the device sends a HID report after a user button press.
 Each report sent should move the mouse cursor by one step on host side.
 
 #### <b>Error behaviors</b>
@@ -100,8 +100,8 @@ RTOS, ThreadX, USBXDevice, USB_OTG, Full Speed, HID, Mouse.
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H723xx devices.
-  - This example has been tested with STMicroelectronics NUCLEO-H723ZG boards revision MB1364-H723ZG-E01
+  - This application runs on STM32H723xx devices.
+  - This application has been tested with STMicroelectronics NUCLEO-H723ZG boards revision MB1364-H723ZG-E01
     and can be easily tailored to any other supported device and development board.
 
 ### <b>How to use it ?</b>

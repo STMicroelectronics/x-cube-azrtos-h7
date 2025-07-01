@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 
 #include "app_azure_rtos.h"
@@ -182,3 +186,7 @@ VOID tx_application_define(VOID *first_unused_memory)
 #endif
 
 }
+
+/* USER CODE BEGIN 2 */
+
+/* USER CODE END 2 */

@@ -431,11 +431,11 @@
 
 #define UX_DEVICE_CLASS_CDC_ACM_TRANSMISSION_DISABLE
 
-/* defined, this macro enables device audio feedback endpoint support.  */
+/* Defined, this macro enables device audio feedback endpoint support.  */
 
 /* #define UX_DEVICE_CLASS_AUDIO_FEEDBACK_SUPPORT  */
 
-/* defined, this macro enables device audio interrupt endpoint support.  */
+/* Defined, this macro enables device audio interrupt endpoint support.  */
 
 /* #define UX_DEVICE_CLASS_AUDIO_INTERRUPT_SUPPORT  */
 
@@ -479,10 +479,6 @@
  */
 
 /* #define UX_HOST_DEVICE_CLASS_CODE_VALIDATION_ENABLE  */
-
-/* Defined, host HID interrupt OUT transfer is supported.  */
-
-/* #define UX_HOST_CLASS_HID_INTERRUPT_OUT_SUPPORT  */
 
 /* Define HID report transfer timeout value in millisecond.
    The default is 10000 milliseconds.  */
@@ -544,7 +540,7 @@
    - ux_host_class_storage_media_unlock : unlock media
    Note it's forced defined/enabled in standalone mode of usbx.
 */
-/* #define UX_HOST_CLASS_STORAGE_NO_FILEX  */
+/* #define UX_HOST_CLASS_STORAGE_NO_FILEX */
 
 /* Defined, this value represents the maximum size of single transfers for the SCSI data phase.
    By default it's 1024.

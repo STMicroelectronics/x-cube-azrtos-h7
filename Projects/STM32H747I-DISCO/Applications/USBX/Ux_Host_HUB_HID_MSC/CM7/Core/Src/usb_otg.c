@@ -41,6 +41,7 @@ HCD_HandleTypeDef hhcd_USB_OTG_HS;
 
 void MX_USB_OTG_HS_HCD_Init(void)
 {
+
   /* USER CODE BEGIN USB_OTG_HS_Init 0 */
 
   /* USER CODE END USB_OTG_HS_Init 0 */
@@ -63,20 +64,22 @@ void MX_USB_OTG_HS_HCD_Init(void)
   /* USER CODE BEGIN USB_OTG_HS_Init 2 */
 
   /* USER CODE END USB_OTG_HS_Init 2 */
+
 }
 
 void HAL_HCD_MspInit(HCD_HandleTypeDef* hcdHandle)
 {
+
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
   if(hcdHandle->Instance==USB_OTG_HS)
   {
-    /* USER CODE BEGIN USB_OTG_HS_MspInit 0 */
+  /* USER CODE BEGIN USB_OTG_HS_MspInit 0 */
 
-    /* USER CODE END USB_OTG_HS_MspInit 0 */
+  /* USER CODE END USB_OTG_HS_MspInit 0 */
 
-    /** Initializes the peripherals clock
-    */
+  /** Initializes the peripherals clock
+  */
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USB;
     PeriphClkInitStruct.PLL3.PLL3M = 25;
     PeriphClkInitStruct.PLL3.PLL3N = 240;
@@ -92,8 +95,8 @@ void HAL_HCD_MspInit(HCD_HandleTypeDef* hcdHandle)
       Error_Handler();
     }
 
-    /** Enable USB Voltage detector
-    */
+  /** Enable USB Voltage detector
+  */
     HAL_PWREx_EnableUSBVoltageDetector();
 
     __HAL_RCC_GPIOB_CLK_ENABLE();
@@ -116,7 +119,7 @@ void HAL_HCD_MspInit(HCD_HandleTypeDef* hcdHandle)
     PB13     ------> USB_OTG_HS_ULPI_D6
     */
     GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_1
-                                              |GPIO_PIN_12|GPIO_PIN_0|GPIO_PIN_13;
+                          |GPIO_PIN_12|GPIO_PIN_0|GPIO_PIN_13;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
@@ -158,19 +161,20 @@ void HAL_HCD_MspInit(HCD_HandleTypeDef* hcdHandle)
     /* USB_OTG_HS interrupt Init */
     HAL_NVIC_SetPriority(OTG_HS_IRQn, 6, 0);
     HAL_NVIC_EnableIRQ(OTG_HS_IRQn);
-    /* USER CODE BEGIN USB_OTG_HS_MspInit 1 */
+  /* USER CODE BEGIN USB_OTG_HS_MspInit 1 */
 
-    /* USER CODE END USB_OTG_HS_MspInit 1 */
+  /* USER CODE END USB_OTG_HS_MspInit 1 */
   }
 }
 
 void HAL_HCD_MspDeInit(HCD_HandleTypeDef* hcdHandle)
 {
+
   if(hcdHandle->Instance==USB_OTG_HS)
   {
-    /* USER CODE BEGIN USB_OTG_HS_MspDeInit 0 */
+  /* USER CODE BEGIN USB_OTG_HS_MspDeInit 0 */
 
-    /* USER CODE END USB_OTG_HS_MspDeInit 0 */
+  /* USER CODE END USB_OTG_HS_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_USB_OTG_HS_CLK_DISABLE();
     __HAL_RCC_USB_OTG_HS_ULPI_CLK_DISABLE();
@@ -190,7 +194,7 @@ void HAL_HCD_MspDeInit(HCD_HandleTypeDef* hcdHandle)
     PB13     ------> USB_OTG_HS_ULPI_D6
     */
     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_5|GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_1
-                                              |GPIO_PIN_12|GPIO_PIN_0|GPIO_PIN_13);
+                          |GPIO_PIN_12|GPIO_PIN_0|GPIO_PIN_13);
 
     HAL_GPIO_DeInit(GPIOI, GPIO_PIN_11);
 
@@ -202,9 +206,9 @@ void HAL_HCD_MspDeInit(HCD_HandleTypeDef* hcdHandle)
 
     /* USB_OTG_HS interrupt Deinit */
     HAL_NVIC_DisableIRQ(OTG_HS_IRQn);
-    /* USER CODE BEGIN USB_OTG_HS_MspDeInit 1 */
+  /* USER CODE BEGIN USB_OTG_HS_MspDeInit 1 */
 
-    /* USER CODE END USB_OTG_HS_MspDeInit 1 */
+  /* USER CODE END USB_OTG_HS_MspDeInit 1 */
   }
 }
 

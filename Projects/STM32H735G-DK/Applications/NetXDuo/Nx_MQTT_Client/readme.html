@@ -27,7 +27,7 @@ vertical-align: middle;
 <body>
 <div class="row">
 <section id="nx_mqtt_client-application-description" class="col-sm-12 col-lg-8">
-<h2><b>Nx_MQTT_Client application description</b></h2>
+<h2><b>Nx_MQTT_Client Application Description</b></h2>
 <p>This application provides an example of Azure RTOS NetX/NetXDuo stack
 usage. It shows how to exchange data between client and server using
 MQTT protocol in an encrypted mode supporting TLS v1.2.</p>
@@ -43,12 +43,12 @@ enabled for the <i>NX_IP</i> instance</li>
 <p>The application then creates 3 threads with the different
 priorities:</p>
 <ul>
-<li><strong>NxAppThread</strong> (priority 10, PreemtionThreashold 10) :
+<li><strong>NxAppThread</strong> (priority 10, PreemptionThreshold 10) :
 created with the <i>TX_AUTO_START</i> flag to start automatically.</li>
 <li><strong>AppMQTTClientThread</strong> (priority 3,
-PreemtionThreashold 3) : created with the <i>TX_DONT_START</i> flag to
+PreemptionThreshold 3) : created with the <i>TX_DONT_START</i> flag to
 be started later.</li>
-<li><strong>AppSNTPThread</strong> (priority 5, PreemtionThreashold 5) :
+<li><strong>AppSNTPThread</strong> (priority 5, PreemptionThreshold 5) :
 created with the <i>TX_DONT_START</i> flag to be started later.</li>
 </ul>
 <p>The <strong>NxAppThread</strong> starts and performs the following
@@ -126,10 +126,10 @@ issues.</li>
   /* USER CODE END ETH_Init 1 */
   heth.Instance = ETH;
   heth.Init.MACAddr[0] =   0x00;
-  heth.Init.MACAddr[1] =   0x11;
-  heth.Init.MACAddr[2] =   0x83;
-  heth.Init.MACAddr[3] =   0x45;
-  heth.Init.MACAddr[4] =   0x26;
+  heth.Init.MACAddr[1] =   0x80;
+  heth.Init.MACAddr[2] =   0xE1;
+  heth.Init.MACAddr[3] =   0x00;
+  heth.Init.MACAddr[4] =   0x30;
   heth.Init.MACAddr[5] =   0x20;</code></pre>
 <h4 id="known-limitations"><b>Known limitations</b></h4>
 <ul>
@@ -177,7 +177,7 @@ use it to ensure server’s authentication :
 “mosquitto.org.der” downloaded from <a href="https://test.mosquitto.org">test.mosquitto</a></p></li>
 <li><p>convert certificate downloaded by executing the following cmd
 from the file downloaded path :</p>
-<pre><code>            xxd.exe -i mosquitto.org.der &gt; mosquitto.cert.h</code></pre></li>
+<pre><code>           xxd.exe -i mosquitto.org.der &gt; mosquitto.cert.h</code></pre></li>
 <li><p>add the converted file under the application :
 NetXDuo/Nx_MQTT_Client/NetXDuo/App</p></li>
 <li><p>configure MOSQUITTO_CERT_FILE with your certificate
@@ -265,7 +265,7 @@ place in NXAppPool_region { section .NXAppPoolSection};</code></pre>
 <ul>
 <li>For MDK-ARM</li>
 </ul>
-<pre><code> RW_NXDriverSection 0x24030200 0x14000  {
+<pre><code> RW_NXDriverSection 0x24030200 0x14000 {
   *(.NetXPoolSection)
   }</code></pre>
 <ul>
@@ -308,11 +308,10 @@ configuration is as follows:
 <li>BaudRate = 115200 baud</li>
 <li>Word Length = 8 Bits</li>
 <li>Stop Bit = 1</li>
-<li>Parity = none</li>
-<li>Flow control = None</li>
+<li>Parity = None</li>
+<li>Flow control = None ### <b>How to use it ?</b></li>
 </ul></li>
 </ul>
-<h3 id="how-to-use-it"><b>How to use it ?</b></h3>
 <p>In order to make the program work, you must do the following :</p>
 <ul>
 <li>Open your preferred toolchain</li>

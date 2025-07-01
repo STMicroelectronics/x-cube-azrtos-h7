@@ -102,7 +102,7 @@ int32_t BSP_SRAM_Init(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= SRAM_INSTANCES_NBR)
+  if (Instance >= SRAM_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
@@ -113,27 +113,27 @@ int32_t BSP_SRAM_Init(uint32_t Instance)
     SRAM_MspInit(&hsram[Instance]);
 #else
     /* Register the SRAM MSP Callbacks */
-    if(IsMspCallbacksValid == 0U)
+    if (IsMspCallbacksValid == 0U)
     {
-      if(BSP_SRAM_RegisterDefaultMspCallbacks(Instance) != BSP_ERROR_NONE)
+      if (BSP_SRAM_RegisterDefaultMspCallbacks(Instance) != BSP_ERROR_NONE)
       {
         ret = BSP_ERROR_PERIPH_FAILURE;
       }
     }
-    if(ret == BSP_ERROR_NONE)
+    if (ret == BSP_ERROR_NONE)
     {
 #endif /* USE_HAL_SRAM_REGISTER_CALLBACKS */
-      /* __weak function can be rewritten by the application */
-      if(MX_SRAM_BANK3_Init(&hsram[Instance]) != HAL_OK)
-      {
-        ret = BSP_ERROR_NO_INIT;
-      }
-#if (USE_HAL_SRAM_REGISTER_CALLBACKS == 1)
+    /* __weak function can be rewritten by the application */
+    if (MX_SRAM_BANK3_Init(&hsram[Instance]) != HAL_OK)
+    {
+      ret = BSP_ERROR_NO_INIT;
     }
-#endif
+#if (USE_HAL_SRAM_REGISTER_CALLBACKS == 1)
   }
+#endif
+}
 
-  return ret;
+return ret;
 }
 
 /**
@@ -145,7 +145,7 @@ int32_t BSP_SRAM_DeInit(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= SRAM_INSTANCES_NBR)
+  if (Instance >= SRAM_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
@@ -157,8 +157,8 @@ int32_t BSP_SRAM_DeInit(uint32_t Instance)
 
     (void)HAL_SRAM_DeInit(&hsram[Instance]);
 #if (USE_HAL_SRAM_REGISTER_CALLBACKS == 0)
-      /* SRAM controller de-initialization */
-      SRAM_MspDeInit(&hsram[Instance]);
+    /* SRAM controller de-initialization */
+    SRAM_MspDeInit(&hsram[Instance]);
 #endif /* (USE_HAL_SRAM_REGISTER_CALLBACKS == 0) */
   }
 
@@ -206,7 +206,7 @@ __weak HAL_StatusTypeDef MX_SRAM_BANK3_Init(SRAM_HandleTypeDef *hSram)
   sram_timing.AccessMode            = FMC_ACCESS_MODE_A;
 
   /* SRAM controller initialization */
-  if(HAL_SRAM_Init(hSram, &sram_timing, NULL) != HAL_OK)
+  if (HAL_SRAM_Init(hSram, &sram_timing, NULL) != HAL_OK)
   {
     return  HAL_ERROR;
   }
@@ -219,23 +219,23 @@ __weak HAL_StatusTypeDef MX_SRAM_BANK3_Init(SRAM_HandleTypeDef *hSram)
   * @param Instance      SRAM Instance
   * @retval BSP status
   */
-int32_t BSP_SRAM_RegisterDefaultMspCallbacks (uint32_t Instance)
+int32_t BSP_SRAM_RegisterDefaultMspCallbacks(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= SRAM_INSTANCES_NBR)
+  if (Instance >= SRAM_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Register MspInit/MspDeInit Callbacks */
-    if(HAL_SRAM_RegisterCallback(&hsram[Instance], HAL_SRAM_MSP_INIT_CB_ID, SRAM_MspInit) != HAL_OK)
+    if (HAL_SRAM_RegisterCallback(&hsram[Instance], HAL_SRAM_MSP_INIT_CB_ID, SRAM_MspInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_SRAM_RegisterCallback(&hsram[Instance], HAL_SRAM_MSP_DEINIT_CB_ID, SRAM_MspDeInit) != HAL_OK)
+    else if (HAL_SRAM_RegisterCallback(&hsram[Instance], HAL_SRAM_MSP_DEINIT_CB_ID, SRAM_MspDeInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -254,23 +254,23 @@ int32_t BSP_SRAM_RegisterDefaultMspCallbacks (uint32_t Instance)
   * @param CallBacks    pointer to MspInit/MspDeInit callbacks functions
   * @retval BSP status
   */
-int32_t BSP_SRAM_RegisterMspCallbacks (uint32_t Instance, BSP_SRAM_Cb_t *CallBacks)
+int32_t BSP_SRAM_RegisterMspCallbacks(uint32_t Instance, BSP_SRAM_Cb_t *CallBacks)
 {
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= SRAM_INSTANCES_NBR)
+  if (Instance >= SRAM_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Register MspInit/MspDeInit Callbacks */
-    if(HAL_SRAM_RegisterCallback(&hsram[Instance], HAL_SRAM_MSP_INIT_CB_ID, CallBacks->pMspInitCb) != HAL_OK)
+    if (HAL_SRAM_RegisterCallback(&hsram[Instance], HAL_SRAM_MSP_INIT_CB_ID, CallBacks->pMspInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_SRAM_RegisterCallback(&hsram[Instance], HAL_SRAM_MSP_DEINIT_CB_ID, CallBacks->pMspDeInitCb) != HAL_OK)
+    else if (HAL_SRAM_RegisterCallback(&hsram[Instance], HAL_SRAM_MSP_DEINIT_CB_ID, CallBacks->pMspDeInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -336,28 +336,28 @@ static void SRAM_MspInit(SRAM_HandleTypeDef  *hSram)
   gpio_init_structure.Alternate = GPIO_AF12_FMC;
 
   /* GPIOD configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_8 |\
-                              GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_8 | \
+                              GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | \
                               GPIO_PIN_14 | GPIO_PIN_15;
   HAL_GPIO_Init(GPIOD, &gpio_init_structure);
 
   /* GPIOE configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 |\
-                              GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | \
+                              GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | \
                               GPIO_PIN_15;
   HAL_GPIO_Init(GPIOE, &gpio_init_structure);
 
   /* GPIOF configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | \
                               GPIO_PIN_5 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
   HAL_GPIO_Init(GPIOF, &gpio_init_structure);
 
   /* GPIOG configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | \
                               GPIO_PIN_5 | GPIO_PIN_10;
   HAL_GPIO_Init(GPIOG, &gpio_init_structure);
 
-   /* Configure common MDMA parameters */
+  /* Configure common MDMA parameters */
   mdma_handle.Init.Request                  = MDMA_REQUEST_SW;
   mdma_handle.Init.TransferTriggerMode      = MDMA_BLOCK_TRANSFER;
   mdma_handle.Init.Priority                 = MDMA_PRIORITY_HIGH;
@@ -374,7 +374,7 @@ static void SRAM_MspInit(SRAM_HandleTypeDef  *hSram)
 
   mdma_handle.Instance = SRAM_MDMAx_CHANNEL;
 
-   /* Associate the DMA handle */
+  /* Associate the DMA handle */
   __HAL_LINKDMA(hSram, hmdma, mdma_handle);
 
   /* De-initialize the Stream for new transfer */
@@ -404,24 +404,24 @@ static void SRAM_MspDeInit(SRAM_HandleTypeDef  *hSram)
   UNUSED(hSram);
 
   /* GPIOD configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_8 |\
-                              GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_8 | \
+                              GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | \
                               GPIO_PIN_14 | GPIO_PIN_15;
   HAL_GPIO_DeInit(GPIOD, gpio_init_structure.Pin);
 
   /* GPIOE configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 |\
-                              GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | \
+                              GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | \
                               GPIO_PIN_15;
   HAL_GPIO_DeInit(GPIOE, gpio_init_structure.Pin);
 
   /* GPIOF configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | \
                               GPIO_PIN_5 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
   HAL_GPIO_DeInit(GPIOF, gpio_init_structure.Pin);
 
   /* GPIOG configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | \
                               GPIO_PIN_5 | GPIO_PIN_10;
   HAL_GPIO_DeInit(GPIOG, gpio_init_structure.Pin);
 

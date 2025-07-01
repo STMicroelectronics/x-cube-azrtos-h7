@@ -22,7 +22,7 @@
 #define STM32H7B3I_EVAL_OSPI_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -46,7 +46,8 @@
 /** @defgroup STM32H7B3I_EVAL_OSPI_NOR_Exported_Types OSPI Exported Types
   * @{
   */
-typedef enum {
+typedef enum
+{
   OSPI_ACCESS_NONE = 0,          /*!<  Instance not initialized,              */
   OSPI_ACCESS_INDIRECT,          /*!<  Instance use indirect mode access      */
   OSPI_ACCESS_MMP                /*!<  Instance use Memory Mapped Mode read   */
@@ -57,7 +58,7 @@ typedef struct
 {
   pOSPI_CallbackTypeDef  pMspInitCb;
   pOSPI_CallbackTypeDef  pMspDeInitCb;
-}BSP_OSPI_Cb_t;
+} BSP_OSPI_Cb_t;
 #endif /* (USE_HAL_OSPI_REGISTER_CALLBACKS == 1) */
 
 typedef struct
@@ -92,9 +93,9 @@ typedef struct
   BSP_OSPI_NOR_Interface_t   InterfaceMode;      /*!<  Current Flash Interface mode */
   BSP_OSPI_NOR_Transfer_t    TransferRate;       /*!<  Current Flash Transfer rate  */
 } BSP_OSPI_NOR_Init_t;
-  /**
+/**
   * @}
-  */
+*/
 
 /* Exported constants --------------------------------------------------------*/
 /** @defgroup STM32H7B3I_EVAL_OSPI_NOR_Exported_Constants OSPI Exported Constants
@@ -197,24 +198,24 @@ extern OSPI_NOR_Ctx_t     Ospi_Nor_Ctx[];
 /** @addtogroup STM32H7B3I_EVAL_OSPI_NOR_Exported_Functions
   * @{
   */
-int32_t BSP_OSPI_NOR_Init                        (uint32_t Instance, BSP_OSPI_NOR_Init_t *Init);
-int32_t BSP_OSPI_NOR_DeInit                      (uint32_t Instance);
+int32_t BSP_OSPI_NOR_Init(uint32_t Instance, BSP_OSPI_NOR_Init_t *Init);
+int32_t BSP_OSPI_NOR_DeInit(uint32_t Instance);
 #if (USE_HAL_OSPI_REGISTER_CALLBACKS == 1)
-int32_t BSP_OSPI_NOR_RegisterMspCallbacks        (uint32_t Instance, BSP_OSPI_Cb_t *CallBacks);
-int32_t BSP_OSPI_NOR_RegisterDefaultMspCallbacks (uint32_t Instance);
+int32_t BSP_OSPI_NOR_RegisterMspCallbacks(uint32_t Instance, BSP_OSPI_Cb_t *CallBacks);
+int32_t BSP_OSPI_NOR_RegisterDefaultMspCallbacks(uint32_t Instance);
 #endif /* (USE_HAL_OSPI_REGISTER_CALLBACKS == 1) */
-int32_t BSP_OSPI_NOR_Read                        (uint32_t Instance, uint8_t* pData, uint32_t ReadAddr, uint32_t Size);
-int32_t BSP_OSPI_NOR_Write                       (uint32_t Instance, uint8_t* pData, uint32_t WriteAddr, uint32_t Size);
-int32_t BSP_OSPI_NOR_Erase_Block                 (uint32_t Instance, uint32_t BlockAddress, BSP_OSPI_NOR_Erase_t BlockSize);
-int32_t BSP_OSPI_NOR_Erase_Chip                  (uint32_t Instance);
-int32_t BSP_OSPI_NOR_GetStatus                   (uint32_t Instance);
-int32_t BSP_OSPI_NOR_GetInfo                     (uint32_t Instance, BSP_OSPI_NOR_Info_t* pInfo);
-int32_t BSP_OSPI_NOR_EnableMemoryMappedMode      (uint32_t Instance);
-int32_t BSP_OSPI_NOR_DisableMemoryMappedMode     (uint32_t Instance);
-int32_t BSP_OSPI_NOR_ReadID                      (uint32_t Instance, uint8_t *Id);
-int32_t BSP_OSPI_NOR_ConfigFlash                 (uint32_t Instance, BSP_OSPI_NOR_Interface_t Mode, BSP_OSPI_NOR_Transfer_t Rate);
-int32_t BSP_OSPI_NOR_SuspendErase                (uint32_t Instance);
-int32_t BSP_OSPI_NOR_ResumeErase                 (uint32_t Instance);
+int32_t BSP_OSPI_NOR_Read(uint32_t Instance, uint8_t *pData, uint32_t ReadAddr, uint32_t Size);
+int32_t BSP_OSPI_NOR_Write(uint32_t Instance, uint8_t *pData, uint32_t WriteAddr, uint32_t Size);
+int32_t BSP_OSPI_NOR_Erase_Block(uint32_t Instance, uint32_t BlockAddress, BSP_OSPI_NOR_Erase_t BlockSize);
+int32_t BSP_OSPI_NOR_Erase_Chip(uint32_t Instance);
+int32_t BSP_OSPI_NOR_GetStatus(uint32_t Instance);
+int32_t BSP_OSPI_NOR_GetInfo(uint32_t Instance, BSP_OSPI_NOR_Info_t *pInfo);
+int32_t BSP_OSPI_NOR_EnableMemoryMappedMode(uint32_t Instance);
+int32_t BSP_OSPI_NOR_DisableMemoryMappedMode(uint32_t Instance);
+int32_t BSP_OSPI_NOR_ReadID(uint32_t Instance, uint8_t *Id);
+int32_t BSP_OSPI_NOR_ConfigFlash(uint32_t Instance, BSP_OSPI_NOR_Interface_t Mode, BSP_OSPI_NOR_Transfer_t Rate);
+int32_t BSP_OSPI_NOR_SuspendErase(uint32_t Instance);
+int32_t BSP_OSPI_NOR_ResumeErase(uint32_t Instance);
 
 /* These functions can be modified in case the current settings
    need to be changed for specific application needs */

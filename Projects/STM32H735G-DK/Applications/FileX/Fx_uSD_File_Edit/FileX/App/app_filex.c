@@ -19,6 +19,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_filex.h"
 
@@ -126,7 +130,7 @@ UINT MX_FileX_Init(VOID *memory_ptr)
   tx_queue_create(&tx_msg_queue, "sd_event_queue", 1, pointer, DEFAULT_QUEUE_LENGTH * sizeof(ULONG));
 
   /* Check msg queue creation */
-  if (ret != FX_SUCCESS)
+  if (ret != TX_SUCCESS)
   {
     return TX_QUEUE_ERROR;
   }
@@ -181,7 +185,7 @@ void fx_app_thread_entry(ULONG thread_input)
   else
   {
     /* Indicate that SD card is not inserted from start */
-    HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
   }
 
   /* Infinite Loop */
@@ -197,7 +201,7 @@ void fx_app_thread_entry(ULONG thread_input)
         /* Toggle GREEN LED to indicate idle state after a successful operation */
         if(last_status == CARD_STATUS_CONNECTED)
         {
-          HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+          HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
         }
       }
 
@@ -215,15 +219,15 @@ void fx_app_thread_entry(ULONG thread_input)
           /* We have a valid SD insertion event, start processing.. */
           /* Update last known status */
           last_status = CARD_STATUS_CONNECTED;
-          HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET); /*LED_RED Off*/
+          HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET); /*LED_RED Off*/
           break;
         }
         else
         {
           /* Update last known status */
           last_status = CARD_STATUS_DISCONNECTED;
-          HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);  /*LED_GREEN Off*/
-          HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET); /*LED_GREEN On*/
+          HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);  /*LED_GREEN Off*/
+          HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET); /*LED_GREEN On*/
         }
       }
     }
@@ -352,7 +356,7 @@ void fx_app_thread_entry(ULONG thread_input)
   /* USER CODE END fx_app_thread_entry 1 */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
  * @brief  Detects if SD card is correctly plugged in the memory slot or not.
@@ -408,4 +412,4 @@ static VOID media_close_callback(FX_MEDIA *media_ptr)
   media_status = MEDIA_CLOSED;
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

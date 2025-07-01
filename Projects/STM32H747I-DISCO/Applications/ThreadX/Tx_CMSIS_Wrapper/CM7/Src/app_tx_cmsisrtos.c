@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_tx_cmsisrtos.h"
 
@@ -107,7 +111,7 @@ uint32_t App_TX_CmsisRTOS_Init(void)
 
 /* USER CODE END Private user code */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 /**
   * @brief  Function implementing the ThreadOne thread.
   * @param  argument: Not used
@@ -210,4 +214,4 @@ static void Led_Toggle(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, uint32_t iter)
   HAL_GPIO_WritePin(GPIOx, GPIO_Pin, GPIO_PIN_SET);
 }
 
-/* USER CODE END 1 */
+/* USER CODE END  2*/

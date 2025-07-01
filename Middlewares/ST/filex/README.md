@@ -1,158 +1,54 @@
-# Azure RTOS FileX
+# Middleware FileX Component
 
-This is a high-performance, file allocation table (FAT)-compatible file system that’s fully integrated with Azure RTOS ThreadX and available for all supported processors. Like Azure RTOS ThreadX, Azure RTOS FileX is designed to have a small footprint and high performance, making it ideal for today’s deeply embedded applications that require file management operations. FileX supports most physical media, including RAM, Azure RTOS USBX, SD CARD, and NAND/NOR flash memories via Azure RTOS LevelX.
+![latest tag](https://img.shields.io/github/v/tag/STMicroelectronics/stm32-mw-filex.svg?color=green)
 
-Here are the key features and modules of FileX:
+## Overview
+The Middleware FileX component is a STM32 tailored fork of the [AzureRTOS FileX](https://github.com/azure-rtos/filex).
 
-![FileX Key Features](./docs/filex-features.png)
+FileX offers the common filesystem features, like formatting media, creating directories and files, accessing files in read and write modes.
 
-## Getting Started
+FileX supports also `extFat` file system. available free of charge for the [licensed STM32 series](./LICENSED-HARDWARE.txt).
 
-Azure RTOS FileX as part of Azure RTOS has been integrated to the semiconductor's SDKs and development environment. You can develop using the tools of choice from [STMicroelectronics](https://www.st.com/content/st_com/en/campaigns/x-cube-azrtos-azure-rtos-stm32.html), [NXP](https://www.nxp.com/design/software/embedded-software/azure-rtos-for-nxp-microcontrollers:AZURE-RTOS), [Renesas](https://github.com/renesas/azure-rtos) and [Microchip](https://mu.microchip.com/get-started-simplifying-your-iot-design-with-azure-rtos).
+The main goal of this component is to integrate different media storage devices through the STM32 HAL and BSP component drivers.
 
-We also provide [samples](https://github.com/azure-rtos/samples) using hero development boards from semiconductors you can build and test with.
 
-See [Overview of Azure RTOS FileX](https://learn.microsoft.com/azure/rtos/filex/overview-filex) for the high-level overview, and all documentation and APIs can be found in: [Azure RTOS FileX documentation](https://learn.microsoft.com/azure/rtos/filex).
+## Low level drivers
 
-## Repository Structure and Usage
+The folder `common/drivers` contains a set of generic ready to use low level drivers and template files. The ready to use drivers are:
 
-### Directory layout
+* **fx_stm32_sram_driver.c**
 
-    .
-    ├── cmake                   # CMakeList files for building the project
-    ├── common                  # Core FileX files
-    ├── ports                   # Architecture and compiler specific files
-    ├── samples                 # Sample codes
-    ├── LICENSE.txt             # License terms
-    ├── LICENSE-HARDWARE.txt    # Licensed hardware from semiconductors
-    ├── CONTRIBUTING.md         # Contribution guidance
-    └── SECURITY.md             # Microsoft repo security guidance
+    A generic driver to simulate a FAT file system under internal RAM.
 
-### Branches & Releases
+* **fx_stm32_sd_driver.c/fx_stm32_mmc_driver.c**
 
-The master branch has the most recent code with all new features and bug fixes. It does not represent the latest General Availability (GA) release of the library. Each official release (preview or GA) will be tagged to mark the commit and push it into the Github releases tab, e.g. `v6.2-rel`.
+    Two generic drivers that communicate respectively with a µSD or an eMMC cards.
 
-> When you see xx-xx-xxxx, 6.x or x.x in function header, this means the file is not officially released yet. They will be updated in the next release. See example below.
-```
-/**************************************************************************/
-/*                                                                        */
-/*  FUNCTION                                               RELEASE        */
-/*                                                                        */
-/*    _tx_initialize_low_level                          Cortex-M23/GNU    */
-/*                                                           6.x          */
-/*  AUTHOR                                                                */
-/*                                                                        */
-/*    Scott Larson, Microsoft Corporation                                 */
-/*                                                                        */
-/*  DESCRIPTION                                                           */
-/*                                                                        */
-/*    This function is responsible for any low-level processor            */
-/*    initialization, including setting up interrupt vectors, setting     */
-/*    up a periodic timer interrupt source, saving the system stack       */
-/*    pointer for use in ISR processing later, and finding the first      */
-/*    available RAM memory address for tx_application_define.             */
-/*                                                                        */
-/*  INPUT                                                                 */
-/*                                                                        */
-/*    None                                                                */
-/*                                                                        */
-/*  OUTPUT                                                                */
-/*                                                                        */
-/*    None                                                                */
-/*                                                                        */
-/*  CALLS                                                                 */
-/*                                                                        */
-/*    None                                                                */
-/*                                                                        */
-/*  CALLED BY                                                             */
-/*                                                                        */
-/*    _tx_initialize_kernel_enter           ThreadX entry function        */
-/*                                                                        */
-/*  RELEASE HISTORY                                                       */
-/*                                                                        */
-/*    DATE              NAME                      DESCRIPTION             */
-/*                                                                        */
-/*  09-30-2020      Scott Larson            Initial Version 6.1           */
-/*  xx-xx-xxxx      Scott Larson            Include tx_user.h,            */
-/*                                            resulting in version 6.x    */
-/*                                                                        */
-/**************************************************************************/ 
-```
+    They can be configured to use DMA and Polling HAL/SD and HAL/MMC APIs and to work in RTOS or baremetal modes.
 
-## exFAT Licensing
+* **fx_stm32_levelx_nor_driver.c**
 
-FileX supports the Microsoft exFAT file system format using the `FX_ENABLE_EXFAT` define. See [`fx_user_sample.h`](common/inc/fx_user_sample.h) for more information about configuration of FileX.
+    A generic driver needed to interface FileX with any LevelX low level NOR flash driver.
 
-The Azure RTOS FileX implementation of exFAT technology is licensed when used in [listed components](https://github.com/azure-rtos/filex/blob/master/LICENSED-HARDWARE.txt) obtained through a licensed partner.  Other implementations of exFAT technology in your products may require a separate license from Microsoft.  Please see the following link for further details on exFAT licensing from Microsoft [here](https://www.microsoft.com/en-us/legal/intellectualproperty/tech-licensing/programs?activetab=pivot1:primaryr5).
+    It is configurable to easily integrate user custom drivers.
 
-## Component dependencies
+* **fx_stm32_levelx_nand_driver.c**
 
-The main components of Azure RTOS are each provided in their own repository, but there are dependencies between them, as shown in the following graph. This is important to understand when setting up your builds.
+    A generic driver needed to interface FileX with any LevelX low level NAND flash driver.
 
-![dependency graph](docs/deps.png)
+    It is configurable to easily integrate any user custom drivers.
 
-> You will have to take the dependency graph above into account when building anything other than ThreadX itself.
+## Documentation
 
-### Building and using the library
+A detailed documentation can be found under the [STM32 wiki page](https://wiki.st.com/stm32mcu/index.php?title=Introduction_to_FILEX&sfr=stm32mcu)
 
-Instruction for building the FileX as static library using Arm GNU Toolchain and CMake. If you are using toolchain and IDE from semiconductor, you might follow its own instructions to use Azure RTOS components as explained in the [Getting Started](#getting-started) section.
+## Compatibility information
 
-1. Install the following tools:
+Please refer to the release note in the repository of the STM32Cube **firmware** you are using to know which version of this middleware library to use with other components' versions (**e.g.**, other middleware libraries, drivers).
 
-    * [CMake](https://cmake.org/download/) version 3.0 or later
-    * [Arm GNU Toolchain for arm-none-eabi](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
-    * [Ninja](https://ninja-build.org/)
+It is **crucial** that you use a consistent set of versions.
 
-1. Build the [ThreadX library](https://github.com/azure-rtos/threadx#building-and-using-the-library) as the dependency.
+## Troubleshooting
+Please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) guide.
 
-1. Cloning the repo.
 
-    ```bash
-    $ git clone https://github.com/azure-rtos/filex.git
-    ```
-
-1. Define the features and addons you need in `fx_user.h` and build together with the component source code. You can refer to [`fx_user_sample.h`](https://github.com/azure-rtos/filex/blob/master/common/inc/fx_user_sample.h) as an example.
-
-1. Building as a static library
-
-    Each component of Azure RTOS comes with a composable CMake-based build system that supports many different MCUs and host systems. Integrating any of these components into your device app code is as simple as adding a git submodule and then including it in your build using the CMake `add_subdirectory()`.
-
-    While the typical usage pattern is to include FileX into your device code source tree to be built & linked with your code, you can compile this project as a standalone static library to confirm your build is set up correctly.
-
-    An example of building the library for Cortex-M4:
-
-    ```bash
-    $ cmake -Bbuild -GNinja -DCMAKE_TOOLCHAIN_FILE=cmake/cortex_m4.cmake .
-
-    $ cmake --build ./build
-    ```
-
-## Professional support
-
-[Professional support plans](https://azure.microsoft.com/support/options/) are available from Microsoft. For community support and others, see the [Resources](#resources) section below.
-
-## Licensing
-
-License terms for using Azure RTOS are defined in the LICENSE.txt file of this repo. Please refer to this file for all definitive licensing information. No additional license fees are required for deploying Azure RTOS on hardware defined in the [LICENSED-HARDWARE.txt](./LICENSED-HARDWARE.txt) file. If you are using hardware not listed in the file or having licensing questions in general, please contact Microsoft directly at https://aka.ms/azrtos-license.
-
-## Resources
-
-The following are references to additional Azure RTOS resources:
-
-- **Product introduction and white papers**: https://azure.com/rtos
-- **General technical questions**: https://aka.ms/QnA/azure-rtos
-- **Product issues and bugs, or feature requests**: https://github.com/azure-rtos/filex/issues
-- **Licensing and sales questions**: https://aka.ms/azrtos-license
-- **Product roadmap and support policy**: https://aka.ms/azrtos/lts
-- **Blogs and videos**: http://msiotblog.com and https://aka.ms/iotshow
-- **Azure RTOS TraceX Installer**: https://aka.ms/azrtos-tracex-installer
-
-You can also check [previous questions](https://stackoverflow.com/questions/tagged/azure-rtos+filex) or ask new ones on StackOverflow using the `azure-rtos` and `filex` tags.
-
-## Security
-
-Azure RTOS provides OEMs with components to secure communication and to create code and data isolation using underlying MCU/MPU hardware protection mechanisms. It is ultimately the responsibility of the device builder to ensure the device fully meets the evolving security requirements associated with its specific use case.
-
-## Contribution
-
-Please follow the instructions provided in the [CONTRIBUTING.md](./CONTRIBUTING.md) for the corresponding repository.

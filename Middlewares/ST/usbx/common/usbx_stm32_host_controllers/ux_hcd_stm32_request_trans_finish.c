@@ -73,7 +73,12 @@
 /**************************************************************************/
 VOID  _ux_hcd_stm32_request_trans_finish(UX_HCD_STM32 *hcd_stm32, UX_HCD_STM32_ED *ed)
 {
-UX_TRANSFER *transfer = ed -> ux_stm32_ed_transfer_request;
+UX_TRANSFER *transfer;
+
+    if (ed == UX_NULL)
+        return;
+
+    transfer = ed -> ux_stm32_ed_transfer_request;
 
     /* If there is no transfer, it's OK.  */
     if (transfer == UX_NULL)

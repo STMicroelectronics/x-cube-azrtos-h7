@@ -26,6 +26,10 @@
  extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h7xx_hal.h"
 
@@ -40,6 +44,10 @@
 #define DUMMY_CYCLES_READ_OCTAL_DTR  6U
 #define DUMMY_CYCLES_REG_OCTAL       4U
 #define DUMMY_CYCLES_REG_OCTAL_DTR   5U
+
+/* USER CODE BEGIN 2 */
+
+/* USER CODE END 2 */
 
 /**
   * @}

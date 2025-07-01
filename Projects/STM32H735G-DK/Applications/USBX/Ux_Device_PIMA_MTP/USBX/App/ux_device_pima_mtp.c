@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_device_pima_mtp.h"
 
@@ -1803,7 +1807,7 @@ ULONG USBD_MTP_StorageGetFreeSpaceImage(VOID)
   return free_space_image;
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 
 /**
@@ -1854,4 +1858,4 @@ UINT MTP_GetObjectHandle(ULONG object_handle, UX_SLAVE_CLASS_PIMA_OBJECT **objec
   return status;
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

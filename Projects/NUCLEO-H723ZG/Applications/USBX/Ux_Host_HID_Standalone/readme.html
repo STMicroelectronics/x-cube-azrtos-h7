@@ -27,7 +27,7 @@ vertical-align: middle;
 <body>
 <div class="row">
 <section id="ux_host_hid_standalone-application-description" class="col-sm-12 col-lg-8">
-<h1><b>Ux_Host_HID_Standalone application description</b></h1>
+<h1><b>Ux_Host_HID_Standalone Application Description</b></h1>
 <p>This application provides an example of Azure RTOS USBX stack usage .
 It shows how to develop bare metal USB Host Human Interface “HID” able
 to enumerate and communicates with a mouse or a keyboard.</p>
@@ -50,9 +50,16 @@ ID of the attached device. After enumeration phase, a message will
 indicate that the device is ready for use. The host must be able to
 properly decode HID reports sent by the corresponding device and display
 those information on the HyperTerminal.</p>
-<p>The received HID reports are used by host to identify: - In case of a
-mouse - (x,y) mouse position - Wheel position - Pressed mouse
-buttons</p>
+<p>The received HID reports are used by host to identify:
+<ul>
+<li>In case of a mouse
+<ul>
+<li>(x,y) mouse position</li>
+<li>Wheel position</li>
+<li>Pressed mouse buttons</li>
+</ul>
+</ul>
+</p>
 <ul>
 <li>In case of a keyboard
 <ul>

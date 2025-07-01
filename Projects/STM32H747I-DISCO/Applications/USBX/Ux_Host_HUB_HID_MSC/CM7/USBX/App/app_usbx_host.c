@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_usbx_host.h"
 
@@ -576,7 +580,7 @@ VOID ux_host_error_callback(UINT system_level, UINT system_context, UINT error_c
   /* USER CODE END ux_host_error_callback1 */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 /**
   * @brief  USBX_APP_Host_Init
   *         Initialization of USB host.
@@ -650,4 +654,4 @@ void USBH_DriverVBUS(uint8_t state)
   HAL_Delay(200);
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

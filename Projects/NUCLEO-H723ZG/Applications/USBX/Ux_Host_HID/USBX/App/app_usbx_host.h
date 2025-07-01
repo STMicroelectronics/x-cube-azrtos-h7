@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_api.h"
 #include "main.h"
@@ -59,7 +63,6 @@ extern "C" {
 #define USBH_ErrLog(...)   printf("ERROR: ") ;\
                            printf(__VA_ARGS__);\
                            printf("\n");
-
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
@@ -68,6 +71,7 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr);
 /* USER CODE BEGIN EFP */
 VOID USBX_APP_Host_Init(VOID);
 void USBH_DriverVBUS(uint8_t state);
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -91,13 +95,13 @@ void USBH_DriverVBUS(uint8_t state);
 #define UX_HOST_APP_THREAD_START_OPTION  TX_AUTO_START
 #endif
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 typedef enum
 {
   USB_VBUS_FALSE = 0,
   USB_VBUS_TRUE,
 } USB_VBUS_State;
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

@@ -1,4 +1,4 @@
-/** 
+/**
   ******************************************************************************
   * @file    stm32h7b3i_discovery_errno.h
   * @author  MCD Application Team
@@ -14,15 +14,15 @@
   * in the root directory of this software component.
   * If no LICENSE file comes with this software, it is provided AS-IS.
   *
-  ******************************************************************************  
-  */ 
-  
+  ******************************************************************************
+  */
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef STM32H7B3I_DK_ERRNO_H
 #define STM32H7B3I_DK_ERRNO_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Common Error codes */
@@ -33,10 +33,10 @@
 #define BSP_ERROR_PERIPH_FAILURE         -4
 #define BSP_ERROR_COMPONENT_FAILURE      -5
 #define BSP_ERROR_UNKNOWN_FAILURE        -6
-#define BSP_ERROR_UNKNOWN_COMPONENT      -7 
-#define BSP_ERROR_BUS_FAILURE            -8 
-#define BSP_ERROR_CLOCK_FAILURE          -9  
-#define BSP_ERROR_MSP_FAILURE            -10  
+#define BSP_ERROR_UNKNOWN_COMPONENT      -7
+#define BSP_ERROR_BUS_FAILURE            -8
+#define BSP_ERROR_CLOCK_FAILURE          -9
+#define BSP_ERROR_MSP_FAILURE            -10
 #define BSP_ERROR_FEATURE_NOT_SUPPORTED  -11
 
 /* BSP OSPI error codes */

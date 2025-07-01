@@ -11,6 +11,13 @@
 
 #include "lx_stm32_nand_custom_driver.h"
 
+/* USER CODE BEGIN 1 */
+static UINT  _lx_nand_flash_erase_all_driver(VOID);
+static uint8_t flash_is_initialized = 0;
+static ULONG  nand_flash_rw_buffer[WORDS_PER_PHYSICAL_PAGE] = {0};
+static UCHAR  Buffer_Spare_Area[SPARE_BYTES_PER_PAGE] = {0};
+/* USER CODE END 1 */
+
 static UINT  lx_nand_driver_read(ULONG block, ULONG page, ULONG *destination, ULONG words);
 static UINT  lx_nand_driver_write(ULONG block, ULONG page, ULONG *source, ULONG words);
 
@@ -29,15 +36,6 @@ static UINT  lx_nand_driver_system_error(UINT error_code, ULONG block, ULONG pag
 static UINT  lx_nand_flash_driver_pages_read(ULONG block, ULONG page, UCHAR *main_buffer, UCHAR *spare_buffer, ULONG pages);
 static UINT  lx_nand_flash_driver_pages_write(ULONG block, ULONG page, UCHAR *main_buffer, UCHAR *spare_buffer, ULONG pages);
 static UINT  lx_nand_flash_driver_pages_copy(ULONG source_block, ULONG source_page, ULONG destination_block, ULONG destination_page, ULONG pages, UCHAR *data_buffer);
-
-/* USER CODE BEGIN 0 */
-static UINT  _lx_nand_flash_erase_all_driver(VOID);
-
-static uint8_t flash_is_initialized = 0;
-static ULONG  nand_flash_rw_buffer[WORDS_PER_PHYSICAL_PAGE] = {0};
-static UCHAR  Buffer_Spare_Area[SPARE_BYTES_PER_PAGE] = {0};
-
-/* USER CODE END 0 */
 
 #ifndef WORDS_PER_PHYSICAL_PAGE
 #define WORDS_PER_PHYSICAL_PAGE 512
@@ -467,7 +465,7 @@ static UINT  lx_nand_flash_driver_pages_copy(ULONG source_block, ULONG source_pa
   return ret;
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 /* Erase chip function*/
 static UINT  _lx_nand_flash_erase_all_driver(VOID)
 {
@@ -478,4 +476,4 @@ static UINT  _lx_nand_flash_erase_all_driver(VOID)
 
   return (LX_SUCCESS);
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

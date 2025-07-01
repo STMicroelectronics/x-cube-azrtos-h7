@@ -9,6 +9,10 @@
 /*                                                                        */
 /**************************************************************************/
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 #include "fx_stm32_sd_driver.h"
 
 __IO UINT sd_read_transfer_completed;
@@ -189,6 +193,6 @@ void HAL_SD_RxCpltCallback(SD_HandleTypeDef *hsd)
   /* USER CODE END POST_RX_CMPLT */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

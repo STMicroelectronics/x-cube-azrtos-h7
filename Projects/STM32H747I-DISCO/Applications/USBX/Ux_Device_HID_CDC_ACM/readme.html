@@ -27,7 +27,7 @@ vertical-align: middle;
 <body>
 <div class="row">
 <section id="ux_device_hid_cdc_acm-application-description" class="col-sm-12 col-lg-8">
-<h2><b>Ux_Device_HID_CDC_ACM application description</b></h2>
+<h2><b>Ux_Device_HID_CDC_ACM Application Description</b></h2>
 <p>This application provides an example of Azure RTOS USBX stack usage
 on STM32H747I-DISCO board, it shows how to develop a composite USB
 device communication class “HID” and “CDC_ACM” based application.</p>
@@ -97,11 +97,14 @@ COM port. During the enumeration phase, the device must provide host
 with the requested descriptors (device descriptor, configuration
 descriptor, string descriptors). Those descriptors are used by host
 driver to identify the device capabilities. Once STM32H747I-DISCO USB
-device successfully completed the enumeration phase: - Connect USB cable
-to Host , Open two hyperterminals (USB com port and UART com port) to
-send/receive data to/from host to/from device. - When USER_Button is
-pressed, the device sends an HID report. Each report sent should move
-the PC host machine mouse cursor by one step.</p>
+device successfully completed the enumeration phase: 
+<ul>
+<li>Connect USB cable to Host , Open two hyperterminals (USB com port and UART com port) to
+send/receive data to/from host to/from device.</li>
+<li>When USER_Button is pressed, the device sends an HID report. Each report sent should move
+the PC host machine mouse cursor by one step.</li>
+</ul>
+</p>
 <h4 id="error-behaviors"><b>Error behaviors</b></h4>
 <p>Host PC shows that USB device does not operate as designed
 (enumeration failed, for example PC cursor doesn’t move or COM port
@@ -115,7 +118,7 @@ and CDC_ACM class specification.</p>
 <ol type="1">
 <li>Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB)
 which decreases critical task execution time, compared to code execution
-from Flash memory. This feature can be activated using ‘#pragma location
+from flash memory. This feature can be activated using ‘#pragma location
 = “.itcmram”’ to be placed above function declaration, or using the
 toolchain GUI (file options) to execute a whole source file in the
 ITCM-RAM.</li>
@@ -209,8 +212,8 @@ USART, DMA, Mouse.</p>
 <h3 id="hardware-and-software-environment"><b>Hardware and Software
 environment</b></h3>
 <ul>
-<li>This example runs on STM32H747xx devices</li>
-<li>This example has been tested with STMicroelectronics
+<li>This application runs on STM32H747xx devices</li>
+<li>This application has been tested with STMicroelectronics
 STM32H747I-DISCO boards revision MB1520-H747I-B02 and can be easily
 tailored to any other supported device and development board.</li>
 <li>STM32H747I-DISCO set-up:
@@ -230,8 +233,15 @@ to “Standard A” cable.</li>
 microcontroller are connected to ST-LINK MCU. By default the USART1
 communication between the target MCU and ST-LINK MCU is enabled.</li>
 </ul>
-<p>Its configuration is as follows: - BaudRate = 115200 baud - Word
-Length = 8 Bits - Stop Bit = 1 - Parity = None - Flow control = None</p>
+<p>Its configuration is as follows:
+<ul>
+<li>BaudRate = 115200 baud</li>
+<li>Word Length = 8 Bits</li>
+<li>Stop Bit = 1</li>
+<li>Parity = None</li>
+<li>Flow control = None</li>
+</ul>
+</p>
 <p><b>Note</b></p>
 <ul>
 <li>When we configure the VCP baudrate under 9600 the USART1 baudrate

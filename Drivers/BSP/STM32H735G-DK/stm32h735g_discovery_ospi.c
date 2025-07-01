@@ -104,9 +104,12 @@
   * @{
   */
 OSPI_HandleTypeDef hospi_nor[OSPI_NOR_INSTANCES_NUMBER] = {0};;
-OSPI_NOR_Ctx_t Ospi_Nor_Ctx[OSPI_NOR_INSTANCES_NUMBER] = {{OSPI_ACCESS_NONE,
-                                                           MX25LM51245G_SPI_MODE,
-                                                           MX25LM51245G_STR_TRANSFER}};
+OSPI_NOR_Ctx_t Ospi_Nor_Ctx[OSPI_NOR_INSTANCES_NUMBER] = {{
+    OSPI_ACCESS_NONE,
+    MX25LM51245G_SPI_MODE,
+    MX25LM51245G_STR_TRANSFER
+  }
+};
 /**
   * @}
   */
@@ -114,10 +117,13 @@ OSPI_NOR_Ctx_t Ospi_Nor_Ctx[OSPI_NOR_INSTANCES_NUMBER] = {{OSPI_ACCESS_NONE,
   * @{
   */
 OSPI_HandleTypeDef hospi_ram[OSPI_RAM_INSTANCES_NUMBER] = {0};
-OSPI_RAM_Ctx_t Ospi_Ram_Ctx[OSPI_RAM_INSTANCES_NUMBER] = {{OSPI_ACCESS_NONE,
-                                                           BSP_OSPI_RAM_FIXED_LATENCY,
-                                                           BSP_OSPI_RAM_HYBRID_BURST,
-                                                           BSP_OSPI_RAM_BURST_16_BYTES}};
+OSPI_RAM_Ctx_t Ospi_Ram_Ctx[OSPI_RAM_INSTANCES_NUMBER] = {{
+    OSPI_ACCESS_NONE,
+    BSP_OSPI_RAM_FIXED_LATENCY,
+    BSP_OSPI_RAM_HYBRID_BURST,
+    BSP_OSPI_RAM_BURST_16_BYTES
+  }
+};
 /**
   * @}
   */
@@ -125,19 +131,19 @@ OSPI_RAM_Ctx_t Ospi_Ram_Ctx[OSPI_RAM_INSTANCES_NUMBER] = {{OSPI_ACCESS_NONE,
 /** @defgroup STM32H735G_DK_OSPI_NOR_Private_Functions OSPI_NOR Private Functions
   * @{
   */
-static void    OSPI_NOR_MspInit      (OSPI_HandleTypeDef *hospi);
-static void    OSPI_NOR_MspDeInit    (OSPI_HandleTypeDef *hospi);
-static int32_t OSPI_NOR_ResetMemory  (uint32_t Instance);
+static void    OSPI_NOR_MspInit(OSPI_HandleTypeDef *hospi);
+static void    OSPI_NOR_MspDeInit(OSPI_HandleTypeDef *hospi);
+static int32_t OSPI_NOR_ResetMemory(uint32_t Instance);
 static int32_t OSPI_NOR_EnterDOPIMode(uint32_t Instance);
 static int32_t OSPI_NOR_EnterSOPIMode(uint32_t Instance);
-static int32_t OSPI_NOR_ExitOPIMode  (uint32_t Instance);
+static int32_t OSPI_NOR_ExitOPIMode(uint32_t Instance);
 /**
   * @}
   */
 /** @defgroup STM32H735G_DK_OSPI_RAM_Private_Functions OSPI_RAM Private Functions
   * @{
   */
-static void OSPI_RAM_MspInit  (OSPI_HandleTypeDef *hospi);
+static void OSPI_RAM_MspInit(OSPI_HandleTypeDef *hospi);
 static void OSPI_RAM_MspDeInit(OSPI_HandleTypeDef *hospi);
 
 /**
@@ -163,7 +169,7 @@ int32_t BSP_OSPI_NOR_Init(uint32_t Instance, BSP_OSPI_NOR_Init_t *Init)
   MX_OSPI_InitTypeDef ospi_config;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -174,9 +180,9 @@ int32_t BSP_OSPI_NOR_Init(uint32_t Instance, BSP_OSPI_NOR_Init_t *Init)
     {
 #if (USE_HAL_OSPI_REGISTER_CALLBACKS == 1)
       /* Register the OSPI MSP Callbacks */
-      if(Ospi_Nor_Ctx[Instance].IsMspCallbacksValid == 0UL)
+      if (Ospi_Nor_Ctx[Instance].IsMspCallbacksValid == 0UL)
       {
-        if(BSP_OSPI_NOR_RegisterDefaultMspCallbacks(Instance) != BSP_ERROR_NONE)
+        if (BSP_OSPI_NOR_RegisterDefaultMspCallbacks(Instance) != BSP_ERROR_NONE)
         {
           return BSP_ERROR_PERIPH_FAILURE;
         }
@@ -200,7 +206,7 @@ int32_t BSP_OSPI_NOR_Init(uint32_t Instance, BSP_OSPI_NOR_Init_t *Init)
       {
         ret = BSP_ERROR_PERIPH_FAILURE;
       }
-       /* STM32 OSPI interface initialization */
+      /* STM32 OSPI interface initialization */
       else if (MX_OSPI_NOR_Init(&hospi_nor[Instance], &ospi_config) != HAL_OK)
       {
         ret = BSP_ERROR_PERIPH_FAILURE;
@@ -211,7 +217,8 @@ int32_t BSP_OSPI_NOR_Init(uint32_t Instance, BSP_OSPI_NOR_Init_t *Init)
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
       /* Check if memory is ready */
-      else if (MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
+      else if (MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                                Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
@@ -245,16 +252,16 @@ int32_t BSP_OSPI_NOR_DeInit(uint32_t Instance)
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Disable Memory mapped mode */
-    if(Ospi_Nor_Ctx[Instance].IsInitialized == OSPI_ACCESS_MMP)
+    if (Ospi_Nor_Ctx[Instance].IsInitialized == OSPI_ACCESS_MMP)
     {
-      if(BSP_OSPI_NOR_DisableMemoryMappedMode(Instance) != BSP_ERROR_NONE)
+      if (BSP_OSPI_NOR_DisableMemoryMappedMode(Instance) != BSP_ERROR_NONE)
       {
         return BSP_ERROR_COMPONENT_FAILURE;
       }
@@ -288,7 +295,7 @@ int32_t BSP_OSPI_NOR_DeInit(uint32_t Instance)
   */
 __weak HAL_StatusTypeDef MX_OSPI_NOR_Init(OSPI_HandleTypeDef *hospi, MX_OSPI_InitTypeDef *Config)
 {
-    /* OctoSPI initialization */
+  /* OctoSPI initialization */
   hospi->Instance = OCTOSPI1;
 
   hospi->Init.FifoThreshold      = 4;
@@ -322,23 +329,23 @@ __weak HAL_StatusTypeDef MX_OSPI_NOR_Init(OSPI_HandleTypeDef *hospi, MX_OSPI_Ini
   * @param Instance      OSPI Instance
   * @retval BSP status
   */
-int32_t BSP_OSPI_NOR_RegisterDefaultMspCallbacks (uint32_t Instance)
+int32_t BSP_OSPI_NOR_RegisterDefaultMspCallbacks(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Register MspInit/MspDeInit Callbacks */
-    if(HAL_OSPI_RegisterCallback(&hospi_nor[Instance], HAL_OSPI_MSP_INIT_CB_ID, OSPI_NOR_MspInit) != HAL_OK)
+    if (HAL_OSPI_RegisterCallback(&hospi_nor[Instance], HAL_OSPI_MSP_INIT_CB_ID, OSPI_NOR_MspInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_OSPI_RegisterCallback(&hospi_nor[Instance], HAL_OSPI_MSP_DEINIT_CB_ID, OSPI_NOR_MspDeInit) != HAL_OK)
+    else if (HAL_OSPI_RegisterCallback(&hospi_nor[Instance], HAL_OSPI_MSP_DEINIT_CB_ID, OSPI_NOR_MspDeInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -358,23 +365,23 @@ int32_t BSP_OSPI_NOR_RegisterDefaultMspCallbacks (uint32_t Instance)
   * @param CallBacks    pointer to MspInit/MspDeInit callbacks functions
   * @retval BSP status
   */
-int32_t BSP_OSPI_NOR_RegisterMspCallbacks (uint32_t Instance, BSP_OSPI_Cb_t *CallBacks)
+int32_t BSP_OSPI_NOR_RegisterMspCallbacks(uint32_t Instance, BSP_OSPI_Cb_t *CallBacks)
 {
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Register MspInit/MspDeInit Callbacks */
-    if(HAL_OSPI_RegisterCallback(&hospi_nor[Instance], HAL_OSPI_MSP_INIT_CB_ID, CallBacks->pMspInitCb) != HAL_OK)
+    if (HAL_OSPI_RegisterCallback(&hospi_nor[Instance], HAL_OSPI_MSP_INIT_CB_ID, CallBacks->pMspInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_OSPI_RegisterCallback(&hospi_nor[Instance], HAL_OSPI_MSP_DEINIT_CB_ID, CallBacks->pMspDeInitCb) != HAL_OK)
+    else if (HAL_OSPI_RegisterCallback(&hospi_nor[Instance], HAL_OSPI_MSP_DEINIT_CB_ID, CallBacks->pMspDeInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -397,27 +404,28 @@ int32_t BSP_OSPI_NOR_RegisterMspCallbacks (uint32_t Instance, BSP_OSPI_Cb_t *Cal
   * @param  Size      Size of data to read
   * @retval BSP status
   */
-int32_t BSP_OSPI_NOR_Read(uint32_t Instance, uint8_t* pData, uint32_t ReadAddr, uint32_t Size)
+int32_t BSP_OSPI_NOR_Read(uint32_t Instance, uint8_t *pData, uint32_t ReadAddr, uint32_t Size)
 {
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(Ospi_Nor_Ctx[Instance].TransferRate == BSP_OSPI_NOR_STR_TRANSFER)
+    if (Ospi_Nor_Ctx[Instance].TransferRate == BSP_OSPI_NOR_STR_TRANSFER)
     {
-      if(MX25LM51245G_ReadSTR(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, MX25LM51245G_4BYTES_SIZE, pData, ReadAddr, Size) != MX25LM51245G_OK)
+      if (MX25LM51245G_ReadSTR(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, MX25LM51245G_4BYTES_SIZE, pData,
+                               ReadAddr, Size) != MX25LM51245G_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
     }
     else
     {
-      if(MX25LM51245G_ReadDTR(&hospi_nor[Instance], pData, ReadAddr, Size) != MX25LM51245G_OK)
+      if (MX25LM51245G_ReadDTR(&hospi_nor[Instance], pData, ReadAddr, Size) != MX25LM51245G_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
@@ -436,14 +444,14 @@ int32_t BSP_OSPI_NOR_Read(uint32_t Instance, uint8_t* pData, uint32_t ReadAddr, 
   * @param  Size      Size of data to write
   * @retval BSP status
   */
-int32_t BSP_OSPI_NOR_Write(uint32_t Instance, uint8_t* pData, uint32_t WriteAddr, uint32_t Size)
+int32_t BSP_OSPI_NOR_Write(uint32_t Instance, uint8_t *pData, uint32_t WriteAddr, uint32_t Size)
 {
   int32_t ret = BSP_ERROR_NONE;
   uint32_t end_addr, current_size, current_addr;
   uint32_t data_addr;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -467,20 +475,23 @@ int32_t BSP_OSPI_NOR_Write(uint32_t Instance, uint8_t* pData, uint32_t WriteAddr
     do
     {
       /* Check if Flash busy ? */
-      if(MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
+      if (MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                           Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }/* Enable write operations */
-      else if(MX25LM51245G_WriteEnable(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
+      else if (MX25LM51245G_WriteEnable(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                        Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
       else
       {
-        if(Ospi_Nor_Ctx[Instance].TransferRate == BSP_OSPI_NOR_STR_TRANSFER)
+        if (Ospi_Nor_Ctx[Instance].TransferRate == BSP_OSPI_NOR_STR_TRANSFER)
         {
           /* Issue page program command */
-          if(MX25LM51245G_PageProgram(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, MX25LM51245G_4BYTES_SIZE, (uint8_t*)data_addr, current_addr, current_size) != MX25LM51245G_OK)
+          if (MX25LM51245G_PageProgram(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, MX25LM51245G_4BYTES_SIZE,
+                                       (uint8_t *)data_addr, current_addr, current_size) != MX25LM51245G_OK)
           {
             ret = BSP_ERROR_COMPONENT_FAILURE;
           }
@@ -488,7 +499,8 @@ int32_t BSP_OSPI_NOR_Write(uint32_t Instance, uint8_t* pData, uint32_t WriteAddr
         else
         {
           /* Issue page program command */
-          if(MX25LM51245G_PageProgramDTR(&hospi_nor[Instance], (uint8_t*)data_addr, current_addr, current_size) != MX25LM51245G_OK)
+          if (MX25LM51245G_PageProgramDTR(&hospi_nor[Instance], (uint8_t *)data_addr, current_addr,
+                                          current_size) != MX25LM51245G_OK)
           {
             ret = BSP_ERROR_COMPONENT_FAILURE;
           }
@@ -497,7 +509,8 @@ int32_t BSP_OSPI_NOR_Write(uint32_t Instance, uint8_t* pData, uint32_t WriteAddr
         if (ret == BSP_ERROR_NONE)
         {
           /* Configure automatic polling mode to wait for end of program */
-          if (MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
+          if (MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                               Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
           {
             ret = BSP_ERROR_COMPONENT_FAILURE;
           }
@@ -529,26 +542,30 @@ int32_t BSP_OSPI_NOR_Erase_Block(uint32_t Instance, uint32_t BlockAddress, BSP_O
   int32_t ret;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Check Flash busy ? */
-    if(MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
+    if (MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                         Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }/* Enable write operations */
-    else if(MX25LM51245G_WriteEnable(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
+    else if (MX25LM51245G_WriteEnable(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                      Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }/* Issue Block Erase command */
-    else if(MX25LM51245G_BlockErase(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate, MX25LM51245G_4BYTES_SIZE, BlockAddress, BlockSize) != MX25LM51245G_OK)
+    else if (MX25LM51245G_BlockErase(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                     Ospi_Nor_Ctx[Instance].TransferRate, MX25LM51245G_4BYTES_SIZE, BlockAddress, BlockSize) != MX25LM51245G_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }/* Check Flash busy ? */
-    else if(MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
+    else if (MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                              Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
@@ -572,22 +589,25 @@ int32_t BSP_OSPI_NOR_Erase_Chip(uint32_t Instance)
   int32_t ret;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Check Flash busy ? */
-    if(MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
+    if (MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                         Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }/* Enable write operations */
-    else if(MX25LM51245G_WriteEnable(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
+    else if (MX25LM51245G_WriteEnable(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                      Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }/* Issue Chip erase command */
-    else if(MX25LM51245G_ChipErase(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
+    else if (MX25LM51245G_ChipErase(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                    Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
@@ -612,13 +632,14 @@ int32_t BSP_OSPI_NOR_GetStatus(uint32_t Instance)
   int32_t ret;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(MX25LM51245G_ReadSecurityRegister(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate, reg) != MX25LM51245G_OK)
+    if (MX25LM51245G_ReadSecurityRegister(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                          Ospi_Nor_Ctx[Instance].TransferRate, reg) != MX25LM51245G_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }/* Check the value of the register */
@@ -630,7 +651,8 @@ int32_t BSP_OSPI_NOR_GetStatus(uint32_t Instance)
     {
       ret = BSP_ERROR_OSPI_SUSPENDED;
     }
-    else if(MX25LM51245G_ReadStatusRegister(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate, reg) != MX25LM51245G_OK)
+    else if (MX25LM51245G_ReadStatusRegister(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                             Ospi_Nor_Ctx[Instance].TransferRate, reg) != MX25LM51245G_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }/* Check the value of the register */
@@ -654,12 +676,12 @@ int32_t BSP_OSPI_NOR_GetStatus(uint32_t Instance)
   * @param  pInfo     pointer on the configuration structure
   * @retval BSP status
   */
-int32_t BSP_OSPI_NOR_GetInfo(uint32_t Instance, BSP_OSPI_NOR_Info_t* pInfo)
+int32_t BSP_OSPI_NOR_GetInfo(uint32_t Instance, BSP_OSPI_NOR_Info_t *pInfo)
 {
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -682,15 +704,16 @@ int32_t BSP_OSPI_NOR_EnableMemoryMappedMode(uint32_t Instance)
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(Ospi_Nor_Ctx[Instance].TransferRate == BSP_OSPI_NOR_STR_TRANSFER)
+    if (Ospi_Nor_Ctx[Instance].TransferRate == BSP_OSPI_NOR_STR_TRANSFER)
     {
-      if(MX25LM51245G_EnableMemoryMappedModeSTR(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, MX25LM51245G_4BYTES_SIZE) != MX25LM51245G_OK)
+      if (MX25LM51245G_EnableMemoryMappedModeSTR(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                                 MX25LM51245G_4BYTES_SIZE) != MX25LM51245G_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
@@ -701,7 +724,8 @@ int32_t BSP_OSPI_NOR_EnableMemoryMappedMode(uint32_t Instance)
     }
     else
     {
-      if(MX25LM51245G_EnableMemoryMappedModeDTR(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode) != MX25LM51245G_OK)
+      if (MX25LM51245G_EnableMemoryMappedModeDTR(&hospi_nor[Instance],
+                                                 Ospi_Nor_Ctx[Instance].InterfaceMode) != MX25LM51245G_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
@@ -727,17 +751,17 @@ int32_t BSP_OSPI_NOR_DisableMemoryMappedMode(uint32_t Instance)
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(Ospi_Nor_Ctx[Instance].IsInitialized != OSPI_ACCESS_MMP)
+    if (Ospi_Nor_Ctx[Instance].IsInitialized != OSPI_ACCESS_MMP)
     {
       ret = BSP_ERROR_OSPI_MMP_UNLOCK_FAILURE;
     }/* Abort MMP back to indirect mode */
-    else if(HAL_OSPI_Abort(&hospi_nor[Instance]) != HAL_OK)
+    else if (HAL_OSPI_Abort(&hospi_nor[Instance]) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -764,11 +788,12 @@ int32_t BSP_OSPI_NOR_ReadID(uint32_t Instance, uint8_t *Id)
   int32_t ret;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(MX25LM51245G_ReadID(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate, Id) != MX25LM51245G_OK)
+  else if (MX25LM51245G_ReadID(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                               Ospi_Nor_Ctx[Instance].TransferRate, Id) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -795,65 +820,65 @@ int32_t BSP_OSPI_NOR_ConfigFlash(uint32_t Instance, BSP_OSPI_NOR_Interface_t Mod
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Check if MMP mode locked ************************************************/
-    if(Ospi_Nor_Ctx[Instance].IsInitialized == OSPI_ACCESS_MMP)
+    if (Ospi_Nor_Ctx[Instance].IsInitialized == OSPI_ACCESS_MMP)
     {
       ret = BSP_ERROR_OSPI_MMP_LOCK_FAILURE;
     }
     else
     {
       /* Setup Flash interface ***************************************************/
-      switch(Ospi_Nor_Ctx[Instance].InterfaceMode)
+      switch (Ospi_Nor_Ctx[Instance].InterfaceMode)
       {
-      case BSP_OSPI_NOR_OPI_MODE :  /* 8-8-8 commands */
-        if((Mode != BSP_OSPI_NOR_OPI_MODE) || (Rate != Ospi_Nor_Ctx[Instance].TransferRate))
-        {
-          /* Exit OPI mode */
-          ret = OSPI_NOR_ExitOPIMode(Instance);
-
-          if ((ret == BSP_ERROR_NONE) && (Mode == BSP_OSPI_NOR_OPI_MODE))
+        case BSP_OSPI_NOR_OPI_MODE :  /* 8-8-8 commands */
+          if ((Mode != BSP_OSPI_NOR_OPI_MODE) || (Rate != Ospi_Nor_Ctx[Instance].TransferRate))
           {
+            /* Exit OPI mode */
+            ret = OSPI_NOR_ExitOPIMode(Instance);
 
-            if (Ospi_Nor_Ctx[Instance].TransferRate == BSP_OSPI_NOR_STR_TRANSFER)
+            if ((ret == BSP_ERROR_NONE) && (Mode == BSP_OSPI_NOR_OPI_MODE))
             {
-              /* Enter DTR OPI mode */
-              ret = OSPI_NOR_EnterDOPIMode(Instance);
+
+              if (Ospi_Nor_Ctx[Instance].TransferRate == BSP_OSPI_NOR_STR_TRANSFER)
+              {
+                /* Enter DTR OPI mode */
+                ret = OSPI_NOR_EnterDOPIMode(Instance);
+              }
+              else
+              {
+                /* Enter STR OPI mode */
+                ret = OSPI_NOR_EnterSOPIMode(Instance);
+              }
             }
-            else
+          }
+          break;
+
+        case BSP_OSPI_NOR_SPI_MODE :  /* 1-1-1 commands, Power on H/W default setting */
+        default :
+          if (Mode == BSP_OSPI_NOR_OPI_MODE)
+          {
+            if (Rate == BSP_OSPI_NOR_STR_TRANSFER)
             {
               /* Enter STR OPI mode */
               ret = OSPI_NOR_EnterSOPIMode(Instance);
             }
+            else
+            {
+              /* Enter DTR OPI mode */
+              ret = OSPI_NOR_EnterDOPIMode(Instance);
+            }
           }
-        }
-        break;
-
-      case BSP_OSPI_NOR_SPI_MODE :  /* 1-1-1 commands, Power on H/W default setting */
-      default :
-        if(Mode == BSP_OSPI_NOR_OPI_MODE)
-        {
-          if(Rate == BSP_OSPI_NOR_STR_TRANSFER)
-          {
-            /* Enter STR OPI mode */
-            ret = OSPI_NOR_EnterSOPIMode(Instance);
-          }
-          else
-          {
-            /* Enter DTR OPI mode */
-            ret = OSPI_NOR_EnterDOPIMode(Instance);
-          }
-        }
-        break;
+          break;
       }
 
       /* Update OSPI context if all operations are well done */
-      if(ret == BSP_ERROR_NONE)
+      if (ret == BSP_ERROR_NONE)
       {
         /* Update current status parameter *****************************************/
         Ospi_Nor_Ctx[Instance].IsInitialized = OSPI_ACCESS_INDIRECT;
@@ -877,7 +902,7 @@ int32_t BSP_OSPI_NOR_SuspendErase(uint32_t Instance)
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -886,7 +911,8 @@ int32_t BSP_OSPI_NOR_SuspendErase(uint32_t Instance)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
-  else if(MX25LM51245G_Suspend(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
+  else if (MX25LM51245G_Suspend(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -913,7 +939,7 @@ int32_t BSP_OSPI_NOR_ResumeErase(uint32_t Instance)
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -922,7 +948,8 @@ int32_t BSP_OSPI_NOR_ResumeErase(uint32_t Instance)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
-  else if(MX25LM51245G_Resume(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
+  else if (MX25LM51245G_Resume(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                               Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -964,7 +991,7 @@ int32_t BSP_OSPI_RAM_Init(uint32_t Instance, BSP_OSPI_RAM_Init_t *Init)
   MX_OSPI_InitTypeDef ospi_init;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_RAM_INSTANCES_NUMBER)
+  if (Instance >= OSPI_RAM_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -978,9 +1005,9 @@ int32_t BSP_OSPI_RAM_Init(uint32_t Instance, BSP_OSPI_RAM_Init_t *Init)
       OSPI_RAM_MspInit(&hospi_ram[Instance]);
 #else
       /* Register the OSPI MSP Callbacks */
-      if(Ospi_Ram_Ctx[Instance].IsMspCallbacksValid == 0UL)
+      if (Ospi_Ram_Ctx[Instance].IsMspCallbacksValid == 0UL)
       {
-        if(BSP_OSPI_RAM_RegisterDefaultMspCallbacks(Instance) != BSP_ERROR_NONE)
+        if (BSP_OSPI_RAM_RegisterDefaultMspCallbacks(Instance) != BSP_ERROR_NONE)
         {
           return BSP_ERROR_PERIPH_FAILURE;
         }
@@ -1032,7 +1059,7 @@ int32_t BSP_OSPI_RAM_DeInit(uint32_t Instance)
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_RAM_INSTANCES_NUMBER)
+  if (Instance >= OSPI_RAM_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -1042,9 +1069,9 @@ int32_t BSP_OSPI_RAM_DeInit(uint32_t Instance)
     if (Ospi_Ram_Ctx[Instance].IsInitialized != OSPI_ACCESS_NONE)
     {
       /* Disable Memory mapped mode */
-      if(Ospi_Ram_Ctx[Instance].IsInitialized == OSPI_ACCESS_MMP)
+      if (Ospi_Ram_Ctx[Instance].IsInitialized == OSPI_ACCESS_MMP)
       {
-        if(BSP_OSPI_RAM_DisableMemoryMappedMode(Instance) != BSP_ERROR_NONE)
+        if (BSP_OSPI_RAM_DisableMemoryMappedMode(Instance) != BSP_ERROR_NONE)
         {
           return BSP_ERROR_COMPONENT_FAILURE;
         }
@@ -1150,23 +1177,23 @@ __weak HAL_StatusTypeDef MX_OSPI_RAM_Init(OSPI_HandleTypeDef *hospi, MX_OSPI_Ini
   * @param Instance      OSPI Instance
   * @retval BSP status
   */
-int32_t BSP_OSPI_RAM_RegisterDefaultMspCallbacks (uint32_t Instance)
+int32_t BSP_OSPI_RAM_RegisterDefaultMspCallbacks(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_RAM_INSTANCES_NUMBER)
+  if (Instance >= OSPI_RAM_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Register MspInit/MspDeInit Callbacks */
-    if(HAL_OSPI_RegisterCallback(&hospi_ram[Instance], HAL_OSPI_MSP_INIT_CB_ID, OSPI_RAM_MspInit) != HAL_OK)
+    if (HAL_OSPI_RegisterCallback(&hospi_ram[Instance], HAL_OSPI_MSP_INIT_CB_ID, OSPI_RAM_MspInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_OSPI_RegisterCallback(&hospi_ram[Instance], HAL_OSPI_MSP_DEINIT_CB_ID, OSPI_RAM_MspDeInit) != HAL_OK)
+    else if (HAL_OSPI_RegisterCallback(&hospi_ram[Instance], HAL_OSPI_MSP_DEINIT_CB_ID, OSPI_RAM_MspDeInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -1186,23 +1213,23 @@ int32_t BSP_OSPI_RAM_RegisterDefaultMspCallbacks (uint32_t Instance)
   * @param CallBacks    pointer to MspInit/MspDeInit callbacks functions
   * @retval BSP status
   */
-int32_t BSP_OSPI_RAM_RegisterMspCallbacks (uint32_t Instance, BSP_OSPI_Cb_t *CallBacks)
+int32_t BSP_OSPI_RAM_RegisterMspCallbacks(uint32_t Instance, BSP_OSPI_Cb_t *CallBacks)
 {
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_RAM_INSTANCES_NUMBER)
+  if (Instance >= OSPI_RAM_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Register MspInit/MspDeInit Callbacks */
-    if(HAL_OSPI_RegisterCallback(&hospi_ram[Instance], HAL_OSPI_MSP_INIT_CB_ID, CallBacks->pMspInitCb) != HAL_OK)
+    if (HAL_OSPI_RegisterCallback(&hospi_ram[Instance], HAL_OSPI_MSP_INIT_CB_ID, CallBacks->pMspInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_OSPI_RegisterCallback(&hospi_ram[Instance], HAL_OSPI_MSP_DEINIT_CB_ID, CallBacks->pMspDeInitCb) != HAL_OK)
+    else if (HAL_OSPI_RegisterCallback(&hospi_ram[Instance], HAL_OSPI_MSP_DEINIT_CB_ID, CallBacks->pMspDeInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -1225,18 +1252,18 @@ int32_t BSP_OSPI_RAM_RegisterMspCallbacks (uint32_t Instance, BSP_OSPI_Cb_t *Cal
   * @param  Size      Size of data to read
   * @retval BSP status
   */
-int32_t BSP_OSPI_RAM_Read(uint32_t Instance, uint8_t* pData, uint32_t ReadAddr, uint32_t Size)
+int32_t BSP_OSPI_RAM_Read(uint32_t Instance, uint8_t *pData, uint32_t ReadAddr, uint32_t Size)
 {
   int32_t ret;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_RAM_INSTANCES_NUMBER)
+  if (Instance >= OSPI_RAM_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(S70KL1281_Read(&hospi_ram[Instance], pData, ReadAddr, Size) != S70KL1281_OK)
+    if (S70KL1281_Read(&hospi_ram[Instance], pData, ReadAddr, Size) != S70KL1281_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
@@ -1258,18 +1285,18 @@ int32_t BSP_OSPI_RAM_Read(uint32_t Instance, uint8_t* pData, uint32_t ReadAddr, 
   * @param  Size      Size of data to read
   * @retval BSP status
   */
-int32_t BSP_OSPI_RAM_Read_DMA(uint32_t Instance, uint8_t* pData, uint32_t ReadAddr, uint32_t Size)
+int32_t BSP_OSPI_RAM_Read_DMA(uint32_t Instance, uint8_t *pData, uint32_t ReadAddr, uint32_t Size)
 {
   int32_t ret;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_RAM_INSTANCES_NUMBER)
+  if (Instance >= OSPI_RAM_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(S70KL1281_Read_DMA(&hospi_ram[Instance], pData, ReadAddr, Size) != S70KL1281_OK)
+    if (S70KL1281_Read_DMA(&hospi_ram[Instance], pData, ReadAddr, Size) != S70KL1281_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
@@ -1291,18 +1318,18 @@ int32_t BSP_OSPI_RAM_Read_DMA(uint32_t Instance, uint8_t* pData, uint32_t ReadAd
   * @param  Size      Size of data to write
   * @retval BSP status
   */
-int32_t BSP_OSPI_RAM_Write(uint32_t Instance, uint8_t* pData, uint32_t WriteAddr, uint32_t Size)
+int32_t BSP_OSPI_RAM_Write(uint32_t Instance, uint8_t *pData, uint32_t WriteAddr, uint32_t Size)
 {
   int32_t ret;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_RAM_INSTANCES_NUMBER)
+  if (Instance >= OSPI_RAM_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(S70KL1281_Write(&hospi_ram[Instance], pData, WriteAddr, Size) != S70KL1281_OK)
+    if (S70KL1281_Write(&hospi_ram[Instance], pData, WriteAddr, Size) != S70KL1281_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
@@ -1324,18 +1351,18 @@ int32_t BSP_OSPI_RAM_Write(uint32_t Instance, uint8_t* pData, uint32_t WriteAddr
   * @param  Size      Size of data to write
   * @retval BSP status
   */
-int32_t BSP_OSPI_RAM_Write_DMA(uint32_t Instance, uint8_t* pData, uint32_t WriteAddr, uint32_t Size)
+int32_t BSP_OSPI_RAM_Write_DMA(uint32_t Instance, uint8_t *pData, uint32_t WriteAddr, uint32_t Size)
 {
   int32_t ret;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_RAM_INSTANCES_NUMBER)
+  if (Instance >= OSPI_RAM_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(S70KL1281_Write_DMA(&hospi_ram[Instance], pData, WriteAddr, Size) != S70KL1281_OK)
+    if (S70KL1281_Write_DMA(&hospi_ram[Instance], pData, WriteAddr, Size) != S70KL1281_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
@@ -1359,13 +1386,13 @@ int32_t BSP_OSPI_RAM_EnableMemoryMappedMode(uint32_t Instance)
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_RAM_INSTANCES_NUMBER)
+  if (Instance >= OSPI_RAM_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(S70KL1281_EnableMemoryMappedMode(&hospi_ram[Instance]) != S70KL1281_OK)
+    if (S70KL1281_EnableMemoryMappedMode(&hospi_ram[Instance]) != S70KL1281_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
@@ -1390,18 +1417,18 @@ int32_t BSP_OSPI_RAM_DisableMemoryMappedMode(uint32_t Instance)
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_RAM_INSTANCES_NUMBER)
+  if (Instance >= OSPI_RAM_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(Ospi_Ram_Ctx[Instance].IsInitialized != OSPI_ACCESS_MMP)
+    if (Ospi_Ram_Ctx[Instance].IsInitialized != OSPI_ACCESS_MMP)
     {
       ret = BSP_ERROR_OSPI_MMP_UNLOCK_FAILURE;
     }
     /* Abort MMP back to indirect mode */
-    else if(HAL_OSPI_Abort(&hospi_ram[Instance]) != HAL_OK)
+    else if (HAL_OSPI_Abort(&hospi_ram[Instance]) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -1426,7 +1453,8 @@ int32_t BSP_OSPI_RAM_DisableMemoryMappedMode(uint32_t Instance)
   * @param  BurstLength OSPI burst length
   * @retval BSP status
   */
-int32_t BSP_OSPI_RAM_ConfigHyperRAM(uint32_t Instance, BSP_OSPI_RAM_Latency_t Latency, BSP_OSPI_RAM_BurstType_t BurstType, BSP_OSPI_RAM_BurstLength_t BurstLength)
+int32_t BSP_OSPI_RAM_ConfigHyperRAM(uint32_t Instance, BSP_OSPI_RAM_Latency_t Latency,
+                                    BSP_OSPI_RAM_BurstType_t BurstType, BSP_OSPI_RAM_BurstLength_t BurstLength)
 {
   OSPI_HyperbusCfgTypeDef sHyperbusCfg;
   int32_t ret = BSP_ERROR_NONE;
@@ -1434,24 +1462,24 @@ int32_t BSP_OSPI_RAM_ConfigHyperRAM(uint32_t Instance, BSP_OSPI_RAM_Latency_t La
   uint16_t reg;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_RAM_INSTANCES_NUMBER)
+  if (Instance >= OSPI_RAM_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Check if MMP mode locked ***********************************************/
-    if(Ospi_Ram_Ctx[Instance].IsInitialized == OSPI_ACCESS_MMP)
+    if (Ospi_Ram_Ctx[Instance].IsInitialized == OSPI_ACCESS_MMP)
     {
       ret = BSP_ERROR_OSPI_MMP_LOCK_FAILURE;
     }
-    else if((Ospi_Ram_Ctx[Instance].IsInitialized == OSPI_ACCESS_NONE) ||
-            (Ospi_Ram_Ctx[Instance].LatencyType   != Latency)              ||
-            (Ospi_Ram_Ctx[Instance].BurstType     != BurstType)            ||
-            (Ospi_Ram_Ctx[Instance].BurstLength   != BurstLength))
+    else if ((Ospi_Ram_Ctx[Instance].IsInitialized == OSPI_ACCESS_NONE) ||
+             (Ospi_Ram_Ctx[Instance].LatencyType   != Latency)              ||
+             (Ospi_Ram_Ctx[Instance].BurstType     != BurstType)            ||
+             (Ospi_Ram_Ctx[Instance].BurstLength   != BurstLength))
     {
       /* Reading the configuration of the HyperRAM ****************************/
-      if(S70KL1281_ReadCfgReg0(&hospi_ram[Instance], &reg) != S70KL1281_OK)
+      if (S70KL1281_ReadCfgReg0(&hospi_ram[Instance], &reg) != S70KL1281_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
@@ -1459,7 +1487,7 @@ int32_t BSP_OSPI_RAM_ConfigHyperRAM(uint32_t Instance, BSP_OSPI_RAM_Latency_t La
       {
         /* Configure the HyperRAM memory **************************************/
         /* Initial latency */
-        if(Ospi_Ram_Ctx[Instance].IsInitialized == OSPI_ACCESS_NONE)
+        if (Ospi_Ram_Ctx[Instance].IsInitialized == OSPI_ACCESS_NONE)
         {
           initial_latency = DEFAULT_INITIAL_LATENCY;
           latency_mode = HAL_OSPI_FIXED_LATENCY;
@@ -1499,20 +1527,20 @@ int32_t BSP_OSPI_RAM_ConfigHyperRAM(uint32_t Instance, BSP_OSPI_RAM_Latency_t La
           {
             switch (BurstLength)
             {
-            case BSP_OSPI_RAM_BURST_16_BYTES :
-              hospi_ram[Instance].Init.WrapSize = HAL_OSPI_WRAP_16_BYTES;
-              break;
-            case BSP_OSPI_RAM_BURST_32_BYTES :
-              hospi_ram[Instance].Init.WrapSize = HAL_OSPI_WRAP_32_BYTES;
-              break;
-            case BSP_OSPI_RAM_BURST_64_BYTES :
-              hospi_ram[Instance].Init.WrapSize = HAL_OSPI_WRAP_64_BYTES;
-              break;
-            case BSP_OSPI_RAM_BURST_128_BYTES :
-              hospi_ram[Instance].Init.WrapSize = HAL_OSPI_WRAP_128_BYTES;
-              break;
-            default :
-              break;
+              case BSP_OSPI_RAM_BURST_16_BYTES :
+                hospi_ram[Instance].Init.WrapSize = HAL_OSPI_WRAP_16_BYTES;
+                break;
+              case BSP_OSPI_RAM_BURST_32_BYTES :
+                hospi_ram[Instance].Init.WrapSize = HAL_OSPI_WRAP_32_BYTES;
+                break;
+              case BSP_OSPI_RAM_BURST_64_BYTES :
+                hospi_ram[Instance].Init.WrapSize = HAL_OSPI_WRAP_64_BYTES;
+                break;
+              case BSP_OSPI_RAM_BURST_128_BYTES :
+                hospi_ram[Instance].Init.WrapSize = HAL_OSPI_WRAP_128_BYTES;
+                break;
+              default :
+                break;
             }
           }
           else
@@ -1539,7 +1567,7 @@ int32_t BSP_OSPI_RAM_ConfigHyperRAM(uint32_t Instance, BSP_OSPI_RAM_Latency_t La
       }
 
       /* Update OSPI context if all operations are well done */
-      if(ret == BSP_ERROR_NONE)
+      if (ret == BSP_ERROR_NONE)
       {
         /* Update current status parameter *****************************************/
         Ospi_Ram_Ctx[Instance].IsInitialized = OSPI_ACCESS_INDIRECT;
@@ -1714,36 +1742,42 @@ static void OSPI_NOR_MspDeInit(OSPI_HandleTypeDef *hospi)
   * @param  Instance  OSPI instance
   * @retval BSP status
   */
-static int32_t OSPI_NOR_ResetMemory (uint32_t Instance)
+static int32_t OSPI_NOR_ResetMemory(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(MX25LM51245G_ResetEnable(&hospi_nor[Instance], BSP_OSPI_NOR_SPI_MODE, BSP_OSPI_NOR_STR_TRANSFER) != MX25LM51245G_OK)
+  else if (MX25LM51245G_ResetEnable(&hospi_nor[Instance], BSP_OSPI_NOR_SPI_MODE,
+                                    BSP_OSPI_NOR_STR_TRANSFER) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
-  else if(MX25LM51245G_ResetMemory(&hospi_nor[Instance], BSP_OSPI_NOR_SPI_MODE, BSP_OSPI_NOR_STR_TRANSFER) != MX25LM51245G_OK)
+  else if (MX25LM51245G_ResetMemory(&hospi_nor[Instance], BSP_OSPI_NOR_SPI_MODE,
+                                    BSP_OSPI_NOR_STR_TRANSFER) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
-  else if(MX25LM51245G_ResetEnable(&hospi_nor[Instance], BSP_OSPI_NOR_OPI_MODE, BSP_OSPI_NOR_STR_TRANSFER) != MX25LM51245G_OK)
+  else if (MX25LM51245G_ResetEnable(&hospi_nor[Instance], BSP_OSPI_NOR_OPI_MODE,
+                                    BSP_OSPI_NOR_STR_TRANSFER) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
-  else if(MX25LM51245G_ResetMemory(&hospi_nor[Instance], BSP_OSPI_NOR_OPI_MODE, BSP_OSPI_NOR_STR_TRANSFER) != MX25LM51245G_OK)
+  else if (MX25LM51245G_ResetMemory(&hospi_nor[Instance], BSP_OSPI_NOR_OPI_MODE,
+                                    BSP_OSPI_NOR_STR_TRANSFER) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
-  else if(MX25LM51245G_ResetEnable(&hospi_nor[Instance], BSP_OSPI_NOR_OPI_MODE, BSP_OSPI_NOR_DTR_TRANSFER) != MX25LM51245G_OK)
+  else if (MX25LM51245G_ResetEnable(&hospi_nor[Instance], BSP_OSPI_NOR_OPI_MODE,
+                                    BSP_OSPI_NOR_DTR_TRANSFER) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
-  else if(MX25LM51245G_ResetMemory(&hospi_nor[Instance], BSP_OSPI_NOR_OPI_MODE, BSP_OSPI_NOR_DTR_TRANSFER) != MX25LM51245G_OK)
+  else if (MX25LM51245G_ResetMemory(&hospi_nor[Instance], BSP_OSPI_NOR_OPI_MODE,
+                                    BSP_OSPI_NOR_DTR_TRANSFER) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -1772,27 +1806,31 @@ static int32_t OSPI_NOR_EnterDOPIMode(uint32_t Instance)
   uint8_t reg[2];
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   /* Enable write operations */
-  else if (MX25LM51245G_WriteEnable(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
+  else if (MX25LM51245G_WriteEnable(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                    Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
   /* Write Configuration register 2 (with new dummy cycles) */
-  else if (MX25LM51245G_WriteCfg2Register(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate, MX25LM51245G_CR2_REG3_ADDR, CONF_OSPI_DUMMY_CYCLES) != MX25LM51245G_OK)
+  else if (MX25LM51245G_WriteCfg2Register(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                          Ospi_Nor_Ctx[Instance].TransferRate, MX25LM51245G_CR2_REG3_ADDR, CONF_OSPI_DUMMY_CYCLES) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
   /* Enable write operations */
-  else if (MX25LM51245G_WriteEnable(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
+  else if (MX25LM51245G_WriteEnable(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                    Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
   /* Write Configuration register 2 (with Octal I/O SPI protocol) */
-  else if (MX25LM51245G_WriteCfg2Register(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate, MX25LM51245G_CR2_REG1_ADDR, MX25LM51245G_CR2_DOPI) != MX25LM51245G_OK)
+  else if (MX25LM51245G_WriteCfg2Register(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                          Ospi_Nor_Ctx[Instance].TransferRate, MX25LM51245G_CR2_REG1_ADDR, MX25LM51245G_CR2_DOPI) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -1809,12 +1847,14 @@ static int32_t OSPI_NOR_EnterDOPIMode(uint32_t Instance)
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
     /* Check Flash busy ? */
-    else if (MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], BSP_OSPI_NOR_OPI_MODE, BSP_OSPI_NOR_DTR_TRANSFER) != MX25LM51245G_OK)
+    else if (MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], BSP_OSPI_NOR_OPI_MODE,
+                                              BSP_OSPI_NOR_DTR_TRANSFER) != MX25LM51245G_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
     /* Check the configuration has been correctly done */
-    else if (MX25LM51245G_ReadCfg2Register(&hospi_nor[Instance], BSP_OSPI_NOR_OPI_MODE, BSP_OSPI_NOR_DTR_TRANSFER, MX25LM51245G_CR2_REG1_ADDR, reg) != MX25LM51245G_OK)
+    else if (MX25LM51245G_ReadCfg2Register(&hospi_nor[Instance], BSP_OSPI_NOR_OPI_MODE, BSP_OSPI_NOR_DTR_TRANSFER,
+                                           MX25LM51245G_CR2_REG1_ADDR, reg) != MX25LM51245G_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
@@ -1843,27 +1883,31 @@ static int32_t OSPI_NOR_EnterSOPIMode(uint32_t Instance)
   uint8_t reg[2];
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   /* Enable write operations */
-  else if (MX25LM51245G_WriteEnable(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
+  else if (MX25LM51245G_WriteEnable(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                    Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
   /* Write Configuration register 2 (with new dummy cycles) */
-  else if (MX25LM51245G_WriteCfg2Register(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate, MX25LM51245G_CR2_REG3_ADDR, CONF_OSPI_DUMMY_CYCLES) != MX25LM51245G_OK)
+  else if (MX25LM51245G_WriteCfg2Register(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                          Ospi_Nor_Ctx[Instance].TransferRate, MX25LM51245G_CR2_REG3_ADDR, CONF_OSPI_DUMMY_CYCLES) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
   /* Enable write operations */
-  else if (MX25LM51245G_WriteEnable(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
+  else if (MX25LM51245G_WriteEnable(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                    Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
   /* Write Configuration register 2 (with Octal I/O SPI protocol) */
-  else if (MX25LM51245G_WriteCfg2Register(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate, MX25LM51245G_CR2_REG1_ADDR, MX25LM51245G_CR2_SOPI) != MX25LM51245G_OK)
+  else if (MX25LM51245G_WriteCfg2Register(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                          Ospi_Nor_Ctx[Instance].TransferRate, MX25LM51245G_CR2_REG1_ADDR, MX25LM51245G_CR2_SOPI) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -1873,12 +1917,14 @@ static int32_t OSPI_NOR_EnterSOPIMode(uint32_t Instance)
     HAL_Delay(MX25LM51245G_WRITE_REG_MAX_TIME);
 
     /* Check Flash busy ? */
-    if (MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], BSP_OSPI_NOR_OPI_MODE, BSP_OSPI_NOR_STR_TRANSFER) != MX25LM51245G_OK)
+    if (MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], BSP_OSPI_NOR_OPI_MODE,
+                                         BSP_OSPI_NOR_STR_TRANSFER) != MX25LM51245G_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
     /* Check the configuration has been correctly done */
-    else if (MX25LM51245G_ReadCfg2Register(&hospi_nor[Instance], BSP_OSPI_NOR_OPI_MODE, BSP_OSPI_NOR_STR_TRANSFER, MX25LM51245G_CR2_REG1_ADDR, reg) != MX25LM51245G_OK)
+    else if (MX25LM51245G_ReadCfg2Register(&hospi_nor[Instance], BSP_OSPI_NOR_OPI_MODE, BSP_OSPI_NOR_STR_TRANSFER,
+                                           MX25LM51245G_CR2_REG1_ADDR, reg) != MX25LM51245G_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
@@ -1901,18 +1947,19 @@ static int32_t OSPI_NOR_EnterSOPIMode(uint32_t Instance)
   * @param  Instance  OSPI instance
   * @retval BSP status
   */
-static int32_t OSPI_NOR_ExitOPIMode (uint32_t Instance)
+static int32_t OSPI_NOR_ExitOPIMode(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
   uint8_t reg[2];
 
   /* Check if the instance is supported */
-  if(Instance >= OSPI_NOR_INSTANCES_NUMBER)
+  if (Instance >= OSPI_NOR_INSTANCES_NUMBER)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   /* Enable write operations */
-  else if (MX25LM51245G_WriteEnable(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
+  else if (MX25LM51245G_WriteEnable(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                    Ospi_Nor_Ctx[Instance].TransferRate) != MX25LM51245G_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -1921,7 +1968,8 @@ static int32_t OSPI_NOR_ExitOPIMode (uint32_t Instance)
     /* Write Configuration register 2 (with SPI protocol) */
     reg[0] = 0;
     reg[1] = 0;
-    if (MX25LM51245G_WriteCfg2Register(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode, Ospi_Nor_Ctx[Instance].TransferRate, MX25LM51245G_CR2_REG1_ADDR, reg[0]) != MX25LM51245G_OK)
+    if (MX25LM51245G_WriteCfg2Register(&hospi_nor[Instance], Ospi_Nor_Ctx[Instance].InterfaceMode,
+                                       Ospi_Nor_Ctx[Instance].TransferRate, MX25LM51245G_CR2_REG1_ADDR, reg[0]) != MX25LM51245G_OK)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
@@ -1942,12 +1990,14 @@ static int32_t OSPI_NOR_ExitOPIMode (uint32_t Instance)
       }
 
       /* Check Flash busy ? */
-      if (MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], BSP_OSPI_NOR_SPI_MODE, BSP_OSPI_NOR_STR_TRANSFER) != MX25LM51245G_OK)
+      if (MX25LM51245G_AutoPollingMemReady(&hospi_nor[Instance], BSP_OSPI_NOR_SPI_MODE,
+                                           BSP_OSPI_NOR_STR_TRANSFER) != MX25LM51245G_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
       /* Check the configuration has been correctly done */
-      else if (MX25LM51245G_ReadCfg2Register(&hospi_nor[Instance], BSP_OSPI_NOR_SPI_MODE, BSP_OSPI_NOR_STR_TRANSFER, MX25LM51245G_CR2_REG1_ADDR, reg) != MX25LM51245G_OK)
+      else if (MX25LM51245G_ReadCfg2Register(&hospi_nor[Instance], BSP_OSPI_NOR_SPI_MODE, BSP_OSPI_NOR_STR_TRANSFER,
+                                             MX25LM51245G_CR2_REG1_ADDR, reg) != MX25LM51245G_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }

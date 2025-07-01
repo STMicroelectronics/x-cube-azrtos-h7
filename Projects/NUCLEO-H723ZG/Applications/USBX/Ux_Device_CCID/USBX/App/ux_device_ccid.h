@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_api.h"
 #include "ux_device_class_ccid.h"
@@ -104,9 +108,9 @@ VOID usbx_ccid_apdu_read_data(CCID_APDU_Command *apdu_cmd, CCID_APDU_Response *a
 
 /* USER CODE END PD */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

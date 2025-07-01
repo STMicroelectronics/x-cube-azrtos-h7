@@ -19,6 +19,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_filex.h"
 
@@ -364,6 +368,6 @@ void fx_app_thread_entry(ULONG thread_input)
   /* USER CODE END fx_app_thread_entry 1 */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

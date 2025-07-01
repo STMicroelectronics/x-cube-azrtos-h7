@@ -78,6 +78,11 @@ UX_HCD_STM32_ED       *ed;
     /* From the endpoint container fetch the STM32 ED descriptor.  */
     ed =  (UX_HCD_STM32_ED *) endpoint -> ux_endpoint_ed;
 
+    if (ed == UX_NULL)
+    {
+      return UX_SUCCESS;
+    }
+
     /* Finish current transfer.  */
     _ux_hcd_stm32_request_trans_finish(hcd_stm32, ed);
 

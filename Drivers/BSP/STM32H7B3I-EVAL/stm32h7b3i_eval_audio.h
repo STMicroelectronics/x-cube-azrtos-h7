@@ -22,7 +22,7 @@
 #define STM32H7B3I_EVAL_AUDIO_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -62,7 +62,7 @@ typedef struct
   uint32_t                    BitsPerSample;
   uint32_t                    ChannelsNbr;
   uint32_t                    Volume;
-}BSP_AUDIO_Init_t;
+} BSP_AUDIO_Init_t;
 
 typedef struct
 {
@@ -78,7 +78,7 @@ typedef struct
   uint32_t                    State;               /* Audio IN State                 */
   uint32_t                    IsMultiBuff;         /* Audio IN multi-buffer usage    */
   uint32_t                    IsMspCallbacksValid; /* Is Msp Callbacks registered     */
-}AUDIO_IN_Ctx_t;
+} AUDIO_IN_Ctx_t;
 
 typedef struct
 {
@@ -91,7 +91,7 @@ typedef struct
   uint32_t                    IsMute;              /* Mute state                      */
   uint32_t                    State;               /* Audio OUT State                 */
   uint32_t                    IsMspCallbacksValid; /* Is Msp Callbacks registered      */
-}AUDIO_OUT_Ctx_t;
+} AUDIO_OUT_Ctx_t;
 
 typedef struct
 {
@@ -106,14 +106,14 @@ typedef struct
   uint32_t FrameLength;
   uint32_t ActiveFrameLength;
   uint32_t SlotActive;
-}MX_SAI_Config;
+} MX_SAI_Config;
 
 typedef struct
 {
   uint32_t SampleRate;
   uint32_t AudioMode;
   uint32_t FullDuplexMode;
-}MX_I2S_Config;
+} MX_I2S_Config;
 
 #if (USE_HAL_SAI_REGISTER_CALLBACKS == 1)||(USE_HAL_I2S_REGISTER_CALLBACKS == 1)
 typedef struct
@@ -126,7 +126,7 @@ typedef struct
   pI2S_CallbackTypeDef  pMspI2sInitCb;
   pI2S_CallbackTypeDef  pMspI2sDeInitCb;
 #endif
-}BSP_AUDIO_OUT_Cb_t;
+} BSP_AUDIO_OUT_Cb_t;
 #endif /* (USE_HAL_SAI_REGISTER_CALLBACKS == 1)||(USE_HAL_I2S_REGISTER_CALLBACKS == 1) */
 
 
@@ -144,17 +144,17 @@ typedef struct
   uint32_t              Channel4Filter;
   uint32_t              ClockDivider;
   uint32_t              RightBitShift;
-}MX_DFSDM_Config;
+} MX_DFSDM_Config;
 
 #if ((USE_HAL_DFSDM_REGISTER_CALLBACKS == 1) || (USE_HAL_SAI_REGISTER_CALLBACKS == 1)  || (USE_HAL_I2S_REGISTER_CALLBACKS == 1))
 typedef struct
 {
 #if (USE_HAL_SAI_REGISTER_CALLBACKS == 1)
-  void (* pMspSaiInitCb  )(SAI_HandleTypeDef *);
+  void (* pMspSaiInitCb)(SAI_HandleTypeDef *);
   void (* pMspSaiDeInitCb)(SAI_HandleTypeDef *);
 #endif
 #if (USE_HAL_I2S_REGISTER_CALLBACKS == 1)
-  void (* pMspI2sInitCb  )(I2S_HandleTypeDef *);
+  void (* pMspI2sInitCb)(I2S_HandleTypeDef *);
   void (* pMspI2sDeInitCb)(I2S_HandleTypeDef *);
 #endif
 #if (USE_HAL_DFSDM_REGISTER_CALLBACKS == 1)
@@ -163,7 +163,7 @@ typedef struct
   pDFSDM_Channel_CallbackTypeDef  pMspChInitCb;
   pDFSDM_Channel_CallbackTypeDef  pMspChDeInitCb;
 #endif /* (USE_HAL_DFSDM_REGISTER_CALLBACKS == 1) */
-}BSP_AUDIO_IN_Cb_t;
+} BSP_AUDIO_IN_Cb_t;
 #endif /* ((USE_HAL_DFSDM_REGISTER_CALLBACKS == 1) || (USE_HAL_SAI_REGISTER_CALLBACKS == 1) || (USE_HAL_I2S_REGISTER_CALLBACKS == 1)) */
 
 /**
@@ -486,15 +486,15 @@ extern AUDIO_IN_Ctx_t                         Audio_In_Ctx[];
 /** @addtogroup STM32H7B3I_EVAL_AUDIO_OUT_Exported_Functions
   * @{
   */
-int32_t BSP_AUDIO_OUT_Init(uint32_t Instance, BSP_AUDIO_Init_t* AudioInit);
+int32_t BSP_AUDIO_OUT_Init(uint32_t Instance, BSP_AUDIO_Init_t *AudioInit);
 int32_t BSP_AUDIO_OUT_DeInit(uint32_t Instance);
 
 #if (USE_HAL_SAI_REGISTER_CALLBACKS == 1) || (USE_HAL_I2S_REGISTER_CALLBACKS == 1)
-int32_t BSP_AUDIO_OUT_RegisterMspCallbacks (uint32_t Instance, BSP_AUDIO_OUT_Cb_t *CallBacks);
-int32_t BSP_AUDIO_OUT_RegisterDefaultMspCallbacks (uint32_t Instance);
+int32_t BSP_AUDIO_OUT_RegisterMspCallbacks(uint32_t Instance, BSP_AUDIO_OUT_Cb_t *CallBacks);
+int32_t BSP_AUDIO_OUT_RegisterDefaultMspCallbacks(uint32_t Instance);
 #endif /* (USE_HAL_SAI_REGISTER_CALLBACKS == 1)|| (USE_HAL_I2S_REGISTER_CALLBACKS == 1) */
 
-int32_t BSP_AUDIO_OUT_Play(uint32_t Instance, uint8_t* pData, uint32_t NbrOfBytes);
+int32_t BSP_AUDIO_OUT_Play(uint32_t Instance, uint8_t *pData, uint32_t NbrOfBytes);
 int32_t BSP_AUDIO_OUT_Pause(uint32_t Instance);
 int32_t BSP_AUDIO_OUT_Resume(uint32_t Instance);
 int32_t BSP_AUDIO_OUT_Stop(uint32_t Instance);
@@ -534,9 +534,9 @@ void    BSP_AUDIO_OUT_Error_CallBack(uint32_t Instance);
 /* These function can be modified in case the current settings need to be changed
    for specific application needs */
 HAL_StatusTypeDef MX_SAI1_ClockConfig(SAI_HandleTypeDef *hsai, uint32_t SampleRate);
-HAL_StatusTypeDef MX_SAI1_Block_A_Init(SAI_HandleTypeDef* hsai, MX_SAI_Config *MXConfig);
+HAL_StatusTypeDef MX_SAI1_Block_A_Init(SAI_HandleTypeDef *hsai, MX_SAI_Config *MXConfig);
 HAL_StatusTypeDef MX_I2S6_ClockConfig(I2S_HandleTypeDef *hi2s, uint32_t SampleRate);
-HAL_StatusTypeDef MX_I2S6_Init(I2S_HandleTypeDef* hi2s, MX_I2S_Config *MXConfig);
+HAL_StatusTypeDef MX_I2S6_Init(I2S_HandleTypeDef *hi2s, MX_I2S_Config *MXConfig);
 /**
   * @}
   */
@@ -544,14 +544,15 @@ HAL_StatusTypeDef MX_I2S6_Init(I2S_HandleTypeDef* hi2s, MX_I2S_Config *MXConfig)
 /** @addtogroup STM32H7B3I_EVAL_AUDIO_IN_Exported_Functions
   * @{
   */
-int32_t BSP_AUDIO_IN_Init(uint32_t Instance, BSP_AUDIO_Init_t* AudioInit);
+int32_t BSP_AUDIO_IN_Init(uint32_t Instance, BSP_AUDIO_Init_t *AudioInit);
 int32_t BSP_AUDIO_IN_DeInit(uint32_t Instance);
 #if ((USE_HAL_DFSDM_REGISTER_CALLBACKS == 1) || (USE_HAL_SAI_REGISTER_CALLBACKS == 1)  || (USE_HAL_I2S_REGISTER_CALLBACKS == 1))
-int32_t BSP_AUDIO_IN_RegisterDefaultMspCallbacks (uint32_t Instance);
-int32_t BSP_AUDIO_IN_RegisterMspCallbacks (uint32_t Instance, BSP_AUDIO_IN_Cb_t *CallBacks);
+int32_t BSP_AUDIO_IN_RegisterDefaultMspCallbacks(uint32_t Instance);
+int32_t BSP_AUDIO_IN_RegisterMspCallbacks(uint32_t Instance, BSP_AUDIO_IN_Cb_t *CallBacks);
 #endif /* ((USE_HAL_DFSDM_REGISTER_CALLBACKS == 1) || (USE_HAL_SAI_REGISTER_CALLBACKS == 1) || (USE_HAL_I2S_REGISTER_CALLBACKS == 1)) */
-int32_t BSP_AUDIO_IN_Record(uint32_t Instance, uint8_t* pBuf, uint32_t NbrOfBytes);
-int32_t BSP_AUDIO_IN_OUT_Record(uint32_t InInstance, uint32_t OutInstance, uint8_t* pTxBuf, uint8_t* pRxBuf, uint32_t NbrOfBytes);
+int32_t BSP_AUDIO_IN_Record(uint32_t Instance, uint8_t *pBuf, uint32_t NbrOfBytes);
+int32_t BSP_AUDIO_IN_OUT_Record(uint32_t InInstance, uint32_t OutInstance, uint8_t *pTxBuf, uint8_t *pRxBuf,
+                                uint32_t NbrOfBytes);
 int32_t BSP_AUDIO_IN_Stop(uint32_t Instance);
 int32_t BSP_AUDIO_IN_Pause(uint32_t Instance);
 int32_t BSP_AUDIO_IN_Resume(uint32_t Instance);
@@ -591,10 +592,12 @@ void BSP_AUDIO_IN_Error_CallBack(uint32_t Instance);
 /* These function can be modified in case the current settings (e.g. DMA stream)
    need to be changed for specific application needs */
 HAL_StatusTypeDef MX_DFSDM1_ClockConfig(DFSDM_Channel_HandleTypeDef *hDfsdmChannel, uint32_t SampleRate);
-HAL_StatusTypeDef MX_DFSDM1_Init(DFSDM_Filter_HandleTypeDef *hDfsdmFilter, DFSDM_Channel_HandleTypeDef *hDfsdmChannel, MX_DFSDM_Config *MXConfig);
+HAL_StatusTypeDef MX_DFSDM1_Init(DFSDM_Filter_HandleTypeDef *hDfsdmFilter, DFSDM_Channel_HandleTypeDef *hDfsdmChannel,
+                                 MX_DFSDM_Config *MXConfig);
 HAL_StatusTypeDef MX_DFSDM2_ClockConfig(DFSDM_Channel_HandleTypeDef *hDfsdmChannel, uint32_t SampleRate);
-HAL_StatusTypeDef MX_DFSDM2_Init(DFSDM_Filter_HandleTypeDef *hDfsdmFilter, DFSDM_Channel_HandleTypeDef *hDfsdmChannel, MX_DFSDM_Config *MXConfig);
-HAL_StatusTypeDef MX_SAI1_Block_B_Init(SAI_HandleTypeDef* hsai, MX_SAI_Config *MXConfig);
+HAL_StatusTypeDef MX_DFSDM2_Init(DFSDM_Filter_HandleTypeDef *hDfsdmFilter, DFSDM_Channel_HandleTypeDef *hDfsdmChannel,
+                                 MX_DFSDM_Config *MXConfig);
+HAL_StatusTypeDef MX_SAI1_Block_B_Init(SAI_HandleTypeDef *hsai, MX_SAI_Config *MXConfig);
 /**
   * @}
   */

@@ -17,6 +17,7 @@ After enumeration phase, the host proceeds to file operations :
 
   - "Explore audio file" operation searches for all .Wav files in the uSD and displays it on the terminal.
   - "Once user presses user button, Start audio Player" operation starts playing the song from the uSD. The files are read using the FileX file system.
+  - Green Led turns ON.
 
 #### <b>Error behaviors</b>
 
@@ -94,8 +95,8 @@ Connectivity, USBXHost, FILEX, ThreadX, AUDIO 2.0, Audio 1.0, UAC, Speaker, UART
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H747xx devices.
-  - This example has been tested with STMicroelectronics STM32H747I-DISCO boards revision MB1520-H747I-B02
+  - This application runs on STM32H747xx devices.
+  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards revision MB1520-H747I-B02
     and can be easily tailored to any other supported device and development board.
 
   - STM32H747I-DISCO Set-up

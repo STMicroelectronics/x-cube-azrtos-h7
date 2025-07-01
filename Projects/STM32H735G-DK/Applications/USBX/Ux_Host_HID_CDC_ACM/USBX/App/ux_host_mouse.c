@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_host_mouse.h"
 
@@ -56,7 +60,7 @@ extern UX_HOST_CLASS_HID_MOUSE      *mouse;
 
 /* USER CODE END 0 */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief  Function implementing hid_mouse_thread_entry.
@@ -152,4 +156,4 @@ VOID hid_mouse_thread_entry(ULONG thread_input)
   }
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

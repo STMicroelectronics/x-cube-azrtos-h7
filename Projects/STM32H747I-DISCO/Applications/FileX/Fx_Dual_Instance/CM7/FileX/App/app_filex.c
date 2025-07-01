@@ -19,6 +19,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_filex.h"
 
@@ -368,7 +372,7 @@ void fx_app_thread_entry(ULONG thread_input)
   /* USER CODE END fx_app_thread_entry 1 */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
@@ -397,4 +401,4 @@ static UINT SD_IsDetected(uint32_t Instance)
   return ret;
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

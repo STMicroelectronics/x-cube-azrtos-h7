@@ -1,5 +1,5 @@
 
-##  <b>Nx_Iperf application description</b>
+##  <b>Nx_Iperf Application Description</b>
 
 This application provides an example of Azure RTOS NetXDuo stack usage .
 It shows performance when using different modes : TCP_server, UDP_server, TCP_client and UDP_client.
@@ -13,7 +13,7 @@ The main entry function tx_application_define() is then called by ThreadX during
 
 The application creates 1 thread :
 
- + **NxAppThread** (priority 4, PreemtionThreashold 4) : created with the <i>TX_AUTO_START</i> flag to start automatically.
+ + **NxAppThread** (priority 4, PreemptionThreshold 4) : created with the <i>TX_AUTO_START</i> flag to start automatically.
 
 The **NxAppThread** starts and performs the following actions:
 
@@ -27,10 +27,10 @@ The **nx_iperf_entry**, once started:
 
 The application then creates 4 threads with the same priorities :
 
-   + **thread_tcp_rx_iperf** (priority 1, PreemtionThreashold 1) : created with the <i>TX_AUTO_START</i> flag to start automatically.
-   + **thread_tcp_tx_iperf** (priority 1, PreemtionThreashold 1) : created with the <i>TX_AUTO_START</i> flag to start automatically.
-   + **thread_udp_rx_iperf** (priority 1, PreemtionThreashold 1) : created with the <i>TX_AUTO_START</i> flag to start automatically.
-   + **thread_udp_tx_iperf** (priority 1, PreemtionThreashold 1) : created with the <i>TX_AUTO_START</i> flag to start automatically.
+   + **thread_tcp_rx_iperf** (priority 1, PreemptionThreshold 1) : created with the <i>TX_AUTO_START</i> flag to start automatically.
+   + **thread_tcp_tx_iperf** (priority 1, PreemptionThreshold 1) : created with the <i>TX_AUTO_START</i> flag to start automatically.
+   + **thread_udp_rx_iperf** (priority 1, PreemptionThreshold 1) : created with the <i>TX_AUTO_START</i> flag to start automatically.
+   + **thread_udp_tx_iperf** (priority 1, PreemptionThreshold 1) : created with the <i>TX_AUTO_START</i> flag to start automatically.
 
 ####  <b>Expected success behavior</b>
 
@@ -113,7 +113,7 @@ void MX_ETH_Init(void)
          . = . + 64K;
          . = ALIGN(8);
        } >RAM AT> RAM
-	```
+    ```
 
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
@@ -186,7 +186,7 @@ RTOS, Network, ThreadX, NetXDuo, Iperf, UART
       - Parity = None
       - Flow control = None
 
-###  <b>How to use it ?</b>
+### <b>How to use it ?</b>
 
 In order to make the program work, you must do the following :
 

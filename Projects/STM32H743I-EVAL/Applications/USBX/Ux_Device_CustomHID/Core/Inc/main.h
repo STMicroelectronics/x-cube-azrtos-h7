@@ -46,21 +46,21 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-#define LED1_REPORT_ID           0x01
-#define LED1_REPORT_COUNT        0x01
+#define LED_GREEN_REPORT_ID           0x01
+#define LED_GREEN_REPORT_COUNT        0x01
 
-#define LED2_REPORT_ID           0x02
-#define LED2_REPORT_COUNT        0x01
+#define LED_RED_REPORT_ID             0x02
+#define LED_RED_REPORT_COUNT          0x01
 
-#define LED3_REPORT_ID           0x03
-#define LED3_REPORT_COUNT        0x01
+#define LED_ORANGE_REPORT_ID          0x03
+#define LED_ORANGE_REPORT_COUNT       0x01
 
-#define LED4_REPORT_ID           0x04
-#define LED4_REPORT_COUNT        0x01
+#define LED_BLUE_REPORT_ID            0x04
+#define LED_BLUE_REPORT_COUNT         0x01
 
-#define KEY_REPORT_ID            0x05
-#define TAMPER_REPORT_ID         0x06
-#define ADC_REPORT_ID            0x07
+#define KEY_REPORT_ID                 0x05
+#define TAMPER_REPORT_ID              0x06
+#define ADC_REPORT_ID                 0x07
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/

@@ -19,6 +19,10 @@
 
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_netxduo.h"
 
@@ -256,7 +260,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
   return ret;
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief  WebServer_RequestNotifyCallback
@@ -281,12 +285,12 @@ static UINT WebServer_RequestNotifyCallback(NX_WEB_HTTP_SERVER *server_ptr,
     /* Check if requested data equal LED_ON */
     if (strncmp((char const *)request_data, LED_ON, sizeof(LED_ON)) == 0)
     {
-      HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_RESET);
     }
     /* Check if requested data equal LED_OFF */
     else if (strncmp((char const *)request_data, LED_OFF, sizeof(LED_OFF)) == 0)
     {
-      HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
     }
   }
 
@@ -322,4 +326,4 @@ VOID nx_server_thread_entry(ULONG thread_input)
     Error_Handler();
   }
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

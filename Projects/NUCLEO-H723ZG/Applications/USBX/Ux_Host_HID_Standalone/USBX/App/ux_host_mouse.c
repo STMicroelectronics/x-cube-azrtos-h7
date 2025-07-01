@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_host_mouse.h"
 
@@ -56,7 +60,7 @@ extern UX_HOST_CLASS_HID_MOUSE *mouse;
 
 /* USER CODE END 0 */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief  USBX_HOST_HID_MOUSE_Task
@@ -132,4 +136,4 @@ VOID USBX_HOST_HID_MOUSE_Task(VOID)
   }
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_usbx_device.h"
 
@@ -223,7 +227,7 @@ ULONG _ux_utility_time_get(VOID)
   return time_tick;
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 /**
   * @brief  MX_USBX_Device_Process
   *         Run USBX state machine.
@@ -285,4 +289,4 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   }
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

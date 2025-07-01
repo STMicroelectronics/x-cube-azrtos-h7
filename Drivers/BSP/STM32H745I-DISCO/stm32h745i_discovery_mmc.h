@@ -22,7 +22,7 @@
 #define STM32H745I_DISCO_MMC_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -55,7 +55,7 @@ typedef struct
 {
   pMMC_CallbackTypeDef  pMspInitCb;
   pMMC_CallbackTypeDef  pMspDeInitCb;
-}BSP_MMC_Cb_t;
+} BSP_MMC_Cb_t;
 #endif /* (USE_HAL_MMC_REGISTER_CALLBACKS == 1) */
 /**
   * @}
@@ -112,7 +112,7 @@ int32_t BSP_MMC_ReadBlocks(uint32_t Instance, uint32_t *pData, uint32_t BlockIdx
 int32_t BSP_MMC_WriteBlocks(uint32_t Instance, uint32_t *pData, uint32_t BlockIdx, uint32_t NbrOfBlocks);
 int32_t BSP_MMC_ReadBlocks_DMA(uint32_t Instance, uint32_t *pData, uint32_t BlockIdx, uint32_t NbrOfBlocks);
 int32_t BSP_MMC_WriteBlocks_DMA(uint32_t Instance, uint32_t *pData, uint32_t BlockIdx, uint32_t NbrOfBlocks);
-int32_t BSP_MMC_Erase(uint32_t Instance,uint32_t StartAddr, uint32_t EndAddr);
+int32_t BSP_MMC_Erase(uint32_t Instance, uint32_t StartAddr, uint32_t EndAddr);
 int32_t BSP_MMC_GetCardState(uint32_t Instance);
 int32_t BSP_MMC_GetCardInfo(uint32_t Instance, BSP_MMC_CardInfo *CardInfo);
 void    BSP_MMC_IRQHandler(uint32_t Instance);

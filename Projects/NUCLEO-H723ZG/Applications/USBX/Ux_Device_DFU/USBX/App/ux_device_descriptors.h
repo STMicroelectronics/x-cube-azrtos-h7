@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_api.h"
 #include "ux_stm32_config.h"
@@ -321,6 +325,11 @@ uint16_t USBD_Get_Configuration_Number(uint8_t class_type, uint8_t interface_typ
                                 pIfDesc->iInterface = (istring); \
                                 *Sze += (uint32_t)sizeof(USBD_IfDescTypedef); \
                               } while(0)
+
+/* USER CODE BEGIN 2 */
+
+/* USER CODE END 2 */
+
 #ifdef __cplusplus
 }
 #endif

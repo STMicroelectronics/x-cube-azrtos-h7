@@ -19,6 +19,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_filex.h"
 
@@ -86,7 +90,7 @@ UINT MX_FileX_Init(VOID)
   return ret;
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 VOID MX_FileX_Process(void)
 {
   UINT status;
@@ -220,8 +224,8 @@ VOID MX_FileX_Process(void)
   /* Infinite loop */
   while (1)
   {
-    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+    HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
     HAL_Delay(500);
   }
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

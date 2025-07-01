@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_api.h"
 #include "ux_stm32_config.h"
@@ -339,6 +343,11 @@ uint16_t USBD_HID_ReportDesc_length(uint8_t hid_type);
                                 pIfDesc->iInterface = (istring); \
                                 *Sze += (uint32_t)sizeof(USBD_IfDescTypedef); \
                               } while(0)
+
+/* USER CODE BEGIN 2 */
+
+/* USER CODE END 2 */
+
 #ifdef __cplusplus
 }
 #endif

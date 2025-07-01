@@ -59,10 +59,10 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define BUTTON_USER_Pin GPIO_PIN_13
 #define BUTTON_USER_GPIO_Port GPIOC
-#define LED2_Pin GPIO_PIN_2
-#define LED2_GPIO_Port GPIOC
-#define LED1_Pin GPIO_PIN_3
-#define LED1_GPIO_Port GPIOC
+#define LED_RED_Pin GPIO_PIN_2
+#define LED_RED_GPIO_Port GPIOC
+#define LED_GREEN_Pin GPIO_PIN_3
+#define LED_GREEN_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
 /* Flash address to load APP from */

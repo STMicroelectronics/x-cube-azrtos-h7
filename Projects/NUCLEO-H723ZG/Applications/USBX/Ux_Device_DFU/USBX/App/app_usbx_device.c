@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_usbx_device.h"
 
@@ -340,7 +344,7 @@ static UINT USBD_ChangeFunction(ULONG Device_State)
 
   return status;
 }
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief  USBX_APP_Device_Init
@@ -376,4 +380,4 @@ VOID USBX_APP_Device_Init(VOID)
   /* USER CODE END USB_Device_Init_PostTreatment */
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

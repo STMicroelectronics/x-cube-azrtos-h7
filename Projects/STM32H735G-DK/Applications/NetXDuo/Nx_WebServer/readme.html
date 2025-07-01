@@ -27,7 +27,7 @@ vertical-align: middle;
 <body>
 <div class="row">
 <section id="nx_webserver-application-description" class="col-sm-12 col-lg-8">
-<h2><b>Nx_WebServer application description</b></h2>
+<h2><b>Nx_WebServer Application Description</b></h2>
 <p>This application provides an example of Azure RTOS NetX Duo stack
 usage on STM32H735G-DK board, it shows how to develop Web HTTP server
 based application. The application is designed to load files and
@@ -49,11 +49,11 @@ instance</li>
 </ul>
 <p>The application then creates 2 threads with different priorities:</p>
 <ul>
-<li><strong>NxAppThread</strong> (priority 10, PreemtionThreashold 10) :
+<li><strong>NxAppThread</strong> (priority 10, PreemptionThreshold 10) :
 created with the TX_AUTO_START flag to start automatically.</li>
-<li><strong>AppServerThread</strong> (priority 5, PreemtionThreashold 5)
+<li><strong>AppServerThread</strong> (priority 5, PreemptionThreshold 5)
 : created with the TX_DONT_START flag to be started later.</li>
-<li><strong>LedThread</strong> (priority 15, PreemtionThreashold 15) :
+<li><strong>LedThread</strong> (priority 15, PreemptionThreshold 15) :
 created with the TX_DONT_START flag to be started later.</li>
 </ul>
 <p>The <strong>NxAppThread</strong> starts and performs the following

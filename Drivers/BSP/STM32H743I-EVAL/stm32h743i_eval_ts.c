@@ -120,6 +120,9 @@ static int32_t EXC7200_Probe(uint32_t Instance);
 #if (USE_TS3510_TS_CTRL == 1U)
 static int32_t TS3510_Probe(uint32_t Instance);
 #endif
+#if (USE_EXC80W32_TS_CTRL == 1U)
+static int32_t EXC80W32_Probe(uint32_t Instance);
+#endif
 static void TS_EXTI_Callback(void);
 /**
   * @}
@@ -152,10 +155,10 @@ int32_t BSP_TS_Init(uint32_t Instance, TS_Init_t *TS_Init)
     ret = EXC7200_Probe(Instance);
 #endif
 #if (USE_TS3510_TS_CTRL == 1U)
-    if(ret != BSP_ERROR_NONE)
-    {
-      ret = TS3510_Probe(Instance);
-    }
+    ret = TS3510_Probe(Instance);
+#endif
+#if (USE_EXC80W32_TS_CTRL == 1U)
+    ret = EXC80W32_Probe(Instance);
 #endif
     if(ret != BSP_ERROR_NONE)
     {
@@ -540,6 +543,53 @@ static int32_t TS3510_Probe(uint32_t Instance)
   {
     Ts_CompObj[Instance] = &TS3510Obj;
     Ts_Drv = (TS_Drv_t *) &TS3510_TS_Driver;
+
+    if(Ts_Drv->Init(Ts_CompObj[Instance]) != TS3510_OK)
+    {
+      ret = BSP_ERROR_COMPONENT_FAILURE;
+    }
+  }
+
+  return ret;
+}
+#endif
+#if (USE_EXC80W32_TS_CTRL == 1U)
+/**
+  * @brief  Register Bus IOs if component ID is OK
+  * @param  Instance TS instance. Could be only 0.
+  * @retval BSP status
+  */
+static int32_t EXC80W32_Probe(uint32_t Instance)
+{
+  int32_t ret                = BSP_ERROR_NONE;
+  EXC80W32_IO_t              IOCtx;
+  static EXC80W32_Object_t   EXC80W32Obj;
+  uint32_t exc80w32_id       = 0U;
+
+  /* Configure the touch screen driver */
+  IOCtx.Address     = TS_EXC80W32_I2C_ADDRESS;
+  IOCtx.Init        = BSP_I2C1_Init;
+  IOCtx.DeInit      = BSP_I2C1_DeInit;
+  IOCtx.ReadReg     = BSP_I2C1_ReadReg;
+  IOCtx.WriteReg    = BSP_I2C1_WriteReg;
+  IOCtx.GetTick     = BSP_GetTick;
+
+  if(EXC80W32_RegisterBusIO(&EXC80W32Obj, &IOCtx) != EXC80W32_OK)
+  {
+    ret = BSP_ERROR_BUS_FAILURE;
+  }
+  else if(EXC80W32_ReadID(&EXC80W32Obj, &exc80w32_id) != EXC80W32_OK)
+  {
+    ret = BSP_ERROR_COMPONENT_FAILURE;
+  }
+  else if(exc80w32_id != EXC80W32_ID)
+  {
+    ret = BSP_ERROR_UNKNOWN_COMPONENT;
+  }
+  else
+  {
+    Ts_CompObj[Instance] = &EXC80W32Obj;
+    Ts_Drv = (TS_Drv_t *) &EXC80W32_TS_Driver;
 
     if(Ts_Drv->Init(Ts_CompObj[Instance]) != TS3510_OK)
     {

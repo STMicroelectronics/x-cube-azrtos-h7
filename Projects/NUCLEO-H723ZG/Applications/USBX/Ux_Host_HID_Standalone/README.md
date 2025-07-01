@@ -1,5 +1,5 @@
 
-# <b>Ux_Host_HID_Standalone application description</b>
+# <b>Ux_Host_HID_Standalone Application Description</b>
 
 This application provides an example of Azure RTOS USBX stack usage .
 It shows how to develop bare metal USB Host Human Interface "HID" able to enumerate and communicates with a mouse or a keyboard.

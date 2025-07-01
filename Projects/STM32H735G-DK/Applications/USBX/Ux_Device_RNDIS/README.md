@@ -1,5 +1,5 @@
 
-## <b>Ux_Device_RNDIS application description</b>
+## <b>Ux_Device_RNDIS Application Description</b>
 
 This application provides an example of Azure RTOS RNDIS stack usage on STM32H735G-DK board, it shows how to run web HTTP server based application stack
 over USB interface. The application is designed to load files and web pages stored in SD card using a web HTTP server through USB RNDIS interface

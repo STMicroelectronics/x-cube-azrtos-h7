@@ -17,6 +17,10 @@
  extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h7xx_hal.h"
 #include "lan8742.h"
@@ -64,9 +68,9 @@ extern void MX_ETH_Init(void);
 
 /* USER CODE END PD */
 
-/* USER CODE BEGIN 0 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 0 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

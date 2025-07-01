@@ -33,9 +33,19 @@
 <div class="col-sm-12 col-lg-8">
 <h1 id="update-history"><strong>Update History</strong></h1>
 <div class="collapse">
-<input type="checkbox" id="collapse-section11" checked aria-hidden="true"> <label for="collapse-section11" aria-hidden="true"><strong>V3.3.2 / 19-February-2024</strong></label>
+<input type="checkbox" id="collapse-section11" checked aria-hidden="true"> <label for="collapse-section11" aria-hidden="true"><strong>V3.3.3 / 04-October-2024</strong></label>
 <div>
 <h2 id="main-changes">Main Changes</h2>
+<ul>
+<li>Update STM32H743I-EVAL BSP drivers to support new Touch Screen component exc80w32.</li>
+<li>Update LCD Reset pin: GPIOF pin 10 instead of GPIOA pin 2.</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section11" aria-hidden="true"> <label for="collapse-section11" aria-hidden="true"><strong>V3.3.2 / 19-February-2024</strong></label>
+<div>
+<h2 id="main-changes-1">Main Changes</h2>
 <ul>
 <li>Invert argument order between definitions and declarations of I2C4_WriteReg() and I2C4_ReadReg().</li>
 <li>Update BSP_SD_DetectITConfig() to set the edge detection for the SD card switch.</li>
@@ -45,7 +55,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section10" aria-hidden="true"> <label for="collapse-section10" aria-hidden="true"><strong>V3.3.1 / 11-February-2022</strong></label>
 <div>
-<h2 id="main-changes-1">Main Changes</h2>
+<h2 id="main-changes-2">Main Changes</h2>
 <ul>
 <li>All source files: update disclaimer to add reference to the new license agreement.</li>
 <li>Modified the address calculation in the BSP_LCD_FillRGBRect() function when USE_DMA2D_TO_FILL_RGB_RECT is enabled to suppress the display of a distorted shape instead of a rectangle when trying to draw a rectangle with a bigger height.</li>
@@ -57,7 +67,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section9" aria-hidden="true"> <label for="collapse-section9" aria-hidden="true"><strong>V3.3.0 / 29-January-2021</strong></label>
 <div>
-<h2 id="main-changes-2">Main Changes</h2>
+<h2 id="main-changes-3">Main Changes</h2>
 <ul>
 <li>Add explicit definition of “BSP_QSPI_Erase_t” type with 8KB, 64KB and 128KB erase size
 <ul>
@@ -78,7 +88,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section8" aria-hidden="true"> <label for="collapse-section8" aria-hidden="true"><strong>V3.2.0 / 29-September-2020</strong></label>
 <div>
-<h2 id="main-changes-3">Main Changes</h2>
+<h2 id="main-changes-4">Main Changes</h2>
 <ul>
 <li>Add License.md file</li>
 </ul>
@@ -91,7 +101,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section7" aria-hidden="true"> <label for="collapse-section7" aria-hidden="true"><strong>V3.1.0 / 30-April-2020</strong></label>
 <div>
-<h2 id="main-changes-4">Main Changes</h2>
+<h2 id="main-changes-5">Main Changes</h2>
 <ul>
 <li>Update BSP_BUS APIs with protection against RTOS multithread usage (under BSP_USE_CMSIS_OS pre-processor conditional define)</li>
 </ul>
@@ -104,7 +114,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section6" aria-hidden="true"> <label for="collapse-section6" aria-hidden="true"><strong>V3.0.0 / 25-February-2020</strong></label>
 <div>
-<h2 id="main-changes-5">Main Changes</h2>
+<h2 id="main-changes-6">Main Changes</h2>
 <ul>
 <li>Rename GUI_Drv_t into UTILS_LCD_Drv_t</li>
 </ul>
@@ -121,7 +131,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section5" aria-hidden="true"> <label for="collapse-section5" aria-hidden="true"><strong>V2.0.0 / 25-November-2019</strong></label>
 <div>
-<h2 id="main-changes-6">Main Changes</h2>
+<h2 id="main-changes-7">Main Changes</h2>
 <ul>
 <li>First official release of STM32H743I-EVAL BSP drivers in line with STM32Cube BSP drivers development guidelines (UM2298)</li>
 </ul>
@@ -130,7 +140,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section4" aria-hidden="true"> <label for="collapse-section4" aria-hidden="true"><strong>V1.3.0 / 05-April-2019</strong></label>
 <div>
-<h2 id="main-changes-7">Main Changes</h2>
+<h2 id="main-changes-8">Main Changes</h2>
 <ul>
 <li>General updates to fix known defects and enhancements implementation.</li>
 <li>Update BSP_SRAM_Init function to add initialization for WriteFifo and PageSize parameters.</li>
@@ -170,7 +180,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section3" aria-hidden="true"> <label for="collapse-section3" aria-hidden="true"><strong>V1.2.0 / 29-December-2017</strong></label>
 <div>
-<h2 id="main-changes-8">Main Changes</h2>
+<h2 id="main-changes-9">Main Changes</h2>
 <ul>
 <li>Improve cache management by using cache maintenance routines.</li>
 </ul>
@@ -179,7 +189,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section2" aria-hidden="true"> <label for="collapse-section2" aria-hidden="true"><strong>V1.1.0 / 31-August-2017</strong></label>
 <div>
-<h2 id="main-changes-9">Main Changes</h2>
+<h2 id="main-changes-10">Main Changes</h2>
 <ul>
 <li>Maintenance release.</li>
 <li>Align board drivers to HAL update.</li>
@@ -192,7 +202,7 @@
 <div class="collapse">
 <input type="checkbox" id="collapse-section1" aria-hidden="true"> <label for="collapse-section1" aria-hidden="true"><strong>V1.0.0 / 05-April-2019</strong></label>
 <div>
-<h2 id="main-changes-10">Main Changes</h2>
+<h2 id="main-changes-11">Main Changes</h2>
 <ul>
 <li>First official release</li>
 </ul>

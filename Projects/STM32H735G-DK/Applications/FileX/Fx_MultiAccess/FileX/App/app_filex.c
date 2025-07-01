@@ -19,6 +19,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_filex.h"
 
@@ -143,7 +147,7 @@ UINT MX_FileX_Init(VOID *memory_ptr)
   ret = tx_thread_create(&fx_thread_one, "fx_thread_one", fx_thread_one_entry, 0, pointer, DEFAULT_STACK_SIZE, DEFAULT_THREAD_PRIO,
                          DEFAULT_PREEMPTION_THRESHOLD, DEFAULT_TIME_SLICE, TX_DONT_START);
 
-  if (ret != FX_SUCCESS)
+  if (ret != TX_SUCCESS)
   {
     /* Failed at creating thread */
     Error_Handler();
@@ -152,7 +156,7 @@ UINT MX_FileX_Init(VOID *memory_ptr)
   /* Allocate memory for the 2nd concurrent thread's stack */
   ret = tx_byte_allocate(byte_pool, &pointer, DEFAULT_STACK_SIZE, TX_NO_WAIT);
 
-  if (ret != FX_SUCCESS)
+  if (ret != TX_SUCCESS)
   {
     /* Failed at allocating memory */
     Error_Handler();
@@ -162,7 +166,7 @@ UINT MX_FileX_Init(VOID *memory_ptr)
   ret = tx_thread_create(&fx_thread_two, "fx_thread_two", fx_thread_two_entry, 0, pointer, DEFAULT_STACK_SIZE, DEFAULT_THREAD_PRIO,
                          DEFAULT_PREEMPTION_THRESHOLD, DEFAULT_TIME_SLICE, TX_DONT_START);
 
-  if (ret != FX_SUCCESS)
+  if (ret != TX_SUCCESS)
   {
     /* Failed at creating thread */
     Error_Handler();
@@ -171,7 +175,7 @@ UINT MX_FileX_Init(VOID *memory_ptr)
   /* An event flag to indicate the status of execution */
   ret = tx_event_flags_create(&finish_flag, "event_flag");
 
-  if (ret != FX_SUCCESS)
+  if (ret != TX_SUCCESS)
   {
     /* Failed at creating event flag */
     Error_Handler();
@@ -214,9 +218,17 @@ void fx_app_thread_entry(ULONG thread_input)
 
   /* USER CODE BEGIN fx_app_thread_entry 1 */
   /* Media opened successfully, we start the concurrent threads. */
-  sd_status = tx_thread_resume(&fx_thread_one) & tx_thread_resume(&fx_thread_two);
+  sd_status = tx_thread_resume(&fx_thread_one);
 
-  /* Check the concurrent thread was started correctly.  */
+  /* Check the concurrent thread 1 was started correctly.  */
+  if (sd_status != TX_SUCCESS)
+  {
+    App_Error_Handler(THREAD_ID_M);
+  }
+
+  sd_status = tx_thread_resume(&fx_thread_two);
+
+  /* Check the concurrent thread 2 was started correctly.  */
   if (sd_status != TX_SUCCESS)
   {
     App_Error_Handler(THREAD_ID_M);
@@ -246,13 +258,13 @@ void fx_app_thread_entry(ULONG thread_input)
   /* Toggle green LED to indicate processing finish OK */
   while (1)
   {
-    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+    HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
     tx_thread_sleep(40);
   }
   /* USER CODE END fx_app_thread_entry 1 */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 VOID fx_thread_one_entry(ULONG thread_input)
 {
@@ -537,4 +549,4 @@ VOID App_Error_Handler(INT id)
   Error_Handler();
 
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

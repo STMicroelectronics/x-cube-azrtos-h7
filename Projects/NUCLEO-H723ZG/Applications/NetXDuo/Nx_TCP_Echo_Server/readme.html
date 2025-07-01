@@ -27,7 +27,7 @@ vertical-align: middle;
 <body>
 <div class="row">
 <section id="nx_tcp_echo_server-application-description" class="col-sm-12 col-lg-8">
-<h2><b>Nx_TCP_Echo_Server application description</b></h2>
+<h2><b>Nx_TCP_Echo_Server Application Description</b></h2>
 <p>This application provides an example of Azure RTOS NetX/NetXDuo stack
 usage. It shows how to develop a NetX TCP server to communicate with a
 remote client using the NetX TCP socket API.</p>
@@ -42,9 +42,9 @@ enabled for the <i>NX_IP</i> instance</li>
 </ul>
 <p>The application then creates 2 threads with the same priorities:</p>
 <ul>
-<li><strong>NxAppThread</strong> (priority 10, PreemtionThreashold 10) :
+<li><strong>NxAppThread</strong> (priority 10, PreemptionThreshold 10) :
 created with the <i>TX_AUTO_START</i> flag to start automatically.</li>
-<li><strong>AppTCPThread</strong> (priority 10, PreemtionThreashold 10)
+<li><strong>AppTCPThread</strong> (priority 10, PreemptionThreshold 10)
 : created with the <i>TX_DONT_START</i> flag to be started later.</li>
 </ul>
 <p>The <strong>NxAppThread</strong> starts and performs the following
@@ -261,8 +261,8 @@ static TX_BYTE_POOL nx_app_byte_pool;</code></pre>
 <h3 id="hardware-and-software-environment"><b>Hardware and Software
 environment</b></h3>
 <ul>
-<li>This example runs on STM32H723xx devices</li>
-<li>This example has been tested with STMicroelectronics NUCLEO-H723ZG
+<li>This application runs on STM32H723xx devices</li>
+<li>This application has been tested with STMicroelectronics NUCLEO-H723ZG
 boards revision MB1364-H723ZG-E01 and can be easily tailored to any
 other supported device and development board.</li>
 <li>This application uses USART3 to display logs, the hyperterminal

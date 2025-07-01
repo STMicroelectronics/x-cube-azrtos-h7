@@ -6,7 +6,7 @@ With Azure RTOS complementing the extensive STM32Cube ecosystem providing free d
 
 **X-CUBE-AZRTOS-H7** (Azure RTOS Software Expansion for STM32Cube) provides a full integration of **Microsoft Azure RTOS** in the STM32Cube environment for the STM32H7 series of microcontrollers. Ready-to-run applicative examples are also provided for the *NUCLEO-H723ZG*, *STM32H735G-DK*, *STM32H747I-DISCO* and *STM32H743I-EVAL* evaluation boards, thus **reducing the learning curve** and ensuring a **smooth application development experience** with Azure RTOS and STM32H7 MCUs.
 
-The scope of this package covers the following Azure RTOS middleware: RTOS (***ThreadX***), USB Device and Host (***USBX***), File System including NOR/NAND memories support (***FileX*** and ***LevelX***) and Networking including Ethernet and WiFi media (***NetXDuo***).
+The scope of this package covers the following Azure RTOS middleware: RTOS (***ThreadX***), USB Device and Host (***USBX***), File System including NOR/NAND memories support (***FileX*** and ***LevelX***) and Networking with Ethernet (***NetXDuo***).
 
 ![](_htmresc/OverviewAzureRTOS_in_STM32Cube.png)
 
@@ -19,14 +19,6 @@ Azure RTOS is a professional grade, highly reliable and market proven Middleware
  - **Security pre-certifications (from Microsoft)**: EAL4+ for TLS/DTLS, FIPS 140-2 for SW crypto lib
  - STM32 **granted production license:** [_here_](https://github.com/azure-rtos/threadx/blob/master/LICENSED-HARDWARE.txt)
 
-> [!NOTE]
-> ## Some middleware libraries and projects are unavailable in this repository
-> 
-> In this repository, the middleware libraries listed below **along with** [this](Projects/README.md#list-of-unavailable-projects) list of projects (demos, applications, and examples) using them, are **not available** as they (the middleware libraries) are subject to some restrictive license terms requiring the user's approval via a "click thru" procedure.
-> * `./Middlewares/ST/STM32_Audio`
-> 
-> If needed, they can be found inside the full firmware package available on our website `st.com` and downloadable from [here](https://www.st.com/en/embedded-software/x-cube-azrtos-h7.html#get-software). You will be prompted to login or to register in case you have no account.
-
 ### Prerequisites
 - USBX, FileX and NetXDuo building requires ThreadX as they are based on RTOS model.
 - USBX Host MSC requires FileX Middleware usage
@@ -35,8 +27,8 @@ Azure RTOS is a professional grade, highly reliable and market proven Middleware
 One of the following toolchains:
 
 - IAR Embedded Workbench for ARM (EWARM) toolchain 8.50.9 + ST-LINKV3
-- [STM32CubeIDE V1.15.0](https://www.st.com/en/development-tools/stm32cubeide.html) + ST-LINKV3
-- RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.37 + ST-LINKV3
+- [STM32CubeIDE V1.19.0](https://www.st.com/en/development-tools/stm32cubeide.html) + ST-LINKV3
+- RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.39 + ST-LINKV3
 
 ## Supported Devices and Boards by applications
 - [NUCLEO-H723ZG](https://www.st.com/en/evaluation-tools/nucleo-h723zg.html) *(MB1364-E01)*
@@ -107,6 +99,7 @@ Details about the content of this release are available in the release note [her
 |USBX    | Ux_Device_HID_Standalone      | It demonstrates how to develop USB Device Human Interface “HID” mouse based bare metal application. The application is designed to emulate an USB HID mouse device, the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB HID mouse device. [readme](./Projects/NUCLEO-H723ZG/Applications/USBX/Ux_Device_HID_Standalone/README.md) |
 |USBX    | Ux_Host_HID_Standalone        | It demonstrates how to develop bare metal USB Host Human Interface “HID” able to enumerate and communicates with a mouse or a keyboard. The application is designed to behave as an USB HID Host, the code provides required requests to properly enumerate HID devices , HID Class APIs to decode HID reports received from a mouse or a keyboard and display data on uart HyperTerminal. [readme](./Projects/NUCLEO-H723ZG/Applications/USBX/Ux_Host_HID_Standalone/README.md) |
 |USBX    | Ux_Host_HUB_HID_MSC           | It demonstrates how to develop a USB Host Hub application supporting Human Interface “HID” and Mass Storage “MSC” class drivers to be able to enumerate and communicate with: - An USB hub. - A mouse. - A keyboard. - An USB removable flash disk. [readme](./Projects/STM32H747I-DISCO/Applications/USBX/Ux_Host_HUB_HID_MSC/README.md) |
+|USBX    | Ux_Device_Audio2.0_PlayBack   | It demonstrates how to develop USB Device communication Class "AUDIO" based application.The application is designed to emulate an USB (Out: Speaker/Headset), the code provides all required device descriptors framework and associated Class descriptor report to build a compliant USB AUDIO device. [readme](./Projects/STM32H743I-EVAL/Applications/USBX/Ux_Device_Audio2.0_PlayBack/README.md) |
 |USBX    | Ux_Host_Audio                 | It demonstrates how to develop AUDIO" able to enumerate and communicates with a device audio speaker 1.0/2.0. [readme](./Projects/STM32H747I-DISCO/Applications/USBX/Ux_Host_Audio/README.md) |
 |FileX   | Fx_uSD_File_Edit              | It demonstrates how to develop a basic SD card file operations application. The application is designed to handle SD card insertion/removal events, and depending on that state, it starts and stops file operations from and into the SD card. [readme](./Projects/STM32H735G-DK/Applications/FileX/Fx_uSD_File_Edit/README.md)  |
 |FileX   | Fx_MultiAccess                | It demonstrates how the FileX's concurrent file access capabilities. The application is designed to execute file operations on the SD card device, the code provides all required software code for handling SD card I/O operations. [readme](./Projects/STM32H735G-DK/Applications/FileX/Fx_MultiAccess/README.md) |
@@ -123,16 +116,9 @@ Details about the content of this release are available in the release note [her
 |NetXDuo | Nx_MQTT_Client                | It demonstrates how to exchange data between client and server using MQTT protocol in an encrypted mode supporting TLS v1.2. [readme](./Projects/STM32H735G-DK/Applications/NetXDuo/Nx_MQTT_Client/README.md) |
 |NetXDuo | Nx_Iperf                      | It shows the performance of NetX IPerf stack when using different modes: TCP_server, UDP_server, TCP_client and UDP_client. [readme](./Projects/STM32H735G-DK/Applications/NetXDuo/Nx_Iperf/README.md) |
 |NetXDuo | Nx_SNTP_Client                | It demonstrates how to develop a NetX SNTP client and connect with an STNP server to get a time update. [readme](./Projects/STM32H747I-DISCO/Applications/NetXDuo/Nx_SNTP_Client/README.md) |
-|NetXDuo | Nx_HTTP_SSE_wifi              | It runs a HTTP server application where the client browser page is updated each time events are sent by the server. [readme](./Projects/STM32H747I-DISCO/Applications/NetXDuo/Nx_HTTP_SSE_wifi/README.md) |
-|NetXDuo | Nx_IAP_Client_wifi            | It shows how to use the WiFi module to perform an IAP ("In Application Programming") from a remote HTTP server. [readme](./Projects/STM32H747I-DISCO/Applications/NetXDuo/Nx_IAP_Client_wifi/README.md) |
-|NetXDuo | Nx_Iperf_wifi                 | It is a network traffic tool for measuring TCP and UDP performance with metrics around both throughput and latency. [readme](./Projects/STM32H747I-DISCO/Applications/NetXDuo/Nx_Iperf_wifi/README.md) |
-|NetXDuo | Nx_MDNS_wifi                  | It demonstrates mDNS protocole on Cypress module. [readme](./Projects/STM32H747I-DISCO/Applications/NetXDuo/Nx_MDNS_wifi/README.md) |
-|NetXDuo | Nx_MQTT_Client_wifi           | It demonstrates how to exchange data between client and server using MQTT protocol in an encrypted mode supporting TLS v1.2. [readme](./Projects/STM32H747I-DISCO/Applications/NetXDuo/Nx_MQTT_Client_wifi/README.md) |
-|NetXDuo | Nx_Network_Basics_wifi        | It demonstrates WiFi connectivity with scan, ping, HTTP download and TCP echo server. [readme](./Projects/STM32H747I-DISCO/Applications/NetXDuo/Nx_Network_Basics_wifi/README.md) |
 
 ## Troubleshooting
 **Caution**  : The issues are  **strictly limited**  to submit problems or suggestions related to the software delivered in this repository.
 
 **For any other question**  related to the product, the hardware performance or characteristics, the tools, the environment, you can submit it to the  **ST Community**  on the STM32 MCUs related  [page](https://community.st.com/s/topic/0TO0X000000BSqSWAW/stm32-mcus).
-
 

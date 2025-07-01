@@ -62,11 +62,11 @@ extern "C" {
   * @brief LCD special pins
   */
 /* LCD reset pin */
-#define LCD_RESET_PIN                         GPIO_PIN_2
+#define LCD_RESET_PIN                         GPIO_PIN_10
 #define LCD_RESET_PULL                        GPIO_NOPULL
-#define LCD_RESET_GPIO_PORT                   GPIOA
-#define LCD_RESET_GPIO_CLK_ENABLE()           __HAL_RCC_GPIOA_CLK_ENABLE()
-#define LCD_RESET_GPIO_CLK_DISABLE()          __HAL_RCC_GPIOA_CLK_DISABLE()
+#define LCD_RESET_GPIO_PORT                   GPIOF
+#define LCD_RESET_GPIO_CLK_ENABLE()           __HAL_RCC_GPIOF_CLK_ENABLE()
+#define LCD_RESET_GPIO_CLK_DISABLE()          __HAL_RCC_GPIOF_CLK_DISABLE()
 
 /* LCD display enable pin */
 #define LCD_DISP_EN_PIN                       GPIO_PIN_7

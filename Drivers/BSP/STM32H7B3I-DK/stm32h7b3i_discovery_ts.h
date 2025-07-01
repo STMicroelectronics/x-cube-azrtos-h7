@@ -22,7 +22,7 @@
 #define STM32H7B3I_DK_TS_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -42,9 +42,9 @@
   * @{
   */
 
- /** @defgroup STM32H7B3I_DK_TS_Exported_Constants Exported Constants
-   * @{
-   */
+/** @defgroup STM32H7B3I_DK_TS_Exported_Constants Exported Constants
+  * @{
+  */
 #ifndef USE_TS_MULTI_TOUCH
 #define USE_TS_MULTI_TOUCH          1U
 #endif
@@ -96,7 +96,7 @@ typedef struct
   uint32_t   Orientation;            /* Touch Screen orientation from the upper left position  */
   uint32_t   Accuracy;               /* Expressed in pixel and means the x or y difference vs old
                                         position to consider the new values valid */
-}TS_Init_t;
+} TS_Init_t;
 
 typedef struct
 {
@@ -138,10 +138,10 @@ typedef struct
 
 #if (USE_TS_GESTURE > 0)
 /**
- *  @brief TS_Gesture_Id_t
- *  Define Possible managed gesture identification values returned by touch screen
- *  driver.
- */
+  *  @brief TS_Gesture_Id_t
+  *  Define Possible managed gesture identification values returned by touch screen
+  *  driver.
+  */
 #define GESTURE_ID_NO_GESTURE   0x00U /*!< Gesture not defined / recognized */
 #define GESTURE_ID_MOVE_UP      0x01U /*!< Gesture Move Up */
 #define GESTURE_ID_MOVE_RIGHT   0x02U /*!< Gesture Move Right */
@@ -159,7 +159,7 @@ typedef struct
   uint32_t  DistanceLeftRight;
   uint32_t  DistanceUpDown;
   uint32_t  DistanceZoom;
-}TS_Gesture_Config_t;
+} TS_Gesture_Config_t;
 
 #endif /* (USE_TS_GESTURE > 0) */
 

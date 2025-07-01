@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_device_cdc_acm.h"
 
@@ -266,7 +270,7 @@ VOID USBD_CDC_ACM_ParameterChange(VOID *cdc_acm_instance)
   return;
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief  Function implementing usbx_cdc_acm_thread_entry.
@@ -573,4 +577,4 @@ static VOID USBD_CDC_VCP_Config(UX_SLAVE_CLASS_CDC_ACM_LINE_CODING_PARAMETER
   HAL_UART_Receive_IT(uart_handler, (uint8_t *)(UserTxBufferFS + UserTxBufPtrIn), 1);
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

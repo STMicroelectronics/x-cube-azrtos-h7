@@ -1,5 +1,5 @@
 
-## <b>Ux_Device_PIMA_MTP application description</b>
+## <b>Ux_Device_PIMA_MTP Application Description</b>
 
 This application provides an example of Azure RTOS USBX stack usage on STM32H735G-DK board, it shows how to develop USB Device Media Transfer Protocol class based
 application. The application is designed to emulate a USB PIMA MTP device, the code provides all required device descriptors framework and the associated class
@@ -119,8 +119,8 @@ RTOS, ThreadX, USBXDevice, Device, USB_OTG, Full Speed, MTP, SD Card, SDMMC
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H735xx devices.
-  - This example has been tested with STMicroelectronics STM32H735G-DK boards revision: MB1520-H735I-B02
+  - This application runs on STM32H735xx devices.
+  - This application has been tested with STMicroelectronics STM32H735G-DK boards revision: MB1520-H735I-B02
     and can be easily tailored to any other supported device and development board.
 
 ### <b>How to use it ?</b>

@@ -59,10 +59,10 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define BUTTON_USER_Pin GPIO_PIN_13
 #define BUTTON_USER_GPIO_Port GPIOC
-#define LED1_Pin GPIO_PIN_0
-#define LED1_GPIO_Port GPIOB
-#define LED2_Pin GPIO_PIN_14
-#define LED2_GPIO_Port GPIOB
+#define LED_GREEN_Pin GPIO_PIN_0
+#define LED_GREEN_GPIO_Port GPIOB
+#define LED_RED_Pin GPIO_PIN_14
+#define LED_RED_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 #define USBD_DFU_APP_DEFAULT_ADDR       0x08020000

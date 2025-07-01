@@ -1,5 +1,5 @@
 
-## <b>IAP_main application description</b>
+## <b>IAP_main Application Description</b>
 
 This application provides an example of Azure RTOS FileX stack usage on STM32H735G-DK board, it implements an In-Application Programming (IAP) demonstrating FileX's SD file access capabilities.
 The application is designed to erase and write to on-chip flash memory, it provides all required software code for handling SD card and flash memory I/O operations.
@@ -135,8 +135,8 @@ RTOS, ThreadX, FileX, File system, SDMMC, SDIO, FAT32
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H735xx devices.
-  - This example has been tested with STMicroelectronics STM32H735G-DK boards revision: MB1520-H735I-B02
+  - This application runs on STM32H735xx devices.
+  - This application has been tested with STMicroelectronics STM32H735G-DK boards revision: MB1520-H735I-B02
     and can be easily tailored to any other supported device and development board
   - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
       - BaudRate = 115200 baud

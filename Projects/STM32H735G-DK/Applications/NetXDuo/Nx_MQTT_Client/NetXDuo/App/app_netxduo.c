@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_netxduo.h"
 
@@ -331,9 +335,7 @@ static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr)
   /* release the semaphore as soon as an IP address is available */
   if (nx_ip_address_get(&NetXDuoEthIpInstance, &IpAddress, &NetMask) != NX_SUCCESS)
   {
-    /* USER CODE BEGIN IP address change callback error */
     Error_Handler();
-    /* USER CODE END IP address change callback error */
   }
   if(IpAddress != NULL_ADDRESS)
   {
@@ -394,15 +396,15 @@ static VOID nx_app_thread_entry (ULONG thread_input)
   /* USER CODE BEGIN Nx_App_Thread_Entry 2 */
   PRINT_IP_ADDRESS(IpAddress);
 
-  /* start the SNTP client thread */
+  /* Start the SNTP client thread */
   tx_thread_resume(&AppSNTPThread);
 
-  /* this thread is not needed any more, we relinquish it */
+  /* This thread is not needed any more, we relinquish it */
   tx_thread_relinquish();
   /* USER CODE END Nx_App_Thread_Entry 2 */
 
 }
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
 * @brief  DNS Create Function.
@@ -827,7 +829,7 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
           /* Start DHCP */
           nx_dhcp_start(&DHCPClient);
 
-          /* wait until an IP address is ready */
+          /* Wait until an IP address is ready */
           if(tx_semaphore_get(&DHCPSemaphore, TX_WAIT_FOREVER) != TX_SUCCESS)
           {
             /* USER CODE BEGIN DHCPSemaphore get error */
@@ -860,4 +862,4 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
   }
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

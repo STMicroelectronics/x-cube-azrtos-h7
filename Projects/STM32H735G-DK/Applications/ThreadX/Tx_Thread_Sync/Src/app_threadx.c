@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_threadx.h"
 
@@ -47,7 +51,6 @@ TX_THREAD tx_app_thread;
 TX_THREAD ThreadTwo;
 APP_SYNC_TYPE SyncObject;
 
-extern UART_HandleTypeDef huart3;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -130,7 +133,7 @@ void ThreadOne_Entry(ULONG thread_input)
       printf("** ThreadOne : SyncObject acquired ** \n");
 
       /*sync object acquired, toggle the LED_GREEN each 500ms for 5s */
-      Led_Toggle(LED1_GPIO_Port, LED1_Pin, 10);
+      Led_Toggle(LED_GREEN_GPIO_Port, LED_GREEN_Pin, 10);
       /*release the sync object */
       APP_SYNC_PUT(&SyncObject);
 
@@ -169,7 +172,7 @@ void MX_ThreadX_Init(void)
   /* USER CODE END  Kernel_Start_Error */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 /**
   * @brief  Function implementing the ThreadTwo thread.
   * @param  thread_input: Not used
@@ -189,7 +192,7 @@ void ThreadTwo_Entry(ULONG thread_input)
       printf("** ThreadTwo : SyncObject acquired ** \n");
 
       /*Sync object acquired toggle the LED_RED each 500ms for 5s*/
-      Led_Toggle(LED2_GPIO_Port, LED2_Pin, 10);
+      Led_Toggle(LED_RED_GPIO_Port, LED_RED_Pin, 10);
       /*release the sync object*/
       APP_SYNC_PUT(&SyncObject);
 
@@ -240,4 +243,4 @@ void App_Delay(ULONG Delay)
   while ((tx_time_get() - initial_time) < Delay);
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

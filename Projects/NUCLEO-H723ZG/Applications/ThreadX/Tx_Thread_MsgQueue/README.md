@@ -1,5 +1,5 @@
 
-##  <b>Tx_Thread_MsgQueue application description</b>
+##  <b>Tx_Thread_MsgQueue Application Description</b>
 
 This application provides an example of Azure RTOS ThreadX stack usage, it shows how to develop an application using the ThreadX message queue APIs.
 It demonstrates how to send and receive messages between threads using ThreadX message queue APIs. In addition, it shows how to use the event chaining feature.
@@ -38,7 +38,7 @@ None
 
 ### <b>Notes</b>
 
- 1. Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from Flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.
+ 1. Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.
  2.  If the application is using the DTCM/ITCM memories (@0x20000000/ 0x0000000: not cacheable and only accessible by the Cortex M7 and the MDMA), no need for cache maintenance when the Cortex M7 and the MDMA access these RAMs. If the application needs to use DMA (or other masters) based access or requires more RAM, then the user has to:
       - Use a non TCM SRAM. (example : D1 AXI-SRAM @ 0x24000000).
       - Add a cache maintenance mechanism to ensure the cache coherence between CPU and other masters (DMAs,DMA2D,LTDC,MDMA).
@@ -93,8 +93,8 @@ RTOS, ThreadX, Threading, Message Queue, Event chaining
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H723xx devices.
-  - This example has been tested with STMicroelectronics NUCLEO-H723ZG boards revision MB1364-H723ZG-E01
+  - This application runs on STM32H723xx devices.
+  - This application has been tested with STMicroelectronics NUCLEO-H723ZG boards revision MB1364-H723ZG-E01
     and can be easily tailored to any other supported device and development board.
   - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
       - BaudRate = 115200 baud

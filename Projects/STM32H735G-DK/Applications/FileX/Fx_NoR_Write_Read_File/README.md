@@ -1,5 +1,5 @@
 
-## <b>Fx_NoR_Write_Read_File application description</b>
+## <b>Fx_NoR_Write_Read_File Application Description</b>
 
 This application provides an example of Azure RTOS FileX and LevelX stacks usage on STM32H735G-DK board, it demonstrates how to create
 a Fat file system on the NOR flash using FileX alongside LevelX. The application is designed to execute file operations on the MX25LM51245G
@@ -115,7 +115,7 @@ RTOS, ThreadX, FileX, LevelX, File System, NOR, OCTOSPI, FAT32
       - BaudRate = 115200 baud
       - Word Length = 8 Bits
       - Stop Bit = 1
-      - Parity = none
+      - Parity = None
       - Flow control = None
 
 ### <b>How to use it ?</b>

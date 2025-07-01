@@ -224,6 +224,7 @@
                 </option>
                 <option>
                     <name>CCDefines</name>
+                    <state>USE_PWR_DIRECT_SMPS_SUPPLY</state>
                     <state>TX_INCLUDE_USER_DEFINE_FILE</state>
                     <state>FX_INCLUDE_USER_DEFINE_FILE</state>
                     <state>UX_INCLUDE_USER_DEFINE_FILE</state>
@@ -547,7 +548,7 @@
                 </option>
                 <option>
                     <name>ADefines</name>
-                    <state></state>
+                    <state>TX_INCLUDE_USER_DEFINE_FILE</state>
                 </option>
                 <option>
                     <name>AList</name>
@@ -639,7 +640,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state></state>
+                    <state>$PROJ_DIR$/../Core/Inc</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -796,7 +797,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\stm32h735xx_flash_rw_sram1.icf</state>
+                    <state>$PROJ_DIR$/stm32h735xx_flash_rw_sram1.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>

@@ -1417,7 +1417,7 @@ int32_t BSP_AUDIO_IN_Init(uint32_t Instance, BSP_AUDIO_Init_t* AudioInit)
       mx_config.FrameLength=(AudioInit->BitsPerSample == AUDIO_RESOLUTION_32B)?128: 64;
       mx_config.ActiveFrameLength=(AudioInit->BitsPerSample == AUDIO_RESOLUTION_32B)?64: 32;
       mx_config.OutputDrive       = SAI_OUTPUTDRIVE_DISABLE;
-      mx_config.SlotActive =(AudioInit->Device==AUDIO_IN_DEVICE_ANALOG_MIC)? CODEC_AUDIOFRAME_SLOT_02:CODEC_AUDIOFRAME_SLOT_13;
+      mx_config.SlotActive        = CODEC_AUDIOFRAME_SLOT_0123;
       /* Prepare haudio_in_sai handle */
       haudio_in_sai.Instance        = SAI1_Block_B;
       mx_config.AudioFrequency    = Audio_In_Ctx[Instance].SampleRate;
@@ -1435,12 +1435,11 @@ int32_t BSP_AUDIO_IN_Init(uint32_t Instance, BSP_AUDIO_Init_t* AudioInit)
 
       /* Prepare haudio_out_sai handle */
       haudio_out_sai.Instance       = SAI1_Block_A;
-      mx_config.AudioMode         = SAI_MODEMASTER_RX;
+      mx_config.AudioMode         = SAI_MODEMASTER_TX;
       mx_config.ClockStrobing     = SAI_CLOCKSTROBING_FALLINGEDGE;
       mx_config.OutputDrive       = SAI_OUTPUTDRIVE_ENABLE;
       mx_config.Synchro           = SAI_ASYNCHRONOUS;
       mx_config.SynchroExt        = SAI_SYNCEXT_DISABLE;
-      mx_config.SlotActive        = CODEC_AUDIOFRAME_SLOT_0123;
       if(MX_SAI1_Block_A_Init(&haudio_out_sai, &mx_config) != HAL_OK)
       {
         /* Return BSP_ERROR_PERIPH_FAILURE when operations are not correctly done */

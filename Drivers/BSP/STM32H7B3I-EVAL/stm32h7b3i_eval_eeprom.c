@@ -102,7 +102,7 @@ static M24LR64_EEPROM_Drv_t     *Eeprom_Drv = NULL;
   * @{
   */
 static int32_t M24LR64_Probe(void);
-static int32_t EEPROM_WriteBytes(uint32_t Instance, uint8_t* pBuffer, uint32_t WriteAddr, uint32_t NbrOfBytes);
+static int32_t EEPROM_WriteBytes(uint32_t Instance, uint8_t *pBuffer, uint32_t WriteAddr, uint32_t NbrOfBytes);
 /**
   * @}
   */
@@ -119,13 +119,13 @@ int32_t BSP_EEPROM_Init(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= EEPROM_INSTANCES_NBR)
+  if (Instance >= EEPROM_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(M24LR64_Probe() != BSP_ERROR_NONE)
+    if (M24LR64_Probe() != BSP_ERROR_NONE)
     {
       ret = BSP_ERROR_NO_INIT;
     }
@@ -144,13 +144,13 @@ int32_t BSP_EEPROM_DeInit(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= EEPROM_INSTANCES_NBR)
+  if (Instance >= EEPROM_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(Eeprom_Drv->DeInit(Eeprom_CompObj) < 0)
+    if (Eeprom_Drv->DeInit(Eeprom_CompObj) < 0)
     {
       ret = BSP_ERROR_BUS_FAILURE;
     }
@@ -168,16 +168,16 @@ int32_t BSP_EEPROM_DeInit(uint32_t Instance)
   * @param  PageNbr EEPROM's internal page number to write to.
   * @retval BSP status
   */
-int32_t BSP_EEPROM_WritePage(uint32_t Instance, uint8_t* pBuffer, uint32_t PageNbr)
+int32_t BSP_EEPROM_WritePage(uint32_t Instance, uint8_t *pBuffer, uint32_t PageNbr)
 {
   int32_t ret = BSP_ERROR_NONE;
-  uint16_t WriteAddr = (uint16_t)PageNbr*EEPROM_PAGESIZE;
+  uint16_t WriteAddr = (uint16_t)PageNbr * EEPROM_PAGESIZE;
 
-  if((Instance >= EEPROM_INSTANCES_NBR) && (WriteAddr > EEPROM_MAX_SIZE))
+  if ((Instance >= EEPROM_INSTANCES_NBR) && (WriteAddr > EEPROM_MAX_SIZE))
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(Eeprom_Drv->Write(Eeprom_CompObj, WriteAddr, pBuffer, EEPROM_PAGESIZE) != BSP_ERROR_NONE)
+  else if (Eeprom_Drv->Write(Eeprom_CompObj, WriteAddr, pBuffer, EEPROM_PAGESIZE) != BSP_ERROR_NONE)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
@@ -201,18 +201,18 @@ int32_t BSP_EEPROM_WritePage(uint32_t Instance, uint8_t* pBuffer, uint32_t PageN
   * @param  PageNbr EEPROM's internal page number to read from.
   * @retval BSP status
   */
-int32_t BSP_EEPROM_ReadPage(uint32_t Instance, uint8_t* pBuffer, uint32_t PageNbr)
+int32_t BSP_EEPROM_ReadPage(uint32_t Instance, uint8_t *pBuffer, uint32_t PageNbr)
 {
   int32_t ret = BSP_ERROR_NONE;
-  uint16_t ReadAddr = (uint16_t)PageNbr*EEPROM_PAGESIZE;
+  uint16_t ReadAddr = (uint16_t)PageNbr * EEPROM_PAGESIZE;
 
-  if((Instance >= EEPROM_INSTANCES_NBR) && (ReadAddr > EEPROM_MAX_SIZE))
+  if ((Instance >= EEPROM_INSTANCES_NBR) && (ReadAddr > EEPROM_MAX_SIZE))
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(Eeprom_Drv->Read(Eeprom_CompObj, ReadAddr, pBuffer, EEPROM_PAGESIZE) < 0)
+    if (Eeprom_Drv->Read(Eeprom_CompObj, ReadAddr, pBuffer, EEPROM_PAGESIZE) < 0)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
@@ -231,17 +231,17 @@ int32_t BSP_EEPROM_ReadPage(uint32_t Instance, uint8_t* pBuffer, uint32_t PageNb
   * @param  NbrOfBytes  Number of bytes to be read from the EEPROM.
   * @retval BSP status
   */
-int32_t BSP_EEPROM_ReadBuffer(uint32_t Instance, uint8_t* pBuffer, uint32_t ReadAddr, uint32_t NbrOfBytes)
+int32_t BSP_EEPROM_ReadBuffer(uint32_t Instance, uint8_t *pBuffer, uint32_t ReadAddr, uint32_t NbrOfBytes)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= EEPROM_INSTANCES_NBR)
+  if (Instance >= EEPROM_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(Eeprom_Drv->Read(Eeprom_CompObj, ReadAddr, pBuffer, NbrOfBytes) < 0)
+    if (Eeprom_Drv->Read(Eeprom_CompObj, ReadAddr, pBuffer, NbrOfBytes) < 0)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
@@ -268,7 +268,7 @@ int32_t BSP_EEPROM_WriteBuffer(uint32_t Instance, uint8_t *pBuffer, uint32_t Wri
   uint32_t write_addr, nbr_of_bytes;
   uint32_t  i;
 
-  if(Instance >= EEPROM_INSTANCES_NBR)
+  if (Instance >= EEPROM_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -282,13 +282,13 @@ int32_t BSP_EEPROM_WriteBuffer(uint32_t Instance, uint8_t *pBuffer, uint32_t Wri
     numofsingle = nbr_of_bytes % EEPROM_PAGESIZE;
 
     /* If WriteAddr is EEPROM_PAGESIZE aligned */
-    if((write_addr % EEPROM_PAGESIZE) == 0U)
+    if ((write_addr % EEPROM_PAGESIZE) == 0U)
     {
       /* If nbr_of_bytes < EEPROM_PAGESIZE */
-      if(numofpages == 0U)
+      if (numofpages == 0U)
       {
         /* Start writing data */
-        if(EEPROM_WriteBytes(Instance, write_buffer, write_addr, numofsingle) != BSP_ERROR_NONE)
+        if (EEPROM_WriteBytes(Instance, write_buffer, write_addr, numofsingle) != BSP_ERROR_NONE)
         {
           ret = BSP_ERROR_COMPONENT_FAILURE;
         }
@@ -299,7 +299,7 @@ int32_t BSP_EEPROM_WriteBuffer(uint32_t Instance, uint8_t *pBuffer, uint32_t Wri
         i = 0;
         do
         {
-          if(EEPROM_WriteBytes(Instance, write_buffer, write_addr, EEPROM_PAGESIZE) != BSP_ERROR_NONE)
+          if (EEPROM_WriteBytes(Instance, write_buffer, write_addr, EEPROM_PAGESIZE) != BSP_ERROR_NONE)
           {
             ret = BSP_ERROR_COMPONENT_FAILURE;
           }
@@ -309,11 +309,11 @@ int32_t BSP_EEPROM_WriteBuffer(uint32_t Instance, uint8_t *pBuffer, uint32_t Wri
             write_buffer += EEPROM_PAGESIZE;
             i++;
           }
-        }while((i < numofpages) && (ret == BSP_ERROR_NONE));
+        } while ((i < numofpages) && (ret == BSP_ERROR_NONE));
 
-        if(numofsingle != 0U)
+        if (numofsingle != 0U)
         {
-          if(EEPROM_WriteBytes(Instance, write_buffer, write_addr, numofsingle) != BSP_ERROR_NONE)
+          if (EEPROM_WriteBytes(Instance, write_buffer, write_addr, numofsingle) != BSP_ERROR_NONE)
           {
             ret = BSP_ERROR_COMPONENT_FAILURE;
           }
@@ -324,18 +324,19 @@ int32_t BSP_EEPROM_WriteBuffer(uint32_t Instance, uint8_t *pBuffer, uint32_t Wri
     else
     {
       /* If nbr_of_bytes < EEPROM_PAGESIZE */
-      if(numofpages == 0U)
+      if (numofpages == 0U)
       {
         /* If the number of data to be written is more than the remaining space
         in the current page: */
-        if(nbr_of_bytes > count)
+        if (nbr_of_bytes > count)
         {
           /* Write the data contained in same page */
-          if(EEPROM_WriteBytes(Instance, write_buffer, write_addr, count) != BSP_ERROR_NONE)
+          if (EEPROM_WriteBytes(Instance, write_buffer, write_addr, count) != BSP_ERROR_NONE)
           {
             ret = BSP_ERROR_COMPONENT_FAILURE;
           }/* Write the remaining data in the following page */
-          else if(EEPROM_WriteBytes(Instance, (uint8_t*)(write_buffer + count), (write_addr + count), nbr_of_bytes - count) != BSP_ERROR_NONE)
+          else if (EEPROM_WriteBytes(Instance, (uint8_t *)(write_buffer + count), (write_addr + count),
+                                     nbr_of_bytes - count) != BSP_ERROR_NONE)
           {
             ret = BSP_ERROR_COMPONENT_FAILURE;
           }
@@ -344,7 +345,7 @@ int32_t BSP_EEPROM_WriteBuffer(uint32_t Instance, uint8_t *pBuffer, uint32_t Wri
             ret = BSP_ERROR_NONE;
           }
         }
-        else if(EEPROM_WriteBytes(Instance, write_buffer, write_addr, numofsingle) != BSP_ERROR_NONE)
+        else if (EEPROM_WriteBytes(Instance, write_buffer, write_addr, numofsingle) != BSP_ERROR_NONE)
         {
           ret = BSP_ERROR_COMPONENT_FAILURE;
         }
@@ -361,7 +362,7 @@ int32_t BSP_EEPROM_WriteBuffer(uint32_t Instance, uint8_t *pBuffer, uint32_t Wri
         numofpages =  nbr_of_bytes / EEPROM_PAGESIZE;
         numofsingle = nbr_of_bytes % EEPROM_PAGESIZE;
 
-        if(EEPROM_WriteBytes(Instance, write_buffer, write_addr, count) != BSP_ERROR_NONE)
+        if (EEPROM_WriteBytes(Instance, write_buffer, write_addr, count) != BSP_ERROR_NONE)
         {
           ret = BSP_ERROR_COMPONENT_FAILURE;
         }
@@ -373,7 +374,7 @@ int32_t BSP_EEPROM_WriteBuffer(uint32_t Instance, uint8_t *pBuffer, uint32_t Wri
 
         do
         {
-          if(EEPROM_WriteBytes(Instance, write_buffer, write_addr, EEPROM_PAGESIZE) != BSP_ERROR_NONE)
+          if (EEPROM_WriteBytes(Instance, write_buffer, write_addr, EEPROM_PAGESIZE) != BSP_ERROR_NONE)
           {
             ret = BSP_ERROR_COMPONENT_FAILURE;
           }
@@ -383,11 +384,11 @@ int32_t BSP_EEPROM_WriteBuffer(uint32_t Instance, uint8_t *pBuffer, uint32_t Wri
             write_buffer += EEPROM_PAGESIZE;
             i++;
           }
-        }while((i < numofpages) && (ret == BSP_ERROR_NONE));
+        } while ((i < numofpages) && (ret == BSP_ERROR_NONE));
 
-        if(numofsingle != 0U)
+        if (numofsingle != 0U)
         {
-          if(EEPROM_WriteBytes(Instance, write_buffer, write_addr, numofsingle) != BSP_ERROR_NONE)
+          if (EEPROM_WriteBytes(Instance, write_buffer, write_addr, numofsingle) != BSP_ERROR_NONE)
           {
             ret = BSP_ERROR_COMPONENT_FAILURE;
           }
@@ -415,13 +416,13 @@ int32_t BSP_EEPROM_IsDeviceReady(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= EEPROM_INSTANCES_NBR)
+  if (Instance >= EEPROM_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(Eeprom_Drv->IsReady(Eeprom_CompObj, EEPROM_MAX_TRIALS) != BSP_ERROR_NONE)
+    if (Eeprom_Drv->IsReady(Eeprom_CompObj, EEPROM_MAX_TRIALS) != BSP_ERROR_NONE)
     {
       ret = BSP_ERROR_BUSY;
     }
@@ -446,17 +447,17 @@ int32_t BSP_EEPROM_IsDeviceReady(uint32_t Instance)
   * @param  NbrOfBytes  number of bytes to write to the EEPROM.
   * @retval BSP status
   */
-static int32_t EEPROM_WriteBytes(uint32_t Instance, uint8_t* pBuffer, uint32_t WriteAddr, uint32_t NbrOfBytes)
+static int32_t EEPROM_WriteBytes(uint32_t Instance, uint8_t *pBuffer, uint32_t WriteAddr, uint32_t NbrOfBytes)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Eeprom_Drv->Write(Eeprom_CompObj, WriteAddr, pBuffer, NbrOfBytes) < 0)
+  if (Eeprom_Drv->Write(Eeprom_CompObj, WriteAddr, pBuffer, NbrOfBytes) < 0)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
   }
   else
   {
-    if(BSP_EEPROM_IsDeviceReady(Instance) != BSP_ERROR_NONE)
+    if (BSP_EEPROM_IsDeviceReady(Instance) != BSP_ERROR_NONE)
     {
       ret = BSP_ERROR_BUSY;
     }
@@ -488,11 +489,11 @@ static int32_t M24LR64_Probe(void)
   IOCtx.Write       = BSP_I2C2_WriteReg16;
   IOCtx.IsReady     = BSP_I2C2_IsReady;
 
-  for(i = 0U; i < 2U; i++)
+  for (i = 0U; i < 2U; i++)
   {
     IOCtx.Address     = (uint16_t)i2c_address[i];
 
-    if(M24LR64_RegisterBusIO(&M24LR64Obj, &IOCtx) != M24LR64_OK)
+    if (M24LR64_RegisterBusIO(&M24LR64Obj, &IOCtx) != M24LR64_OK)
     {
       ret = BSP_ERROR_BUS_FAILURE;
     }
@@ -500,11 +501,11 @@ static int32_t M24LR64_Probe(void)
     {
       Eeprom_Drv = &M24LR64_EEPROM_Driver;
       Eeprom_CompObj = &M24LR64Obj;
-      if(Eeprom_Drv->Init(Eeprom_CompObj) != M24LR64_OK)
+      if (Eeprom_Drv->Init(Eeprom_CompObj) != M24LR64_OK)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
-      else if(Eeprom_Drv->IsReady(Eeprom_CompObj, EEPROM_MAX_TRIALS) == BSP_ERROR_NONE)
+      else if (Eeprom_Drv->IsReady(Eeprom_CompObj, EEPROM_MAX_TRIALS) == BSP_ERROR_NONE)
       {
         ret = BSP_ERROR_NONE;
         break;

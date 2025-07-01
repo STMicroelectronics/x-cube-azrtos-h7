@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_netxduo.h"
 
@@ -276,7 +280,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
     return TX_POOL_ERROR;
   }
 
-  /* create the Link thread */
+  /* Create the Link thread */
   ret = tx_thread_create(&AppLinkThread, "App Link Thread", App_Link_Thread_Entry, 0, pointer, 2 * DEFAULT_MEMORY_SIZE,
                          LINK_PRIORITY, LINK_PRIORITY, TX_NO_TIME_SLICE, TX_AUTO_START);
 
@@ -299,15 +303,11 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
 static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr)
 {
   /* USER CODE BEGIN ip_address_change_notify_callback */
-  /* release the semaphore as soon as an IP address is available */
+  /* Release the semaphore as soon as an IP address is available */
   if (nx_ip_address_get(&NetXDuoEthIpInstance, &IpAddress, &NetMask) != NX_SUCCESS)
   {
-    /* USER CODE BEGIN IP address change callback error */
-
     /* Error, call error handler.*/
     Error_Handler();
-
-    /* USER CODE END IP address change callback error */
   }
   if(IpAddress != NULL_ADDRESS)
   {
@@ -376,7 +376,7 @@ static VOID nx_app_thread_entry (ULONG thread_input)
   /* USER CODE END Nx_App_Thread_Entry 2 */
 
 }
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 /**
 * @brief  Link thread entry
 * @param thread_input: ULONG thread parameter
@@ -420,7 +420,7 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
           /* Start DHCP */
           nx_dhcp_start(&DHCPClient);
 
-          /* wait until an IP address is ready */
+          /* Wait until an IP address is ready */
           if(tx_semaphore_get(&DHCPSemaphore, TX_WAIT_FOREVER) != TX_SUCCESS)
           {
             /* USER CODE BEGIN DHCPSemaphore get error */
@@ -453,4 +453,4 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
   }
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

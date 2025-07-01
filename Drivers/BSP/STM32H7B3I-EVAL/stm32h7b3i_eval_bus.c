@@ -38,7 +38,7 @@
   * @{
   */
 #ifndef I2C_VALID_TIMING_NBR
-  #define I2C_VALID_TIMING_NBR                 128U
+#define I2C_VALID_TIMING_NBR                 128U
 #endif
 #define I2C_SPEED_FREQ_STANDARD                0U    /* 100 kHz */
 #define I2C_SPEED_FREQ_FAST                    1U    /* 400 kHz */
@@ -197,7 +197,7 @@ int32_t BSP_I2C2_Init(void)
     if (HAL_I2C_GetState(&hbus_i2c2) == HAL_I2C_STATE_RESET)
     {
 #if defined(BSP_USE_CMSIS_OS)
-      if(BspI2cSemaphore == NULL)
+      if (BspI2cSemaphore == NULL)
       {
         /* Create semaphore to prevent multiple I2C access */
         osSemaphoreDef(BSP_I2C_SEM);
@@ -218,17 +218,17 @@ int32_t BSP_I2C2_Init(void)
       if (ret == BSP_ERROR_NONE)
       {
 #endif
-        if (MX_I2C2_Init(&hbus_i2c2, I2C_GetTiming(HAL_RCC_GetPCLK1Freq(), BUS_I2C2_FREQUENCY)) != HAL_OK)
-        {
-          ret = BSP_ERROR_BUS_FAILURE;
-        }
-#if (USE_HAL_I2C_REGISTER_CALLBACKS == 1)
+      if (MX_I2C2_Init(&hbus_i2c2, I2C_GetTiming(HAL_RCC_GetPCLK1Freq(), BUS_I2C2_FREQUENCY)) != HAL_OK)
+      {
+        ret = BSP_ERROR_BUS_FAILURE;
       }
-#endif
+#if (USE_HAL_I2C_REGISTER_CALLBACKS == 1)
     }
+#endif
   }
+}
 
-  return ret;
+return ret;
 }
 
 /**
@@ -317,13 +317,13 @@ int32_t BSP_I2C2_WriteReg(uint16_t DevAddr, uint16_t Reg, uint8_t *pData, uint16
   /* Get semaphore to prevent multiple I2C access */
   osSemaphoreWait(BspI2cSemaphore, osWaitForever);
 #endif
-  if(I2C2_WriteReg(DevAddr, Reg, I2C_MEMADD_SIZE_8BIT, pData, Length) == 0)
+  if (I2C2_WriteReg(DevAddr, Reg, I2C_MEMADD_SIZE_8BIT, pData, Length) == 0)
   {
     ret = BSP_ERROR_NONE;
   }
   else
   {
-    if( HAL_I2C_GetError(&hbus_i2c2) == HAL_I2C_ERROR_AF)
+    if (HAL_I2C_GetError(&hbus_i2c2) == HAL_I2C_ERROR_AF)
     {
       ret = BSP_ERROR_BUS_ACKNOWLEDGE_FAILURE;
     }
@@ -355,13 +355,13 @@ int32_t BSP_I2C2_ReadReg(uint16_t DevAddr, uint16_t Reg, uint8_t *pData, uint16_
   /* Get semaphore to prevent multiple I2C access */
   osSemaphoreWait(BspI2cSemaphore, osWaitForever);
 #endif
-  if(I2C2_ReadReg(DevAddr, Reg, I2C_MEMADD_SIZE_8BIT, pData, Length) == 0)
+  if (I2C2_ReadReg(DevAddr, Reg, I2C_MEMADD_SIZE_8BIT, pData, Length) == 0)
   {
     ret = BSP_ERROR_NONE;
   }
   else
   {
-    if( HAL_I2C_GetError(&hbus_i2c2) == HAL_I2C_ERROR_AF)
+    if (HAL_I2C_GetError(&hbus_i2c2) == HAL_I2C_ERROR_AF)
     {
       ret = BSP_ERROR_BUS_ACKNOWLEDGE_FAILURE;
     }
@@ -389,17 +389,17 @@ int32_t BSP_I2C2_WriteReg16(uint16_t DevAddr, uint16_t Reg, uint8_t *pData, uint
 {
   int32_t ret;
 
- #if defined(BSP_USE_CMSIS_OS)
+#if defined(BSP_USE_CMSIS_OS)
   /* Get semaphore to prevent multiple I2C access */
   osSemaphoreWait(BspI2cSemaphore, osWaitForever);
 #endif
-  if(I2C2_WriteReg(DevAddr, Reg, I2C_MEMADD_SIZE_16BIT, pData, Length) == 0)
+  if (I2C2_WriteReg(DevAddr, Reg, I2C_MEMADD_SIZE_16BIT, pData, Length) == 0)
   {
     ret = BSP_ERROR_NONE;
   }
   else
   {
-    if( HAL_I2C_GetError(&hbus_i2c2) == HAL_I2C_ERROR_AF)
+    if (HAL_I2C_GetError(&hbus_i2c2) == HAL_I2C_ERROR_AF)
     {
       ret = BSP_ERROR_BUS_ACKNOWLEDGE_FAILURE;
     }
@@ -431,13 +431,13 @@ int32_t BSP_I2C2_ReadReg16(uint16_t DevAddr, uint16_t Reg, uint8_t *pData, uint1
   /* Get semaphore to prevent multiple I2C access */
   osSemaphoreWait(BspI2cSemaphore, osWaitForever);
 #endif
-  if(I2C2_ReadReg(DevAddr, Reg, I2C_MEMADD_SIZE_16BIT, pData, Length) == 0)
+  if (I2C2_ReadReg(DevAddr, Reg, I2C_MEMADD_SIZE_16BIT, pData, Length) == 0)
   {
     ret = BSP_ERROR_NONE;
   }
   else
   {
-    if( HAL_I2C_GetError(&hbus_i2c2) == HAL_I2C_ERROR_AF)
+    if (HAL_I2C_GetError(&hbus_i2c2) == HAL_I2C_ERROR_AF)
     {
       ret = BSP_ERROR_BUS_ACKNOWLEDGE_FAILURE;
     }
@@ -468,7 +468,7 @@ int32_t BSP_I2C2_IsReady(uint16_t DevAddr, uint32_t Trials)
   /* Get semaphore to prevent multiple I2C access */
   osSemaphoreWait(BspI2cSemaphore, osWaitForever);
 #endif
-  if(HAL_I2C_IsDeviceReady(&hbus_i2c2, DevAddr, Trials, 1000) != HAL_OK)
+  if (HAL_I2C_IsDeviceReady(&hbus_i2c2, DevAddr, Trials, 1000) != HAL_OK)
   {
     ret = BSP_ERROR_BUSY;
   }
@@ -493,7 +493,7 @@ int32_t BSP_GetTick(void)
   * @brief Register Default I2C2 Bus Msp Callbacks
   * @retval BSP status
   */
-int32_t BSP_I2C2_RegisterDefaultMspCallbacks (void)
+int32_t BSP_I2C2_RegisterDefaultMspCallbacks(void)
 {
   int32_t ret = BSP_ERROR_NONE;
 
@@ -504,11 +504,11 @@ int32_t BSP_I2C2_RegisterDefaultMspCallbacks (void)
   __HAL_I2C_RESET_HANDLE_STATE(&hbus_i2c2);
 
   /* Register default MspInit/MspDeInit Callback */
-  if(HAL_I2C_RegisterCallback(&hbus_i2c2, HAL_I2C_MSPINIT_CB_ID, I2C2_MspInit) != HAL_OK)
+  if (HAL_I2C_RegisterCallback(&hbus_i2c2, HAL_I2C_MSPINIT_CB_ID, I2C2_MspInit) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
-  else if(HAL_I2C_RegisterCallback(&hbus_i2c2, HAL_I2C_MSPDEINIT_CB_ID, I2C2_MspDeInit) != HAL_OK)
+  else if (HAL_I2C_RegisterCallback(&hbus_i2c2, HAL_I2C_MSPDEINIT_CB_ID, I2C2_MspDeInit) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -529,7 +529,7 @@ int32_t BSP_I2C2_RegisterDefaultMspCallbacks (void)
   * @param Callbacks     pointer to I2C2 MspInit/MspDeInit callback functions
   * @retval BSP status
   */
-int32_t BSP_I2C2_RegisterMspCallbacks (BSP_I2C_Cb_t *Callback)
+int32_t BSP_I2C2_RegisterMspCallbacks(BSP_I2C_Cb_t *Callback)
 {
   int32_t ret = BSP_ERROR_NONE;
 
@@ -540,11 +540,11 @@ int32_t BSP_I2C2_RegisterMspCallbacks (BSP_I2C_Cb_t *Callback)
   __HAL_I2C_RESET_HANDLE_STATE(&hbus_i2c2);
 
   /* Register MspInit/MspDeInit Callbacks */
-  if(HAL_I2C_RegisterCallback(&hbus_i2c2, HAL_I2C_MSPINIT_CB_ID, Callback->pMspI2cInitCb) != HAL_OK)
+  if (HAL_I2C_RegisterCallback(&hbus_i2c2, HAL_I2C_MSPINIT_CB_ID, Callback->pMspI2cInitCb) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
-  else if(HAL_I2C_RegisterCallback(&hbus_i2c2, HAL_I2C_MSPDEINIT_CB_ID, Callback->pMspI2cDeInitCb) != HAL_OK)
+  else if (HAL_I2C_RegisterCallback(&hbus_i2c2, HAL_I2C_MSPDEINIT_CB_ID, Callback->pMspI2cDeInitCb) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -579,9 +579,9 @@ static uint32_t I2C_GetTiming(uint32_t clock_src_freq, uint32_t i2c_freq)
   uint32_t speed;
   uint32_t idx;
 
-  if((clock_src_freq != 0U) && (i2c_freq != 0U))
+  if ((clock_src_freq != 0U) && (i2c_freq != 0U))
   {
-    for ( speed = 0 ; speed <=  (uint32_t)I2C_SPEED_FREQ_FAST_PLUS ; speed++)
+    for (speed = 0 ; speed <= (uint32_t)I2C_SPEED_FREQ_FAST_PLUS ; speed++)
     {
       if ((i2c_freq >= I2C_Charac[speed].freq_min) &&
           (i2c_freq <= I2C_Charac[speed].freq_max))
@@ -591,10 +591,10 @@ static uint32_t I2C_GetTiming(uint32_t clock_src_freq, uint32_t i2c_freq)
 
         if (idx < I2C_VALID_TIMING_NBR)
         {
-          ret = ((I2c_valid_timing[idx].presc  & 0x0FU) << 28) |\
-                ((I2c_valid_timing[idx].tscldel & 0x0FU) << 20) |\
-                ((I2c_valid_timing[idx].tsdadel & 0x0FU) << 16) |\
-                ((I2c_valid_timing[idx].sclh & 0xFFU) << 8) |\
+          ret = ((I2c_valid_timing[idx].presc  & 0x0FU) << 28) | \
+                ((I2c_valid_timing[idx].tscldel & 0x0FU) << 20) | \
+                ((I2c_valid_timing[idx].tsdadel & 0x0FU) << 16) | \
+                ((I2c_valid_timing[idx].sclh & 0xFFU) << 8) | \
                 ((I2c_valid_timing[idx].scll & 0xFFU) << 0);
         }
         break;
@@ -620,7 +620,7 @@ static void I2C_Compute_PRESC_SCLDEL_SDADEL(uint32_t clock_src_freq, uint32_t I2
   uint32_t presc, scldel, sdadel;
   uint32_t tafdel_min, tafdel_max;
 
-  ti2cclk   = (SEC2NSEC + (clock_src_freq / 2U))/ clock_src_freq;
+  ti2cclk   = (SEC2NSEC + (clock_src_freq / 2U)) / clock_src_freq;
 
   tafdel_min = I2C_ANALOG_FILTER_DELAY_MIN;
   tafdel_max = I2C_ANALOG_FILTER_DELAY_MAX;
@@ -631,10 +631,10 @@ static void I2C_Compute_PRESC_SCLDEL_SDADEL(uint32_t clock_src_freq, uint32_t I2
      SDADEL <= {tVD;DAT(max) - tr - tAF(max) - tDNF- [4 x tI2CCLK]} / {tPRESC} */
 
   tsdadel_min = (int32_t)I2C_Charac[I2C_speed].tfall + (int32_t)I2C_Charac[I2C_speed].hddat_min -
-    (int32_t)tafdel_min - (int32_t)(((int32_t)I2C_Charac[I2C_speed].dnf + 3) * (int32_t)ti2cclk);
+                (int32_t)tafdel_min - (int32_t)(((int32_t)I2C_Charac[I2C_speed].dnf + 3) * (int32_t)ti2cclk);
 
   tsdadel_max = (int32_t)I2C_Charac[I2C_speed].vddat_max - (int32_t)I2C_Charac[I2C_speed].trise -
-    (int32_t)tafdel_max - (int32_t)(((int32_t)I2C_Charac[I2C_speed].dnf + 4) * (int32_t)ti2cclk);
+                (int32_t)tafdel_max - (int32_t)(((int32_t)I2C_Charac[I2C_speed].dnf + 4) * (int32_t)ti2cclk);
 
 
   /* {[tr+ tSU;DAT(min)] / [tPRESC]} - 1 <= SCLDEL */
@@ -666,7 +666,7 @@ static void I2C_Compute_PRESC_SCLDEL_SDADEL(uint32_t clock_src_freq, uint32_t I2
 
           if ((tsdadel >= (uint32_t)tsdadel_min) && (tsdadel <= (uint32_t)tsdadel_max))
           {
-            if(presc != prev_presc)
+            if (presc != prev_presc)
             {
               I2c_valid_timing[I2c_valid_timing_nbr].presc = presc;
               I2c_valid_timing[I2c_valid_timing_nbr].tscldel = scldel;
@@ -674,7 +674,7 @@ static void I2C_Compute_PRESC_SCLDEL_SDADEL(uint32_t clock_src_freq, uint32_t I2
               prev_presc = presc;
               I2c_valid_timing_nbr ++;
 
-              if(I2c_valid_timing_nbr >= I2C_VALID_TIMING_NBR)
+              if (I2c_valid_timing_nbr >= I2C_VALID_TIMING_NBR)
               {
                 return;
               }
@@ -692,9 +692,9 @@ static void I2C_Compute_PRESC_SCLDEL_SDADEL(uint32_t clock_src_freq, uint32_t I2
   * @param  I2C_speed I2C frequency (index).
   * @retval config index (0 to I2C_VALID_TIMING_NBR], 0xFFFFFFFF for no valid config.
   */
-static uint32_t I2C_Compute_SCLL_SCLH (uint32_t clock_src_freq, uint32_t I2C_speed)
+static uint32_t I2C_Compute_SCLL_SCLH(uint32_t clock_src_freq, uint32_t I2C_speed)
 {
- uint32_t ret = 0xFFFFFFFFU;
+  uint32_t ret = 0xFFFFFFFFU;
   uint32_t ti2cclk;
   uint32_t ti2cspeed;
   uint32_t prev_error;
@@ -703,8 +703,8 @@ static uint32_t I2C_Compute_SCLL_SCLH (uint32_t clock_src_freq, uint32_t I2C_spe
   uint32_t scll, sclh;
   uint32_t tafdel_min;
 
-  ti2cclk   = (SEC2NSEC + (clock_src_freq / 2U))/ clock_src_freq;
-  ti2cspeed   = (SEC2NSEC + (I2C_Charac[I2C_speed].freq / 2U))/ I2C_Charac[I2C_speed].freq;
+  ti2cclk   = (SEC2NSEC + (clock_src_freq / 2U)) / clock_src_freq;
+  ti2cspeed   = (SEC2NSEC + (I2C_Charac[I2C_speed].freq / 2U)) / I2C_Charac[I2C_speed].freq;
 
   tafdel_min = I2C_ANALOG_FILTER_DELAY_MIN;
 
@@ -784,17 +784,17 @@ static void I2C2_MspInit(I2C_HandleTypeDef *hI2c)
   BUS_I2C2_SDA_GPIO_CLK_ENABLE();
 
   /* Configure I2C Tx as alternate function */
-  gpio_init_structure.Pin 		= BUS_I2C2_SCL_PIN;
-  gpio_init_structure.Mode 		= GPIO_MODE_AF_OD;
-  gpio_init_structure.Pull 		= GPIO_NOPULL;
+  gpio_init_structure.Pin     = BUS_I2C2_SCL_PIN;
+  gpio_init_structure.Mode    = GPIO_MODE_AF_OD;
+  gpio_init_structure.Pull    = GPIO_NOPULL;
   gpio_init_structure.Speed     = GPIO_SPEED_FREQ_HIGH;
   gpio_init_structure.Alternate = BUS_I2C2_SCL_AF;
   HAL_GPIO_Init(BUS_I2C2_SCL_GPIO_PORT, &gpio_init_structure);
 
   /* Configure I2C Rx as alternate function */
-  gpio_init_structure.Pin 		= BUS_I2C2_SDA_PIN;
-  gpio_init_structure.Mode 		= GPIO_MODE_AF_OD;
-  gpio_init_structure.Pull 		= GPIO_NOPULL;
+  gpio_init_structure.Pin     = BUS_I2C2_SDA_PIN;
+  gpio_init_structure.Mode    = GPIO_MODE_AF_OD;
+  gpio_init_structure.Pull    = GPIO_NOPULL;
   gpio_init_structure.Speed     = GPIO_SPEED_FREQ_HIGH;
   gpio_init_structure.Alternate = BUS_I2C2_SDA_AF;
   HAL_GPIO_Init(BUS_I2C2_SDA_GPIO_PORT, &gpio_init_structure);
@@ -824,7 +824,7 @@ static void I2C2_MspDeInit(I2C_HandleTypeDef *hI2c)
 
   /* Configure I2C Tx, Rx as alternate function */
   gpio_init_structure.Pin = BUS_I2C2_SCL_PIN;
-  HAL_GPIO_DeInit(BUS_I2C2_SCL_GPIO_PORT, gpio_init_structure.Pin );
+  HAL_GPIO_DeInit(BUS_I2C2_SCL_GPIO_PORT, gpio_init_structure.Pin);
   gpio_init_structure.Pin = BUS_I2C2_SDA_PIN;
   HAL_GPIO_DeInit(BUS_I2C2_SDA_GPIO_PORT, gpio_init_structure.Pin);
 
@@ -843,7 +843,7 @@ static void I2C2_MspDeInit(I2C_HandleTypeDef *hI2c)
   */
 static int32_t I2C2_WriteReg(uint16_t DevAddr, uint16_t Reg, uint16_t MemAddSize, uint8_t *pData, uint16_t Length)
 {
-  if(HAL_I2C_Mem_Write(&hbus_i2c2, DevAddr, Reg, MemAddSize, pData, Length, 10000) == HAL_OK)
+  if (HAL_I2C_Mem_Write(&hbus_i2c2, DevAddr, Reg, MemAddSize, pData, Length, 10000) == HAL_OK)
   {
     return BSP_ERROR_NONE;
   }

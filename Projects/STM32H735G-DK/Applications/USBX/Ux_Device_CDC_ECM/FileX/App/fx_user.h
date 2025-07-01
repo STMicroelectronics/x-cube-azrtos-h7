@@ -70,7 +70,7 @@
    here by commenting or un-commenting the conditional compilation defined OR supply the defines though the compiler's equivalent of the -D option.  */
 
 /* Override various options with default values already assigned in fx_api.h or fx_port.h.
-  Please also refer to fx_port.h for descriptions on each of these options.  */
+   Please also refer to fx_port.h for descriptions on each of these options.  */
 
 /* Defined, the direct read sector update of cache is disabled.  */
 
@@ -171,7 +171,7 @@
 
 /* #define FX_SINGLE_THREAD */
 
-/* Defined, Filex will be used in standalone mode (without ThreadX) */
+/* Defined, FileX will be used in standalone mode (without ThreadX) */
 
 /* #define FX_STANDALONE_ENABLE */
 
@@ -218,14 +218,13 @@
 /* #define FX_DISABLE_CONSECUTIVE_DETECT */
 
 /* Define bitmap cache size for exFAT. Size should be minimum one sector size and maximum 4096.
-For applications using multiple media devices with varying sector size, the value should be :
-set to the size of largest sector size.
-The FX_EXFAT_MAX_CACHE_SIZE is 2 power of FX_EXFAT_MAX_CACHE_SIZE_NB_BIT. */
+   For applications using multiple media devices with varying sector size, the value should be set to the
+   size of largest sector size. */
 
 /* #define FX_EXFAT_MAX_CACHE_SIZE         512 */
 
 /* Define the size of fault tolerant cache, which is used when freeing FAT chain.
-The FX_FAULT_TOLERANT_CACHE_SIZE is 2 power of FX_FAULT_TOLERANT_CACHE_SIZE_NB_SIZE. */
+   The FX_FAULT_TOLERANT_CACHE_SIZE is 2 power of FX_FAULT_TOLERANT_CACHE_SIZE_NB_SIZE. */
 
 /* #define FX_FAULT_TOLERANT_CACHE_SIZE         1024 */
 

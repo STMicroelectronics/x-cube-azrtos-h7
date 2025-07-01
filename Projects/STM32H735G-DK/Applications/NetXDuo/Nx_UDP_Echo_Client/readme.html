@@ -27,7 +27,7 @@ vertical-align: middle;
 <body>
 <div class="row">
 <section id="nx_udp_echo_client-application-description" class="col-sm-12 col-lg-8">
-<h2><b>Nx_UDP_Echo_Client application description</b></h2>
+<h2><b>Nx_UDP_Echo_Client Application Description</b></h2>
 <p>This application provides an example of Azure RTOS NetX/NetXDuo stack
 usage . It shows how to develop a NetX udp client to communicate with a
 remote sever using the NetX UDP socket API.</p>
@@ -42,9 +42,9 @@ instance</li>
 </ul>
 <p>The application then creates 2 threads with the same priorities:</p>
 <ul>
-<li><strong>NxAppThread</strong> (priority 10, PreemtionThreashold 10) :
+<li><strong>NxAppThread</strong> (priority 10, PreemptionThreshold 10) :
 created with the TX_AUTO_START flag to start automatically.</li>
-<li><strong>AppUDPThread</strong> (priority 10, PreemtionThreashold 10)
+<li><strong>AppUDPThread</strong> (priority 10, PreemptionThreshold 10)
 : created with the TX_DONT_START flag to be started later.</li>
 </ul>
 <p>The <strong>NxAppThread</strong> starts and performs the following
@@ -77,7 +77,7 @@ HyperTerminal and the green LED is toggling.</li>
 <pre><code> SUCCESS : 100 / 100 packets sent</code></pre>
 <h4 id="error-behaviors"><b>Error behaviors</b></h4>
 <ul>
-<li>the red LED is toggling to indicate any error that have
+<li>The red LED is toggling to indicate any error that have
 occurred.</li>
 <li>In case the message exchange is not completed a failure message is
 printed on the HyperTerminal showing the actual sent message compared to
@@ -105,12 +105,12 @@ issues.</li>
 
   /* USER CODE END ETH_Init 1 */
   heth.Instance = ETH;
-  heth.Init.MACAddr[0] =   0x00;
-  heth.Init.MACAddr[1] =   0x80;
-  heth.Init.MACAddr[2] =   0xE1;
-  heth.Init.MACAddr[3] =   0x00;
-  heth.Init.MACAddr[4] =   0x30;
-  heth.Init.MACAddr[5] =   0x20;</code></pre>
+  heth.Init.MACAddr[0] = 0x00;
+  heth.Init.MACAddr[1] = 0x80;
+  heth.Init.MACAddr[2] = 0xE1;
+  heth.Init.MACAddr[3] = 0x00;
+  heth.Init.MACAddr[4] = 0x30;
+  heth.Init.MACAddr[5] = 0x20;</code></pre>
 <h4 id="known-limitations"><b>Known limitations</b></h4>
 <p>None</p>
 <h3 id="notes"><b>Notes</b></h3>

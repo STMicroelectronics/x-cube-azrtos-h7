@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_netxduo.h"
 
@@ -82,7 +86,7 @@ static uint8_t nx_server_pool[SERVER_POOL_SIZE];
 
 /* Define FileX global data structures. */
 
-/* the server reads the content from the uSD, a FX_MEDIA instance is required */
+/* The server reads the content from the uSD, a FX_MEDIA instance is required */
 FX_MEDIA                SDMedia;
 
 /* Buffer for FileX FX_MEDIA sector cache. this should be 32-Bytes aligned to avoid
@@ -350,15 +354,11 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
 static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr)
 {
   /* USER CODE BEGIN ip_address_change_notify_callback */
-  /* release the semaphore as soon as an IP address is available */
+  /* Release the semaphore as soon as an IP address is available */
   if (nx_ip_address_get(&NetXDuoEthIpInstance, &IpAddress, &NetMask) != NX_SUCCESS)
   {
-    /* USER CODE BEGIN IP address change callback error */
-
     /* Error, call error handler.*/
     Error_Handler();
-
-    /* USER CODE END IP address change callback error */
   }
   if(IpAddress != NULL_ADDRESS)
   {
@@ -422,15 +422,15 @@ static VOID nx_app_thread_entry (ULONG thread_input)
   /* USER CODE BEGIN Nx_App_Thread_Entry 2 */
   PRINT_IP_ADDRESS(IpAddress);
 
-  /* the network is correctly initialized, start the WEB server thread */
+  /* The network is correctly initialized, start the WEB server thread */
   tx_thread_resume(&AppServerThread);
 
-  /* this thread is not needed any more, we relinquish it */
+  /* This thread is not needed any more, we relinquish it */
   tx_thread_relinquish();
   /* USER CODE END Nx_App_Thread_Entry 2 */
 
 }
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 UINT webserver_request_notify_callback(NX_WEB_HTTP_SERVER *server_ptr, UINT request_type, CHAR *resource, NX_PACKET *packet_ptr)
 {
@@ -502,7 +502,7 @@ UINT webserver_request_notify_callback(NX_WEB_HTTP_SERVER *server_ptr, UINT requ
   else if (strcmp(resource, "/LedOff") == 0)
   {
     printf(" Toggling Green Led Off \n");
-    HAL_GPIO_WritePin (LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin (LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
     tx_thread_suspend(&LedThread);
   }
   else
@@ -599,7 +599,7 @@ void LedThread_Entry(ULONG thread_input)
   /* Infinite loop */
   while (1)
   {
-    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+    HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
     /* Delay for 500ms (App_Delay is used to avoid context change). */
     tx_thread_sleep(50);
   }
@@ -648,7 +648,7 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
           /* Start DHCP */
           nx_dhcp_start(&DHCPClient);
 
-          /* wait until an IP address is ready */
+          /* Wait until an IP address is ready */
           if(tx_semaphore_get(&DHCPSemaphore, TX_WAIT_FOREVER) != TX_SUCCESS)
           {
             /* USER CODE BEGIN DHCPSemaphore get error */
@@ -680,4 +680,4 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
     tx_thread_sleep(NX_APP_CABLE_CONNECTION_CHECK_PERIOD);
   }
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

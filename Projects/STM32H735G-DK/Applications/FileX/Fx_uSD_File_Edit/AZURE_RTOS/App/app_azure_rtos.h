@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_azure_rtos_config.h"
 
@@ -60,6 +64,10 @@ extern "C" {
 /* USER CODE BEGIN PD */
 
 /* USER CODE END PD */
+
+/* USER CODE BEGIN 2 */
+
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

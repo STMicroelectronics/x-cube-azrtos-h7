@@ -92,6 +92,12 @@ UX_DCD_STM32            *dcd_stm32;
     /* Get controller driver.  */
     dcd_stm32 = (UX_DCD_STM32 *)dcd -> ux_slave_dcd_controller_hardware;
 
+    if (dcd_stm32 == UX_NULL)
+    {
+      dcd -> ux_slave_dcd_controller_hardware = UX_NULL;
+      return(UX_SUCCESS);
+    }
+
     /* Check parameter.  */
     if ((ULONG)dcd_stm32 -> pcd_handle == parameter)
     {

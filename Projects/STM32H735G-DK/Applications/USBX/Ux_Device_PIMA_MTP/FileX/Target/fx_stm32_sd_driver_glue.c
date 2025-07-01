@@ -9,6 +9,10 @@
 /*                                                                        */
 /**************************************************************************/
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 #include "fx_stm32_sd_driver.h"
 
 TX_SEMAPHORE sd_tx_semaphore;
@@ -190,6 +194,6 @@ void HAL_SD_RxCpltCallback(SD_HandleTypeDef *hsd)
   /* USER CODE END POST_RX_CMPLT */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

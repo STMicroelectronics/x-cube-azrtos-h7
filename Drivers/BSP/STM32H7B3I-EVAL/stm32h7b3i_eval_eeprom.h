@@ -22,7 +22,7 @@
 #define STM32H7B3I_EVAL_EEPROM_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -78,10 +78,10 @@ extern void  *Eeprom_CompObj;
   */
 int32_t BSP_EEPROM_Init(uint32_t Instance);
 int32_t BSP_EEPROM_DeInit(uint32_t Instance);
-int32_t BSP_EEPROM_WritePage(uint32_t Instance, uint8_t* pBuffer, uint32_t PageNbr);
-int32_t BSP_EEPROM_ReadPage(uint32_t Instance, uint8_t* pBuffer, uint32_t PageNbr);
-int32_t BSP_EEPROM_WriteBuffer(uint32_t Instance, uint8_t* pBuffer, uint32_t WriteAddr, uint32_t NbrOfBytes);
-int32_t BSP_EEPROM_ReadBuffer(uint32_t Instance, uint8_t* pBuffer, uint32_t ReadAddr, uint32_t NbrOfBytes);
+int32_t BSP_EEPROM_WritePage(uint32_t Instance, uint8_t *pBuffer, uint32_t PageNbr);
+int32_t BSP_EEPROM_ReadPage(uint32_t Instance, uint8_t *pBuffer, uint32_t PageNbr);
+int32_t BSP_EEPROM_WriteBuffer(uint32_t Instance, uint8_t *pBuffer, uint32_t WriteAddr, uint32_t NbrOfBytes);
+int32_t BSP_EEPROM_ReadBuffer(uint32_t Instance, uint8_t *pBuffer, uint32_t ReadAddr, uint32_t NbrOfBytes);
 int32_t BSP_EEPROM_IsDeviceReady(uint32_t Instance);
 
 /**

@@ -39,7 +39,7 @@
 /** @defgroup STM32H735G_DK_LOW_LEVEL_Private_TypesDefinitions Private Types Definitions
   * @{
   */
-typedef void (* BSP_EXTI_LineCallback) (void);
+typedef void (* BSP_EXTI_LineCallback)(void);
 /**
   * @}
   */
@@ -63,7 +63,7 @@ static void USART1_MspDeInit(UART_HandleTypeDef *huart);
 EXTI_HandleTypeDef hpb_exti[BUTTONn];
 #if (USE_BSP_COM_FEATURE > 0)
 UART_HandleTypeDef hcom_uart[COMn];
-USART_TypeDef* COM_USART[COMn]   = {COM1_UART};
+USART_TypeDef *COM_USART[COMn]   = {COM1_UART};
 #endif
 /**
   * @}
@@ -72,14 +72,16 @@ USART_TypeDef* COM_USART[COMn]   = {COM1_UART};
 /** @defgroup STM32H735G_DK_LOW_LEVEL_Private_Variables Private Variables
   * @{
   */
-static GPIO_TypeDef* LED_PORT[LEDn] = {
-                                       LED1_GPIO_PORT,
-                                       LED2_GPIO_PORT
-                                      };
+static GPIO_TypeDef *LED_PORT[LEDn] =
+{
+  LED1_GPIO_PORT,
+  LED2_GPIO_PORT
+};
 static const uint32_t LED_PIN[LEDn] = {LED1_PIN,
-                                       LED2_PIN};
+                                       LED2_PIN
+                                      };
 
-static GPIO_TypeDef* BUTTON_PORT[BUTTONn] = {BUTTON_USER_GPIO_PORT};
+static GPIO_TypeDef *BUTTON_PORT[BUTTONn] = {BUTTON_USER_GPIO_PORT};
 static const uint16_t BUTTON_PIN[BUTTONn] = {BUTTON_USER_PIN};
 static const IRQn_Type BUTTON_IRQn[BUTTONn] = {BUTTON_USER_EXTI_IRQn};
 #if (USE_BSP_COM_FEATURE > 0)
@@ -98,10 +100,10 @@ static uint32_t IsComMspCbValid[COMn] = {0};
   * @{
   */
 
-  /**
+/**
   * @brief  This method returns the STM32H735G_DK BSP Driver revision
   * @retval version: 0xXYZR (8bits for each decimal, R for RC)
-  */
+*/
 int32_t BSP_GetVersion(void)
 {
   return (int32_t)STM32H735G_DK_BSP_VERSION;
@@ -163,8 +165,8 @@ int32_t BSP_LED_DeInit(Led_TypeDef Led)
   /* DeInit the GPIO_LED pin */
   gpio_init_structure.Pin = LED_PIN [Led];
   /* Turn off LED */
-  HAL_GPIO_WritePin (LED_PORT [Led], (uint16_t)LED_PIN[Led], GPIO_PIN_SET);
-  HAL_GPIO_DeInit (LED_PORT [Led], gpio_init_structure.Pin);
+  HAL_GPIO_WritePin(LED_PORT [Led], (uint16_t)LED_PIN[Led], GPIO_PIN_SET);
+  HAL_GPIO_DeInit(LED_PORT [Led], gpio_init_structure.Pin);
   return ret;
 }
 
@@ -180,7 +182,7 @@ int32_t BSP_LED_On(Led_TypeDef Led)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  HAL_GPIO_WritePin (LED_PORT [Led], (uint16_t)LED_PIN [Led], GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(LED_PORT [Led], (uint16_t)LED_PIN [Led], GPIO_PIN_RESET);
   return ret;
 }
 
@@ -195,7 +197,7 @@ int32_t BSP_LED_On(Led_TypeDef Led)
 int32_t BSP_LED_Off(Led_TypeDef Led)
 {
   int32_t ret = BSP_ERROR_NONE;
-  HAL_GPIO_WritePin (LED_PORT [Led], (uint16_t)LED_PIN [Led], GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED_PORT [Led], (uint16_t)LED_PIN [Led], GPIO_PIN_SET);
   return ret;
 }
 
@@ -222,10 +224,10 @@ int32_t BSP_LED_Toggle(Led_TypeDef Led)
   *            @arg  LED2
   * @retval LED status
   */
-int32_t BSP_LED_GetState (Led_TypeDef Led)
+int32_t BSP_LED_GetState(Led_TypeDef Led)
 {
   int32_t ret = BSP_ERROR_NONE;
-  ret = (int32_t)HAL_GPIO_ReadPin (LED_PORT [Led], (uint16_t)LED_PIN [Led]);
+  ret = (int32_t)HAL_GPIO_ReadPin(LED_PORT [Led], (uint16_t)LED_PIN [Led]);
   return ret;
 }
 
@@ -244,16 +246,16 @@ int32_t BSP_LED_GetState (Led_TypeDef Led)
 int32_t BSP_PB_Init(Button_TypeDef Button, ButtonMode_TypeDef ButtonMode)
 {
   GPIO_InitTypeDef gpio_init_structure;
-  static BSP_EXTI_LineCallback ButtonCallback[BUTTONn] ={BUTTON_USER_EXTI_Callback};
-  static uint32_t  BSP_BUTTON_PRIO [BUTTONn] ={BSP_BUTTON_USER_IT_PRIORITY};
-  static const uint32_t BUTTON_EXTI_LINE[BUTTONn] ={BUTTON_USER_EXTI_LINE};
+  static BSP_EXTI_LineCallback ButtonCallback[BUTTONn] = {BUTTON_USER_EXTI_Callback};
+  static uint32_t  BSP_BUTTON_PRIO [BUTTONn] = {BSP_BUTTON_USER_IT_PRIORITY};
+  static const uint32_t BUTTON_EXTI_LINE[BUTTONn] = {BUTTON_USER_EXTI_LINE};
   /* Enable the BUTTON clock*/
   BUTTON_USER_GPIO_CLK_ENABLE();
   gpio_init_structure.Pin = BUTTON_PIN [Button];
   gpio_init_structure.Pull = GPIO_PULLDOWN;
   gpio_init_structure.Speed = GPIO_SPEED_FREQ_HIGH;
 
-  if(ButtonMode == BUTTON_MODE_GPIO)
+  if (ButtonMode == BUTTON_MODE_GPIO)
   {
     /* Configure Button pin as input */
     gpio_init_structure.Mode = GPIO_MODE_INPUT;
@@ -352,7 +354,7 @@ int32_t BSP_COM_Init(COM_TypeDef COM, COM_InitTypeDef *COM_Init)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(COM >= COMn)
+  if (COM >= COMn)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -362,16 +364,16 @@ int32_t BSP_COM_Init(COM_TypeDef COM, COM_InitTypeDef *COM_Init)
 #if (USE_HAL_UART_REGISTER_CALLBACKS == 0)
     USART1_MspInit(&hcom_uart[COM]);
 #else
-    if(IsComMspCbValid[COM] == 0U)
+    if (IsComMspCbValid[COM] == 0U)
     {
-      if(BSP_COM_RegisterDefaultMspCallbacks(COM) != BSP_ERROR_NONE)
+      if (BSP_COM_RegisterDefaultMspCallbacks(COM) != BSP_ERROR_NONE)
       {
         return BSP_ERROR_MSP_FAILURE;
       }
     }
 #endif
 
-    if(MX_USART3_Init(&hcom_uart[COM], COM_Init) != HAL_OK)
+    if (MX_USART3_Init(&hcom_uart[COM], COM_Init) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -390,7 +392,7 @@ int32_t BSP_COM_DeInit(COM_TypeDef COM)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(COM >= COMn)
+  if (COM >= COMn)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -403,7 +405,7 @@ int32_t BSP_COM_DeInit(COM_TypeDef COM)
     USART1_MspDeInit(&hcom_uart[COM]);
 #endif /* (USE_HAL_UART_REGISTER_CALLBACKS == 0) */
 
-    if(HAL_UART_DeInit(&hcom_uart[COM]) != HAL_OK)
+    if (HAL_UART_DeInit(&hcom_uart[COM]) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -445,7 +447,7 @@ int32_t BSP_COM_RegisterDefaultMspCallbacks(COM_TypeDef COM)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(COM >= COMn)
+  if (COM >= COMn)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -454,11 +456,11 @@ int32_t BSP_COM_RegisterDefaultMspCallbacks(COM_TypeDef COM)
     __HAL_UART_RESET_HANDLE_STATE(&hcom_uart[COM]);
 
     /* Register default MspInit/MspDeInit Callback */
-    if(HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPINIT_CB_ID, USART1_MspInit) != HAL_OK)
+    if (HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPINIT_CB_ID, USART1_MspInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPDEINIT_CB_ID, USART1_MspDeInit) != HAL_OK)
+    else if (HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPDEINIT_CB_ID, USART1_MspDeInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -482,7 +484,7 @@ int32_t BSP_COM_RegisterMspCallbacks(COM_TypeDef COM, BSP_COM_Cb_t *Callback)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(COM >= COMn)
+  if (COM >= COMn)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -491,11 +493,11 @@ int32_t BSP_COM_RegisterMspCallbacks(COM_TypeDef COM, BSP_COM_Cb_t *Callback)
     __HAL_UART_RESET_HANDLE_STATE(&hcom_uart[COM]);
 
     /* Register MspInit/MspDeInit Callbacks */
-    if(HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPINIT_CB_ID, Callback->pMspInitCb) != HAL_OK)
+    if (HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPINIT_CB_ID, Callback->pMspInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    else if(HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPDEINIT_CB_ID, Callback->pMspDeInitCb) != HAL_OK)
+    else if (HAL_UART_RegisterCallback(&hcom_uart[COM], HAL_UART_MSPDEINIT_CB_ID, Callback->pMspDeInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -519,20 +521,20 @@ int32_t BSP_COM_RegisterMspCallbacks(COM_TypeDef COM, BSP_COM_Cb_t *Callback)
   */
 int32_t BSP_COM_SelectLogPort(COM_TypeDef COM)
 {
-  if(COM_ActiveLogPort != COM)
+  if (COM_ActiveLogPort != COM)
   {
     COM_ActiveLogPort = COM;
   }
   return BSP_ERROR_NONE;
 }
 
- #ifdef __GNUC__
- int __io_putchar (int ch)
- #else
- int fputc (int ch, FILE *f)
- #endif /* __GNUC__ */
+#ifdef __GNUC__
+int __io_putchar(int ch)
+#else
+int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
 {
-  HAL_UART_Transmit (&hcom_uart [COM_ActiveLogPort], (uint8_t *) &ch, 1, COM_POLL_TIMEOUT);
+  HAL_UART_Transmit(&hcom_uart [COM_ActiveLogPort], (uint8_t *) &ch, 1, COM_POLL_TIMEOUT);
   return ch;
 }
 #endif /* USE_COM_LOG */

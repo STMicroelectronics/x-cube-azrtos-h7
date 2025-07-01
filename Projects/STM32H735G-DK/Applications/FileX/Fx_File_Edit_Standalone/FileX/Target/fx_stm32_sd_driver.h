@@ -18,6 +18,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "fx_api.h"
 #include "stm32h7xx_hal.h"
@@ -194,9 +198,9 @@ VOID fx_stm32_sd_driver(FX_MEDIA *media_ptr);
 
 /* USER CODE END PD */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

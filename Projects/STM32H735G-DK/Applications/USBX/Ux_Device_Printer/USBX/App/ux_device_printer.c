@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_device_printer.h"
 
@@ -151,7 +155,7 @@ VOID USBD_PRINTER_SoftReset(VOID *printer_instance)
   return;
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief  Function implementing usbx_hid_thread_entry.
@@ -240,4 +244,4 @@ VOID usbx_printer_write_thread_entry(ULONG thread_input)
     }
   }
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

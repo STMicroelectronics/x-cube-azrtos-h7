@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_device_descriptors.h"
 
@@ -107,44 +111,44 @@ __ALIGN_END =
   0x06, 0xFF, 0x00,             /* Usage Page (Vendor Page: 0xFF00)     */
   0x09, 0x01,                   /* Usage (Demo Kit)                     */
   0xa1, 0x01,                   /* Collection (Application)             */
-  0x85, LED1_REPORT_ID,         /*   Report id (1)                      */
+  0x85, LED_GREEN_REPORT_ID,         /*   Report id (1)                      */
   0x09, 0x01,                   /*   Usage (LED 1)                      */
   0x15, 0x00,                   /*   Logical Minimum (0)                */
   0x25, 0x01,                   /*   Logical Maximum (1)                */
   0x75, 0x08,                   /*   Report Size (8)                    */
-  0x95, LED1_REPORT_COUNT,      /*   Report Count (1)                   */
+  0x95, LED_GREEN_REPORT_COUNT,      /*   Report Count (1)                   */
   0xB1, 0x82,                   /*   Feature (Data,Var,Abs,Vol)         */
-  0x85, LED1_REPORT_ID,         /*   Report id (1)                      */
+  0x85, LED_GREEN_REPORT_ID,         /*   Report id (1)                      */
   0x09, 0x01,                   /*   Usage (LED 1)                      */
   0x91, 0x82,                   /*   Output (Data,Var,Abs,Vol)          */
-  0x85, LED2_REPORT_ID,         /*   Report id 2                        */
+  0x85, LED_RED_REPORT_ID,         /*   Report id 2                        */
   0x09, 0x02,                   /*   Usage (LED 2)                      */
   0x15, 0x00,                   /*   Logical Minimum (0)                */
   0x25, 0x01,                   /*   Logical Maximum (1)                */
   0x75, 0x08,                   /*   Report Size (8)                    */
-  0x95, LED2_REPORT_COUNT,      /*   Report Count (1)                   */
+  0x95, LED_RED_REPORT_COUNT,      /*   Report Count (1)                   */
   0xB1, 0x82,                   /*   Feature (Data,Var,Abs,Vol)         */
-  0x85, LED2_REPORT_ID,         /*   Report id (2)                      */
+  0x85, LED_RED_REPORT_ID,         /*   Report id (2)                      */
   0x09, 0x02,                   /*   Usage (LED 2)                      */
   0x91, 0x82,                   /*   Output (Data,Var,Abs,Vol)          */
-  0x85, LED3_REPORT_ID,         /*   Report id (3)                      */
+  0x85, LED_ORANGE_REPORT_ID,         /*   Report id (3)                      */
   0x09, 0x03,                   /*   Usage (LED 3)                      */
   0x15, 0x00,                   /*   Logical Minimum (0)                */
   0x25, 0x01,                   /*   Logical Maximum (1)                */
   0x75, 0x08,                   /*   Report Size (8)                    */
-  0x95, LED3_REPORT_COUNT,      /*   Report Count (1)                   */
+  0x95, LED_ORANGE_REPORT_COUNT,      /*   Report Count (1)                   */
   0xB1, 0x82,                   /*   Feature (Data,Var,Abs,Vol)         */
-  0x85, LED3_REPORT_ID,         /*   Report id (3)                      */
+  0x85, LED_ORANGE_REPORT_ID,         /*   Report id (3)                      */
   0x09, 0x03,                   /*   Usage (LED 3)                      */
   0x91, 0x82,                   /*   Output (Data,Var,Abs,Vol)          */
-  0x85, LED4_REPORT_ID,         /*   Report id (4)                      */
+  0x85, LED_BLUE_REPORT_ID,         /*   Report id (4)                      */
   0x09, 0x04,                   /*   Usage (LED 4)                      */
   0x15, 0x00,                   /*   Logical Minimum (0)                */
   0x25, 0x01,                   /*   Logical Maximum (1)                */
   0x75, 0x08,                   /*   Report Size (8)                    */
-  0x95, LED4_REPORT_COUNT,      /*   Report Count (1)                   */
+  0x95, LED_BLUE_REPORT_COUNT,      /*   Report Count (1)                   */
   0xB1, 0x82,                   /*   Feature (Data,Var,Abs,Vol)         */
-  0x85, LED4_REPORT_ID,         /*   Report id (4)                      */
+  0x85, LED_BLUE_REPORT_ID,         /*   Report id (4)                      */
   0x09, 0x04,                   /*   Usage (LED 4)                      */
   0x91, 0x82,                   /*   Output (Data,Var,Abs,Vol)          */
   0x85, KEY_REPORT_ID,          /*   Report id (5)                      */
@@ -922,6 +926,6 @@ static void  USBD_FrameWork_HID_Desc(USBD_DevClassHandleTypeDef *pdev,
 }
 #endif /* USBD_HID_CLASS_ACTIVATED */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

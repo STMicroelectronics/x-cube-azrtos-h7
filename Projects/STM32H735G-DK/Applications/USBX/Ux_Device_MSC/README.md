@@ -1,5 +1,5 @@
 
-## <b>Ux_Device_MSC application description</b>
+## <b>Ux_Device_MSC Application Description</b>
 
 This application provides an example of Azure RTOS USBX stack usage on STM32H735G-DK board, it shows how to develop USB device mass storage class based application.
 The application is designed to emulate a USB MSC device, the code provides all required device descriptors framework and the associated class
@@ -38,7 +38,7 @@ The Eject operation is not supported yet by MSC class.
 
 ### <b>Notes</b>
 
- 1. Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from Flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.
+ 1. Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.
  2.  If the application is using the DTCM/ITCM memories (@0x20000000/ 0x0000000: not cacheable and only accessible by the Cortex M7 and the MDMA), no need for cache maintenance when the Cortex M7 and the MDMA access these RAMs. If the application needs to use DMA (or other masters) based access or requires more RAM, then the user has to:
       - Use a non TCM SRAM. (example : D1 AXI-SRAM @ 0x24000000).
       - Add a cache maintenance mechanism to ensure the cache coherence between CPU and other masters (DMAs,DMA2D,LTDC,MDMA).
@@ -99,8 +99,8 @@ RTOS, ThreadX, USBXDevice, Device, USB_OTG, Full Speed, MSC, Mass Storage, SD Ca
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H735xx devices.
-  - This example has been tested with STMicroelectronics STM32H735G-DK boards revision: MB1520-H735I-B02
+  - This application runs on STM32H735xx devices.
+  - This application has been tested with STMicroelectronics STM32H735G-DK boards revision: MB1520-H735I-B02
     and can be easily tailored to any other supported device and development board.
 
 ### <b>How to use it ?</b>

@@ -6,6 +6,10 @@
   *          Azure RTOS FileX for STM32 devices.
   ******************************************************************************
   */
+### V6.4.0 (06-09-2024) ###
+============================
+- Add STM32N6/STM32U3 series to Azure RTOS licensed hardware list
+
 ### V6.4.0 (19-04-2024) ###
 ============================
 - Upgrade to Azure RTOS FileX 6.4.0

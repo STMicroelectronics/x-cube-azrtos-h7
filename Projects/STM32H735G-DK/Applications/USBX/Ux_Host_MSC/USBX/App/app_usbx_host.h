@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_api.h"
 #include "main.h"
@@ -53,6 +57,7 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
+
 #define USBH_UsrLog(...)   printf(__VA_ARGS__);\
                            printf("\n");
 
@@ -90,14 +95,13 @@ void USBH_DriverVBUS(uint8_t state);
 #define UX_HOST_APP_THREAD_START_OPTION  TX_AUTO_START
 #endif
 
-/* USER CODE BEGIN 1 */
-
+/* USER CODE BEGIN 2 */
 typedef enum
 {
   USB_VBUS_FALSE = 0,
   USB_VBUS_TRUE,
 } USB_VBUS_State;
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

@@ -22,7 +22,7 @@
 #define STM32H7B3I_EVAL_SD_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -55,7 +55,7 @@ typedef struct
 {
   void (* pMspInitCb)(SD_HandleTypeDef *);
   void (* pMspDeInitCb)(SD_HandleTypeDef *);
-}BSP_SD_Cb_t;
+} BSP_SD_Cb_t;
 #endif /* (USE_HAL_SD_REGISTER_CALLBACKS == 1) */
 /**
   * @}

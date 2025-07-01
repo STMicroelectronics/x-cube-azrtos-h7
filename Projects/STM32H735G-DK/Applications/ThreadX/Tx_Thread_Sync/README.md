@@ -1,5 +1,5 @@
 
-## <b>Tx_Thread_Sync application description</b>
+## <b>Tx_Thread_Sync Application Description</b>
 
 This application provides an example of Azure RTOS ThreadX stack usage, it shows how to develop an application using the ThreadX synchronization APIs.
 The main entry function tx_application_define() is called by ThreadX during kernel start, at this stage, the application creates 2 threads with the same priorities:
@@ -106,8 +106,8 @@ RTOS, ThreadX, Threading, Semaphore, Mutex
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H735xx devices.
-  - This example has been tested with STMicroelectronics STM32H735G-DK boards revision: MB1520-H735I-B02
+  - This application runs on STM32H735xx devices.
+  - This application has been tested with STMicroelectronics STM32H735G-DK boards revision: MB1520-H735I-B02
     and can be easily tailored to any other supported device and development board.
   - A virtual COM port appears in the HyperTerminal:
       - Hyperterminal configuration:

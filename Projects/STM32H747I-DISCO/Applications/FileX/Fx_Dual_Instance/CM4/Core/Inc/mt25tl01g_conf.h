@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    mt25tl01g_conf_template.h
+  * @file    mt25tl01g_conf.h
   * @author  MCD Application Team
   * @brief   This file contains all the description of the
   *          MT25TL01G QSPI memory.
@@ -23,6 +23,10 @@
  extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h7xx_hal.h"
 
@@ -42,6 +46,10 @@
 /* Dummy cycles for DTR read mode */
 #define MT25TL01G_DUMMY_CYCLES_READ_DTR       6U
 #define MT25TL01G_DUMMY_CYCLES_READ_QUAD_DTR  8U
+
+/* USER CODE BEGIN 2 */
+
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

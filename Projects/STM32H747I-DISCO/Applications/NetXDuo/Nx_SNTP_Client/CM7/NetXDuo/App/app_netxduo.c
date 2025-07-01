@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_netxduo.h"
 
@@ -239,7 +243,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
     return TX_POOL_ERROR;
   }
 
-  /* create the SNTP client thread */
+  /* Create the SNTP client thread */
   ret = tx_thread_create(&AppSNTPThread, "App SNTP Thread", App_SNTP_Thread_Entry, 0, pointer, SNTP_CLIENT_THREAD_MEMORY,
                          NX_APP_INSTANCE_PRIORITY, NX_APP_INSTANCE_PRIORITY, TX_NO_TIME_SLICE, TX_DONT_START);
 
@@ -254,7 +258,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
     return TX_POOL_ERROR;
   }
 
-  /* create the Link thread */
+  /* Create the Link thread */
   ret = tx_thread_create(&AppLinkThread, "App Link Thread", App_Link_Thread_Entry, 0, pointer, NX_APP_THREAD_STACK_SIZE,
                          LINK_PRIORITY, LINK_PRIORITY, TX_NO_TIME_SLICE, TX_AUTO_START);
 
@@ -286,12 +290,10 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
 static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr)
 {
   /* USER CODE BEGIN ip_address_change_notify_callback */
-  /* release the semaphore as soon as an IP address is available */
+  /* Release the semaphore as soon as an IP address is available */
   if (nx_ip_address_get(&NetXDuoEthIpInstance, &IpAddress, &NetMask) != NX_SUCCESS)
   {
-    /* USER CODE BEGIN IP address change callback error */
     Error_Handler();
-    /* USER CODE END IP address change callback error */
   }
   if(IpAddress != NULL_ADDRESS)
   {
@@ -346,17 +348,17 @@ static VOID nx_app_thread_entry (ULONG thread_input)
   /* USER CODE BEGIN Nx_App_Thread_Entry 2 */
   PRINT_IP_ADDRESS(IpAddress);
 
-  /* the network is correctly initialized, start the TCP server thread */
+  /* The network is correctly initialized, start the TCP server thread */
   tx_thread_resume(&AppSNTPThread);
 
-  /* this thread is not needed any more, we relinquish it */
+  /* This thread is not needed any more, we relinquish it */
   tx_thread_relinquish();
 
   return;
   /* USER CODE END Nx_App_Thread_Entry 2 */
 
 }
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 /**
 * @brief  DNS Create Function.
 * @param dns_ptr
@@ -508,7 +510,7 @@ static void App_SNTP_Thread_Entry(ULONG info)
   {
     /* Display RTC time each second  */
     display_rtc_time(&RtcHandle);
-    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+    HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
     /* Delay for 1s */
     tx_thread_sleep(100);
   }
@@ -686,7 +688,7 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
           /* Start DHCP */
           nx_dhcp_start(&DHCPClient);
 
-          /* wait until an IP address is ready */
+          /* Wait until an IP address is ready */
           if(tx_semaphore_get(&DHCPSemaphore, TX_WAIT_FOREVER) != TX_SUCCESS)
           {
             /* USER CODE BEGIN DHCPSemaphore get error */
@@ -718,4 +720,4 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
     tx_thread_sleep(NX_APP_CABLE_CONNECTION_CHECK_PERIOD);
   }
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

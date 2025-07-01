@@ -11,6 +11,10 @@
 
 #include "lx_stm32_qspi_driver.h"
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* HAL DMA mode based implementation for QuadSPI component MT25TL01G
  * The present implementation assumes the following settings are set for single bank:
 
@@ -813,6 +817,6 @@ void HAL_QSPI_TxCpltCallback(QSPI_HandleTypeDef *handle_qspi)
   /* USER CODE END POST_TX_CMPLT */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

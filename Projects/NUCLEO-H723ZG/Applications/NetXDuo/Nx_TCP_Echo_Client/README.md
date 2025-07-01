@@ -1,5 +1,5 @@
 
-##  <b>Nx_TCP_Echo_Client application description</b>
+##  <b>Nx_TCP_Echo_Client Application Description</b>
 
 This application provides an example of Azure RTOS NetX/NetXDuo stack usage.
 It shows how to develop a NetX TCP client to communicate with a remote sever using the NetX TCP socket API.
@@ -13,8 +13,8 @@ The main entry function tx_application_define() is then called by ThreadX during
 
 The application then creates 2 threads with the same priorities:
 
- + **NxAppThread** (priority 10, PreemtionThreashold 10) : created with the <i>TX_AUTO_START</i> flag to start automatically.
- + **AppTCPThread** (priority 10, PreemtionThreashold 10) : created with the <i>TX_DONT_START</i> flag to be started later.
+ + **NxAppThread** (priority 10, PreemptionThreshold 10) : created with the <i>TX_AUTO_START</i> flag to start automatically.
+ + **AppTCPThread** (priority 10, PreemptionThreshold 10) : created with the <i>TX_DONT_START</i> flag to be started later.
 
 The **NxAppThread** starts and performs the following actions:
 
@@ -62,12 +62,12 @@ void MX_ETH_Init(void)
 
   /* USER CODE END ETH_Init 1 */
   heth.Instance = ETH;
-  heth.Init.MACAddr[0] =   0x00;
-  heth.Init.MACAddr[1] =   0x80;
-  heth.Init.MACAddr[2] =   0xE1;
-  heth.Init.MACAddr[3] =   0x00;
-  heth.Init.MACAddr[4] =   0x30;
-  heth.Init.MACAddr[5] =   0x20;
+  heth.Init.MACAddr[0] = 0x00;
+  heth.Init.MACAddr[1] = 0x80;
+  heth.Init.MACAddr[2] = 0xE1;
+  heth.Init.MACAddr[3] = 0x00;
+  heth.Init.MACAddr[4] = 0x30;
+  heth.Init.MACAddr[5] = 0x20;
 ```
 
 #### <b>Known limitations</b>
@@ -76,7 +76,7 @@ None
 
 ### <b>Notes</b>
 
- 1. Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from Flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.
+ 1. Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.
  2.  If the application is using the DTCM/ITCM memories (@0x20000000/ 0x0000000: not cacheable and only accessible by the Cortex M7 and the MDMA), no need for cache maintenance when the Cortex M7 and the MDMA access these RAMs. If the application needs to use DMA (or other masters) based access or requires more RAM, then the user has to:
       - Use a non TCM SRAM. (example : D1 AXI-SRAM @ 0x24000000).
       - Add a cache maintenance mechanism to ensure the cache coherence between CPU and other masters (DMAs,DMA2D,LTDC,MDMA).
@@ -179,8 +179,8 @@ RTOS, Network, ThreadX, NetXDuo, TCP, UART
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H723xx devices
-  - This example has been tested with STMicroelectronics NUCLEO-H723ZG boards revision MB1364-H723ZG-E01
+  - This application runs on STM32H723xx devices
+  - This application has been tested with STMicroelectronics NUCLEO-H723ZG boards revision MB1364-H723ZG-E01
     and can be easily tailored to any other supported device and development board.
   - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
       - BaudRate = 115200 baud

@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_threadx.h"
 
@@ -183,7 +187,7 @@ void MX_ThreadX_Init(void)
   /* USER CODE END  Kernel_Start_Error */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 /**
   * @brief  Function implementing the MsgSenderThreadTwo thread.
   * @param  thread_input: Not used
@@ -201,7 +205,7 @@ void MsgSenderThreadTwo_Entry(ULONG thread_input)
     {
       Error_Handler();
     }
-    /* Sleep for 500s */
+    /* Sleep for 500ms */
     tx_thread_sleep(50);
   }
 }
@@ -232,7 +236,7 @@ void MsgReceiverThread_Entry(ULONG thread_input)
       {
         /* Turn ON GREEN LED */
         printf("** Message is available on MsgQueueOne: SET_GREEN_LED**\r\n");
-        HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+        HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
       }
     }
     else
@@ -248,10 +252,10 @@ void MsgReceiverThread_Entry(ULONG thread_input)
         else
         {          /* Turn ON RED LED */
           printf("** Message is available on MsgQueueTwo: SET_RED_LED**\r\n");
-          HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+          HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
         }
       }
     }
   }
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

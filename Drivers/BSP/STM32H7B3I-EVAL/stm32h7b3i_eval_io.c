@@ -143,7 +143,7 @@ int32_t BSP_IOEXPANDER_DeInit(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= IOEXPANDER_INSTANCES_NBR)
+  if (Instance >= IOEXPANDER_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -179,15 +179,15 @@ int32_t BSP_IO_Init(uint32_t Instance, BSP_IO_Init_t *Init)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if((Instance >= IOEXPANDER_INSTANCES_NBR) || (Init == NULL))
+  if ((Instance >= IOEXPANDER_INSTANCES_NBR) || (Init == NULL))
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if((IO_Ctx[Instance].Functions & IOEXPANDER_IO_MODE) != IOEXPANDER_IO_MODE)
+    if ((IO_Ctx[Instance].Functions & IOEXPANDER_IO_MODE) != IOEXPANDER_IO_MODE)
     {
-      if(BSP_IOEXPANDER_Init(Instance, IOEXPANDER_IO_MODE) != BSP_ERROR_NONE)
+      if (BSP_IOEXPANDER_Init(Instance, IOEXPANDER_IO_MODE) != BSP_ERROR_NONE)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
@@ -201,16 +201,16 @@ int32_t BSP_IO_Init(uint32_t Instance, BSP_IO_Init_t *Init)
       }
     }
 
-    if(ret == BSP_ERROR_NONE)
+    if (ret == BSP_ERROR_NONE)
     {
       /* If IT mode is selected, configures MFX low level interrupt */
-      if(Init->Mode >= IO_MODE_IT_RISING_EDGE)
+      if (Init->Mode >= IO_MODE_IT_RISING_EDGE)
       {
         BSP_IOEXPANDER_ITConfig();
       }
 
       /* Initializes IO pin */
-      if(Io_Drv->Init(&Io_CompObj, Init) < 0)
+      if (Io_Drv->Init(&Io_CompObj, Init) < 0)
       {
         ret = BSP_ERROR_COMPONENT_FAILURE;
       }
@@ -255,7 +255,7 @@ int32_t BSP_IO_DeInit(uint32_t Instance)
   */
 int32_t BSP_IO_GetIT(uint32_t Instance, uint32_t IoPin)
 {
-  if((Instance >= IOEXPANDER_INSTANCES_NBR) || ((IO_Ctx[Instance].Functions & IOEXPANDER_IO_MODE) != IOEXPANDER_IO_MODE))
+  if ((Instance >= IOEXPANDER_INSTANCES_NBR) || ((IO_Ctx[Instance].Functions & IOEXPANDER_IO_MODE) != IOEXPANDER_IO_MODE))
   {
     return BSP_ERROR_WRONG_PARAM;
   }
@@ -274,14 +274,14 @@ int32_t BSP_IO_ClearIT(uint32_t Instance, uint32_t IO_Pins_To_Clear)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if((Instance >= IOEXPANDER_INSTANCES_NBR) || ((IO_Ctx[Instance].Functions & IOEXPANDER_IO_MODE) != IOEXPANDER_IO_MODE))
+  if ((Instance >= IOEXPANDER_INSTANCES_NBR) || ((IO_Ctx[Instance].Functions & IOEXPANDER_IO_MODE) != IOEXPANDER_IO_MODE))
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Clear only the selected list of IO IT pending bits */
-    if(Io_Drv->ClearIT(&Io_CompObj, IO_Pins_To_Clear) < 0)
+    if (Io_Drv->ClearIT(&Io_CompObj, IO_Pins_To_Clear) < 0)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
@@ -303,14 +303,14 @@ int32_t BSP_IO_WritePin(uint32_t Instance, uint32_t IoPin, uint32_t PinState)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if((Instance >= IOEXPANDER_INSTANCES_NBR) || ((IO_Ctx[Instance].Functions & IOEXPANDER_IO_MODE) != IOEXPANDER_IO_MODE))
+  if ((Instance >= IOEXPANDER_INSTANCES_NBR) || ((IO_Ctx[Instance].Functions & IOEXPANDER_IO_MODE) != IOEXPANDER_IO_MODE))
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Set the Pin state */
-    if(Io_Drv->WritePin(&Io_CompObj, IoPin, PinState) < 0)
+    if (Io_Drv->WritePin(&Io_CompObj, IoPin, PinState) < 0)
     {
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
@@ -327,7 +327,7 @@ int32_t BSP_IO_WritePin(uint32_t Instance, uint32_t IoPin, uint32_t PinState)
   */
 int32_t BSP_IO_ReadPin(uint32_t Instance, uint32_t IoPin)
 {
-  if((Instance >= IOEXPANDER_INSTANCES_NBR) || ((IO_Ctx[Instance].Functions & IOEXPANDER_IO_MODE) != IOEXPANDER_IO_MODE))
+  if ((Instance >= IOEXPANDER_INSTANCES_NBR) || ((IO_Ctx[Instance].Functions & IOEXPANDER_IO_MODE) != IOEXPANDER_IO_MODE))
   {
     return BSP_ERROR_WRONG_PARAM;
   }
@@ -348,7 +348,7 @@ int32_t BSP_IO_TogglePin(uint32_t Instance, uint32_t IoPin)
   int32_t ret = BSP_ERROR_NONE;
   int32_t pinState;
 
-  if((Instance >= IOEXPANDER_INSTANCES_NBR) || ((IO_Ctx[Instance].Functions & IOEXPANDER_IO_MODE) != IOEXPANDER_IO_MODE))
+  if ((Instance >= IOEXPANDER_INSTANCES_NBR) || ((IO_Ctx[Instance].Functions & IOEXPANDER_IO_MODE) != IOEXPANDER_IO_MODE))
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -391,7 +391,7 @@ void BSP_IOEXPANDER_ITConfig(void)
   static uint32_t mfx_io_it_enabled = 0U;
   GPIO_InitTypeDef  gpio_init_structure;
 
-  if(mfx_io_it_enabled == 0U)
+  if (mfx_io_it_enabled == 0U)
   {
     mfx_io_it_enabled = 1U;
     /* Enable the GPIO EXTI clock */
@@ -468,22 +468,22 @@ static int32_t MFXSTM32L152_Probe(uint32_t Instance)
   IOCtx.WriteReg    = BSP_I2C2_WriteReg;
   IOCtx.GetTick     = BSP_GetTick;
 
-  for(i = 0U; i < 2U; i++)
+  for (i = 0U; i < 2U; i++)
   {
     IOCtx.Address     = (uint16_t)i2c_address[i];
-    if(MFXSTM32L152_RegisterBusIO (&Io_CompObj, &IOCtx) != MFXSTM32L152_OK)
+    if (MFXSTM32L152_RegisterBusIO(&Io_CompObj, &IOCtx) != MFXSTM32L152_OK)
     {
       ret = BSP_ERROR_BUS_FAILURE;
     }
-    else if(MFXSTM32L152_ReadID(&Io_CompObj, &mfxstm32l152_id) != MFXSTM32L152_OK)
+    else if (MFXSTM32L152_ReadID(&Io_CompObj, &mfxstm32l152_id) != MFXSTM32L152_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
     else
     {
-      if((mfxstm32l152_id == MFXSTM32L152_ID) || (mfxstm32l152_id == MFXSTM32L152_ID_2))
+      if ((mfxstm32l152_id == MFXSTM32L152_ID) || (mfxstm32l152_id == MFXSTM32L152_ID_2))
       {
-        if(MFXSTM32L152_Init(&Io_CompObj) != MFXSTM32L152_OK)
+        if (MFXSTM32L152_Init(&Io_CompObj) != MFXSTM32L152_OK)
         {
           ret = BSP_ERROR_COMPONENT_FAILURE;
         }

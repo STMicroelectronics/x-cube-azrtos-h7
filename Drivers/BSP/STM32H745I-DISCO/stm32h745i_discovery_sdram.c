@@ -110,7 +110,7 @@ int32_t BSP_SDRAM_Init(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
   static MT48LC4M32B2_Context_t pRegMode;
-  if(Instance >=SDRAM_INSTANCES_NBR)
+  if (Instance >= SDRAM_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
@@ -118,9 +118,9 @@ int32_t BSP_SDRAM_Init(uint32_t Instance)
   {
 #if (USE_HAL_SDRAM_REGISTER_CALLBACKS == 1)
     /* Register the SDRAM MSP Callbacks */
-    if(IsMspCallbacksValid == 0)
+    if (IsMspCallbacksValid == 0)
     {
-      if(BSP_SDRAM_RegisterDefaultMspCallbacks(Instance) != BSP_ERROR_NONE)
+      if (BSP_SDRAM_RegisterDefaultMspCallbacks(Instance) != BSP_ERROR_NONE)
       {
         return BSP_ERROR_PERIPH_FAILURE;
       }
@@ -129,7 +129,7 @@ int32_t BSP_SDRAM_Init(uint32_t Instance)
     /* Msp SDRAM initialization */
     SDRAM_MspInit(&hsdram[Instance]);
 #endif /* USE_HAL_SDRAM_REGISTER_CALLBACKS */
-    if(MX_SDRAM_BANK2_Init(&hsdram[Instance],FMC_SDRAM_ROW_BITS_NUM_12, FMC_SDRAM_MEM_BUS_WIDTH_16) != HAL_OK)
+    if (MX_SDRAM_BANK2_Init(&hsdram[Instance], FMC_SDRAM_ROW_BITS_NUM_12, FMC_SDRAM_MEM_BUS_WIDTH_16) != HAL_OK)
     {
       ret = BSP_ERROR_NO_INIT;
     }
@@ -146,7 +146,7 @@ int32_t BSP_SDRAM_Init(uint32_t Instance)
       pRegMode.WriteBurstMode  = MT48LC4M32B2_WRITEBURST_MODE_SINGLE;
 
       /* SDRAM initialization sequence */
-      if(MT48LC4M32B2_Init(&hsdram[Instance], &pRegMode) != MT48LC4M32B2_OK)
+      if (MT48LC4M32B2_Init(&hsdram[Instance], &pRegMode) != MT48LC4M32B2_OK)
       {
         ret =  BSP_ERROR_COMPONENT_FAILURE;
       }
@@ -165,7 +165,7 @@ int32_t BSP_SDRAM_DeInit(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= SDRAM_INSTANCES_NBR)
+  if (Instance >= SDRAM_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
@@ -188,7 +188,8 @@ int32_t BSP_SDRAM_DeInit(uint32_t Instance)
   * @param  MemoryDataWidth The momory width 16 or 32bits
   * @retval HAL status
   */
-__weak HAL_StatusTypeDef MX_SDRAM_BANK2_Init(SDRAM_HandleTypeDef *hSdram, uint32_t RowBitsNumber, uint32_t MemoryDataWidth)
+__weak HAL_StatusTypeDef MX_SDRAM_BANK2_Init(SDRAM_HandleTypeDef *hSdram, uint32_t RowBitsNumber,
+                                             uint32_t MemoryDataWidth)
 {
   FMC_SDRAM_TimingTypeDef sdram_timing;
 
@@ -217,7 +218,7 @@ __weak HAL_StatusTypeDef MX_SDRAM_BANK2_Init(SDRAM_HandleTypeDef *hSdram, uint32
   sdram_timing.RCDDelay             = 2;
 
   /* SDRAM controller initialization */
-  if(HAL_SDRAM_Init(hSdram, &sdram_timing) != HAL_OK)
+  if (HAL_SDRAM_Init(hSdram, &sdram_timing) != HAL_OK)
   {
     return  HAL_ERROR;
   }
@@ -231,23 +232,23 @@ __weak HAL_StatusTypeDef MX_SDRAM_BANK2_Init(SDRAM_HandleTypeDef *hSdram, uint32
   * @param Instance      SDRAM Instance
   * @retval BSP status
   */
-int32_t BSP_SDRAM_RegisterDefaultMspCallbacks (uint32_t Instance)
+int32_t BSP_SDRAM_RegisterDefaultMspCallbacks(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= SDRAM_INSTANCES_NBR)
+  if (Instance >= SDRAM_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Register MspInit/MspDeInit Callbacks */
-    if(HAL_SDRAM_RegisterCallback(&hsdram[Instance], HAL_SDRAM_MSP_INIT_CB_ID, SDRAM_MspInit) != HAL_OK)
+    if (HAL_SDRAM_RegisterCallback(&hsdram[Instance], HAL_SDRAM_MSP_INIT_CB_ID, SDRAM_MspInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    if(HAL_SDRAM_RegisterCallback(&hsdram[Instance], HAL_SDRAM_MSP_DEINIT_CB_ID, SDRAM_MspDeInit) != HAL_OK)
+    if (HAL_SDRAM_RegisterCallback(&hsdram[Instance], HAL_SDRAM_MSP_DEINIT_CB_ID, SDRAM_MspDeInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -266,23 +267,23 @@ int32_t BSP_SDRAM_RegisterDefaultMspCallbacks (uint32_t Instance)
   * @param CallBacks    pointer to MspInit/MspDeInit callbacks functions
   * @retval BSP status
   */
-int32_t BSP_SDRAM_RegisterMspCallbacks (uint32_t Instance, BSP_SDRAM_Cb_t *CallBacks)
+int32_t BSP_SDRAM_RegisterMspCallbacks(uint32_t Instance, BSP_SDRAM_Cb_t *CallBacks)
 {
   int32_t ret = BSP_ERROR_NONE;
 
   /* Check if the instance is supported */
-  if(Instance >= SDRAM_INSTANCES_NBR)
+  if (Instance >= SDRAM_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     /* Register MspInit/MspDeInit Callbacks */
-    if(HAL_SDRAM_RegisterCallback(&hsdram[Instance], HAL_SDRAM_MSP_INIT_CB_ID, CallBacks->pMspInitCb) != HAL_OK)
+    if (HAL_SDRAM_RegisterCallback(&hsdram[Instance], HAL_SDRAM_MSP_INIT_CB_ID, CallBacks->pMspInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
-    if(HAL_SDRAM_RegisterCallback(&hsdram[Instance], HAL_SDRAM_MSP_DEINIT_CB_ID, CallBacks->pMspDeInitCb) != HAL_OK)
+    if (HAL_SDRAM_RegisterCallback(&hsdram[Instance], HAL_SDRAM_MSP_DEINIT_CB_ID, CallBacks->pMspDeInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -306,11 +307,11 @@ int32_t BSP_SDRAM_SendCmd(uint32_t Instance, FMC_SDRAM_CommandTypeDef *SdramCmd)
 {
   int32_t ret;
 
-  if(Instance >= SDRAM_INSTANCES_NBR)
+  if (Instance >= SDRAM_INSTANCES_NBR)
   {
     ret =  BSP_ERROR_WRONG_PARAM;
   }
-  else if(MT48LC4M32B2_Sendcmd(&hsdram[Instance], SdramCmd) != MT48LC4M32B2_OK)
+  else if (MT48LC4M32B2_Sendcmd(&hsdram[Instance], SdramCmd) != MT48LC4M32B2_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -369,22 +370,22 @@ static void SDRAM_MspInit(SDRAM_HandleTypeDef  *hSdram)
   gpio_init_structure.Alternate = GPIO_AF12_FMC;
 
   /* GPIOD configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_8| GPIO_PIN_9 | GPIO_PIN_10 |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | \
                               GPIO_PIN_14 | GPIO_PIN_15;
 
 
   HAL_GPIO_Init(GPIOD, &gpio_init_structure);
 
   /* GPIOE configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_7| GPIO_PIN_8 | GPIO_PIN_9 |\
-                              GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | \
+                              GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | \
                               GPIO_PIN_15;
 
   HAL_GPIO_Init(GPIOE, &gpio_init_structure);
 
   /* GPIOF configuration */
-  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2| GPIO_PIN_3 | GPIO_PIN_4 |\
-                              GPIO_PIN_5 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 |\
+  gpio_init_structure.Pin   = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | \
+                              GPIO_PIN_5 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | \
                               GPIO_PIN_15;
 
   HAL_GPIO_Init(GPIOF, &gpio_init_structure);
@@ -396,7 +397,6 @@ static void SDRAM_MspInit(SDRAM_HandleTypeDef  *hSdram)
   /* GPIOH configuration */
   gpio_init_structure.Pin   = GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7 ;
   HAL_GPIO_Init(GPIOH, &gpio_init_structure);
-
 
 
   /* Configure common MDMA parameters */
@@ -418,7 +418,7 @@ static void SDRAM_MspInit(SDRAM_HandleTypeDef  *hSdram)
 
   mdma_handle.Instance = SDRAM_MDMAx_CHANNEL;
 
-   /* Associate the DMA handle */
+  /* Associate the DMA handle */
   __HAL_LINKDMA(hsdram, hmdma, mdma_handle);
 
   /* Deinitialize the stream for new transfer */

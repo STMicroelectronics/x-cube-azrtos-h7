@@ -1,8 +1,8 @@
 
-## <b>Tx_MPU application description</b>
+## <b>Tx_MPU Application Description</b>
 
 This application provides an example of Azure RTOS ThreadX stack usage, it shows how to develop an application using the ThreadX Module feature.
-It demonstrates how to load, start and unload modules. In addition, it shows how ThreadX memory protection on modules using the Memory Protection Unit (MPU). 
+It demonstrates how to load, start and unload modules. In addition, it shows how ThreadX memory protection on modules using the Memory Protection Unit (MPU).
 
 This project is composed of two sub-projects:
 
@@ -94,8 +94,8 @@ The above configuration results in an attributes word equals 0x00000007
 
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.
-       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.	 
-       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).	 
+       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
        Read more in STM32CubeIDE User Guide, chapter: "Linker script".
 
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
@@ -107,8 +107,8 @@ RTOS, ThreadX, Threading, Message Queue, Module Manager, Module, MPU
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H747xx devices
-  - This example has been tested with STMicroelectronics STM32H747I-DISCO boards Revision: MB1248D-01.
+  - This application runs on STM32H747xx devices
+  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards Revision: MB1248D-01.
     and can be easily tailored to any other supported device and development board.
   - A virtual COM port appears in the HyperTerminal:
       - Hyperterminal configuration:

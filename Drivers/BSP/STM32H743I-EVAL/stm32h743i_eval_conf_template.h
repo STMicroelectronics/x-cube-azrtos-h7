@@ -55,6 +55,9 @@
 
 /* Default TS touch number */
 #define TS_TOUCH_NBR                        2U
+#define USE_TS3510_TS_CTRL                  0U
+#define USE_EXC7200_TS_CTRL                 1U
+#define USE_EXC80W32_TS_CTRL                0U /* EXC80W32 component available on STM32H753I-EVAL2 board, MB1246 Rev E03 */
 
 /* Default EEPROM max trials */
 #define EEPROM_MAX_TRIALS                   3000U

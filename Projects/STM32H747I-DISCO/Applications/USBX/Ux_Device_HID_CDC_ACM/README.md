@@ -1,5 +1,5 @@
 
-## <b>Ux_Device_HID_CDC_ACM application description</b>
+## <b>Ux_Device_HID_CDC_ACM Application Description</b>
 
 This application provides an example of Azure RTOS USBX stack usage on STM32H747I-DISCO board, it shows how to develop a composite USB device communication
 class "HID" and "CDC_ACM" based application.
@@ -67,7 +67,7 @@ None.
 
 ### <b>Notes</b>
 
- 1. Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from Flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.
+ 1. Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.
  2.  If the application is using the DTCM/ITCM memories (@0x20000000/ 0x0000000: not cacheable and only accessible by the Cortex M7 and the MDMA), no need for cache maintenance when the Cortex M7 and the MDMA access these RAMs. If the application needs to use DMA (or other masters) based access or requires more RAM, then the user has to:
       - Use a non TCM SRAM. (example : D1 AXI-SRAM @ 0x24000000).
       - Add a cache maintenance mechanism to ensure the cache coherence between CPU and other masters (DMAs,DMA2D,LTDC,MDMA).
@@ -76,6 +76,7 @@ None.
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
       - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
+
 
 #### <b>ThreadX usage hints</b>
 
@@ -128,16 +129,16 @@ RTOS, ThreadX, USBX, USBXDevice, USB_OTG, High Speed, CDC, HID, VCP, USART, DMA,
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H747xx devices
-  - This example has been tested with STMicroelectronics STM32H747I-DISCO boards revision MB1520-H747I-B02 and can be easily tailored to any other supported device and development board.
+  - This application runs on STM32H747xx devices
+  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards revision MB1520-H747I-B02 and can be easily tailored to any other supported device and development board.
   - STM32H747I-DISCO set-up:
     - Connect the STM32H747I-DISCO board CN1 to the PC through "MICRO-USB" to "Standard A" cable.
     - For VCP the configuration is dynamic for example it can be :
-        - BaudRate = 115200 baud
-        - Word Length = 8 Bits
-        - Stop Bit = 1
-        - Parity = None
-        - Flow control = None
+      - BaudRate = 115200 baud
+      - Word Length = 8 Bits
+      - Stop Bit = 1
+      - Parity = None
+      - Flow control = None
 
   - The USART1 interface available on PA9 and PA10 of the microcontroller are connected to ST-LINK MCU.
     By default the USART1 communication between the target MCU and ST-LINK MCU is enabled.

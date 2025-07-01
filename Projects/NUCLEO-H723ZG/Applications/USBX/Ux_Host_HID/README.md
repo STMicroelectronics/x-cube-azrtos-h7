@@ -1,5 +1,5 @@
 
-## <b>Ux_Host_HID application description</b>
+## <b>Ux_Host_HID Application Description</b>
 
 This application provides an example of Azure RTOS USBX stack usage.
 It shows how to develop a USB Host Human Interface "HID" able to enumerate and communicate with a mouse or a keyboard.
@@ -11,7 +11,7 @@ The main entry function tx_application_define() is then called by ThreadX during
 are initialized, the HID class driver and HID clients are registered.
 The application creates 3 threads with different priorities :
 
-  - usbx_app_thread_entry     (Priority : 25; Preemption threshold : 25) used to initialize USB OTG HAL HCD driver and start the Host.
+  - app_ux_host_thread_entry  (Priority : 25; Preemption threshold : 25) used to initialize USB OTG HAL HCD driver and start the Host.
   - hid_mouse_thread_entry    (Priority : 30; Preemption threshold : 30) used to decode HID reports received  from a mouse.
   - hid_keyboard_thread_entry (Priority : 30; Preemption threshold : 30) used to decode HID reports received  from a keyboard.
 
@@ -45,7 +45,7 @@ None
 
 ### <b>Notes</b>
 
- 1. Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from Flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.
+ 1. Some code parts can be executed in the ITCM-RAM (64 KB up to 256kB) which decreases critical task execution time, compared to code execution from flash memory. This feature can be activated using '#pragma location = ".itcmram"' to be placed above function declaration, or using the toolchain GUI (file options) to execute a whole source file in the ITCM-RAM.
  2.  If the application is using the DTCM/ITCM memories (@0x20000000/ 0x0000000: not cacheable and only accessible by the Cortex M7 and the MDMA), no need for cache maintenance when the Cortex M7 and the MDMA access these RAMs. If the application needs to use DMA (or other masters) based access or requires more RAM, then the user has to:
       - Use a non TCM SRAM. (example : D1 AXI-SRAM @ 0x24000000).
       - Add a cache maintenance mechanism to ensure the cache coherence between CPU and other masters (DMAs,DMA2D,LTDC,MDMA).
@@ -102,17 +102,16 @@ None
 
 ### <b>Keywords</b>
 
-Connectivity, USBX Host, ThreadX, USB, HID, Mouse, Keyboard, UART, USART,
+Connectivity, USBX Host, ThreadX, USB, HID, Mouse, Keyboard, UART, USART
 
 ### <b>Hardware and Software environment</b>
 
-  - This application runs on STM32H723xx devices
+  - This application runs on STM32H723xx devices.
   - This application has been tested with STMicroelectronics NUCLEO-H723ZG MB1364-H723ZG-E01
     and can be easily tailored to any other supported device and development board.
-
-- NUCLEO-H723ZG Set-up
-    - Plug the USB HID device into the NUCLEO-H723ZG board through 'USB micro A-Male  to A-Female' cable to the connector:
-      - CN13 : to use USB High Speed OTG IP
+  - NUCLEO-H723ZG set-up:
+    - Plug the USB HID device into the NUCLEO-H723ZG board through 'USB micro A-Male to A-Female' cable to the connector:
+      - CN13 : to use USB High Speed OTG IP (HS)
     - Connect ST-Link cable to the PC USB port to display data on the HyperTerminal.
 
     A virtual COM port will then appear in the HyperTerminal:

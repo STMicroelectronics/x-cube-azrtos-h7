@@ -16,6 +16,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "lx_api.h"
 #include "stm32h7xx_hal.h"
@@ -207,9 +211,9 @@ extern void MX_QUADSPI_Init(void);
 #define LX_STM32_QSPI_ENTER_4_BYTE_ADDR_MODE_CMD  MT25TL01G_ENTER_4_BYTE_ADDR_MODE_CMD
 #define LX_STM32_QSPI_DUMMY_CYCLES_READ_QUAD      MT25TL01G_DUMMY_CYCLES_READ_QUAD_DTR
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

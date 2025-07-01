@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_netxduo.h"
 
@@ -164,7 +168,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
     return TX_POOL_ERROR;
   }
 
-  /* create the TCP server thread */
+  /* Create the TCP server thread */
   ret = tx_thread_create(&AppTCPThread, "App TCP Thread", App_TCP_Thread_Entry, 0, pointer, NX_APP_THREAD_STACK_SIZE,
                          NX_APP_THREAD_PRIORITY, NX_APP_THREAD_PRIORITY, TX_NO_TIME_SLICE, TX_DONT_START);
 
@@ -226,7 +230,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
   tx_semaphore_create(&DHCPSemaphore, "DHCP Semaphore", 0);
 
   /* USER CODE BEGIN MX_NetXDuo_Init */
-  /* set DHCP notification callback  */
+  /* Set DHCP notification callback  */
   tx_semaphore_create(&TCPSemaphore, "TCP Semaphore", 0);
 
   /* Allocate the memory for Link thread   */
@@ -235,7 +239,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
     return TX_POOL_ERROR;
   }
 
-  /* create the Link thread */
+  /* Create the Link thread */
   ret = tx_thread_create(&AppLinkThread, "App Link Thread", App_Link_Thread_Entry, 0, pointer, NX_APP_THREAD_STACK_SIZE,
                          LINK_PRIORITY, LINK_PRIORITY, TX_NO_TIME_SLICE, TX_AUTO_START);
 
@@ -258,12 +262,10 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
 static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr)
 {
   /* USER CODE BEGIN ip_address_change_notify_callback */
-  /* release the semaphore as soon as an IP address is available */
+  /* Release the semaphore as soon as an IP address is available */
   if (nx_ip_address_get(&NetXDuoEthIpInstance, &IpAddress, &NetMask) != NX_SUCCESS)
   {
-    /* USER CODE BEGIN IP address change callback error */
     Error_Handler();
-    /* USER CODE END IP address change callback error */
   }
   if(IpAddress != NULL_ADDRESS)
   {
@@ -318,17 +320,17 @@ static VOID nx_app_thread_entry (ULONG thread_input)
   /* USER CODE BEGIN Nx_App_Thread_Entry 2 */
   PRINT_IP_ADDRESS(IpAddress);
 
-  /* the network is correctly initialized, start the TCP server thread */
+  /* The network is correctly initialized, start the TCP server thread */
   tx_thread_resume(&AppTCPThread);
 
-  /* if this thread is not needed any more, we relinquish it */
+  /* If this thread is not needed any more, we relinquish it */
   tx_thread_relinquish();
 
   return;
   /* USER CODE END Nx_App_Thread_Entry 2 */
 
 }
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 /**
 * @brief  TCP listen call back
 * @param socket_ptr: NX_TCP_SOCKET socket registered for the callback
@@ -356,7 +358,7 @@ static VOID App_TCP_Thread_Entry(ULONG thread_input)
   UINT source_port;
   ULONG bytes_read;
 
-  /* create the TCP socket */
+  /* Create the TCP socket */
   ret = nx_tcp_socket_create(&NetXDuoEthIpInstance, &TCPSocket, "TCP Server Socket", NX_IP_NORMAL, NX_FRAGMENT_OKAY,
                              NX_IP_TIME_TO_LIVE, WINDOW_SIZE, NX_NULL, NX_NULL);
   if (ret != NX_SUCCESS)
@@ -365,8 +367,8 @@ static VOID App_TCP_Thread_Entry(ULONG thread_input)
   }
 
   /*
-  * listen to new client connections.
-  * the TCP_listen_callback will release the 'Semaphore' when a new connection is available
+  * Listen to new client connections.
+  * The TCP_listen_callback will release the 'Semaphore' when a new connection is available
   */
   ret = nx_tcp_server_socket_listen(&NetXDuoEthIpInstance, DEFAULT_PORT, &TCPSocket, MAX_TCP_CLIENTS, tcp_listen_callback);
 
@@ -385,7 +387,7 @@ static VOID App_TCP_Thread_Entry(ULONG thread_input)
   }
   else
   {
-    /* accept the new client connection before starting data exchange */
+    /* Accept the new client connection before starting data exchange */
     ret = nx_tcp_server_socket_accept(&TCPSocket, TX_WAIT_FOREVER);
 
     if (ret != NX_SUCCESS)
@@ -400,10 +402,10 @@ static VOID App_TCP_Thread_Entry(ULONG thread_input)
 
     TX_MEMSET(data_buffer, '\0', sizeof(data_buffer));
 
-    /* get the socket state */
+    /* Get the socket state */
     nx_tcp_socket_info_get(&TCPSocket, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &socket_state, NULL, NULL, NULL);
 
-    /* if the connections is not established then accept new ones, otherwise start receiving data */
+    /* If the connections is not established then accept new ones, otherwise start receiving data */
     if(socket_state != NX_TCP_ESTABLISHED)
     {
       ret = nx_tcp_server_socket_accept(&TCPSocket, NX_IP_PERIODIC_RATE);
@@ -411,28 +413,28 @@ static VOID App_TCP_Thread_Entry(ULONG thread_input)
 
     if(ret == NX_SUCCESS)
     {
-      /* receive the TCP packet send by the client */
+      /* Receive the TCP packet send by the client */
       ret = nx_tcp_socket_receive(&TCPSocket, &data_packet, NX_WAIT_FOREVER);
 
       if (ret == NX_SUCCESS)
       {
-        HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+        HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
 
-        /* get the client IP address and  port */
+        /* Get the client IP address and  port */
         nx_udp_source_extract(data_packet, &source_ip_address, &source_port);
 
-        /* retrieve the data sent by the client */
+        /* Retrieve the data sent by the client */
         nx_packet_data_retrieve(data_packet, data_buffer, &bytes_read);
 
-        /* print the received data */
+        /* Print the received data */
         PRINT_DATA(source_ip_address, source_port, data_buffer);
 
-        /* immediately resend the same packet */
+        /* Immediately resend the same packet */
         ret =  nx_tcp_socket_send(&TCPSocket, data_packet, NX_IP_PERIODIC_RATE);
 
         if (ret == NX_SUCCESS)
         {
-          HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+          HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
         }
       }
       else
@@ -444,8 +446,8 @@ static VOID App_TCP_Thread_Entry(ULONG thread_input)
     }
     else
     {
-      /*toggle the green led to indicate the idle state */
-      HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+      /*Toggle the green led to indicate the idle state */
+      HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
     }
   }
 }
@@ -493,7 +495,7 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
           /* Start DHCP */
           nx_dhcp_start(&DHCPClient);
 
-          /* wait until an IP address is ready */
+          /* Wait until an IP address is ready */
           if(tx_semaphore_get(&DHCPSemaphore, TX_WAIT_FOREVER) != TX_SUCCESS)
           {
             /* USER CODE BEGIN DHCPSemaphore get error */
@@ -525,4 +527,4 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
     tx_thread_sleep(NX_APP_CABLE_CONNECTION_CHECK_PERIOD);
   }
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

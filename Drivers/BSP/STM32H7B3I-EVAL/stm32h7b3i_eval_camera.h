@@ -22,7 +22,7 @@
 #define STM32H7B3I_EVAL_CAMERA_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -74,7 +74,7 @@ typedef struct
   uint32_t Zoom;
   uint32_t NightMode;
   uint32_t IsMspCallbacksValid;
-}CAMERA_Ctx_t;
+} CAMERA_Ctx_t;
 
 typedef struct
 {
@@ -95,7 +95,7 @@ typedef struct
 {
   void (* pMspInitCb)(DCMI_HandleTypeDef *);
   void (* pMspDeInitCb)(DCMI_HandleTypeDef *);
-}BSP_CAMERA_Cb_t;
+} BSP_CAMERA_Cb_t;
 #endif /* (USE_HAL_DCMI_REGISTER_CALLBACKS == 1) */
 /**
   * @}
@@ -200,7 +200,7 @@ extern CAMERA_Ctx_t        Camera_Ctx[];
 int32_t BSP_CAMERA_Init(uint32_t Instance, uint32_t Resolution, uint32_t PixelFormat);
 int32_t BSP_CAMERA_DeInit(uint32_t Instance);
 #if (USE_HAL_DCMI_REGISTER_CALLBACKS == 1)
-int32_t BSP_CAMERA_RegisterDefaultMspCallbacks (uint32_t Instance);
+int32_t BSP_CAMERA_RegisterDefaultMspCallbacks(uint32_t Instance);
 int32_t BSP_CAMERA_RegisterMspCallbacks(uint32_t Instance, BSP_CAMERA_Cb_t *CallBacks);
 #endif /* (USE_HAL_DCMI_REGISTER_CALLBACKS == 1) */
 int32_t BSP_CAMERA_Start(uint32_t Instance, uint8_t *buff, uint32_t Mode);
@@ -254,7 +254,7 @@ void    BSP_CAMERA_DMA_IRQHandler(uint32_t Instance);
 
 /* These functions can be modified in case the current settings (e.g. DMA stream)
    need to be changed for specific application needs */
-HAL_StatusTypeDef MX_DCMI_Init(DCMI_HandleTypeDef* hdcmi);
+HAL_StatusTypeDef MX_DCMI_Init(DCMI_HandleTypeDef *hdcmi);
 
 
 /**

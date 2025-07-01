@@ -51,16 +51,17 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
+void MX_SDMMC1_SD_Init(void);
 
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define LED2_Pin GPIO_PIN_2
-#define LED2_GPIO_Port GPIOC
-#define LED1_Pin GPIO_PIN_3
-#define LED1_GPIO_Port GPIOC
+#define LED_RED_Pin GPIO_PIN_2
+#define LED_RED_GPIO_Port GPIOC
+#define LED_GREEN_Pin GPIO_PIN_3
+#define LED_GREEN_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
 

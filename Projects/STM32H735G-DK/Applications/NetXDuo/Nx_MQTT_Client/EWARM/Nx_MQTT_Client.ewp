@@ -224,6 +224,7 @@
                 </option>
                 <option>
                     <name>CCDefines</name>
+                    <state>USE_PWR_DIRECT_SMPS_SUPPLY</state>
                     <state>TX_INCLUDE_USER_DEFINE_FILE</state>
                     <state>NX_SECURE_INCLUDE_USER_DEFINE_FILE</state>
                     <state>NX_INCLUDE_USER_DEFINE_FILE</state>
@@ -552,7 +553,7 @@
                 </option>
                 <option>
                     <name>ADefines</name>
-                    <state></state>
+                    <state>TX_INCLUDE_USER_DEFINE_FILE</state>
                 </option>
                 <option>
                     <name>AList</name>
@@ -644,7 +645,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state></state>
+                    <state>$PROJ_DIR$/../Core/Inc</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>

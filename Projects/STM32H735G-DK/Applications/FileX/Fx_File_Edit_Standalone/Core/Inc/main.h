@@ -60,10 +60,10 @@ void Error_Handler(void);
 #define SD_DETECT_Pin GPIO_PIN_5
 #define SD_DETECT_GPIO_Port GPIOF
 #define SD_DETECT_EXTI_IRQn EXTI9_5_IRQn
-#define LED2_Pin GPIO_PIN_2
-#define LED2_GPIO_Port GPIOC
-#define LED1_Pin GPIO_PIN_3
-#define LED1_GPIO_Port GPIOC
+#define LED_RED_Pin GPIO_PIN_2
+#define LED_RED_GPIO_Port GPIOC
+#define LED_GREEN_Pin GPIO_PIN_3
+#define LED_GREEN_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
 

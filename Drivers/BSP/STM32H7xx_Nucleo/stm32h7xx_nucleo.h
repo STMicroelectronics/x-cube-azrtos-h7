@@ -61,16 +61,19 @@
  #error "Board Pin number not defined!! Add USE_NUCLEO_144 define within stm32h7xx_nucleo_conf.h file"
 #endif
 
-#if !defined (USE_NUCLEO_H745ZI_Q) && !defined (USE_NUCLEO_H743ZI) && !defined (USE_NUCLEO_H743ZI2) &&\
-    !defined (USE_NUCLEO_H7A3ZI_Q) && !defined (USE_NUCLEO_H723ZG)
- #error "Board Part number not defined!! Add one of the following define within stm32h7xx_nucleo_conf.h file:\
-         USE_NUCLEO_H745ZI_Q, USE_NUCLEO_H743ZI, USE_NUCLEO_H743ZI2, USE_NUCLEO_H7A3ZI_Q, USE_NUCLEO_H723ZG"
+#if !defined (USE_NUCLEO_H745ZI_Q) && !defined (USE_NUCLEO_H755ZI_Q) && !defined (USE_NUCLEO_H743ZI) &&\
+     !defined (USE_NUCLEO_H753ZI) && !defined (USE_NUCLEO_H743ZI2) && !defined (USE_NUCLEO_H7A3ZI_Q) &&\
+     !defined (USE_NUCLEO_H723ZG)
+ #error "Board Part number not defined!! Add one of the following defines within stm32h7xx_nucleo_conf.h file:\
+         USE_NUCLEO_H745ZI_Q, USE_NUCLEO_H755ZI_Q, USE_NUCLEO_H743ZI, USE_NUCLEO_H753ZI, USE_NUCLEO_H743ZI2,\
+         USE_NUCLEO_H7A3ZI_Q or USE_NUCLEO_H723ZG"
 #endif
 
 /** @defgroup STM32H7XX_NUCLEO_LOW_LEVEL_Exported_Types LOW LEVEL Exported Types
   * @{
   */
-#if defined (USE_NUCLEO_H745ZI_Q) || defined (USE_NUCLEO_H743ZI2) || defined (USE_NUCLEO_H7A3ZI_Q) || defined (USE_NUCLEO_H723ZG)
+#if defined (USE_NUCLEO_H745ZI_Q) || defined (USE_NUCLEO_H755ZI_Q) || defined (USE_NUCLEO_H743ZI2) ||\
+    defined (USE_NUCLEO_H7A3ZI_Q) || defined (USE_NUCLEO_H723ZG)
 typedef enum
 {
   LED1 = 0,
@@ -81,7 +84,7 @@ typedef enum
   LED_RED = LED3,
   LEDn
 }Led_TypeDef;
-#else /* USE_NUCLEO_H743ZI */
+#else /* USE_NUCLEO_H743ZI || USE_NUCLEO_H753ZI */
 typedef enum
 {
   LED1 = 0,
@@ -170,11 +173,11 @@ typedef struct
   */
 
 /**
-  * @brief STM32H7XX NUCLEO BSP Driver version number V1.3.2
+  * @brief STM32H7XX NUCLEO BSP Driver version number
   */
 #define STM32H7XX_NUCLEO_BSP_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
 #define STM32H7XX_NUCLEO_BSP_VERSION_SUB1   (0x03U) /*!< [23:16] sub1 version */
-#define STM32H7XX_NUCLEO_BSP_VERSION_SUB2   (0x02U) /*!< [15:8]  sub2 version */
+#define STM32H7XX_NUCLEO_BSP_VERSION_SUB2   (0x03U) /*!< [15:8]  sub2 version */
 #define STM32H7XX_NUCLEO_BSP_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
 #define STM32H7XX_NUCLEO_BSP_VERSION        ((STM32H7XX_NUCLEO_BSP_VERSION_MAIN << 24)\
                                             |(STM32H7XX_NUCLEO_BSP_VERSION_SUB1 << 16)\
@@ -191,12 +194,13 @@ typedef struct
 #define LED1_GPIO_CLK_ENABLE()                  __HAL_RCC_GPIOB_CLK_ENABLE()
 #define LED1_GPIO_CLK_DISABLE()                 __HAL_RCC_GPIOB_CLK_DISABLE()
 
-#if defined (USE_NUCLEO_H745ZI_Q) || defined (USE_NUCLEO_H743ZI2) || defined (USE_NUCLEO_H7A3ZI_Q) || defined (USE_NUCLEO_H723ZG)
+#if defined (USE_NUCLEO_H745ZI_Q) || defined (USE_NUCLEO_H755ZI_Q) || defined (USE_NUCLEO_H743ZI2) ||\
+    defined (USE_NUCLEO_H7A3ZI_Q) || defined (USE_NUCLEO_H723ZG)
 #define LED2_PIN                                GPIO_PIN_1
 #define LED2_GPIO_PORT                          GPIOE
 #define LED2_GPIO_CLK_ENABLE()                  __HAL_RCC_GPIOE_CLK_ENABLE()
 #define LED2_GPIO_CLK_DISABLE()                 __HAL_RCC_GPIOE_CLK_DISABLE()
-#else /* USE_NUCLEO_H743ZI */
+#else /* USE_NUCLEO_H743ZI || USE_NUCLEO_H753ZI */
 #define LED2_PIN                                GPIO_PIN_7
 #define LED2_GPIO_PORT                          GPIOB
 #define LED2_GPIO_CLK_ENABLE()                  __HAL_RCC_GPIOB_CLK_ENABLE()

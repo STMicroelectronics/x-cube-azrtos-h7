@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_host_audio.h"
 
@@ -67,7 +71,7 @@ UX_HOST_CLASS_AUDIO_CONTROL audio_speaker_mute;
 
 /* USER CODE END 0 */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 /**
   * @brief  Function implementing audio_playback_thread_entry.
   * @param  thread_input: not used
@@ -414,4 +418,4 @@ VOID playback_transfer_request_completion(UX_HOST_CLASS_AUDIO_TRANSFER_REQUEST *
   /* Release the semaphore */
   tx_semaphore_put(&data_send_semaphore);
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_usbx_device.h"
 
@@ -183,18 +187,20 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
   /* USER CODE BEGIN MX_USBX_Device_Init1 */
 
   /* Allocate the stack for hid mouse thread */
-  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, 1024, TX_NO_WAIT) != TX_SUCCESS)
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, UX_DEVICE_APP_THREAD_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
   {
     return TX_POOL_ERROR;
   }
 
   /* Create the hid mouse thread. */
   if (tx_thread_create(&ux_hid_thread, "hid_usbx_app_thread_entry",
-                       usbx_hid_thread_entry, 1, pointer, 1024, 20, 20,
+                       usbx_hid_thread_entry, 1, pointer, UX_DEVICE_APP_THREAD_STACK_SIZE, 20, 20,
                        1, TX_AUTO_START) != TX_SUCCESS)
   {
     return TX_THREAD_ERROR;
   }
+
+
   /* USER CODE END MX_USBX_Device_Init1 */
 
   return ret;
@@ -214,7 +220,7 @@ static VOID app_ux_device_thread_entry(ULONG thread_input)
   /* USER CODE END app_ux_device_thread_entry */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 /**
   * @brief  USBX_APP_Device_Init
   *         Initialization of USB device.
@@ -263,4 +269,4 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     User_Button_State ^= 1U;
   }
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

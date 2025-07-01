@@ -20,4 +20,3 @@
 | Azure RTOS FileX                | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
 | Azure RTOS LeveLX               | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
 | Azure RTOS USBX                 | Microsoft Corporation                                 | Microsoft Software License for Azure RTOS |
-| Cypress-WHD                     | Cypress Semiconductor Corporation                     | Apache-2.0 for sources and PBL-1.0 for binaries |

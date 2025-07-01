@@ -1,5 +1,5 @@
 
-## <b>Nx_SNTP_Client application description</b>
+## <b>Nx_SNTP_Client Application Description</b>
 
 This application provides an example of Azure RTOS NetX/NetXDuo stack usage.
 
@@ -15,8 +15,8 @@ The main entry function tx_application_define() is called by ThreadX during kern
 
 The application then creates 2 threads with the same priorities:
 
- + **NxAppThread** (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.
- + **AppSNTPThread** (priority 5, PreemtionThreashold 5) : created with the TX_DONT_START flag to be started later.
+ + **NxAppThread** (priority 10, PreemptionThreshold 10) : created with the TX_AUTO_START flag to start automatically.
+ + **AppSNTPThread** (priority 5, PreemptionThreshold 5) : created with the TX_DONT_START flag to be started later.
 
 The **NxAppThread** starts and performs the following actions:
 
@@ -60,12 +60,12 @@ void MX_ETH_Init(void)
 
   /* USER CODE END ETH_Init 1 */
   heth.Instance = ETH;
-  MACAddr[0] = 0x00;
-  MACAddr[1] = 0x80;
-  MACAddr[2] = 0xE1;
-  MACAddr[3] = 0x00;
-  MACAddr[4] = 0x30;
-  MACAddr[5] = 0x20;
+  heth.Init.MACAddr[0] =   0x00;
+  heth.Init.MACAddr[1] =   0x80;
+  heth.Init.MACAddr[2] =   0xE1;
+  heth.Init.MACAddr[3] =   0x00;
+  heth.Init.MACAddr[4] =   0x30;
+  heth.Init.MACAddr[5] =   0x20;
 
 ```
 
@@ -153,6 +153,7 @@ default NX_SNTP_CLIENT_MAX_ROOT_DISPERSION and NX_SNTP_CLIENT_MIN_SERVER_STRATUM
      *(.NetXPoolSection)
      } >RAM_D1
    ```
+
   This section is then used in the <code> app_azure_rtos.c</code> file to force the <code>nx_byte_pool_buffer</code> allocation.
 
 ```
@@ -179,7 +180,7 @@ For more details about the MPU configuration please refer to the [AN4838](https:
 
 RTOS, Network, ThreadX, NetXDuo, SNTP, UART
 
-### Hardware and Software environment</b>
+### <b>Hardware and Software environment</b>
 
   - This application runs on STM32H747xx devices
   - This application has been tested with STMicroelectronics STM32H747I-DISCO boards revision MB1520-H747I-B02

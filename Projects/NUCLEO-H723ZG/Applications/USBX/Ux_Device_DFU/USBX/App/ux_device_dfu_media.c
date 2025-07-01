@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_device_dfu_media.h"
 
@@ -330,7 +334,7 @@ UINT USBD_DFU_CustomRequest(VOID *dfu_instance, UX_SLAVE_TRANSFER *transfer)
 
 #endif /* UX_DEVICE_CLASS_DFU_CUSTOM_REQUEST_ENABLE */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief  Function implementing usbx_dfu_download_thread_entry.
@@ -526,4 +530,4 @@ static uint32_t GetSector(uint32_t Address)
 
   return (sector);
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

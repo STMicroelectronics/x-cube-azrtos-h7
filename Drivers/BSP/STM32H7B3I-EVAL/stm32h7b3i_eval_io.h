@@ -22,7 +22,7 @@
 #define STM32H7B3I_EVAL_IO_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -53,14 +53,14 @@ typedef struct
 {
   uint32_t                    IsInitialized;     /*   IO_IsInitialized    */
   uint32_t                    Functions;         /*   Selected functions  */
-}IOEXPANDER_Ctx_t;
+} IOEXPANDER_Ctx_t;
 
 typedef struct
 {
   uint32_t Pin;       /*!< Specifies the IO pins to be configured */
   uint32_t Mode;      /*!< Specifies the operating mode for the selected pins */
   uint32_t Pull;      /*!< Specifies the Pull-up or Pull-Down activation for the selected pins */
-}BSP_IO_Init_t;
+} BSP_IO_Init_t;
 
 /**
   * @}

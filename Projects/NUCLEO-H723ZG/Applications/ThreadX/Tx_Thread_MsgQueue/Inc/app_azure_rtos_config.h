@@ -26,6 +26,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 
 /* Private includes ----------------------------------------------------------*/
@@ -63,6 +67,10 @@ extern "C" {
 /* USER CODE BEGIN PD */
 
 /* USER CODE END PD */
+
+/* USER CODE BEGIN 2 */
+
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

@@ -22,7 +22,7 @@
 #define STM32H7B3I_EVAL_SDRAM_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -49,14 +49,14 @@ typedef enum
 {
   SDRAM_DATA_LENGTH_16B,
   SDRAM_DATA_LENGTH_32B
-}SDRAM_DataLength_t;
+} SDRAM_DataLength_t;
 
 #if (USE_HAL_SDRAM_REGISTER_CALLBACKS == 1)
 typedef struct
 {
   void (* pMspInitCb)(SDRAM_HandleTypeDef *);
   void (* pMspDeInitCb)(SDRAM_HandleTypeDef *);
-}BSP_SDRAM_Cb_t;
+} BSP_SDRAM_Cb_t;
 #endif /* (USE_HAL_SDRAM_REGISTER_CALLBACKS == 1) */
 /**
   * @}
@@ -110,8 +110,8 @@ int32_t BSP_SDRAM_Init(uint32_t Instance);
 int32_t BSP_SDRAM_InitEx(uint32_t Instance, SDRAM_DataLength_t DataLength);
 int32_t BSP_SDRAM_DeInit(uint32_t Instance);
 #if (USE_HAL_SDRAM_REGISTER_CALLBACKS == 1)
-int32_t BSP_SDRAM_RegisterDefaultMspCallbacks (uint32_t Instance);
-int32_t BSP_SDRAM_RegisterMspCallbacks (uint32_t Instance, BSP_SDRAM_Cb_t *CallBacks);
+int32_t BSP_SDRAM_RegisterDefaultMspCallbacks(uint32_t Instance);
+int32_t BSP_SDRAM_RegisterMspCallbacks(uint32_t Instance, BSP_SDRAM_Cb_t *CallBacks);
 #endif /* (USE_HAL_SDRAM_REGISTER_CALLBACKS == 1)  */
 int32_t BSP_SDRAM_SendCmd(uint32_t Instance, FMC_SDRAM_CommandTypeDef *SdramCmd);
 void BSP_SDRAM_IRQHandler(uint32_t Instance);

@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "nx_api.h"
 
@@ -89,10 +93,10 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr);
 
 #define DEFAULT_PORT                          6000
 #define UDP_SERVER_PORT                       DEFAULT_PORT
-#define UDP_SERVER_ADDRESS                    IP_ADDRESS(10, 157, 11, 178)
+#define UDP_SERVER_ADDRESS                    IP_ADDRESS(192, 168, 1, 1)
 
 #define MAX_PACKET_COUNT                      100
-#define DEFAULT_MESSAGE                       "NetXDuo On STM32H735"
+#define DEFAULT_MESSAGE                       "NetXDuo On STM32H735G-DK"
 
 #define NX_APP_CABLE_CONNECTION_CHECK_PERIOD  (1 * NX_IP_PERIODIC_RATE)
 /* USER CODE END PD */
@@ -115,9 +119,9 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr);
 
 #define NX_APP_DEFAULT_NET_MASK                     0
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

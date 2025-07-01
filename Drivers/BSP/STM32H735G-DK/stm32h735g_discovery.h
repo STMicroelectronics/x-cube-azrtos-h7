@@ -25,7 +25,7 @@
 #define STM32H735G_DK_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -55,40 +55,40 @@ typedef enum
   LED2 = 1U,
   LED_RED = LED2,
   LEDn
-}Led_TypeDef;
+} Led_TypeDef;
 
 
 typedef enum
 {
   BUTTON_USER = 0U,
   BUTTONn
-}Button_TypeDef;
+} Button_TypeDef;
 
 typedef enum
 {
   BUTTON_MODE_GPIO = 0U,
   BUTTON_MODE_EXTI = 1U
-}ButtonMode_TypeDef;
+} ButtonMode_TypeDef;
 
 #if (USE_BSP_COM_FEATURE > 0)
 typedef enum
 {
   COM1 = 0U,
   COMn
-}COM_TypeDef;
+} COM_TypeDef;
 
 typedef enum
 {
   COM_STOPBITS_1     =   UART_STOPBITS_1,
   COM_STOPBITS_2     =   UART_STOPBITS_2,
-}COM_StopBitsTypeDef;
+} COM_StopBitsTypeDef;
 
 typedef enum
 {
   COM_PARITY_NONE     =  UART_PARITY_NONE,
   COM_PARITY_EVEN     =  UART_PARITY_EVEN,
   COM_PARITY_ODD      =  UART_PARITY_ODD,
-}COM_ParityTypeDef;
+} COM_ParityTypeDef;
 
 typedef enum
 {
@@ -96,14 +96,14 @@ typedef enum
   COM_HWCONTROL_RTS     =  UART_HWCONTROL_RTS,
   COM_HWCONTROL_CTS     =  UART_HWCONTROL_CTS,
   COM_HWCONTROL_RTS_CTS =  UART_HWCONTROL_RTS_CTS,
-}COM_HwFlowCtlTypeDef;
+} COM_HwFlowCtlTypeDef;
 
 typedef enum
 {
   COM_WORDLENGTH_7B = UART_WORDLENGTH_7B,
   COM_WORDLENGTH_8B = UART_WORDLENGTH_8B,
   COM_WORDLENGTH_9B = UART_WORDLENGTH_9B,
-}COM_WordLengthTypeDef;
+} COM_WordLengthTypeDef;
 
 typedef struct
 {
@@ -112,14 +112,14 @@ typedef struct
   COM_StopBitsTypeDef   StopBits;
   COM_ParityTypeDef     Parity;
   COM_HwFlowCtlTypeDef  HwFlowCtl;
-}COM_InitTypeDef;
+} COM_InitTypeDef;
 
 #if (USE_HAL_UART_REGISTER_CALLBACKS == 1)
 typedef struct
 {
   void (* pMspInitCb)(UART_HandleTypeDef *);
   void (* pMspDeInitCb)(UART_HandleTypeDef *);
-}BSP_COM_Cb_t;
+} BSP_COM_Cb_t;
 #endif /* (USE_HAL_UART_REGISTER_CALLBACKS == 1) */
 #endif
 
@@ -135,20 +135,20 @@ typedef struct
   * @brief  Define for STM32H735G_DK board
   */
 #if !defined (USE_STM32H735G_DK)
- #define USE_STM32H735G_DK
+#define USE_STM32H735G_DK
 #endif
 
 /**
- * @brief STM32H735G_DK BSP Driver version number V1.2.2
+  * @brief STM32H735G_DK BSP Driver version number
    */
-#define	STM32H735G_DK_BSP_VERSION_MAIN   (uint32_t)(0x01) /*!< [31:24] main version */
-#define	STM32H735G_DK_BSP_VERSION_SUB1   (uint32_t)(0x02) /*!< [23:16] sub1 version */
-#define	STM32H735G_DK_BSP_VERSION_SUB2   (uint32_t)(0x02) /*!< [15:8]  sub2 version */
-#define	STM32H735G_DK_BSP_VERSION_RC     (uint32_t)(0x00) /*!< [7:0]  release candidate */
-#define	STM32H735G_DK_BSP_VERSION        ((STM32H735G_DK_BSP_VERSION_MAIN << 24)\
-                                                |(STM32H735G_DK_BSP_VERSION_SUB1 << 16)\
-                                                |(STM32H735G_DK_BSP_VERSION_SUB2 << 8 )\
-                                                |(STM32H735G_DK_BSP_VERSION_RC))
+#define STM32H735G_DK_BSP_VERSION_MAIN   (uint32_t)(0x01) /*!< [31:24] main version */
+#define STM32H735G_DK_BSP_VERSION_SUB1   (uint32_t)(0x02) /*!< [23:16] sub1 version */
+#define STM32H735G_DK_BSP_VERSION_SUB2   (uint32_t)(0x03) /*!< [15:8]  sub2 version */
+#define STM32H735G_DK_BSP_VERSION_RC     (uint32_t)(0x00) /*!< [7:0]  release candidate */
+#define STM32H735G_DK_BSP_VERSION        ((STM32H735G_DK_BSP_VERSION_MAIN << 24)\
+                                          |(STM32H735G_DK_BSP_VERSION_SUB1 << 16)\
+                                          |(STM32H735G_DK_BSP_VERSION_SUB2 << 8 )\
+                                          |(STM32H735G_DK_BSP_VERSION_RC))
 
 
 /** @defgroup STM32H735G_DK_LOW_LEVEL_LED EVAL LOW LEVEL LED
@@ -193,8 +193,8 @@ typedef struct
   */
 #if (USE_BSP_COM_FEATURE > 0)
 /**
- * @brief Definition for COM port1, connected to USART3
- */
+  * @brief Definition for COM port1, connected to USART3
+  */
 #define COM1_UART                      USART3
 #define COM1_CLK_ENABLE()             __HAL_RCC_USART3_CLK_ENABLE()
 #define COM1_CLK_DISABLE()            __HAL_RCC_USART3_CLK_DISABLE()
@@ -228,7 +228,7 @@ typedef struct
 extern EXTI_HandleTypeDef hpb_exti[];
 #if (USE_BSP_COM_FEATURE > 0)
 extern UART_HandleTypeDef hcom_uart[];
-extern USART_TypeDef* COM_USART[];
+extern USART_TypeDef *COM_USART[];
 #endif
 /**
   * @}
@@ -243,7 +243,7 @@ int32_t  BSP_LED_DeInit(Led_TypeDef Led);
 int32_t  BSP_LED_On(Led_TypeDef Led);
 int32_t  BSP_LED_Off(Led_TypeDef Led);
 int32_t  BSP_LED_Toggle(Led_TypeDef Led);
-int32_t  BSP_LED_GetState (Led_TypeDef Led);
+int32_t  BSP_LED_GetState(Led_TypeDef Led);
 int32_t  BSP_PB_Init(Button_TypeDef Button, ButtonMode_TypeDef ButtonMode);
 int32_t  BSP_PB_DeInit(Button_TypeDef Button);
 int32_t  BSP_PB_GetState(Button_TypeDef Button);
@@ -252,7 +252,7 @@ void     BSP_PB_Callback(Button_TypeDef Button);
 int32_t  BSP_COM_Init(COM_TypeDef COM, COM_InitTypeDef *COM_Init);
 int32_t  BSP_COM_DeInit(COM_TypeDef COM);
 #if( USE_COM_LOG == 1)
-int32_t  BSP_COM_SelectLogPort (COM_TypeDef COM);
+int32_t  BSP_COM_SelectLogPort(COM_TypeDef COM);
 #endif
 
 #if (USE_HAL_UART_REGISTER_CALLBACKS == 1)

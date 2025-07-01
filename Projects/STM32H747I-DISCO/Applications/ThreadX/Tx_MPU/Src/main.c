@@ -66,8 +66,10 @@ void Error_Handler(void);
 
 /* USER CODE END PFP */
 
-/* Private functions ---------------------------------------------------------*/
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
 
+/* USER CODE END 0 */
 /**
   * @brief  Main program
   * @param  None
@@ -82,10 +84,10 @@ int main(void)
   /* MPU Configuration--------------------------------------------------------*/
   MPU_Config();
 
-  /* Enable I-Cache */
+  /* Enable I-Cache---------------------------------------------------------*/
   SCB_EnableICache();
 
-  /* Enable D-Cache */
+  /* Enable D-Cache---------------------------------------------------------*/
   SCB_EnableDCache();
 
   /* STM32H7xx HAL library initialization */
@@ -235,7 +237,7 @@ void Error_Handler(void)
 PUTCHAR_PROTOTYPE
 {
   /* Place your implementation of fputc here */
-  /* e.g. write a character to the USART and Loop until the end of transmission */
+  /* e.g. write a character to the USART1 and Loop until the end of transmission */
   HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xFFFF);
 
   return ch;

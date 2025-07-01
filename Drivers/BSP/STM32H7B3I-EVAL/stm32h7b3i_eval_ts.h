@@ -22,7 +22,7 @@
 #define STM32H7B3I_EVAL_TS_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -30,6 +30,7 @@
 #include "stm32h7b3i_eval_errno.h"
 
 #include "../Components/ft5336/ft5336.h"
+#include "../Components/gt911/gt911.h"
 #include "../Components/Common/ts.h"
 
 /** @addtogroup BSP
@@ -73,6 +74,8 @@
   * @brief TouchScreen Slave I2C address 1
   */
 #define TS_I2C_ADDRESS              0x70U
+#define TS_I2C_ADDRESS_GT           0xBAU
+#define TS_I2C_ADDRESS_BACK         0x28U
 
 /**
   * @brief Touch screen interrupt signal
@@ -98,7 +101,7 @@ typedef struct
   uint32_t   Orientation;            /* Touch Screen orientation from the upper left position  */
   uint32_t   Accuracy;               /* Expressed in pixel and means the x or y difference vs old
                                         position to consider the new values valid */
-}TS_Init_t;
+} TS_Init_t;
 
 typedef struct
 {
@@ -140,10 +143,10 @@ typedef struct
 
 #if (USE_TS_GESTURE > 0)
 /**
- *  @brief TS_Gesture_Id_t
- *  Define Possible managed gesture identification values returned by touch screen
- *  driver.
- */
+  *  @brief TS_Gesture_Id_t
+  *  Define Possible managed gesture identification values returned by touch screen
+  *  driver.
+  */
 #define GESTURE_ID_NO_GESTURE   0x00U /*!< Gesture not defined / recognized */
 #define GESTURE_ID_MOVE_UP      0x01U /*!< Gesture Move Up */
 #define GESTURE_ID_MOVE_RIGHT   0x02U /*!< Gesture Move Right */
@@ -161,7 +164,7 @@ typedef struct
   uint32_t  DistanceLeftRight;
   uint32_t  DistanceUpDown;
   uint32_t  DistanceZoom;
-}TS_Gesture_Config_t;
+} TS_Gesture_Config_t;
 
 #endif /* (USE_TS_GESTURE > 0) */
 
@@ -199,6 +202,8 @@ int32_t BSP_TS_Get_Orientation(uint32_t Instance, uint32_t *Orientation);
 int32_t BSP_TS_GetCapabilities(uint32_t Instance, TS_Capabilities_t *Capabilities);
 void    BSP_TS_Callback(uint32_t Instance);
 void    BSP_TS_IRQHandler(uint32_t Instance);
+int32_t GT911_Probe(uint32_t Instance);
+int32_t FT5336_Probe(uint32_t Instance);
 /**
   * @}
   */

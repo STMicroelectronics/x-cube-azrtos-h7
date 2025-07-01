@@ -22,7 +22,7 @@
 #define STM32H745I_DISCO_AUDIO_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -30,7 +30,7 @@
 #include "stm32h745i_discovery_errno.h"
 
 #if (USE_AUDIO_CODEC_WM8994 == 1U)
-   /* Include audio component Driver */
+/* Include audio component Driver */
 #include "../Components/wm8994/wm8994.h"
 #endif
 
@@ -60,7 +60,7 @@ typedef struct
   uint32_t                    BitsPerSample;
   uint32_t                    ChannelsNbr;
   uint32_t                    Volume;
-}BSP_AUDIO_Init_t;
+} BSP_AUDIO_Init_t;
 
 typedef struct
 {
@@ -76,7 +76,7 @@ typedef struct
   uint32_t                    State;               /* Audio IN State                 */
   uint32_t                    IsMultiBuff;         /* Audio IN multi-buffer usage    */
   uint32_t                    IsMspCallbacksValid; /* Is Msp Callbacks registered     */
-}AUDIO_IN_Ctx_t;
+} AUDIO_IN_Ctx_t;
 
 typedef struct
 {
@@ -89,7 +89,7 @@ typedef struct
   uint32_t                    IsMute;              /* Mute state                      */
   uint32_t                    State;               /* Audio OUT State                 */
   uint32_t                    IsMspCallbacksValid; /* Is Msp Callbacks registered      */
-}AUDIO_OUT_Ctx_t;
+} AUDIO_OUT_Ctx_t;
 
 typedef struct
 {
@@ -104,7 +104,7 @@ typedef struct
   uint32_t FrameLength;
   uint32_t ActiveFrameLength;
   uint32_t SlotActive;
-}MX_SAI_Config_t;
+} MX_SAI_Config_t;
 
 
 #if (USE_HAL_SAI_REGISTER_CALLBACKS == 1)
@@ -112,7 +112,7 @@ typedef struct
 {
   pSAI_CallbackTypeDef  pMspSaiInitCb;
   pSAI_CallbackTypeDef  pMspSaiDeInitCb;
-}BSP_AUDIO_OUT_Cb_t;
+} BSP_AUDIO_OUT_Cb_t;
 #endif /* (USE_HAL_SAI_REGISTER_CALLBACKS == 1) */
 
 /**
@@ -182,7 +182,8 @@ typedef struct
   * +------------------------------------------------------------------------------+
   */
 /* To have 2 separate audio stream in Both headphone and speaker the 4 slot must be activated */
-#define CODEC_AUDIOFRAME_SLOT_0123                   SAI_SLOTACTIVE_0 | SAI_SLOTACTIVE_1 | SAI_SLOTACTIVE_2 | SAI_SLOTACTIVE_3
+#define CODEC_AUDIOFRAME_SLOT_0123                   SAI_SLOTACTIVE_0 |\
+  SAI_SLOTACTIVE_1 | SAI_SLOTACTIVE_2 | SAI_SLOTACTIVE_3
 /* To have an audio stream in headphone only SAI Slot 0 and Slot 2 must be activated */
 #define CODEC_AUDIOFRAME_SLOT_02                     SAI_SLOTACTIVE_0 | SAI_SLOTACTIVE_2
 /* To have an audio stream in speaker only SAI Slot 1 and Slot 3 must be activated */
@@ -320,15 +321,15 @@ extern AUDIO_IN_Ctx_t        Audio_In_Ctx[];
 /** @addtogroup STM32H745I_DISCO_AUDIO_OUT_Exported_Functions
   * @{
   */
-int32_t BSP_AUDIO_OUT_Init(uint32_t Instance, BSP_AUDIO_Init_t* AudioInit);
+int32_t BSP_AUDIO_OUT_Init(uint32_t Instance, BSP_AUDIO_Init_t *AudioInit);
 int32_t BSP_AUDIO_OUT_DeInit(uint32_t Instance);
 
 #if (USE_HAL_SAI_REGISTER_CALLBACKS == 1U)
-int32_t BSP_AUDIO_OUT_RegisterMspCallbacks (uint32_t Instance, BSP_AUDIO_OUT_Cb_t *CallBacks);
-int32_t BSP_AUDIO_OUT_RegisterDefaultMspCallbacks (uint32_t Instance);
+int32_t BSP_AUDIO_OUT_RegisterMspCallbacks(uint32_t Instance, BSP_AUDIO_OUT_Cb_t *CallBacks);
+int32_t BSP_AUDIO_OUT_RegisterDefaultMspCallbacks(uint32_t Instance);
 #endif /* (USE_HAL_SAI_REGISTER_CALLBACKS == 1U) */
 
-int32_t BSP_AUDIO_OUT_Play(uint32_t Instance, uint8_t* pData, uint32_t NbrOfBytes);
+int32_t BSP_AUDIO_OUT_Play(uint32_t Instance, uint8_t *pData, uint32_t NbrOfBytes);
 int32_t BSP_AUDIO_OUT_Pause(uint32_t Instance);
 int32_t BSP_AUDIO_OUT_Resume(uint32_t Instance);
 int32_t BSP_AUDIO_OUT_Stop(uint32_t Instance);
@@ -364,7 +365,7 @@ void    BSP_AUDIO_OUT_Error_CallBack(uint32_t Instance);
    for specific application needs */
 HAL_StatusTypeDef MX_SAI2_ClockConfig(SAI_HandleTypeDef *hsai, uint32_t SampleRate);
 HAL_StatusTypeDef MX_SAI4_ClockConfig(SAI_HandleTypeDef *hsai, uint32_t SampleRate);
-HAL_StatusTypeDef MX_SAI2_Block_A_Init(SAI_HandleTypeDef* hsai, MX_SAI_Config_t *MXConfig);
+HAL_StatusTypeDef MX_SAI2_Block_A_Init(SAI_HandleTypeDef *hsai, MX_SAI_Config_t *MXConfig);
 /**
   * @}
   */
@@ -372,10 +373,10 @@ HAL_StatusTypeDef MX_SAI2_Block_A_Init(SAI_HandleTypeDef* hsai, MX_SAI_Config_t 
 /** @addtogroup STM32H745I_DISCO_AUDIO_IN_Exported_Functions
   * @{
   */
-int32_t BSP_AUDIO_IN_Init(uint32_t Instance, BSP_AUDIO_Init_t* AudioInit);
+int32_t BSP_AUDIO_IN_Init(uint32_t Instance, BSP_AUDIO_Init_t *AudioInit);
 int32_t BSP_AUDIO_IN_DeInit(uint32_t Instance);
 
-int32_t BSP_AUDIO_IN_Record(uint32_t Instance, uint8_t* pBuf, uint32_t NbrOfBytes);
+int32_t BSP_AUDIO_IN_Record(uint32_t Instance, uint8_t *pBuf, uint32_t NbrOfBytes);
 int32_t BSP_AUDIO_IN_Stop(uint32_t Instance);
 int32_t BSP_AUDIO_IN_Pause(uint32_t Instance);
 int32_t BSP_AUDIO_IN_Resume(uint32_t Instance);
@@ -395,7 +396,7 @@ int32_t BSP_AUDIO_IN_GetState(uint32_t Instance, uint32_t *State);
 /* Specific PDM recodr APIs */
 int32_t BSP_AUDIO_IN_PDMToPCM_Init(uint32_t Instance, uint32_t AudioFreq, uint32_t ChnlNbrIn, uint32_t ChnlNbrOut);
 int32_t BSP_AUDIO_IN_PDMToPCM(uint32_t Instance, uint16_t *PDMBuf, uint16_t *PCMBuf);
-int32_t BSP_AUDIO_IN_RecordPDM(uint32_t Instance, uint8_t* pBuf, uint32_t NbrOfBytes);
+int32_t BSP_AUDIO_IN_RecordPDM(uint32_t Instance, uint8_t *pBuf, uint32_t NbrOfBytes);
 
 void BSP_AUDIO_IN_IRQHandler(uint32_t Instance, uint32_t InputDevice);
 
@@ -411,8 +412,8 @@ void BSP_AUDIO_IN_HalfTransfer_CallBack(uint32_t Instance);
 void BSP_AUDIO_IN_Error_CallBack(uint32_t Instance);
 /* These function can be modified in case the current settings (e.g. DMA stream)
    need to be changed for specific application needs */
-HAL_StatusTypeDef MX_SAI2_Block_B_Init(SAI_HandleTypeDef* hsai, MX_SAI_Config_t *MXConfig);
-HAL_StatusTypeDef MX_SAI4_Block_A_Init(SAI_HandleTypeDef* hsai, MX_SAI_Config_t *MXConfig);
+HAL_StatusTypeDef MX_SAI2_Block_B_Init(SAI_HandleTypeDef *hsai, MX_SAI_Config_t *MXConfig);
+HAL_StatusTypeDef MX_SAI4_Block_A_Init(SAI_HandleTypeDef *hsai, MX_SAI_Config_t *MXConfig);
 
 /**
   * @}

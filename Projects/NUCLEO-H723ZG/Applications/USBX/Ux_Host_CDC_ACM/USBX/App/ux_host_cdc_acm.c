@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_host_cdc_acm.h"
 
@@ -76,7 +80,7 @@ static UCHAR UserRxBuffer[APP_RX_DATA_SIZE];
 
 /* USER CODE END 0 */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief  Function implementing cdc_acm_send_app_thread_entry.
@@ -127,7 +131,7 @@ VOID cdc_acm_send_app_thread_entry(ULONG thread_input)
   * @param  thread_input: Not used
   * @retval none
   */
-VOID cdc_acm_recieve_app_thread_entry(ULONG thread_inputg)
+VOID cdc_acm_recieve_app_thread_entry(ULONG thread_input)
 {
   UINT     status;
   ULONG    receive_dataflag = 0;
@@ -271,4 +275,4 @@ VOID cdc_acm_reception_callback(struct UX_HOST_CLASS_CDC_ACM_STRUCT *cdc_acm,
   }
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_tx_freertos.h"
 
@@ -78,12 +82,12 @@ VOID tx_application_define(VOID *first_unused_memory)
 {
   /* USER CODE BEGIN  tx_application_define */
   /* Initialize the adaptation layer with 64KiB of internal heap.*/
-  if(tx_freertos_init() != TX_SUCCESS) 
+  if(tx_freertos_init() != TX_SUCCESS)
   {
     Error_Handler();
   }
   /* Create LEDThread.  */
-  if (xTaskCreate(LEDThread_Entry, "LED Thread", 
+  if (xTaskCreate(LEDThread_Entry, "LED Thread",
                   APP_STACK_SIZE, NULL, LED_THREAD_PRIO,
                   &LEDThread) != pdPASS)
   {
@@ -97,10 +101,10 @@ VOID tx_application_define(VOID *first_unused_memory)
 
 /* USER CODE END Private user code */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 /**
   * @brief  Function implementing the LEDThread thread.
-  * @param  argument: Not used 
+  * @param  argument: Not used
   * @retval None
   */
 void LEDThread_Entry(void *argument)
@@ -114,4 +118,4 @@ void LEDThread_Entry(void *argument)
     vTaskDelay(500);
   }
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

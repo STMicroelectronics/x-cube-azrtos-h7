@@ -1,5 +1,5 @@
 
-## <b>Tx_Thread_Creation application description</b>
+## <b>Tx_Thread_Creation Application Description</b>
 
 This application provides an example of Azure RTOS ThreadX stack usage, it shows how to develop an application using the ThreadX thread management APIs.
 It demonstrates how to create and destroy multiple threads using Azure RTOS ThreadX APIs. In addition, it shows how to use preemption threshold between threads and change priorities on-fly.
@@ -96,8 +96,8 @@ RTOS, ThreadX, Threading, Event flags, Preemption threshold
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H723xx devices.
-  - This example has been tested with STMicroelectronics NUCLEO-H723ZG boards revision MB1364-H723ZG-E01
+  - This application runs on STM32H723xx devices.
+  - This application has been tested with STMicroelectronics NUCLEO-H723ZG boards revision MB1364-H723ZG-E01
     and can be easily tailored to any other supported device and development board.
   - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
       - BaudRate = 115200 baud

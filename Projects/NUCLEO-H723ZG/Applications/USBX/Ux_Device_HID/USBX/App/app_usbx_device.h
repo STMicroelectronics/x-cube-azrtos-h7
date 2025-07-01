@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_api.h"
 #include "ux_device_descriptors.h"
@@ -83,8 +87,8 @@ VOID USBX_APP_Device_Init(VOID);
 #define UX_DEVICE_APP_THREAD_START_OPTION  TX_AUTO_START
 #endif
 
-/* USER CODE BEGIN 1 */
-/* USER CODE END 1 */
+/* USER CODE BEGIN 2 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

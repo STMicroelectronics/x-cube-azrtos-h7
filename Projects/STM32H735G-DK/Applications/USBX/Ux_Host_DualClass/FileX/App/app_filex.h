@@ -26,6 +26,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "fx_api.h"
 
@@ -64,9 +68,9 @@ UINT  App_File_Read(FX_MEDIA *fx_media);
 
 /* USER CODE END PD */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 #ifdef __cplusplus
 }
 #endif

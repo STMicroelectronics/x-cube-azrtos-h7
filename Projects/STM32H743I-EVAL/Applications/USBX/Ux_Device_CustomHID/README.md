@@ -1,5 +1,5 @@
 
-## <b>Ux_Device_CustomHID application description</b>
+## <b>Ux_Device_CustomHID Application Description</b>
 
 This application provides an example of Azure RTOS USBX stack usage on STM32H743I-EVAL board,
 it shows how to develop USB Device Human Interface "HID" custom based application.
@@ -28,8 +28,8 @@ Once the STM32H743I-EVAL USB device successfully completed the enumeration phase
    for LED control
  - Use the potentiometer of the STM32H743I-EVAL board to transfer the result of the converted voltage
   (via the ADC) to the PC host (these values are sent to the PC using the endpoint1 IN)
- - Make sure that the following report IDs are configured: LED1 ID (0x1), LED2 ID(0x2), LED3 ID(0x3),
-   LED4 ID(0x4), BUTTON1_ID(0x6) and Potentiometer_ID(0x7).
+ - Make sure that the following report IDs are configured: LED_GREEN ID (0x1), LED_RED ID(0x2), LED_ORANGE ID(0x3),
+   LED_BLUE ID(0x4), BUTTON1_ID(0x6) and Potentiometer_ID(0x7).
  - Select LEDs to switch on/off on the STM32H743I-EVAL board: a SET_REPORT request will be sent.
 
 #### <b>Error behaviors</b>
@@ -107,8 +107,8 @@ RTOS, ThreadX, USBXDevice, USB_OTG, High Speed, HID, Custom, Potentiometer, ADC
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H743xx devices.
-  - This example has been tested with STMicroelectronics STM32H743I-EVAL boards revision MB1246-B03 and can be easily
+  - This application runs on STM32H743xx devices.
+  - This application has been tested with STMicroelectronics STM32H743I-EVAL boards revision MB1246-B03 and can be easily
     tailored to any other supported device and development board.
   - STM32H743I-EVAL set-up:
     - Connect the STM32H743I-EVAL board to the PC through 'USB micro A-Male

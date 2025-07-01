@@ -9,6 +9,11 @@
   *
   *   This file provides two functions and one global variable to be called from
   *   user application:
+  *      - ExitRun0Mode(): Specifies the Power Supply source. This function is
+  *                        called at startup just after reset and before the call
+  *                        of SystemInit(). This call is made inside
+  *                        the "startup_stm32h7xx.s" file.
+  *
   *      - SystemInit(): This function is called at startup just after reset and
   *                      before branch to main program. This call is made inside
   *                      the "startup_stm32h7xx.s" file.
@@ -25,7 +30,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2017-2021 STMicroelectronics.
+  * Copyright (c) 2017 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -80,11 +85,48 @@
   */
 
 /************************* Miscellaneous Configuration ************************/
-/*!< Uncomment the following line if you need to relocate your vector Table in
-     Internal SRAM. */
+/* Note: Following vector table addresses must be defined in line with linker
+         configuration. */
+/*!< Uncomment the following line if you need to relocate the vector table
+     anywhere in FLASH BANK1 or AXI SRAM, else the vector table is kept at the automatic
+     remap of boot address selected */
+/* #define USER_VECT_TAB_ADDRESS */
+
+#if defined(USER_VECT_TAB_ADDRESS)
+#if defined(CORE_CM4)
+/*!< Uncomment the following line if you need to relocate your vector Table
+     in D2 AXI SRAM else user remap will be done in FLASH BANK2. */
 /* #define VECT_TAB_SRAM */
-#define VECT_TAB_OFFSET  0x00000000UL /*!< Vector Table base offset field.
-                                      This value must be a multiple of 0x200. */
+#if defined(VECT_TAB_SRAM)
+#define VECT_TAB_BASE_ADDRESS   D2_AXISRAM_BASE   /*!< Vector Table base address field.
+                                                       This value must be a multiple of 0x400. */
+#define VECT_TAB_OFFSET         0x00000000U       /*!< Vector Table base offset field.
+                                                       This value must be a multiple of 0x400. */
+#else
+#define VECT_TAB_BASE_ADDRESS   FLASH_BANK2_BASE  /*!< Vector Table base address field.
+                                                       This value must be a multiple of 0x400. */
+#define VECT_TAB_OFFSET         0x00000000U       /*!< Vector Table base offset field.
+                                                       This value must be a multiple of 0x400. */
+#endif /* VECT_TAB_SRAM */
+#elif defined(CORE_CM7)
+/*!< Uncomment the following line if you need to relocate your vector Table
+     in D1 AXI SRAM else user remap will be done in FLASH BANK1. */
+/* #define VECT_TAB_SRAM */
+#if defined(VECT_TAB_SRAM)
+#define VECT_TAB_BASE_ADDRESS   D1_AXISRAM_BASE   /*!< Vector Table base address field.
+                                                       This value must be a multiple of 0x400. */
+#define VECT_TAB_OFFSET         0x00000000U       /*!< Vector Table base offset field.
+                                                       This value must be a multiple of 0x400. */
+#else
+#define VECT_TAB_BASE_ADDRESS   FLASH_BANK1_BASE  /*!< Vector Table base address field.
+                                                       This value must be a multiple of 0x400. */
+#define VECT_TAB_OFFSET         0x00000000U       /*!< Vector Table base offset field.
+                                                       This value must be a multiple of 0x400. */
+#endif /* VECT_TAB_SRAM */
+#else
+#error Please #define CORE_CM4 or CORE_CM7
+#endif /* CORE_CM4 */
+#endif /* USER_VECT_TAB_ADDRESS */
 /******************************************************************************/
 
 /**
@@ -148,13 +190,13 @@ void SystemInit (void)
      detectable by the CPU after a WFI/WFE instruction.*/
  SCB->SCR |= SCB_SCR_SEVONPEND_Msk;
 
-#ifdef CORE_CM7
+#if defined(CORE_CM7)
   /* Reset the RCC clock configuration to the default reset state ------------*/
    /* Increasing the CPU frequency */
   if(FLASH_LATENCY_DEFAULT  > (READ_BIT((FLASH->ACR), FLASH_ACR_LATENCY)))
   {
     /* Program the new number of wait states to the LATENCY bits in the FLASH_ACR register */
-	MODIFY_REG(FLASH->ACR, FLASH_ACR_LATENCY, (uint32_t)(FLASH_LATENCY_DEFAULT));
+    MODIFY_REG(FLASH->ACR, FLASH_ACR_LATENCY, (uint32_t)(FLASH_LATENCY_DEFAULT));
   }
 
   /* Set HSION bit */
@@ -163,14 +205,14 @@ void SystemInit (void)
   /* Reset CFGR register */
   RCC->CFGR = 0x00000000;
 
-  /* Reset HSEON, HSECSSON, CSION, RC48ON, CSIKERON, PLL1ON, PLL2ON and PLL3ON bits */
+  /* Reset HSEON, HSECSSON, CSION, HSI48ON, CSIKERON, PLL1ON, PLL2ON and PLL3ON bits */
   RCC->CR &= 0xEAF6ED7FU;
 
    /* Decreasing the number of wait states because of lower CPU frequency */
   if(FLASH_LATENCY_DEFAULT  < (READ_BIT((FLASH->ACR), FLASH_ACR_LATENCY)))
   {
     /* Program the new number of wait states to the LATENCY bits in the FLASH_ACR register */
-	MODIFY_REG(FLASH->ACR, FLASH_ACR_LATENCY, (uint32_t)(FLASH_LATENCY_DEFAULT));
+    MODIFY_REG(FLASH->ACR, FLASH_ACR_LATENCY, (uint32_t)(FLASH_LATENCY_DEFAULT));
   }
 
   /* Reset D1CFGR register */
@@ -213,7 +255,6 @@ void SystemInit (void)
   /* Enable CortexM7 HSEM EXTI line (line 78)*/
   EXTI_D2->EMR3 |= 0x4000UL;
 
-
   if((DBGMCU->IDCODE & 0xFFFF0000U) < 0x20000000U)
   {
     /* if stm32h7 revY*/
@@ -223,18 +264,13 @@ void SystemInit (void)
 
 #endif /* CORE_CM7*/
 
-#ifdef CORE_CM4
+#if defined(CORE_CM4)
+  /* Configure the Vector Table location add offset address for cortex-M4 ------------------*/
+#if defined(USER_VECT_TAB_ADDRESS)
+  SCB->VTOR = VECT_TAB_BASE_ADDRESS | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal D2 AXI-RAM or in Internal FLASH */
+#endif /* USER_VECT_TAB_ADDRESS */
 
-  /* Configure the Vector Table location add offset address ------------------*/
-#ifdef VECT_TAB_SRAM
-  SCB->VTOR = D2_AXISRAM_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal SRAM */
-#else
-  SCB->VTOR = FLASH_BANK2_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal FLASH */
-#endif
-
-#else
-#ifdef CORE_CM7
-
+#elif defined(CORE_CM7)
   /*
    * Disable the FMC bank1 (enabled after reset).
    * This, prevents CPU speculation access on this bank which blocks the use of FMC during
@@ -242,22 +278,18 @@ void SystemInit (void)
    */
   FMC_Bank1_R->BTCR[0] = 0x000030D2;
 
-  /* Configure the Vector Table location add offset address ------------------*/
-#ifdef VECT_TAB_SRAM
-  SCB->VTOR = D1_AXISRAM_BASE  | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal D1 AXI-RAM */
-#else
-  SCB->VTOR = FLASH_BANK1_BASE | VECT_TAB_OFFSET;       /* Vector Table Relocation in Internal FLASH */
-#endif
+  /* Configure the Vector Table location -------------------------------------*/
+#if defined(USER_VECT_TAB_ADDRESS)
+  SCB->VTOR = VECT_TAB_BASE_ADDRESS | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal D1 AXI-RAM or in Internal FLASH */
+#endif /* USER_VECT_TAB_ADDRESS */
 
 #else
 #error Please #define CORE_CM4 or CORE_CM7
-#endif
-#endif
-
+#endif /* CORE_CM4 */
 }
 
 /**
-   * @brief  Update SystemCoreClock variable according to Clock Register Values.
+  * @brief  Update SystemCoreClock variable according to Clock Register Values.
   *         The SystemCoreClock variable contains the core clock , it can
   *         be used by the user application to setup the SysTick timer or configure
   *         other parameters.
@@ -372,13 +404,105 @@ void SystemCoreClockUpdate (void)
   /* SystemD2Clock frequency : CM4 CPU, AXI and AHBs Clock frequency  */
   SystemD2Clock = (common_system_clock >> ((D1CorePrescTable[(RCC->D1CFGR & RCC_D1CFGR_HPRE)>> RCC_D1CFGR_HPRE_Pos]) & 0x1FU));
 
-#if defined(DUAL_CORE) && defined(CORE_CM4)
+#if defined(CORE_CM4)
   SystemCoreClock = SystemD2Clock;
 #else
   SystemCoreClock = common_system_clock;
-#endif /* DUAL_CORE && CORE_CM4 */
+#endif /* CORE_CM4 */
 }
 
+/**
+  * @brief  Exit Run* mode and Configure the system Power Supply
+  *
+  * @note   This function exits the Run* mode and configures the system power supply
+  *         according to the definition to be used at compilation preprocessing level.
+  *         The application shall set one of the following configuration option:
+  *           - PWR_LDO_SUPPLY
+  *           - PWR_DIRECT_SMPS_SUPPLY
+  *           - PWR_EXTERNAL_SOURCE_SUPPLY
+  *           - PWR_SMPS_1V8_SUPPLIES_LDO
+  *           - PWR_SMPS_2V5_SUPPLIES_LDO
+  *           - PWR_SMPS_1V8_SUPPLIES_EXT_AND_LDO
+  *           - PWR_SMPS_2V5_SUPPLIES_EXT_AND_LDO
+  *           - PWR_SMPS_1V8_SUPPLIES_EXT
+  *           - PWR_SMPS_2V5_SUPPLIES_EXT
+  *
+  * @note   The function modifies the PWR->CR3 register to enable or disable specific
+  *         power supply modes and waits until the voltage level flag is set, indicating
+  *         that the power supply configuration is stable.
+  *
+  * @param  None
+  * @retval None
+  */
+void ExitRun0Mode(void)
+{
+#if defined(USE_PWR_LDO_SUPPLY)
+  #if defined(SMPS)
+    /* Exit Run* mode by disabling SMPS and enabling LDO */
+    PWR->CR3 = (PWR->CR3 & ~PWR_CR3_SMPSEN) | PWR_CR3_LDOEN;
+  #else
+    /* Enable LDO mode */
+    PWR->CR3 |= PWR_CR3_LDOEN;
+  #endif /* SMPS */
+  /* Wait till voltage level flag is set */
+  while ((PWR->CSR1 & PWR_CSR1_ACTVOSRDY) == 0U)
+  {}
+#elif defined(USE_PWR_EXTERNAL_SOURCE_SUPPLY)
+  #if defined(SMPS)
+    /* Exit Run* mode */
+    PWR->CR3 = (PWR->CR3 & ~(PWR_CR3_SMPSEN | PWR_CR3_LDOEN)) | PWR_CR3_BYPASS;
+  #else
+    PWR->CR3 = (PWR->CR3 & ~(PWR_CR3_LDOEN)) | PWR_CR3_BYPASS;
+  #endif /* SMPS */
+  /* Wait till voltage level flag is set */
+  while ((PWR->CSR1 & PWR_CSR1_ACTVOSRDY) == 0U)
+  {}
+#elif defined(USE_PWR_DIRECT_SMPS_SUPPLY) && defined(SMPS)
+  /* Exit Run* mode */
+  PWR->CR3 &= ~(PWR_CR3_LDOEN);
+  /* Wait till voltage level flag is set */
+  while ((PWR->CSR1 & PWR_CSR1_ACTVOSRDY) == 0U)
+  {}
+#elif defined(USE_PWR_SMPS_1V8_SUPPLIES_LDO) && defined(SMPS)
+  /* Exit Run* mode */
+  PWR->CR3 |= PWR_CR3_SMPSLEVEL_0 | PWR_CR3_SMPSEN | PWR_CR3_LDOEN;
+  /* Wait till voltage level flag is set */
+  while ((PWR->CSR1 & PWR_CSR1_ACTVOSRDY) == 0U)
+  {}
+#elif defined(USE_PWR_SMPS_2V5_SUPPLIES_LDO) && defined(SMPS)
+  /* Exit Run* mode */
+  PWR->CR3 |= PWR_CR3_SMPSLEVEL_1 | PWR_CR3_SMPSEN | PWR_CR3_LDOEN;
+  /* Wait till voltage level flag is set */
+  while ((PWR->CSR1 & PWR_CSR1_ACTVOSRDY) == 0U)
+  {}
+#elif defined(USE_PWR_SMPS_1V8_SUPPLIES_EXT_AND_LDO) && defined(SMPS)
+  /* Exit Run* mode */
+  PWR->CR3 |= PWR_CR3_SMPSLEVEL_0 | PWR_CR3_SMPSEXTHP | PWR_CR3_SMPSEN | PWR_CR3_LDOEN;
+  /* Wait till voltage level flag is set */
+  while ((PWR->CSR1 & PWR_CSR1_ACTVOSRDY) == 0U)
+  {}
+#elif defined(USE_PWR_SMPS_2V5_SUPPLIES_EXT_AND_LDO) && defined(SMPS)
+  /* Exit Run* mode */
+  PWR->CR3 |= PWR_CR3_SMPSLEVEL_1 | PWR_CR3_SMPSEXTHP | PWR_CR3_SMPSEN | PWR_CR3_LDOEN;
+  /* Wait till voltage level flag is set */
+  while ((PWR->CSR1 & PWR_CSR1_ACTVOSRDY) == 0U)
+  {}
+#elif defined(USE_PWR_SMPS_1V8_SUPPLIES_EXT) && defined(SMPS)
+  /* Exit Run* mode */
+  PWR->CR3 = (PWR->CR3 & ~(PWR_CR3_LDOEN)) | PWR_CR3_SMPSLEVEL_0 | PWR_CR3_SMPSEXTHP | PWR_CR3_SMPSEN | PWR_CR3_BYPASS;
+  /* Wait till voltage level flag is set */
+  while ((PWR->CSR1 & PWR_CSR1_ACTVOSRDY) == 0U)
+  {}
+#elif defined(USE_PWR_SMPS_2V5_SUPPLIES_EXT) && defined(SMPS)
+  /* Exit Run* mode */
+  PWR->CR3 = (PWR->CR3 & ~(PWR_CR3_LDOEN)) | PWR_CR3_SMPSLEVEL_1 | PWR_CR3_SMPSEXTHP | PWR_CR3_SMPSEN | PWR_CR3_BYPASS;
+  /* Wait till voltage level flag is set */
+  while ((PWR->CSR1 & PWR_CSR1_ACTVOSRDY) == 0U)
+  {}
+#else
+  /* No system power supply configuration is selected at exit Run* mode */
+#endif /* USE_PWR_LDO_SUPPLY */
+}
 
 /**
   * @}

@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_api.h"
 #include "ux_device_class_pima.h"
@@ -221,9 +225,9 @@ typedef struct
 #define USBD_MTP_STORAGE_DESCRIPTION_IDENTIFIER  "STM32 MTP Storage Label"
 #endif
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

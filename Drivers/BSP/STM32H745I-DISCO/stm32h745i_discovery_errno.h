@@ -22,7 +22,7 @@
 #define STM32H745I_DISCO_ERRNO_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Common Error codes */
@@ -58,7 +58,7 @@
 #define BSP_ERROR_BUS_FRAME_ERROR            -105
 #define BSP_ERROR_BUS_CRC_ERROR              -106
 #define BSP_ERROR_BUS_DMA_FAILURE            -107
-   
+
 #ifdef __cplusplus
 }
 #endif

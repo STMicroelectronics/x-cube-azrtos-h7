@@ -49,7 +49,6 @@ No SD card insertion/removal mechanisms are implemented.
 ### <b>Keywords</b>
 
 FileX, File system, FAT32, SDMMC
-
 ### <b>Hardware and Software environment</b>
 
   - This application runs on STM32H735xx devices.

@@ -21,7 +21,7 @@
 #define STM32H745I_DISCO_QSPI_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h745i_discovery_conf.h"
@@ -51,9 +51,9 @@
 
 typedef enum
 {
-  BSP_QSPI_ERASE_8K   =  MT25TL01G_ERASE_4K ,       /*!< 8K size Sector erase = 2 x 4K as Dual flash mode is used for this board   */
-  BSP_QSPI_ERASE_64K  =  MT25TL01G_ERASE_32K ,      /*!< 64K size Sector erase = 2 x 32K as Dual flash mode is used for this board */
-  BSP_QSPI_ERASE_128K =  MT25TL01G_ERASE_64K ,      /*!< 128K size Sector erase = 2 x 64K as Dual mode is used for this board      */
+  BSP_QSPI_ERASE_8K   =  MT25TL01G_ERASE_4K,        /*!< 8K size Sector erase = 2 x 4K as Dual flash mode is used for this board   */
+  BSP_QSPI_ERASE_64K  =  MT25TL01G_ERASE_32K,       /*!< 64K size Sector erase = 2 x 32K as Dual flash mode is used for this board */
+  BSP_QSPI_ERASE_128K =  MT25TL01G_ERASE_64K,       /*!< 128K size Sector erase = 2 x 64K as Dual mode is used for this board      */
   BSP_QSPI_ERASE_CHIP =  MT25TL01G_ERASE_CHIP       /*!< Whole chip erase */
 
 } BSP_QSPI_Erase_t;
@@ -87,13 +87,13 @@ typedef struct
   uint32_t ClockPrescaler;
   uint32_t SampleShifting;
   uint32_t DualFlashMode;
-}MX_QSPI_Init_t;
+} MX_QSPI_Init_t;
 #if (USE_HAL_QSPI_REGISTER_CALLBACKS == 1)
 typedef struct
 {
- void(*pMspInitCb)(pQSPI_CallbackTypeDef);
- void(*pMspDeInitCb)(pQSPI_CallbackTypeDef);
-}BSP_QSPI_Cb_t;
+  void(*pMspInitCb)(pQSPI_CallbackTypeDef);
+  void(*pMspDeInitCb)(pQSPI_CallbackTypeDef);
+} BSP_QSPI_Cb_t;
 #endif /* (USE_HAL_QSPI_REGISTER_CALLBACKS == 1) */
 
 /**
@@ -204,8 +204,8 @@ extern BSP_QSPI_Ctx_t     QSPI_Ctx[QSPI_INSTANCES_NUMBER];
 int32_t BSP_QSPI_Init(uint32_t Instance, BSP_QSPI_Init_t *Init);
 int32_t BSP_QSPI_DeInit(uint32_t Instance);
 #if (USE_HAL_QSPI_REGISTER_CALLBACKS == 1)
-int32_t BSP_QSPI_RegisterMspCallbacks (uint32_t Instance, BSP_QSPI_Cb_t *CallBacks);
-int32_t BSP_QSPI_RegisterDefaultMspCallbacks (uint32_t Instance);
+int32_t BSP_QSPI_RegisterMspCallbacks(uint32_t Instance, BSP_QSPI_Cb_t *CallBacks);
+int32_t BSP_QSPI_RegisterDefaultMspCallbacks(uint32_t Instance);
 #endif /* (USE_HAL_QSPI_REGISTER_CALLBACKS == 1) */
 int32_t BSP_QSPI_Read(uint32_t Instance, uint8_t *pData, uint32_t ReadAddr, uint32_t Size);
 int32_t BSP_QSPI_Write(uint32_t Instance, uint8_t *pData, uint32_t WriteAddr, uint32_t Size);

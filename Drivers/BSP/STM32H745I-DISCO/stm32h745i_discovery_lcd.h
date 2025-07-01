@@ -22,7 +22,7 @@
 #define STM32H745I_DISCOVERY_LCD_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -30,7 +30,7 @@
 #include "stm32h745i_discovery_errno.h"
 
 #ifndef USE_LCD_CTRL_RK043FN48H
-  #define USE_LCD_CTRL_RK043FN48H 1
+#define USE_LCD_CTRL_RK043FN48H 1
 #endif
 
 #if (USE_LCD_CTRL_RK043FN48H == 1)
@@ -184,25 +184,25 @@
   */
 typedef struct
 {
-uint32_t XSize;
-uint32_t YSize;
-uint32_t ActiveLayer;
-uint32_t PixelFormat;
-uint32_t BppFactor;
-uint32_t IsMspCallbacksValid;
-uint32_t ReloadEnable;
-uint32_t Brightness;
+  uint32_t XSize;
+  uint32_t YSize;
+  uint32_t ActiveLayer;
+  uint32_t PixelFormat;
+  uint32_t BppFactor;
+  uint32_t IsMspCallbacksValid;
+  uint32_t ReloadEnable;
+  uint32_t Brightness;
 } BSP_LCD_Ctx_t;
 
 typedef struct
 {
-uint32_t X0;
-uint32_t X1;
-uint32_t Y0;
-uint32_t Y1;
-uint32_t PixelFormat;
-uint32_t Address;
-}MX_LTDC_LayerConfig_t;
+  uint32_t X0;
+  uint32_t X1;
+  uint32_t Y0;
+  uint32_t Y1;
+  uint32_t PixelFormat;
+  uint32_t Address;
+} MX_LTDC_LayerConfig_t;
 
 #define BSP_LCD_LayerConfig_t MX_LTDC_LayerConfig_t
 
@@ -211,15 +211,15 @@ typedef struct
 {
   pLTDC_CallbackTypeDef            pMspLtdcInitCb;
   pLTDC_CallbackTypeDef            pMspLtdcDeInitCb;
-}BSP_LCD_Cb_t;
+} BSP_LCD_Cb_t;
 #endif /*(USE_HAL_LTDC_REGISTER_CALLBACKS == 1) */
 /**
   * @}
   */
 
 /** @addtogroup STM32H745I_DISCO_LCD_Exported_Variables
-* @{
-*/
+  * @{
+  */
 extern const LCD_UTILS_Drv_t LCD_Driver;
 extern DMA2D_HandleTypeDef hlcd_dma2d;
 extern LTDC_HandleTypeDef  hlcd_ltdc;
@@ -239,8 +239,8 @@ int32_t BSP_LCD_DeInit(uint32_t Instance);
 
 /* Register Callbacks APIs */
 #if (USE_HAL_LTDC_REGISTER_CALLBACKS == 1)
-int32_t BSP_LCD_RegisterDefaultMspCallbacks (uint32_t Instance);
-int32_t BSP_LCD_RegisterMspCallbacks (uint32_t Instance, BSP_LCD_Cb_t *CallBacks);
+int32_t BSP_LCD_RegisterDefaultMspCallbacks(uint32_t Instance);
+int32_t BSP_LCD_RegisterMspCallbacks(uint32_t Instance, BSP_LCD_Cb_t *CallBacks);
 #endif /*(USE_HAL_LTDC_REGISTER_CALLBACKS == 1) */
 
 /* LCD specific APIs: Layer control & LCD HW reset */
@@ -249,7 +249,8 @@ int32_t BSP_LCD_ConfigLayer(uint32_t Instance, uint32_t LayerIndex, BSP_LCD_Laye
 int32_t BSP_LCD_SetLayerVisible(uint32_t Instance, uint32_t LayerIndex, FunctionalState State);
 int32_t BSP_LCD_SetTransparency(uint32_t Instance, uint32_t LayerIndex, uint8_t Transparency);
 int32_t BSP_LCD_SetLayerAddress(uint32_t Instance, uint32_t LayerIndex, uint32_t Address);
-int32_t BSP_LCD_SetLayerWindow(uint32_t Instance, uint16_t LayerIndex, uint16_t Xpos, uint16_t Ypos, uint16_t Width, uint16_t Height);
+int32_t BSP_LCD_SetLayerWindow(uint32_t Instance, uint16_t LayerIndex, uint16_t Xpos, uint16_t Ypos, uint16_t Width,
+                               uint16_t Height);
 int32_t BSP_LCD_SetColorKeying(uint32_t Instance, uint32_t LayerIndex, uint32_t Color);
 int32_t BSP_LCD_ResetColorKeying(uint32_t Instance, uint32_t LayerIndex);
 
@@ -268,8 +269,10 @@ int32_t BSP_LCD_GetPixelFormat(uint32_t Instance, uint32_t *PixelFormat);
 int32_t BSP_LCD_DrawBitmap(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint8_t *pBmp);
 int32_t BSP_LCD_DrawHLine(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint32_t Length, uint32_t Color);
 int32_t BSP_LCD_DrawVLine(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint32_t Length, uint32_t Color);
-int32_t BSP_LCD_FillRGBRect(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint8_t *pData, uint32_t Width, uint32_t Height);
-int32_t BSP_LCD_FillRect(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint32_t Width, uint32_t Height, uint32_t Color);
+int32_t BSP_LCD_FillRGBRect(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint8_t *pData, uint32_t Width,
+                            uint32_t Height);
+int32_t BSP_LCD_FillRect(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint32_t Width, uint32_t Height,
+                         uint32_t Color);
 int32_t BSP_LCD_ReadPixel(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint32_t *Color);
 int32_t BSP_LCD_WritePixel(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint32_t Color);
 

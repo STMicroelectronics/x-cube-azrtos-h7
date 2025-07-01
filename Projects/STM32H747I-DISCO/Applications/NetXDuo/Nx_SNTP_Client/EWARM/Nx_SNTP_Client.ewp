@@ -227,6 +227,7 @@
                     <state>CORE_CM4</state>
                     <state>USE_HAL_DRIVER</state>
                     <state>STM32H747xx</state>
+                    <state>USE_PWR_DIRECT_SMPS_SUPPLY</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -1299,6 +1300,7 @@
                     <state>STM32H747xx</state>
                     <state>TX_INCLUDE_USER_DEFINE_FILE</state>
                     <state>NX_INCLUDE_USER_DEFINE_FILE</state>
+                    <state>USE_PWR_DIRECT_SMPS_SUPPLY</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -1617,7 +1619,7 @@
                 </option>
                 <option>
                     <name>ADefines</name>
-                    <state></state>
+                    <state>TX_INCLUDE_USER_DEFINE_FILE</state>
                 </option>
                 <option>
                     <name>AList</name>
@@ -1709,7 +1711,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state></state>
+                    <state>$PROJ_DIR$/../CM7/Core/Inc</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>

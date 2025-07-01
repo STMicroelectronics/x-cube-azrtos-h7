@@ -10,7 +10,7 @@
       <TargetName>Nx_TCP_Echo_Client</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6190000::V6.19::ARMCLANG</pCCUsed>
+      <pCCUsed>6210000::V6.21::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -338,7 +338,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>TX_INCLUDE_USER_DEFINE_FILE,NX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H723xx</Define>
+              <Define>USE_PWR_LDO_SUPPLY,TX_INCLUDE_USER_DEFINE_FILE,NX_INCLUDE_USER_DEFINE_FILE,USE_HAL_DRIVER,STM32H723xx</Define>
               <Undefine></Undefine>
               <IncludePath>../Core/Inc;../AZURE_RTOS/App;../NetXDuo/App;../NetXDuo/Target;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc;../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../../../../../../Drivers/CMSIS/Include;../../../../../../Drivers/BSP/Components/lan8742/;../../../../../../Middlewares/ST/netxduo/common/drivers/ethernet/;../../../../../../Middlewares/ST/netxduo/addons/dhcp/;../../../../../../Middlewares/ST/netxduo/common/inc/;../../../../../../Middlewares/ST/netxduo/ports/cortex_m7/ac5/inc/;../../../../../../Middlewares/ST/threadx/common/inc/;../../../../../../Middlewares/ST/threadx/ports/cortex_m7/ac6/inc/</IncludePath>
             </VariousControls>
@@ -356,9 +356,9 @@
             <ClangAsOpt>1</ClangAsOpt>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define></Define>
+              <Define>TX_INCLUDE_USER_DEFINE_FILE</Define>
               <Undefine></Undefine>
-              <IncludePath></IncludePath>
+              <IncludePath>../Core/Inc</IncludePath>
             </VariousControls>
           </Aads>
           <LDads>

@@ -1,5 +1,5 @@
 
-## <b>Fx_NAND_Write_Read_File application description</b>
+## <b>Fx_NAND_Write_Read_File Application Description</b>
 
 This application provides an example of Azure RTOS FileX and LevelX stacks usage on custom
 board(doesn't run on STM32H743I-EVAL board unless a custom board is added). It demonstrates how to create a Fat File system
@@ -8,47 +8,47 @@ NAND flash device, the code provides all required software code for properly man
 
  - This application has been tested using an internal custom test board embedding a Micron MT29F2G16ABAEAWP NAND flash device configured as below:
 
-      - MemoryDataWidth = 16 bit
-      - PageSize = 1024 words
-      - SpareAreaSize = 32 words
-      - BlockSize = 64 pages
-      - BlockNbr = 2048
-      - PlaneSize = 2048 (NAND memory plane size is measured in number of blocks )
-      - PlaneNbr = 1
+    - MemoryDataWidth = 16 bit
+    - PageSize = 1024 words
+    - SpareAreaSize = 32 words
+    - BlockSize = 64 pages
+    - BlockNbr = 2048
+    - PlaneSize = 2048 (NAND memory plane size is measured in number of blocks )
+    - PlaneNbr = 1
 
   - User should have attention when configuring timings for the NAND memory. for more details about the timings please refer to AN4761.
 
   - The timings are configured the same for the ComSpaceTiming and AttSpaceTiming as below:
-      - SetupTime = 1
-      - WaitSetupTime = 7
-      - HoldSetupTime = 2
-      - HiZSetupTime = 8
+    - SetupTime = 1
+    - WaitSetupTime = 7
+    - HoldSetupTime = 2
+    - HiZSetupTime = 8
 
   - User can design his own hardware according to the following FMC GPIO configuration:
 
-      - PG9   ------> FMC_NCE
-      - PD0   ------> FMC_D2
-      - PD1   ------> FMC_D3
-      - PD4   ------> FMC_NOE
-      - PD5   ------> FMC_NWE
-      - PD6   ------> FMC_NWAIT
-      - PD8   ------> FMC_D13
-      - PD9   ------> FMC_D14
-      - PD10  ------> FMC_D15
-      - PD11  ------> FMC_CLE (FMC_A16)
-      - PD12  ------> FMC_ALE (FMC_A17)
-      - PD13  ------> FMC_A18
-      - PD14  ------> FMC_D0
-      - PD15  ------> FMC_D1
-      - PE7   ------> FMC_D4
-      - PE8   ------> FMC_D5
-      - PE9   ------> FMC_D6
-      - PE10  ------> FMC_D7
-      - PE11  ------> FMC_D8
-      - PE12  ------> FMC_D9
-      - PE13  ------> FMC_D10
-      - PE14  ------> FMC_D11
-      - PE15  ------> FMC_D12
+    - PG9   ------> FMC_NCE
+    - PD0   ------> FMC_D2
+    - PD1   ------> FMC_D3
+    - PD4   ------> FMC_NOE
+    - PD5   ------> FMC_NWE
+    - PD6   ------> FMC_NWAIT
+    - PD8   ------> FMC_D13
+    - PD9   ------> FMC_D14
+    - PD10  ------> FMC_D15
+    - PD11  ------> FMC_CLE (FMC_A16)
+    - PD12  ------> FMC_ALE (FMC_A17)
+    - PD13  ------> FMC_A18
+    - PD14  ------> FMC_D0
+    - PD15  ------> FMC_D1
+    - PE7   ------> FMC_D4
+    - PE8   ------> FMC_D5
+    - PE9   ------> FMC_D6
+    - PE10  ------> FMC_D7
+    - PE11  ------> FMC_D8
+    - PE12  ------> FMC_D9
+    - PE13  ------> FMC_D10
+    - PE14  ------> FMC_D11
+    - PE15  ------> FMC_D12
 
 The application starts by calling the ThreadX's initialization routine which executes the main thread that handles file operations.
 At this stage, all FileX resources are created, the NAND flash is initialized and a single thread is created:
@@ -60,7 +60,7 @@ In case FAT FileSystem is not created, please check the following flag in "fx_st
 
   - FX_NAND_FORMAT_FLASH_BEFORE_OPEN
 
-Optionally, the NAND flash can be erased prior to format, this allows LevelX and FileX to create a clean FAT FileSystem. 
+Optionally, the NAND flash can be erased prior to format, this allows LevelX and FileX to create a clean FAT FileSystem.
 To enable flash mass erase, please set the following flag in "lx_stm32_nand_custom_driver.h":
 
   - LX_DRIVER_ERASES_FLASH_AFTER_INIT
@@ -81,9 +81,11 @@ Also, information regarding the total and available size of the flash media is p
 On failure, the red LED starts toggling while the green LED is switched OFF.
 
 #### <b>Assumptions if any</b>
+
 None
 
 #### <b>Known limitations</b>
+
 None
 
 ### <b>Notes</b>
@@ -104,7 +106,7 @@ None
  - ThreadX is configured with 100 ticks/sec by default, this should be taken into account when using delays or timeouts at application. It is always possible to reconfigure it in the "tx_user.h", the "TX_TIMER_TICKS_PER_SECOND" define,but this should be reflected in "tx_initialize_low_level.S" file too.
  - ThreadX is disabling all interrupts during kernel start-up to avoid any unexpected behavior, therefore all system related calls (HAL, BSP) should be done either at the beginning of the application or inside the thread entry functions.
  - ThreadX offers the "tx_application_define()" function, that is automatically called by the tx_kernel_enter() API.
-   It is highly recommended to use it to create all applications ThreadX related resources (threads, semaphores, memory pools...)  but it should not in any way contain a system API call (HAL or BSP).
+   It is highly recommended to use it to create all applications ThreadX related resources (threads, semaphores, memory pools...) but it should not in any way contain a system API call (HAL or BSP).
  - Using dynamic memory allocation requires to apply some changes to the linker file.
    ThreadX needs to pass a pointer to the first free memory location in RAM to the tx_application_define() function,
    using the "first_unused_memory" argument.
@@ -130,14 +132,13 @@ None
        } >RAM_D1 AT> RAM_D1
     ```
 
-       The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
-       In the example above the ThreadX heap size is set to 64KBytes.
-       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
-       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
-       Read more in STM32CubeIDE User Guide, chapter: "Linker script".
+    The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
+    In the example above the ThreadX heap size is set to 64KBytes.
+    The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+    Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
+    Read more in STM32CubeIDE User Guide, chapter: "Linker script".
 
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
-
 
 #### <b>FileX/LevelX usage hints</b>
 
@@ -145,7 +146,6 @@ None
 - When calling the fx_media_format() API, it is highly recommended to understand all the parameters used by the API to correctly generate a valid filesystem.
 - When calling the fx_media_format() API, total sectors number should be one full block size of sectors less than the NAND flash provides. This will help ensure best performance during the wear level processing.
 - FileX is using data buffers, passed as arguments to fx_media_open(), fx_media_read() and fx_media_write() API it is recommended that these buffers are multiple of sector size and "32 bytes" aligned to avoid cache maintenance issues.
-
 
 ### <b>Keywords</b>
 
@@ -158,12 +158,11 @@ RTOS, ThreadX, FileX, LevelX, File System, NAND, FMC, FAT32
     STM32H743I-EVAL boards Revision: MB1246-B03 and can be easily tailored to any other supported device and development board.
 
   - This application uses USART1 to display logs, the hyperterminal configuration is as follows:
-      - BaudRate = 115200 baud
-      - Word Length = 8 Bits
-      - Stop Bit = 1
-      - Parity = None
-      - Flow control = None
-
+    - BaudRate = 115200 baud
+    - Word Length = 8 Bits
+    - Stop Bit = 1
+    - Parity = None
+    - Flow control = None
 
 ### <b>How to use it ?</b>
 

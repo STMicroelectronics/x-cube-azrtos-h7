@@ -16,6 +16,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "lx_api.h"
 #include "stm32h7xx_hal.h"
@@ -231,9 +235,9 @@ extern void MX_OCTOSPI1_Init(void);
 #define LX_STM32_OSPI_CR2_SOPI                    MX25LM51245G_CR2_SOPI
 #define LX_STM32_OSPI_CR2_DOPI                    MX25LM51245G_CR2_DOPI
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

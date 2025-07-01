@@ -19,6 +19,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_filex.h"
 
@@ -106,7 +110,7 @@ UINT MX_FileX_Init(VOID *memory_ptr)
   return ret;
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 VOID fx_thread_entry(ULONG thread_input)
 {
@@ -463,4 +467,4 @@ UINT Object_GetHandleFile(ULONG handle_index, FX_FILE **mtp_object_file)
   return MTP_SUCCESS;
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

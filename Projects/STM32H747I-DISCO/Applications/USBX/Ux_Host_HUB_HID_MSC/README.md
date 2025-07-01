@@ -65,6 +65,7 @@ This application supports two instances HID: a mouse and a keyboard, and two ins
 #### <b>Error behaviors</b>
 
 Errors are detected such as (Unsupported device, Enumeration Fail) and the corresponding message is displayed on the HyperTerminal.
+LED_RED toggles if any error occurs.
 
 #### <b>Assumptions if any</b>
 
@@ -76,6 +77,7 @@ None
 
 ### <b>Notes</b>
 
+None
 
 #### <b>ThreadX usage hints</b>
 
@@ -109,20 +111,21 @@ None
        } >RAM_D1 AT> RAM_D1
     ```
 
-       The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
-       In the example above the ThreadX heap size is set to 64KBytes.
-       The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
-       Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
-       Read more in STM32CubeIDE User Guide, chapter: "Linker script".
+    The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
+    In the example above the ThreadX heap size is set to 64KBytes.
+    The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.
+    Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).
+    Read more in STM32CubeIDE User Guide, chapter: "Linker script".
 
     + The "tx_initialize_low_level.S" should be also modified to enable the "USE_DYNAMIC_MEMORY_ALLOCATION" flag.
 
 #### <b>USBX usage hints</b>
 
+None
 
 ### <b>Keywords</b>
 
-Connectivity, USBXHost,HUB, FILEX, ThreadX, HID, Mouse, Keyboard, MSC, Mass Storage, BOT, SCSI, Removable drive, UART/USART
+Connectivity, USBXHost,HUB, FileX, ThreadX, HID, Mouse, Keyboard, MSC, Mass Storage, BOT, SCSI, Removable drive, UART/USART
 
 
 ### <b>Hardware and Software environment</b>

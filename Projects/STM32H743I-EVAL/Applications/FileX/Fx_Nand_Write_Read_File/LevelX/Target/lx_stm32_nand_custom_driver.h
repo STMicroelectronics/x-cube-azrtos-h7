@@ -16,6 +16,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "lx_api.h"
 
@@ -99,9 +103,9 @@ UINT  lx_stm32_nand_custom_driver_initialize(LX_NAND_FLASH *nand_flash);
 
 /* USER CODE END PD */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 #ifdef __cplusplus
 }
 #endif

@@ -22,6 +22,12 @@
   ******************************************************************************
   */
 
+/* IMPORTANT: The following flag must be enabled in stm32h743i_eval_conf.h file */
+/* options in order to use STM32H753I EVAL2 board MB1246 Rev E03 : !!!!!!!!!! */
+/* #define USE_TS3510_TS_CTRL                  0U */
+/* #define USE_EXC7200_TS_CTRL                 0U */
+/* #define USE_EXC80W32_TS_CTRL                1U */
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef STM32H743I_EVAL_H
 #define STM32H743I_EVAL_H
@@ -191,11 +197,11 @@ typedef struct
 #define USE_STM32H743I_EVAL
 #endif
 /**
-  * @brief STM32H743I EVAL BSP Driver version number V3.3.2
+  * @brief STM32H743I EVAL BSP Driver version number
   */
 #define STM32H743I_EVAL_BSP_VERSION_MAIN   (0x03) /*!< [31:24] main version   */
 #define STM32H743I_EVAL_BSP_VERSION_SUB1   (0x03) /*!< [23:16] sub1 version   */
-#define STM32H743I_EVAL_BSP_VERSION_SUB2   (0x02) /*!< [15:8]  sub2 version   */
+#define STM32H743I_EVAL_BSP_VERSION_SUB2   (0x03) /*!< [15:8]  sub2 version   */
 #define STM32H743I_EVAL_BSP_VERSION_RC     (0x00) /*!< [7:0]  release candidate   */
 #define STM32H743I_EVAL_BSP_VERSION        ((STM32H743I_EVAL_BSP_VERSION_MAIN << 24)\
                                             |(STM32H743I_EVAL_BSP_VERSION_SUB1 << 16)\

@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_host_msc.h"
 
@@ -58,7 +62,7 @@ extern TX_EVENT_FLAGS_GROUP ux_app_EventFlag;
 
 /* USER CODE END 0 */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief  Function implementing msc_process_thread_entry.
@@ -131,4 +135,4 @@ VOID msc_process_thread_entry(ULONG thread_input)
   }
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

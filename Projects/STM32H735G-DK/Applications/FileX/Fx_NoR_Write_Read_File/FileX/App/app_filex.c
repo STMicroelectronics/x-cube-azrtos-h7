@@ -19,6 +19,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_filex.h"
 
@@ -319,12 +323,12 @@ void fx_app_thread_entry(ULONG thread_input)
 
   while(1)
   {
-      HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+      HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
       tx_thread_sleep(40);
   }
   /* USER CODE END fx_app_thread_entry 1 */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

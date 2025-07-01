@@ -1,5 +1,5 @@
 
-## <b>Nx_WebServer application description</b>
+## <b>Nx_WebServer Application Description</b>
 
 This application provides an example of Azure RTOS NetX Duo stack usage on STM32H735G-DK board, it shows how to develop Web HTTP server based application.
 The application is designed to load files and dyncamic web pages stored in SD card using a Web HTTP server, the code provides all required features to build a compliant Web HTTP Server.
@@ -14,9 +14,9 @@ The main entry function tx_application_define() is called by ThreadX during kern
 
 The application then creates 2 threads with different priorities:
 
- + **NxAppThread** (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.
- + **AppServerThread** (priority 5, PreemtionThreashold 5) : created with the TX_DONT_START flag to be started later.
- + **LedThread** (priority 15, PreemtionThreashold 15) : created with the TX_DONT_START flag to be started later.
+ + **NxAppThread** (priority 10, PreemptionThreshold 10) : created with the TX_AUTO_START flag to start automatically.
+ + **AppServerThread** (priority 5, PreemptionThreshold 5) : created with the TX_DONT_START flag to be started later.
+ + **LedThread** (priority 15, PreemptionThreshold 15) : created with the TX_DONT_START flag to be started later.
 
 The **NxAppThread** starts and performs the following actions:
 
@@ -80,16 +80,16 @@ Hotplug is not implemented for this example, that is, the SD card is expected to
    This requires changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+     place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	```
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -97,7 +97,7 @@ Hotplug is not implemented for this example, that is, the SD card is expected to
          . = . + 64K;
          . = ALIGN(8);
        } >RAM_D1 AT> RAM_D1
-	```
+    ```
 
        The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
        In the example above the ThreadX heap size is set to 64KBytes.

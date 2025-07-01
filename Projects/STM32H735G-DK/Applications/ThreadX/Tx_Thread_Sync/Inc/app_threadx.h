@@ -25,6 +25,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "tx_api.h"
 
@@ -105,9 +109,9 @@ void ThreadOne_Entry(ULONG thread_input);
 
 /* USER CODE END EFP */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

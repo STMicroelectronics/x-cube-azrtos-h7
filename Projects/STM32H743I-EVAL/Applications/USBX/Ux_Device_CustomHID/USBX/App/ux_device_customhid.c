@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_device_customhid.h"
 
@@ -242,7 +246,7 @@ ULONG USBD_Custom_HID_EventMaxLength(VOID)
 
 #endif /* UX_DEVICE_CLASS_HID_INTERRUPT_OUT_SUPPORT */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief  Function implementing usbx_cutomhid_thread_entry.
@@ -355,29 +359,29 @@ static VOID Led_Toggle(UINT event_idx, UINT state)
 {
   switch (event_idx)
   {
-    case LED1_REPORT_ID:
-      (state == 1) ? BSP_LED_On(LED1) : BSP_LED_Off(LED1);
+    case LED_GREEN_REPORT_ID:
+      (state == 1) ? BSP_LED_On(LED_GREEN) : BSP_LED_Off(LED_GREEN);
       break;
 
-    case LED2_REPORT_ID:
-      (state == 1) ? BSP_LED_On(LED2) : BSP_LED_Off(LED2);
+    case LED_RED_REPORT_ID:
+      (state == 1) ? BSP_LED_On(LED_RED) : BSP_LED_Off(LED_RED);
       break;
 
-    case LED3_REPORT_ID:
-      (state == 1) ? BSP_LED_On(LED3) : BSP_LED_Off(LED3);
+    case LED_ORANGE_REPORT_ID:
+      (state == 1) ? BSP_LED_On(LED_ORANGE) : BSP_LED_Off(LED_ORANGE);
       break;
 
-    case LED4_REPORT_ID:
-      (state == 1) ? BSP_LED_On(LED4) : BSP_LED_Off(LED4);
+    case LED_BLUE_REPORT_ID:
+      (state == 1) ? BSP_LED_On(LED_BLUE) : BSP_LED_Off(LED_BLUE);
       break;
 
     default:
-      BSP_LED_Off(LED1);
-      BSP_LED_Off(LED2);
-      BSP_LED_Off(LED3);
-      BSP_LED_Off(LED4);
+      BSP_LED_Off(LED_GREEN);
+      BSP_LED_Off(LED_RED);
+      BSP_LED_Off(LED_ORANGE);
+      BSP_LED_Off(LED_BLUE);
       break;
   }
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

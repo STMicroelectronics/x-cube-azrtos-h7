@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_threadx.h"
 
@@ -33,7 +37,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -111,7 +114,7 @@ void MainThread_Entry(ULONG thread_input)
       for (i=0; i<10; i++)
       {
       /* Toggle LED to indicate status*/
-      HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+      HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
       App_Delay(50);
       }
     }
@@ -145,7 +148,7 @@ void MX_ThreadX_Init(void)
 void App_ThreadX_LowPower_Enter(void)
 {
   /* USER CODE BEGIN  App_ThreadX_LowPower_Enter */
-  HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+  HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
   /* Enter to the stop mode */
   HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
   /* USER CODE END  App_ThreadX_LowPower_Enter */
@@ -159,14 +162,14 @@ void App_ThreadX_LowPower_Enter(void)
 void App_ThreadX_LowPower_Exit(void)
 {
   /* USER CODE BEGIN  App_ThreadX_LowPower_Exit */
-  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
   /* Reconfigure the system clock*/
   HAL_RCC_DeInit();
   SystemClock_Config();
   /* USER CODE END  App_ThreadX_LowPower_Exit */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 /**
   * @brief EXTI line detection callbacks
   * @param GPIO_Pin: Specifies the pins connected EXTI line
@@ -176,9 +179,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if (GPIO_Pin == GPIO_PIN_13)
   {
-      /* Put the semaphore to release the MainThread and specify ceiling to 1 to avoid 
+      /* Put the semaphore to release the MainThread and specify ceiling to 1 to avoid
       multiple semaphore puts by successively clicking on the user button */
-      tx_semaphore_ceiling_put(&tx_app_semaphore,1); 
+      tx_semaphore_ceiling_put(&tx_app_semaphore,1);
   }
 }
 /**
@@ -191,4 +194,4 @@ void App_Delay(ULONG Delay)
   ULONG initial_time = tx_time_get();
   while ((tx_time_get() - initial_time) < Delay);
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

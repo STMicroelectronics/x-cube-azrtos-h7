@@ -17,6 +17,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "fx_api.h"
 #include "lx_api.h"
@@ -113,9 +117,9 @@ VOID  fx_stm32_levelx_nand_driver(FX_MEDIA *media_ptr);
 
 /* USER CODE END PD */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

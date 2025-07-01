@@ -1,5 +1,5 @@
 
-## <b>Nx_UDP_Echo_Client application description</b>
+## <b>Nx_UDP_Echo_Client Application Description</b>
 
 This application provides an example of Azure RTOS NetX/NetXDuo stack usage .
 It shows how to develop a NetX udp client to communicate with a remote sever using the NetX UDP socket API.
@@ -13,8 +13,8 @@ The main entry function tx_application_define() is called by ThreadX during kern
 
 The application then creates 2 threads with the same priorities:
 
- + **NxAppThread** (priority 10, PreemtionThreashold 10) : created with the TX_AUTO_START flag to start automatically.
- + **AppUDPThread** (priority 10, PreemtionThreashold 10) : created with the TX_DONT_START flag to be started later.
+ + **NxAppThread** (priority 10, PreemptionThreshold 10) : created with the TX_AUTO_START flag to start automatically.
+ + **AppUDPThread** (priority 10, PreemptionThreshold 10) : created with the TX_DONT_START flag to be started later.
 
 The **NxAppThread** starts and performs the following actions:
 
@@ -41,7 +41,7 @@ The **AppUDPThread**, once started:
 
 #### <b>Error behaviors</b>
 
-+ the red LED is toggling to indicate any error that have occurred.
++ The red LED is toggling to indicate any error that have occurred.
 + In case the message exchange is not completed a failure message is printed on the HyperTerminal showing the actual sent message compared to the expected ones.
 
 #### <b>Assumptions if any</b>
@@ -63,12 +63,12 @@ void MX_ETH_Init(void)
 
   /* USER CODE END ETH_Init 1 */
   heth.Instance = ETH;
-  heth.Init.MACAddr[0] =   0x00;
-  heth.Init.MACAddr[1] =   0x80;
-  heth.Init.MACAddr[2] =   0xE1;
-  heth.Init.MACAddr[3] =   0x00;
-  heth.Init.MACAddr[4] =   0x30;
-  heth.Init.MACAddr[5] =   0x20;
+  heth.Init.MACAddr[0] = 0x00;
+  heth.Init.MACAddr[1] = 0x80;
+  heth.Init.MACAddr[2] = 0xE1;
+  heth.Init.MACAddr[3] = 0x00;
+  heth.Init.MACAddr[4] = 0x30;
+  heth.Init.MACAddr[5] = 0x20;
 ```
 
 #### <b>Known limitations</b>

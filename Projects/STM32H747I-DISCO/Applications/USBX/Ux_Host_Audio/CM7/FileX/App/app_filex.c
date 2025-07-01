@@ -19,6 +19,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_filex.h"
 
@@ -148,7 +152,7 @@ void fx_app_thread_entry(ULONG thread_input)
   /* USER CODE END fx_app_thread_entry 1 */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 /**
   * @brief  SD_StorageParse
   *         Copies disk content in the explorer list.
@@ -288,4 +292,4 @@ VOID AUDIO_EndOfWAVFile(VOID)
     while(1);
   }
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

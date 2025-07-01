@@ -230,6 +230,7 @@
                     <state>TX_INCLUDE_USER_DEFINE_FILE</state>
                     <state>FX_INCLUDE_USER_DEFINE_FILE</state>
                     <state>LX_INCLUDE_USER_DEFINE_FILE</state>
+                    <state>USE_PWR_DIRECT_SMPS_SUPPLY</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -547,7 +548,7 @@
                 </option>
                 <option>
                     <name>ADefines</name>
-                    <state></state>
+                    <state>TX_INCLUDE_USER_DEFINE_FILE</state>
                 </option>
                 <option>
                     <name>AList</name>
@@ -639,7 +640,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state></state>
+                    <state>$PROJ_DIR$/../CM4/Core/Inc</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -1313,6 +1314,7 @@
                     <state>STM32H747xx</state>
                     <state>TX_INCLUDE_USER_DEFINE_FILE</state>
                     <state>FX_INCLUDE_USER_DEFINE_FILE</state>
+                    <state>USE_PWR_DIRECT_SMPS_SUPPLY</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -1626,7 +1628,7 @@
                 </option>
                 <option>
                     <name>ADefines</name>
-                    <state></state>
+                    <state>TX_INCLUDE_USER_DEFINE_FILE</state>
                 </option>
                 <option>
                     <name>AList</name>
@@ -1718,7 +1720,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state></state>
+                    <state>$PROJ_DIR$/../CM7/Core/Inc</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -2382,6 +2384,18 @@
                 <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_mdma.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_mmc.c</name>
+                <excluded>
+                    <configuration>Fx_Dual_Instance_CM4</configuration>
+                </excluded>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_mmc_ex.c</name>
+                <excluded>
+                    <configuration>Fx_Dual_Instance_CM4</configuration>
+                </excluded>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_pwr.c</name>
             </file>
             <file>
@@ -2431,9 +2445,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_delayblock.c</name>
-                <excluded>
-                    <configuration>Fx_Dual_Instance_CM4</configuration>
-                </excluded>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_sdmmc.c</name>

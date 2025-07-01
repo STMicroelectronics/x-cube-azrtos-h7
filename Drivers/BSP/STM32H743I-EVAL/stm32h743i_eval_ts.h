@@ -31,6 +31,9 @@ extern "C" {
 
 #include "../Components/exc7200/exc7200.h"
 #include "../Components/ts3510/ts3510.h"
+#if (USE_EXC80W32_TS_CTRL == 1U)
+#include "../Components/exc80w32/exc80w32.h"
+#endif
 #include "../Components/Common/ts.h"
 
 /** @addtogroup BSP
@@ -72,7 +75,7 @@ extern "C" {
   */
 #define TS_EXC7200_I2C_ADDRESS      0x08U
 #define TS_TS3510_I2C_ADDRESS       0x80U
-
+#define TS_EXC80W32_I2C_ADDRESS     0x54U /* EXC80W32 component available on STM32H753I-EVAL2 board, MB1246 Rev E03 */
 /**
   * @brief Touch screen interrupt signal
   */

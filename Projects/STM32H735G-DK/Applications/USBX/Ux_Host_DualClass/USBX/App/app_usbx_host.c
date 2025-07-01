@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_usbx_host.h"
 
@@ -33,7 +37,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -64,7 +67,6 @@ static VOID app_ux_host_thread_entry(ULONG thread_input);
 static UINT ux_host_event_callback(ULONG event, UX_HOST_CLASS *current_class, VOID *current_instance);
 static VOID ux_host_error_callback(UINT system_level, UINT system_context, UINT error_code);
 /* USER CODE BEGIN PFP */
-
 /* USER CODE END PFP */
 
 /**
@@ -196,9 +198,9 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
     return TX_THREAD_ERROR;
   }
 
-/* Allocate the stack for storrage app thread  */
+  /* Allocate the stack for storage app thread  */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
-                       UX_HOST_APP_THREAD_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+                       UX_HOST_APP_THREAD_STACK_SIZE*2, TX_NO_WAIT) != TX_SUCCESS)
   {
     return TX_POOL_ERROR;
   }
@@ -210,6 +212,7 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
   {
     return TX_THREAD_ERROR;
   }
+
 
   /* Create the event flags group */
   if (tx_event_flags_create(&ux_app_EventFlag, "Event Flag") != TX_SUCCESS)
@@ -503,7 +506,7 @@ VOID ux_host_error_callback(UINT system_level, UINT system_context, UINT error_c
   /* USER CODE END ux_host_error_callback1 */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 /**
   * @brief  USBX_APP_Host_Init
   *         Initialization of USB Host.
@@ -529,11 +532,10 @@ VOID USBX_APP_Host_Init(VOID)
 
   /* Enable USB Global Interrupt */
   HAL_HCD_Start(&hhcd_USB_OTG_HS);
-
   /* USER CODE BEGIN USB_Host_Init_PreTreatment1 */
 
   /* Start Application Message */
-  USBH_UsrLog(" **** USB OTG HS in FS Dual_Class Host **** \n");
+  USBH_UsrLog(" **** USB OTG HS Dual_Class Host **** \n");
   USBH_UsrLog("USB Host library started.\n");
 
   /* Wait for Device to be attached */
@@ -542,7 +544,6 @@ VOID USBX_APP_Host_Init(VOID)
 
   /* USER CODE END USB_Host_Init_PreTreatment1 */
 }
-
 /**
 * @brief  Drive VBUS.
 * @param  state : VBUS state
@@ -577,4 +578,4 @@ void USBH_DriverVBUS(uint8_t state)
   HAL_Delay(200);
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

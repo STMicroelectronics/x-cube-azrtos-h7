@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_api.h"
 #include "ux_device_class_storage.h"
@@ -87,9 +91,9 @@ ULONG USBD_STORAGE_GetMediaBlocklength(VOID);
 #ifndef STORAGE_READ_ONLY
 #define STORAGE_READ_ONLY    UX_FALSE
 #endif
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

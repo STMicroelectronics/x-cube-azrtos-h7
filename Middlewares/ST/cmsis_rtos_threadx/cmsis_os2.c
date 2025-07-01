@@ -143,6 +143,13 @@ TX_BYTE_POOL HeapBytePool;
 TX_BYTE_POOL StackBytePool;
 TX_BLOCK_POOL BlockPool;
 
+/* Semaphore wrapper to support max_count with ThreadX */
+typedef struct osSemaphore
+{
+  TX_SEMAPHORE txSemaphore;
+  ULONG        ceiling;
+} osSemaphore_t;
+
 /*---------------------------------------------------------------------------*/
 /*-------------------CMSIS RTOS2 Internal Functions--------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -2949,14 +2956,14 @@ osStatus_t osMutexDelete(osMutexId_t mutex_id)
   */
 osSemaphoreId_t osSemaphoreNew(uint32_t max_count, uint32_t initial_count, const osSemaphoreAttr_t *attr)
 {
-  /* For ThreadX the control block pointer is the semaphore identifier */
-  TX_SEMAPHORE *semaphore_ptr = NULL;
+  /* For ThreadX the control block is part of the wrapper struct returned as the semaphore identifier */
+  osSemaphore_t *semaphore_ptr = NULL;
   /* Pointer to the semaphore name */
   CHAR *name_ptr = NULL;
   /* The semaphore initial count */
   ULONG init_count = (ULONG) initial_count;
   /* The size of control block */
-  ULONG cb_size = sizeof(TX_SEMAPHORE);
+  ULONG cb_size = sizeof(osSemaphore_t);
 
   /* Check if this API is called from Interrupt Service Routines */
   if (!IS_IRQ_MODE())
@@ -2974,10 +2981,10 @@ osSemaphoreId_t osSemaphoreNew(uint32_t max_count, uint32_t initial_count, const
       /* Check if the control block size is equal to 0 */
       if (attr->cb_size == 0U)
       {
-        /* Set control block size to sizeof(TX_SEMAPHORE) */
-        cb_size = sizeof(TX_SEMAPHORE);
+        /* Set control block size to sizeof(osSemaphore_t) */
+        cb_size = sizeof(osSemaphore_t);
       }
-      else if (attr->cb_size < sizeof(TX_SEMAPHORE))
+      else if (attr->cb_size < sizeof(osSemaphore_t))
       {
         /* Return NULL pointer in case of error */
         return (NULL);
@@ -2992,7 +2999,7 @@ osSemaphoreId_t osSemaphoreNew(uint32_t max_count, uint32_t initial_count, const
       if (attr->cb_mem == NULL)
       {
         /* Allocate the semaphore_ptr structure for the semaphore to be created */
-        semaphore_ptr = (TX_SEMAPHORE *)MemAlloc(cb_size, RTOS2_BYTE_POOL_HEAP_TYPE);
+        semaphore_ptr = (osSemaphore_t *)MemAlloc(cb_size, RTOS2_BYTE_POOL_HEAP_TYPE);
         if (semaphore_ptr == NULL)
         {
           /* Return NULL pointer in case of error */
@@ -3008,12 +3015,13 @@ osSemaphoreId_t osSemaphoreNew(uint32_t max_count, uint32_t initial_count, const
     else
     {
       /* Allocate the semaphore_ptr structure for the semaphore to be created */
-      semaphore_ptr = (TX_SEMAPHORE *)MemAlloc(cb_size, RTOS2_BYTE_POOL_HEAP_TYPE);
+      semaphore_ptr = (osSemaphore_t *)MemAlloc(cb_size, RTOS2_BYTE_POOL_HEAP_TYPE);
     }
 
-
+    /* store max_count needed during osSemaphoreRelease */
+    semaphore_ptr->ceiling = max_count;
     /* Call the tx_semaphore_create function to create the new semaphore */
-    if (tx_semaphore_create(semaphore_ptr, name_ptr, init_count) != TX_SUCCESS)
+    if (tx_semaphore_create(&(semaphore_ptr->txSemaphore), name_ptr, init_count) != TX_SUCCESS)
     {
       if ((attr->cb_mem == NULL) || (attr == NULL))
       {
@@ -3038,13 +3046,13 @@ osSemaphoreId_t osSemaphoreNew(uint32_t max_count, uint32_t initial_count, const
 const char *osSemaphoreGetName(osSemaphoreId_t semaphore_id)
 {
   /* For ThreadX the control block pointer is the semaphore identifier */
-  TX_SEMAPHORE *semaphore_ptr = (TX_SEMAPHORE *)semaphore_id;
+  osSemaphore_t *semaphore_ptr = (osSemaphore_t *)semaphore_id;
   /* The output name_ptr as null-terminated string */
   CHAR *name_ptr;
 
   /* Check if this API is called from Interrupt Service Routines or the semaphore_id is NULL
      and the semaphore is invalid  */
-  if (IS_IRQ_MODE() || (semaphore_ptr == NULL) || (semaphore_ptr -> tx_semaphore_id != TX_SEMAPHORE_ID))
+  if (IS_IRQ_MODE() || (semaphore_ptr == NULL) || (semaphore_ptr -> txSemaphore.tx_semaphore_id != TX_SEMAPHORE_ID))
   {
     /* Return NULL in case of an error */
     name_ptr = NULL;
@@ -3052,7 +3060,7 @@ const char *osSemaphoreGetName(osSemaphoreId_t semaphore_id)
   else
   {
     /* Call the tx_semaphore_info_get to get the semaphore name_ptr */
-    if (tx_semaphore_info_get(semaphore_ptr, &name_ptr, NULL, NULL, NULL, NULL) != TX_SUCCESS)
+    if (tx_semaphore_info_get(&(semaphore_ptr->txSemaphore), &name_ptr, NULL, NULL, NULL, NULL) != TX_SUCCESS)
     {
       /* Return NULL in case of an error */
       name_ptr = NULL;
@@ -3076,7 +3084,7 @@ const char *osSemaphoreGetName(osSemaphoreId_t semaphore_id)
 osStatus_t osSemaphoreAcquire(osSemaphoreId_t semaphore_id, uint32_t timeout)
 {
   /* For ThreadX the control block pointer is the semaphore identifier */
-  TX_SEMAPHORE *semaphore_ptr = (TX_SEMAPHORE *)semaphore_id;
+  osSemaphore_t *semaphore_ptr = (osSemaphore_t *)semaphore_id;
   /* The returned status or error */
   osStatus_t status;
   /* The ThreadX wait option */
@@ -3086,7 +3094,7 @@ osStatus_t osSemaphoreAcquire(osSemaphoreId_t semaphore_id, uint32_t timeout)
 
   /* Check if the semaphore ID is NULL or the semaphore is invalid or non-zero timeout specified in an ISR  */
   if ((IS_IRQ_MODE() && (timeout != 0)) || (semaphore_id == NULL) ||
-      (semaphore_ptr -> tx_semaphore_id != TX_SEMAPHORE_ID))
+      (semaphore_ptr -> txSemaphore.tx_semaphore_id != TX_SEMAPHORE_ID))
   {
     /* Return osErrorParameter error */
     status = osErrorParameter;
@@ -3094,7 +3102,7 @@ osStatus_t osSemaphoreAcquire(osSemaphoreId_t semaphore_id, uint32_t timeout)
   else
   {
     /* Call the tx_semaphore_get to get the semaphore object */
-    tx_status = tx_semaphore_get(semaphore_ptr, wait_option);
+    tx_status = tx_semaphore_get(&(semaphore_ptr->txSemaphore), wait_option);
     if (tx_status == TX_SUCCESS)
     {
       /* Return osOK for success */
@@ -3130,20 +3138,20 @@ osStatus_t osSemaphoreAcquire(osSemaphoreId_t semaphore_id, uint32_t timeout)
 osStatus_t osSemaphoreRelease(osSemaphoreId_t semaphore_id)
 {
   /* For ThreadX the control block pointer is the semaphore identifier */
-  TX_SEMAPHORE *semaphore_ptr = (TX_SEMAPHORE *)semaphore_id;
+  osSemaphore_t *semaphore_ptr = (osSemaphore_t *)semaphore_id;
   /* The returned status or error */
   osStatus_t status;
 
   /* Check if the semaphore ID is NULL or the semaphore is invalid */
-  if ((semaphore_id == NULL) || (semaphore_ptr -> tx_semaphore_id != TX_SEMAPHORE_ID))
+  if ((semaphore_id == NULL) || (semaphore_ptr -> txSemaphore.tx_semaphore_id != TX_SEMAPHORE_ID))
   {
     /* Return osErrorParameter error */
     status = osErrorParameter;
   }
   else
   {
-    /* Call the tx_semaphore_put to put the semaphore object */
-    if (tx_semaphore_put(semaphore_ptr) == TX_SUCCESS)
+    /* Call the tx_semaphore_ceiling_put to put the semaphore object */
+    if (tx_semaphore_ceiling_put(&(semaphore_ptr->txSemaphore), semaphore_ptr->ceiling) == TX_SUCCESS)
     {
       /* Return osOK for success */
       status = osOK;
@@ -3172,7 +3180,7 @@ osStatus_t osSemaphoreRelease(osSemaphoreId_t semaphore_id)
 osStatus_t osSemaphoreDelete(osSemaphoreId_t semaphore_id)
 {
   /* For ThreadX the control block pointer is the semaphore identifier */
-  TX_SEMAPHORE *semaphore_ptr = (TX_SEMAPHORE *)semaphore_id;
+  osSemaphore_t *semaphore_ptr = (osSemaphore_t *)semaphore_id;
   /* The returned status or error */
   osStatus_t status;
 
@@ -3183,7 +3191,7 @@ osStatus_t osSemaphoreDelete(osSemaphoreId_t semaphore_id)
     status = osErrorISR;
   }
   /* Check if the semaphore ID is NULL or the semaphore is invalid */
-  else if ((semaphore_id == NULL) || (semaphore_ptr -> tx_semaphore_id != TX_SEMAPHORE_ID))
+  else if ((semaphore_id == NULL) || (semaphore_ptr -> txSemaphore.tx_semaphore_id != TX_SEMAPHORE_ID))
   {
     /* Return osErrorParameter error */
     status = osErrorParameter;
@@ -3191,7 +3199,7 @@ osStatus_t osSemaphoreDelete(osSemaphoreId_t semaphore_id)
   else
   {
     /* Call the tx_semaphore_delete to delete the semaphore object */
-    if (tx_semaphore_delete(semaphore_ptr) == TX_SUCCESS)
+    if (tx_semaphore_delete(&(semaphore_ptr->txSemaphore)) == TX_SUCCESS)
     {
       /* Free the already allocated memory for semaphore control block */
       if (MemFree(semaphore_ptr) == osOK)
@@ -3258,7 +3266,7 @@ osMessageQueueId_t osMessageQueueNew(uint32_t msg_count, uint32_t msg_size, cons
     name_ptr = NULL;
 
     /* The msg_size is rounded up to a double even number to ensure 32-bit alignment of the memory blocks. */
-    msg_size = msg_size + (msg_size % sizeof(ULONG));
+    msg_size = (msg_size + sizeof(ULONG) - 1) & ~(sizeof(ULONG) - 1);
 
     /* Check if the attr is not NULL */
     if (attr != NULL)

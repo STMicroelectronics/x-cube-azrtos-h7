@@ -1,5 +1,5 @@
 
-## <b>Ux_Host_MSC application description</b>
+## <b>Ux_Host_MSC Application Description</b>
 
 This application provides an example of Azure RTOS USBX stack usage. It shows how to develop USB Host Mass Storage "MSC" able to enumerate and communicate with a removable USB flash disk.
 
@@ -8,7 +8,7 @@ The application is designed to behave as a USB MSC Host able to operate with an 
 The main entry function tx_application_define() is then called by ThreadX during kernel start, at this stage, all USBx resources are initialized, the MSC class driver is registered.
 The application creates two threads :
 
-  - usbx_app_thread_entry    (Priority : 10; Preemption threshold : 10) used to initialize USB_OTG HAL HCD driver and start the Host.
+  - app_ux_host_thread_entry (Priority : 10; Preemption threshold : 10) used to initialize USB_OTG HAL HCD driver and start the Host.
   - msc_process_thread_entry (Priority : 30; Preemption threshold : 30) used to proceed to file operations once the device is properly enumerated.
 
 ####  <b>Expected success behavior</b>
@@ -95,7 +95,7 @@ None
 
 ### <b>Keywords</b>
 
-Connectivity, USBXHost, FILEX, ThreadX, MSC, Mass Storage, BOT, SCSI, Removable drive, UART/USART
+Connectivity, USBXHost, FileX, ThreadX, MSC, Mass Storage, BOT, SCSI, Removable drive, UART/USART
 
 ### <b>Hardware and Software environment</b>
 
@@ -104,7 +104,7 @@ Connectivity, USBXHost, FILEX, ThreadX, MSC, Mass Storage, BOT, SCSI, Removable 
     and can be easily tailored to any other supported device and development board.
   - STM32H735G-DK set-up:
     - Plug the USB key into the STM32H735G-DK board through 'USB micro A-Male to A-Female' cable to the connector:
-      - CN14 : to use USB High Speed OTG IP.
+      - CN14 : to use USB High Speed OTG IP (HS)
     - Connect ST-Link cable to the PC USB port to display data on the HyperTerminal.
 
   - A virtual COM port will then appear in the HyperTerminal:

@@ -1,5 +1,5 @@
 
-## <b>Tx_CMSIS_Wrapper application description</b>
+## <b>Tx_CMSIS_Wrapper Application Description</b>
 
 This application provides an example of CMSIS RTOS adaptation layer for Azure RTOS ThreadX, it shows how to develop an application using the CMSIS RTOS 2 APIs.
 It demonstrates how to create multiple threads using CMSIS RTOS 2 for ThreadX APIs.
@@ -42,9 +42,11 @@ the compile flags in the file "app_tx_cmsisrtos.h".
 'LED_RED' toggles every 1 second if any error occurs.
 
 #### <b>Assumptions if any</b>
+
 None
 
 #### <b>Known limitations</b>
+
 None
 
 ### <b>Notes</b>
@@ -104,12 +106,10 @@ None
 
 RTOS, ThreadX, Threading, CMSIS RTOS, Semaphore, Mutex
 
-
-
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H747xx devices
-  - This example has been tested with STMicroelectronics STM32H747I-DISCO boards Revision
+  - This application runs on STM32H747xx devices
+  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards Revision
     and can be easily tailored to any other supported device and development board.
   - A virtual COM port appears in the HyperTerminal:
       - Hyperterminal configuration:
@@ -118,7 +118,6 @@ RTOS, ThreadX, Threading, CMSIS RTOS, Semaphore, Mutex
         + No parity
         + BaudRate = 115200 baud
         + Flow control: None
-
 
 ### <b>How to use it ?</b>
 

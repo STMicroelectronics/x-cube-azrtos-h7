@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_device_ccid.h"
 
@@ -774,7 +778,7 @@ UINT USBD_CCID_set_data_rate_and_clock_frequency(ULONG slot, UX_DEVICE_CLASS_CCI
   return status;
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief  Function implementing usbx_ccid_thread_entry.
@@ -1004,4 +1008,4 @@ VOID  usbx_ccid_apdu_process(CCID_APDU_Command *apdu_cmd, CCID_APDU_Response *ap
   }
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

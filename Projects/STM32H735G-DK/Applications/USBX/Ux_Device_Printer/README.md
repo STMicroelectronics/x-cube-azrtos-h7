@@ -1,5 +1,5 @@
 
-## <b>Ux_Device_Printer application description</b>
+## <b>Ux_Device_Printer Application Description</b>
 
 This application provides an example of Azure RTOS USBX stack usage on STM32H735G-DK board, it shows how to develop USB Device Printer Class based
 application. The application is designed to emulate a USB Printer device, the code provides all required device descriptors framework and the associated class
@@ -98,8 +98,8 @@ RTOS, ThreadX, USBXDevice, Device, USB_OTG, Full Speed, Printer.
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H735xx devices.
-  - This example has been tested with STMicroelectronics STM32H735G-DK boards revision: MB1520-H735I-B02
+  - This application runs on STM32H735xx devices.
+  - This application has been tested with STMicroelectronics STM32H735G-DK boards revision: MB1520-H735I-B02
     and can be easily tailored to any other supported device and development board.
   - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
      - BaudRate = 115200 baud

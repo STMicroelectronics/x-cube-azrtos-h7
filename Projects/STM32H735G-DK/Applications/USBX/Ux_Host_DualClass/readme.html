@@ -27,7 +27,7 @@ vertical-align: middle;
 <body>
 <div class="row">
 <section id="ux_host_dualclass-application-description" class="col-sm-12 col-lg-8">
-<h2><b>Ux_Host_DualClass application description</b></h2>
+<h2><b>Ux_Host_DualClass Application Description</b></h2>
 <p>This application provides an example of Azure RTOS USBX stack usage.
 It shows how to develop USB Host Human Interface “HID” and Mass Storage
 “MSC” able to enumerate and communicates with:</p>
@@ -49,7 +49,7 @@ ThreadX during kernel start, at this stage, all USBx resources are
 initialized, the MSC and the HID class drivers are registered. The
 application creates four threads:</p>
 <ul>
-<li>usbx_app_thread_entry (Priority : 10; Preemption threshold : 10)
+<li>app_ux_host_thread_entry (Priority : 10; Preemption threshold : 10)
 used to initialize USB OTG HAL HCD driver, start the host and proceed to
 file operations or HID reports once the device is properly
 enumerated.</li>
@@ -193,7 +193,7 @@ attribute “Non-Cacheable” to ensure coherency between CPU and USB
 DMA</li>
 </ul>
 <h3 id="keywords"><b>Keywords</b></h3>
-<p>Connectivity, USBXHost, FILEX, ThreadX, HID, Mouse, Keyboard, MSC,
+<p>Connectivity, USBXHost, FileX, ThreadX, HID, Mouse, Keyboard, MSC,
 Mass Storage, BOT, SCSI, Removable drive, UART/USART</p>
 <h3 id="hardware-and-software-environment"><b>Hardware and Software
 environment</b></h3>

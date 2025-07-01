@@ -1,5 +1,5 @@
 
-## <b>Ux_Device_CDC_ACM application description </b>
+## <b>Ux_Device_CDC_ACM Application Description </b>
 
 This application provides an example of Azure RTOS USBX stack usage on NUCLEO-H723ZG board, it shows how to develop USB device communication class "CDC_ACM" based application.
 The application is designed to emulate an USB-to-UART bridge following the Virtual COM Port (VCP) implementation, the code provides all required device descriptors framework
@@ -120,8 +120,8 @@ RTOS, ThreadX, USBXDevice, USB_OTG, Full Speed, CDC, VCP, USART, DMA.
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H723xx devices
-  - This example has been tested with STMicroelectronics NUCLEO-H723ZG boards revision MB1364-H723ZG-E01 and can be easily tailored to any other supported device and development board.
+  - This application runs on STM32H723xx devices
+  - This application has been tested with STMicroelectronics NUCLEO-H723ZG boards revision MB1364-H723ZG-E01 and can be easily tailored to any other supported device and development board.
   - NUCLEO-H723ZG set-up:
   - Connect the NUCLEO-H723ZG board CN13 to the PC through "MICRO-USB" to "Standard A" cable.
   - For VCP the configuration is dynamic for example it can be :

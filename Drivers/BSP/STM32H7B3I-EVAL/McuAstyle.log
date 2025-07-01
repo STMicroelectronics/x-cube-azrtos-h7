@@ -1,0 +1,294 @@
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",29 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",60 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",64 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",72 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",84 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",87 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",102 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",110 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",129 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",134 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",135 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",140 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",141 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",158 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",587 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",782 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",871 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",893 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",896 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",997 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",1101 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.c",1189 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",86 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",109 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",208 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",300 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",349 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",375 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",401 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",445 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",456 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",474 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",485 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",493 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",495 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",532 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",580 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",590 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",732 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",738 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",773 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",779 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",826 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",845 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",886 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",905 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",926 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",1662 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",1813 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",1891 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",1973 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",2552 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",2571 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",2576 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",2592 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",2638 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",2659 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",2664 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",2685 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",2690 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",2695 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",2696 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",2697 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",2698 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",2699 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",2783 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",2798 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",3170 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",3370 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",3390 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",3444 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",3451 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",3647 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",3652 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",3681 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",3820 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",4331 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",4333 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",4616 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",4618 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",4918 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",4919 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",4920 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.c",000 Severity-Normal: Number of lines of code should be below 4000(actual is 4461 ). Rule-59
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",42 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",153 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",206 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",220 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",227 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",319 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",338 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",357 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",376 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",395 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",414 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",433 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",452 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",470 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",478 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",503 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",522 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",539 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",558 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",618 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",620 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",621 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",702 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",703 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.c",742 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.c",181 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.c",185 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.c",229 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.c",284 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.c",288 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.c",306 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.c",1260 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.c",1314 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.c",1330 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.c",1364 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.c",1792 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.c",1849 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_eeprom.c",266 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_eeprom.c",268 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_io.c",258 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_io.c",277 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_io.c",306 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_io.c",330 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_io.c",351 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_io.c",461 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.c",252 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.c",420 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.c",453 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.c",1003 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.c",1021 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.c",1075 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.c",1093 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.c",1098 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.c",1103 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.c",1122 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.c",1144 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.c",1168 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.c",1189 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.c",1194 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.c",1245 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.c",1570 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_nor.c",79 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_nor.c",135 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.c",184 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.c",336 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.c",370 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.c",399 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.c",442 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.c",471 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.c",512 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.c",730 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.c",1039 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.c",1071 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.c",1072 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.c",1100 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.c",1112 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.c",1171 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.c",1183 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.c",1239 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sd.c",74 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sd.c",94 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sd.c",129 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sd.c",232 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sd.c",715 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sd.c",792 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sd.c",903 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sd.c",996 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sd.c",1037 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sdram.c",86 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sdram.c",127 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sdram.c",487 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sram.c",78 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sram.c",133 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sram.c",371 Severity-Normal: Avoid using 'magic numbers' instead use macros. Rule-68
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ts.c",334 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ts.c",335 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ts.c",421 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ts.c",422 Severity-Normal: Avoid declaring multiple variables with the same base type. Rule-40
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",41 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",42 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",43 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",71 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",72 Severity-Normal: Only uppercase should be used in enum type. Rule-11
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",81 Severity-Normal: Only uppercase should be used in enum type. Rule-11
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",167 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",195 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",223 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",241 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",251 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",261 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",272 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",302 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",337 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",344 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",351 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",358 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",365 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",383 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",386 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval.h",415 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",35 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",40 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",109 Severity-Normal: Typedef struct name does not end with '_t' or 'TypeDef'. Rule-13
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",116 Severity-Normal: Typedef struct name does not end with '_t' or 'TypeDef'. Rule-13
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",124 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",128 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",147 Severity-Normal: Typedef struct name does not end with '_t' or 'TypeDef'. Rule-13
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",149 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",155 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",159 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",167 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",254 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",255 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",256 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",257 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",258 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",291 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",292 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",293 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",294 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",295 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",296 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",312 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",313 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",314 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",315 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",316 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",326 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",327 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",328 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",329 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",330 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",345 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",346 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",347 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",348 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",349 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",397 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",398 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",399 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",400 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",402 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",403 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",404 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",405 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",407 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",408 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",409 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",410 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",412 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",413 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",414 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",415 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",417 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",418 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",419 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",420 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",423 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",424 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",549 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_audio.h",552 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.h",33 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_bus.h",84 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.h",34 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.h",38 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.h",42 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.h",45 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.h",172 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_camera.h",173 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_io.h",146 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.h",35 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_lcd.h",40 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.h",70 Severity-Normal: Typedef struct name does not end with '_t' or 'TypeDef'. Rule-13
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.h",168 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.h",169 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.h",172 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ospi.h",173 Severity-Normal: Line length is limited to 120 characters. Rule-31
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sd.h",51 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sd.h",71 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sd.h",75 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sd.h",94 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sd.h",101 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sdram.h",77 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sdram.h",78 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sram.h",73 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_sram.h",74 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ts.h",53 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ts.h",56 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ts.h",60 Severity-Normal: #endif should be followed by a comment based on the test in #if. Rule-48
+"C:\git\h7_masterfinal\Firmware\Drivers\BSP\STM32H7B3I-EVAL\stm32h7b3i_eval_ts.h",87 Severity-Normal: Only uppercase separated by an underscore should be used. Rule-12

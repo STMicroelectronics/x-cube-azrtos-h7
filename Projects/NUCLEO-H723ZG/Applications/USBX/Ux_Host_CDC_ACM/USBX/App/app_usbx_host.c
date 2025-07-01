@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_usbx_host.h"
 
@@ -33,7 +37,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -52,7 +55,7 @@ TX_EVENT_FLAGS_GROUP  ux_app_EventFlag;
 UX_HOST_CLASS_CDC_ACM *cdc_acm;
 
 extern uint16_t                        RxSzeIdx;
-extern UX_HOST_CLASS_CDC_ACM_RECEPTION cdc_acm_reception;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -60,7 +63,6 @@ static VOID app_ux_host_thread_entry(ULONG thread_input);
 static UINT ux_host_event_callback(ULONG event, UX_HOST_CLASS *current_class, VOID *current_instance);
 static VOID ux_host_error_callback(UINT system_level, UINT system_context, UINT error_code);
 /* USER CODE BEGIN PFP */
-
 /* USER CODE END PFP */
 
 /**
@@ -169,6 +171,7 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
   {
     return TX_THREAD_ERROR;
   }
+
 
   /* Create the event flags group */
   if (tx_event_flags_create(&ux_app_EventFlag, "Event Flag") != TX_SUCCESS)
@@ -352,11 +355,12 @@ VOID ux_host_error_callback(UINT system_level, UINT system_context, UINT error_c
   /* USER CODE END ux_host_error_callback1 */
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief USBX_APP_Host_Init
   *        Initialization of USB Host.
+  * @param  None
   * @retval None
   */
 VOID USBX_APP_Host_Init(VOID)
@@ -378,11 +382,10 @@ VOID USBX_APP_Host_Init(VOID)
 
   /* Enable USB Global Interrupt */
   HAL_HCD_Start(&hhcd_USB_OTG_HS);
-
   /* USER CODE BEGIN USB_Host_Init_PreTreatment1 */
-
+  
   /* Start Application Message */
-  USBH_UsrLog(" **** USB OTG HS in FS CDC Host **** \n");
+  USBH_UsrLog(" **** USB OTG HS CDC Host **** \n");
   USBH_UsrLog("USB Host library started.\n");
 
   /* Wait for Device to be attached */
@@ -392,7 +395,6 @@ VOID USBX_APP_Host_Init(VOID)
   /* USER CODE END USB_Host_Init_PreTreatment1 */
 
 }
-
 /**
 * @brief  Drive VBUS.
 * @param  state : VBUS state
@@ -445,4 +447,4 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   }
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

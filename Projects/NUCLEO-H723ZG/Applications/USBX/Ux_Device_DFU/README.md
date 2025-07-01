@@ -1,5 +1,5 @@
 
-## <b>Ux_Device_DFU application description</b>
+## <b>Ux_Device_DFU Application Description</b>
 
 This application provides an example of Azure RTOS USBX stack usage on NUCLEO-H723ZG board,
 it shows how to develop USB Device Firmware Upgrade "DFU" based application.
@@ -33,7 +33,7 @@ In this application, two operating modes are available:
        0x20000.
 
  2. Run-time application mode:
-    This is the normal run-time activities. A binary which toggles LED1 and LED2 on the NUCLEO-H723ZG board "NUCLEO-H723ZG_LED_Toggle_@0x08020000" is provided in Binary directory.
+    This is the normal run-time activities. A binary which toggles LED_GREEN and LED_RED on the NUCLEO-H723ZG board "NUCLEO-H723ZG_LED_Toggle_@0x08020000" is provided in Binary directory.
 
 #### <b>Note 2</b>
 
@@ -147,8 +147,8 @@ RTOS, ThreadX, USBXDevice, High speed, USB_OTG, DFU, Firmware upgrade
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H723xx devices.
-  - This example has been tested with STMicroelectronics NUCLEO-H723ZG boards revision MB1364-H723ZG-E01
+  - This application runs on STM32H723xx devices.
+  - This application has been tested with STMicroelectronics NUCLEO-H723ZG boards revision MB1364-H723ZG-E01
     and can be easily tailored to any other supported device and development board.
   - NUCLEO-H723ZG board Set-up
     - Install the DFU driver available in "DfuSe Demonstrator" installation directory

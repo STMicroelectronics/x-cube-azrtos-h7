@@ -229,6 +229,7 @@
                     <state>LX_INCLUDE_USER_DEFINE_FILE</state>
                     <state>USE_HAL_DRIVER</state>
                     <state>STM32H743xx</state>
+                    <state>USE_PWR_LDO_SUPPLY</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -547,7 +548,7 @@
                 </option>
                 <option>
                     <name>ADefines</name>
-                    <state></state>
+                    <state>TX_INCLUDE_USER_DEFINE_FILE</state>
                 </option>
                 <option>
                     <name>AList</name>
@@ -639,7 +640,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state></state>
+                    <state>$PROJ_DIR$/../Core/Inc</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -1228,6 +1229,9 @@
                 <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_nand.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_nor.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_pwr.c</name>
             </file>
             <file>
@@ -1238,6 +1242,12 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_rcc_ex.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_sdram.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_sram.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\..\..\..\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_tim.c</name>

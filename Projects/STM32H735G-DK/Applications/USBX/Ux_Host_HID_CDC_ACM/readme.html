@@ -27,7 +27,7 @@ vertical-align: middle;
 <body>
 <div class="row">
 <section id="ux_host_hid_cdc_acm-application-description" class="col-sm-12 col-lg-8">
-<h2><b>Ux_Host_HID_CDC_ACM application description </b></h2>
+<h2><b>Ux_Host_HID_CDC_ACM Application Description </b></h2>
 <p>This application provides an example of Azure RTOS USBX stack usage
 on STM32H735G-DK. It shows how to develop a composite “USB HID CDC_ACM
 Host” that is able to enumerate and communicate with:</p>
@@ -46,7 +46,7 @@ mouse or a keyboard and display data on UART terminal.</p>
 during kernel start, at this stage, all USBx resources are initialized.
 The application creates 5 threads with different priorities :</p>
 <ul>
-<li>usbx_app_thread_entry (Priority : 10; Preemption threshold : 10)
+<li>app_ux_host_thread_entry (Priority : 10; Preemption threshold : 10)
 used to initialize USB USB_OTG HAL HCD driver and start the Host.</li>
 <li>cdc_acm_send_app_thread_entry (Priority : 30; Preemption threshold :
 30) used to send data from host to device.</li>
@@ -67,14 +67,24 @@ attached device. The host should be able to properly decode composite
 HID CDC_ACM class or simple HID/CDC_ACM request data sent by the device.
 After enumeration phase, the device will be ready to use.</li>
 </ul>
-<p>In case of a CDC_ACM - The sent/received data are displayed on
-respective terminals.</p>
-<p>In case of a mouse: - (x,y) mouse position - Wheel position - Pressed
-mouse buttons</p>
-<p>In case of a keyboard: - Pressed key</p>
-<p>In case of composite HID CDC_ACM - The sent/received data are
-displayed on respective terminals. - (x,y) mouse position, wheel
-position, pressed mouse button or pressed key in case of a keyboard</p>
+<p>In case of a CDC_ACM 
+<ul>
+<li>The sent/received data are displayed on respective terminals.</p>
+<p>In case of a mouse: 
+<ul>
+<li>(x,y) mouse position</li>
+<li>Wheel position</li>
+<li>Pressed mouse buttons</li>
+</ul></p>
+<p>In case of a keyboard: 
+<ul>
+<li>Pressed key</li>
+</ul></p>
+<p>In case of composite HID CDC_ACM
+<ul>
+<li>The sent/received data are displayed on respective terminals.</li> 
+<li>(x,y) mouse position, wheel position, pressed mouse button or pressed key in case of a keyboard</li>
+</ul></p>
 <h4 id="error-behaviors"><b>Error behaviors</b></h4>
 <p>Errors are detected (such as unsupported device, enumeration fail)
 and the corresponding message is displayed on the HyperTerminal.</p>

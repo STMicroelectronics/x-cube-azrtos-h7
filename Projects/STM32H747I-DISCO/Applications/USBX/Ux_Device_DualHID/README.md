@@ -1,5 +1,5 @@
 
-## <b>Ux_Device_DualHID application description</b>
+## <b>Ux_Device_DualHID Application Description</b>
 
 This application provides an example of Azure RTOS USBX stack usage on STM32H747I-DISCO board, it shows how to develop a composite USB Human Interface
 Device class "HID Mouse" and "HID Keyboard" based application.
@@ -104,8 +104,8 @@ RTOS, ThreadX, USBX, USBXDevice, USB_OTG, High Speed, HID, Keyboard, Mouse.
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H747xx devices.
-  - This example has been tested with STMicroelectronics STM32H747I-DISCO boards revision MB1520-H747I-B02
+  - This application runs on STM32H747xx devices.
+  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards revision MB1520-H747I-B02
     and can be easily tailored to any other supported device and development board.
   - STM32H747I-DISCO Set-up
   - Connect the STM32H747I-DISCO board CN1 to the PC through "MICRO-USB" to "Standard A" cable.

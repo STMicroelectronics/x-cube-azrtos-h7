@@ -1607,7 +1607,7 @@
                 </option>
                 <option>
                     <name>ADefines</name>
-                    <state></state>
+                    <state>TX_INCLUDE_USER_DEFINE_FILE </state>
                 </option>
                 <option>
                     <name>AList</name>
@@ -1699,7 +1699,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state></state>
+                    <state>$PROJ_DIR$\..\CM7\Inc</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>

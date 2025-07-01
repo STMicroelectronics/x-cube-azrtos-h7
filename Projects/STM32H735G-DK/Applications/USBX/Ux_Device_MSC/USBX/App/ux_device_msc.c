@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_device_msc.h"
 
@@ -114,7 +118,7 @@ UINT USBD_STORAGE_Read(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
   ULONG ReadFlags = 0U;
 
   /* Check if the SD card is present */
-  if (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_5) == GPIO_PIN_SET)
+  if (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_5) != GPIO_PIN_RESET)
   {
     /* Check id SD card is ready */
     if(check_sd_status() != HAL_OK)
@@ -167,9 +171,9 @@ UINT USBD_STORAGE_Write(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
   ULONG WriteFlags = 0U;
 
   /* Check if the SD card is present */
-  if (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_5) == GPIO_PIN_SET)
+  if (HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_5) != GPIO_PIN_RESET)
   {
-    /* Check id SD card is ready */
+    /* Check if SD card is ready */
     if(check_sd_status() != HAL_OK)
     {
       Error_Handler();
@@ -315,7 +319,7 @@ ULONG USBD_STORAGE_GetMediaBlocklength(VOID)
   return MediaBlockLen;
 }
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
 /**
   * @brief  BSP_SD_WriteCpltCallback
@@ -366,4 +370,4 @@ static int32_t check_sd_status(VOID)
   return HAL_ERROR;
 }
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */

@@ -212,6 +212,11 @@ int32_t BSP_LCD_InitEx(uint32_t Instance, uint32_t Orientation, uint32_t PixelFo
   EXC7200_Object_t ts_comp_obj_2;
   EXC7200_IO_t     io_comp_ctx_2 ;
 #endif
+#if (USE_EXC80W32_TS_CTRL == 1U)
+  uint32_t exc80w32_id;
+  EXC80W32_Object_t ts_comp_obj_3;
+  EXC80W32_IO_t     io_comp_ctx_3 ;
+#endif
   MX_LTDC_LayerConfig_t config;
 
   if((Orientation > LCD_ORIENTATION_LANDSCAPE) || (Instance >= LCD_INSTANCES_NBR))
@@ -302,6 +307,29 @@ int32_t BSP_LCD_InitEx(uint32_t Instance, uint32_t Orientation, uint32_t PixelFo
         else
         {
           if(ts3510_id != TS3510_ID)
+          {
+            ret = BSP_ERROR_UNKNOWN_COMPONENT;
+          }
+        }
+      }
+#endif
+#if (USE_EXC80W32_TS_CTRL == 1)
+      if(ret != BSP_ERROR_NONE)
+      {
+        io_comp_ctx_3.Init    = BSP_I2C1_Init;
+        io_comp_ctx_3.ReadReg = BSP_I2C1_ReadReg;
+        io_comp_ctx_3.Address = TS_EXC80W32_I2C_ADDRESS;
+        if(EXC80W32_RegisterBusIO(&ts_comp_obj_3, &io_comp_ctx_3) < 0)
+        {
+          ret = BSP_ERROR_COMPONENT_FAILURE;
+        }
+        else if(EXC80W32_ReadID(&ts_comp_obj_3, &exc80w32_id) < 0)
+        {
+          ret = BSP_ERROR_COMPONENT_FAILURE;
+        }
+        else
+        {
+          if(exc80w32_id != EXC80W32_ID)
           {
             ret = BSP_ERROR_UNKNOWN_COMPONENT;
           }

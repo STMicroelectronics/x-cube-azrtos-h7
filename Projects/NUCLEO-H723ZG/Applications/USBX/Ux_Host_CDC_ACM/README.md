@@ -1,5 +1,5 @@
 
-## <b>Ux_Host_CDC_ACM application description </b>
+## <b>Ux_Host_CDC_ACM Application Description </b>
 
 This application provides an example of Azure RTOS USBX stack usage .
 
@@ -10,7 +10,7 @@ The main entry function tx_application_define() is then called by ThreadX during
 are initialized.
 The application creates 3 threads with different priorities:
 
-  - usbx_app_thread_entry            (Priority : 10; Preemption threshold : 10) used to initialize USB OTG HAL HCD driver and start the Host.
+  - app_ux_host_thread_entry         (Priority : 10; Preemption threshold : 10) used to initialize USB OTG HAL HCD driver and start the Host.
   - cdc_acm_send_app_thread_entry    (Priority : 30; Preemption threshold : 30) used to send data from host to device.
   - cdc_acm_recieve_app_thread_entry (Priority : 30; Preemption threshold : 30) used to receive data from the device.
 

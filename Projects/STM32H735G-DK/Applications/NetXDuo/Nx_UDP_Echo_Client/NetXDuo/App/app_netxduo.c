@@ -18,6 +18,10 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_netxduo.h"
 
@@ -199,7 +203,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
   {
     return TX_POOL_ERROR;
   }
-  /* create the UDP client thread */
+  /* Create the UDP client thread */
   ret = tx_thread_create(&AppUDPThread, "App UDP Thread", App_UDP_Thread_Entry, 0, pointer, NX_APP_THREAD_STACK_SIZE,
                          NX_APP_THREAD_PRIORITY, NX_APP_THREAD_PRIORITY, TX_NO_TIME_SLICE, TX_DONT_START);
 
@@ -226,7 +230,7 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
     return TX_POOL_ERROR;
   }
 
-  /* create the Link thread */
+  /* Create the Link thread */
   ret = tx_thread_create(&AppLinkThread, "App Link Thread", App_Link_Thread_Entry, 0, pointer, NX_APP_THREAD_STACK_SIZE,
                          LINK_PRIORITY, LINK_PRIORITY, TX_NO_TIME_SLICE, TX_AUTO_START);
 
@@ -248,12 +252,10 @@ UINT MX_NetXDuo_Init(VOID *memory_ptr)
 static VOID ip_address_change_notify_callback(NX_IP *ip_instance, VOID *ptr)
 {
   /* USER CODE BEGIN ip_address_change_notify_callback */
-  /* release the semaphore as soon as an IP address is available */
+  /* Release the semaphore as soon as an IP address is available */
   if (nx_ip_address_get(&NetXDuoEthIpInstance, &IpAddress, &NetMask) != NX_SUCCESS)
   {
-    /* USER CODE BEGIN IP address change callback error */
     Error_Handler();
-    /* USER CODE END IP address change callback error */
   }
   if(IpAddress != NULL_ADDRESS)
   {
@@ -308,17 +310,17 @@ static VOID nx_app_thread_entry (ULONG thread_input)
   /* USER CODE BEGIN Nx_App_Thread_Entry 2 */
   PRINT_IP_ADDRESS(IpAddress);
 
-  /* the network is correctly initialized, start the UDP thread */
+  /* The network is correctly initialized, start the UDP thread */
   tx_thread_resume(&AppUDPThread);
 
-  /* this thread is not needed any more, we relinquish it */
+  /* This thread is not needed any more, we relinquish it */
   tx_thread_relinquish();
 
   return;
   /* USER CODE END Nx_App_Thread_Entry 2 */
 
 }
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 static VOID App_UDP_Thread_Entry(ULONG thread_input)
 {
   UINT ret;
@@ -329,7 +331,7 @@ static VOID App_UDP_Thread_Entry(ULONG thread_input)
 
   NX_PACKET *data_packet;
 
-  /* create the UDP socket */
+  /* Create the UDP socket */
   ret = nx_udp_socket_create(&NetXDuoEthIpInstance, &UDPSocket, "UDP Client Socket", NX_IP_NORMAL, NX_FRAGMENT_OKAY, NX_IP_TIME_TO_LIVE, QUEUE_MAX_SIZE);
 
   if (ret != NX_SUCCESS)
@@ -337,7 +339,7 @@ static VOID App_UDP_Thread_Entry(ULONG thread_input)
     Error_Handler();
   }
 
-  /* bind UDP socket to the DEFAULT PORT */
+  /* Bind UDP socket to the DEFAULT PORT */
   ret = nx_udp_socket_bind(&UDPSocket, DEFAULT_PORT, TX_WAIT_FOREVER);
 
   if (ret != NX_SUCCESS)
@@ -349,7 +351,7 @@ static VOID App_UDP_Thread_Entry(ULONG thread_input)
   {
     TX_MEMSET(data_buffer, '\0', sizeof(data_buffer));
 
-    /* create the packet to send over the UDP socket */
+    /* Create the packet to send over the UDP socket */
     ret = nx_packet_allocate(&NxAppPool, &data_packet, NX_UDP_PACKET, TX_WAIT_FOREVER);
 
     if (ret != NX_SUCCESS)
@@ -364,10 +366,10 @@ static VOID App_UDP_Thread_Entry(ULONG thread_input)
       Error_Handler();
     }
 
-    /* send the message */
+    /* Send the message */
     ret = nx_udp_socket_send(&UDPSocket, data_packet, UDP_SERVER_ADDRESS, UDP_SERVER_PORT);
 
-    /* wait 10 sec to receive response from the server */
+    /* Wait 10 sec to receive response from the server */
     ret = nx_udp_socket_receive(&UDPSocket, &server_packet, NX_APP_DEFAULT_TIMEOUT);
 
     if (ret == NX_SUCCESS)
@@ -375,24 +377,24 @@ static VOID App_UDP_Thread_Entry(ULONG thread_input)
       ULONG source_ip_address;
       UINT source_port;
 
-      /* get the server IP address and  port */
+      /* Get the server IP address and  port */
       nx_udp_source_extract(server_packet, &source_ip_address, &source_port);
 
-      /* retrieve the data sent by the server */
+      /* Retrieve the data sent by the server */
       nx_packet_data_retrieve(server_packet, data_buffer, &bytes_read);
 
-      /* print the received data */
+      /* Print the received data */
      PRINT_DATA(source_ip_address, source_port, data_buffer);
 
-      /* release the server packet */
+      /* Release the server packet */
       nx_packet_release(server_packet);
 
-      /* toggle the green led on success */
-      HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+      /* Toggle the green led on success */
+      HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
     }
     else
     {
-      /* connection lost with the server, exit the loop */
+      /* Connection lost with the server, exit the loop */
       break;
     }
     /* Add a short timeout to let the echool tool correctly
@@ -458,7 +460,7 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
           /* Start DHCP */
           nx_dhcp_start(&DHCPClient);
 
-          /* wait until an IP address is ready */
+          /* Wait until an IP address is ready */
           if(tx_semaphore_get(&DHCPSemaphore, TX_WAIT_FOREVER) != TX_SUCCESS)
           {
             /* USER CODE BEGIN DHCPSemaphore get error */
@@ -490,4 +492,4 @@ static VOID App_Link_Thread_Entry(ULONG thread_input)
     tx_thread_sleep(NX_APP_CABLE_CONNECTION_CHECK_PERIOD);
   }
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

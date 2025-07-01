@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "ux_api.h"
 #include "ux_device_class_rndis.h"
@@ -66,9 +70,9 @@ VOID USBD_RNDIS_GetMacAdd(UCHAR *mac_add, UCHAR *mac_node);
 #define USBD_RNDIS_DRIVER_VERSION  0x1127
 #endif
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
 }

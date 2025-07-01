@@ -24,6 +24,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
 
 /* Includes ------------------------------------------------------------------*/
 /* Private includes ----------------------------------------------------------*/
@@ -42,7 +45,18 @@ extern "C" {
 
 /* USER CODE END EC */
 
+/* Private defines -----------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
+
+/* Main thread defines -------------------------------------------------------*/
+/* USER CODE BEGIN MTD */
+
+/* USER CODE END MTD */
+
 /* Exported macro ------------------------------------------------------------*/
+
 /* USER CODE BEGIN EM */
 
 /* USER CODE END EM */
@@ -86,9 +100,9 @@ uint32_t App_TX_CmsisRTOS_Init(void);
 #define APP_THREAD_STACK_SIZE    2*256
 /* USER CODE END Private defines */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
  }

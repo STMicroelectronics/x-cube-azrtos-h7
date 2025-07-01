@@ -18,7 +18,7 @@ static UINT  lx_ospi_driver_erase_block(ULONG block, ULONG erase_count);
 static UINT  lx_ospi_driver_block_erased_verify(ULONG block);
 
 #ifndef LX_DIRECT_READ
-extern ULONG ospi_sector_buffer[LX_STM32_OSPI_SECTOR_SIZE/sizeof(ULONG)];
+extern ULONG ospi_sector_buffer[LX_NOR_SECTOR_SIZE];
 #endif
 
 static UINT is_initialized = LX_FALSE;

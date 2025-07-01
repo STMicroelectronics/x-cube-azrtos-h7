@@ -1,3 +1,4 @@
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    app_threadx.c
@@ -15,11 +16,18 @@
   *
   ******************************************************************************
   */
+/* USER CODE END Header */
+
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
 
 /* Includes ------------------------------------------------------------------*/
 
 /* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
 #include "app_threadx.h"
+/* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 typedef enum {
@@ -138,6 +146,7 @@ void MX_AZURE_RTOS_Init(void)
   /* USER CODE END  Kernel_Start_Error */
 }
 
+/* USER CODE BEGIN 2 */
 /**
   * @brief  Module Manager main thread.
   * @param  thread_input: thread id
@@ -308,3 +317,5 @@ VOID pretty_msg(char *p_msg, ULONG r_msg)
     break;
   }
 }
+
+/* USER CODE END  2*/

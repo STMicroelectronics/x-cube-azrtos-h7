@@ -7,6 +7,11 @@
 
   ******************************************************************************
   */
+### V3.0.4 / 10-September-2024 ###
+===============================
+Main changes
+-------------
+- Avoid NULL pointer access during endpoint reset and finish of requested transfer 
 
 ### V3.0.3 / 17-May-2024 ###
 ===============================

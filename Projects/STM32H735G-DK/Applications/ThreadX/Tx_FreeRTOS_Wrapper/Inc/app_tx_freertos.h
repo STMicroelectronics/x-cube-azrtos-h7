@@ -24,6 +24,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
 
 /* Includes ------------------------------------------------------------------*/
 #include "tx_api.h"
@@ -62,9 +65,9 @@ UINT App_TX_FreeRTOS_Init(void);
 #define LED_THREAD_PRIO                  5
 /* USER CODE END Private defines */
 
-/* USER CODE BEGIN 1 */
+/* USER CODE BEGIN 2 */
 
-/* USER CODE END 1 */
+/* USER CODE END 2 */
 
 #ifdef __cplusplus
  }

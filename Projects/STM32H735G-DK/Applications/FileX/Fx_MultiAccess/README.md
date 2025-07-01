@@ -1,5 +1,5 @@
 
-## <b>Fx_MultiAccess application description</b>
+## <b>Fx_MultiAccess Application Description</b>
 
 This application provides an example of Azure RTOS FileX stack usage on STM32H735G-DK board, it demonstrates the FileX's concurrent file access capabilities. The application is designed to execute file operations on the SD card device, the code provides all required software code for handling SD card I/O operations.
 
@@ -9,7 +9,7 @@ The application starts by calling the ThreadX's initialization routine which cre
   - fx_thread_one  (Prio : 10; PreemptionPrio : 10) used to create, write and read operations for file fx_file_one.
   - fx_thread_two  (Prio : 10; PreemptionPrio : 10) used to create, write and read operations for file fx_file_two.
 
-<b>Note</b>:
+### <b>Notes</b>
 A FAT32 compatible SD card is expected to be used with this example. The program will start file operations without formatting the media, so all user related files are kept.
 
 #### <b>Expected success behavior</b>
@@ -22,7 +22,7 @@ A FAT32 compatible SD card is expected to be used with this example. The program
 
 #### <b>Error behaviors</b>
 
-On failure, the LED_RED starts toggling while the LED_GREEN is switched OFF.
+- On failure, the LED_RED starts toggling while the LED_GREEN is switched OFF.
 
 #### <b>Assumptions if any</b>
 
@@ -97,14 +97,14 @@ RTOS, ThreadX, FileX, File system, SDMMC, SDIO, FAT32
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H735xx devices.
-  - This example has been tested with STMicroelectronics STM32H735G-DK boards revision: MB1520-H735I-B02
+  - This application runs on STM32H735xx devices.
+  - This application has been tested with STMicroelectronics STM32H735G-DK boards revision: MB1520-H735I-B02
     and can be easily tailored to any other supported device and development board.
 
 ### <b>How to use it ?</b>
 
 In order to make the program work, you must do the following :
 
-  - Open your preferred toolchain
-  - Rebuild all files and load your image into target memory
-  - Run the application
+ - Open your preferred toolchain
+ - Rebuild all files and load your image into target memory
+ - Run the application

@@ -1,5 +1,5 @@
 
-## <b>Ux_Host_DualClass application description</b>
+## <b>Ux_Host_DualClass Application Description</b>
 
 This application provides an example of Azure RTOS USBX stack usage.
 It shows how to develop USB Host Human Interface "HID" and Mass Storage "MSC" able to enumerate and communicates with:
@@ -15,7 +15,7 @@ The application is designed to behave as a:
 The main entry function tx_application_define() is then called by ThreadX during kernel start, at this stage, all USBx resources are initialized, the MSC and the HID class drivers are registered.
 The application creates four threads:
 
-  - usbx_app_thread_entry     (Priority : 10; Preemption threshold : 10) used to initialize USB OTG HAL HCD driver, start the host and proceed to file operations or HID reports once the device is properly enumerated.
+  - app_ux_host_thread_entry  (Priority : 10; Preemption threshold : 10) used to initialize USB OTG HAL HCD driver, start the host and proceed to file operations or HID reports once the device is properly enumerated.
   - hid_mouse_thread_entry    (Priority : 30; Preemption threshold : 30) used to decode HID reports received from a mouse.
   - hid_keyboard_thread_entry (Priority : 30; Preemption threshold : 30) used to decode HID reports received from a keyboard.
   - msc_process_thread_entry  (Priority : 30; Preemption threshold : 30) used to proceed to file operations.
@@ -118,7 +118,7 @@ None
 
 ### <b>Keywords</b>
 
-Connectivity, USBXHost, FILEX, ThreadX, HID, Mouse, Keyboard, MSC, Mass Storage, BOT, SCSI, Removable drive, UART/USART
+Connectivity, USBXHost, FileX, ThreadX, HID, Mouse, Keyboard, MSC, Mass Storage, BOT, SCSI, Removable drive, UART/USART
 
 ### <b>Hardware and Software environment</b>
 
@@ -151,5 +151,4 @@ In order to make the program work, you must do the following :
 <b>Note</b>
 
    The user has to check the list of the COM ports in Device Manager to find out the number of the
-   COM ports that have been assigned (by OS) to the Stlink VCP .
-
+   COM ports that have been assigned (by OS) to the Stlink VCP.

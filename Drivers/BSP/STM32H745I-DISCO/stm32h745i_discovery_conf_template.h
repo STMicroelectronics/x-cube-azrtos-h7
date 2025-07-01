@@ -21,7 +21,7 @@
 #define STM32H745I_DISCO_CONF_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -50,7 +50,6 @@
 
 /* Default TS touch number */
 #define TS_TOUCH_NBR                        2U
-
 
 
 /* IRQ priorities */

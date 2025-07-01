@@ -18,12 +18,15 @@
   */
 /* USER CODE END Header */
 
+/* USER CODE BEGIN 1 */
+
+/* USER CODE END 1 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "app_usbx_host.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
 
 /* USER CODE END Includes */
 
@@ -34,7 +37,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -180,7 +182,6 @@ UINT MX_USBX_Host_Init(VOID *memory_ptr)
   {
     return TX_THREAD_ERROR;
   }
-
   /* USER CODE END MX_USBX_Host_Init1 */
 
   return ret;
@@ -197,7 +198,6 @@ static VOID app_ux_host_thread_entry(ULONG thread_input)
 
   /* Initialization of USB host */
   USBX_APP_Host_Init();
-
   /* USER CODE END app_ux_host_thread_entry */
 }
 
@@ -403,9 +403,9 @@ VOID ux_host_error_callback(UINT system_level, UINT system_context, UINT error_c
   /* USER CODE END ux_host_error_callback1 */
 }
 
-/* USER CODE BEGIN 1 */
-/**
+/* USER CODE BEGIN 2 */
 
+/**
   * @brief  USBX_APP_Host_Init
   *         Initialization of USB host.
   * @param  none
@@ -475,4 +475,4 @@ void USBH_DriverVBUS(uint8_t state)
 
   HAL_Delay(200);
 }
-/* USER CODE END 1 */
+/* USER CODE END 2 */

@@ -150,7 +150,8 @@ static void LTDC_MspInit(LTDC_HandleTypeDef *hltdc);
 static void LTDC_MspDeInit(LTDC_HandleTypeDef *hltdc);
 static void DMA2D_MspInit(DMA2D_HandleTypeDef *hdma2d);
 static void DMA2D_MspDeInit(DMA2D_HandleTypeDef *hdma2d);
-static void LL_FillBuffer(uint32_t Instance, uint32_t LayerIndex, uint32_t *pDst, uint32_t xSize, uint32_t ySize, uint32_t OffLine, uint32_t Color);
+static void LL_FillBuffer(uint32_t Instance, uint32_t LayerIndex, uint32_t *pDst, uint32_t xSize, uint32_t ySize,
+                          uint32_t OffLine, uint32_t Color);
 static void LL_ConvertLineToRGB(uint32_t Instance, uint32_t *pSrc, uint32_t *pDst, uint32_t xSize, uint32_t ColorMode);
 /**
   * @}
@@ -160,8 +161,8 @@ static void LL_ConvertLineToRGB(uint32_t Instance, uint32_t *pSrc, uint32_t *pDs
   * @{
   */
 #define CONVERTRGB5652ARGB8888(Color)(((((((Color >> 11) & 0x1FU) * 527) + 23) >> 6) << 16) |\
-                                     ((((((Color >> 5) & 0x3FU) * 259) + 33) >> 6) << 8) |\
-                                     ((((Color & 0x1FU) * 527) + 23) >> 6) | 0xFF000000)
+                                      ((((((Color >> 5) & 0x3FU) * 259) + 33) >> 6) << 8) |\
+                                      ((((Color & 0x1FU) * 527) + 23) >> 6) | 0xFF000000)
 /**
   * @}
   */
@@ -194,29 +195,26 @@ int32_t BSP_LCD_InitEx(uint32_t Instance, uint32_t Orientation, uint32_t PixelFo
 {
   int32_t ret = BSP_ERROR_NONE;
   uint32_t ltdc_pixel_format;
-  static uint32_t id;
-  FT5336_Object_t ts_comp_obj;
-  FT5336_IO_t io_comp_ctx;
   MX_LTDC_LayerConfig_t config;
   BSP_OSPI_RAM_Init_t ospi_init;
 
-  if((Orientation > LCD_ORIENTATION_LANDSCAPE) || (Instance >= LCD_INSTANCES_NBR))
+  if ((Orientation > LCD_ORIENTATION_LANDSCAPE) || (Instance >= LCD_INSTANCES_NBR))
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    switch(PixelFormat)
+    switch (PixelFormat)
     {
-    case LCD_PIXEL_FORMAT_RGB565:
-      ltdc_pixel_format = LTDC_PIXEL_FORMAT_RGB565;
-      PixelFormatFactor = 2U;
-      break;
-    case LCD_PIXEL_FORMAT_RGB888:
-    default:
-      ltdc_pixel_format = LTDC_PIXEL_FORMAT_ARGB8888;
-      PixelFormatFactor = 4U;
-      break;
+      case LCD_PIXEL_FORMAT_RGB565:
+        ltdc_pixel_format = LTDC_PIXEL_FORMAT_RGB565;
+        PixelFormatFactor = 2U;
+        break;
+      case LCD_PIXEL_FORMAT_RGB888:
+      default:
+        ltdc_pixel_format = LTDC_PIXEL_FORMAT_ARGB8888;
+        PixelFormatFactor = 4U;
+        break;
     }
 
     /* Store pixel format, xsize and ysize information */
@@ -231,9 +229,9 @@ int32_t BSP_LCD_InitEx(uint32_t Instance, uint32_t Orientation, uint32_t PixelFo
     /* MSP initialization */
 #if (USE_HAL_LTDC_REGISTER_CALLBACKS == 1)
     /* Register the LTDC MSP Callbacks */
-    if(Lcd_Ctx[Instance].IsMspCallbacksValid == 0U)
+    if (Lcd_Ctx[Instance].IsMspCallbacksValid == 0U)
     {
-      if(BSP_LCD_RegisterDefaultMspCallbacks(0) != BSP_ERROR_NONE)
+      if (BSP_LCD_RegisterDefaultMspCallbacks(0) != BSP_ERROR_NONE)
       {
         return BSP_ERROR_PERIPH_FAILURE;
       }
@@ -252,44 +250,29 @@ int32_t BSP_LCD_InitEx(uint32_t Instance, uint32_t Orientation, uint32_t PixelFo
 
     DMA2D_MspInit(&hlcd_dma2d);
 
-    io_comp_ctx.Init    = BSP_I2C4_Init;
-    io_comp_ctx.ReadReg = BSP_I2C4_ReadReg;
-    io_comp_ctx.Address = TS_I2C_ADDRESS;
-    if(FT5336_RegisterBusIO(&ts_comp_obj, &io_comp_ctx) < 0)
-    {
-      ret = BSP_ERROR_UNKNOWN_COMPONENT;
-    }
-    else if(FT5336_ReadID(&ts_comp_obj, &id) < 0)
-    {
-      ret = BSP_ERROR_UNKNOWN_COMPONENT;
-    }
-    else if(id != FT5336_ID)
-    {
-      ret = BSP_ERROR_UNKNOWN_COMPONENT;
-    }
-    else if(MX_LTDC_ClockConfig(&hlcd_ltdc) != HAL_OK)
+    if(MX_LTDC_ClockConfig(&hlcd_ltdc) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
     else
     {
-      if(MX_LTDC_Init(&hlcd_ltdc, Width, Height) != HAL_OK)
+      if (MX_LTDC_Init(&hlcd_ltdc, Width, Height) != HAL_OK)
       {
         ret = BSP_ERROR_PERIPH_FAILURE;
       }
     }
 
-    if(ret == BSP_ERROR_NONE)
+    if (ret == BSP_ERROR_NONE)
     {
       /* Before configuring LTDC layer, ensure OSPI is initialized */
       ospi_init.LatencyType = BSP_OSPI_RAM_FIXED_LATENCY;
       ospi_init.BurstType   = BSP_OSPI_RAM_LINEAR_BURST;
       ospi_init.BurstLength = BSP_OSPI_RAM_BURST_32_BYTES;
-      if(BSP_OSPI_RAM_Init(0, &ospi_init) != BSP_ERROR_NONE)
+      if (BSP_OSPI_RAM_Init(0, &ospi_init) != BSP_ERROR_NONE)
       {
         ret = BSP_ERROR_NO_INIT;
       }
-      else if(BSP_OSPI_RAM_EnableMemoryMappedMode(0) != BSP_ERROR_NONE)
+      else if (BSP_OSPI_RAM_EnableMemoryMappedMode(0) != BSP_ERROR_NONE)
       {
         ret = BSP_ERROR_PERIPH_FAILURE;
       }
@@ -303,7 +286,7 @@ int32_t BSP_LCD_InitEx(uint32_t Instance, uint32_t Orientation, uint32_t PixelFo
         config.Y1          = Height;
         config.PixelFormat = ltdc_pixel_format;
         config.Address     = LCD_LAYER_0_ADDRESS;
-        if(MX_LTDC_ConfigLayer(&hlcd_ltdc, 0, &config) != HAL_OK)
+        if (MX_LTDC_ConfigLayer(&hlcd_ltdc, 0, &config) != HAL_OK)
         {
           ret = BSP_ERROR_PERIPH_FAILURE;
         }
@@ -311,7 +294,7 @@ int32_t BSP_LCD_InitEx(uint32_t Instance, uint32_t Orientation, uint32_t PixelFo
         Lcd_Ctx[Instance].ReloadEnable = 1U;
       }
     }
-   }
+  }
 
   return ret;
 }
@@ -325,7 +308,7 @@ int32_t BSP_LCD_DeInit(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -343,7 +326,7 @@ int32_t BSP_LCD_DeInit(uint32_t Instance)
     DMA2D_MspDeInit(&hlcd_dma2d);
 
     (void)HAL_LTDC_DeInit(&hlcd_ltdc);
-    if(HAL_DMA2D_DeInit(&hlcd_dma2d) != HAL_OK)
+    if (HAL_DMA2D_DeInit(&hlcd_dma2d) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
@@ -373,9 +356,9 @@ __weak HAL_StatusTypeDef MX_LTDC_Init(LTDC_HandleTypeDef *hltdc, uint32_t Width,
   hltdc->Init.PCPolarity = LTDC_PCPOLARITY_IPC;
 
   hltdc->Init.HorizontalSync     = RK043FN48H_HSYNC - 1;
-  hltdc->Init.AccumulatedHBP     = (RK043FN48H_HSYNC + (RK043FN48H_HBP-11) - 1);
+  hltdc->Init.AccumulatedHBP     = (RK043FN48H_HSYNC + (RK043FN48H_HBP - 11) - 1);
   hltdc->Init.AccumulatedActiveW = RK043FN48H_HSYNC + Width + RK043FN48H_HBP - 1;
-  hltdc->Init.TotalWidth         = RK043FN48H_HSYNC + Width + (RK043FN48H_HBP-11) + RK043FN48H_HFP - 1;
+  hltdc->Init.TotalWidth         = RK043FN48H_HSYNC + Width + (RK043FN48H_HBP - 11) + RK043FN48H_HFP - 1;
   hltdc->Init.VerticalSync       = RK043FN48H_VSYNC - 1;
   hltdc->Init.AccumulatedVBP     = RK043FN48H_VSYNC + RK043FN48H_VBP - 1;
   hltdc->Init.AccumulatedActiveH = RK043FN48H_VSYNC + Height + RK043FN48H_VBP - 1;
@@ -395,7 +378,8 @@ __weak HAL_StatusTypeDef MX_LTDC_Init(LTDC_HandleTypeDef *hltdc, uint32_t Width,
   * @param  Config     Layer configuration
   * @retval HAL status
   */
-__weak HAL_StatusTypeDef MX_LTDC_ConfigLayer(LTDC_HandleTypeDef *hltdc, uint32_t LayerIndex, MX_LTDC_LayerConfig_t *Config)
+__weak HAL_StatusTypeDef MX_LTDC_ConfigLayer(LTDC_HandleTypeDef *hltdc, uint32_t LayerIndex,
+                                             MX_LTDC_LayerConfig_t *Config)
 {
   LTDC_LayerCfgTypeDef pLayerCfg;
 
@@ -453,23 +437,23 @@ __weak HAL_StatusTypeDef MX_LTDC_ClockConfig(LTDC_HandleTypeDef *hltdc)
   * @param Instance BSP LCD Instance
   * @retval BSP status
   */
-int32_t BSP_LCD_RegisterDefaultMspCallbacks (uint32_t Instance)
+int32_t BSP_LCD_RegisterDefaultMspCallbacks(uint32_t Instance)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(HAL_LTDC_RegisterCallback(&hlcd_ltdc, HAL_LTDC_MSPINIT_CB_ID, LTDC_MspInit) != HAL_OK)
+    if (HAL_LTDC_RegisterCallback(&hlcd_ltdc, HAL_LTDC_MSPINIT_CB_ID, LTDC_MspInit) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
     else
     {
-      if(HAL_LTDC_RegisterCallback(&hlcd_ltdc, HAL_LTDC_MSPDEINIT_CB_ID, LTDC_MspDeInit) != HAL_OK)
+      if (HAL_LTDC_RegisterCallback(&hlcd_ltdc, HAL_LTDC_MSPDEINIT_CB_ID, LTDC_MspDeInit) != HAL_OK)
       {
         ret = BSP_ERROR_PERIPH_FAILURE;
       }
@@ -487,23 +471,23 @@ int32_t BSP_LCD_RegisterDefaultMspCallbacks (uint32_t Instance)
   * @param CallBacks   pointer to LCD MspInit/MspDeInit functions
   * @retval BSP status
   */
-int32_t BSP_LCD_RegisterMspCallbacks (uint32_t Instance, BSP_LCD_Cb_t *CallBacks)
+int32_t BSP_LCD_RegisterMspCallbacks(uint32_t Instance, BSP_LCD_Cb_t *CallBacks)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(HAL_LTDC_RegisterCallback(&hlcd_ltdc, HAL_LTDC_MSPINIT_CB_ID, CallBacks->pMspLtdcInitCb) != HAL_OK)
+    if (HAL_LTDC_RegisterCallback(&hlcd_ltdc, HAL_LTDC_MSPINIT_CB_ID, CallBacks->pMspLtdcInitCb) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
     }
     else
     {
-      if(HAL_LTDC_RegisterCallback(&hlcd_ltdc, HAL_LTDC_MSPDEINIT_CB_ID, CallBacks->pMspLtdcDeInitCb) != HAL_OK)
+      if (HAL_LTDC_RegisterCallback(&hlcd_ltdc, HAL_LTDC_MSPDEINIT_CB_ID, CallBacks->pMspLtdcDeInitCb) != HAL_OK)
       {
         ret = BSP_ERROR_PERIPH_FAILURE;
       }
@@ -526,7 +510,7 @@ int32_t BSP_LCD_RegisterMspCallbacks (uint32_t Instance, BSP_LCD_Cb_t *CallBacks
 int32_t BSP_LCD_ConfigLayer(uint32_t Instance, uint32_t LayerIndex, BSP_LCD_LayerConfig_t *Config)
 {
   int32_t ret = BSP_ERROR_NONE;
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -550,7 +534,7 @@ int32_t BSP_LCD_GetPixelFormat(uint32_t Instance, uint32_t *PixelFormat)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -573,7 +557,7 @@ int32_t BSP_LCD_SetActiveLayer(uint32_t Instance, uint32_t LayerIndex)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -598,15 +582,15 @@ int32_t BSP_LCD_Relaod(uint32_t Instance, uint32_t ReloadType)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if(ReloadType == BSP_LCD_RELOAD_NONE)
+  else if (ReloadType == BSP_LCD_RELOAD_NONE)
   {
     Lcd_Ctx[Instance].ReloadEnable = 0U;
   }
-  else if(HAL_LTDC_Reload (&hlcd_ltdc, ReloadType) != HAL_OK)
+  else if (HAL_LTDC_Reload(&hlcd_ltdc, ReloadType) != HAL_OK)
   {
     ret = BSP_ERROR_PERIPH_FAILURE;
   }
@@ -632,13 +616,13 @@ int32_t BSP_LCD_SetLayerVisible(uint32_t Instance, uint32_t LayerIndex, Function
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(State == ENABLE)
+    if (State == ENABLE)
     {
       __HAL_LTDC_LAYER_ENABLE(&hlcd_ltdc, LayerIndex);
     }
@@ -647,7 +631,7 @@ int32_t BSP_LCD_SetLayerVisible(uint32_t Instance, uint32_t LayerIndex, Function
       __HAL_LTDC_LAYER_DISABLE(&hlcd_ltdc, LayerIndex);
     }
 
-    if(Lcd_Ctx[Instance].ReloadEnable == 1U)
+    if (Lcd_Ctx[Instance].ReloadEnable == 1U)
     {
       __HAL_LTDC_RELOAD_IMMEDIATE_CONFIG(&hlcd_ltdc);
     }
@@ -668,13 +652,13 @@ int32_t BSP_LCD_SetTransparency(uint32_t Instance, uint32_t LayerIndex, uint8_t 
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(Lcd_Ctx[Instance].ReloadEnable == 1U)
+    if (Lcd_Ctx[Instance].ReloadEnable == 1U)
     {
       (void)HAL_LTDC_SetAlpha(&hlcd_ltdc, Transparency, LayerIndex);
     }
@@ -698,13 +682,13 @@ int32_t BSP_LCD_SetLayerAddress(uint32_t Instance, uint32_t LayerIndex, uint32_t
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(Lcd_Ctx[Instance].ReloadEnable == 1U)
+    if (Lcd_Ctx[Instance].ReloadEnable == 1U)
     {
       (void)HAL_LTDC_SetAddress(&hlcd_ltdc, Address, LayerIndex);
     }
@@ -727,17 +711,18 @@ int32_t BSP_LCD_SetLayerAddress(uint32_t Instance, uint32_t LayerIndex, uint32_t
   * @param  Height LCD window height
   * @retval BSP status
   */
-int32_t BSP_LCD_SetLayerWindow(uint32_t Instance, uint16_t LayerIndex, uint16_t Xpos, uint16_t Ypos, uint16_t Width, uint16_t Height)
+int32_t BSP_LCD_SetLayerWindow(uint32_t Instance, uint16_t LayerIndex, uint16_t Xpos, uint16_t Ypos, uint16_t Width,
+                               uint16_t Height)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(Lcd_Ctx[Instance].ReloadEnable == 1U)
+    if (Lcd_Ctx[Instance].ReloadEnable == 1U)
     {
       /* Reconfigure the layer size  and position */
       (void)HAL_LTDC_SetWindowSize(&hlcd_ltdc, Width, Height, LayerIndex);
@@ -768,13 +753,13 @@ int32_t BSP_LCD_SetColorKeying(uint32_t Instance, uint32_t LayerIndex, uint32_t 
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(Lcd_Ctx[Instance].ReloadEnable == 1U)
+    if (Lcd_Ctx[Instance].ReloadEnable == 1U)
     {
       /* Configure and Enable the color Keying for LCD Layer */
       (void)HAL_LTDC_ConfigColorKeying(&hlcd_ltdc, Color, LayerIndex);
@@ -801,13 +786,13 @@ int32_t BSP_LCD_ResetColorKeying(uint32_t Instance, uint32_t LayerIndex)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
-    if(Lcd_Ctx[Instance].ReloadEnable == 1U)
+    if (Lcd_Ctx[Instance].ReloadEnable == 1U)
     {
       /* Disable the color Keying for LCD Layer */
       (void)HAL_LTDC_DisableColorKeying(&hlcd_ltdc, LayerIndex);
@@ -832,7 +817,7 @@ int32_t BSP_LCD_GetXSize(uint32_t Instance, uint32_t *XSize)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -854,7 +839,7 @@ int32_t BSP_LCD_GetYSize(uint32_t Instance, uint32_t *YSize)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -875,16 +860,16 @@ int32_t BSP_LCD_DisplayOn(uint32_t Instance)
 {
   int32_t ret;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     __HAL_LTDC_ENABLE(&hlcd_ltdc);
-	/* Assert LCD_DISP_CTRL_EN pin */
+    /* Assert LCD_DISP_CTRL_EN pin */
     HAL_GPIO_WritePin(LCD_DISP_CTRL_GPIO_PORT, LCD_DISP_CTRL_PIN, GPIO_PIN_SET);
-	/* Assert LCD_BL_CTRL pin */
+    /* Assert LCD_BL_CTRL pin */
     HAL_GPIO_WritePin(LCD_BL_CTRL_GPIO_PORT, LCD_BL_CTRL_PIN, GPIO_PIN_SET);
 
     ret = BSP_ERROR_NONE;
@@ -902,16 +887,16 @@ int32_t BSP_LCD_DisplayOff(uint32_t Instance)
 {
   int32_t ret;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
   else
   {
     __HAL_LTDC_DISABLE(&hlcd_ltdc);
-	/* Assert LCD_DISP_CTRL_EN pin */
+    /* Assert LCD_DISP_CTRL_EN pin */
     HAL_GPIO_WritePin(LCD_DISP_CTRL_GPIO_PORT, LCD_DISP_CTRL_PIN, GPIO_PIN_RESET);
-	/* Assert LCD_BL_CTRL pin */
+    /* Assert LCD_BL_CTRL pin */
     HAL_GPIO_WritePin(LCD_BL_CTRL_GPIO_PORT, LCD_BL_CTRL_PIN, GPIO_PIN_RESET);
 
     ret = BSP_ERROR_NONE;
@@ -930,7 +915,7 @@ int32_t BSP_LCD_SetBrightness(uint32_t Instance, uint32_t Brightness)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -952,7 +937,7 @@ int32_t BSP_LCD_GetBrightness(uint32_t Instance, uint32_t *Brightness)
 {
   int32_t ret = BSP_ERROR_NONE;
 
-  if(Instance >= LCD_INSTANCES_NBR)
+  if (Instance >= LCD_INSTANCES_NBR)
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
@@ -993,14 +978,14 @@ int32_t BSP_LCD_DrawBitmap(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint
   bit_pixel = (uint32_t)pBmp[28] + ((uint32_t)pBmp[29] << 8);
 
   /* Set the address */
-  Address = hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress + (((Lcd_Ctx[Instance].XSize*Ypos) + Xpos)*PixelFormatFactor);
+  Address = hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress + (((Lcd_Ctx[Instance].XSize * Ypos) + Xpos) * PixelFormatFactor);
 
   /* Get the layer pixel format */
-  if ((bit_pixel/8U) == 4U)
+  if ((bit_pixel / 8U) == 4U)
   {
     input_color_mode = DMA2D_INPUT_ARGB8888;
   }
-  else if ((bit_pixel/8U) == 2U)
+  else if ((bit_pixel / 8U) == 2U)
   {
     input_color_mode = DMA2D_INPUT_RGB565;
   }
@@ -1010,17 +995,17 @@ int32_t BSP_LCD_DrawBitmap(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint
   }
 
   /* Bypass the bitmap header */
-  pbmp = pBmp + (index + (width * (height - 1U) * (bit_pixel/8U)));
+  pbmp = pBmp + (index + (width * (height - 1U) * (bit_pixel / 8U)));
 
   /* Convert picture to ARGB8888 pixel format */
-  for(index=0; index < height; index++)
+  for (index = 0; index < height; index++)
   {
     /* Pixel format conversion */
     LL_ConvertLineToRGB(Instance, (uint32_t *)pbmp, (uint32_t *)Address, width, input_color_mode);
 
     /* Increment the source and destination buffers */
-    Address+=  (Lcd_Ctx[Instance].XSize * PixelFormatFactor);
-    pbmp -= width*(bit_pixel/8U);
+    Address += (Lcd_Ctx[Instance].XSize * PixelFormatFactor);
+    pbmp -= width * (bit_pixel / 8U);
   }
 
   return ret;
@@ -1036,23 +1021,24 @@ int32_t BSP_LCD_DrawBitmap(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint
   * @param  Height Rectangle Height.
   * @retval BSP status.
   */
-int32_t BSP_LCD_FillRGBRect(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint8_t *pData, uint32_t Width, uint32_t Height)
+int32_t BSP_LCD_FillRGBRect(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint8_t *pData, uint32_t Width,
+                            uint32_t Height)
 {
   uint32_t i;
 
 #if (USE_DMA2D_TO_FILL_RGB_RECT == 1)
   uint32_t  Xaddress;
-  for(i = 0; i < Height; i++)
+  for (i = 0; i < Height; i++)
   {
     /* Get the line address */
-    Xaddress = hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress + (PixelFormatFactor*((Lcd_Ctx[Instance].XSize*(Ypos + i)) + Xpos));
+    Xaddress = hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress + (PixelFormatFactor * ((Lcd_Ctx[Instance].XSize * (Ypos + i)) + Xpos));
 
 #if (USE_BSP_CPU_CACHE_MAINTENANCE == 1)
-    SCB_CleanDCache_by_Addr((uint32_t *)pdata, PixelFormatFactor*Lcd_Ctx[Instance].XSize);
+    SCB_CleanDCache_by_Addr((uint32_t *)pdata, PixelFormatFactor * Lcd_Ctx[Instance].XSize);
 #endif /* USE_BSP_CPU_CACHE_MAINTENANCE */
 
     /* Write line */
-    if(Lcd_Ctx[Instance].PixelFormat == LCD_PIXEL_FORMAT_RGB565)
+    if (Lcd_Ctx[Instance].PixelFormat == LCD_PIXEL_FORMAT_RGB565)
     {
       LL_ConvertLineToRGB(Instance, (uint32_t *)pData, (uint32_t *)Xaddress, Width, DMA2D_INPUT_RGB565);
     }
@@ -1060,13 +1046,13 @@ int32_t BSP_LCD_FillRGBRect(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uin
     {
       LL_ConvertLineToRGB(Instance, (uint32_t *)pData, (uint32_t *)Xaddress, Width, DMA2D_INPUT_ARGB8888);
     }
-    pData += PixelFormatFactor*Width;
+    pData += PixelFormatFactor * Width;
   }
 #else
   uint32_t color, j;
-  for(i = 0; i < Height; i++)
+  for (i = 0; i < Height; i++)
   {
-    for(j = 0; j < Width; j++)
+    for (j = 0; j < Width; j++)
     {
       color = *pData | (*(pData + 1) << 8) | (*(pData + 2) << 16) | (*(pData + 3) << 24);
       BSP_LCD_WritePixel(Instance, Xpos + j, Ypos + i, color);
@@ -1089,7 +1075,7 @@ int32_t BSP_LCD_DrawHLine(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint3
   uint32_t  Xaddress;
 
   /* Get the line address */
-  Xaddress = hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress + (PixelFormatFactor*((Lcd_Ctx[Instance].XSize*Ypos) + Xpos));
+  Xaddress = hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress + (PixelFormatFactor * ((Lcd_Ctx[Instance].XSize * Ypos) + Xpos));
 
   /* Write line */
   LL_FillBuffer(Instance, Lcd_Ctx[Instance].ActiveLayer, (uint32_t *)Xaddress, Length, 1, 0, Color);
@@ -1109,10 +1095,11 @@ int32_t BSP_LCD_DrawVLine(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint3
   uint32_t  Xaddress;
 
   /* Get the line address */
-  Xaddress = (hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress) + (PixelFormatFactor*(Lcd_Ctx[Instance].XSize*Ypos + Xpos));
+  Xaddress = (hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress) + (PixelFormatFactor * (Lcd_Ctx[Instance].XSize * Ypos + Xpos));
 
   /* Write line */
-  LL_FillBuffer(Instance, Lcd_Ctx[Instance].ActiveLayer, (uint32_t *)Xaddress, 1, Length, (Lcd_Ctx[Instance].XSize - 1U), Color);
+  LL_FillBuffer(Instance, Lcd_Ctx[Instance].ActiveLayer, (uint32_t *)Xaddress, 1, Length, (Lcd_Ctx[Instance].XSize - 1U),
+                Color);
 
   return BSP_ERROR_NONE;
 }
@@ -1125,15 +1112,17 @@ int32_t BSP_LCD_DrawVLine(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint3
   * @param  Width Rectangle width
   * @param  Height Rectangle height
   */
-int32_t BSP_LCD_FillRect(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint32_t Width, uint32_t Height, uint32_t Color)
+int32_t BSP_LCD_FillRect(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint32_t Width, uint32_t Height,
+                         uint32_t Color)
 {
   uint32_t  Xaddress;
 
   /* Get the rectangle start address */
-  Xaddress = (hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress) + (PixelFormatFactor*(Lcd_Ctx[Instance].XSize*Ypos + Xpos));
+  Xaddress = (hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress) + (PixelFormatFactor * (Lcd_Ctx[Instance].XSize * Ypos + Xpos));
 
   /* Fill the rectangle */
-  LL_FillBuffer(Instance, Lcd_Ctx[Instance].ActiveLayer, (uint32_t *)Xaddress, Width, Height, (Lcd_Ctx[Instance].XSize - Width), Color);
+  LL_FillBuffer(Instance, Lcd_Ctx[Instance].ActiveLayer, (uint32_t *)Xaddress, Width, Height,
+                (Lcd_Ctx[Instance].XSize - Width), Color);
 
   return BSP_ERROR_NONE;
 }
@@ -1148,15 +1137,15 @@ int32_t BSP_LCD_FillRect(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint32
   */
 int32_t BSP_LCD_ReadPixel(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint32_t *Color)
 {
-  if(hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].PixelFormat == LTDC_PIXEL_FORMAT_ARGB8888)
+  if (hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].PixelFormat == LTDC_PIXEL_FORMAT_ARGB8888)
   {
     /* Read data value from SDRAM memory */
-    *Color = *(__IO uint32_t*) (hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress + (4U*(Ypos*Lcd_Ctx[Instance].XSize + Xpos)));
+    *Color = *(__IO uint32_t *)(hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress + (4U * (Ypos * Lcd_Ctx[Instance].XSize + Xpos)));
   }
   else /* if((hlcd_ltdc.LayerCfg[layer].PixelFormat == LTDC_PIXEL_FORMAT_RGB565) */
   {
     /* Read data value from SDRAM memory */
-    *Color = *(__IO uint16_t*) (hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress + (2U*(Ypos*Lcd_Ctx[Instance].XSize + Xpos)));
+    *Color = *(__IO uint16_t *)(hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress + (2U * (Ypos * Lcd_Ctx[Instance].XSize + Xpos)));
   }
 
   return BSP_ERROR_NONE;
@@ -1172,15 +1161,17 @@ int32_t BSP_LCD_ReadPixel(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint3
   */
 int32_t BSP_LCD_WritePixel(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint32_t Color)
 {
-  if(hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].PixelFormat == LTDC_PIXEL_FORMAT_ARGB8888)
+  if (hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].PixelFormat == LTDC_PIXEL_FORMAT_ARGB8888)
   {
     /* Write data value to SDRAM memory */
-    *(__IO uint32_t*) (hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress + (4U*(Ypos*Lcd_Ctx[Instance].XSize + Xpos))) = Color;
+    *(__IO uint32_t *)(hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress + (4U *
+                       (Ypos * Lcd_Ctx[Instance].XSize + Xpos))) = Color;
   }
   else
   {
     /* Write data value to SDRAM memory */
-    *(__IO uint16_t*) (hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress + (2U*(Ypos*Lcd_Ctx[Instance].XSize + Xpos))) = Color;
+    *(__IO uint16_t *)(hlcd_ltdc.LayerCfg[Lcd_Ctx[Instance].ActiveLayer].FBStartAdress + (2U *
+                       (Ypos * Lcd_Ctx[Instance].XSize + Xpos))) = Color;
   }
 
   return BSP_ERROR_NONE;
@@ -1203,20 +1194,21 @@ int32_t BSP_LCD_WritePixel(uint32_t Instance, uint32_t Xpos, uint32_t Ypos, uint
   * @param  OffLine Offset
   * @param  Color Color index
   */
-static void LL_FillBuffer(uint32_t Instance, uint32_t LayerIndex, uint32_t *pDst, uint32_t xSize, uint32_t ySize, uint32_t OffLine, uint32_t Color)
+static void LL_FillBuffer(uint32_t Instance, uint32_t LayerIndex, uint32_t *pDst, uint32_t xSize, uint32_t ySize,
+                          uint32_t OffLine, uint32_t Color)
 {
   uint32_t output_color_mode, input_color = Color;
 
-  switch(Lcd_Ctx[Instance].PixelFormat)
+  switch (Lcd_Ctx[Instance].PixelFormat)
   {
-  case LCD_PIXEL_FORMAT_RGB565:
-    output_color_mode = DMA2D_OUTPUT_RGB565; /* RGB565 */
-    input_color = CONVERTRGB5652ARGB8888(Color);
-    break;
-  case LCD_PIXEL_FORMAT_RGB888:
-  default:
-    output_color_mode = DMA2D_OUTPUT_ARGB8888; /* ARGB8888 */
-    break;
+    case LCD_PIXEL_FORMAT_RGB565:
+      output_color_mode = DMA2D_OUTPUT_RGB565; /* RGB565 */
+      input_color = CONVERTRGB5652ARGB8888(Color);
+      break;
+    case LCD_PIXEL_FORMAT_RGB888:
+    default:
+      output_color_mode = DMA2D_OUTPUT_ARGB8888; /* ARGB8888 */
+      break;
   }
 
   /* Register to memory mode with ARGB8888 as color Mode */
@@ -1227,7 +1219,7 @@ static void LL_FillBuffer(uint32_t Instance, uint32_t LayerIndex, uint32_t *pDst
   hlcd_dma2d.Instance = DMA2D;
 
   /* DMA2D Initialization */
-  if(HAL_DMA2D_Init(&hlcd_dma2d) == HAL_OK)
+  if (HAL_DMA2D_Init(&hlcd_dma2d) == HAL_OK)
   {
     if (HAL_DMA2D_Start(&hlcd_dma2d, input_color, (uint32_t)pDst, xSize, ySize) == HAL_OK)
     {
@@ -1249,15 +1241,15 @@ static void LL_ConvertLineToRGB(uint32_t Instance, uint32_t *pSrc, uint32_t *pDs
 {
   uint32_t output_color_mode;
 
-  switch(Lcd_Ctx[Instance].PixelFormat)
+  switch (Lcd_Ctx[Instance].PixelFormat)
   {
-  case LCD_PIXEL_FORMAT_RGB565:
-    output_color_mode = DMA2D_OUTPUT_RGB565; /* RGB565 */
-    break;
-  case LCD_PIXEL_FORMAT_RGB888:
-  default:
-    output_color_mode = DMA2D_OUTPUT_ARGB8888; /* ARGB8888 */
-    break;
+    case LCD_PIXEL_FORMAT_RGB565:
+      output_color_mode = DMA2D_OUTPUT_RGB565; /* RGB565 */
+      break;
+    case LCD_PIXEL_FORMAT_RGB888:
+    default:
+      output_color_mode = DMA2D_OUTPUT_ARGB8888; /* ARGB8888 */
+      break;
   }
 
   /* Configure the DMA2D Mode, Color Mode and output offset */
@@ -1274,9 +1266,9 @@ static void LL_ConvertLineToRGB(uint32_t Instance, uint32_t *pSrc, uint32_t *pDs
   hlcd_dma2d.Instance = DMA2D;
 
   /* DMA2D Initialization */
-  if(HAL_DMA2D_Init(&hlcd_dma2d) == HAL_OK)
+  if (HAL_DMA2D_Init(&hlcd_dma2d) == HAL_OK)
   {
-    if(HAL_DMA2D_ConfigLayer(&hlcd_dma2d, 1) == HAL_OK)
+    if (HAL_DMA2D_ConfigLayer(&hlcd_dma2d, 1) == HAL_OK)
     {
       if (HAL_DMA2D_Start(&hlcd_dma2d, (uint32_t)pSrc, (uint32_t)pDst, xSize, 1) == HAL_OK)
       {
@@ -1289,9 +1281,9 @@ static void LL_ConvertLineToRGB(uint32_t Instance, uint32_t *pSrc, uint32_t *pDs
 
 /*******************************************************************************
                        BSP Routines:
-					   LTDC
-					   DMA2D
-*******************************************************************************/
+             LTDC
+             DMA2D
+  *******************************************************************************/
 /**
   * @brief  Initialize the BSP LTDC Msp.
   * @param  hltdc  LTDC handle
@@ -1301,7 +1293,7 @@ static void LTDC_MspInit(LTDC_HandleTypeDef *hltdc)
 {
   GPIO_InitTypeDef  gpio_init_structure;
 
-  if(hltdc->Instance == LTDC)
+  if (hltdc->Instance == LTDC)
   {
     /* Enable the LTDC clock */
     __HAL_RCC_LTDC_CLK_ENABLE();
@@ -1386,7 +1378,7 @@ static void LTDC_MspDeInit(LTDC_HandleTypeDef *hltdc)
 {
   GPIO_InitTypeDef  gpio_init_structure;
 
-  if(hltdc->Instance == LTDC)
+  if (hltdc->Instance == LTDC)
   {
     /* LTDC Pins deactivation */
     /* GPIOA deactivation */
@@ -1432,7 +1424,7 @@ static void LTDC_MspDeInit(LTDC_HandleTypeDef *hltdc)
   */
 static void DMA2D_MspInit(DMA2D_HandleTypeDef *hdma2d)
 {
-  if(hdma2d->Instance == DMA2D)
+  if (hdma2d->Instance == DMA2D)
   {
     /** Enable the DMA2D clock */
     __HAL_RCC_DMA2D_CLK_ENABLE();
@@ -1450,7 +1442,7 @@ static void DMA2D_MspInit(DMA2D_HandleTypeDef *hdma2d)
   */
 static void DMA2D_MspDeInit(DMA2D_HandleTypeDef *hdma2d)
 {
-  if(hdma2d->Instance == DMA2D)
+  if (hdma2d->Instance == DMA2D)
   {
     /** Disable IRQ of DMA2D IP */
     HAL_NVIC_DisableIRQ(DMA2D_IRQn);

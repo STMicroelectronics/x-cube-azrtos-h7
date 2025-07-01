@@ -1,5 +1,5 @@
 
-##  <b>Nx_TCP_Echo_Server application description</b>
+##  <b>Nx_TCP_Echo_Server Application Description</b>
 
 This application provides an example of Azure RTOS NetX/NetXDuo stack usage.
 It shows how to develop a NetX TCP server to communicate with a remote client using the NetX TCP socket API.
@@ -13,8 +13,8 @@ The main entry function tx_application_define() is called by ThreadX during kern
 
 The application then creates 2 threads with the same priorities:
 
- + **NxAppThread** (priority 10, PreemtionThreashold 10) : created with the <i>TX_AUTO_START</i> flag to start automatically.
- + **AppTCPThread** (priority 10, PreemtionThreashold 10) : created with the <i>TX_DONT_START</i> flag to be started later.
+ + **NxAppThread** (priority 10, PreemptionThreshold 10) : created with the <i>TX_AUTO_START</i> flag to start automatically.
+ + **AppTCPThread** (priority 10, PreemptionThreshold 10) : created with the <i>TX_DONT_START</i> flag to be started later.
 
 The **NxAppThread** starts and performs the following actions:
 
@@ -105,16 +105,16 @@ None
    This requires changes in the linker files to expose this memory location.
     + For EWARM add the following section into the .icf file:
      ```
-	 place in RAM_region    { last section FREE_MEM };
-	 ```
+    place in RAM_region    { last section FREE_MEM };
+     ```
     + For MDK-ARM:
-	```
+    ```
     either define the RW_IRAM1 region in the ".sct" file
     or modify the line below in "tx_initialize_low_level.S to match the memory region being used
         LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|
-	```
+    ```
     + For STM32CubeIDE add the following section into the .ld file:
-	```
+    ```
     ._threadx_heap :
       {
          . = ALIGN(8);
@@ -184,8 +184,8 @@ RTOS, Network, ThreadX, NetXDuo, TCP, UART
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32H723xx devices
-  - This example has been tested with STMicroelectronics NUCLEO-H723ZG boards revision MB1364-H723ZG-E01
+  - This application runs on STM32H723xx devices
+  - This application has been tested with STMicroelectronics NUCLEO-H723ZG boards revision MB1364-H723ZG-E01
     and can be easily tailored to any other supported device and development board.
   - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
       - BaudRate = 115200 baud

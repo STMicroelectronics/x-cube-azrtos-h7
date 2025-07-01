@@ -42,18 +42,18 @@ static rtl8211_Object_t RTL8211;
 
 int32_t nx_eth_phy_init(void)
 {
-    int32_t ret = ETH_PHY_STATUS_ERROR;
+  int32_t ret = ETH_PHY_STATUS_OK;
+  if (RTL8211.Is_Initialized == 0 )
+  {
     /* Set PHY IO functions */
-
     RTL8211_RegisterBusIO(&RTL8211, &RTL8211_IOCtx);
-    /* Initialize the RTL8211 ETH PHY */
-
-    if (RTL8211_Init(&RTL8211) == RTL8211_STATUS_OK)
+    /* Initialize the RTL8211EG ETH PHY */
+    if (RTL8211_Init(&RTL8211) != RTL8211_STATUS_OK)
     {
-        ret = ETH_PHY_STATUS_OK;
+      ret = ETH_PHY_STATUS_ERROR;
     }
-
-    return ret;
+  }
+  return ret;
 }
 
 /**

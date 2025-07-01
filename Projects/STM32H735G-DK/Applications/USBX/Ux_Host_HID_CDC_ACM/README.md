@@ -1,5 +1,5 @@
 
-## <b>Ux_Host_HID_CDC_ACM application description </b>
+## <b>Ux_Host_HID_CDC_ACM Application Description </b>
 
 This application provides an example of Azure RTOS USBX stack usage on STM32H735G-DK.
 It shows how to develop a composite "USB HID CDC_ACM Host" that is able to enumerate and communicate with:
@@ -13,7 +13,7 @@ In case of composite or a simple device, the CDC_ACM class APIs is used to send,
 The main entry function tx_application_define() is called by ThreadX during kernel start, at this stage, all USBx resources are initialized.
 The application creates 5 threads with different priorities :
 
-  - usbx_app_thread_entry            (Priority : 10; Preemption threshold : 10) used to initialize USB USB_OTG HAL HCD driver and start the Host.
+  - app_ux_host_thread_entry         (Priority : 10; Preemption threshold : 10) used to initialize USB USB_OTG HAL HCD driver and start the Host.
   - cdc_acm_send_app_thread_entry    (Priority : 30; Preemption threshold : 30) used to send data from host to device.
   - cdc_acm_recieve_app_thread_entry (Priority : 30; Preemption threshold : 30) used to receive data from the device.
   - hid_mouse_thread_entry           (Priority : 30; Preemption threshold : 30) used to decode HID reports received  from a mouse.

@@ -27,7 +27,7 @@ vertical-align: middle;
 <body>
 <div class="row">
 <section id="nx_iperf-application-description" class="col-sm-12 col-lg-8">
-<h2><b>Nx_Iperf application description</b></h2>
+<h2><b>Nx_Iperf Application Description</b></h2>
 <p>This application provides an example of Azure RTOS NetXDuo stack
 usage . It shows performance when using different modes : TCP_server,
 UDP_server, TCP_client and UDP_client. The main entry function
@@ -44,7 +44,7 @@ instance</li>
 </ul>
 <p>The application creates 1 thread :</p>
 <ul>
-<li><strong>NxAppThread</strong> (priority 4, PreemtionThreashold 4) :
+<li><strong>NxAppThread</strong> (priority 4, PreemptionThreshold 4) :
 created with the <i>TX_AUTO_START</i> flag to start automatically.</li>
 </ul>
 <p>The <strong>NxAppThread</strong> starts and performs the following
@@ -61,16 +61,16 @@ actions:</p>
 <p>The application then creates 4 threads with the same priorities :</p>
 <ul>
 <li><strong>thread_tcp_rx_iperf</strong> (priority 1,
-PreemtionThreashold 1) : created with the <i>TX_AUTO_START</i> flag to
+PreemptionThreshold 1) : created with the <i>TX_AUTO_START</i> flag to
 start automatically.</li>
 <li><strong>thread_tcp_tx_iperf</strong> (priority 1,
-PreemtionThreashold 1) : created with the <i>TX_AUTO_START</i> flag to
+PreemptionThreshold 1) : created with the <i>TX_AUTO_START</i> flag to
 start automatically.</li>
 <li><strong>thread_udp_rx_iperf</strong> (priority 1,
-PreemtionThreashold 1) : created with the <i>TX_AUTO_START</i> flag to
+PreemptionThreshold 1) : created with the <i>TX_AUTO_START</i> flag to
 start automatically.</li>
 <li><strong>thread_udp_tx_iperf</strong> (priority 1,
-PreemtionThreashold 1) : created with the <i>TX_AUTO_START</i> flag to
+PreemptionThreshold 1) : created with the <i>TX_AUTO_START</i> flag to
 start automatically.</li>
 </ul>
 <h4 id="expected-success-behavior"><b>Expected success behavior</b></h4>
