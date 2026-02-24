@@ -321,7 +321,7 @@ ULONG                   test_n;
     dfu_parameter.ux_slave_class_dfu_parameter_framework                       =  device_framework_dfu;
     dfu_parameter.ux_slave_class_dfu_parameter_framework_length                =  DEVICE_FRAMEWORK_LENGTH_DFU;
 
-    /* Initilize the device dfu class. The class is connected with interface 1 on configuration 1. */
+    /* Initialize the device dfu class. The class is connected with interface 1 on configuration 1. */
     status =  ux_device_stack_class_register(_ux_system_slave_class_dfu_name, ux_device_class_dfu_entry, 
                                              1, 0, (VOID *)&dfu_parameter);
     if(status!=UX_SUCCESS)
@@ -595,7 +595,7 @@ UINT                    status;
         printf(" host   buffer %p: %2x %2x ...\n", dfu_host_buffer, dfu_host_buffer[0], dfu_host_buffer[1]);
         test_control_return(1);
     }
-    /* Test upload faile.  */
+    /* Test upload failed.  */
     status = _req_DFU_UPLOAD(control_transfer, 0, UX_SLAVE_REQUEST_CONTROL_MAX_LENGTH + 1);
     if (status != UX_TRANSFER_STALLED)
     {

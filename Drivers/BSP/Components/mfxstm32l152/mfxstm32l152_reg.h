@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2018-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -23,28 +22,28 @@
 #define MFXSTM32L152_REG_H
 
 #ifdef __cplusplus
- extern "C" {
-#endif   
-   
+extern "C" {
+#endif
+
 #include <stdint.h>
-   
+
 /* Includes ------------------------------------------------------------------*/
 /** @addtogroup BSP
   * @{
-  */ 
+  */
 
 /** @addtogroup Component
   * @{
   */
-    
+
 /** @defgroup MFXSTM32L152
   * @{
-  */    
-  
+  */
+
 /** @addtogroup MFXSTM32L152_Exported_Constants
   * @{
-  */ 
-   
+  */
+
 /**
   * @brief Register address: chip IDs (R)
   */
@@ -68,7 +67,7 @@
 #define MFXSTM32L152_REG_ADR_VDD_REF_LSB        0x07U
 
 /**
-  * @brief Register address: Error source 
+  * @brief Register address: Error source
   */
 #define MFXSTM32L152_REG_ADR_ERROR_SRC          0x03U
 
@@ -83,7 +82,7 @@
 #define MFXSTM32L152_REG_ADR_MFX_IRQ_OUT        0x41U
 
 /**
-  * @brief Reg Addr IRQs: to select the events which activate the MFXSTM32L152_IRQ_OUT signal 
+  * @brief Reg Addr IRQs: to select the events which activate the MFXSTM32L152_IRQ_OUT signal
   */
 #define MFXSTM32L152_REG_ADR_IRQ_SRC_EN         0x42U
 
@@ -93,10 +92,10 @@
 #define MFXSTM32L152_REG_ADR_IRQ_PENDING        0x08U
 
 /**
-  * @brief Reg Addr IRQs: the Main MCU must acknowledge it thanks to a writing access to the IRQ_ACK register 
+  * @brief Reg Addr IRQs: the Main MCU must acknowledge it thanks to a writing access to the IRQ_ACK register
   */
 #define MFXSTM32L152_REG_ADR_IRQ_ACK            0x44U
-   
+
 /**
   * @brief  GPIO: 24 programmable input/output called MFXSTM32L152_GPIO[23:0] are provided
   */
@@ -124,7 +123,7 @@
 #define MFXSTM32L152_REG_ADR_GPIO_PUPD3         0x6AU  /* agpio [0:7] */
 
 /**
-  * @brief Reg addr: GPIO SET (W): When GPIO is in output mode, write (1) puts 
+  * @brief Reg addr: GPIO SET (W): When GPIO is in output mode, write (1) puts
            the corresponding GPO in High level.
  */
 #define MFXSTM32L152_REG_ADR_GPO_SET1           0x6CU  /* gpio [0:7] */
@@ -132,7 +131,7 @@
 #define MFXSTM32L152_REG_ADR_GPO_SET3           0x6EU  /* agpio [0:7] */
 
 /**
-  * @brief Reg addr: GPIO CLEAR (W): When GPIO is in output mode, write (1) puts 
+  * @brief Reg addr: GPIO CLEAR (W): When GPIO is in output mode, write (1) puts
            the corresponding GPO in Low level.
  */
 #define MFXSTM32L152_REG_ADR_GPO_CLR1           0x70U  /* gpio [0:7] */
@@ -161,7 +160,7 @@
 #define MFXSTM32L152_REG_ADR_IRQ_GPI_EVT3       0x4EU  /* agpio [0:7] */
 
 /**
-  * @brief GPIO IRQ_GPI_TYPE1/2/3 (R/W): Irq generated on (0) : Low level or Falling edge. 
+  * @brief GPIO IRQ_GPI_TYPE1/2/3 (R/W): Irq generated on (0) : Low level or Falling edge.
           (1) : High level or Rising edge.
   */
 #define MFXSTM32L152_REG_ADR_IRQ_GPI_TYPE1      0x50U  /* gpio [0:7] */
@@ -180,11 +179,11 @@
   */
 #define MFXSTM32L152_REG_ADR_IRQ_GPI_ACK1       0x54U  /* gpio [0:7] */
 #define MFXSTM32L152_REG_ADR_IRQ_GPI_ACK2       0x55U  /* gpio [8:15] */
-#define MFXSTM32L152_REG_ADR_IRQ_GPI_ACK3       0x56U  /* agpio [0:7] */ 
-                                             
+#define MFXSTM32L152_REG_ADR_IRQ_GPI_ACK3       0x56U  /* agpio [0:7] */
+
 /**
   * @brief Touch Screen Registers
- */                 
+ */
 #define MFXSTM32L152_TS_SETTLING                0xA0U
 #define MFXSTM32L152_TS_TOUCH_DET_DELAY         0xA1U
 #define MFXSTM32L152_TS_AVE                     0xA2U
@@ -279,8 +278,8 @@
   * @{
   */
 
-typedef int32_t (*MFXSTM32L152_Write_Func)(void *, uint16_t, uint8_t*, uint16_t);
-typedef int32_t (*MFXSTM32L152_Read_Func) (void *, uint16_t, uint8_t*, uint16_t);
+typedef int32_t (*MFXSTM32L152_Write_Func)(void *, uint16_t, uint8_t *, uint16_t);
+typedef int32_t (*MFXSTM32L152_Read_Func)(void *, uint16_t, uint8_t *, uint16_t);
 
 typedef struct
 {
@@ -292,7 +291,7 @@ typedef struct
 
 /**
   * @}
-  */ 
+  */
 
 /** @addtogroup MFXSTM32L152_Exported_Functions
   * @{
@@ -316,9 +315,8 @@ int32_t mfxstm32l152_read_reg(mfxstm32l152_ctx_t *ctx, uint16_t reg, uint8_t *da
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */       
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+  */

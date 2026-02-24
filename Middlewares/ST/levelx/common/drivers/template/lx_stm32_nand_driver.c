@@ -28,10 +28,13 @@
 
 /* USER CODE END EM */
 
+/* Private variables ---------------------------------------------------------*/
+
+/* USER CODE BEGIN PV */
+
+/* USER CODE END PV */
+
 /* Exported functions prototypes ---------------------------------------------*/
-
-
-
 
 static UINT  lx_nand_driver_read(ULONG block, ULONG page, ULONG *destination, ULONG words);
 static UINT  lx_nand_driver_write(ULONG block, ULONG page, ULONG *source, ULONG words);
@@ -65,11 +68,9 @@ static UINT  lx_nand_flash_driver_pages_copy(ULONG source_block, ULONG source_pa
 
 /* USER CODE END 0 */
 
-#ifndef WORDS_PER_PHYSICAL_PAGE
-#define WORDS_PER_PHYSICAL_PAGE 512
+#ifndef CUSTOM_WORDS_PER_PHYSICAL_PAGE
+#define CUSTOM_WORDS_PER_PHYSICAL_PAGE 512
 #endif
-
-static UCHAR  nand_flash_buffer[WORDS_PER_PHYSICAL_PAGE];
 
 UINT lx_stm32_nand_custom_driver_initialize(LX_NAND_FLASH *nand_flash)
 {
@@ -79,17 +80,17 @@ UINT lx_stm32_nand_custom_driver_initialize(LX_NAND_FLASH *nand_flash)
 
   /*USER CODE END Init_Section_0 */
 
-  nand_flash->lx_nand_flash_total_blocks =                  TOTAL_BLOCKS;
-  nand_flash->lx_nand_flash_pages_per_block =               PHYSICAL_PAGES_PER_BLOCK;
-  nand_flash->lx_nand_flash_bytes_per_page =                BYTES_PER_PHYSICAL_PAGE;
+  nand_flash->lx_nand_flash_total_blocks =                  CUSTOM_TOTAL_BLOCKS;
+  nand_flash->lx_nand_flash_pages_per_block =               CUSTOM_PHYSICAL_PAGES_PER_BLOCK;
+  nand_flash->lx_nand_flash_bytes_per_page =                CUSTOM_BYTES_PER_PHYSICAL_PAGE;
 
-  nand_flash -> lx_nand_flash_spare_data1_offset =          SPARE_DATA1_OFFSET;
-  nand_flash -> lx_nand_flash_spare_data1_length =          SPARE_DATA1_LENGTH;
+  nand_flash -> lx_nand_flash_spare_data1_offset =          CUSTOM_SPARE_DATA1_OFFSET;
+  nand_flash -> lx_nand_flash_spare_data1_length =          CUSTOM_SPARE_DATA1_LENGTH;
 
-  nand_flash -> lx_nand_flash_spare_data2_offset =          SPARE_DATA2_OFFSET;
-  nand_flash -> lx_nand_flash_spare_data2_length =          SPARE_DATA2_LENGTH;
+  nand_flash -> lx_nand_flash_spare_data2_offset =          CUSTOM_SPARE_DATA2_OFFSET;
+  nand_flash -> lx_nand_flash_spare_data2_length =          CUSTOM_SPARE_DATA2_LENGTH;
 
-  nand_flash -> lx_nand_flash_spare_total_length =          SPARE_BYTES_PER_PAGE;
+  nand_flash -> lx_nand_flash_spare_total_length =          CUSTOM_SPARE_BYTES_PER_PAGE;
 
 
   /* USER CODE BEGIN Init_Section_1 */
@@ -118,12 +119,6 @@ UINT lx_stm32_nand_custom_driver_initialize(LX_NAND_FLASH *nand_flash)
   /* USER CODE BEGIN Init_Section_2 */
 
   /*USER CODE END Init_Section_2 */
-
-  nand_flash->lx_nand_flash_page_buffer =  &nand_flash_buffer[0];
-
-  /* USER CODE BEGIN Init_Section_3 */
-
-  /*USER CODE END Init_Section_3 */
   return ret;
 
 }

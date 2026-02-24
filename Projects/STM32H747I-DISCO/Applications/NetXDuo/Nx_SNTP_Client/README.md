@@ -40,7 +40,7 @@ The **AppSNTPThread**, once started:
 
 #### <b>Error behaviors</b>
 
-+ The red LED is toggling to indicate any error that has occurred.
++ The red LED is toggling to indicate any error that has occurred while the green LED switch off.
 
 #### <b>Assumptions if any</b>
 
@@ -132,7 +132,7 @@ default NX_SNTP_CLIENT_MAX_ROOT_DISPERSION and NX_SNTP_CLIENT_MIN_SERVER_STRATUM
 
 - The ETH TX And RX descriptors are accessed by the CPU and the ETH DMA IP, thus they should not be allocated into the DTCM RAM "0x20000000".
 - Make sure to allocate them into a "Non-Cacheable" memory region to always ensure data coherency between the CPU and ETH DMA.
-- Depending on the application scenario, the total TX and RX descriptors may need to be increased by updating respectively  the "ETH_TX_DESC_CNT" and "ETH_RX_DESC_CNT" in the "stm32h7xx_hal_conf.h", to guarantee the application correct behaviour, but this will cost extra memory to allocate.
+- Depending on the application scenario, the total TX and RX descriptors may need to be increased by updating respectively  the "ETH_TX_DESC_CNT" and "ETH_RX_DESC_CNT" in the "stm32h7xx_hal_conf.h", to guarantee the application's correct behavior, but this will cost extra memory to allocate.
 - The NetXDuo application needs to allocate the <b> <i> NX_PACKET </i> </b> pool in a dedicated section that is  configured as either "Cacheable Write-through" for <i>STM32H72XX</i> and <i>STM32H73XX </i>,  <i>STM32H7AXX</i> and <i>STM32H7BXX </i> or non-cacheable for other STM32H7 families. Below is an example of the section declaration for different IDEs.
    + For EWARM ".icf" file
    ```
@@ -183,7 +183,7 @@ RTOS, Network, ThreadX, NetXDuo, SNTP, UART
 ### <b>Hardware and Software environment</b>
 
   - This application runs on STM32H747xx devices
-  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards revision MB1520-H747I-B02
+  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards revision MB1248-H747I-D02
     and can be easily tailored to any other supported device and development board.
   - This application uses USART1 to display logs, the hyperterminal configuration is as follows:
       - BaudRate = 115200 baud

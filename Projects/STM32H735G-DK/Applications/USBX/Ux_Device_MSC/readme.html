@@ -67,7 +67,6 @@ format operations fail).</p>
 <ul>
 <li>USB cable should not be unplugged during enumeration and driver
 installation.</li>
-<li>SD card should be inserted before application is started.</li>
 </ul>
 <h4 id="known-limitations"><b>Known limitations</b></h4>
 <p>The Eject operation is not supported yet by MSC class.</p>
@@ -169,10 +168,17 @@ Storage, SD Card, DMA, SDMMC</p>
 <h3 id="hardware-and-software-environment"><b>Hardware and Software
 environment</b></h3>
 <ul>
-<li>This application runs on STM32H735xx devices.</li>
-<li>This application has been tested with STMicroelectronics STM32H735G-DK
-boards revision: MB1520-H735I-B02 and can be easily tailored to any
-other supported device and development board.</li>
+<li><p>This application runs on STM32H735xx devices.</p></li>
+<li><p>This application has been tested with STMicroelectronics
+STM32H735G-DK boards revision: MB1520-H735I-B02 and can be easily
+tailored to any other supported device and development board.</p></li>
+<li><p>STM32H735G-DK Set-up:</p>
+<ul>
+<li>JP7 must be left unconnected (USBFS position) to ensure proper USB
+unplug/plug detection and functionality. Connecting JP7 may prevent the
+device from correctly handling USB cable insertion and removal
+events.</li>
+</ul></li>
 </ul>
 <h3 id="how-to-use-it"><b>How to use it ?</b></h3>
 <p>In order to make the program work, you must do the following :</p>

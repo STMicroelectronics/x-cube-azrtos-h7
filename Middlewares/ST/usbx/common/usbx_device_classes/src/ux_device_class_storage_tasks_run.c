@@ -492,7 +492,7 @@ UCHAR               lun;
 
         _ux_device_class_storage_test_ready(storage, lun, endpoint_in, endpoint_out, cbwcb);
         break;
-            
+
     case UX_SLAVE_CLASS_STORAGE_SCSI_REQUEST_SENSE:
 
         _ux_device_class_storage_request_sense(storage, lun, endpoint_in, endpoint_out, cbwcb);
@@ -512,7 +512,7 @@ UCHAR               lun;
 
         _ux_device_class_storage_start_stop(storage, lun, endpoint_in, endpoint_out, cbwcb);
         break;
-            
+
     case UX_SLAVE_CLASS_STORAGE_SCSI_PREVENT_ALLOW_MEDIA_REMOVAL:
 
         _ux_device_class_storage_prevent_allow_media_removal(storage, lun, endpoint_in, endpoint_out, cbwcb);
@@ -546,13 +546,13 @@ UCHAR               lun;
 
     case UX_SLAVE_CLASS_STORAGE_SCSI_READ32:
 
-        _ux_device_class_storage_read(storage, lun, endpoint_in, endpoint_out, cbwcb, 
+        _ux_device_class_storage_read(storage, lun, endpoint_in, endpoint_out, cbwcb,
                                         UX_SLAVE_CLASS_STORAGE_SCSI_READ32);
         break;
 
     case UX_SLAVE_CLASS_STORAGE_SCSI_READ16:
 
-        _ux_device_class_storage_read(storage, lun, endpoint_in, endpoint_out, cbwcb, 
+        _ux_device_class_storage_read(storage, lun, endpoint_in, endpoint_out, cbwcb,
                                         UX_SLAVE_CLASS_STORAGE_SCSI_READ16);
         break;
 
@@ -564,7 +564,7 @@ UCHAR               lun;
 
     case UX_SLAVE_CLASS_STORAGE_SCSI_WRITE16:
 
-        _ux_device_class_storage_write(storage, lun, endpoint_in, endpoint_out, cbwcb, 
+        _ux_device_class_storage_write(storage, lun, endpoint_in, endpoint_out, cbwcb,
                                         UX_SLAVE_CLASS_STORAGE_SCSI_WRITE16);
         break;
 
@@ -576,37 +576,37 @@ UCHAR               lun;
 #ifdef UX_SLAVE_CLASS_STORAGE_INCLUDE_MMC
     case UX_SLAVE_CLASS_STORAGE_SCSI_GET_STATUS_NOTIFICATION:
 
-        _ux_device_class_storage_get_status_notification(storage, lun, endpoint_in, endpoint_out, cbwcb); 
+        _ux_device_class_storage_get_status_notification(storage, lun, endpoint_in, endpoint_out, cbwcb);
         break;
 
     case UX_SLAVE_CLASS_STORAGE_SCSI_GET_CONFIGURATION:
 
-        _ux_device_class_storage_get_configuration(storage, lun, endpoint_in, endpoint_out, cbwcb); 
+        _ux_device_class_storage_get_configuration(storage, lun, endpoint_in, endpoint_out, cbwcb);
         break;
 
     case UX_SLAVE_CLASS_STORAGE_SCSI_READ_DISK_INFORMATION:
 
-        _ux_device_class_storage_read_disk_information(storage, lun, endpoint_in, endpoint_out, cbwcb); 
+        _ux_device_class_storage_read_disk_information(storage, lun, endpoint_in, endpoint_out, cbwcb);
         break;
 
     case UX_SLAVE_CLASS_STORAGE_SCSI_REPORT_KEY:
 
-        _ux_device_class_storage_report_key(storage, lun, endpoint_in, endpoint_out, cbwcb); 
+        _ux_device_class_storage_report_key(storage, lun, endpoint_in, endpoint_out, cbwcb);
         break;
 
     case UX_SLAVE_CLASS_STORAGE_SCSI_GET_PERFORMANCE:
 
-        _ux_device_class_storage_get_performance(storage, lun, endpoint_in, endpoint_out, cbwcb); 
+        _ux_device_class_storage_get_performance(storage, lun, endpoint_in, endpoint_out, cbwcb);
         break;
 
     case UX_SLAVE_CLASS_STORAGE_SCSI_READ_DVD_STRUCTURE:
 
-        _ux_device_class_storage_read_dvd_structure(storage, lun, endpoint_in, endpoint_out, cbwcb); 
+        _ux_device_class_storage_read_dvd_structure(storage, lun, endpoint_in, endpoint_out, cbwcb);
         break;
 
     case UX_SLAVE_CLASS_STORAGE_SCSI_READ_TOC:
 
-        _ux_device_class_storage_read_toc(storage, lun, endpoint_in, endpoint_out, cbwcb); 
+        _ux_device_class_storage_read_toc(storage, lun, endpoint_in, endpoint_out, cbwcb);
         break;
 
 #endif
@@ -752,7 +752,7 @@ static inline UINT _ux_device_class_storage_data_next(UX_SLAVE_CLASS_STORAGE *st
             if (storage -> ux_device_class_storage_device_length >
                 storage -> ux_device_class_storage_data_count)
             {
-                
+
                 /* Update bCSWStatus.  */
                 storage -> ux_slave_class_storage_csw_status = UX_SLAVE_CLASS_STORAGE_CSW_FAILED;
             }
@@ -867,7 +867,7 @@ static inline UINT _ux_device_class_storage_data_next(UX_SLAVE_CLASS_STORAGE *st
         if (storage -> ux_device_class_storage_device_length >
             storage -> ux_device_class_storage_data_count)
         {
-            
+
             /* Update bCSWStatus.  */
             storage -> ux_slave_class_storage_csw_status = UX_SLAVE_CLASS_STORAGE_CSW_FAILED;
         }
@@ -1082,44 +1082,54 @@ ULONG max_n_blocks;
 }
 static inline UINT _ux_device_class_storage_disk_wait(UX_SLAVE_CLASS_STORAGE *storage)
 {
+   UINT status;
+
     switch (storage -> ux_device_class_storage_cmd)
     {
     case UX_SLAVE_CLASS_STORAGE_SCSI_READ16:
     case UX_SLAVE_CLASS_STORAGE_SCSI_READ32:
-        return storage -> ux_slave_class_storage_lun[storage -> ux_slave_class_storage_cbw_lun].
-                        ux_slave_class_storage_media_read(storage,
-                            storage -> ux_slave_class_storage_cbw_lun,
-                            storage -> ux_device_class_storage_buffer[
-                                storage -> ux_device_class_storage_buffer_disk],
-                            storage -> ux_device_class_storage_disk_n_lb,
-                            storage -> ux_device_class_storage_cmd_lba,
-                            &storage -> ux_device_class_storage_media_status);
+        status = storage -> ux_slave_class_storage_lun[storage -> ux_slave_class_storage_cbw_lun].
+                          ux_slave_class_storage_media_read(storage,
+                              storage -> ux_slave_class_storage_cbw_lun,
+                              storage -> ux_device_class_storage_buffer[
+                                  storage -> ux_device_class_storage_buffer_disk],
+                              storage -> ux_device_class_storage_disk_n_lb,
+                              storage -> ux_device_class_storage_cmd_lba,
+                              &storage -> ux_device_class_storage_media_status);
+
+        return (status == UX_SUCCESS) ? UX_STATE_NEXT : UX_STATE_ERROR;
 
     case UX_SLAVE_CLASS_STORAGE_SCSI_WRITE16:
     case UX_SLAVE_CLASS_STORAGE_SCSI_WRITE32:
-        return storage -> ux_slave_class_storage_lun[storage -> ux_slave_class_storage_cbw_lun].
-                        ux_slave_class_storage_media_write(storage,
-                            storage -> ux_slave_class_storage_cbw_lun,
-                            storage -> ux_device_class_storage_buffer[
-                                storage -> ux_device_class_storage_buffer_disk],
-                            storage -> ux_device_class_storage_disk_n_lb,
-                            storage -> ux_device_class_storage_cmd_lba,
-                            &storage -> ux_device_class_storage_media_status);
+        status = storage -> ux_slave_class_storage_lun[storage -> ux_slave_class_storage_cbw_lun].
+                          ux_slave_class_storage_media_write(storage,
+                              storage -> ux_slave_class_storage_cbw_lun,
+                              storage -> ux_device_class_storage_buffer[
+                                  storage -> ux_device_class_storage_buffer_disk],
+                              storage -> ux_device_class_storage_disk_n_lb,
+                              storage -> ux_device_class_storage_cmd_lba,
+                              &storage -> ux_device_class_storage_media_status);
+
+        return (status == UX_SUCCESS) ? UX_STATE_NEXT : UX_STATE_ERROR;
 
     case UX_SLAVE_CLASS_STORAGE_SCSI_SYNCHRONIZE_CACHE:
-        return storage -> ux_slave_class_storage_lun[storage -> ux_slave_class_storage_cbw_lun].
-                        ux_slave_class_storage_media_flush(storage,
-                            storage -> ux_slave_class_storage_cbw_lun,
-                            storage -> ux_device_class_storage_disk_n_lb,
-                            storage -> ux_device_class_storage_cmd_lba,
-                            &storage -> ux_device_class_storage_media_status);
+        status = storage -> ux_slave_class_storage_lun[storage -> ux_slave_class_storage_cbw_lun].
+                          ux_slave_class_storage_media_flush(storage,
+                              storage -> ux_slave_class_storage_cbw_lun,
+                              storage -> ux_device_class_storage_disk_n_lb,
+                              storage -> ux_device_class_storage_cmd_lba,
+                              &storage -> ux_device_class_storage_media_status);
+
+        return (status == UX_SUCCESS) ? UX_STATE_NEXT : UX_STATE_ERROR;
 
     case UX_SLAVE_CLASS_STORAGE_SCSI_VERIFY: /* No nothing for now.  */
     default:
         break;
     }
+
     return(UX_STATE_NEXT);
 }
+
 static inline VOID _ux_device_class_storage_disk_next(UX_SLAVE_CLASS_STORAGE *storage)
 {
 

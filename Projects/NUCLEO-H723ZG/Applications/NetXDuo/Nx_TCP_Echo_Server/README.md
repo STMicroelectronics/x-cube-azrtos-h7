@@ -32,7 +32,7 @@ The **AppTCPThread**, once started:
 ####  <b>Expected success behavior</b>
 
  + The board IP address is printed on the HyperTerminal
- + The response messages sent by the server are printed on the HyerTerminal
+ + The response messages sent by the server are printed on the HyperTerminal
  + if the [echotool](https://github.com/PavelBansky/EchoTool/releases/tag/v1.5.0.0) utility  messages similar to the shown below can be seen on the console:
 
 ```
@@ -91,6 +91,7 @@ None
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
       - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
+
 
 #### <b>ThreadX usage hints</b>
 

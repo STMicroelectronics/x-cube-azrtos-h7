@@ -241,7 +241,7 @@ UCHAR               *descriptor;
 UX_ENDPOINT         *control_endpoint;
 UX_TRANSFER         *transfer_request;
 
-    /* Allocate configuration containter for the descriptor.  */
+    /* Allocate configuration container for the descriptor.  */
     configuration = _ux_utility_memory_allocate(UX_NO_ALIGN, UX_REGULAR_MEMORY,
                                                     sizeof(UX_CONFIGURATION));
     if (configuration == UX_NULL)

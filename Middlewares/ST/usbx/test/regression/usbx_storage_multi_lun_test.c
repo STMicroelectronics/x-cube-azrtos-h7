@@ -292,7 +292,7 @@ CHAR *                          memory_pointer;
     global_storage_parameter.ux_slave_class_storage_parameter_lun[1].ux_slave_class_storage_media_write           =  demo_thread_media_write2; 
     global_storage_parameter.ux_slave_class_storage_parameter_lun[1].ux_slave_class_storage_media_status          =  demo_thread_media_status2;
 
-    /* Initilize the device storage class. The class is connected with interface 0 on configuration 1. */
+    /* Initialize the device storage class. The class is connected with interface 0 on configuration 1. */
     status =  ux_device_stack_class_register(_ux_system_slave_class_storage_name, ux_device_class_storage_entry, 
                                                 1, 0, (VOID *)&global_storage_parameter);
     if(status!=UX_SUCCESS)

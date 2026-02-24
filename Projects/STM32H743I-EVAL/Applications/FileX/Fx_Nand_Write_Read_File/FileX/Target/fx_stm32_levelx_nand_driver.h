@@ -41,6 +41,7 @@ extern "C" {
 /* USER CODE END Includes */
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
+
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -53,11 +54,13 @@ extern "C" {
 #define CUSTOM_DRIVER_ID           0xDDDD
 #define NAND_CUSTOM_DRIVER_NAME    "NAND CUSTOM DRIVER"
 #include "lx_stm32_nand_custom_driver.h"
-#define LX_NAND_CUSTOM_DRIVERS   {.name = NAND_CUSTOM_DRIVER_NAME,  .id = CUSTOM_DRIVER_ID, .nand_driver_initialize = lx_stm32_nand_custom_driver_initialize}
 
 /* USER CODE BEGIN CUSTOM_DRIVER */
 
+extern ULONG fx_lx_nand_custom_driver_buffer[(7 * CUSTOM_TOTAL_BLOCKS + 4 + 2 * (CUSTOM_BYTES_PER_PHYSICAL_PAGE + CUSTOM_SPARE_BYTES_PER_PAGE)) / sizeof(ULONG)];
 /* USER CODE END CUSTOM_DRIVER */
+
+#define LX_NAND_CUSTOM_DRIVERS   {.name = NAND_CUSTOM_DRIVER_NAME,  .id = CUSTOM_DRIVER_ID, .nand_driver_initialize = lx_stm32_nand_custom_driver_initialize, .buffer=fx_lx_nand_custom_driver_buffer, .buffer_size=sizeof(fx_lx_nand_custom_driver_buffer)}
 
 #endif
 
@@ -98,6 +101,7 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
+
 /* Define the flag for format NAND flash memory */
 #define FX_NAND_FORMAT_FLASH_BEFORE_OPEN
 

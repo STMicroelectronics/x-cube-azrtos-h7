@@ -83,7 +83,7 @@
 #define UX_CLASS_AUDIO20_CATEGORY_OTHER                    0xFF
 
 
-/* Define Audio Class desctiptor types.  */
+/* Define Audio Class descriptor types.  */
 #define UX_CLASS_AUDIO20_CS_UNDEFINED                      0x20
 #define UX_CLASS_AUDIO20_CS_DEVICE                         0x21
 #define UX_CLASS_AUDIO20_CS_CONFIGURATION                  0x22

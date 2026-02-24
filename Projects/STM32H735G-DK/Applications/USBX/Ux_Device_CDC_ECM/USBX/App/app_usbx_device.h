@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2020-2021 STMicroelectronics.
+  * Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -33,11 +33,11 @@ extern "C" {
 #include "ux_api.h"
 #include "ux_device_descriptors.h"
 #include "ux_device_cdc_ecm.h"
+#include "ux_dcd_stm32.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usb_otg.h"
-#include "ux_dcd_stm32.h"
 #include "ux_network_driver.h"
 /* USER CODE END Includes */
 
@@ -47,7 +47,6 @@ extern "C" {
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
-#define USBX_DEVICE_MEMORY_STACK_SIZE       38 * 1024
 
 #define UX_DEVICE_APP_THREAD_STACK_SIZE   1024
 #define UX_DEVICE_APP_THREAD_PRIO         10
@@ -63,9 +62,11 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 UINT MX_USBX_Device_Init(VOID *memory_ptr);
+UINT MX_USBX_Device_Stack_Init(void);
+UINT MX_USBX_Device_Stack_DeInit(void);
 
 /* USER CODE BEGIN EFP */
-void USBX_APP_Device_Init(void);
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -89,6 +90,11 @@ void USBX_APP_Device_Init(void);
 #endif
 
 /* USER CODE BEGIN 2 */
+typedef enum {
+  Device_VBUS_SENSING=0,
+  Device_Connection,
+  Device_Disconnection,
+}Device_State;
 /* USER CODE END 2 */
 
 #ifdef __cplusplus

@@ -90,6 +90,9 @@
 #define UX_HCD_STM32_ED_STATUS_PERIODIC_TRANSFER                0x0AU
 #define UX_HCD_STM32_ED_STATUS_PENDING_MASK                     0x0FU
 #define UX_HCD_STM32_ED_STATUS_TRANSFER_DONE                    0x10U
+#define UX_HCD_STM32_ED_STATUS_ALIGNED_BUFFER_PENDING_FREE      0x11U
+#define UX_HCD_STM32_ED_STATUS_ALIGNED_BUFFER_FREE_DONE         0x12U
+
 
 
 /* Define STM32 static definition.  */
@@ -124,6 +127,7 @@ typedef struct UX_HCD_STM32_ED_STRUCT
     struct UX_TRANSFER_STRUCT           *ux_stm32_ed_transfer_request;
     UCHAR                               *ux_stm32_ed_setup;
     UCHAR                               *ux_stm32_ed_data;
+    UCHAR                               *ux_stm32_ed_aligned_data;
     USHORT                              ux_stm32_ed_saved_length;
     USHORT                              ux_stm32_ed_saved_actual_length;
     ULONG                               ux_stm32_ed_packet_length;
@@ -136,7 +140,7 @@ typedef struct UX_HCD_STM32_ED_STRUCT
     UCHAR                               ux_stm32_ed_speed;
     UCHAR                               ux_stm32_ed_type;
     UCHAR                               ux_stm32_ed_sch_mode;
-    UCHAR                               reserved[2];
+    UCHAR                               ux_stm32_ed_data_free;
 } UX_HCD_STM32_ED;
 
 

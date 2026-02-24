@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2017-2019 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -76,8 +75,8 @@ static uint32_t CS42L51_CurrentDevices = CS42L51_OUT_NONE;
 /** @defgroup CS42L51_Function_Prototypes Function Prototypes
   * @{
   */
-static int32_t CS42L51_ReadRegWrap(void *handle, uint16_t Reg, uint8_t* Data, uint16_t Length);
-static int32_t CS42L51_WriteRegWrap(void *handle, uint16_t Reg, uint8_t* Data, uint16_t Length);
+static int32_t CS42L51_ReadRegWrap(const void *handle, uint16_t Reg, uint8_t *Data, uint16_t Length);
+static int32_t CS42L51_WriteRegWrap(const void *handle, uint16_t Reg, uint8_t *Data, uint16_t Length);
 
 /**
   * @}
@@ -93,12 +92,12 @@ static int32_t CS42L51_WriteRegWrap(void *handle, uint16_t Reg, uint8_t* Data, u
   * @param pInit pointer de component init structure
   * @retval Component status
   */
-int32_t CS42L51_Init(CS42L51_Object_t *pObj, CS42L51_Init_t *pInit)
+int32_t CS42L51_Init(CS42L51_Object_t *pObj, const CS42L51_Init_t *pInit)
 {
   int32_t ret = 0;
   uint8_t tmp;
 
-  if(pObj->IsInitialized == 0U)
+  if (pObj->IsInitialized == 0U)
   {
     /* Set the device in standby mode */
     ret += cs42l51_read_reg(&pObj->Ctx, CS42L51_PWR_CTRL_1, &tmp, 1);
@@ -116,7 +115,7 @@ int32_t CS42L51_Init(CS42L51_Object_t *pObj, CS42L51_Init_t *pInit)
   }
   else
   {
-    /* Set all power down bits to 1 exept PDN to mute ADCs and DACs*/
+    /* Set all power down bits to 1 except PDN to mute ADCs and DACs*/
     tmp = 0x7EU;
     ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_PWR_CTRL_1, &tmp, 1);
     ret += cs42l51_read_reg(&pObj->Ctx, CS42L51_MIC_PWR_SPEED_CTRL, &tmp, 1);
@@ -144,15 +143,18 @@ int32_t CS42L51_Init(CS42L51_Object_t *pObj, CS42L51_Init_t *pInit)
   tmp = 0x0CU;
   ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_INTERFACE_CTRL, &tmp, 1);
 
-  /* Mic control : ADC single volume off, ADCB boost off, ADCA boost off, MicBias on AIN3B/MICIN2 pin, MicBias level 0.8xVA, MICB boost 32db, MICA boost 32dB */
+  /* Mic control : ADC single volume off, ADCB boost off, ADCA boost off, MicBias on AIN3B/MICIN2 pin,
+  MicBias level 0.8xVA, MICB boost 32db, MICA boost 32dB */
   tmp = 0x03U;
   ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_MIC_CTRL, &tmp, 1);
 
-  /* ADC control : ADCB HPF on, ADCB HPF freeze off, ADCA HPF on, ADCA HPF freeze off, Soft ramp B on, Zero cross B on, Soft ramp A on, Zero cross A on */
+  /* ADC control : ADCB HPF on, ADCB HPF freeze off, ADCA HPF on, ADCA HPF freeze off, Soft ramp B on,
+  Zero cross B on, Soft ramp A on, Zero cross A on */
   tmp = 0xAFU;
   ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_ADC_CTRL, &tmp, 1);
 
-  /* DAC output control : HP Gain to 1, Single volume control off, PCM invert signals polarity off, DAC channels mute on */
+  /* DAC output control : HP Gain to 1, Single volume control off, PCM invert signals polarity off,
+  DAC channels mute on */
   tmp = 0xC3U;
   ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_DAC_OUTPUT_CTRL, &tmp, 1);
 
@@ -167,11 +169,20 @@ int32_t CS42L51_Init(CS42L51_Object_t *pObj, CS42L51_Init_t *pInit)
   /* ALCB and PGAB Control : ALCB soft ramp disable on, ALCB zero cross disable on, PGA B Gain +8dB */
   ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_ALCB_PGAB_CTRL, &tmp, 1);
 
-  /* ADCA Attenuator : 0dB */
-  tmp = 0x00U;
+  if ((pInit->InputDevice & CS42L51_IN_LINE1) == CS42L51_IN_LINE1)
+  {
+    /* ADCA/ADCB Attenuator : -10dB */
+    tmp = 0xF6U;
+  }
+  else
+  {
+    /* ADCA/ADCB Attenuator : 0dB */
+    tmp = 0x00U;
+  }
+  /* ADCA Attenuator */
   ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_ADCA_ATTENUATOR, &tmp, 1);
 
-  /* ADCB Attenuator : 0dB */
+  /* ADCB Attenuator */
   ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_ADCB_ATTENUATOR, &tmp, 1);
 
   /* ADCA mixer volume control : ADCA mixer channel mute on, ADCA mixer volume 0dB */
@@ -191,7 +202,7 @@ int32_t CS42L51_Init(CS42L51_Object_t *pObj, CS42L51_Init_t *pInit)
   /* PCM channel mixer : AOUTA Left, AOUTB Right */
   ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_ADC_PCM_CHANNEL_MIXER, &tmp, 1);
 
-  if((pInit->OutputDevice & CS42L51_OUT_HEADPHONE) == CS42L51_OUT_HEADPHONE)
+  if ((pInit->OutputDevice & CS42L51_OUT_HEADPHONE) == CS42L51_OUT_HEADPHONE)
   {
     tmp = VOLUME_CONVERT(pInit->Volume);
     /* AOUTA volume control : AOUTA volume */
@@ -207,7 +218,7 @@ int32_t CS42L51_Init(CS42L51_Object_t *pObj, CS42L51_Init_t *pInit)
   /* Store current devices */
   CS42L51_CurrentDevices = (pInit->OutputDevice | pInit->InputDevice);
 
-  if(ret != CS42L51_OK)
+  if (ret != CS42L51_OK)
   {
     ret = CS42L51_ERROR;
   }
@@ -222,7 +233,7 @@ int32_t CS42L51_Init(CS42L51_Object_t *pObj, CS42L51_Init_t *pInit)
   */
 int32_t CS42L51_DeInit(CS42L51_Object_t *pObj)
 {
-  if(pObj->IsInitialized == 1U)
+  if (pObj->IsInitialized == 1U)
   {
     pObj->IsInitialized = 0U;
   }
@@ -263,12 +274,13 @@ int32_t CS42L51_Play(CS42L51_Object_t *pObj)
   int32_t ret = 0;
   uint8_t tmp;
 
-  if((CS42L51_CurrentDevices & CS42L51_OUT_HEADPHONE) == CS42L51_OUT_HEADPHONE)
+  if ((CS42L51_CurrentDevices & CS42L51_OUT_HEADPHONE) == CS42L51_OUT_HEADPHONE)
   {
     /* Unmute the output first */
     ret += CS42L51_SetMute(pObj, CS42L51_MUTE_OFF);
 
-    /* DAC control : Signal processing to DAC, Freeze off, De-emphasis off, Analog output auto mute off, DAC soft ramp */
+    /* DAC control : Signal processing to DAC, Freeze off, De-emphasis off, Analog output auto mute off,
+	DAC soft ramp */
     tmp = 0x42U;
     ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_DAC_CTRL, &tmp, 1);
 
@@ -278,9 +290,10 @@ int32_t CS42L51_Play(CS42L51_Object_t *pObj)
     ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_PWR_CTRL_1, &tmp, 1);
   }
 
-  if((CS42L51_CurrentDevices & CS42L51_IN_LINE1) == CS42L51_IN_LINE1)
+  if ((CS42L51_CurrentDevices & CS42L51_IN_LINE1) == CS42L51_IN_LINE1)
   {
-    /* ADC Input Select, Invert and Mute : AIN1B to PGAB, AIN1A to PGAA, ADCB invert off, ADCA invert off, ADCB mute off, ADCA mute off */
+    /* ADC Input Select, Invert and Mute : AIN1B to PGAB, AIN1A to PGAA, ADCB invert off,
+    ADCA invert off, ADCB mute off, ADCA mute off */
     tmp = 0x00U;
     ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_ADCX_INPUT_SELECT, &tmp, 1);
 
@@ -295,9 +308,10 @@ int32_t CS42L51_Play(CS42L51_Object_t *pObj)
     ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_MIC_PWR_SPEED_CTRL, &tmp, 1);
   }
 
-  if((CS42L51_CurrentDevices & CS42L51_IN_MIC1) == CS42L51_IN_MIC1)
+  if ((CS42L51_CurrentDevices & CS42L51_IN_MIC1) == CS42L51_IN_MIC1)
   {
-    /* ADC Input Select, Invert and Mute : AIN1B to PGAB, AIN3A to PreAmp to PGAA, ADCB invert off, ADCA invert off, ADCB mute on, ADCA mute off */
+    /* ADC Input Select, Invert and Mute : AIN1B to PGAB, AIN3A to PreAmp to PGAA, ADCB invert off,
+    ADCA invert off, ADCB mute on, ADCA mute off */
     tmp = 0x32U;
     ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_ADCX_INPUT_SELECT, &tmp, 1);
 
@@ -312,7 +326,7 @@ int32_t CS42L51_Play(CS42L51_Object_t *pObj)
     ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_MIC_PWR_SPEED_CTRL, &tmp, 1);
   }
 
-  if((CS42L51_CurrentDevices & CS42L51_IN_MIC2) == CS42L51_IN_MIC2)
+  if ((CS42L51_CurrentDevices & CS42L51_IN_MIC2) == CS42L51_IN_MIC2)
   {
     /* Power control 1 : PDN_PGAB, PDN_ADCB disable. */
     ret += cs42l51_read_reg(&pObj->Ctx, CS42L51_PWR_CTRL_1, &tmp, 1);
@@ -341,7 +355,7 @@ int32_t CS42L51_Play(CS42L51_Object_t *pObj)
 int32_t CS42L51_Pause(CS42L51_Object_t *pObj)
 {
   /* Pause the audio file playing */
-  if(CS42L51_SetMute(pObj, CS42L51_MUTE_ON) != CS42L51_OK)
+  if (CS42L51_SetMute(pObj, CS42L51_MUTE_ON) != CS42L51_OK)
   {
     return CS42L51_ERROR;
   }
@@ -387,7 +401,7 @@ int32_t CS42L51_Stop(CS42L51_Object_t *pObj, uint32_t CodecPdwnMode)
   }
   else /* CS42L51_PDWN_HW */
   {
-    /* Set all power down bits to 1 exept PDN to mute ADCs and DACs*/
+    /* Set all power down bits to 1 except PDN to mute ADCs and DACs*/
     tmp = 0x7EU;
     ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_PWR_CTRL_1, &tmp, 1);
     ret += cs42l51_read_reg(&pObj->Ctx, CS42L51_MIC_PWR_SPEED_CTRL, &tmp, 1);
@@ -405,7 +419,7 @@ int32_t CS42L51_Stop(CS42L51_Object_t *pObj, uint32_t CodecPdwnMode)
     ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_PWR_CTRL_1, &tmp, 1);
   }
 
-  if(ret != CS42L51_OK)
+  if (ret != CS42L51_OK)
   {
     ret = CS42L51_ERROR;
   }
@@ -426,7 +440,7 @@ int32_t CS42L51_SetVolume(CS42L51_Object_t *pObj, uint32_t InputOutput, uint8_t 
   int32_t ret;
   uint8_t convertedvol;
 
-  if(InputOutput != VOLUME_OUTPUT)
+  if (InputOutput != VOLUME_OUTPUT)
   {
     ret = CS42L51_ERROR;
   }
@@ -440,7 +454,7 @@ int32_t CS42L51_SetVolume(CS42L51_Object_t *pObj, uint32_t InputOutput, uint8_t 
     ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_AOUTB_VOL_CTRL, &convertedvol, 1);
   }
 
-  if(ret != CS42L51_OK)
+  if (ret != CS42L51_OK)
   {
     ret = CS42L51_ERROR;
   }
@@ -460,7 +474,7 @@ int32_t CS42L51_GetVolume(CS42L51_Object_t *pObj, uint32_t InputOutput, uint8_t 
   int32_t ret;
   uint8_t tmp;
 
-  if(InputOutput != VOLUME_OUTPUT)
+  if (InputOutput != VOLUME_OUTPUT)
   {
     ret = CS42L51_ERROR;
   }
@@ -488,7 +502,7 @@ int32_t CS42L51_SetMute(CS42L51_Object_t *pObj, uint32_t Cmd)
   ret = cs42l51_read_reg(&pObj->Ctx, CS42L51_DAC_OUTPUT_CTRL, &tmp, 1);
 
   /* Set the Mute mode */
-  if(Cmd == CS42L51_MUTE_ON)
+  if (Cmd == CS42L51_MUTE_ON)
   {
     tmp |= 0x03U;
   }
@@ -499,7 +513,7 @@ int32_t CS42L51_SetMute(CS42L51_Object_t *pObj, uint32_t Cmd)
 
   ret += cs42l51_write_reg(&pObj->Ctx, CS42L51_DAC_OUTPUT_CTRL, &tmp, 1);
 
-  if(ret != CS42L51_OK)
+  if (ret != CS42L51_OK)
   {
     ret = CS42L51_ERROR;
   }
@@ -514,7 +528,7 @@ int32_t CS42L51_SetMute(CS42L51_Object_t *pObj, uint32_t Cmd)
   * @param  Output Only CS42L51_OUT_HEADPHONE output is supported
   * @retval Component status
   */
-int32_t CS42L51_SetOutputMode(CS42L51_Object_t *pObj, uint32_t Output)
+int32_t CS42L51_SetOutputMode(const CS42L51_Object_t *pObj, uint32_t Output)
 {
   (void)(pObj);
   (void)(Output);
@@ -527,12 +541,12 @@ int32_t CS42L51_SetOutputMode(CS42L51_Object_t *pObj, uint32_t Output)
   * @brief Set Audio resolution.
   * @param pObj pointer to component object
   * @param Resolution  Audio resolution. Can be:
-  *                    CS42L51_RESOLUTION_16b, CS42L51_RESOLUTION_18b,
-  *                    CS42L51_RESOLUTION_20b or CS42L51_RESOLUTION_24b
+  *                    CS42L51_RESOLUTION_16B, CS42L51_RESOLUTION_18B,
+  *                    CS42L51_RESOLUTION_20B or CS42L51_RESOLUTION_24B
   * @note This is applicable only for CS42L51_PROTOCOL_R_JUSTIFIED protocol
   * @retval Component status
   */
-int32_t CS42L51_SetResolution(CS42L51_Object_t *pObj, uint32_t Resolution)
+int32_t CS42L51_SetResolution(const CS42L51_Object_t *pObj, uint32_t Resolution)
 {
   (void)(pObj);
   (void)(Resolution);
@@ -546,7 +560,7 @@ int32_t CS42L51_SetResolution(CS42L51_Object_t *pObj, uint32_t Resolution)
   * @param pObj pointer to component object
   * @retval Audio resolution
   */
-int32_t CS42L51_GetResolution(CS42L51_Object_t *pObj, uint32_t *Resolution)
+int32_t CS42L51_GetResolution(const CS42L51_Object_t *pObj, const uint32_t *Resolution)
 {
   (void)(pObj);
   (void)(Resolution);
@@ -563,7 +577,7 @@ int32_t CS42L51_GetResolution(CS42L51_Object_t *pObj, uint32_t *Resolution)
   *                  or CS42L51_PROTOCOL_I2S
   * @retval Component status
   */
-int32_t CS42L51_SetProtocol(CS42L51_Object_t *pObj, uint32_t Protocol)
+int32_t CS42L51_SetProtocol(const CS42L51_Object_t *pObj, uint32_t Protocol)
 {
   (void)(pObj);
   (void)(Protocol);
@@ -578,7 +592,7 @@ int32_t CS42L51_SetProtocol(CS42L51_Object_t *pObj, uint32_t Protocol)
   * @param Protocol pointer to protocol value
   * @retval Component status
   */
-int32_t CS42L51_GetProtocol(CS42L51_Object_t *pObj, uint32_t *Protocol)
+int32_t CS42L51_GetProtocol(const CS42L51_Object_t *pObj, const uint32_t *Protocol)
 {
   (void)(pObj);
   (void)(Protocol);
@@ -593,7 +607,7 @@ int32_t CS42L51_GetProtocol(CS42L51_Object_t *pObj, uint32_t *Protocol)
   * @param AudioFreq Audio frequency
   * @retval Component status
   */
-int32_t CS42L51_SetFrequency(CS42L51_Object_t *pObj, uint32_t AudioFreq)
+int32_t CS42L51_SetFrequency(const CS42L51_Object_t *pObj, uint32_t AudioFreq)
 {
   (void)(pObj);
   (void)(AudioFreq);
@@ -608,7 +622,7 @@ int32_t CS42L51_SetFrequency(CS42L51_Object_t *pObj, uint32_t AudioFreq)
   * @param AudioFreq Audio frequency
   * @retval Component status
   */
-int32_t CS42L51_GetFrequency(CS42L51_Object_t *pObj, uint32_t *AudioFreq)
+int32_t CS42L51_GetFrequency(const CS42L51_Object_t *pObj, const uint32_t *AudioFreq)
 {
   (void)(pObj);
   (void)(AudioFreq);
@@ -622,7 +636,7 @@ int32_t CS42L51_GetFrequency(CS42L51_Object_t *pObj, uint32_t *AudioFreq)
   * @param pObj pointer to component object
   * @retval Component status
   */
-int32_t CS42L51_Reset(CS42L51_Object_t *pObj)
+int32_t CS42L51_Reset(const CS42L51_Object_t *pObj)
 {
   /* De-Initialize Audio Codec interface */
   pObj->IO.DeInit();
@@ -639,7 +653,7 @@ int32_t CS42L51_Reset(CS42L51_Object_t *pObj)
   * @param  Component object pointer
   * @retval error status
   */
-int32_t CS42L51_RegisterBusIO (CS42L51_Object_t *pObj, CS42L51_IO_t *pIO)
+int32_t CS42L51_RegisterBusIO(CS42L51_Object_t *pObj, CS42L51_IO_t *pIO)
 {
   int32_t ret;
 
@@ -660,7 +674,7 @@ int32_t CS42L51_RegisterBusIO (CS42L51_Object_t *pObj, CS42L51_IO_t *pIO)
     pObj->Ctx.WriteReg = CS42L51_WriteRegWrap;
     pObj->Ctx.handle   = pObj;
 
-    if(pObj->IO.Init != NULL)
+    if (pObj->IO.Init != NULL)
     {
       ret = pObj->IO.Init();
     }
@@ -681,9 +695,9 @@ int32_t CS42L51_RegisterBusIO (CS42L51_Object_t *pObj, CS42L51_IO_t *pIO)
   * @param  Length  buffer size to be written
   * @retval error status
   */
-static int32_t CS42L51_ReadRegWrap(void *handle, uint16_t Reg, uint8_t* pData, uint16_t Length)
+static int32_t CS42L51_ReadRegWrap(const void *handle, uint16_t Reg, uint8_t *pData, uint16_t Length)
 {
-  CS42L51_Object_t *pObj = (CS42L51_Object_t *)handle;
+  const CS42L51_Object_t *pObj = (const CS42L51_Object_t *)handle;
 
   return pObj->IO.ReadReg(pObj->IO.Address, Reg, pData, Length);
 }
@@ -696,9 +710,9 @@ static int32_t CS42L51_ReadRegWrap(void *handle, uint16_t Reg, uint8_t* pData, u
   * @param  Length buffer size to be written
   * @retval error status
   */
-static int32_t CS42L51_WriteRegWrap(void *handle, uint16_t Reg, uint8_t* pData, uint16_t Length)
+static int32_t CS42L51_WriteRegWrap(const void *handle, uint16_t Reg, uint8_t *pData, uint16_t Length)
 {
-  CS42L51_Object_t *pObj = (CS42L51_Object_t *)handle;
+  const CS42L51_Object_t *pObj = (const CS42L51_Object_t *)handle;
 
   return pObj->IO.WriteReg(pObj->IO.Address, Reg, pData, Length);
 }
@@ -718,5 +732,3 @@ static int32_t CS42L51_WriteRegWrap(void *handle, uint16_t Reg, uint8_t* pData, 
 /**
   * @}
   */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

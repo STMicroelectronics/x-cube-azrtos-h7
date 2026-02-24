@@ -177,17 +177,12 @@ SECTIONS
     . = ALIGN(8);
   } >RAM_D1
 
-  .UXApp_region 0x24035000 (NOLOAD):
+  .UXApp_region 0x24020000 (NOLOAD):
   {
     *(.UsbHhcdSection)
   } >RAM_D1
 
-  .UXApp_region_pool 0x24036000 (NOLOAD):
-  {
-    *(.UsbxAppSection)
-  } >RAM_D1
-
-  .UXApp_region_pool_app 0x24046000 (NOLOAD):
+  .UXApp_region_pool 0x24021000 (NOLOAD):
   {
     *(.UsbxPoolSection)
   } >RAM_D1

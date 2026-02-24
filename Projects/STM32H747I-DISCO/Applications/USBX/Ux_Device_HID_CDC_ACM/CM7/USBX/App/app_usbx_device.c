@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2020-2021 STMicroelectronics.
+  * Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -23,7 +23,7 @@
 /* USER CODE END 1 */
 
 /* Includes ------------------------------------------------------------------*/
-#include "app_usbx_device.h"
+#include "app_usbx.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -53,6 +53,7 @@ static ULONG cdc_acm_configuration_number;
 static UX_SLAVE_CLASS_HID_PARAMETER hid_mouse_parameter;
 static UX_SLAVE_CLASS_CDC_ACM_PARAMETER cdc_acm_parameter;
 static TX_THREAD ux_device_app_thread;
+extern PCD_HandleTypeDef hpcd_USB_OTG_HS;
 
 /* USER CODE BEGIN PV */
 static TX_THREAD ux_hid_thread;
@@ -76,6 +77,98 @@ static VOID app_ux_device_thread_entry(ULONG thread_input);
 UINT MX_USBX_Device_Init(VOID *memory_ptr)
 {
   UINT ret = UX_SUCCESS;
+  UCHAR *pointer;
+  TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+
+  /* USER CODE BEGIN MX_USBX_Device_Init0 */
+
+  /* USER CODE END MX_USBX_Device_Init0 */
+
+  /* Allocate the stack for device application main thread */
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, UX_DEVICE_APP_THREAD_STACK_SIZE,
+                       TX_NO_WAIT) != TX_SUCCESS)
+  {
+    /* USER CODE BEGIN MAIN_THREAD_ALLOCATE_STACK_ERROR */
+    return TX_POOL_ERROR;
+    /* USER CODE END MAIN_THREAD_ALLOCATE_STACK_ERROR */
+  }
+
+  /* Create the device application main thread */
+  if (tx_thread_create(&ux_device_app_thread, UX_DEVICE_APP_THREAD_NAME, app_ux_device_thread_entry,
+                       0, pointer, UX_DEVICE_APP_THREAD_STACK_SIZE, UX_DEVICE_APP_THREAD_PRIO,
+                       UX_DEVICE_APP_THREAD_PREEMPTION_THRESHOLD, UX_DEVICE_APP_THREAD_TIME_SLICE,
+                       UX_DEVICE_APP_THREAD_START_OPTION) != TX_SUCCESS)
+  {
+    /* USER CODE BEGIN MAIN_THREAD_CREATE_ERROR */
+    return TX_THREAD_ERROR;
+    /* USER CODE END MAIN_THREAD_CREATE_ERROR */
+  }
+
+  /* USER CODE BEGIN MX_USBX_Device_Init1 */
+
+  /* Allocate the stack for hid mouse thread */
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, UX_DEVICE_APP_THREAD_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+  {
+    return TX_POOL_ERROR;
+  }
+
+  /* Create the hid mouse thread. */
+  if (tx_thread_create(&ux_hid_thread, "hid_usbx_app_thread_entry",
+                       usbx_hid_thread_entry, 1, pointer, UX_DEVICE_APP_THREAD_STACK_SIZE, 20, 20,
+                       1, TX_AUTO_START) != TX_SUCCESS)
+  {
+    return TX_THREAD_ERROR;
+  }
+
+  /* Allocate the stack for usbx cdc acm read thread */
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, UX_DEVICE_APP_THREAD_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+  {
+    return TX_POOL_ERROR;
+  }
+
+  /* Create the usbx cdc acm read thread */
+  if (tx_thread_create(&ux_cdc_read_thread, "cdc_acm_read_usbx_app_thread_entry",
+                       usbx_cdc_acm_read_thread_entry, 1, pointer,
+                       UX_DEVICE_APP_THREAD_STACK_SIZE, 20, 20, TX_NO_TIME_SLICE,
+                       TX_AUTO_START) != TX_SUCCESS)
+  {
+    return TX_THREAD_ERROR;
+  }
+
+  /* Allocate the stack for usbx cdc acm write thread */
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, UX_DEVICE_APP_THREAD_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+  {
+    return TX_POOL_ERROR;
+  }
+
+  /* Create the usbx_cdc_acm_write_thread_entry thread */
+  if (tx_thread_create(&ux_cdc_write_thread, "cdc_acm_write_usbx_app_thread_entry",
+                       usbx_cdc_acm_write_thread_entry, 1, pointer,
+                       UX_DEVICE_APP_THREAD_STACK_SIZE, 20, 20, TX_NO_TIME_SLICE,
+                       TX_AUTO_START) != TX_SUCCESS)
+  {
+    return TX_THREAD_ERROR;
+  }
+
+  /* Create the event flags group */
+  if (tx_event_flags_create(&EventFlag, "Event Flag") != TX_SUCCESS)
+  {
+    return TX_GROUP_ERROR;
+  }
+
+  /* USER CODE END MX_USBX_Device_Init1 */
+
+  return ret;
+}
+
+/**
+  * @brief  Application USBX Device Initialization.
+  * @param  None
+  * @retval ret
+  */
+UINT MX_USBX_Device_Stack_Init(void)
+{
+  UINT ret = UX_SUCCESS;
   UCHAR *device_framework_high_speed;
   UCHAR *device_framework_full_speed;
   ULONG device_framework_hs_length;
@@ -84,29 +177,10 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
   ULONG language_id_framework_length;
   UCHAR *string_framework;
   UCHAR *language_id_framework;
-  UCHAR *pointer;
-  TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-  /* USER CODE BEGIN MX_USBX_Device_Init0 */
+  /* USER CODE BEGIN MX_USBX_Device_Stack_Init_PreTreatment */
 
-  /* USER CODE END MX_USBX_Device_Init0 */
-
-  /* Allocate the stack for USBX Memory */
-  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
-                       USBX_DEVICE_MEMORY_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
-  {
-    /* USER CODE BEGIN USBX_ALLOCATE_STACK_ERROR */
-    return TX_POOL_ERROR;
-    /* USER CODE END USBX_ALLOCATE_STACK_ERROR */
-  }
-
-  /* Initialize USBX Memory */
-  if (ux_system_initialize(pointer, USBX_DEVICE_MEMORY_STACK_SIZE, UX_NULL, 0) != UX_SUCCESS)
-  {
-    /* USER CODE BEGIN USBX_SYSTEM_INITIALIZE_ERROR */
-    return UX_ERROR;
-    /* USER CODE END USBX_SYSTEM_INITIALIZE_ERROR */
-  }
+  /* USER CODE END MX_USBX_Device_Stack_Init_PreTreatment */
 
   /* Get Device Framework High Speed and get the length */
   device_framework_high_speed = USBD_Get_Device_Framework_Speed(USBD_HIGH_SPEED,
@@ -196,79 +270,59 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
     /* USER CODE END USBX_DEVICE_CDC_ACM_REGISTER_ERROR */
   }
 
-  /* Allocate the stack for device application main thread */
-  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, UX_DEVICE_APP_THREAD_STACK_SIZE,
-                       TX_NO_WAIT) != TX_SUCCESS)
+  /* Initialize and link controller HAL driver */
+  ux_dcd_stm32_initialize((ULONG)USB_OTG_HS, (ULONG)&hpcd_USB_OTG_HS);
+
+  /* USER CODE BEGIN MX_USBX_Device_Stack_Init_PostTreatment */
+
+  /* USER CODE END MX_USBX_Device_Stack_Init_PostTreatment */
+
+return ret;
+
+}
+
+/**
+  * @brief MX_USBX_Device_Stack_DeInit
+  *        Unitialization of USB Device.
+  * uninitialize the device stack, unregister of device class stack
+  * unregister of the usb device controller
+  * @param  None
+  * @retval ret
+  */
+UINT MX_USBX_Device_Stack_DeInit(void)
+{
+  UINT ret = UX_SUCCESS;
+
+  /* USER CODE BEGIN MX_USBX_Device_Stack_DeInit_PreTreatment */
+
+  /* USER CODE END MX_USBX_Device_Stack_DeInit_PreTreatment */
+
+  /* Uninitialize and unlink controller HAL driver */
+  ux_dcd_stm32_uninitialize((ULONG)USB_OTG_HS, (ULONG)&hpcd_USB_OTG_HS);
+
+/* Unregister hid class. */
+  if (ux_device_stack_class_unregister(_ux_system_slave_class_hid_name,
+                                       ux_device_class_hid_entry) != UX_SUCCESS)
   {
-    /* USER CODE BEGIN MAIN_THREAD_ALLOCATE_STACK_ERROR */
-    return TX_POOL_ERROR;
-    /* USER CODE END MAIN_THREAD_ALLOCATE_STACK_ERROR */
+    return UX_ERROR;
   }
 
-  /* Create the device application main thread */
-  if (tx_thread_create(&ux_device_app_thread, UX_DEVICE_APP_THREAD_NAME, app_ux_device_thread_entry,
-                       0, pointer, UX_DEVICE_APP_THREAD_STACK_SIZE, UX_DEVICE_APP_THREAD_PRIO,
-                       UX_DEVICE_APP_THREAD_PREEMPTION_THRESHOLD, UX_DEVICE_APP_THREAD_TIME_SLICE,
-                       UX_DEVICE_APP_THREAD_START_OPTION) != TX_SUCCESS)
+  /* Unregister CDC ACM class. */
+  if (ux_device_stack_class_unregister(_ux_system_slave_class_cdc_acm_name,
+                                     ux_device_class_cdc_acm_entry) != UX_SUCCESS)
   {
-    /* USER CODE BEGIN MAIN_THREAD_CREATE_ERROR */
-    return TX_THREAD_ERROR;
-    /* USER CODE END MAIN_THREAD_CREATE_ERROR */
+    return UX_ERROR;
   }
 
-  /* USER CODE BEGIN MX_USBX_Device_Init1 */
-
-  /* Allocate the stack for hid mouse thread */
-  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, UX_DEVICE_APP_THREAD_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
+  /* The code below is required for uninstalling the device portion of USBX.  */
+  if (ux_device_stack_uninitialize() != UX_SUCCESS)
   {
-    return TX_POOL_ERROR;
+    return UX_ERROR;
   }
 
-  /* Create the hid mouse thread. */
-  if (tx_thread_create(&ux_hid_thread, "hid_usbx_app_thread_entry",
-                       usbx_hid_thread_entry, 1, pointer, UX_DEVICE_APP_THREAD_STACK_SIZE, 20, 20,
-                       1, TX_AUTO_START) != TX_SUCCESS)
-  {
-    return TX_THREAD_ERROR;
-  }
+  /* USER CODE BEGIN MX_USBX_Device_Stack_DeInit_PostTreatment */
 
-  /* Allocate the stack for usbx cdc acm read thread */
-  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, UX_DEVICE_APP_THREAD_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
-  {
-    return TX_POOL_ERROR;
-  }
-
-  /* Create the usbx cdc acm read thread */
-  if (tx_thread_create(&ux_cdc_read_thread, "cdc_acm_read_usbx_app_thread_entry",
-                       usbx_cdc_acm_read_thread_entry, 1, pointer,
-                       UX_DEVICE_APP_THREAD_STACK_SIZE, 20, 20, TX_NO_TIME_SLICE,
-                       TX_AUTO_START) != TX_SUCCESS)
-  {
-    return TX_THREAD_ERROR;
-  }
-
-  /* Allocate the stack for usbx cdc acm write thread */
-  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, UX_DEVICE_APP_THREAD_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
-  {
-    return TX_POOL_ERROR;
-  }
-
-  /* Create the usbx_cdc_acm_write_thread_entry thread */
-  if (tx_thread_create(&ux_cdc_write_thread, "cdc_acm_write_usbx_app_thread_entry",
-                       usbx_cdc_acm_write_thread_entry, 1, pointer,
-                       UX_DEVICE_APP_THREAD_STACK_SIZE, 20, 20, TX_NO_TIME_SLICE,
-                       TX_AUTO_START) != TX_SUCCESS)
-  {
-    return TX_THREAD_ERROR;
-  }
-
-  /* Create the event flags group */
-  if (tx_event_flags_create(&EventFlag, "Event Flag") != TX_SUCCESS)
-  {
-    return TX_GROUP_ERROR;
-  }
-
-  /* USER CODE END MX_USBX_Device_Init1 */
+  /* USER CODE END MX_USBX_Device_Stack_DeInit_PostTreatment */
 
   return ret;
 }
@@ -282,54 +336,23 @@ static VOID app_ux_device_thread_entry(ULONG thread_input)
 {
   /* USER CODE BEGIN app_ux_device_thread_entry */
 
-  /* Initialization of USB device */
-  USBX_APP_Device_Init();
+  /* USB_OTG_HS init function */
+  MX_USB_OTG_HS_PCD_Init();
+
+  if (MX_USBX_Device_Stack_Init() != UX_SUCCESS)
+  {
+    /* USER CODE BEGIN MAIN_INITIALIZE_STACK_ERROR */
+    Error_Handler();
+    /* USER CODE END MAIN_INITIALIZE_STACK_ERROR */
+  }
+
+  /* Start the USB device */
+  HAL_PCD_Start(&hpcd_USB_OTG_HS);
 
   /* USER CODE END app_ux_device_thread_entry */
 }
 
 /* USER CODE BEGIN 2 */
-
-/**
-  * @brief  USBX_APP_Device_Init
-  *         Initialization of USB device.
-  * @param  none
-  * @retval none
-  */
-VOID USBX_APP_Device_Init(VOID)
-{
-  /* USER CODE BEGIN USB_Device_Init_PreTreatment_0 */
-
-  /* USER CODE END USB_Device_Init_PreTreatment_0 */
-
-  /* USB_OTG_HS init function */
-  MX_USB_OTG_HS_PCD_Init();
-
-  /* USER CODE BEGIN USB_Device_Init_PreTreatment_1 */
-
-  /* Set Rx FIFO */
-  HAL_PCDEx_SetRxFiFo(&hpcd_USB_OTG_HS, 0x200);
-  /* Set Tx FIFO 0 */
-  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 0, 0x10);
-  /* Set Tx FIFO 2 */
-  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 1, 0x10);
-  /* Set Tx FIFO 3 */
-  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 2, 0x80);
-  /* Set Tx FIFO 4 */
-  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 3, 0x20);
-
-  /* USER CODE END USB_Device_Init_PreTreatment_1 */
-
-  /* Initialize the device controller driver */
-  ux_dcd_stm32_initialize((ULONG)USB_OTG_HS, (ULONG)&hpcd_USB_OTG_HS);
-
-  /* Start the USB device */
-  HAL_PCD_Start(&hpcd_USB_OTG_HS);
-
-  /* USER CODE BEGIN USB_Device_Init_PostTreatment */
-
-  /* USER CODE END USB_Device_Init_PostTreatment */
-}
 
 /**
   * @brief  USBX_APP_UART_Init

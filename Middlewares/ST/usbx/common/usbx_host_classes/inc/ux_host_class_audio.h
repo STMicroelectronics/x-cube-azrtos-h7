@@ -568,8 +568,8 @@ typedef struct UX_HOST_CLASS_AUDIO_SAMPLING_CHARACTERISTICS_STRUCT
     ULONG           ux_host_class_audio_sampling_characteristics_clock_mul;
     ULONG           ux_host_class_audio_sampling_characteristics_clock_div;
 
-    /* UAC 1.0, format type I descriptor for futher operations.  */
-    /* UAC 2.0, clock source descriptor (CSD) for futher operations.  */
+    /* UAC 1.0, format type I descriptor for further operations.  */
+    /* UAC 2.0, clock source descriptor (CSD) for further operations.  */
     UCHAR           *ux_host_class_audio_sampling_characteristics_descriptor;
 } UX_HOST_CLASS_AUDIO_SAMPLING_CHARACTERISTICS;
 

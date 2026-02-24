@@ -70,7 +70,7 @@ ULONG                   notification_count;
 
     ux_test_device_class_cdc_ecm_set_link_state(cdc_ecm_device, 1);
 
-    /* Now wait for the host to receive it. Luckly, there's an increment count we can check! */
+    /* Now wait for the host to receive it. Luckily, there's an increment count we can check! */
     ux_test_wait_for_value_ulong(&cdc_ecm_host->ux_host_class_cdc_ecm_notification_count, notification_count + 1);
 
     cdc_ecm_host->ux_host_class_cdc_ecm_link_state = UX_HOST_CLASS_CDC_ECM_LINK_STATE_UP;
@@ -89,7 +89,7 @@ ULONG                   notification_count;
     /* Send the link down event again. */
     ux_test_device_class_cdc_ecm_set_link_state(cdc_ecm_device, 0);
 
-    /* Now wait for the host to receive it. Luckly, there's an increment count we can check! */
+    /* Now wait for the host to receive it. Luckily, there's an increment count we can check! */
     ux_test_wait_for_value_ulong(&cdc_ecm_host->ux_host_class_cdc_ecm_notification_count, notification_count + 1);
 
     /** Test receiving LINK DOWN while link is pending down. **/
@@ -101,7 +101,7 @@ ULONG                   notification_count;
 
     ux_test_device_class_cdc_ecm_set_link_state(cdc_ecm_device, 0);
 
-    /* Now wait for the host to receive it. Luckly, there's an increment count we can check! */
+    /* Now wait for the host to receive it. Luckily, there's an increment count we can check! */
     ux_test_wait_for_value_ulong(&cdc_ecm_host->ux_host_class_cdc_ecm_notification_count, notification_count + 1);
 
     cdc_ecm_host->ux_host_class_cdc_ecm_link_state = UX_HOST_CLASS_CDC_ECM_LINK_STATE_DOWN;

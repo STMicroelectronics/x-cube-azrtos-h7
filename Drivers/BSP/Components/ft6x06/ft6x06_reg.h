@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2015-2019 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -50,8 +49,8 @@ extern "C" {
  */
 /************** Generic Function  *******************/
 
-typedef int32_t (*FT6X06_Write_Func)(void *, uint8_t, uint8_t*, uint16_t);
-typedef int32_t (*FT6X06_Read_Func) (void *, uint8_t, uint8_t*, uint16_t);
+typedef int32_t (*FT6X06_Write_Func)(const void *, uint8_t, uint8_t*, uint16_t);
+typedef int32_t (*FT6X06_Read_Func) (const void *, uint8_t, uint8_t*, uint16_t);
 
 /**
  * @}
@@ -172,8 +171,8 @@ typedef struct
 * Bit Group Name: None
 * Permission    : W
 *******************************************************************************/
-int32_t ft6x06_write_reg(ft6x06_ctx_t *ctx, uint8_t reg, uint8_t *pbuf, uint16_t length);
-int32_t ft6x06_read_reg(ft6x06_ctx_t *ctx, uint8_t reg, uint8_t *pbuf, uint16_t length);
+int32_t ft6x06_write_reg(const ft6x06_ctx_t *ctx, uint8_t reg, uint8_t *pdata, uint16_t length);
+int32_t ft6x06_read_reg(const ft6x06_ctx_t *ctx, uint8_t reg, uint8_t *pdata, uint16_t length);
 
 /**************** Base Function  *******************/
 
@@ -185,8 +184,8 @@ int32_t ft6x06_read_reg(ft6x06_ctx_t *ctx, uint8_t reg, uint8_t *pbuf, uint16_t 
 *******************************************************************************/
 #define   FT6X06_DEV_MODE_BIT_MASK        0x70U
 #define   FT6X06_DEV_MODE_BIT_POSITION    4U
-int32_t  ft6x06_dev_mode_w(ft6x06_ctx_t *ctx, uint8_t value);
-int32_t  ft6x06_dev_mode_r(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t  ft6x06_dev_mode_w(const ft6x06_ctx_t *ctx, uint8_t value);
+int32_t  ft6x06_dev_mode_r(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : GEST_ID
@@ -196,7 +195,7 @@ int32_t  ft6x06_dev_mode_r(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_GEST_ID_BIT_MASK        0xFFU
 #define   FT6X06_GEST_ID_BIT_POSITION    0U
-int32_t ft6x06_gest_id(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_gest_id(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : TD_STATUS
@@ -206,7 +205,7 @@ int32_t ft6x06_gest_id(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_TD_STATUS_BIT_MASK        0x0FU
 #define   FT6X06_TD_STATUS_BIT_POSITION    0U
-int32_t ft6x06_td_status(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_td_status(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : P1_XH
@@ -217,7 +216,7 @@ int32_t ft6x06_td_status(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_P1_XH_EF_BIT_MASK        0xC0U
 #define   FT6X06_P1_XH_EF_BIT_POSITION    6U
-int32_t ft6x06_p1_xh_ef(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_p1_xh_ef(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : P1_XH
@@ -228,7 +227,7 @@ int32_t ft6x06_p1_xh_ef(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_P1_XH_TP_BIT_MASK        0x0FU
 #define   FT6X06_P1_XH_TP_BIT_POSITION    0U
-int32_t ft6x06_p1_xh_tp(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_p1_xh_tp(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : P1_XL
@@ -239,7 +238,7 @@ int32_t ft6x06_p1_xh_tp(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_P1_XL_TP_BIT_MASK        0xFFU
 #define   FT6X06_P1_XL_TP_BIT_POSITION    0U
-int32_t ft6x06_p1_xl_tp(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_p1_xl_tp(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : P1_YH
@@ -250,7 +249,7 @@ int32_t ft6x06_p1_xl_tp(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_P1_YH_TID_BIT_MASK        0xF0U
 #define   FT6X06_P1_YH_TID_BIT_POSITION    4U
-int32_t ft6x06_p1_yh_tid(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_p1_yh_tid(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : P1_YH
@@ -261,7 +260,7 @@ int32_t ft6x06_p1_yh_tid(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_P1_YH_TP_BIT_MASK        0x0FU
 #define   FT6X06_P1_YH_TP_BIT_POSITION    0U
-int32_t ft6x06_p1_yh_tp(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_p1_yh_tp(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : P1_YL
@@ -272,7 +271,7 @@ int32_t ft6x06_p1_yh_tp(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_P1_YL_TP_BIT_MASK        0xFFU
 #define   FT6X06_P1_YL_TP_BIT_POSITION    0U
-int32_t ft6x06_p1_yl_tp(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_p1_yl_tp(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : P1_WEIGHT
@@ -283,7 +282,7 @@ int32_t ft6x06_p1_yl_tp(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_P1_WEIGHT_BIT_MASK        0xFFU
 #define   FT6X06_P1_WEIGHT_BIT_POSITION    0U
-int32_t ft6x06_p1_weight(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_p1_weight(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : P1_MISC
@@ -294,7 +293,7 @@ int32_t ft6x06_p1_weight(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_P1_MISC_BIT_MASK        0xF0U
 #define   FT6X06_P1_MISC_BIT_POSITION    4U
-int32_t ft6x06_p1_misc(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_p1_misc(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : P2_XH
@@ -305,7 +304,7 @@ int32_t ft6x06_p1_misc(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_P2_XH_EF_BIT_MASK        0xC0U
 #define   FT6X06_P2_XH_EF_BIT_POSITION    6U
-int32_t ft6x06_p2_xh_ef(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_p2_xh_ef(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : P2_XH
@@ -316,7 +315,7 @@ int32_t ft6x06_p2_xh_ef(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_P2_XH_TP_BIT_MASK        0x0FU
 #define   FT6X06_P2_XH_TP_BIT_POSITION    0U
-int32_t ft6x06_p2_xh_tp(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_p2_xh_tp(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : P2_XL
@@ -327,7 +326,7 @@ int32_t ft6x06_p2_xh_tp(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_P2_XL_TP_BIT_MASK        0xFFU
 #define   FT6X06_P2_XL_TP_BIT_POSITION    0U
-int32_t ft6x06_p2_xl_tp(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_p2_xl_tp(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : P2_YH
@@ -338,7 +337,7 @@ int32_t ft6x06_p2_xl_tp(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_P2_YH_TID_BIT_MASK        0xF0U
 #define   FT6X06_P2_YH_TID_BIT_POSITION    4U
-int32_t ft6x06_p2_yh_tid(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_p2_yh_tid(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : P2_YH
@@ -349,7 +348,7 @@ int32_t ft6x06_p2_yh_tid(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_P2_YH_TP_BIT_MASK        0x0FU
 #define   FT6X06_P2_YH_TP_BIT_POSITION    0U
-int32_t ft6x06_p2_yh_tp(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_p2_yh_tp(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : P2_YL
@@ -360,7 +359,7 @@ int32_t ft6x06_p2_yh_tp(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_P2_YL_TP_BIT_MASK        0xFFU
 #define   FT6X06_P2_YL_TP_BIT_POSITION    0U
-int32_t ft6x06_p2_yl_tp(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_p2_yl_tp(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : P2_WEIGHT
@@ -371,7 +370,7 @@ int32_t ft6x06_p2_yl_tp(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_P2_WEIGHT_BIT_MASK        0xFFU
 #define   FT6X06_P2_WEIGHT_BIT_POSITION    0U
-int32_t ft6x06_p2_weight(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_p2_weight(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : P2_MISC
@@ -382,7 +381,7 @@ int32_t ft6x06_p2_weight(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_P2_MISC_BIT_MASK        0xF0U
 #define   FT6X06_P2_MISC_BIT_POSITION    4U
-int32_t ft6x06_p2_misc(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_p2_misc(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : TH_GROUP
@@ -393,7 +392,7 @@ int32_t ft6x06_p2_misc(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_TH_GROUP_BIT_MASK        0xFFU
 #define   FT6X06_TH_GROUP_BIT_POSITION    0U
-int32_t ft6x06_th_group(ft6x06_ctx_t *ctx, uint8_t value);
+int32_t ft6x06_th_group(const ft6x06_ctx_t *ctx, uint8_t value);
 
 /*******************************************************************************
 * Register      : TH_DIFF
@@ -404,7 +403,7 @@ int32_t ft6x06_th_group(ft6x06_ctx_t *ctx, uint8_t value);
 *******************************************************************************/
 #define   FT6X06_TH_DIFF_BIT_MASK        0xFFU
 #define   FT6X06_TH_DIFF_BIT_POSITION    0U
-int32_t ft6x06_th_diff(ft6x06_ctx_t *ctx, uint8_t value);
+int32_t ft6x06_th_diff(const ft6x06_ctx_t *ctx, uint8_t value);
 
 /*******************************************************************************
 * Register      : CTRL
@@ -415,7 +414,7 @@ int32_t ft6x06_th_diff(ft6x06_ctx_t *ctx, uint8_t value);
 *******************************************************************************/
 #define   FT6X06_CTRL_BIT_MASK           0xFFU
 #define   FT6X06_CTRL_BIT_POSITION       0U
-int32_t ft6x06_ctrl(ft6x06_ctx_t *ctx, uint8_t value);
+int32_t ft6x06_ctrl(const ft6x06_ctx_t *ctx, uint8_t value);
 
 /*******************************************************************************
 * Register      : TIMEENTERMONITOR
@@ -426,7 +425,7 @@ int32_t ft6x06_ctrl(ft6x06_ctx_t *ctx, uint8_t value);
 *******************************************************************************/
 #define   FT6X06_TIMEENTERMONITOR_BIT_MASK           0xFFU
 #define   FT6X06_TIMEENTERMONITOR_BIT_POSITION       0U
-int32_t ft6x06_time_enter_monitor(ft6x06_ctx_t *ctx, uint8_t value);
+int32_t ft6x06_time_enter_monitor(const ft6x06_ctx_t *ctx, uint8_t value);
 
 /*******************************************************************************
 * Register      : PERIODACTIVE
@@ -437,7 +436,7 @@ int32_t ft6x06_time_enter_monitor(ft6x06_ctx_t *ctx, uint8_t value);
 *******************************************************************************/
 #define   FT6X06_PERIODACTIVE_BIT_MASK           0xFFU
 #define   FT6X06_PERIODACTIVE_BIT_POSITION       0U
-int32_t ft6x06_period_active(ft6x06_ctx_t *ctx, uint8_t value);
+int32_t ft6x06_period_active(const ft6x06_ctx_t *ctx, uint8_t value);
 
 /*******************************************************************************
 * Register      : PERIODMONITOR
@@ -448,7 +447,7 @@ int32_t ft6x06_period_active(ft6x06_ctx_t *ctx, uint8_t value);
 *******************************************************************************/
 #define   FT6X06_PERIODMONITOR_BIT_MASK           0xFFU
 #define   FT6X06_PERIODMONITOR_BIT_POSITION       0U
-int32_t ft6x06_period_monitor(ft6x06_ctx_t *ctx, uint8_t value);
+int32_t ft6x06_period_monitor(const ft6x06_ctx_t *ctx, uint8_t value);
 
 /*******************************************************************************
 * Register      : RADIAN_VALUE
@@ -459,7 +458,7 @@ int32_t ft6x06_period_monitor(ft6x06_ctx_t *ctx, uint8_t value);
 *******************************************************************************/
 #define   FT6X06_RADIAN_VALUE_BIT_MASK           0xFFU
 #define   FT6X06_RADIAN_VALUE_BIT_POSITION       0U
-int32_t ft6x06_radian_value(ft6x06_ctx_t *ctx, uint8_t value);
+int32_t ft6x06_radian_value(const ft6x06_ctx_t *ctx, uint8_t value);
 
 /*******************************************************************************
 * Register      : OFFSET_LEFT_RIGHT
@@ -470,7 +469,7 @@ int32_t ft6x06_radian_value(ft6x06_ctx_t *ctx, uint8_t value);
 *******************************************************************************/
 #define   FT6X06_OFFSET_LR_BIT_MASK           0xFFU
 #define   FT6X06_OFFSET_LR_BIT_POSITION       0U
-int32_t ft6x06_offset_left_right(ft6x06_ctx_t *ctx, uint8_t value);
+int32_t ft6x06_offset_left_right(const ft6x06_ctx_t *ctx, uint8_t value);
 
 /*******************************************************************************
 * Register      : OFFSET_UP_DOWN
@@ -481,7 +480,7 @@ int32_t ft6x06_offset_left_right(ft6x06_ctx_t *ctx, uint8_t value);
 *******************************************************************************/
 #define   FT6X06_OFFSET_UD_BIT_MASK           0xFFU
 #define   FT6X06_OFFSET_UD_BIT_POSITION       0U
-int32_t ft6x06_offset_up_down(ft6x06_ctx_t *ctx, uint8_t value);
+int32_t ft6x06_offset_up_down(const ft6x06_ctx_t *ctx, uint8_t value);
 
 /*******************************************************************************
 * Register      : DISTANCE_LEFT_RIGHT
@@ -492,7 +491,7 @@ int32_t ft6x06_offset_up_down(ft6x06_ctx_t *ctx, uint8_t value);
 *******************************************************************************/
 #define   FT6X06_DISTANCE_LR_BIT_MASK           0xFFU
 #define   FT6X06_DISTANCE_LR_BIT_POSITION       0U
-int32_t  ft6x06_disatnce_left_right(ft6x06_ctx_t *ctx, uint8_t value);
+int32_t  ft6x06_disatnce_left_right(const ft6x06_ctx_t *ctx, uint8_t value);
         
 /*******************************************************************************
 * Register      : DISTANCE_UP_DOWN
@@ -503,7 +502,7 @@ int32_t  ft6x06_disatnce_left_right(ft6x06_ctx_t *ctx, uint8_t value);
 *******************************************************************************/
 #define   FT6X06_DISTANCE_UD_BIT_MASK           0xFFU
 #define   FT6X06_DISTANCE_UD_BIT_POSITION       0U
-int32_t ft6x06_distance_up_down(ft6x06_ctx_t *ctx, uint8_t value);
+int32_t ft6x06_distance_up_down(const ft6x06_ctx_t *ctx, uint8_t value);
 
 /*******************************************************************************
 * Register      : DISTANCE_ZOOM
@@ -514,7 +513,7 @@ int32_t ft6x06_distance_up_down(ft6x06_ctx_t *ctx, uint8_t value);
 *******************************************************************************/
 #define   FT6X06_DISTANCE_ZOOM_BIT_MASK           0xFFU
 #define   FT6X06_DISTANCE_ZOOM_BIT_POSITION       0U
-int32_t ft6x06_distance_zoom(ft6x06_ctx_t *ctx, uint8_t value);
+int32_t ft6x06_distance_zoom(const ft6x06_ctx_t *ctx, uint8_t value);
 
 /*******************************************************************************
 * Register      : LIB_VER_H
@@ -525,7 +524,7 @@ int32_t ft6x06_distance_zoom(ft6x06_ctx_t *ctx, uint8_t value);
 *******************************************************************************/
 #define   FT6X06_LIB_VER_H_BIT_MASK           0xFFU
 #define   FT6X06_LIB_VER_H_BIT_POSITION       0U
-int32_t ft6x06_lib_ver_high(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_lib_ver_high(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : LIB_VER_L
@@ -536,7 +535,7 @@ int32_t ft6x06_lib_ver_high(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_LIB_VER_L_BIT_MASK           0xFFU
 #define   FT6X06_LIB_VER_L_BIT_POSITION       0U
-int32_t ft6x06_lib_ver_low(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_lib_ver_low(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : CIPHER
@@ -547,7 +546,7 @@ int32_t ft6x06_lib_ver_low(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_CIPHER_BIT_MASK           0xFFU
 #define   FT6X06_CIPHER_BIT_POSITION       0U
-int32_t ft6x06_cipher(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_cipher(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : G_MODE
@@ -558,7 +557,7 @@ int32_t ft6x06_cipher(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_G_MODE_BIT_MASK           0xFFU
 #define   FT6X06_G_MODE_BIT_POSITION       0U
-int32_t ft6x06_g_mode(ft6x06_ctx_t *ctx, uint8_t value);
+int32_t ft6x06_g_mode(const ft6x06_ctx_t *ctx, uint8_t value);
 
 /*******************************************************************************
 * Register      : PWR_MODE
@@ -569,7 +568,7 @@ int32_t ft6x06_g_mode(ft6x06_ctx_t *ctx, uint8_t value);
 *******************************************************************************/
 #define   FT6X06_PWR_MODE_BIT_MASK           0xFFU
 #define   FT6X06_PWR_MODE_BIT_POSITION       0U
-int32_t ft6x06_pwr_mode(ft6x06_ctx_t *ctx, uint8_t value);
+int32_t ft6x06_pwr_mode(const ft6x06_ctx_t *ctx, uint8_t value);
 
 /*******************************************************************************
 * Register      : FIRMID
@@ -580,7 +579,7 @@ int32_t ft6x06_pwr_mode(ft6x06_ctx_t *ctx, uint8_t value);
 *******************************************************************************/
 #define   FT6X06_FIRMID_BIT_MASK           0xFFU
 #define   FT6X06_FIRMID_BIT_POSITION       0U
-int32_t ft6x06_firm_id(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_firm_id(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : FOCALTECH_ID
@@ -591,7 +590,7 @@ int32_t ft6x06_firm_id(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_CHIP_ID_BIT_MASK           0xFFU
 #define   FT6X06_CHIP_ID_BIT_POSITION       0U
-int32_t ft6x06_chip_id(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_chip_id(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : RELEASE_CODE_ID
@@ -602,7 +601,7 @@ int32_t ft6x06_chip_id(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_RC_ID_BIT_MASK           0xFFU
 #define   FT6X06_RC_ID_BIT_POSITION       0U
-int32_t ft6x06_release_code_id(ft6x06_ctx_t *ctx, uint8_t *value);
+int32_t ft6x06_release_code_id(const ft6x06_ctx_t *ctx, uint8_t *value);
 
 /*******************************************************************************
 * Register      : STATE
@@ -613,7 +612,7 @@ int32_t ft6x06_release_code_id(ft6x06_ctx_t *ctx, uint8_t *value);
 *******************************************************************************/
 #define   FT6X06_STATE_BIT_MASK           0xFFU
 #define   FT6X06_STATE_BIT_POSITION       0U
-int32_t ft6x06_state(ft6x06_ctx_t *ctx, uint8_t value);
+int32_t ft6x06_state(const ft6x06_ctx_t *ctx, uint8_t value);
 
   /**
    * @}
@@ -640,4 +639,3 @@ int32_t ft6x06_state(ft6x06_ctx_t *ctx, uint8_t value);
 /**
  * @}
  */
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

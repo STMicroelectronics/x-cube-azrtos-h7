@@ -59,7 +59,7 @@ client disconnected from server
 
 #### <b> Error behaviors</b>
 
-+ The red LED is toggling to indicate any error that has occurred.
++ The red LED is toggling to indicate any error that has occurred while the green LED switch off.
 
 #### <b> Assumptions if any</b>
 

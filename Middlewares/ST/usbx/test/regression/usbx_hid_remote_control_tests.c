@@ -1,4 +1,4 @@
-/* TODO: some common stuff from storage we might want to pull out:
+/* Pending: some common stuff from storage we might want to pull out:
     -memory check - pretty good
     -connect and disconnect
     -getting class/instance
@@ -315,7 +315,7 @@ CHAR    *memory_pointer;
     global_slave_hid_parameter.ux_device_class_hid_parameter_report_length  = sizeof(hid_report_descriptor);
     global_slave_hid_parameter.ux_device_class_hid_parameter_callback       = slave_hid_callback;
 
-    /* Initilize the device hid class. The class is connected with interface 2. */
+    /* Initialize the device hid class. The class is connected with interface 2. */
     status =  ux_device_stack_class_register(_ux_system_slave_class_hid_name, ux_device_class_hid_entry,
                                              1, 2, (VOID *)&global_slave_hid_parameter);
     if(status!=UX_SUCCESS)

@@ -1161,7 +1161,6 @@ HAL_StatusTypeDef HAL_RTCEx_SetActiveTampers(RTC_HandleTypeDef *hrtc, const RTC_
   }
 
   WRITE_REG(TAMP->IER, IER);
-  WRITE_REG(TAMP->IER, IER);
   WRITE_REG(TAMP->ATCR1, ATCR1);
 #if defined(TAMP_ATCR2_ATOSEL1)
   WRITE_REG(TAMP->ATCR2, ATCR2);

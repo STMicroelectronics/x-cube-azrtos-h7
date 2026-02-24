@@ -266,7 +266,7 @@ UINT                            descriptor_size = HID_REPORT_LENGTH;
     hid_parameter.ux_slave_class_hid_instance_activate         = instance_activate_callback;
 
 
-    /* Initilize the device hid class. The class is connected with interface 2 */
+    /* Initialize the device hid class. The class is connected with interface 2 */
     status =  ux_device_stack_class_register(_ux_system_slave_class_hid_name, ux_device_class_hid_entry,
                                                 1,2, (VOID *)&hid_parameter);
     if(status!=UX_SUCCESS)

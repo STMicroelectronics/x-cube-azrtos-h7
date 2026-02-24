@@ -7,6 +7,24 @@
   ******************************************************************************
   */
 
+### V6.4.0 (16-01-2026) ###
+============================
+- Fix added in STM32 host controller driver interface.
+
+### V6.4.0 (02-12-2025) ###
+============================
+- HID device class, abort out endpoint during deactivate.
+- MSC device class, correct return value in standalone mode.
+
+### V6.4.0 (22-10-2025) ###
+============================
+- Remove forbidden words and correct code spelling mistakes.
+
+### V6.4.0 (22-08-2025) ###
+============================
+- Align version against the controller drivers
+- Update README.md
+
 ### V6.4.0 (06-09-2024) ###
 ============================
 - Add STM32N6/STM32U3 series to Azure RTOS licensed hardware list

@@ -8,7 +8,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2020-2021 STMicroelectronics.
+  * Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -65,7 +65,7 @@
 #define FX_NAND_DISK_LENGTH                        28
 
 /* Total sectors */
-#define FX_NAND_DISK_TOTAL_SECTORS                (((TOTAL_BLOCKS-1) * PHYSICAL_PAGES_PER_BLOCK * BYTES_PER_PHYSICAL_PAGE)/ FX_NAND_DISK_SECTOR_SIZE)
+#define FX_NAND_DISK_TOTAL_SECTORS                (((CUSTOM_TOTAL_BLOCKS-1) * CUSTOM_PHYSICAL_PAGES_PER_BLOCK * CUSTOM_BYTES_PER_PHYSICAL_PAGE)/ FX_NAND_DISK_SECTOR_SIZE)
 
 /* Number of FATs */
 #define FX_NAND_DISK_NUMBER_OF_FATS                1
@@ -74,7 +74,7 @@
 #define FX_NAND_DISK_DIRECTORY_ENTRIES             32
 
 /* Sector size */
-#define FX_NAND_DISK_SECTOR_SIZE                   BYTES_PER_PHYSICAL_PAGE /* sector size is always the page size of the underlying NAND hardware */
+#define FX_NAND_DISK_SECTOR_SIZE                   CUSTOM_BYTES_PER_PHYSICAL_PAGE /* sector size is always the page size of the underlying NAND hardware */
 
 /* Sectors per cluster */
 #define FX_NAND_DISK_SECTORS_PER_CLUSTER           1
@@ -102,6 +102,8 @@ FX_FILE         fx_file;
 
 /* Define ThreadX global data structures.  */
 TX_THREAD       fx_thread;
+
+ULONG fx_lx_nand_custom_driver_buffer[(7 * CUSTOM_TOTAL_BLOCKS + 4 + 2 * (CUSTOM_BYTES_PER_PHYSICAL_PAGE + CUSTOM_SPARE_BYTES_PER_PAGE)) / sizeof(ULONG)];
 
 /* USER CODE END PV */
 
@@ -140,7 +142,7 @@ UINT MX_FileX_Init(VOID *memory_ptr)
   ret = tx_byte_allocate(byte_pool, &pointer, FX_APP_THREAD_STACK_SIZE, TX_NO_WAIT);
 
   /* Check FX_APP_THREAD_STACK_SIZE allocation*/
-  if (ret != FX_SUCCESS)
+  if (ret != TX_SUCCESS)
   {
     return TX_POOL_ERROR;
   }

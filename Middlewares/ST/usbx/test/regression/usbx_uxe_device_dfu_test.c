@@ -325,7 +325,7 @@ ULONG                   test_n;
     dfu_parameter.ux_slave_class_dfu_parameter_framework                       =  UX_NULL;
     dfu_parameter.ux_slave_class_dfu_parameter_framework_length                =  DEVICE_FRAMEWORK_LENGTH_DFU;
 
-    /* Initilize the device dfu class. The class is connected with interface 1 on configuration 1. */
+    /* Initialize the device dfu class. The class is connected with interface 1 on configuration 1. */
     // status =  ux_device_stack_class_register(_ux_system_slave_class_dfu_name, ux_device_class_dfu_entry, 
     //                                          1, 0, (VOID *)&dfu_parameter);
     status =  ux_device_stack_class_register(_ux_system_slave_class_dfu_name, ux_device_class_dfu_entry, 

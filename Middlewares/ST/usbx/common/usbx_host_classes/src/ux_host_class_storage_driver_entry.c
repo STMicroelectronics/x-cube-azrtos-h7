@@ -81,7 +81,7 @@ VOID    _ux_host_class_storage_driver_entry(UX_MEDIA *media);
 /*    the proper USB storage class functions.                             */
 /*                                                                        */
 /*    When the entry is for storage with FX support (not in standalone    */
-/*    mode, and with FileX), the FX media is openned in storage mount     */
+/*    mode, and with FileX), the FX media is opened in storage mount      */
 /*    flow, and can be directly used in application after mounted.        */
 /*                                                                        */
 /*    When the entry is for no FX mode (FX in external module, and USBX   */

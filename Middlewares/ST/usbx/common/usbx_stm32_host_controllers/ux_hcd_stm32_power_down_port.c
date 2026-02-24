@@ -72,6 +72,8 @@
 /**************************************************************************/
 UINT  _ux_hcd_stm32_power_down_port(UX_HCD_STM32 *hcd_stm32, ULONG port_index)
 {
+  UNUSED(hcd_stm32);
+  UNUSED(port_index);
 
     /* Return error status.  */
     return(UX_FUNCTION_NOT_SUPPORTED);

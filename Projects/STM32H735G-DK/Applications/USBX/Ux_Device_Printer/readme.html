@@ -162,12 +162,19 @@ DMA</li>
 <h3 id="hardware-and-software-environment"><b>Hardware and Software
 environment</b></h3>
 <ul>
-<li>This application runs on STM32H735xx devices.</li>
-<li>This application has been tested with STMicroelectronics STM32H735G-DK
-boards revision: MB1520-H735I-B02 and can be easily tailored to any
-other supported device and development board.</li>
-<li>This application uses USART3 to display logs, the hyperterminal
-configuration is as follows:
+<li><p>This application runs on STM32H735xx devices.</p></li>
+<li><p>This application has been tested with STMicroelectronics
+STM32H735G-DK boards revision: MB1520-H735I-B02 and can be easily
+tailored to any other supported device and development board.</p></li>
+<li><p>STM32H735G-DK Set-up:</p>
+<ul>
+<li>JP7 must be left unconnected (USBFS position) to ensure proper USB
+unplug/plug detection and functionality. Connecting JP7 may prevent the
+device from correctly handling USB cable insertion and removal
+events.</li>
+</ul></li>
+<li><p>This application uses USART3 to display logs, the hyperterminal
+configuration is as follows:</p>
 <ul>
 <li>BaudRate = 115200 baud</li>
 <li>Word Length = 8 Bits</li>

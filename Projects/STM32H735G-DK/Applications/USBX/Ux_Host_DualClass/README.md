@@ -128,7 +128,7 @@ Connectivity, USBXHost, FileX, ThreadX, HID, Mouse, Keyboard, MSC, Mass Storage,
 
   - STM32H735G-DK Set-up
     - Plug the USB device (mouse, keyboard, flash disk) into the STM32H735G-DK board through 'USB micro A-Male to A-Female' cable to the connector:
-      - CN14 : to use USB High Speed OTG IP in full speed (HS_IN_FS)
+      - CN14 : to use USB High Speed OTG IP in full speed (HS_IN_FS).
     - Connect ST-Link cable to the PC USB port to display data on the HyperTerminal.
 
   - A virtual COM port will then appear in the HyperTerminal:

@@ -286,6 +286,7 @@ void App_ThreadX_LowPower_Exit(void);
 /*#define TX_LOW_POWER_USER_TIMER_ADJUST */
 
 #endif
+
 /* USER CODE BEGIN 2 */
 
 /* Define the user extension field of the thread control block.*/

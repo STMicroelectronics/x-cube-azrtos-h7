@@ -596,7 +596,7 @@ UINT                    status;
 
     case UX_HOST_CLASS_HID_ENUM_DONE                     :
 
-        /* Free temperary memory.  */
+        /* Free temporary memory.  */
         if (hid -> ux_host_class_hid_allocated)
         {
             _ux_utility_memory_free(hid -> ux_host_class_hid_allocated);

@@ -152,5 +152,13 @@ void HAL_SD_MspDeInit(SD_HandleTypeDef* sdHandle)
 }
 
 /* USER CODE BEGIN 1 */
+void MX_SDMMC1_SD_DeInit(void)
+{
+  if (HAL_SD_DeInit(&hsd1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
 
 /* USER CODE END 1 */
+

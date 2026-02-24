@@ -19,12 +19,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "app_threadx.h"
 #include "main.h"
-#include "sdmmc.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "sdmmc.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -67,7 +66,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  UINT status;
+
   /* USER CODE END 1 */
 
   /* MPU Configuration--------------------------------------------------------*/
@@ -99,21 +98,8 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_SDMMC1_SD_Init();
   /* USER CODE BEGIN 2 */
-  /* Check if SD card is present */
-  if(HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_5) == GPIO_PIN_RESET)
-  {
-    Error_Handler();
-  }
 
-  /* Get SD card info */
-  status = HAL_SD_GetCardInfo(&hsd1, &USBD_SD_CardInfo);
-
-  if (status != HAL_OK)
-  {
-    Error_Handler();
-  }
   /* USER CODE END 2 */
 
   MX_ThreadX_Init();

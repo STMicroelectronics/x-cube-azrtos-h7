@@ -16,28 +16,28 @@
   *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef OV9655_H
 #define OV9655_H
 
 #ifdef __cplusplus
- extern "C" {
-#endif 
+extern "C" {
+#endif
 
 /* Includes ------------------------------------------------------------------*/
 #include "ov9655_reg.h"
 #include <stddef.h>
-   
+
 /** @addtogroup BSP
   * @{
-  */ 
+  */
 
 /** @addtogroup Components
   * @{
-  */ 
-  
+  */
+
 /** @addtogroup ov9655
   * @{
   */
@@ -46,34 +46,34 @@
   * @{
   */
 
-typedef int32_t (*OV9655_Init_Func)    (void);
-typedef int32_t (*OV9655_DeInit_Func)  (void);
-typedef int32_t (*OV9655_GetTick_Func) (void);
-typedef int32_t (*OV9655_Delay_Func)   (uint32_t);
-typedef int32_t (*OV9655_WriteReg_Func)(uint16_t, uint16_t, uint8_t*, uint16_t);
-typedef int32_t (*OV9655_ReadReg_Func) (uint16_t, uint16_t, uint8_t*, uint16_t);
+typedef int32_t (*OV9655_Init_Func)(void);
+typedef int32_t (*OV9655_DeInit_Func)(void);
+typedef int32_t (*OV9655_GetTick_Func)(void);
+typedef int32_t (*OV9655_Delay_Func)(uint32_t);
+typedef int32_t (*OV9655_WriteReg_Func)(uint16_t, uint16_t, uint8_t *, uint16_t);
+typedef int32_t (*OV9655_ReadReg_Func)(uint16_t, uint16_t, uint8_t *, uint16_t);
 
 typedef struct
 {
   OV9655_Init_Func          Init;
   OV9655_DeInit_Func        DeInit;
-  uint16_t                  Address;  
+  uint16_t                  Address;
   OV9655_WriteReg_Func      WriteReg;
-  OV9655_ReadReg_Func       ReadReg; 
-  OV9655_GetTick_Func       GetTick; 
+  OV9655_ReadReg_Func       ReadReg;
+  OV9655_GetTick_Func       GetTick;
 } OV9655_IO_t;
 
- 
+
 typedef struct
 {
   OV9655_IO_t         IO;
-  ov9655_ctx_t        Ctx;   
+  ov9655_ctx_t        Ctx;
   uint8_t             IsInitialized;
 } OV9655_Object_t;
 
-typedef struct 
-{       
-  uint32_t Config_Resolution;  
+typedef struct
+{
+  uint32_t Config_Resolution;
   uint32_t Config_LightMode;
   uint32_t Config_SpecialEffect;
   uint32_t Config_Brightness;
@@ -87,45 +87,45 @@ typedef struct
 
 typedef struct
 {
-  int32_t  (*Init              )(OV9655_Object_t*, uint32_t, uint32_t);
-  int32_t  (*DeInit            )(OV9655_Object_t*);    
-  int32_t  (*ReadID            )(OV9655_Object_t*, uint32_t*); 
-  int32_t  (*GetCapabilities   )(OV9655_Object_t*, OV9655_Capabilities_t*);  
-  int32_t  (*SetLightMode      )(OV9655_Object_t*, uint32_t);
-  int32_t  (*SetColorEffect    )(OV9655_Object_t*, uint32_t);
-  int32_t  (*SetBrightness     )(OV9655_Object_t*, int32_t);
-  int32_t  (*SetSaturation     )(OV9655_Object_t*, int32_t);
-  int32_t  (*SetContrast       )(OV9655_Object_t*, int32_t);
-  int32_t  (*SetHueDegree      )(OV9655_Object_t*, int32_t);
-  int32_t  (*MirrorFlipConfig  )(OV9655_Object_t*, uint32_t);
-  int32_t  (*ZoomConfig        )(OV9655_Object_t*, uint32_t);
-  int32_t  (*SetResolution     )(OV9655_Object_t*, uint32_t);  
-  int32_t  (*GetResolution     )(OV9655_Object_t*, uint32_t*);
-  int32_t  (*SetPixelFormat    )(OV9655_Object_t*, uint32_t);  
-  int32_t  (*GetPixelFormat    )(OV9655_Object_t*, uint32_t*);  
-  int32_t  (*NightModeConfig   )(OV9655_Object_t*, uint32_t);
-}OV9655_CAMERA_Drv_t;
+  int32_t (*Init)(OV9655_Object_t *, uint32_t, uint32_t);
+  int32_t (*DeInit)(OV9655_Object_t *);
+  int32_t (*ReadID)(OV9655_Object_t *, uint32_t *);
+  int32_t (*GetCapabilities)(OV9655_Object_t *, OV9655_Capabilities_t *);
+  int32_t (*SetLightMode)(OV9655_Object_t *, uint32_t);
+  int32_t (*SetColorEffect)(OV9655_Object_t *, uint32_t);
+  int32_t (*SetBrightness)(OV9655_Object_t *, int32_t);
+  int32_t (*SetSaturation)(OV9655_Object_t *, int32_t);
+  int32_t (*SetContrast)(OV9655_Object_t *, int32_t);
+  int32_t (*SetHueDegree)(OV9655_Object_t *, int32_t);
+  int32_t (*MirrorFlipConfig)(OV9655_Object_t *, uint32_t);
+  int32_t (*ZoomConfig)(OV9655_Object_t *, uint32_t);
+  int32_t (*SetResolution)(OV9655_Object_t *, uint32_t);
+  int32_t (*GetResolution)(OV9655_Object_t *, uint32_t *);
+  int32_t (*SetPixelFormat)(OV9655_Object_t *, uint32_t);
+  int32_t (*GetPixelFormat)(OV9655_Object_t *, uint32_t *);
+  int32_t (*NightModeConfig)(OV9655_Object_t *, uint32_t);
+} OV9655_CAMERA_Drv_t;
 
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup OV9655_Exported_Constants Exported Constants
   * @{
   */
 #define OV9655_OK                      (0)
 #define OV9655_ERROR                   (-1)
-/** 
- * @brief  OV9655 Features Parameters  
- */
-/* Camera resolutions */ 
+/**
+  * @brief  OV9655 Features Parameters
+  */
+/* Camera resolutions */
 #define OV9655_R160x120                 0x00U   /* QQVGA Resolution           */
 #define OV9655_R320x240                 0x01U   /* QVGA Resolution            */
 #define OV9655_R480x272                 0x02U   /* 480x272 Resolution: Not 
                                                    supported                  */
 #define OV9655_R640x480                 0x03U   /* VGA Resolution             */
 
-/* Camera Pixel Format */ 
+/* Camera Pixel Format */
 #define OV9655_RGB565                   0x00U   /* Pixel Format RGB565        */
 #define OV9655_RGB888                   0x01U   /* Pixel Format RGB888:  
                                                    Not supported              */
@@ -136,7 +136,7 @@ typedef struct
 #define OV9655_FLIP                     0x01U   /* Set camera flip config     */
 #define OV9655_MIRROR                   0x02U   /* Set camera mirror config   */
 #define OV9655_MIRROR_FLIP              0x03U   /* Set camera mirror and flip */
- 
+
 /* Zoom */
 #define OV9655_ZOOM_x8                  0x00U   /* Set zoom to x8             */
 #define OV9655_ZOOM_x4                  0x11U   /* Set zoom to x4             */
@@ -147,12 +147,12 @@ typedef struct
 #define OV9655_COLOR_EFFECT_NONE        0x00U   /* No effect                  */
 #define OV9655_COLOR_EFFECT_BLUE        0x01U   /* Blue effect                */
 #define OV9655_COLOR_EFFECT_RED         0x02U   /* Red effect                 */
-#define OV9655_COLOR_EFFECT_GREEN       0x04U   /* Green effect               */   
-#define OV9655_COLOR_EFFECT_BW          0x08U   /* Black and White effect     */ 
-#define OV9655_COLOR_EFFECT_SEPIA       0x10U   /* Sepia effect               */ 
-#define OV9655_COLOR_EFFECT_NEGATIVE    0x20U   /* Negative effect            */ 
+#define OV9655_COLOR_EFFECT_GREEN       0x04U   /* Green effect               */
+#define OV9655_COLOR_EFFECT_BW          0x08U   /* Black and White effect     */
+#define OV9655_COLOR_EFFECT_SEPIA       0x10U   /* Sepia effect               */
+#define OV9655_COLOR_EFFECT_NEGATIVE    0x20U   /* Negative effect            */
 
-   
+
 /* Light Mode */
 #define OV9655_LIGHT_AUTO               0x00U   /* Light Mode Auto            */
 #define OV9655_LIGHT_SUNNY              0x01U   /* Light Mode Sunny           */
@@ -162,16 +162,16 @@ typedef struct
 
 /* Night Mode */
 #define NIGHT_MODE_DISABLE              0x00U   /* Disable night mode         */
-#define NIGHT_MODE_ENABLE               0x01U   /* Enable night mode          */   
-    
+#define NIGHT_MODE_ENABLE               0x01U   /* Enable night mode          */
+
 /**
   * @}
   */
-  
+
 /** @defgroup OV9655_Exported_Functions OV9655 Exported Functions
   * @{
   */
-int32_t OV9655_RegisterBusIO (OV9655_Object_t *pObj, OV9655_IO_t *pIO);
+int32_t OV9655_RegisterBusIO(OV9655_Object_t *pObj, OV9655_IO_t *pIO);
 int32_t OV9655_Init(OV9655_Object_t *pObj, uint32_t Resolution, uint32_t PixelFormat);
 int32_t OV9655_DeInit(OV9655_Object_t *pObj);
 int32_t OV9655_ReadID(OV9655_Object_t *pObj, uint32_t *Id);
@@ -194,7 +194,7 @@ int32_t OV9655_NightModeConfig(OV9655_Object_t *pObj, uint32_t Cmd);
 extern OV9655_CAMERA_Drv_t   OV9655_CAMERA_Driver;
 /**
   * @}
-  */    
+  */
 #ifdef __cplusplus
 }
 #endif
@@ -202,14 +202,14 @@ extern OV9655_CAMERA_Drv_t   OV9655_CAMERA_Driver;
 #endif /* OV9655_H */
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

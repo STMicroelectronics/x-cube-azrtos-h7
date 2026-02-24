@@ -86,6 +86,14 @@ UX_HCD_STM32_ED       *ed;
     /* Finish current transfer.  */
     _ux_hcd_stm32_request_trans_finish(hcd_stm32, ed);
 
+    /* Free ed data resources */
+    if ((ed -> ux_stm32_ed_data != UX_NULL) && (ed ->ux_stm32_ed_data_free == UX_HCD_STM32_ED_STATUS_ALIGNED_BUFFER_PENDING_FREE))
+    {
+      _ux_utility_memory_free(ed -> ux_stm32_ed_data);
+      ed -> ux_stm32_ed_data = UX_NULL;
+      ed ->ux_stm32_ed_data_free = UX_HCD_STM32_ED_STATUS_ALIGNED_BUFFER_FREE_DONE;
+    }
+
     /* Reset the data0/data1 toggle bit.  */
     hcd_stm32 -> hcd_handle -> hc[ed -> ux_stm32_ed_channel].toggle_in = 0;
     hcd_stm32 -> hcd_handle -> hc[ed -> ux_stm32_ed_channel].toggle_out = 0;

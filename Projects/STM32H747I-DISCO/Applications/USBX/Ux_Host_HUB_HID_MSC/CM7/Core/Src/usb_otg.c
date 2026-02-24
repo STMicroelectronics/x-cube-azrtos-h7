@@ -41,14 +41,13 @@ HCD_HandleTypeDef hhcd_USB_OTG_HS;
 
 void MX_USB_OTG_HS_HCD_Init(void)
 {
+  /* USER CODE BEGIN USB_OTG_HS_HCD_Init 0 */
 
-  /* USER CODE BEGIN USB_OTG_HS_Init 0 */
+  /* USER CODE END USB_OTG_HS_HCD_Init 0 */
 
-  /* USER CODE END USB_OTG_HS_Init 0 */
-
-  /* USER CODE BEGIN USB_OTG_HS_Init 1 */
+  /* USER CODE BEGIN USB_OTG_HS_HCD_Init 1 */
   memset(&hhcd_USB_OTG_HS, 0x0, sizeof(HCD_HandleTypeDef));
-  /* USER CODE END USB_OTG_HS_Init 1 */
+  /* USER CODE END USB_OTG_HS_HCD_Init 1 */
   hhcd_USB_OTG_HS.Instance = USB_OTG_HS;
   hhcd_USB_OTG_HS.Init.Host_channels = 16;
   hhcd_USB_OTG_HS.Init.speed = HCD_SPEED_HIGH;
@@ -61,9 +60,9 @@ void MX_USB_OTG_HS_HCD_Init(void)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN USB_OTG_HS_Init 2 */
+  /* USER CODE BEGIN USB_OTG_HS_HCD_Init 2 */
 
-  /* USER CODE END USB_OTG_HS_Init 2 */
+  /* USER CODE END USB_OTG_HS_HCD_Init 2 */
 
 }
 
@@ -74,9 +73,9 @@ void HAL_HCD_MspInit(HCD_HandleTypeDef* hcdHandle)
   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
   if(hcdHandle->Instance==USB_OTG_HS)
   {
-  /* USER CODE BEGIN USB_OTG_HS_MspInit 0 */
+  /* USER CODE BEGIN USB_OTG_HS_HCD_MspInit 0 */
 
-  /* USER CODE END USB_OTG_HS_MspInit 0 */
+  /* USER CODE END USB_OTG_HS_HCD_MspInit 0 */
 
   /** Initializes the peripherals clock
   */
@@ -161,9 +160,9 @@ void HAL_HCD_MspInit(HCD_HandleTypeDef* hcdHandle)
     /* USB_OTG_HS interrupt Init */
     HAL_NVIC_SetPriority(OTG_HS_IRQn, 6, 0);
     HAL_NVIC_EnableIRQ(OTG_HS_IRQn);
-  /* USER CODE BEGIN USB_OTG_HS_MspInit 1 */
+  /* USER CODE BEGIN USB_OTG_HS_HCD_MspInit 1 */
 
-  /* USER CODE END USB_OTG_HS_MspInit 1 */
+  /* USER CODE END USB_OTG_HS_HCD_MspInit 1 */
   }
 }
 
@@ -172,9 +171,9 @@ void HAL_HCD_MspDeInit(HCD_HandleTypeDef* hcdHandle)
 
   if(hcdHandle->Instance==USB_OTG_HS)
   {
-  /* USER CODE BEGIN USB_OTG_HS_MspDeInit 0 */
+  /* USER CODE BEGIN USB_OTG_HS_HCD_MspDeInit 0 */
 
-  /* USER CODE END USB_OTG_HS_MspDeInit 0 */
+  /* USER CODE END USB_OTG_HS_HCD_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_USB_OTG_HS_CLK_DISABLE();
     __HAL_RCC_USB_OTG_HS_ULPI_CLK_DISABLE();
@@ -206,12 +205,13 @@ void HAL_HCD_MspDeInit(HCD_HandleTypeDef* hcdHandle)
 
     /* USB_OTG_HS interrupt Deinit */
     HAL_NVIC_DisableIRQ(OTG_HS_IRQn);
-  /* USER CODE BEGIN USB_OTG_HS_MspDeInit 1 */
+  /* USER CODE BEGIN USB_OTG_HS_HCD_MspDeInit 1 */
 
-  /* USER CODE END USB_OTG_HS_MspDeInit 1 */
+  /* USER CODE END USB_OTG_HS_HCD_MspDeInit 1 */
   }
 }
 
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
+

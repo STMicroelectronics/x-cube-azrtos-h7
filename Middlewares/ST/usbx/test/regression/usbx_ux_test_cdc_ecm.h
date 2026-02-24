@@ -556,7 +556,7 @@ UINT num_iters;
         if (socket_type == BASIC_TEST_TCP)
 
             /* Wait for all ACKs to complete. */
-            /* TODO: find better way. */
+            /* Pending: find better way. */
             tx_thread_sleep(MS_TO_TICK(1000));
 
         /* Reset for next test. */

@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2015-2019 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -103,7 +102,9 @@ typedef struct
 typedef int32_t (*FT6X06_Init_Func)    (void);
 typedef int32_t (*FT6X06_DeInit_Func)  (void);
 typedef int32_t (*FT6X06_GetTick_Func) (void);
+#if (FT6X06_AUTO_CALIBRATION_ENABLED == 1)
 typedef int32_t (*FT6X06_Delay_Func)   (uint32_t);
+#endif /* FT6X06_AUTO_CALIBRATION_ENABLED == 1 */
 typedef int32_t (*FT6X06_WriteReg_Func)(uint16_t, uint16_t, uint8_t*, uint16_t);
 typedef int32_t (*FT6X06_ReadReg_Func) (uint16_t, uint16_t, uint8_t*, uint16_t);
 
@@ -159,11 +160,11 @@ typedef struct
   int32_t ( *GetState             ) ( FT6X06_Object_t *, FT6X06_State_t* );
   int32_t ( *GetMultiTouchState   ) ( FT6X06_Object_t *, FT6X06_MultiTouch_State_t* );
   int32_t ( *GetGesture           ) ( FT6X06_Object_t *, uint8_t* );
-  int32_t ( *GetCapabilities      ) ( FT6X06_Object_t *, FT6X06_Capabilities_t * );
+  int32_t ( *GetCapabilities      ) ( const FT6X06_Object_t *, FT6X06_Capabilities_t * );
   int32_t ( *EnableIT             ) ( FT6X06_Object_t * );
   int32_t ( *DisableIT            ) ( FT6X06_Object_t * );
-  int32_t ( *ClearIT              ) ( FT6X06_Object_t * );
-  int32_t ( *ITStatus             ) ( FT6X06_Object_t * ); 
+  int32_t ( *ClearIT              ) ( const FT6X06_Object_t * );
+  int32_t ( *ITStatus             ) ( const FT6X06_Object_t * ); 
 } FT6X06_TS_Drv_t;
 /**
  * @}
@@ -194,9 +195,9 @@ int32_t FT6X06_GetMultiTouchState(FT6X06_Object_t *pObj, FT6X06_MultiTouch_State
 int32_t FT6X06_GetGesture(FT6X06_Object_t *pObj, uint8_t *GestureId);
 int32_t FT6X06_EnableIT(FT6X06_Object_t *pObj);
 int32_t FT6X06_DisableIT(FT6X06_Object_t *pObj);
-int32_t FT6X06_ITStatus(FT6X06_Object_t *pObj);
-int32_t FT6X06_ClearIT(FT6X06_Object_t *pObj);
-int32_t FT6X06_GetCapabilities(FT6X06_Object_t *pObj, FT6X06_Capabilities_t *Capabilities);
+int32_t FT6X06_ITStatus(const FT6X06_Object_t *pObj);
+int32_t FT6X06_ClearIT(const FT6X06_Object_t *pObj);
+int32_t FT6X06_GetCapabilities(const FT6X06_Object_t *pObj, FT6X06_Capabilities_t *Capabilities);
 
 /**
  * @}
@@ -218,4 +219,3 @@ int32_t FT6X06_GetCapabilities(FT6X06_Object_t *pObj, FT6X06_Capabilities_t *Cap
 /**
  * @}
  */
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -492,7 +492,7 @@ UINT status;
         return status;
     }
 
-    /* Initilize the device storage class. The class is connected with interface 0 on configuration 1. */
+    /* Initialize the device storage class. The class is connected with interface 0 on configuration 1. */
     status =  ux_device_stack_class_register(_ux_system_slave_class_storage_name, ux_device_class_storage_entry, 
                                              1, 0, (VOID *)&storage_parameter);
     if(status!=UX_SUCCESS)

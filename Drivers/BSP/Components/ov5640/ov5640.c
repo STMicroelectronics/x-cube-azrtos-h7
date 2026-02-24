@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2019-2020 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -141,14 +140,6 @@ int32_t OV5640_Init(OV5640_Object_t *pObj, uint32_t Resolution, uint32_t PixelFo
     {OV5640_SCCB_SYSTEM_CTRL1, 0x11},
     {OV5640_SYSTEM_CTROL0, 0x82},
     {OV5640_SCCB_SYSTEM_CTRL1, 0x03},
-    {OV5640_PAD_OUTPUT_ENABLE01, 0xFF},
-    {OV5640_PAD_OUTPUT_ENABLE02, 0xf3},
-    {OV5640_SC_PLL_CONTRL0, 0x18},
-    {OV5640_SYSTEM_CTROL0, 0x02},
-    {OV5640_SC_PLL_CONTRL1, 0x41},
-    {OV5640_SC_PLL_CONTRL2, 0x30},
-    {OV5640_SC_PLL_CONTRL3, 0x13},
-    {OV5640_SYSTEM_ROOT_DIVIDER, 0x01},
     {0x3630, 0x36},
     {0x3631, 0x0e},
     {0x3632, 0xe2},
@@ -202,10 +193,11 @@ int32_t OV5640_Init(OV5640_Object_t *pObj, uint32_t Resolution, uint32_t PixelFo
     {OV5640_TIMING_DVPHO_LOW, 0x20},
     {OV5640_TIMING_DVPVO_HIGH, 0x02},
     {OV5640_TIMING_DVPVO_LOW, 0x58},
-    {OV5640_TIMING_HTS_HIGH, 0x06},
-    {OV5640_TIMING_HTS_LOW, 0x40},
-    {OV5640_TIMING_VTS_HIGH, 0x03},
-    {OV5640_TIMING_VTS_LOW, 0xe8},
+    /* For 800x480 resolution: OV5640_TIMING_HTS=0x790, OV5640_TIMING_VTS=0x440 */
+    {OV5640_TIMING_HTS_HIGH, 0x07},
+    {OV5640_TIMING_HTS_LOW, 0x90},
+    {OV5640_TIMING_VTS_HIGH, 0x04},
+    {OV5640_TIMING_VTS_LOW, 0x40},
     {OV5640_TIMING_HOFFSET_HIGH, 0x00},
     {OV5640_TIMING_HOFFSET_LOW, 0x10},
     {OV5640_TIMING_VOFFSET_HIGH, 0x00},
@@ -420,6 +412,35 @@ int32_t OV5640_Init(OV5640_Object_t *pObj, uint32_t Resolution, uint32_t PixelFo
           }
         }
       }
+
+      if(ret == OV5640_OK)
+      {
+        /* Set configuration for Serial Interface */
+        if(pObj->Mode == SERIAL_MODE)
+        {
+          if(OV5640_EnableMIPIMode(pObj) != OV5640_OK)
+          {
+            ret = OV5640_ERROR;
+          }
+          else if(OV5640_SetMIPIVirtualChannel(pObj, pObj->VirtualChannelID) != OV5640_OK)
+          {
+            ret = OV5640_ERROR;
+          }
+        }
+        else
+        {
+          /* Set configuration for parallel Interface */
+          if(OV5640_EnableDVPMode(pObj) != OV5640_OK)
+          {
+            ret = OV5640_ERROR;
+          }
+          else
+          {
+            ret = OV5640_OK;
+          }
+        }
+      }
+
 
       if (ret == OV5640_OK)
       {
@@ -1953,7 +1974,7 @@ int32_t OV5640_ColorbarModeConfig(OV5640_Object_t *pObj, uint32_t Cmd)
 /**
   * @brief  Set the camera pixel clock
   * @param  pObj  pointer to component object
-  * @param  ClockValue Can be OV5640_PCLK_24M, OV5640_PCLK_12M, OV5640_PCLK_9M
+  * @param  ClockValue Can be OV5640_PCLK_48M, OV5640_PCLK_24M, OV5640_PCLK_12M, OV5640_PCLK_9M
   *                    OV5640_PCLK_8M, OV5640_PCLK_7M
   * @retval Component status
   */
@@ -1961,46 +1982,196 @@ int32_t OV5640_SetPCLK(OV5640_Object_t *pObj, uint32_t ClockValue)
 {
   int32_t ret;
   uint8_t tmp;
-  
-  switch(ClockValue)
+
+  switch (ClockValue)
   {
-  case OV5640_PCLK_7M:
-    tmp = 0x38;
-    ret = ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL2, &tmp, 1);
-    tmp = 0x16;
-    ret += ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL3, &tmp, 1);
-    break;
-  case OV5640_PCLK_8M:
-    tmp = 0x40;
-    ret = ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL2, &tmp, 1);
-    tmp = 0x16;
-    ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL3, &tmp, 1);
-    break;
-  case OV5640_PCLK_9M:
-    ret = ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL2, &tmp, 1);
-    tmp = 0x18;
-    ret += ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL3, &tmp, 1);
-    break;
-  case OV5640_PCLK_12M:
-    ret = ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL2, &tmp, 1);
-    tmp = 0x16;
-    ret += ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL3, &tmp, 1);
-    break;
-  case OV5640_PCLK_24M:
-  default:
-    tmp = 0x60;  
-    ret = ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL2, &tmp, 1);
-    tmp = 0x13;
-    ret += ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL3, &tmp, 1);
-    break;
+    case OV5640_PCLK_7M:
+      tmp = 0x38;
+      ret = ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL2, &tmp, 1);
+      tmp = 0x16;
+      ret += ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL3, &tmp, 1);
+      break;
+    case OV5640_PCLK_8M:
+      tmp = 0x40;
+      ret = ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL2, &tmp, 1);
+      tmp = 0x16;
+      ret += ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL3, &tmp, 1);
+      break;
+    case OV5640_PCLK_9M:
+      tmp = 0x60;
+      ret = ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL2, &tmp, 1);
+      tmp = 0x18;
+      ret += ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL3, &tmp, 1);
+      break;
+    case OV5640_PCLK_12M:
+      tmp = 0x60;
+      ret = ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL2, &tmp, 1);
+      tmp = 0x16;
+      ret += ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL3, &tmp, 1);
+      break;
+    case OV5640_PCLK_48M:
+      tmp = 0x60;
+      ret = ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL2, &tmp, 1);
+      tmp = 0x03;
+      ret += ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL3, &tmp, 1);
+      break;
+    case OV5640_PCLK_24M:
+    default:
+      tmp = 0x60;
+      ret = ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL2, &tmp, 1);
+      tmp = 0x13;
+      ret += ov5640_write_reg(&pObj->Ctx, OV5640_SC_PLL_CONTRL3, &tmp, 1);
+      break;
   }
-  
+
   if (ret != OV5640_OK)
   {
     ret = OV5640_ERROR;
   }
-  
+
   return ret;
+}
+
+/**
+  * @brief  Enable DVP(Digital Video Port) Mode: Parallel Data Output
+  * @param  pObj  pointer to component object
+  * @retval Component status
+  */
+int OV5640_EnableDVPMode(OV5640_Object_t *pObj)
+{
+  uint32_t index;
+  int32_t ret = OV5640_OK;
+  uint8_t tmp;
+
+
+  static const uint16_t regs[10][2] =
+  {
+    /* Configure the IO Pad, output FREX/VSYNC/HREF/PCLK/D[9:2]/GPIO0/GPIO1 */
+    {OV5640_PAD_OUTPUT_ENABLE01, 0xFF},
+    {OV5640_PAD_OUTPUT_ENABLE02, 0xF3},
+    {0x302e, 0x00},
+    /* Unknown DVP control configuration */
+    {0x471c, 0x50},
+    {OV5640_MIPI_CONTROL00, 0x58},
+    /* Timing configuration */
+    {OV5640_SC_PLL_CONTRL0, 0x18},
+    {OV5640_SC_PLL_CONTRL1, 0x41},
+    {OV5640_SC_PLL_CONTRL2, 0x60},
+    {OV5640_SC_PLL_CONTRL3, 0x13},
+    {OV5640_SYSTEM_ROOT_DIVIDER, 0x01},
+  };
+
+  for(index=0; index < sizeof(regs) / 4U ; index++)
+  {
+    tmp = (uint8_t)regs[index][1];
+    if(ov5640_write_reg(&pObj->Ctx, regs[index][0], &tmp, 1) != OV5640_OK)
+    {
+      ret = OV5640_ERROR;
+      break;
+    }
+  }
+
+  return ret;
+}
+
+/**
+  * @brief  Enable MIPI (Mobile Industry Processor Interface) Mode: Serial port
+  * @param  pObj  pointer to component object
+  * @retval Component status
+  */
+int32_t OV5640_EnableMIPIMode(OV5640_Object_t *pObj)
+{
+  int32_t ret = OV5640_OK;
+  uint8_t tmp;
+  uint32_t index;
+
+  static const uint16_t regs[14][2] =
+  {
+    /* PAD settings */
+    {OV5640_PAD_OUTPUT_ENABLE01, 0},
+    {OV5640_PAD_OUTPUT_ENABLE02, 0},
+    {0x302e, 0x08},
+    /* Pixel clock period */
+    {OV5640_PCLK_PERIOD, 0x23},
+    /* Timing configuration */
+    {OV5640_SC_PLL_CONTRL0, 0x18},
+    {OV5640_SC_PLL_CONTRL1, 0x12},
+    {OV5640_SC_PLL_CONTRL2, 0x1C},
+    {OV5640_SC_PLL_CONTRL3, 0x13},
+    {OV5640_SYSTEM_ROOT_DIVIDER, 0x01},
+    {0x4814, 0x2a},
+    {OV5640_MIPI_CTRL00, 0x24},
+    {OV5640_PAD_OUTPUT_VALUE00, 0x70},
+    {OV5640_MIPI_CONTROL00, 0x45},
+    {OV5640_FRAME_CTRL02, 0x00},
+  };
+
+  for(index=0; index < sizeof(regs) / 4U ; index++)
+  {
+    tmp = (uint8_t)regs[index][1];
+    if(ov5640_write_reg(&pObj->Ctx, regs[index][0], &tmp, 1) != OV5640_OK)
+    {
+      ret = OV5640_ERROR;
+      break;
+    }
+  }
+
+  return ret;
+}
+
+/**
+  * @brief  Set MIPI VirtualChannel
+  * @param  pObj  pointer to component object
+  * @param  vchannel virtual channel for Mipi Mode
+  * @retval Component status
+  */
+int32_t OV5640_SetMIPIVirtualChannel(OV5640_Object_t *pObj, uint32_t vchannel)
+{
+  int32_t ret = OV5640_OK;
+  uint8_t tmp;
+
+  if (ov5640_read_reg(&pObj->Ctx, 0x4814, &tmp, 1) != OV5640_OK)
+  {
+    ret = OV5640_ERROR;
+  }
+  else
+  {
+    tmp &= ~(3 << 6);
+    tmp |= (vchannel << 6);
+    if (ov5640_write_reg(&pObj->Ctx, 0x4814, &tmp, 1) != OV5640_OK)
+    {
+      ret = OV5640_ERROR;
+    }
+  }
+
+  return ret;
+}
+
+/**
+  * @brief  Start camera
+  * @param  pObj  pointer to component object
+  * @retval Component status
+  */
+int32_t OV5640_Start(OV5640_Object_t *pObj)
+{
+  uint8_t tmp;
+
+  tmp = 0x2;
+  return ov5640_write_reg(&pObj->Ctx, OV5640_SYSTEM_CTROL0, &tmp, 1);
+}
+
+/**
+  * @brief  Stop camera
+  * @param  pObj  pointer to component object
+  * @retval Component status
+  */
+int32_t OV5640_Stop(OV5640_Object_t *pObj)
+{
+  uint8_t tmp;
+
+  tmp = 0x42;
+  return ov5640_write_reg(&pObj->Ctx, OV5640_SYSTEM_CTROL0, &tmp, 1);
+
 }
 
 
@@ -2072,5 +2243,3 @@ static int32_t OV5640_WriteRegWrap(void *handle, uint16_t Reg, uint8_t *pData, u
 /**
   * @}
   */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

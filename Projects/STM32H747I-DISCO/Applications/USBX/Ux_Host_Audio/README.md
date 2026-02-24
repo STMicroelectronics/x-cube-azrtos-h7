@@ -96,7 +96,7 @@ Connectivity, USBXHost, FILEX, ThreadX, AUDIO 2.0, Audio 1.0, UAC, Speaker, UART
 ### <b>Hardware and Software environment</b>
 
   - This application runs on STM32H747xx devices.
-  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards revision MB1520-H747I-B02
+  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards revision MB1248-H747I-D02
     and can be easily tailored to any other supported device and development board.
 
   - STM32H747I-DISCO Set-up

@@ -282,7 +282,7 @@
 #define UX_SLAVE_REQUEST_DATA_MAX_LENGTH    (1024 * 2)
 
 /* Defined, this enables processing of Get String Descriptor requests with zero Language ID.  
-   The first language ID in the language ID framwork will be used if the request has a zero
+   The first language ID in the language ID framework will be used if the request has a zero
    Language ID.  */
 /* #define UX_DEVICE_ENABLE_GET_STRING_WITH_ZERO_LANGUAGE_ID  */
 

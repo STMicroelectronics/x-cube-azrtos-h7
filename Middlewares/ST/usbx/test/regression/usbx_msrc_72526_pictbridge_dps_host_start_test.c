@@ -818,7 +818,7 @@ ULONG                                               actual_flags;
                     if (status == UX_SUCCESS)
                     {
 
-                        /* Check if the printer is ready for a pring job.  */
+                        /* Check if the printer is ready for a print job.  */
                         if (pictbridge_device.ux_pictbridge_dpsclient.ux_pictbridge_devinfo_newjobok == UX_PICTBRIDGE_NEW_JOB_TRUE)
                         {
 

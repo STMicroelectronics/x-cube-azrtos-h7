@@ -220,7 +220,7 @@ size_t __write(int file, unsigned char const *ptr, size_t len)
 PUTCHAR_PROTOTYPE
 {
   /* Place your implementation of fputc here */
-  /* e.g. write a character to the  UART3 and Loop until the end of transmission */
+  /* e.g. write a character to the UART3 and Loop until the end of transmission */
   HAL_UART_Transmit(&huart3, (uint8_t *)&ch, 1, 0xFFFF);
 
   return ch;

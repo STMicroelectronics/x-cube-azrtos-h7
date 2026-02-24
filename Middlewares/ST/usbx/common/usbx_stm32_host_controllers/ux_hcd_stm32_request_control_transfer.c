@@ -132,6 +132,7 @@ UX_HCD_STM32_ED         *ed;
         /* Free allocated memory.  */
         _ux_utility_memory_free(ed -> ux_stm32_ed_setup);
         ed -> ux_stm32_ed_setup = UX_NULL;
+        ed -> ux_stm32_ed_data = UX_NULL;
 
         /* Restore request information.  */
         transfer_request -> ux_transfer_request_requested_length =
@@ -190,6 +191,14 @@ UX_HCD_STM32_ED         *ed;
                     transfer_request -> ux_transfer_request_requested_length;
         }
 
+        /* Check whether allocated resources require freeing. */
+        if ((ed -> ux_stm32_ed_data != UX_NULL) && (ed ->ux_stm32_ed_data_free == UX_HCD_STM32_ED_STATUS_ALIGNED_BUFFER_PENDING_FREE))
+        {
+          _ux_utility_memory_free(ed -> ux_stm32_ed_data);
+          ed -> ux_stm32_ed_data = UX_NULL;
+          ed ->ux_stm32_ed_data_free = UX_HCD_STM32_ED_STATUS_ALIGNED_BUFFER_FREE_DONE;
+        }
+
         /* To status stage.  */
         _ux_hcd_stm32_request_control_status(hcd_stm32, ed, endpoint, transfer_request);
         UX_RESTORE
@@ -244,9 +253,11 @@ UX_HCD_STM32_ED         *ed;
     /* Wait for the completion of the transfer request.  */
     status =  _ux_host_semaphore_get(&transfer_request -> ux_transfer_request_semaphore, MS_TO_TICK(UX_CONTROL_TRANSFER_TIMEOUT));
 
-    /* Free the resources.  */
+    /* Free the setup request resources.  */
     _ux_utility_memory_free(ed -> ux_stm32_ed_setup);
+
     ed -> ux_stm32_ed_setup = UX_NULL;
+    ed -> ux_stm32_ed_data = NULL;
 
     /* If the semaphore did not succeed we probably have a time out.  */
     if (status != UX_SUCCESS)
@@ -297,6 +308,14 @@ UX_HCD_STM32_ED         *ed;
 
             return(UX_TRANSFER_TIMEOUT);
 
+        }
+
+        /* Check whether allocated resources require freeing. */
+        if ((ed -> ux_stm32_ed_data != UX_NULL) && (ed ->ux_stm32_ed_data_free == UX_HCD_STM32_ED_STATUS_ALIGNED_BUFFER_PENDING_FREE))
+        {
+          _ux_utility_memory_free(ed -> ux_stm32_ed_data);
+          ed -> ux_stm32_ed_data = UX_NULL;
+          ed ->ux_stm32_ed_data_free = UX_HCD_STM32_ED_STATUS_ALIGNED_BUFFER_FREE_DONE;
         }
 
         /* Check the transfer request completion code.  */
@@ -364,7 +383,7 @@ UCHAR                   *setup_request;
 
     /* Save the original transfer parameter.  */
     ed -> ux_stm32_ed_saved_length = transfer_request -> ux_transfer_request_requested_length;
-    ed -> ux_stm32_ed_data = setup_request;
+    ed -> ux_stm32_ed_data = ed -> ux_stm32_ed_setup;
 
     /* Reset requested length for SETUP packet.  */
     transfer_request -> ux_transfer_request_requested_length = 0;

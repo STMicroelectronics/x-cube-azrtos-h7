@@ -22,6 +22,7 @@ priorities and 2 message queues :
 ####  <b>Expected success behavior</b>
 
 <i>GREEN_LED</i> toggles every 200ms and <i>RED_LED</i> toggles every 500ms indefinitely.
+Information regarding the message queue processing progress printed to the serial port.
 
 #### <b>Error behaviors</b>
 

@@ -59,7 +59,7 @@ static UCHAR hid_report_descriptor[] = {
     0x95, 0x01,                    //   REPORT_COUNT (1)
     0x81, 0x02,                    //   INPUT (Data,Var,Abs)
 
-                                   /*   Eigth field */
+                                   /*   Eighth field */
     0x09, 0x0e,                    //   USAGE (14)
     0x75, 0x20,                    //   REPORT_SIZE (32)
     0x95, 0x01,                    //   REPORT_COUNT (1)
@@ -260,7 +260,7 @@ UINT                            descriptor_size = HID_REPORT_LENGTH;
     hid_parameter.ux_device_class_hid_parameter_report_length  = HID_REPORT_LENGTH;
     hid_parameter.ux_device_class_hid_parameter_callback       = demo_thread_hid_callback;
 
-    /* Initilize the device hid class. The class is connected with interface 2 */
+    /* Initialize the device hid class. The class is connected with interface 2 */
     status =  ux_device_stack_class_register(_ux_system_slave_class_hid_name, ux_device_class_hid_entry,
                                                 1,2, (VOID *)&hid_parameter);
     if(status!=UX_SUCCESS)
@@ -446,7 +446,7 @@ UX_HOST_CLASS_HID_REPORT            *hid_report;
         report_buffer_decompressed[24] != 0x0001000d ||
         report_buffer_decompressed[25] != 0x09674523 ||
 
-        /* Eigth field */
+        /* Eighth field */
 
         /* bits 104-135 - 0000 0011 1101 1111 1001 1011 0101 0111 */
         report_buffer_decompressed[26] != 0x0001000e ||

@@ -245,7 +245,7 @@ CHAR                            *memory_pointer;
     hid_parameter.ux_device_class_hid_parameter_report_length  = HID_MOUSE_REPORT_LENGTH;
     hid_parameter.ux_device_class_hid_parameter_callback       = demo_thread_hid_callback;
 
-    /* Initilize the device hid class. The class is connected with interface 2 */
+    /* Initialize the device hid class. The class is connected with interface 2 */
     status =  ux_device_stack_class_register(_ux_system_slave_class_hid_name, ux_device_class_hid_entry,
                                                 1,2, (VOID *)&hid_parameter);
     if(status!=UX_SUCCESS)
@@ -361,7 +361,7 @@ UCHAR   next_mouse_buttons;
 UX_HCD  *hcd;
 
 
-    /* Initilize max loop value.  */
+    /* Initialize max loop value.  */
     max_num_loops = 16;
 
     /* Find the HID class */

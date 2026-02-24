@@ -108,7 +108,7 @@ RTOS, ThreadX, Threading, Message Queue, Module Manager, Module, MPU
 ### <b>Hardware and Software environment</b>
 
   - This application runs on STM32H747xx devices
-  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards Revision: MB1248D-01.
+  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards Revision: MB1248-D02
     and can be easily tailored to any other supported device and development board.
   - A virtual COM port appears in the HyperTerminal:
       - Hyperterminal configuration:

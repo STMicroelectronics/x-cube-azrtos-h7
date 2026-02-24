@@ -73,8 +73,8 @@ OV9655_CAMERA_Drv_t   OV9655_CAMERA_Driver =
 /** @defgroup OV9655_Function_Prototypes
   * @{
   */
-static int32_t OV9655_ReadRegWrap(void *handle, uint16_t Reg, uint8_t* Data, uint16_t Length);
-static int32_t OV9655_WriteRegWrap(void *handle, uint16_t Reg, uint8_t* Data, uint16_t Length);
+static int32_t OV9655_ReadRegWrap(void *handle, uint16_t Reg, uint8_t *Data, uint16_t Length);
+static int32_t OV9655_WriteRegWrap(void *handle, uint16_t Reg, uint8_t *Data, uint16_t Length);
 static int32_t OV9655_Delay(OV9655_Object_t *pObj, uint32_t Delay);
 
 /**
@@ -89,7 +89,7 @@ static int32_t OV9655_Delay(OV9655_Object_t *pObj, uint32_t Delay);
   * @param  Component object pointer
   * @retval Component status
   */
-int32_t OV9655_RegisterBusIO (OV9655_Object_t *pObj, OV9655_IO_t *pIO)
+int32_t OV9655_RegisterBusIO(OV9655_Object_t *pObj, OV9655_IO_t *pIO)
 {
   int32_t ret;
 
@@ -110,7 +110,7 @@ int32_t OV9655_RegisterBusIO (OV9655_Object_t *pObj, OV9655_IO_t *pIO)
     pObj->Ctx.WriteReg = OV9655_WriteRegWrap;
     pObj->Ctx.handle   = pObj;
 
-    if(pObj->IO.Init != NULL)
+    if (pObj->IO.Init != NULL)
     {
       ret = pObj->IO.Init();
     }
@@ -135,17 +135,17 @@ int32_t OV9655_Init(OV9655_Object_t *pObj, uint32_t Resolution, uint32_t PixelFo
   int32_t ret = OV9655_OK;
   uint8_t tmp;
 
-  if(pObj->IsInitialized == 0U)
+  if (pObj->IsInitialized == 0U)
   {
     /* Check if resolution is supported */
-    if((Resolution > OV9655_R640x480) || ((PixelFormat != OV9655_RGB565) && (PixelFormat != OV9655_YUV422)))
+    if ((Resolution > OV9655_R640x480) || ((PixelFormat != OV9655_RGB565) && (PixelFormat != OV9655_YUV422)))
     {
       ret = OV9655_ERROR;
     }
     else
     {
       tmp = 0x80U;
-      if(ov9655_write_reg(&pObj->Ctx, OV9655_COMMON_CTRL7, &tmp, 1) != OV9655_OK)
+      if (ov9655_write_reg(&pObj->Ctx, OV9655_COMMON_CTRL7, &tmp, 1) != OV9655_OK)
       {
         ret = OV9655_ERROR;
       }
@@ -154,11 +154,11 @@ int32_t OV9655_Init(OV9655_Object_t *pObj, uint32_t Resolution, uint32_t PixelFo
       {
         OV9655_Delay(pObj, 200);
         /* Set specific parameters for each resolution */
-        if(OV9655_SetResolution(pObj, Resolution)!= OV9655_OK)
+        if (OV9655_SetResolution(pObj, Resolution) != OV9655_OK)
         {
           ret = OV9655_ERROR;
         }/* Set specific parameters for each pixel format */
-        else if(OV9655_SetPixelFormat(pObj, PixelFormat)!= OV9655_OK)
+        else if (OV9655_SetPixelFormat(pObj, PixelFormat) != OV9655_OK)
         {
           ret = OV9655_ERROR;
         }
@@ -180,7 +180,7 @@ int32_t OV9655_Init(OV9655_Object_t *pObj, uint32_t Resolution, uint32_t PixelFo
   */
 int32_t OV9655_DeInit(OV9655_Object_t *pObj)
 {
-  if(pObj->IsInitialized == 1U)
+  if (pObj->IsInitialized == 1U)
   {
     pObj->IsInitialized = 0U;
   }
@@ -200,12 +200,12 @@ int32_t OV9655_SetPixelFormat(OV9655_Object_t *pObj, uint32_t PixelFormat)
   uint8_t tmp;
 
   /* Check if PixelFormat is supported */
-  if((PixelFormat != OV9655_RGB565) && (PixelFormat != OV9655_YUV422))
+  if ((PixelFormat != OV9655_RGB565) && (PixelFormat != OV9655_YUV422))
   {
     /* Pixel format not supported */
     ret = OV9655_ERROR;
   }
-  else if(ov9655_read_reg(&pObj->Ctx, OV9655_COMMON_CTRL7, &tmp, 1) != OV9655_OK)
+  else if (ov9655_read_reg(&pObj->Ctx, OV9655_COMMON_CTRL7, &tmp, 1) != OV9655_OK)
   {
     ret = OV9655_ERROR;
   }
@@ -216,66 +216,66 @@ int32_t OV9655_SetPixelFormat(OV9655_Object_t *pObj, uint32_t PixelFormat)
 
     switch (PixelFormat)
     {
-    case OV9655_YUV422:
-      tmp |= 0x02U;
-      if(ov9655_write_reg(&pObj->Ctx, OV9655_COMMON_CTRL7, &tmp, 1) != OV9655_OK)
-      {
-        ret = OV9655_ERROR;
-      }
-      else
-      {
-        if(ov9655_read_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1) != OV9655_OK)
+      case OV9655_YUV422:
+        tmp |= 0x02U;
+        if (ov9655_write_reg(&pObj->Ctx, OV9655_COMMON_CTRL7, &tmp, 1) != OV9655_OK)
         {
           ret = OV9655_ERROR;
         }
         else
         {
-          tmp &= ~(1 << 5); /* Clear bit 5: Output bit-wise reverse */
-          tmp &= ~(3 << 2); /* Clear bits 3:2: YUV output sequence is 0:yuyv */
-
-          if(ov9655_write_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1) != OV9655_OK)
+          if (ov9655_read_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1) != OV9655_OK)
           {
             ret = OV9655_ERROR;
           }
           else
           {
-            if(ov9655_read_reg(&pObj->Ctx, OV9655_COMMON_CTRL15, &tmp, 1) != OV9655_OK)
+            tmp &= ~(1 << 5); /* Clear bit 5: Output bit-wise reverse */
+            tmp &= ~(3 << 2); /* Clear bits 3:2: YUV output sequence is 0:yuyv */
+
+            if (ov9655_write_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1) != OV9655_OK)
             {
               ret = OV9655_ERROR;
             }
             else
             {
-                tmp |=  (3 << 6); /* Data format - output full range enable 3: [00] to [FF] */
+              if (ov9655_read_reg(&pObj->Ctx, OV9655_COMMON_CTRL15, &tmp, 1) != OV9655_OK)
+              {
+                ret = OV9655_ERROR;
+              }
+              else
+              {
+                tmp |= (3 << 6);  /* Data format - output full range enable 3: [00] to [FF] */
                 tmp &= ~(3 << 4); /* Clear bits 5:4: RGB 555/565 option */
-            }
-            if(ov9655_write_reg(&pObj->Ctx, OV9655_COMMON_CTRL15, &tmp, 1) != OV9655_OK)
-            {
-              ret = OV9655_ERROR;
+              }
+              if (ov9655_write_reg(&pObj->Ctx, OV9655_COMMON_CTRL15, &tmp, 1) != OV9655_OK)
+              {
+                ret = OV9655_ERROR;
+              }
             }
           }
         }
-      }
-      break;
-    case OV9655_RGB565:
-    default:
-      tmp |= 0x03U;
-      if(ov9655_write_reg(&pObj->Ctx, OV9655_COMMON_CTRL7, &tmp, 1) != OV9655_OK)
-      {
-        ret = OV9655_ERROR;
-      }
-      else if(ov9655_read_reg(&pObj->Ctx, OV9655_COMMON_CTRL15, &tmp, 1) != OV9655_OK)
-      {
-        ret = OV9655_ERROR;
-      }
-      else
-      {
-        tmp |= 0x10U;
-        if(ov9655_write_reg(&pObj->Ctx, OV9655_COMMON_CTRL15, &tmp, 1) != OV9655_OK)
+        break;
+      case OV9655_RGB565:
+      default:
+        tmp |= 0x03U;
+        if (ov9655_write_reg(&pObj->Ctx, OV9655_COMMON_CTRL7, &tmp, 1) != OV9655_OK)
         {
           ret = OV9655_ERROR;
         }
-      }
-      break;
+        else if (ov9655_read_reg(&pObj->Ctx, OV9655_COMMON_CTRL15, &tmp, 1) != OV9655_OK)
+        {
+          ret = OV9655_ERROR;
+        }
+        else
+        {
+          tmp |= 0x10U;
+          if (ov9655_write_reg(&pObj->Ctx, OV9655_COMMON_CTRL15, &tmp, 1) != OV9655_OK)
+          {
+            ret = OV9655_ERROR;
+          }
+        }
+        break;
     }
   }
 
@@ -309,7 +309,7 @@ int32_t OV9655_SetResolution(OV9655_Object_t *pObj, uint32_t Resolution)
   uint8_t tmp;
 
   /* Initialization sequence for VGA resolution (640x480)*/
-  static const uint8_t OV9655_VGA[][2]=
+  static const uint8_t OV9655_VGA[][2] =
   {
     {0x00, 0x00},
     {0x01, 0x80},
@@ -461,7 +461,7 @@ int32_t OV9655_SetResolution(OV9655_Object_t *pObj, uint32_t Resolution)
   };
 
   /* Initialization sequence for QQVGA resolution (160x120) */
-  static const uint8_t OV9655_QVGA_QQVGA[][2]=
+  static const uint8_t OV9655_QVGA_QQVGA[][2] =
   {
     {0x00, 0x00},
     {0x01, 0x80},
@@ -621,7 +621,7 @@ int32_t OV9655_SetResolution(OV9655_Object_t *pObj, uint32_t Resolution)
   };
 
   /* Initialization sequence for QQVGA resolution (160x120) */
-  static const uint8_t OV9655_QQVGA[][2]=
+  static const uint8_t OV9655_QQVGA[][2] =
   {
     {OV9655_HORIZONTAL_FRAME_CTRL, 0xA4},
     {0x3e, 0x0E},
@@ -640,76 +640,76 @@ int32_t OV9655_SetResolution(OV9655_Object_t *pObj, uint32_t Resolution)
     /* Initialize OV9655 */
     switch (Resolution)
     {
-    case OV9655_R160x120:
-      for(index=0; index<(sizeof(OV9655_QVGA_QQVGA)/2U); index++)
-      {
-        if(ret != OV9655_ERROR)
+      case OV9655_R160x120:
+        for (index = 0; index < (sizeof(OV9655_QVGA_QQVGA) / 2U); index++)
         {
-          tmp = OV9655_QVGA_QQVGA[index][1];
-          if(ov9655_write_reg(&pObj->Ctx, OV9655_QVGA_QQVGA[index][0], &tmp, 1) != OV9655_OK)
+          if (ret != OV9655_ERROR)
           {
-            ret = OV9655_ERROR;
+            tmp = OV9655_QVGA_QQVGA[index][1];
+            if (ov9655_write_reg(&pObj->Ctx, OV9655_QVGA_QQVGA[index][0], &tmp, 1) != OV9655_OK)
+            {
+              ret = OV9655_ERROR;
+            }
+            (void)OV9655_Delay(pObj, 2);
           }
-          (void)OV9655_Delay(pObj, 2);
         }
-      }
-      for(index=0; index<(sizeof(OV9655_QQVGA)/2U); index++)
-      {
-        if(ret != OV9655_ERROR)
+        for (index = 0; index < (sizeof(OV9655_QQVGA) / 2U); index++)
         {
-          tmp = OV9655_QQVGA[index][1];
-          if(ov9655_write_reg(&pObj->Ctx, OV9655_QQVGA[index][0], &tmp, 1) != OV9655_OK)
+          if (ret != OV9655_ERROR)
           {
-            ret = OV9655_ERROR;
+            tmp = OV9655_QQVGA[index][1];
+            if (ov9655_write_reg(&pObj->Ctx, OV9655_QQVGA[index][0], &tmp, 1) != OV9655_OK)
+            {
+              ret = OV9655_ERROR;
+            }
+            (void)OV9655_Delay(pObj, 2);
           }
-          (void)OV9655_Delay(pObj, 2);
         }
-      }
-      break;
-    case OV9655_R320x240:
-      for(index=0; index<(sizeof(OV9655_QVGA_QQVGA)/2U); index++)
-      {
-        if(ret != OV9655_ERROR)
+        break;
+      case OV9655_R320x240:
+        for (index = 0; index < (sizeof(OV9655_QVGA_QQVGA) / 2U); index++)
         {
-          tmp = OV9655_QVGA_QQVGA[index][1];
-          if(ov9655_write_reg(&pObj->Ctx, OV9655_QVGA_QQVGA[index][0], &tmp, 1) != OV9655_OK)
+          if (ret != OV9655_ERROR)
           {
-            ret = OV9655_ERROR;
+            tmp = OV9655_QVGA_QQVGA[index][1];
+            if (ov9655_write_reg(&pObj->Ctx, OV9655_QVGA_QQVGA[index][0], &tmp, 1) != OV9655_OK)
+            {
+              ret = OV9655_ERROR;
+            }
+            (void)OV9655_Delay(pObj, 2);
           }
-          (void)OV9655_Delay(pObj, 2);
         }
-      }
-      for(index=0; index< (sizeof(OV9655_QVGA)/2U); index++)
-      {
-        if(ret != OV9655_ERROR)
+        for (index = 0; index < (sizeof(OV9655_QVGA) / 2U); index++)
         {
-          tmp = OV9655_QVGA[index][1];
-          if(ov9655_write_reg(&pObj->Ctx, OV9655_QVGA[index][0], &tmp, 1) != OV9655_OK)
+          if (ret != OV9655_ERROR)
           {
-            ret = OV9655_ERROR;
+            tmp = OV9655_QVGA[index][1];
+            if (ov9655_write_reg(&pObj->Ctx, OV9655_QVGA[index][0], &tmp, 1) != OV9655_OK)
+            {
+              ret = OV9655_ERROR;
+            }
+            (void)OV9655_Delay(pObj, 2);
           }
-          (void)OV9655_Delay(pObj, 2);
         }
-      }
-      break;
-    case OV9655_R480x272:
-    case OV9655_R640x480:
-      for(index=0; index<(sizeof(OV9655_VGA)/2U); index++)
-      {
-        if(ret != OV9655_ERROR)
+        break;
+      case OV9655_R480x272:
+      case OV9655_R640x480:
+        for (index = 0; index < (sizeof(OV9655_VGA) / 2U); index++)
         {
-          tmp = OV9655_VGA[index][1];
-          if(ov9655_write_reg(&pObj->Ctx, OV9655_VGA[index][0], &tmp, 1) != OV9655_OK)
+          if (ret != OV9655_ERROR)
           {
-            ret = OV9655_ERROR;
+            tmp = OV9655_VGA[index][1];
+            if (ov9655_write_reg(&pObj->Ctx, OV9655_VGA[index][0], &tmp, 1) != OV9655_OK)
+            {
+              ret = OV9655_ERROR;
+            }
+            (void)OV9655_Delay(pObj, 2);
           }
-          (void)OV9655_Delay(pObj, 2);
         }
-      }
-      break;
-    default:
-      ret = OV9655_ERROR;
-      break;
+        break;
+      default:
+        ret = OV9655_ERROR;
+        break;
     }
   }
 
@@ -727,7 +727,7 @@ int32_t OV9655_GetResolution(OV9655_Object_t *pObj, uint32_t *Resolution)
   int32_t ret = OV9655_OK;
   uint8_t tmp;
 
-  if(ov9655_read_reg(&pObj->Ctx, OV9655_HORIZONTAL_FRAME_CTRL, &tmp, 1) != OV9655_OK)
+  if (ov9655_read_reg(&pObj->Ctx, OV9655_HORIZONTAL_FRAME_CTRL, &tmp, 1) != OV9655_OK)
   {
     ret = OV9655_ERROR;
   }
@@ -735,18 +735,18 @@ int32_t OV9655_GetResolution(OV9655_Object_t *pObj, uint32_t *Resolution)
   {
     switch (tmp)
     {
-    case 0xFF:
-      *Resolution = OV9655_R640x480;
-      break;
-    case 0x12:
-      *Resolution = OV9655_R320x240;
-      break;
-    case 0xA4:
-      *Resolution = OV9655_R160x120;
-      break;
-    default:
-      ret = OV9655_ERROR;
-      break;
+      case 0xFF:
+        *Resolution = OV9655_R640x480;
+        break;
+      case 0x12:
+        *Resolution = OV9655_R320x240;
+        break;
+      case 0xA4:
+        *Resolution = OV9655_R160x120;
+        break;
+      default:
+        ret = OV9655_ERROR;
+        break;
     }
   }
 
@@ -767,23 +767,23 @@ int32_t OV9655_ReadID(OV9655_Object_t *pObj, uint32_t *Id)
   /* Initialize I2C */
   pObj->IO.Init();
 
-    if(ov9655_read_reg(&pObj->Ctx, OV9655_PID_NUMBER_HIGH, &tmp, 1)!= OV9655_OK)
+  if (ov9655_read_reg(&pObj->Ctx, OV9655_PID_NUMBER_HIGH, &tmp, 1) != OV9655_OK)
+  {
+    ret = OV9655_ERROR;
+  }
+  else
+  {
+    *Id = (uint32_t)tmp << 8U;
+    if (ov9655_read_reg(&pObj->Ctx, OV9655_PID_NUMBER_LOW, &tmp, 1) != OV9655_OK)
     {
       ret = OV9655_ERROR;
     }
     else
     {
-      *Id = (uint32_t)tmp << 8U;
-      if(ov9655_read_reg(&pObj->Ctx, OV9655_PID_NUMBER_LOW, &tmp, 1)!= OV9655_OK)
-      {
-        ret = OV9655_ERROR;
-      }
-      else
-      {
-        *Id |= tmp;
-        ret = OV9655_OK;
-      }
+      *Id |= tmp;
+      ret = OV9655_OK;
     }
+  }
 
   /* Component status */
   return ret;
@@ -799,7 +799,7 @@ int32_t OV9655_GetCapabilities(OV9655_Object_t *pObj, OV9655_Capabilities_t *Cap
 {
   int32_t ret;
 
-  if(pObj == NULL)
+  if (pObj == NULL)
   {
     ret = OV9655_ERROR;
   }
@@ -847,106 +847,106 @@ int32_t OV9655_SetColorEffect(OV9655_Object_t *pObj, uint32_t Effect)
   int32_t ret;
   uint8_t tmp;
 
-  switch(Effect)
+  switch (Effect)
   {
-  case OV9655_COLOR_EFFECT_BLUE:
-    tmp = 0xCC;
-    ret = ov9655_write_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1);
-    tmp = 0x00;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_1, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_2, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_3, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_4, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_5, &tmp, 1);
-    tmp = 0x60;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_6, &tmp, 1);
-    break;
+    case OV9655_COLOR_EFFECT_BLUE:
+      tmp = 0xCC;
+      ret = ov9655_write_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1);
+      tmp = 0x00;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_1, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_2, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_3, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_4, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_5, &tmp, 1);
+      tmp = 0x60;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_6, &tmp, 1);
+      break;
 
-  case OV9655_COLOR_EFFECT_RED:
-    tmp = 0xCC;
-    ret = ov9655_write_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1);
-    tmp = 0x60;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_1, &tmp, 1);
-    tmp = 0x00;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_2, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_3, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_4, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_5, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_6, &tmp, 1);
-    break;
+    case OV9655_COLOR_EFFECT_RED:
+      tmp = 0xCC;
+      ret = ov9655_write_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1);
+      tmp = 0x60;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_1, &tmp, 1);
+      tmp = 0x00;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_2, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_3, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_4, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_5, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_6, &tmp, 1);
+      break;
 
-  case OV9655_COLOR_EFFECT_GREEN:
-    tmp = 0xCC;
-    ret = ov9655_write_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1);
-    tmp = 0x00;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_1, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_2, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_3, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_4, &tmp, 1);
-    tmp = 0x80;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_5, &tmp, 1);
-    tmp = 0x00;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_6, &tmp, 1);
-    break;
+    case OV9655_COLOR_EFFECT_GREEN:
+      tmp = 0xCC;
+      ret = ov9655_write_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1);
+      tmp = 0x00;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_1, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_2, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_3, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_4, &tmp, 1);
+      tmp = 0x80;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_5, &tmp, 1);
+      tmp = 0x00;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_6, &tmp, 1);
+      break;
 
-  case OV9655_COLOR_EFFECT_BW:
-    tmp = 0xCC;
-    ret = ov9655_write_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1);
-    tmp = 0x00;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_1, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_2, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_3, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_4, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_5, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_6, &tmp, 1);
-    break;
+    case OV9655_COLOR_EFFECT_BW:
+      tmp = 0xCC;
+      ret = ov9655_write_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1);
+      tmp = 0x00;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_1, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_2, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_3, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_4, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_5, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_6, &tmp, 1);
+      break;
 
-  case OV9655_COLOR_EFFECT_SEPIA:
-    tmp = 0xCC;
-    ret = ov9655_write_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1);
-    tmp = 0x00;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_1, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_2, &tmp, 1);
-    tmp = 0x20;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_3, &tmp, 1);
-    tmp = 0xF0;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_4, &tmp, 1);
-    tmp = 0x00;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_5, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_6, &tmp, 1);
-    break;
+    case OV9655_COLOR_EFFECT_SEPIA:
+      tmp = 0xCC;
+      ret = ov9655_write_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1);
+      tmp = 0x00;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_1, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_2, &tmp, 1);
+      tmp = 0x20;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_3, &tmp, 1);
+      tmp = 0xF0;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_4, &tmp, 1);
+      tmp = 0x00;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_5, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_6, &tmp, 1);
+      break;
 
-  case OV9655_COLOR_EFFECT_NEGATIVE:
-    tmp = 0xEC;
-    ret = ov9655_write_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1);
-    tmp = 0x80;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_1, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_2, &tmp, 1);
-    tmp = 0x00;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_3, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_4, &tmp, 1);
-    tmp = 0x80;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_5, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_6, &tmp, 1);
-    break;
+    case OV9655_COLOR_EFFECT_NEGATIVE:
+      tmp = 0xEC;
+      ret = ov9655_write_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1);
+      tmp = 0x80;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_1, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_2, &tmp, 1);
+      tmp = 0x00;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_3, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_4, &tmp, 1);
+      tmp = 0x80;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_5, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_6, &tmp, 1);
+      break;
 
-  case OV9655_COLOR_EFFECT_NONE:
-  default :
-    tmp = 0xCC;
-    ret = ov9655_write_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1);
-    tmp = 0x80;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_1, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_2, &tmp, 1);
-    tmp = 0x00;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_3, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_4, &tmp, 1);
-    tmp = 0x80;
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_5, &tmp, 1);
-    ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_6, &tmp, 1);
-    break;
+    case OV9655_COLOR_EFFECT_NONE:
+    default :
+      tmp = 0xCC;
+      ret = ov9655_write_reg(&pObj->Ctx, OV9655_TSLB, &tmp, 1);
+      tmp = 0x80;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_1, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_2, &tmp, 1);
+      tmp = 0x00;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_3, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_4, &tmp, 1);
+      tmp = 0x80;
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_5, &tmp, 1);
+      ret += ov9655_write_reg(&pObj->Ctx, OV9655_MATRIX_COEFFICIENT_6, &tmp, 1);
+      break;
   }
 
-  if(ret != OV9655_OK)
+  if (ret != OV9655_OK)
   {
     ret = OV9655_ERROR;
   }
@@ -970,7 +970,7 @@ int32_t OV9655_SetBrightness(OV9655_Object_t *pObj, int32_t Level)
   uint8_t tmp;
 
   tmp = brightness_level[Level + 4];
-  if(ov9655_write_reg(&pObj->Ctx, OV9655_BRIGHTNESS_ADJUSTMENT, &tmp, 1) != OV9655_OK)
+  if (ov9655_write_reg(&pObj->Ctx, OV9655_BRIGHTNESS_ADJUSTMENT, &tmp, 1) != OV9655_OK)
   {
     ret = OV9655_ERROR;
   }
@@ -1010,7 +1010,7 @@ int32_t OV9655_SetContrast(OV9655_Object_t *pObj, int32_t Level)
   uint8_t tmp;
 
   tmp = contrast_level[Level + 4];
-  if(ov9655_write_reg(&pObj->Ctx, OV9655_CONTRAST_COEFFICIENT_1, &tmp, 1) != OV9655_OK)
+  if (ov9655_write_reg(&pObj->Ctx, OV9655_CONTRAST_COEFFICIENT_1, &tmp, 1) != OV9655_OK)
   {
     ret = OV9655_ERROR;
   }
@@ -1043,13 +1043,13 @@ int32_t OV9655_MirrorFlipConfig(OV9655_Object_t *pObj, uint32_t Config)
   int32_t ret = OV9655_OK;
   uint8_t tmp;
 
-  if(Config > OV9655_MIRROR_FLIP)
+  if (Config > OV9655_MIRROR_FLIP)
   {
     ret = OV9655_ERROR;
   }
   else
   {
-    if(ov9655_read_reg(&pObj->Ctx, OV9655_MIRROR_VFLIP, &tmp, 1) != OV9655_OK)
+    if (ov9655_read_reg(&pObj->Ctx, OV9655_MIRROR_VFLIP, &tmp, 1) != OV9655_OK)
     {
       ret = OV9655_ERROR;
     }
@@ -1057,7 +1057,7 @@ int32_t OV9655_MirrorFlipConfig(OV9655_Object_t *pObj, uint32_t Config)
     {
       tmp &= ~(3U << 4U);    /* Clear Bit[5:4] Mirror/VFlip */
       tmp |= (Config << 4U); /* Configure Bit[5:4] Mirror/VFlip */
-      if(ov9655_write_reg(&pObj->Ctx, OV9655_MIRROR_VFLIP, &tmp, 1) != OV9655_OK)
+      if (ov9655_write_reg(&pObj->Ctx, OV9655_MIRROR_VFLIP, &tmp, 1) != OV9655_OK)
       {
         ret = OV9655_ERROR;
       }
@@ -1092,13 +1092,13 @@ int32_t OV9655_NightModeConfig(OV9655_Object_t *pObj, uint32_t Cmd)
   int32_t ret = OV9655_OK;
   uint8_t tmp;
 
-  if(ov9655_read_reg(&pObj->Ctx, OV9655_COMMON_CTRL11, &tmp, 1) != OV9655_OK)
+  if (ov9655_read_reg(&pObj->Ctx, OV9655_COMMON_CTRL11, &tmp, 1) != OV9655_OK)
   {
     ret = OV9655_ERROR;
   }
   else
   {
-    if(Cmd == NIGHT_MODE_ENABLE)
+    if (Cmd == NIGHT_MODE_ENABLE)
     {
       tmp |= 0x80U;
     }
@@ -1107,7 +1107,7 @@ int32_t OV9655_NightModeConfig(OV9655_Object_t *pObj, uint32_t Cmd)
       tmp &= 0x7FU;
     }
 
-    if(ov9655_write_reg(&pObj->Ctx, OV9655_COMMON_CTRL11 ,&tmp, 1) != OV9655_OK)
+    if (ov9655_write_reg(&pObj->Ctx, OV9655_COMMON_CTRL11, &tmp, 1) != OV9655_OK)
     {
       ret = OV9655_ERROR;
     }
@@ -1127,7 +1127,7 @@ static int32_t OV9655_Delay(OV9655_Object_t *pObj, uint32_t Delay)
 {
   uint32_t tickstart;
   tickstart = pObj->IO.GetTick();
-  while((pObj->IO.GetTick() - tickstart) < Delay)
+  while ((pObj->IO.GetTick() - tickstart) < Delay)
   {
   }
   return OV9655_OK;
@@ -1141,7 +1141,7 @@ static int32_t OV9655_Delay(OV9655_Object_t *pObj, uint32_t Delay)
   * @param  Length  buffer size to be written
   * @retval error status
   */
-static int32_t OV9655_ReadRegWrap(void *handle, uint16_t Reg, uint8_t* pData, uint16_t Length)
+static int32_t OV9655_ReadRegWrap(void *handle, uint16_t Reg, uint8_t *pData, uint16_t Length)
 {
   OV9655_Object_t *pObj = (OV9655_Object_t *)handle;
 
@@ -1156,7 +1156,7 @@ static int32_t OV9655_ReadRegWrap(void *handle, uint16_t Reg, uint8_t* pData, ui
   * @param  Length  buffer size to be written
   * @retval error status
   */
-static int32_t OV9655_WriteRegWrap(void *handle, uint16_t Reg, uint8_t* pData, uint16_t Length)
+static int32_t OV9655_WriteRegWrap(void *handle, uint16_t Reg, uint8_t *pData, uint16_t Length)
 {
   OV9655_Object_t *pObj = (OV9655_Object_t *)handle;
 

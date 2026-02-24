@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2015-2019 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -67,8 +66,8 @@ static int32_t FT6X06_TS_Calibration(FT6X06_Object_t *pObj);
 static int32_t FT6X06_Delay(FT6X06_Object_t *pObj, uint32_t Delay);
 #endif /* FT6X06_AUTO_CALIBRATION_ENABLED == 1 */
 static int32_t FT6X06_DetectTouch(FT6X06_Object_t *pObj);
-static int32_t ReadRegWrap(void *handle, uint8_t Reg, uint8_t* Data, uint16_t Length);
-static int32_t WriteRegWrap(void *handle, uint8_t Reg, uint8_t* Data, uint16_t Length);
+static int32_t ReadRegWrap(const void *handle, uint8_t Reg, uint8_t* Data, uint16_t Length);
+static int32_t WriteRegWrap(const void *handle, uint8_t Reg, uint8_t* Data, uint16_t Length);
 
 /**
   * @}
@@ -123,7 +122,7 @@ int32_t FT6X06_RegisterBusIO (FT6X06_Object_t *pObj, FT6X06_IO_t *pIO)
   * @param  Capabilities pointer to FT6X06 sensor capabilities
   * @retval Component status
   */
-int32_t FT6X06_GetCapabilities(FT6X06_Object_t *pObj, FT6X06_Capabilities_t *Capabilities)
+int32_t FT6X06_GetCapabilities(const FT6X06_Object_t *pObj, FT6X06_Capabilities_t *Capabilities)
 {
   /* Prevent unused argument(s) compilation warning */  
   (void)(pObj);
@@ -346,7 +345,7 @@ int32_t FT6X06_DisableIT(FT6X06_Object_t *pObj)
   * @param  pObj Component object pointer
   * @retval Component status
   */
-int32_t FT6X06_ITStatus(FT6X06_Object_t *pObj)
+int32_t FT6X06_ITStatus(const FT6X06_Object_t *pObj)
 {
   /* Prevent unused argument(s) compilation warning */  
   (void)(pObj);
@@ -362,7 +361,7 @@ int32_t FT6X06_ITStatus(FT6X06_Object_t *pObj)
   * @param  pObj Component object pointer
   * @retval Component status
   */
-int32_t FT6X06_ClearIT(FT6X06_Object_t *pObj)
+int32_t FT6X06_ClearIT(const FT6X06_Object_t *pObj)
 {
   /* Prevent unused argument(s) compilation warning */  
   (void)(pObj);
@@ -502,9 +501,9 @@ static int32_t FT6X06_DetectTouch(FT6X06_Object_t *pObj)
   * @param  Length buffer size to be read
   * @retval Component status.
   */
-static int32_t ReadRegWrap(void *handle, uint8_t Reg, uint8_t* pData, uint16_t Length)
+static int32_t ReadRegWrap(const void *handle, uint8_t Reg, uint8_t* pData, uint16_t Length)
 {
-  FT6X06_Object_t *pObj = (FT6X06_Object_t *)handle;
+  const FT6X06_Object_t *pObj = (const FT6X06_Object_t *)handle;
 
   return pObj->IO.ReadReg(pObj->IO.Address, Reg, pData, Length);
 }
@@ -517,9 +516,9 @@ static int32_t ReadRegWrap(void *handle, uint8_t Reg, uint8_t* pData, uint16_t L
   * @param  Length buffer size to be written
   * @retval Component status.
   */
-static int32_t WriteRegWrap(void *handle, uint8_t Reg, uint8_t* pData, uint16_t Length)
+static int32_t WriteRegWrap(const void *handle, uint8_t Reg, uint8_t* pData, uint16_t Length)
 {
-  FT6X06_Object_t *pObj = (FT6X06_Object_t *)handle;
+  const FT6X06_Object_t *pObj = (const FT6X06_Object_t *)handle;
 
   return pObj->IO.WriteReg(pObj->IO.Address, Reg, pData, Length);
 }
@@ -539,5 +538,3 @@ static int32_t WriteRegWrap(void *handle, uint8_t Reg, uint8_t* pData, uint16_t 
 /**
   * @}
   */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

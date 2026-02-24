@@ -1361,7 +1361,7 @@ VOID  ux_test_utility_sim_mem_alloc_log_enable(UCHAR enable_disable)
 VOID ux_test_utility_sim_mem_alloc_log_lock(VOID)
 {
     ux_system_mutex_alloc_logs_lock = UX_TRUE;
-#if 0 /* TODO: Dump mem alloc log map.  */
+#if 0 /* Pending: Dump mem alloc log map.  */
     printf("Lock mem log map, %ld area:\n", ux_system_mutex_alloc_logs_count + 1);
     for (int i = 0; i <= ux_system_mutex_alloc_logs_count; i ++)
     {

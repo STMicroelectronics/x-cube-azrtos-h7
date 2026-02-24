@@ -16,7 +16,7 @@
 #include "ux_test_hcd_sim_host.h"
 #include "ux_test_utility_sim.h"
 
-#if 0 /* TODO: Enable/disable stepinfo */
+#if 0 /* Pending: Enable/disable stepinfo */
 #define stepinfo printf
 #else
 #define stepinfo(...)

@@ -32,7 +32,10 @@ VOID  fx_stm32_sram_driver(FX_MEDIA *media_ptr)
 UCHAR *source_buffer;
 UCHAR *destination_buffer;
 UINT   bytes_per_sector;
-
+UCHAR *destination_buffer_end;
+UCHAR *source_buffer_end;
+/* Calculate SRAM disk end address */
+UCHAR *sram_disk_end = ((UCHAR *)(FX_SRAM_DISK_BASE_ADDRESS + FX_SRAM_DISK_SIZE));
     /* Process the driver request specified in the media control block.  */
     switch (media_ptr->fx_media_driver_request)
     {
@@ -69,13 +72,25 @@ UINT   bytes_per_sector;
             source_buffer = ((UCHAR *)FX_SRAM_DISK_BASE_ADDRESS) +
                              ((media_ptr->fx_media_driver_logical_sector + media_ptr->fx_media_hidden_sectors) * media_ptr->fx_media_bytes_per_sector);
 
-            /* Copy the RAM sector into the destination.  */
-            _fx_utility_memory_copy(source_buffer, media_ptr -> fx_media_driver_buffer,
-                                     media_ptr->fx_media_driver_sectors * media_ptr->fx_media_bytes_per_sector);
+            /* Calculate source buffer end address */
+            source_buffer_end = source_buffer + (media_ptr->fx_media_driver_sectors * media_ptr->fx_media_bytes_per_sector);
 
-            /* Successful driver request.  */
-            media_ptr->fx_media_driver_status = FX_SUCCESS;
-            break;
+            /* Check source buffer does not exceed sram disk end address */
+            if (source_buffer_end  > sram_disk_end)
+            {
+              media_ptr -> fx_media_driver_status =  FX_PTR_ERROR;
+              break;
+            }
+            else
+            {
+              /* Copy the RAM sector into the destination.  */
+              _fx_utility_memory_copy(source_buffer, media_ptr -> fx_media_driver_buffer,
+                                       media_ptr->fx_media_driver_sectors * media_ptr->fx_media_bytes_per_sector);
+
+              /* Successful driver request.  */
+              media_ptr->fx_media_driver_status = FX_SUCCESS;
+              break;
+            }
         }
 
         case FX_DRIVER_WRITE:
@@ -84,14 +99,25 @@ UINT   bytes_per_sector;
             /* Calculate the RAM disk sector offset */
             destination_buffer =  (UCHAR *)FX_SRAM_DISK_BASE_ADDRESS +
                                   ((media_ptr->fx_media_driver_logical_sector +  media_ptr->fx_media_hidden_sectors) * media_ptr->fx_media_bytes_per_sector);
+            /* Calculate destination buffer end address */
+            destination_buffer_end = destination_buffer + (media_ptr->fx_media_driver_sectors * media_ptr->fx_media_bytes_per_sector);
 
-            /* Copy the source to the RAM sector.  */
-            _fx_utility_memory_copy(media_ptr->fx_media_driver_buffer, destination_buffer,
-                                    media_ptr->fx_media_driver_sectors * media_ptr->fx_media_bytes_per_sector);
+            /* Check destination buffer does not exceed sram disk end address */
+            if (destination_buffer_end  > sram_disk_end)
+            {
+              media_ptr -> fx_media_driver_status =  FX_PTR_ERROR;
+              break;
+            }
+            else
+            {
+              /* Copy the source to the RAM sector.  */
+              _fx_utility_memory_copy(media_ptr->fx_media_driver_buffer, destination_buffer,
+                                      media_ptr->fx_media_driver_sectors * media_ptr->fx_media_bytes_per_sector);
 
-            /* Successful driver request.  */
-            media_ptr -> fx_media_driver_status =  FX_SUCCESS;
-            break;
+              /* Successful driver request.  */
+              media_ptr -> fx_media_driver_status =  FX_SUCCESS;
+              break;
+            }
         }
 
         case FX_DRIVER_FLUSH:

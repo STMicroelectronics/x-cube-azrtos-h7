@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2020-2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -34,9 +34,9 @@ extern "C" {
 #include "main.h"
 #include "ux_host_mouse.h"
 #include "ux_host_keyboard.h"
+#include "ux_hcd_stm32.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "ux_hcd_stm32.h"
 #include "usb_otg.h"
 /* USER CODE END Includes */
 
@@ -46,8 +46,6 @@ extern "C" {
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
-#define USBX_HOST_APP_MEMORY_BUFFER_SIZE  13*1024
-#define USBX_HOST_MEMORY_STACK_SIZE     13*1024
 
 /* USER CODE BEGIN EC */
 
@@ -65,9 +63,10 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 UINT MX_USBX_Host_Init(VOID);
+UINT MX_USBX_Host_Stack_Init(void);
+UINT MX_USBX_Host_Stack_DeInit(void);
 
 /* USER CODE BEGIN EFP */
-VOID USBX_APP_Host_Init(VOID);
 VOID USBH_DriverVBUS(uint8_t state);
 VOID USBX_Host_Process(VOID *arg);
 

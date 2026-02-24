@@ -47,12 +47,12 @@ event flag. The <em>ThreadOne</em> starts to toggle the
 priority is less than the <em>ThreadOne</em> threshold. After 5 seconds
 it sends an event <em>THREAD_ONE_EVT</em> to the <b>MainThread</b>.</p>
 <p>After receiving the <em>THREAD_ONE_EVT</em>, the <b>MainThread</b>
-change the <b>ThreadTwo</b> priority to 8 and its preemption threshold
+changes the <b>ThreadTwo</b> priority to 8 and its preemption threshold
 to 8 to be more than the <em>ThreadOne</em> threshold then waits for an
 event.</p>
 <p>Now, the <b>ThreadTwo</b> can preempt the <b>ThreadOne</b> and start
 toggling the <em>LED_GREEN</em> each 200ms for 5 seconds. Once done it
-send the <b>THREAD_TWO_EVT</b> to <b>MainThread</b>. Once
+sends the <b>THREAD_TWO_EVT</b> to <b>MainThread</b>. Once
 <em>ThreadTwo_Evt</em> is received, the <b>MainThread</b> resets the
 <b>ThreadTwo</b> priority and preemption threshold to their original
 values (10, 10), <b>ThreadOne</b> is rescheduled and the above scenario
@@ -67,8 +67,9 @@ and toggles the <em>LED_GREEN</em> each 1 second for ever.</p>
 forever.</li>
 </ul>
 <h4 id="error-behaviors"><b>Error behaviors</b></h4>
-<p>LED_RED toggles every 1 second if an error occurs. An error message
-is printed to the serial port.</p>
+<p>‘LED_RED’ toggles every 1 second if an error occurs while the
+‘LED_GREEN’ is turned OFF. An error message is printed to the serial
+port.</p>
 <h4 id="assumptions-if-any"><b>Assumptions if any</b></h4>
 <p>None</p>
 <h4 id="known-limitations"><b>Known limitations</b></h4>
@@ -110,9 +111,9 @@ STM32F7 Series and STM32H7 Series”</li>
 HAL uses a separate time base through the TIM IPs.</li>
 <li>ThreadX is configured with 100 ticks/sec by default, this should be
 taken into account when using delays or timeouts at application. It is
-always possible to reconfigure it in the “tx_user.h”, the
-“TX_TIMER_TICKS_PER_SECOND” define,but this should be reflected in
-“tx_initialize_low_level.S” file too.</li>
+always possible to reconfigure it, by updating the
+“TX_TIMER_TICKS_PER_SECOND” define in the “tx_user.h” file. The update
+should be reflected in “tx_initialize_low_level.S” file too.</li>
 <li>ThreadX is disabling all interrupts during kernel start-up to avoid
 any unexpected behavior, therefore all system related calls (HAL, BSP)
 should be done either at the beginning of the application or inside the
@@ -125,7 +126,7 @@ way contain a system API call (HAL or BSP).</li>
 <li>Using dynamic memory allocation requires to apply some changes to
 the linker file. ThreadX needs to pass a pointer to the first free
 memory location in RAM to the tx_application_define() function, using
-the “first_unused_memory” argument. This require changes in the linker
+the “first_unused_memory” argument. This requires changes in the linker
 files to expose this memory location.
 <ul>
 <li>For EWARM add the following section into the .icf file:</li>
@@ -162,12 +163,12 @@ the “USE_DYNAMIC_MEMORY_ALLOCATION” flag.</li>
 <h3 id="hardware-and-software-environment"><b>Hardware and Software
 environment</b></h3>
 <ul>
-<li><p>This application runs on STM32H723xx devices</p></li>
-<li><p>This application has been tested with STMicroelectronics
+<li>This application runs on STM32H723xx devices.</li>
+<li>This application has been tested with STMicroelectronics
 NUCLEO-H723ZG boards revision MB1364-H723ZG-E01 and can be easily
-tailored to any other supported device and development board.</p></li>
-<li><p>This application uses USART3 to display logs, the hyperterminal
-configuration is as follows:</p>
+tailored to any other supported device and development board.</li>
+<li>This application uses USART3 to display logs, the hyperterminal
+configuration is as follows:
 <ul>
 <li>BaudRate = 115200 baud</li>
 <li>Word Length = 8 Bits</li>

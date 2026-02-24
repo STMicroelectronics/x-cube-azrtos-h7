@@ -40,11 +40,11 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 /* Define constants for the NAND flash simulation. */
-#define TOTAL_BLOCKS                        2048
-#define PHYSICAL_PAGES_PER_BLOCK            64                                  /* Min value of 2                                              */
-#define BYTES_PER_PHYSICAL_PAGE             2048                                /* 2048 bytes per page                                         */
-#define WORDS_PER_PHYSICAL_PAGE             BYTES_PER_PHYSICAL_PAGE/4           /* Words per page                                              */
-#define SPARE_BYTES_PER_PAGE                64                                  /* 64 "spare" bytes per page                                   */
+#define CUSTOM_TOTAL_BLOCKS                        2048
+#define CUSTOM_PHYSICAL_PAGES_PER_BLOCK            64                                  /* Min value of 2                                              */
+#define CUSTOM_BYTES_PER_PHYSICAL_PAGE             2048                                /* 2048 bytes per page                                         */
+#define CUSTOM_WORDS_PER_PHYSICAL_PAGE             CUSTOM_BYTES_PER_PHYSICAL_PAGE/4           /* Words per page                                              */
+#define CUSTOM_SPARE_BYTES_PER_PAGE                64                                  /* 64 "spare" bytes per page                                   */
 /* For 2048 byte block spare area:                             */
 #define BAD_BLOCK_POSITION                  0                                   /*      0 is the bad block byte position                        */
 #define EXTRA_BYTE_POSITION                 2                                   /*      2 is the extra bytes starting byte position             */
@@ -53,12 +53,16 @@ extern "C" {
 #define NAND_INSTANCE                       0
 /* Define the flag for erase NAND flash memory */
 #define LX_DRIVER_ERASES_FLASH_AFTER_INIT
-#define NAND_FLASH_SIZE                     (TOTAL_BLOCKS * PHYSICAL_PAGES_PER_BLOCK * BYTES_PER_PHYSICAL_PAGE)
+#define NAND_FLASH_SIZE                     (CUSTOM_TOTAL_BLOCKS * CUSTOM_PHYSICAL_PAGES_PER_BLOCK * CUSTOM_BYTES_PER_PHYSICAL_PAGE)
 
-#define SPARE_DATA1_OFFSET                  0
-#define SPARE_DATA1_LENGTH                  0x40
-#define SPARE_DATA2_OFFSET                  0
-#define SPARE_DATA2_LENGTH                  0
+#define CUSTOM_SPARE_DATA1_OFFSET                  0
+#define CUSTOM_SPARE_DATA1_LENGTH                  0x40
+#define CUSTOM_SPARE_DATA2_OFFSET                  0
+#define CUSTOM_SPARE_DATA2_LENGTH                  0
+
+#if (EXTRA_BYTE_POSITION >= CUSTOM_SPARE_BYTES_PER_PAGE)
+#error "EXTRA_BYTE_POSITION must be < CUSTOM_SPARE_BYTES_PER_PAGE."
+#endif
 
 /* Definition of the spare area is relative to the block size of the NAND part and perhaps manufactures of the NAND part.
    Here are some common definitions:

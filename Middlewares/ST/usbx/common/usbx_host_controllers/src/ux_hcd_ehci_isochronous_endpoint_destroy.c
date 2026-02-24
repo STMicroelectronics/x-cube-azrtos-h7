@@ -123,7 +123,7 @@ ULONG                           last_size;
 #if defined(UX_HCD_EHCI_SPLIT_TRANSFER_ENABLE)
     if (endpoint -> ux_endpoint_device -> ux_device_speed != UX_HIGH_SPEED_DEVICE)
     {
-        /* TBD.  */
+        /* To be done.  */
     }
     else
 #endif

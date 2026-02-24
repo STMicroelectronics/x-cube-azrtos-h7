@@ -49,13 +49,15 @@ extern "C" {
 #define CUSTOM_DRIVER_ID           0xABCDEF
 #define NAND_CUSTOM_DRIVER_NAME    "NAND CUSTOM DRIVER"
 #include "lx_nand_custom_driver.h"
-#define LX_NAND_CUSTOM_DRIVERS   {.name = NAND_CUSTOM_DRIVER_NAME,  .id = CUSTOM_DRIVER_ID, .nand_driver_initialize = lx_nand_flash_initialize_driver}
  */
 
 /* USER CODE BEGIN CUSTOM_DRIVER */
-
+/* extern ULONG fx_lx_nand_custom_driver_buffer[(7 * CUSTOM_TOTAL_BLOCKS + 4 + 2 * (CUSTOM_BYTES_PER_PHYSICAL_PAGE + CUSTOM_SPARE_BYTES_PER_PAGE)) / sizeof(ULONG)]; */
 /* USER CODE END CUSTOM_DRIVER */
 
+/*
+#define LX_NAND_CUSTOM_DRIVERS   {.name = NAND_CUSTOM_DRIVER_NAME,  .id = CUSTOM_DRIVER_ID, .nand_driver_initialize = lx_stm32_nand_custom_driver_initialize, .buffer=fx_lx_nand_custom_driver_buffer, .buffer_size=sizeof(fx_lx_nand_custom_driver_buffer)}
+ */
 #endif
 
 #define MAX_LX_NAND_DRIVERS     8

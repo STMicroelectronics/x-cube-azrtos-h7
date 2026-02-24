@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2020-2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -154,6 +154,8 @@ uint8_t *USBD_Get_Device_Framework_Speed(uint8_t Speed, ULONG *Length)
 
   if (USBD_FULL_SPEED == Speed)
   {
+    _ux_utility_memory_set(&USBD_Device_FS, 0U, sizeof(USBD_Device_FS));
+
     USBD_Device_Framework_Builder(&USBD_Device_FS, pDevFrameWorkDesc_FS,
                                   UserClassInstance, Speed);
 
@@ -164,6 +166,8 @@ uint8_t *USBD_Get_Device_Framework_Speed(uint8_t Speed, ULONG *Length)
   }
   else
   {
+    _ux_utility_memory_set(&USBD_Device_HS, 0U, sizeof(USBD_Device_HS));
+
     USBD_Device_Framework_Builder(&USBD_Device_HS, pDevFrameWorkDesc_HS,
                                   UserClassInstance, Speed);
 
@@ -447,6 +451,12 @@ static uint8_t *USBD_Device_Framework_Builder(USBD_DevClassHandleTypeDef *pdev,
       pDevDesc->bDeviceClass = 0x02;
       pDevDesc->bDeviceSubClass = 0x02;
       pDevDesc->bDeviceProtocol = 0x00;
+    }
+    else if (UserClassInstance[0] == CLASS_TYPE_VIDEO)
+    {
+      pDevDesc->bDeviceClass = 0xEF;
+      pDevDesc->bDeviceSubClass = 0x02;
+      pDevDesc->bDeviceProtocol = 0x01;
     }
   }
 

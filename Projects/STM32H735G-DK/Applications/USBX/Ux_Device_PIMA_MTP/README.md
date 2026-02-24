@@ -20,7 +20,7 @@ Those descriptors are used by the host driver to identify the device capabilitie
 Once the STM32H735G-DK USB device successfully completed the enumeration phase, a new removable drive appears in the system window.
 Operations can be performed as with any other removable drive.
 It is then possible to do all standard files operations:
-  - Files: read, write, delete, copy, paste.
+  - Files: read, delete, copy, paste.
 
 The provided application does not support modifying an existing file in the media storage.
 
@@ -46,7 +46,7 @@ Note2: After formatting media a refersh is required.
 
 #### <b>Error behaviors</b>
 
-Host PC shows that USB device does not operate as designed (MTP enumeration fails, the new removable driver appears but read, write or format operations fail).
+Host PC shows that USB device does not operate as designed (MTP enumeration fails, the new removable driver appears but read or format operations fail).
 
 #### <b>Assumptions if any</b>
 
@@ -122,6 +122,10 @@ RTOS, ThreadX, USBXDevice, Device, USB_OTG, Full Speed, MTP, SD Card, SDMMC
   - This application runs on STM32H735xx devices.
   - This application has been tested with STMicroelectronics STM32H735G-DK boards revision: MB1520-H735I-B02
     and can be easily tailored to any other supported device and development board.
+
+  - STM32H735G-DK Set-up:
+
+    - JP7 must be left unconnected (USBFS position) to ensure proper USB unplug/plug detection and functionality. Connecting JP7 may prevent the device from correctly handling USB cable insertion and removal events.
 
 ### <b>How to use it ?</b>
 

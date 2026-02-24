@@ -1710,7 +1710,7 @@ HAL_StatusTypeDef HAL_QSPI_MemoryMapped(QSPI_HandleTypeDef *hqspi, QSPI_CommandT
   assert_param(IS_QSPI_INSTRUCTION_MODE(cmd->InstructionMode));
   if (cmd->InstructionMode != QSPI_INSTRUCTION_NONE)
   {
-  assert_param(IS_QSPI_INSTRUCTION(cmd->Instruction));
+    assert_param(IS_QSPI_INSTRUCTION(cmd->Instruction));
   }
 
   assert_param(IS_QSPI_ADDRESS_MODE(cmd->AddressMode));
@@ -1750,9 +1750,9 @@ HAL_StatusTypeDef HAL_QSPI_MemoryMapped(QSPI_HandleTypeDef *hqspi, QSPI_CommandT
     if (status == HAL_OK)
     {
       /* Configure QSPI: CR register with timeout counter enable */
-    MODIFY_REG(hqspi->Instance->CR, QUADSPI_CR_TCEN, cfg->TimeOutActivation);
+      MODIFY_REG(hqspi->Instance->CR, QUADSPI_CR_TCEN, cfg->TimeOutActivation);
 
-    if (cfg->TimeOutActivation == QSPI_TIMEOUT_COUNTER_ENABLE)
+      if (cfg->TimeOutActivation == QSPI_TIMEOUT_COUNTER_ENABLE)
       {
         assert_param(IS_QSPI_TIMEOUT_PERIOD(cfg->TimeOutPeriod));
 
@@ -2370,6 +2370,75 @@ HAL_StatusTypeDef HAL_QSPI_SetFlashID(QSPI_HandleTypeDef *hqspi, uint32_t FlashI
   return status;
 }
 
+#if defined(QUADSPI_CCR_FRCM)
+/** @brief  Enable Free Running Clock Mode.
+  * @param  hqspi QSPI handle.
+  * @note   Free running clock mode could only be enabled when BUSY = 0.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_QSPI_EnableFreeRunningClockMode(QSPI_HandleTypeDef *hqspi)
+{
+  HAL_StatusTypeDef status = HAL_BUSY;
+
+  /* Process locked */
+  __HAL_LOCK(hqspi);
+
+  if (hqspi->State == HAL_QSPI_STATE_READY)
+  {
+    if (__HAL_QSPI_GET_FLAG(hqspi, QSPI_FLAG_BUSY) == RESET)
+    {
+      /* Enable Free Running Clock mode */
+      SET_BIT(hqspi->Instance->CCR, QUADSPI_CCR_FRCM);
+      status = HAL_OK;
+    }
+  }
+
+  /* Process unlocked */
+  __HAL_UNLOCK(hqspi);
+
+  /* Return function status */
+  return status;
+}
+
+/** @brief  Disable Free Running Clock Mode.
+  * @param  hqspi QSPI handle.
+  * @note   Free running clock mode could only be disabled when BUSY = 0.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_QSPI_DisableFreeRunningClockMode(QSPI_HandleTypeDef *hqspi)
+{
+  HAL_StatusTypeDef status = HAL_BUSY;
+
+  /* Process locked */
+  __HAL_LOCK(hqspi);
+
+  if (hqspi->State == HAL_QSPI_STATE_READY)
+  {
+    if (__HAL_QSPI_GET_FLAG(hqspi, QSPI_FLAG_BUSY) == RESET)
+    {
+      /* Disable Free Running Clock mode */
+      CLEAR_BIT(hqspi->Instance->CCR, QUADSPI_CCR_FRCM);
+      status = HAL_OK;
+    }
+  }
+
+  /* Process unlocked */
+  __HAL_UNLOCK(hqspi);
+
+  /* Return function status */
+  return status;
+}
+
+/** @brief  Inidicate if Free Running Clock Mode is enabled.
+  * @param  hqspi QSPI handle.
+  * @retval Free Running Clock Mode status (0 : Normal mode, 1 : Free running clock mode)
+  */
+uint32_t HAL_QSPI_IsEnabledFreeRunningClockMode(QSPI_HandleTypeDef *hqspi)
+{
+  return (READ_BIT(hqspi->Instance->CCR, QUADSPI_CCR_FRCM) >> QUADSPI_CCR_FRCM_Pos);
+}
+
+#endif /* QUADSPI_CCR_FRCM */
 /**
   * @}
   */

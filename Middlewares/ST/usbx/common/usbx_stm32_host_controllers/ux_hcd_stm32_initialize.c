@@ -103,9 +103,6 @@ UX_HCD_STM32          *hcd_stm32;
     /* Set the state of the controller to HALTED first.  */
     hcd -> ux_hcd_status =  UX_HCD_STATUS_HALTED;
 
-    /* Initialize the number of channels.  */
-    hcd_stm32 -> ux_hcd_stm32_nb_channels =  UX_HCD_STM32_MAX_NB_CHANNELS;
-
     /* Check if the parameter is null.  */
     if (hcd -> ux_hcd_irq == 0)
     {
@@ -116,6 +113,10 @@ UX_HCD_STM32          *hcd_stm32;
     /* Get HCD handle from parameter.  */
     hcd_stm32 -> hcd_handle = (HCD_HandleTypeDef*)hcd -> ux_hcd_irq;
     hcd_stm32 -> hcd_handle -> pData = hcd;
+
+    /* Initialize the number of channels.  */
+    hcd_stm32 -> ux_hcd_stm32_nb_channels = UX_MIN(hcd_stm32->hcd_handle->Init.Host_channels,
+                                                   UX_HCD_STM32_MAX_NB_CHANNELS);
 
     /* Allocate the list of eds.   */
     hcd_stm32 -> ux_hcd_stm32_ed_list =  _ux_utility_memory_allocate(UX_NO_ALIGN, UX_REGULAR_MEMORY, sizeof(UX_HCD_STM32_ED) *_ux_system_host -> ux_system_host_max_ed);

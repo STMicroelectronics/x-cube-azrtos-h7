@@ -129,7 +129,7 @@ void usbx_cdc_ecm_data_interface_no_bulk_in_endpoint_test_application_define(voi
 {
 
     /* Inform user.  */
-    printf("Running CDC-ECM No Bulk In Endpiont Test............................ ");
+    printf("Running CDC-ECM No Bulk In Endpoint Test............................ ");
 
     stepinfo("\n");
 

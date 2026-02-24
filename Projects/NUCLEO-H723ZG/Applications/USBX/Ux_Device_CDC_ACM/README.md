@@ -133,7 +133,7 @@ RTOS, ThreadX, USBXDevice, USB_OTG, Full Speed, CDC, VCP, USART, DMA.
 
   - The USART3 interface available on PD8 and PD9 of the microcontroller are connected to ST-LINK MCU.
   By default the USART3 communication between the target MCU and ST-LINK MCU is enabled.
-  Its configuration is as follows:
+  It's configuration is as following:
     - BaudRate = 115200 baud
     - Word Length = 8 Bits
     - Stop Bit = 1

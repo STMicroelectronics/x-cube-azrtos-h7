@@ -132,13 +132,21 @@ UX_INTERRUPT_SAVE_AREA
 
     UX_RESTORE
 
+    /* Free ed data resources */
+    if ((ed -> ux_stm32_ed_data != UX_NULL) && (ed ->ux_stm32_ed_data_free == UX_HCD_STM32_ED_STATUS_ALIGNED_BUFFER_PENDING_FREE))
+    {
+      _ux_utility_memory_free(ed -> ux_stm32_ed_data);
+      ed -> ux_stm32_ed_data = UX_NULL;
+      ed ->ux_stm32_ed_data_free = UX_HCD_STM32_ED_STATUS_ALIGNED_BUFFER_FREE_DONE;
+    }
+
 #if !defined(UX_HOST_STANDALONE)
 
     /* Wait for the controller to finish the current frame processing.  */
     _ux_utility_delay_ms(1);
 #else
 
-    /* If setup memory is not freed correct, free it.  */
+    /* If the setup memory has not been freed correctly, free it now. */
     if (ed -> ux_stm32_ed_setup)
         _ux_utility_memory_free(ed -> ux_stm32_ed_setup);
 #endif /* !defined(UX_HOST_STANDALONE) */

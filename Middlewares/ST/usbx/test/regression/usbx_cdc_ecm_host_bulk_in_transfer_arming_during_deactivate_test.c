@@ -57,7 +57,7 @@ static void post_init_host()
     /* Wait for CDC-ECM thread to stall. */
     UX_TEST_CHECK_SUCCESS(ux_test_wait_for_value_uchar(&cdc_ecm_thread_suspended, 1));
 
-    /* Just for the hell of it, null out the system change function so we can hit that case too. */
+    /* Null out the system change function so we can hit that case too. */
     _ux_system_host->ux_system_host_change_function = UX_NULL;
 
     /* Now disconnect the host. */

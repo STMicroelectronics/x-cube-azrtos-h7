@@ -246,6 +246,11 @@
 			<locationURI>PARENT-2-PROJECT_LOC/CM7/FileX/Target/fx_stm32_sd_driver_glue.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/USBX/App/app_usbx.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/CM7/USBX/App/app_usbx.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/USBX/App/app_usbx_host.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/CM7/USBX/App/app_usbx_host.c</locationURI>

@@ -574,7 +574,7 @@ static VOID test_cdc_instance_parameter_change(VOID *cdc_instance)
 static VOID test_ux_error_callback(UINT system_level, UINT system_context, UINT error_code)
 {
 }
-/* TODO: _ux_system_uninitialize, patch implement to lib if necessary */
+/* To be done: _ux_system_uninitialize, patch implement to lib if necessary */
 #if 0
 UINT  _ux_system_uninitialize(VOID)
 {
@@ -586,7 +586,7 @@ UINT  _ux_system_uninitialize(VOID)
     return(UX_SUCCESS);
 }
 #endif
-/* TODO: _ux_device_stack_uninitialize, patch implement to lib if necessary */
+/* To be done: _ux_device_stack_uninitialize, patch implement to lib if necessary */
 #if 0
 UINT  _ux_device_stack_uninitialize(VOID)
 {

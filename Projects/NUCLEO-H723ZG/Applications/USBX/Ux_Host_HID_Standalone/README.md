@@ -4,7 +4,7 @@
 This application provides an example of Azure RTOS USBX stack usage .
 It shows how to develop bare metal USB Host Human Interface "HID" able to enumerate and communicates with a mouse or a keyboard.
 
-The application's main calls the MX_USBX_Host_Init() function in order to initialize USBX and USBX_Host_Process in the while loop.
+The application's main calls the MX_USBX_Init() function in order to initialize USBX and USBX_Host_Process in the while loop.
 As stated earlier, the present application runs in standalone mode without ThreadX, for this reason, the standalone variant of USBX is enabled by adding the following flag in ux_user.h:
 
  - #define UX_STANDALONE

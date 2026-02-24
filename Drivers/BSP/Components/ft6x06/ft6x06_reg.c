@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2015-2019 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -40,7 +39,7 @@
 * Input         : Register Address, length of buffer
 * Output        : pdata Read
 *******************************************************************************/
-int32_t ft6x06_read_reg(ft6x06_ctx_t *ctx, uint8_t reg, uint8_t* pdata, uint16_t length)
+int32_t ft6x06_read_reg(const ft6x06_ctx_t *ctx, uint8_t reg, uint8_t *pdata, uint16_t length)
 {
   return ctx->ReadReg(ctx->handle, reg, pdata, length);
 }
@@ -52,7 +51,7 @@ int32_t ft6x06_read_reg(ft6x06_ctx_t *ctx, uint8_t reg, uint8_t* pdata, uint16_t
 * Input         : Register Address, pdata to be written, length of buffer
 * Output        : None
 *******************************************************************************/
-int32_t ft6x06_write_reg(ft6x06_ctx_t *ctx, uint8_t reg, uint8_t *pdata, uint16_t length)
+int32_t ft6x06_write_reg(const ft6x06_ctx_t *ctx, uint8_t reg, uint8_t *pdata, uint16_t length)
 {
   return ctx->WriteReg(ctx->handle, reg, pdata, length);
 }
@@ -66,7 +65,7 @@ int32_t ft6x06_write_reg(ft6x06_ctx_t *ctx, uint8_t reg, uint8_t *pdata, uint16_
 * Output         : None
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_dev_mode_w(ft6x06_ctx_t *ctx, uint8_t value)
+int32_t  ft6x06_dev_mode_w(const ft6x06_ctx_t *ctx, uint8_t value)
 {
   int32_t ret;
   uint8_t tmp;
@@ -91,7 +90,7 @@ int32_t  ft6x06_dev_mode_w(ft6x06_ctx_t *ctx, uint8_t value)
 * Output         : None
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_dev_mode_r(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_dev_mode_r(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
   int32_t ret;
   
@@ -113,9 +112,9 @@ int32_t  ft6x06_dev_mode_r(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of GEST_ID register
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_gest_id(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_gest_id(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
-  return ft6x06_read_reg(ctx, FT6X06_GEST_ID_REG, (uint8_t *)value, 1);
+  return ft6x06_read_reg(ctx, FT6X06_GEST_ID_REG, value, 1);
 }
 
 /*******************************************************************************
@@ -125,7 +124,7 @@ int32_t  ft6x06_gest_id(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of TD_STATUS register
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_td_status(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_td_status(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
   int32_t ret;
   
@@ -147,7 +146,7 @@ int32_t  ft6x06_td_status(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_P1_XH[7:6] bits
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_p1_xh_ef(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_p1_xh_ef(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
   int32_t ret;
   
@@ -169,7 +168,7 @@ int32_t  ft6x06_p1_xh_ef(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_P1_XH[3:0] bits
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_p1_xh_tp(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_p1_xh_tp(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
   int32_t ret;
   
@@ -191,9 +190,9 @@ int32_t  ft6x06_p1_xh_tp(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_P1_XL register
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_p1_xl_tp(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_p1_xl_tp(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
-  return ft6x06_read_reg(ctx, FT6X06_P1_XL_REG, (uint8_t *)value, 1);
+  return ft6x06_read_reg(ctx, FT6X06_P1_XL_REG, value, 1);
 }
 
 /*******************************************************************************
@@ -203,7 +202,7 @@ int32_t  ft6x06_p1_xl_tp(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_P1_YH[7:4] bits
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_p1_yh_tid(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_p1_yh_tid(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
   int32_t ret;
   
@@ -225,7 +224,7 @@ int32_t  ft6x06_p1_yh_tid(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_P1_YH[3:0] bits
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_p1_yh_tp(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_p1_yh_tp(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
   int32_t ret;
   
@@ -247,9 +246,9 @@ int32_t  ft6x06_p1_yh_tp(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_P1_YL register
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_p1_yl_tp(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_p1_yl_tp(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
-  return ft6x06_read_reg(ctx, FT6X06_P1_YL_REG, (uint8_t *)value, 1);
+  return ft6x06_read_reg(ctx, FT6X06_P1_YL_REG, value, 1);
 }
 
 /*******************************************************************************
@@ -259,9 +258,9 @@ int32_t  ft6x06_p1_yl_tp(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_P1_WEIGHT register
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_p1_weight(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_p1_weight(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
-  return ft6x06_read_reg(ctx, FT6X06_P1_WEIGHT_REG, (uint8_t *)value, 1);
+  return ft6x06_read_reg(ctx, FT6X06_P1_WEIGHT_REG, value, 1);
 }
 
 /*******************************************************************************
@@ -271,7 +270,7 @@ int32_t  ft6x06_p1_weight(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_P1_MISC register
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_p1_misc(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_p1_misc(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
   int32_t ret;
   
@@ -292,7 +291,7 @@ int32_t  ft6x06_p1_misc(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_P2_XH[7:6] bits
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_p2_xh_ef(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_p2_xh_ef(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
   int32_t ret;
   
@@ -314,7 +313,7 @@ int32_t  ft6x06_p2_xh_ef(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_P2_XH[3:0] bits
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_p2_xh_tp(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_p2_xh_tp(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
   int32_t ret;
   
@@ -336,9 +335,9 @@ int32_t  ft6x06_p2_xh_tp(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_P2_XL register
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_p2_xl_tp(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_p2_xl_tp(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
-  return ft6x06_read_reg(ctx, FT6X06_P2_XL_REG, (uint8_t *)value, 1);
+  return ft6x06_read_reg(ctx, FT6X06_P2_XL_REG, value, 1);
 }
 
 /*******************************************************************************
@@ -348,7 +347,7 @@ int32_t  ft6x06_p2_xl_tp(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_P2_YH[7:4] bits
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_p2_yh_tid(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_p2_yh_tid(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
   int32_t ret;
   
@@ -370,7 +369,7 @@ int32_t  ft6x06_p2_yh_tid(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_P2_YH[3:0] bits
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_p2_yh_tp(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_p2_yh_tp(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
   int32_t ret;
   
@@ -392,9 +391,9 @@ int32_t  ft6x06_p2_yh_tp(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_P2_YL register
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_p2_yl_tp(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_p2_yl_tp(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
-  return ft6x06_read_reg(ctx, FT6X06_P2_YL_REG, (uint8_t *)value, 1);
+  return ft6x06_read_reg(ctx, FT6X06_P2_YL_REG, value, 1);
 }
 
 /*******************************************************************************
@@ -404,9 +403,9 @@ int32_t  ft6x06_p2_yl_tp(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_P2_WEIGHT register
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_p2_weight(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_p2_weight(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
-  return ft6x06_read_reg(ctx, FT6X06_P2_WEIGHT_REG, (uint8_t *)value, 1);
+  return ft6x06_read_reg(ctx, FT6X06_P2_WEIGHT_REG, value, 1);
 }
 
 /*******************************************************************************
@@ -416,7 +415,7 @@ int32_t  ft6x06_p2_weight(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_P2_MISC register
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_p2_misc(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_p2_misc(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
   int32_t ret;
   
@@ -438,7 +437,7 @@ int32_t  ft6x06_p2_misc(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : None
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_th_group(ft6x06_ctx_t *ctx, uint8_t value)
+int32_t  ft6x06_th_group(const ft6x06_ctx_t *ctx, uint8_t value)
 {
   return ft6x06_write_reg(ctx, FT6X06_TH_GROUP_REG, &value, 1);
 }
@@ -450,7 +449,7 @@ int32_t  ft6x06_th_group(ft6x06_ctx_t *ctx, uint8_t value)
 * Output         : None
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_th_diff(ft6x06_ctx_t *ctx, uint8_t value)
+int32_t  ft6x06_th_diff(const ft6x06_ctx_t *ctx, uint8_t value)
 {
   return ft6x06_write_reg(ctx, FT6X06_TH_DIFF_REG, &value, 1);
 }
@@ -462,7 +461,7 @@ int32_t  ft6x06_th_diff(ft6x06_ctx_t *ctx, uint8_t value)
 * Output         : None
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_ctrl(ft6x06_ctx_t *ctx, uint8_t value)
+int32_t  ft6x06_ctrl(const ft6x06_ctx_t *ctx, uint8_t value)
 {
   return ft6x06_write_reg(ctx, FT6X06_CTRL_REG, &value, 1);
 }
@@ -475,7 +474,7 @@ int32_t  ft6x06_ctrl(ft6x06_ctx_t *ctx, uint8_t value)
 * Output         : None
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_time_enter_monitor(ft6x06_ctx_t *ctx, uint8_t value)
+int32_t  ft6x06_time_enter_monitor(const ft6x06_ctx_t *ctx, uint8_t value)
 {
   return ft6x06_write_reg(ctx, FT6X06_TIMEENTERMONITOR_REG, &value, 1);
 }
@@ -487,7 +486,7 @@ int32_t  ft6x06_time_enter_monitor(ft6x06_ctx_t *ctx, uint8_t value)
 * Output         : None
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_period_active(ft6x06_ctx_t *ctx, uint8_t value)
+int32_t  ft6x06_period_active(const ft6x06_ctx_t *ctx, uint8_t value)
 {
   return ft6x06_write_reg(ctx, FT6X06_PERIODACTIVE_REG, &value, 1);
 }
@@ -499,7 +498,7 @@ int32_t  ft6x06_period_active(ft6x06_ctx_t *ctx, uint8_t value)
 * Output         : None
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_period_monitor(ft6x06_ctx_t *ctx, uint8_t value)
+int32_t  ft6x06_period_monitor(const ft6x06_ctx_t *ctx, uint8_t value)
 {
   return ft6x06_write_reg(ctx, FT6X06_PERIODMONITOR_REG, &value, 1);
 }
@@ -512,7 +511,7 @@ int32_t  ft6x06_period_monitor(ft6x06_ctx_t *ctx, uint8_t value)
 * Output         : None
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_radian_value(ft6x06_ctx_t *ctx, uint8_t value)
+int32_t  ft6x06_radian_value(const ft6x06_ctx_t *ctx, uint8_t value)
 {
   return ft6x06_write_reg(ctx, FT6X06_RADIAN_VALUE_REG, &value, 1);
 }
@@ -524,7 +523,7 @@ int32_t  ft6x06_radian_value(ft6x06_ctx_t *ctx, uint8_t value)
 * Output         : None
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_offset_left_right(ft6x06_ctx_t *ctx, uint8_t value)
+int32_t  ft6x06_offset_left_right(const ft6x06_ctx_t *ctx, uint8_t value)
 {
   return ft6x06_write_reg(ctx, FT6X06_OFFSET_LR_REG, &value, 1);
 }
@@ -536,7 +535,7 @@ int32_t  ft6x06_offset_left_right(ft6x06_ctx_t *ctx, uint8_t value)
 * Output         : None
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_offset_up_down(ft6x06_ctx_t *ctx, uint8_t value)
+int32_t  ft6x06_offset_up_down(const ft6x06_ctx_t *ctx, uint8_t value)
 {
   return ft6x06_write_reg(ctx, FT6X06_OFFSET_UD_REG, &value, 1);
 }
@@ -548,7 +547,7 @@ int32_t  ft6x06_offset_up_down(ft6x06_ctx_t *ctx, uint8_t value)
 * Output         : None
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_disatnce_left_right(ft6x06_ctx_t *ctx, uint8_t value)
+int32_t  ft6x06_disatnce_left_right(const ft6x06_ctx_t *ctx, uint8_t value)
 {
   return ft6x06_write_reg(ctx, FT6X06_DISTANCE_LR_REG, &value, 1);
 }
@@ -560,7 +559,7 @@ int32_t  ft6x06_disatnce_left_right(ft6x06_ctx_t *ctx, uint8_t value)
 * Output         : None
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_distance_up_down(ft6x06_ctx_t *ctx, uint8_t value)
+int32_t  ft6x06_distance_up_down(const ft6x06_ctx_t *ctx, uint8_t value)
 {
   return ft6x06_write_reg(ctx, FT6X06_DISTANCE_UD_REG, &value, 1);
 }
@@ -572,7 +571,7 @@ int32_t  ft6x06_distance_up_down(ft6x06_ctx_t *ctx, uint8_t value)
 * Output         : None
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_distance_zoom(ft6x06_ctx_t *ctx, uint8_t value)
+int32_t  ft6x06_distance_zoom(const ft6x06_ctx_t *ctx, uint8_t value)
 {
   return ft6x06_write_reg(ctx, FT6X06_DISTANCE_ZOOM_REG, &value, 1);
 }
@@ -584,9 +583,9 @@ int32_t  ft6x06_distance_zoom(ft6x06_ctx_t *ctx, uint8_t value)
 * Output         : Status of FT6X06_LIB_VER_H register
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_lib_ver_high(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_lib_ver_high(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
-  return ft6x06_read_reg(ctx, FT6X06_LIB_VER_H_REG, (uint8_t *)value, 1);
+  return ft6x06_read_reg(ctx, FT6X06_LIB_VER_H_REG, value, 1);
 }
 
 /*******************************************************************************
@@ -596,9 +595,9 @@ int32_t  ft6x06_lib_ver_high(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_LIB_VER_L register
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_lib_ver_low(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_lib_ver_low(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
-  return ft6x06_read_reg(ctx, FT6X06_LIB_VER_L_REG, (uint8_t *)value, 1);
+  return ft6x06_read_reg(ctx, FT6X06_LIB_VER_L_REG, value, 1);
 }
 
 /*******************************************************************************
@@ -608,9 +607,9 @@ int32_t  ft6x06_lib_ver_low(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_CIPHER register
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_cipher(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_cipher(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
-  return ft6x06_read_reg(ctx, FT6X06_CIPHER_REG, (uint8_t *)value, 1);
+  return ft6x06_read_reg(ctx, FT6X06_CIPHER_REG, value, 1);
 }
 
 /*******************************************************************************
@@ -620,7 +619,7 @@ int32_t  ft6x06_cipher(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : None
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_g_mode(ft6x06_ctx_t *ctx, uint8_t value)
+int32_t  ft6x06_g_mode(const ft6x06_ctx_t *ctx, uint8_t value)
 {
   return ft6x06_write_reg(ctx, FT6X06_GMODE_REG, &value, 1);
 }
@@ -632,7 +631,7 @@ int32_t  ft6x06_g_mode(ft6x06_ctx_t *ctx, uint8_t value)
 * Output         : None
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_pwr_mode(ft6x06_ctx_t *ctx, uint8_t value)
+int32_t  ft6x06_pwr_mode(const ft6x06_ctx_t *ctx, uint8_t value)
 {
   return ft6x06_write_reg(ctx, FT6X06_PWR_MODE_REG, &value, 1); 
 }
@@ -644,9 +643,9 @@ int32_t  ft6x06_pwr_mode(ft6x06_ctx_t *ctx, uint8_t value)
 * Output         : Status of FT6X06_FIRMID register
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_firm_id(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_firm_id(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
-  return ft6x06_read_reg(ctx, FT6X06_FIRMID_REG, (uint8_t *)value, 1);
+  return ft6x06_read_reg(ctx, FT6X06_FIRMID_REG, value, 1);
 }
 
 /*******************************************************************************
@@ -656,7 +655,7 @@ int32_t  ft6x06_firm_id(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_CHIP_ID register
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_chip_id(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_chip_id(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
   int32_t ret;
   
@@ -678,9 +677,9 @@ int32_t  ft6x06_chip_id(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : Status of FT6X06_RELEASE_CODE_ID register
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_release_code_id(ft6x06_ctx_t *ctx, uint8_t *value)
+int32_t  ft6x06_release_code_id(const ft6x06_ctx_t *ctx, uint8_t *value)
 {
-  return ft6x06_read_reg(ctx, FT6X06_RELEASE_CODE_ID_REG, (uint8_t *)value, 1);
+  return ft6x06_read_reg(ctx, FT6X06_RELEASE_CODE_ID_REG, value, 1);
 }
 
 /*******************************************************************************
@@ -690,7 +689,7 @@ int32_t  ft6x06_release_code_id(ft6x06_ctx_t *ctx, uint8_t *value)
 * Output         : None
 * Return         : Status [FT6X06_ERROR, FT6X06_OK]
 *******************************************************************************/
-int32_t  ft6x06_state(ft6x06_ctx_t *ctx, uint8_t value)
+int32_t  ft6x06_state(const ft6x06_ctx_t *ctx, uint8_t value)
 {
   return ft6x06_write_reg(ctx, FT6X06_STATE_REG, &value, 1);
 }
@@ -706,5 +705,3 @@ int32_t  ft6x06_state(ft6x06_ctx_t *ctx, uint8_t value)
 /**
   * @}
   */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

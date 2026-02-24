@@ -390,7 +390,7 @@ CHAR                                               *memory_pointer;
     hid_keyboard_parameter.ux_device_class_hid_parameter_get_callback   = UX_NULL;
     hid_keyboard_parameter.ux_slave_class_hid_instance_activate         = keyboard_instance_activate_callback;
 
-    /* Initilize the device hid class. */
+    /* Initialize the device hid class. */
     status  = ux_device_stack_class_register(_ux_system_slave_class_hid_name, ux_device_class_hid_entry,
                                              1,0, (VOID *)&hid_mouse_parameter);
     status |= ux_device_stack_class_register(_ux_system_slave_class_hid_name, ux_device_class_hid_entry,

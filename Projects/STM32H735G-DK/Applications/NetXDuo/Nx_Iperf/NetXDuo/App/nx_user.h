@@ -2336,7 +2336,7 @@
          A quick check in driver is to search for
          NX_LINK_RAW_PACKET_SEND. VLAN APIs are not supported if not found. */
 
-/* #define NX_ENABLE_VLAN */
+#define NX_ENABLE_VLAN
 
 #ifdef NX_DISABLE_IPV6
 #ifdef NX_DISABLE_IPV4

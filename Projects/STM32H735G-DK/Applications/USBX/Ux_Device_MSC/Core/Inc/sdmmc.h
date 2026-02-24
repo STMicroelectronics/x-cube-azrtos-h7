@@ -41,7 +41,7 @@ extern SD_HandleTypeDef hsd1;
 void MX_SDMMC1_SD_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+void MX_SDMMC1_SD_DeInit(void);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

@@ -641,6 +641,22 @@
                 <option>
                     <name>AUserIncludes</name>
                     <state>$PROJ_DIR$/../Core/Inc</state>
+                    <state>$PROJ_DIR$/../AZURE_RTOS/App</state>
+                    <state>$PROJ_DIR$/../FileX/App</state>
+                    <state>$PROJ_DIR$/../USBX/App</state>
+                    <state>$PROJ_DIR$/../USBX/Target</state>
+                    <state>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc</state>
+                    <state>$PROJ_DIR$/../../../../../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy</state>
+                    <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Device/ST/STM32H7xx/Include</state>
+                    <state>$PROJ_DIR$/../../../../../../Drivers/CMSIS/Include</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/filex/common/inc/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/filex/ports/generic/inc/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_host_classes/inc/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/core/inc/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/ports/generic/inc/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/usbx/common/usbx_stm32_host_controllers/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/common/inc/</state>
+                    <state>$PROJ_DIR$/../../../../../../Middlewares/ST/threadx/ports/cortex_m7/iar/inc/</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -797,7 +813,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$/stm32h735xx_flash_rw_sram1.icf</state>
+                    <state>$PROJ_DIR$\stm32h735xx_flash_rw_sram1.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -1148,6 +1164,9 @@
                 <name>USBX</name>
                 <group>
                     <name>App</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\USBX\App\app_usbx.c</name>
+                    </file>
                     <file>
                         <name>$PROJ_DIR$\..\USBX\App\app_usbx_host.c</name>
                     </file>

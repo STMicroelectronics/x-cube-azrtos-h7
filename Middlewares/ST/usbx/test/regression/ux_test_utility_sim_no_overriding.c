@@ -54,7 +54,7 @@ VOID ux_test_utility_sim_mem_alloc_fail_all_stop(VOID)
 
 
 /* When the memory allocator tries to find a block of memory for the requested size, it will add extra stuff to
-   accomodate things like having to align the memory. See the allocator for what it adds. We don't take the requested
+   accommodate things like having to align the memory. See the allocator for what it adds. We don't take the requested
    size alignment into account - we leave it up to the caller.  */
 static ULONG get_amount_added_by_memory_allocator(ULONG memory_alignment, ULONG memory_size_requested)
 {

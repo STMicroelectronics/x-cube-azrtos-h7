@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2017-2019 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -88,8 +87,8 @@ extern "C" {
 
 /************** Generic Function  *******************/
 
-typedef int32_t (*CS42L51_Write_Func)(void *, uint16_t, uint8_t*, uint16_t);
-typedef int32_t (*CS42L51_Read_Func) (void *, uint16_t, uint8_t*, uint16_t);
+typedef int32_t (*CS42L51_Write_Func)(const void *, uint16_t, uint8_t *, uint16_t);
+typedef int32_t (*CS42L51_Read_Func)(const void *, uint16_t, uint8_t *, uint16_t);
 
 typedef struct
 {
@@ -99,13 +98,13 @@ typedef struct
 } cs42l51_ctx_t;
 
 /*******************************************************************************
-* Register      : Generic - All
-* Address       : Generic - All
-* Bit Group Name: None
-* Permission    : W
-*******************************************************************************/
-int32_t cs42l51_write_reg(cs42l51_ctx_t *ctx, uint16_t reg, uint8_t *data, uint16_t length);
-int32_t cs42l51_read_reg(cs42l51_ctx_t *ctx, uint16_t reg, uint8_t* data, uint16_t length);
+  * Register      : Generic - All
+  * Address       : Generic - All
+  * Bit Group Name: None
+  * Permission    : W
+  *******************************************************************************/
+int32_t cs42l51_write_reg(const cs42l51_ctx_t *ctx, uint16_t reg, uint8_t *data, uint16_t length);
+int32_t cs42l51_read_reg(const cs42l51_ctx_t *ctx, uint16_t reg, uint8_t *data, uint16_t length);
 
 #ifdef __cplusplus
 }
@@ -124,5 +123,3 @@ int32_t cs42l51_read_reg(cs42l51_ctx_t *ctx, uint16_t reg, uint8_t* data, uint16
 /**
   * @}
   */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -211,6 +211,11 @@
 			<locationURI>PARENT-2-PROJECT_LOC/CM7/AZURE_RTOS/App/app_azure_rtos.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/USBX/App/app_usbx.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/CM7/USBX/App/app_usbx.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/USBX/App/app_usbx_device.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/CM7/USBX/App/app_usbx_device.c</locationURI>

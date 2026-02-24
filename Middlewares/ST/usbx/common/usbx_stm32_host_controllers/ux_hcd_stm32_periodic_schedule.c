@@ -137,9 +137,6 @@ USHORT              port_status_change_bits;
               else
                 ed -> ux_stm32_ed_packet_length = transfer_request -> ux_transfer_request_requested_length;
 
-              /* Prepare transactions.  */
-              _ux_hcd_stm32_request_trans_prepare(hcd_stm32, ed, transfer_request);
-
               /* Get the pointer to the Endpoint.  */
               endpoint = (UX_ENDPOINT *) transfer_request -> ux_transfer_request_endpoint;
 
@@ -173,6 +170,14 @@ USHORT              port_status_change_bits;
 
               if ((endpoint->ux_endpoint_device->ux_device_state == UX_DEVICE_CONFIGURED) && (ep_schedule != 0U))
               {
+                if (ed -> ux_stm32_ed_data != NULL)
+                {
+                  ed -> ux_stm32_ed_data_free = UX_HCD_STM32_ED_STATUS_ALIGNED_BUFFER_PENDING_FREE;
+                }
+
+                /* Prepare transactions.  */
+                _ux_hcd_stm32_request_trans_prepare(hcd_stm32, ed, transfer_request);
+
                 /* Call HAL driver to submit the transfer request.  */
                 HAL_HCD_HC_SubmitRequest(hcd_stm32 -> hcd_handle, ed -> ux_stm32_ed_channel,
                                          ed -> ux_stm32_ed_dir,
@@ -211,6 +216,11 @@ USHORT              port_status_change_bits;
               ed -> ux_stm32_ed_packet_length = transfer_request -> ux_transfer_request_packet_length;
             else
               ed -> ux_stm32_ed_packet_length = transfer_request -> ux_transfer_request_requested_length;
+
+            if (ed -> ux_stm32_ed_data != NULL)
+            {
+              ed -> ux_stm32_ed_data_free = UX_HCD_STM32_ED_STATUS_ALIGNED_BUFFER_PENDING_FREE;
+            }
 
             /* Prepare transactions.  */
             _ux_hcd_stm32_request_trans_prepare(hcd_stm32, ed, transfer_request);

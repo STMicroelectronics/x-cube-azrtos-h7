@@ -338,7 +338,7 @@ UCHAR                               *memory_pointer;
     hid_parameter.ux_device_class_hid_parameter_report_length  = HID_MOUSE_REPORT_LENGTH;
     hid_parameter.ux_device_class_hid_parameter_callback       = UX_NULL;
 
-    /* Initilize the device hid class. The class is connected with interface 2 */
+    /* Initialize the device hid class. The class is connected with interface 2 */
     status =  ux_device_stack_class_register(_ux_system_slave_class_hid_name, ux_device_class_hid_entry,
                                              1, 2, (VOID *)&hid_parameter);
 #if UX_MAX_SLAVE_CLASS_DRIVER > 1

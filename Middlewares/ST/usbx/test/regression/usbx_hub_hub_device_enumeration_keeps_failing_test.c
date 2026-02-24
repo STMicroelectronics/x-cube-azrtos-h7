@@ -16,7 +16,7 @@ void usbx_hub_hub_device_enumeration_keeps_failing_test_application_define(void 
 {
 
     /* Inform user.  */
-    printf("Running Hub Hub Device Enumeration Kepps Failing Test............... ");
+    printf("Running Hub Hub Device Enumeration Keeps Failing Test............... ");
 
     stepinfo("\n");
 

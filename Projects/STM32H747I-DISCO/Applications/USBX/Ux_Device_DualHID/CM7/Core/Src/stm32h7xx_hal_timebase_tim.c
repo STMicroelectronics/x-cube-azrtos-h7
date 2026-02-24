@@ -96,6 +96,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 
   if(HAL_TIM_Base_Init(&htim6) == HAL_OK)
   {
+
     /* Start the TIM time Base generation in interrupt mode */
     return HAL_TIM_Base_Start_IT(&htim6);
   }

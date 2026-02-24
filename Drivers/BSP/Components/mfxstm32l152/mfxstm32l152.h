@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2018-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -23,7 +22,7 @@
 #define MFXSTM32L152_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -57,7 +56,7 @@ typedef struct
 
   uint32_t Pull;      /*!< Specifies the Pull-up or Pull-Down activation for the selected pins.
                            This parameter can be a value of @ref GPIO_pull_define */
-}MFXSTM32L152_IO_Init_t;
+} MFXSTM32L152_IO_Init_t;
 
 typedef struct
 {
@@ -103,14 +102,14 @@ typedef struct
                                   This parameter can be a value of @ref IDD_DeltaDelay */
   uint8_t DeltaDelayValue;  /*!< Specifies Delta delay between 2 measures
                                   value can be between 1 and 128 */
-}MFXSTM32L152_IDD_Config_t;
+} MFXSTM32L152_IDD_Config_t;
 
-typedef int32_t (*MFXSTM32L152_Init_Func)    (void);
-typedef int32_t (*MFXSTM32L152_DeInit_Func)  (void);
-typedef int32_t (*MFXSTM32L152_GetTick_Func) (void);
-typedef int32_t (*MFXSTM32L152_Delay_Func)   (uint32_t);
-typedef int32_t (*MFXSTM32L152_WriteReg_Func)(uint16_t, uint16_t, uint8_t*, uint16_t);
-typedef int32_t (*MFXSTM32L152_ReadReg_Func) (uint16_t, uint16_t, uint8_t*, uint16_t);
+typedef int32_t (*MFXSTM32L152_Init_Func)(void);
+typedef int32_t (*MFXSTM32L152_DeInit_Func)(void);
+typedef int32_t (*MFXSTM32L152_GetTick_Func)(void);
+typedef int32_t (*MFXSTM32L152_Delay_Func)(uint32_t);
+typedef int32_t (*MFXSTM32L152_WriteReg_Func)(uint16_t, uint16_t, uint8_t *, uint16_t);
+typedef int32_t (*MFXSTM32L152_ReadReg_Func)(uint16_t, uint16_t, uint8_t *, uint16_t);
 
 typedef struct
 {
@@ -131,59 +130,103 @@ typedef struct
 } MFXSTM32L152_Object_t;
 
 /* Touch screen driver structure initialization */
+
+#define MFXSTM32L152_MAX_NB_TOUCH             1U
+
+#define MFXSTM32L152_MAX_X_LENGTH          3800U
+#define MFXSTM32L152_MAX_Y_LENGTH          3800U
+
 typedef struct
 {
-  int32_t ( *Init               )(MFXSTM32L152_Object_t *);
-  int32_t ( *ReadID             )(MFXSTM32L152_Object_t *, uint32_t*);
-  int32_t ( *Reset              )(MFXSTM32L152_Object_t *);
-  int32_t ( *TS_Start           )(MFXSTM32L152_Object_t *);
-  int32_t ( *TS_DetectTouch     )(MFXSTM32L152_Object_t *);
-  int32_t ( *TS_GetXY           )(MFXSTM32L152_Object_t *, uint16_t*, uint16_t*);
-  int32_t ( *TS_EnableIT        )(MFXSTM32L152_Object_t *);
-  int32_t ( *TS_ClearIT         )(MFXSTM32L152_Object_t *);
-  int32_t ( *TS_ITStatus        )(MFXSTM32L152_Object_t *);
-  int32_t ( *TS_DisableIT       )(MFXSTM32L152_Object_t *);
-}MFXSTM32L152_TS_Mode_t;
+  uint32_t  Radian;
+  uint32_t  OffsetLeftRight;
+  uint32_t  OffsetUpDown;
+  uint32_t  DistanceLeftRight;
+  uint32_t  DistanceUpDown;
+  uint32_t  DistanceZoom;
+} MFXSTM32L152_Gesture_Init_t;
+
+typedef struct
+{
+  uint32_t  TouchDetected;
+  uint32_t  TouchX;
+  uint32_t  TouchY;
+} MFXSTM32L152_State_t;
+
+typedef struct
+{
+  uint32_t  TouchDetected;
+  uint32_t  TouchX[MFXSTM32L152_MAX_NB_TOUCH];
+  uint32_t  TouchY[MFXSTM32L152_MAX_NB_TOUCH];
+  uint32_t  TouchWeight[MFXSTM32L152_MAX_NB_TOUCH];
+  uint32_t  TouchEvent[MFXSTM32L152_MAX_NB_TOUCH];
+  uint32_t  TouchArea[MFXSTM32L152_MAX_NB_TOUCH];
+} MFXSTM32L152_MultiTouch_State_t;
+
+typedef struct
+{
+  uint8_t   MultiTouch;
+  uint8_t   Gesture;
+  uint8_t   MaxTouch;
+  uint32_t  MaxXl;
+  uint32_t  MaxYl;
+} MFXSTM32L152_Capabilities_t;
+
+typedef struct
+{
+  int32_t (*Init)(MFXSTM32L152_Object_t *);
+  int32_t (*DeInit)(MFXSTM32L152_Object_t *);
+  int32_t (*GestureConfig)(MFXSTM32L152_Object_t *, MFXSTM32L152_Gesture_Init_t *);
+  int32_t (*ReadID)(MFXSTM32L152_Object_t *, uint32_t *);
+  int32_t (*GetState)(MFXSTM32L152_Object_t *, MFXSTM32L152_State_t*);
+  int32_t (*GetMultiTouchState)(MFXSTM32L152_Object_t *, MFXSTM32L152_MultiTouch_State_t *);
+  int32_t (*GetGesture)(MFXSTM32L152_Object_t *, uint8_t* );
+  int32_t (*GetCapabilities)(MFXSTM32L152_Object_t *, MFXSTM32L152_Capabilities_t *);
+  int32_t (*EnableIT)(MFXSTM32L152_Object_t *);
+  int32_t (*DisableIT)(MFXSTM32L152_Object_t *);
+  int32_t (*ClearIT)(MFXSTM32L152_Object_t *);
+  int32_t (*ITStatus)(MFXSTM32L152_Object_t *);
+} MFXSTM32L152_TS_Mode_t;
 
 /* IO driver structure initialization */
 typedef struct
 {
-  int32_t ( *Init               )(MFXSTM32L152_Object_t *, MFXSTM32L152_IO_Init_t *);
-  int32_t ( *DeInit             )(MFXSTM32L152_Object_t *);
-  int32_t ( *ReadID             )(MFXSTM32L152_Object_t *, uint32_t*);
-  int32_t ( *Reset              )(MFXSTM32L152_Object_t *);
-  int32_t ( *IO_Start           )(MFXSTM32L152_Object_t *, uint32_t);
-  int32_t ( *IO_WritePin        )(MFXSTM32L152_Object_t *, uint32_t, uint8_t);
-  int32_t ( *IO_ReadPin         )(MFXSTM32L152_Object_t *, uint32_t);
-  int32_t ( *IO_EnableIT        )(MFXSTM32L152_Object_t *);
-  int32_t ( *IO_DisableIT       )(MFXSTM32L152_Object_t *);
-  int32_t ( *IO_ITStatus        )(MFXSTM32L152_Object_t *, uint32_t);
-  int32_t ( *IO_ClearIT         )(MFXSTM32L152_Object_t *, uint32_t);
-}MFXSTM32L152_IO_Mode_t;
+  int32_t (*Init)(MFXSTM32L152_Object_t *, MFXSTM32L152_IO_Init_t *);
+  int32_t (*DeInit)(MFXSTM32L152_Object_t *);
+  int32_t (*ReadID)(MFXSTM32L152_Object_t *, uint32_t *);
+  int32_t (*Reset)(MFXSTM32L152_Object_t *);
+  int32_t (*IO_Start)(MFXSTM32L152_Object_t *, uint32_t);
+  int32_t (*IO_WritePin)(MFXSTM32L152_Object_t *, uint32_t, uint8_t);
+  int32_t (*IO_ReadPin)(MFXSTM32L152_Object_t *, uint32_t);
+  int32_t (*IO_EnableIT)(MFXSTM32L152_Object_t *);
+  int32_t (*IO_DisableIT)(MFXSTM32L152_Object_t *);
+  int32_t (*IO_ITStatus)(MFXSTM32L152_Object_t *, uint32_t);
+  int32_t (*IO_ClearIT)(MFXSTM32L152_Object_t *, uint32_t);
+} MFXSTM32L152_IO_Mode_t;
 
 /* IDD driver structure initialization */
 typedef struct
 {
-  int32_t ( *Init               )(MFXSTM32L152_Object_t *);
-  int32_t ( *DeInit             )(MFXSTM32L152_Object_t *);
-  int32_t ( *ReadID             )(MFXSTM32L152_Object_t *, uint32_t*);
-  int32_t ( *Reset              )(MFXSTM32L152_Object_t *);
-  int32_t ( *LowPower           )(MFXSTM32L152_Object_t *);
-  int32_t ( *WakeUp             )(MFXSTM32L152_Object_t *);
-  int32_t ( *IDD_Start          )(MFXSTM32L152_Object_t *);
-  int32_t ( *IDD_Config         )(MFXSTM32L152_Object_t *, MFXSTM32L152_IDD_Config_t*);
-  int32_t ( *IDD_GetValue       )(MFXSTM32L152_Object_t *, uint32_t*);
-  int32_t ( *IDD_EnableIT       )(MFXSTM32L152_Object_t *);
-  int32_t ( *IDD_DisableIT      )(MFXSTM32L152_Object_t *);
-  int32_t ( *IDD_GetITStatus    )(MFXSTM32L152_Object_t *);
-  int32_t ( *IDD_ClearIT        )(MFXSTM32L152_Object_t *);
-  int32_t ( *Error_EnableIT     )(MFXSTM32L152_Object_t *);
-  int32_t ( *Error_ClearIT      )(MFXSTM32L152_Object_t *);
-  int32_t ( *Error_GetITStatus  )(MFXSTM32L152_Object_t *);
-  int32_t ( *Error_DisableIT    )(MFXSTM32L152_Object_t *);
-  int32_t ( *Error_ReadSrc      )(MFXSTM32L152_Object_t *);
-  int32_t ( *Error_ReadMsg      )(MFXSTM32L152_Object_t *);
-}MFXSTM32L152_IDD_Mode_t;
+  int32_t (*Init)(MFXSTM32L152_Object_t *);
+  int32_t (*DeInit)(MFXSTM32L152_Object_t *);
+  int32_t (*ReadID)(MFXSTM32L152_Object_t *, uint32_t *);
+  int32_t (*Reset)(MFXSTM32L152_Object_t *);
+  int32_t (*LowPower)(MFXSTM32L152_Object_t *);
+  int32_t (*WakeUp)(MFXSTM32L152_Object_t *);
+  int32_t (*IDD_Start)(MFXSTM32L152_Object_t *);
+  int32_t (*IDD_Config)(MFXSTM32L152_Object_t *, MFXSTM32L152_IDD_Config_t *);
+  int32_t (*IDD_GetValue)(MFXSTM32L152_Object_t *, uint32_t *);
+  int32_t (*IDD_EnableIT)(MFXSTM32L152_Object_t *);
+  int32_t (*IDD_DisableIT)(MFXSTM32L152_Object_t *);
+  int32_t (*IDD_GetITStatus)(MFXSTM32L152_Object_t *);
+  int32_t (*IDD_ClearIT)(MFXSTM32L152_Object_t *);
+  int32_t (*Error_EnableIT)(MFXSTM32L152_Object_t *);
+  int32_t (*Error_ClearIT)(MFXSTM32L152_Object_t *);
+  int32_t (*Error_GetITStatus)(MFXSTM32L152_Object_t *);
+  int32_t (*Error_DisableIT)(MFXSTM32L152_Object_t *);
+  int32_t (*Error_ReadSrc)(MFXSTM32L152_Object_t *);
+  int32_t (*Error_ReadMsg)(MFXSTM32L152_Object_t *);
+} MFXSTM32L152_IDD_Mode_t;
 
 /**
   * @}
@@ -230,7 +273,11 @@ typedef struct
 #define MFXSTM32L152_IRQ_IDD                  0x02U  /* IDD function irq */
 #define MFXSTM32L152_IRQ_GPIO                 0x01U  /* General GPIO irq (only for SRC_EN and PENDING) */
 #define MFXSTM32L152_IRQ_ALL                  0xFFU  /* All global interrupts          */
-#define MFXSTM32L152_IRQ_TS                   (MFXSTM32L152_IRQ_TS_DET | MFXSTM32L152_IRQ_TS_NE |  MFXSTM32L152_IRQ_TS_TH | MFXSTM32L152_IRQ_TS_FULL | MFXSTM32L152_IRQ_TS_OVF)
+#define MFXSTM32L152_IRQ_TS                   (MFXSTM32L152_IRQ_TS_DET\
+                                               | MFXSTM32L152_IRQ_TS_NE\
+                                               |  MFXSTM32L152_IRQ_TS_TH\
+                                               | MFXSTM32L152_IRQ_TS_FULL\
+                                               | MFXSTM32L152_IRQ_TS_OVF)
 
 /* GPIO: IO Pins definition */
 #define MFXSTM32L152_GPIO_PIN_0                0x0001U
@@ -369,7 +416,7 @@ typedef struct
   */
 
 /* MFXSTM32L152 Control functions */
-int32_t MFXSTM32L152_RegisterBusIO (MFXSTM32L152_Object_t *pObj, MFXSTM32L152_IO_t *pIO);
+int32_t MFXSTM32L152_RegisterBusIO(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_IO_t *pIO);
 int32_t MFXSTM32L152_Init(MFXSTM32L152_Object_t *pObj);
 int32_t MFXSTM32L152_DeInit(MFXSTM32L152_Object_t *pObj);
 int32_t MFXSTM32L152_Reset(MFXSTM32L152_Object_t *pObj);
@@ -403,17 +450,20 @@ int32_t MFXSTM32L152_IO_EnablePinIT(MFXSTM32L152_Object_t *pObj, uint32_t IO_Pin
 int32_t MFXSTM32L152_IO_DisablePinIT(MFXSTM32L152_Object_t *pObj, uint32_t IO_Pin);
 
 /* MFXSTM32L152 Touch screen functionalities functions */
-int32_t MFXSTM32L152_TS_Start(MFXSTM32L152_Object_t *pObj);
-int32_t MFXSTM32L152_TS_DetectTouch(MFXSTM32L152_Object_t *pObj);
-int32_t MFXSTM32L152_TS_GetXY(MFXSTM32L152_Object_t *pObj, uint16_t *X, uint16_t *Y);
+int32_t MFXSTM32L152_TS_Init(MFXSTM32L152_Object_t *pObj);
+int32_t MFXSTM32L152_TS_GestureConfig(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_Gesture_Init_t *GestureInit);
+int32_t MFXSTM32L152_TS_GetState(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_State_t *State);
+int32_t MFXSTM32L152_TS_GetMultiTouchState(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_MultiTouch_State_t *State);
+int32_t MFXSTM32L152_TS_GetGesture(MFXSTM32L152_Object_t *pObj, uint8_t *GestureId);
+int32_t MFXSTM32L152_TS_GetCapabilities(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_Capabilities_t *Capabilities);
 int32_t MFXSTM32L152_TS_EnableIT(MFXSTM32L152_Object_t *pObj);
 int32_t MFXSTM32L152_TS_DisableIT(MFXSTM32L152_Object_t *pObj);
-int32_t MFXSTM32L152_TS_ITStatus (MFXSTM32L152_Object_t *pObj);
-int32_t MFXSTM32L152_TS_ClearIT (MFXSTM32L152_Object_t *pObj);
+int32_t MFXSTM32L152_TS_ITStatus(MFXSTM32L152_Object_t *pObj);
+int32_t MFXSTM32L152_TS_ClearIT(MFXSTM32L152_Object_t *pObj);
 
 /* MFXSTM32L152 IDD current measurement functionalities functions */
 int32_t MFXSTM32L152_IDD_Start(MFXSTM32L152_Object_t *pObj);
-int32_t MFXSTM32L152_IDD_Config(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_IDD_Config_t * MfxIddConfig);
+int32_t MFXSTM32L152_IDD_Config(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_IDD_Config_t *MfxIddConfig);
 int32_t MFXSTM32L152_IDD_ConfigShuntNbLimit(MFXSTM32L152_Object_t *pObj, uint8_t ShuntNbLimit);
 int32_t MFXSTM32L152_IDD_GetValue(MFXSTM32L152_Object_t *pObj, uint32_t *ReadValue);
 int32_t MFXSTM32L152_IDD_GetShuntUsed(MFXSTM32L152_Object_t *pObj);
@@ -461,4 +511,3 @@ extern MFXSTM32L152_IDD_Mode_t MFXSTM32L152_IDD_Driver;
 /**
   * @}
   */
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

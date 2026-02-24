@@ -73,7 +73,7 @@
 /*                                                                        */
 /*  10-31-2022     Chaoqiong Xiao           Initial Version 6.2.0         */
 /*  10-31-2023     Chaoqiong Xiao           Modified comment(s),          */
-/*                                            useed zero copy when class  */
+/*                                            used zero copy when class   */
 /*                                            owns endpoint buffer,       */
 /*                                            resulting in version 6.3.0  */
 /*                                                                        */

@@ -234,7 +234,7 @@ INT             immediate_state;
             /* Fall through.  */
         case UX_HOST_CLASS_STORAGE_STATE_TEST_READY:
 
-            /* Save the LUN for the follwing sequence to use.  */
+            /* Save the LUN for the following sequence to use.  */
             storage -> ux_host_class_storage_lun =
                                     storage -> ux_host_class_storage_check_lun;
 

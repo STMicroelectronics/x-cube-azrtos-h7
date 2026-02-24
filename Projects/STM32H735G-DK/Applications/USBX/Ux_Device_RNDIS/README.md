@@ -108,7 +108,10 @@ RTOS, ThreadX, USBXDevice, RNDIS, Network, NetxDuo, FileX, File ,SDMMC, UART
   - This application has been tested with STMicroelectronics STM32H735G-DK boards revision: MB1520-H735I-B02
     and can be easily tailored to any other supported device and development board.
 
-  - STM32H735G-DK set-up:
+  - STM32H735G-DK Set-up:
+
+    - JP7 must be left unconnected (USBFS position) to ensure proper USB unplug/plug detection and functionality. Connecting JP7 may prevent the device from correctly handling USB cable insertion and removal events.
+
     - Connect the DK board to remote PC (through a USB cable)
      - Http clients: Microsoft Internet Explorer (v8 and later) or Google Chrome (v107)
 

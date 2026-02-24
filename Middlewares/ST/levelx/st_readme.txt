@@ -6,6 +6,16 @@
   *          Azure RTOS LeveLX for STM32 devices.
   ******************************************************************************
   */
+
+### V6.4.0 (06-10-2025) ###
+============================
+- Align version against the low-level interfaces
+
+### V6.4.0 (22-08-2025) ###
+============================
+- Align version against the low-level interfaces
+- Update README.md
+
 ### V6.4.0 (06-09-2024) ###
 ============================
 - Add STM32N6/STM32U3 series to Azure RTOS licensed hardware list

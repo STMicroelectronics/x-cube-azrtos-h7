@@ -14,9 +14,32 @@
 /* USER CODE BEGIN 1 */
 static UINT  _lx_nand_flash_erase_all_driver(VOID);
 static uint8_t flash_is_initialized = 0;
-static ULONG  nand_flash_rw_buffer[WORDS_PER_PHYSICAL_PAGE] = {0};
-static UCHAR  Buffer_Spare_Area[SPARE_BYTES_PER_PAGE] = {0};
+static ULONG  nand_flash_rw_buffer[CUSTOM_WORDS_PER_PHYSICAL_PAGE] = {0};
+static UCHAR  Buffer_Spare_Area[CUSTOM_SPARE_BYTES_PER_PAGE] = {0};
 /* USER CODE END 1 */
+
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
+
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+/* USER CODE BEGIN EC */
+
+/* USER CODE END EC */
+
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/* USER CODE END EM */
+
+/* Private variables ---------------------------------------------------------*/
+
+/* USER CODE BEGIN PV */
+
+/* USER CODE END PV */
+
+/* Exported functions prototypes ---------------------------------------------*/
 
 static UINT  lx_nand_driver_read(ULONG block, ULONG page, ULONG *destination, ULONG words);
 static UINT  lx_nand_driver_write(ULONG block, ULONG page, ULONG *source, ULONG words);
@@ -37,11 +60,18 @@ static UINT  lx_nand_flash_driver_pages_read(ULONG block, ULONG page, UCHAR *mai
 static UINT  lx_nand_flash_driver_pages_write(ULONG block, ULONG page, UCHAR *main_buffer, UCHAR *spare_buffer, ULONG pages);
 static UINT  lx_nand_flash_driver_pages_copy(ULONG source_block, ULONG source_page, ULONG destination_block, ULONG destination_page, ULONG pages, UCHAR *data_buffer);
 
-#ifndef WORDS_PER_PHYSICAL_PAGE
-#define WORDS_PER_PHYSICAL_PAGE 512
-#endif
+/* USER CODE BEGIN EFP */
 
-static UCHAR  nand_flash_buffer[WORDS_PER_PHYSICAL_PAGE];
+/* USER CODE END EFP */
+
+/* Private defines -----------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
+
+#ifndef CUSTOM_WORDS_PER_PHYSICAL_PAGE
+#define CUSTOM_WORDS_PER_PHYSICAL_PAGE 512
+#endif
 
 UINT lx_stm32_nand_custom_driver_initialize(LX_NAND_FLASH *nand_flash)
 {
@@ -94,17 +124,17 @@ UINT lx_stm32_nand_custom_driver_initialize(LX_NAND_FLASH *nand_flash)
 
   /*USER CODE END Init_Section_0 */
 
-  nand_flash->lx_nand_flash_total_blocks =                  TOTAL_BLOCKS;
-  nand_flash->lx_nand_flash_pages_per_block =               PHYSICAL_PAGES_PER_BLOCK;
-  nand_flash->lx_nand_flash_bytes_per_page =                BYTES_PER_PHYSICAL_PAGE;
+  nand_flash->lx_nand_flash_total_blocks =                  CUSTOM_TOTAL_BLOCKS;
+  nand_flash->lx_nand_flash_pages_per_block =               CUSTOM_PHYSICAL_PAGES_PER_BLOCK;
+  nand_flash->lx_nand_flash_bytes_per_page =                CUSTOM_BYTES_PER_PHYSICAL_PAGE;
 
-  nand_flash -> lx_nand_flash_spare_data1_offset =          SPARE_DATA1_OFFSET;
-  nand_flash -> lx_nand_flash_spare_data1_length =          SPARE_DATA1_LENGTH;
+  nand_flash -> lx_nand_flash_spare_data1_offset =          CUSTOM_SPARE_DATA1_OFFSET;
+  nand_flash -> lx_nand_flash_spare_data1_length =          CUSTOM_SPARE_DATA1_LENGTH;
 
-  nand_flash -> lx_nand_flash_spare_data2_offset =          SPARE_DATA2_OFFSET;
-  nand_flash -> lx_nand_flash_spare_data2_length =          SPARE_DATA2_LENGTH;
+  nand_flash -> lx_nand_flash_spare_data2_offset =          CUSTOM_SPARE_DATA2_OFFSET;
+  nand_flash -> lx_nand_flash_spare_data2_length =          CUSTOM_SPARE_DATA2_LENGTH;
 
-  nand_flash -> lx_nand_flash_spare_total_length =          SPARE_BYTES_PER_PAGE;
+  nand_flash -> lx_nand_flash_spare_total_length =          CUSTOM_SPARE_BYTES_PER_PAGE;
 
   /* USER CODE BEGIN Init_Section_1 */
 
@@ -132,12 +162,6 @@ UINT lx_stm32_nand_custom_driver_initialize(LX_NAND_FLASH *nand_flash)
   /* USER CODE BEGIN Init_Section_2 */
 
   /*USER CODE END Init_Section_2 */
-
-  nand_flash->lx_nand_flash_page_buffer =  &nand_flash_buffer[0];
-
-  /* USER CODE BEGIN Init_Section_3 */
-
-  /*USER CODE END Init_Section_3 */
   return ret;
 
 }
@@ -210,7 +234,7 @@ static UINT  lx_nand_driver_block_erased_verify(ULONG block)
   Bsp_Address.Block = (uint16_t) block;
 
 
-  for (index = 0; index < PHYSICAL_PAGES_PER_BLOCK ; index++)
+  for (index = 0; index < CUSTOM_PHYSICAL_PAGES_PER_BLOCK ; index++)
   {
     if (lx_nand_driver_page_erased_verify(Bsp_Address.Block, Bsp_Address.Page) != LX_SUCCESS)
     {
@@ -246,7 +270,7 @@ static UINT  lx_nand_driver_page_erased_verify(ULONG block, ULONG page)
   word_ptr = (ULONG *) & (nand_flash_rw_buffer[0]);
 
   /* Calculate the number of words in a page.  */
-  words =  WORDS_PER_PHYSICAL_PAGE;
+  words =  CUSTOM_WORDS_PER_PHYSICAL_PAGE;
 
   /* Loop to read flash.  */
   while (words--)
@@ -324,6 +348,11 @@ static UINT  lx_nand_driver_extra_bytes_get(ULONG block, ULONG page, UCHAR *dest
     return (LX_ERROR);
   }
 
+  /* Clamp to available spare bytes after EXTRA_BYTE_POSITION to avoid overflow. */
+  if (size > (CUSTOM_SPARE_BYTES_PER_PAGE - EXTRA_BYTE_POSITION))
+  {
+    size = (CUSTOM_SPARE_BYTES_PER_PAGE - EXTRA_BYTE_POSITION);
+  }
   source = (UCHAR *) & (Buffer_Spare_Area[EXTRA_BYTE_POSITION]);
 
   while (size--)
@@ -354,6 +383,11 @@ static UINT  lx_nand_driver_extra_bytes_set(ULONG block, ULONG page, UCHAR *sour
     return (LX_ERROR);
   }
 
+  /* Clamp to available spare bytes after EXTRA_BYTE_POSITION to avoid overflow. */
+  if (size > (CUSTOM_SPARE_BYTES_PER_PAGE - EXTRA_BYTE_POSITION))
+  {
+    size = (CUSTOM_SPARE_BYTES_PER_PAGE - EXTRA_BYTE_POSITION);
+  }
   destination = (UCHAR *) & (Buffer_Spare_Area[EXTRA_BYTE_POSITION]);
 
   while (size--)
@@ -399,13 +433,13 @@ static UINT  lx_nand_flash_driver_pages_read(ULONG block, ULONG page, UCHAR *mai
   {
     if (main_buffer)
     {
-      if (lx_nand_driver_read(block, page + i, (ULONG*)(main_buffer + i * BYTES_PER_PHYSICAL_PAGE), WORDS_PER_PHYSICAL_PAGE) == LX_ERROR)
+      if (lx_nand_driver_read(block, page + i, (ULONG*)(main_buffer + i * CUSTOM_BYTES_PER_PHYSICAL_PAGE), CUSTOM_WORDS_PER_PHYSICAL_PAGE) == LX_ERROR)
       {
         return (LX_ERROR);
       }
     }
 
-    if (lx_nand_driver_extra_bytes_get(block, page + i, spare_buffer + i * SPARE_BYTES_PER_PAGE, SPARE_BYTES_PER_PAGE) == LX_ERROR)
+    if (lx_nand_driver_extra_bytes_get(block, page + i, spare_buffer + i * CUSTOM_SPARE_BYTES_PER_PAGE, CUSTOM_SPARE_BYTES_PER_PAGE) == LX_ERROR)
     {
       return (LX_ERROR);
     }
@@ -425,12 +459,12 @@ static UINT  lx_nand_flash_driver_pages_write(ULONG block, ULONG page, UCHAR *ma
 
   for (i = 0; i < pages; i++)
   {
-    if (lx_nand_driver_write(block, page + i, (ULONG*)(main_buffer + i * BYTES_PER_PHYSICAL_PAGE), WORDS_PER_PHYSICAL_PAGE) == LX_ERROR)
+    if (lx_nand_driver_write(block, page + i, (ULONG*)(main_buffer + i * CUSTOM_BYTES_PER_PHYSICAL_PAGE), CUSTOM_WORDS_PER_PHYSICAL_PAGE) == LX_ERROR)
     {
       return (LX_ERROR);
     }
 
-    if (lx_nand_driver_extra_bytes_set(block, page + i, spare_buffer + i * SPARE_BYTES_PER_PAGE, SPARE_BYTES_PER_PAGE) == LX_ERROR)
+    if (lx_nand_driver_extra_bytes_set(block, page + i, spare_buffer + i * CUSTOM_SPARE_BYTES_PER_PAGE, CUSTOM_SPARE_BYTES_PER_PAGE) == LX_ERROR)
     {
       return (LX_ERROR);
     }
@@ -449,12 +483,12 @@ static UINT  lx_nand_flash_driver_pages_copy(ULONG source_block, ULONG source_pa
 
   for (i = 0; i < pages; i++)
   {
-    if (lx_nand_flash_driver_pages_read(source_block, source_page + i, data_buffer , data_buffer + BYTES_PER_PHYSICAL_PAGE, 1) == LX_ERROR)
+    if (lx_nand_flash_driver_pages_read(source_block, source_page + i, data_buffer , data_buffer + CUSTOM_BYTES_PER_PHYSICAL_PAGE, 1) == LX_ERROR)
     {
       return (LX_ERROR);
     }
 
-    if (lx_nand_flash_driver_pages_write(destination_block, destination_page + i, data_buffer , data_buffer + BYTES_PER_PHYSICAL_PAGE, 1) == LX_ERROR)
+    if (lx_nand_flash_driver_pages_write(destination_block, destination_page + i, data_buffer , data_buffer + CUSTOM_BYTES_PER_PHYSICAL_PAGE, 1) == LX_ERROR)
     {
       return (LX_ERROR);
     }

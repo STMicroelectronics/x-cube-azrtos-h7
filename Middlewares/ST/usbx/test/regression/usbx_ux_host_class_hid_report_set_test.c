@@ -270,7 +270,7 @@ UINT                            descriptor_size = HID_REPORT_LENGTH;
     hid_parameter.ux_device_class_hid_parameter_report_length  = HID_REPORT_LENGTH;
     hid_parameter.ux_device_class_hid_parameter_callback       = demo_thread_hid_callback;
 
-    /* Initilize the device hid class. The class is connected with interface 2 */
+    /* Initialize the device hid class. The class is connected with interface 2 */
     status =  ux_device_stack_class_register(_ux_system_slave_class_hid_name, ux_device_class_hid_entry,
                                                 1,2, (VOID *)&hid_parameter);
     if(status!=UX_SUCCESS)
@@ -577,7 +577,7 @@ UCHAR                           buffer[256];
     /* ux_host_stack_transfer_request() doesn't release the device protection semaphore when it fails, so do it manually. */
     ux_utility_semaphore_put(&hid -> ux_host_class_hid_device -> ux_device_protection_semaphore);
 
-#if 0 /* TODO: USBX-246, USBX-247 */
+#if 0 /* Pending: USBX-246, USBX-247 */
     /**************************************************/
     /** Test case: functionality test. **/
     /**************************************************/

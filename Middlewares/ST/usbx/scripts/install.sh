@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Install necessary softwares for Ubuntu.
+# Install necessary software modules for Ubuntu.
 
 sudo apt-get update
 sudo apt-get install -y \

@@ -101,10 +101,10 @@ static struct BUFFER_LOG_STRUCT {
     UCHAR data[256];
 } buffer_log[UX_TEST_LOG_SIZE];
 static ULONG buffer_log_count = 0;
-#define SAVE_BUFFER_LOG(buf,siz) do {                                                      \
+#define SAVE_BUFFER_LOG(buf,size) do {                                                     \
     if (buffer_log_count < UX_TEST_LOG_SIZE) {                                             \
-        ULONG __local_size__ = ((siz) > 256) ? 256 : (siz);                                \
-        buffer_log[buffer_log_count].length = (siz);                                       \
+        ULONG __local_size__ = ((size) > 256) ? 256 : (size);                              \
+        buffer_log[buffer_log_count].length = (size);                                      \
         _ux_utility_memory_copy(buffer_log[buffer_log_count].data, (buf), __local_size__); \
     }                                                                                      \
     buffer_log_count ++;                                                                   \

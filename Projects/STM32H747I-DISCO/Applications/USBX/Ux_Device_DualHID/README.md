@@ -33,6 +33,7 @@ Those descriptors are used by host driver to identify the device capabilities. O
 #### <b>Error behaviors</b>
 
 Host PC shows that USB device does not operate as designed (enumeration failed, for example PC cursor doesn't move or COM port enumeration failed).
+The LED_RED is toggling to indicate any error that has occurred.
 
 #### <b>Assumptions if any</b>
 
@@ -105,7 +106,7 @@ RTOS, ThreadX, USBX, USBXDevice, USB_OTG, High Speed, HID, Keyboard, Mouse.
 ### <b>Hardware and Software environment</b>
 
   - This application runs on STM32H747xx devices.
-  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards revision MB1520-H747I-B02
+  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards revision MB1248-H747I-D02
     and can be easily tailored to any other supported device and development board.
   - STM32H747I-DISCO Set-up
   - Connect the STM32H747I-DISCO board CN1 to the PC through "MICRO-USB" to "Standard A" cable.

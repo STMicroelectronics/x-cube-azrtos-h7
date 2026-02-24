@@ -34,9 +34,9 @@ Interface “HID” mouse based bare metal application.</p>
 <p>The application is designed to emulate a USB HID mouse device, the
 code provides all required device descriptors framework and associated
 class descriptor report to build a compliant USB HID mouse device.</p>
-<p>The application’s main calls the MX_USBX_Device_Init() function in
-order to Initialize USBX and USBX_Device_Process in the while loop. As
-stated earlier, the present application runs in standalone mode without
+<p>The application’s main calls the MX_USBX_Init() function in order to
+Initialize USBX and USBX_Device_Process in the while loop. As stated
+earlier, the present application runs in standalone mode without
 ThreadX, for this reason, the standalone variant of USBX is enabled by
 adding the following flag in ux_user.h:</p>
 <ul>
@@ -109,9 +109,9 @@ DMA</li>
 environment</b></h3>
 <ul>
 <li>This application runs on STM32H723xx devices.</li>
-<li>This application has been tested with STMicroelectronics NUCLEO-H723ZG
-boards revision MB1364-H723ZG-E01 and can be easily tailored to any
-other supported device and development board.</li>
+<li>This application has been tested with STMicroelectronics
+NUCLEO-H723ZG boards revision MB1364-H723ZG-E01 and can be easily
+tailored to any other supported device and development board.</li>
 </ul>
 <h3 id="how-to-use-it"><b>How to use it ?</b></h3>
 <p>In order to make the program work, you must do the following :</p>

@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2020-2021 STMicroelectronics.
+  * Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -23,7 +23,7 @@
 /* USER CODE END 1 */
 
 /* Includes ------------------------------------------------------------------*/
-#include "app_usbx_device.h"
+#include "app_usbx.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -51,10 +51,12 @@ static ULONG storage_interface_number;
 static ULONG storage_configuration_number;
 static UX_SLAVE_CLASS_STORAGE_PARAMETER storage_parameter;
 static TX_THREAD ux_device_app_thread;
+extern PCD_HandleTypeDef hpcd_USB_OTG_HS;
 
 /* USER CODE BEGIN PV */
 TX_EVENT_FLAGS_GROUP EventFlag;
-
+extern HAL_SD_CardInfoTypeDef USBD_SD_CardInfo;
+uint8_t USB_Device_State = STOP_USB_DEVICE;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -71,6 +73,54 @@ static VOID app_ux_device_thread_entry(ULONG thread_input);
 UINT MX_USBX_Device_Init(VOID *memory_ptr)
 {
   UINT ret = UX_SUCCESS;
+  UCHAR *pointer;
+  TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
+
+  /* USER CODE BEGIN MX_USBX_Device_Init0 */
+
+  /* USER CODE END MX_USBX_Device_Init0 */
+
+  /* Allocate the stack for device application main thread */
+  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, UX_DEVICE_APP_THREAD_STACK_SIZE,
+                       TX_NO_WAIT) != TX_SUCCESS)
+  {
+    /* USER CODE BEGIN MAIN_THREAD_ALLOCATE_STACK_ERROR */
+    return TX_POOL_ERROR;
+    /* USER CODE END MAIN_THREAD_ALLOCATE_STACK_ERROR */
+  }
+
+  /* Create the device application main thread */
+  if (tx_thread_create(&ux_device_app_thread, UX_DEVICE_APP_THREAD_NAME, app_ux_device_thread_entry,
+                       0, pointer, UX_DEVICE_APP_THREAD_STACK_SIZE, UX_DEVICE_APP_THREAD_PRIO,
+                       UX_DEVICE_APP_THREAD_PREEMPTION_THRESHOLD, UX_DEVICE_APP_THREAD_TIME_SLICE,
+                       UX_DEVICE_APP_THREAD_START_OPTION) != TX_SUCCESS)
+  {
+    /* USER CODE BEGIN MAIN_THREAD_CREATE_ERROR */
+    return TX_THREAD_ERROR;
+    /* USER CODE END MAIN_THREAD_CREATE_ERROR */
+  }
+
+  /* USER CODE BEGIN MX_USBX_Device_Init1 */
+
+  /* Create the event flags group */
+  if (tx_event_flags_create(&EventFlag, "Event Flag") != TX_SUCCESS)
+  {
+    return TX_GROUP_ERROR;
+  }
+
+  /* USER CODE END MX_USBX_Device_Init1 */
+
+  return ret;
+}
+
+/**
+  * @brief  Application USBX Device Initialization.
+  * @param  None
+  * @retval ret
+  */
+UINT MX_USBX_Device_Stack_Init(void)
+{
+  UINT ret = UX_SUCCESS;
   UCHAR *device_framework_high_speed;
   UCHAR *device_framework_full_speed;
   ULONG device_framework_hs_length;
@@ -79,29 +129,10 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
   ULONG language_id_framework_length;
   UCHAR *string_framework;
   UCHAR *language_id_framework;
-  UCHAR *pointer;
-  TX_BYTE_POOL *byte_pool = (TX_BYTE_POOL*)memory_ptr;
 
-  /* USER CODE BEGIN MX_USBX_Device_Init0 */
+  /* USER CODE BEGIN MX_USBX_Device_Stack_Init_PreTreatment */
 
-  /* USER CODE END MX_USBX_Device_Init0 */
-
-  /* Allocate the stack for USBX Memory */
-  if (tx_byte_allocate(byte_pool, (VOID **) &pointer,
-                       USBX_DEVICE_MEMORY_STACK_SIZE, TX_NO_WAIT) != TX_SUCCESS)
-  {
-    /* USER CODE BEGIN USBX_ALLOCATE_STACK_ERROR */
-    return TX_POOL_ERROR;
-    /* USER CODE END USBX_ALLOCATE_STACK_ERROR */
-  }
-
-  /* Initialize USBX Memory */
-  if (ux_system_initialize(pointer, USBX_DEVICE_MEMORY_STACK_SIZE, UX_NULL, 0) != UX_SUCCESS)
-  {
-    /* USER CODE BEGIN USBX_SYSTEM_INITIALIZE_ERROR */
-    return UX_ERROR;
-    /* USER CODE END USBX_SYSTEM_INITIALIZE_ERROR */
-  }
+  /* USER CODE END MX_USBX_Device_Stack_Init_PreTreatment */
 
   /* Get Device Framework High Speed and get the length */
   device_framework_high_speed = USBD_Get_Device_Framework_Speed(USBD_HIGH_SPEED,
@@ -193,35 +224,52 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
     /* USER CODE END USBX_DEVICE_STORAGE_REGISTER_ERROR */
   }
 
-  /* Allocate the stack for device application main thread */
-  if (tx_byte_allocate(byte_pool, (VOID **) &pointer, UX_DEVICE_APP_THREAD_STACK_SIZE,
-                       TX_NO_WAIT) != TX_SUCCESS)
+  /* Initialize and link controller HAL driver */
+  ux_dcd_stm32_initialize((ULONG)USB_OTG_HS, (ULONG)&hpcd_USB_OTG_HS);
+
+  /* USER CODE BEGIN MX_USBX_Device_Stack_Init_PostTreatment */
+
+  /* USER CODE END MX_USBX_Device_Stack_Init_PostTreatment */
+
+return ret;
+
+}
+
+/**
+  * @brief MX_USBX_Device_Stack_DeInit
+  *        Unitialization of USB Device.
+  * uninitialize the device stack, unregister of device class stack
+  * unregister of the usb device controller
+  * @param  None
+  * @retval ret
+  */
+UINT MX_USBX_Device_Stack_DeInit(void)
+{
+  UINT ret = UX_SUCCESS;
+
+  /* USER CODE BEGIN MX_USBX_Device_Stack_DeInit_PreTreatment */
+
+  /* USER CODE END MX_USBX_Device_Stack_DeInit_PreTreatment */
+
+  /* Uninitialize and unlink controller HAL driver */
+  ux_dcd_stm32_uninitialize((ULONG)USB_OTG_HS, (ULONG)&hpcd_USB_OTG_HS);
+
+/* Unregister storage class. */
+  if (ux_device_stack_class_unregister(_ux_system_slave_class_storage_name,
+                                       ux_device_class_storage_entry) != UX_SUCCESS)
   {
-    /* USER CODE BEGIN MAIN_THREAD_ALLOCATE_STACK_ERROR */
-    return TX_POOL_ERROR;
-    /* USER CODE END MAIN_THREAD_ALLOCATE_STACK_ERROR */
+    return UX_ERROR;
   }
 
-  /* Create the device application main thread */
-  if (tx_thread_create(&ux_device_app_thread, UX_DEVICE_APP_THREAD_NAME, app_ux_device_thread_entry,
-                       0, pointer, UX_DEVICE_APP_THREAD_STACK_SIZE, UX_DEVICE_APP_THREAD_PRIO,
-                       UX_DEVICE_APP_THREAD_PREEMPTION_THRESHOLD, UX_DEVICE_APP_THREAD_TIME_SLICE,
-                       UX_DEVICE_APP_THREAD_START_OPTION) != TX_SUCCESS)
+  /* The code below is required for uninstalling the device portion of USBX.  */
+  if (ux_device_stack_uninitialize() != UX_SUCCESS)
   {
-    /* USER CODE BEGIN MAIN_THREAD_CREATE_ERROR */
-    return TX_THREAD_ERROR;
-    /* USER CODE END MAIN_THREAD_CREATE_ERROR */
+    return UX_ERROR;
   }
 
-  /* USER CODE BEGIN MX_USBX_Device_Init1 */
+  /* USER CODE BEGIN MX_USBX_Device_Stack_DeInit_PostTreatment */
 
-  /* Create the event flags group */
-  if (tx_event_flags_create(&EventFlag, "Event Flag") != TX_SUCCESS)
-  {
-    return TX_GROUP_ERROR;
-  }
-
-  /* USER CODE END MX_USBX_Device_Init1 */
+  /* USER CODE END MX_USBX_Device_Stack_DeInit_PostTreatment */
 
   return ret;
 }
@@ -234,49 +282,95 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
 static VOID app_ux_device_thread_entry(ULONG thread_input)
 {
   /* USER CODE BEGIN app_ux_device_thread_entry */
-
-  /* Initialization of USB device */
-  USBX_APP_Device_Init();
-
-  /* USER CODE END app_ux_device_thread_entry */
-}
-
-/* USER CODE BEGIN 2 */
-/**
-  * @brief  USBX_APP_Device_Init
-  *         Initialization of USB device.
-  * @param  none
-  * @retval none
-  */
-VOID USBX_APP_Device_Init(VOID)
-{
-  /* USER CODE BEGIN USB_Device_Init_PreTreatment_0 */
-
-  /* USER CODE END USB_Device_Init_PreTreatment_0 */
+  UINT status;
 
   /* USB_OTG_HS init function */
   MX_USB_OTG_HS_PCD_Init();
 
-  /* USER CODE BEGIN USB_Device_Init_PreTreatment_1 */
+  /* Check if SD card is plugged and USB cable is connected */
+  if ((HAL_GPIO_ReadPin(SD_DETECT_GPIO_Port, SD_DETECT_Pin) == GPIO_PIN_RESET) &&
+      (HAL_GPIO_ReadPin(USB_DETECT_GPIO_Port, USB_DETECT_Pin) == GPIO_PIN_SET))
+    {
+      MX_SDMMC1_SD_Init();
+      /* Get SD card info */
+      status = HAL_SD_GetCardInfo(&hsd1, &USBD_SD_CardInfo);
 
-  /* Set Rx FIFO */
-  HAL_PCDEx_SetRxFiFo(&hpcd_USB_OTG_HS, 0x200);
-  /* Set Tx FIFO 0 */
-  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 0, 0x40);
-  /* Set Tx FIFO 1 */
-  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_HS, 1, 0x100);
+      if (status != HAL_OK)
+      {
+        Error_Handler();
+      }
 
-  /* USER CODE END USB_Device_Init_PreTreatment_1 */
+      if (MX_USBX_Device_Stack_Init() != UX_SUCCESS)
+      {
+        /* USER CODE BEGIN MAIN_INITIALIZE_STACK_ERROR */
+        Error_Handler();
+        /* USER CODE END MAIN_INITIALIZE_STACK_ERROR */
+      }
 
-  /* Initialize and link controller HAL driver */
-  ux_dcd_stm32_initialize((ULONG)USB_OTG_HS, (ULONG)&hpcd_USB_OTG_HS);
+      /* Start USB device */
+      HAL_PCD_Start(&hpcd_USB_OTG_HS);
+      USB_Device_State = START_USB_DEVICE;
+    }
 
-  /* Start USB device */
-  HAL_PCD_Start(&hpcd_USB_OTG_HS);
+  while(1)
+  {
+    ULONG actual_events;
+    /* Wait for an event */
+    tx_event_flags_get(&EventFlag, 0x30, TX_OR_CLEAR, &actual_events, TX_WAIT_FOREVER);
 
-  /* USER CODE BEGIN USB_Device_Init_PostTreatment */
+    tx_thread_sleep(MS_TO_TICK(1000));
+    if ((HAL_GPIO_ReadPin(SD_DETECT_GPIO_Port, SD_DETECT_Pin) == GPIO_PIN_RESET) &&
+        (HAL_GPIO_ReadPin(USB_DETECT_GPIO_Port, USB_DETECT_Pin) == GPIO_PIN_SET) &&
+        (USB_Device_State == STOP_USB_DEVICE))
+    {
+      USB_Device_State = START_USB_DEVICE;
+      MX_SDMMC1_SD_Init();
+      /* Get SD card info */
+      status = HAL_SD_GetCardInfo(&hsd1, &USBD_SD_CardInfo);
+      if (status != HAL_OK)
+      {
+        Error_Handler();
+      }
+      if (MX_USBX_Device_Stack_Init() != UX_SUCCESS)
+      {
+        /* USER CODE BEGIN MAIN_INITIALIZE_STACK_ERROR */
+        Error_Handler();
+        /* USER CODE END MAIN_INITIALIZE_STACK_ERROR */
+      }
+      /* Start USB device */
+      HAL_PCD_Start(&hpcd_USB_OTG_HS);
+    }
 
-  /* USER CODE END USB_Device_Init_PostTreatment */
+    if (((HAL_GPIO_ReadPin(SD_DETECT_GPIO_Port, SD_DETECT_Pin) == GPIO_PIN_SET) || (HAL_GPIO_ReadPin(USB_DETECT_GPIO_Port, USB_DETECT_Pin) == GPIO_PIN_RESET)) && (USB_Device_State == START_USB_DEVICE))
+    {
+      USB_Device_State = STOP_USB_DEVICE;
+      MX_SDMMC1_SD_DeInit();
+      ux_device_stack_disconnect();
+      HAL_PCD_Stop(&hpcd_USB_OTG_HS);
+      if (MX_USBX_Device_Stack_DeInit() != UX_SUCCESS)
+      {
+        /* USER CODE BEGIN MAIN_DEINITIALIZE_STACK_ERROR */
+        Error_Handler();
+        /* USER CODE END MAIN_DEINITIALIZE_STACK_ERROR */
+      }
+    }
+  }
+  /* USER CODE END app_ux_device_thread_entry */
+}
+
+/* USER CODE BEGIN 2 */
+
+/**
+  * @brief  EXTI line detection callback.
+  * @param  GPIO_Pin: Specifies the port pin connected to corresponding EXTI line.
+  * @retval None
+  */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  if ((GPIO_Pin == SD_DETECT_Pin) || (GPIO_Pin == USB_DETECT_Pin))
+  {
+    tx_event_flags_set(&EventFlag, 0x30, TX_OR);
+  }
 }
 
 /* USER CODE END 2 */

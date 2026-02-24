@@ -191,7 +191,7 @@ UINT                            status;
         /* OUT: only start-splits, no complete splits.  */
         /* IN : at most one start-split and one to N complete-splits.  */
 
-        /* TBD.  */
+        /* To be done.  */
 #endif
     }
     else
@@ -291,7 +291,7 @@ UINT                            status;
     if (device -> ux_device_speed != UX_HIGH_SPEED_DEVICE)
     {
 
-        /* TBD.  */
+        /* To be done.  */
     }
     else
 #endif

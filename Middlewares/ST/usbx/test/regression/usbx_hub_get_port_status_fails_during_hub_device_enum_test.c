@@ -1,4 +1,4 @@
-/* This tests the case where the get port status commmand fails 
+/* This tests the case where the get port status command fails 
    when a device connected to the hub is being enumerated. The specific test case 
    is in ux_host_class_hub_port_change_connection_process.c. */
 

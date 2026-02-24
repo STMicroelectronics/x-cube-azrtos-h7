@@ -57,6 +57,9 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define USB_DETECT_Pin GPIO_PIN_9
+#define USB_DETECT_GPIO_Port GPIOA
+#define USB_DETECT_EXTI_IRQn EXTI9_5_IRQn
 #define SD_DETECT_Pin GPIO_PIN_5
 #define SD_DETECT_GPIO_Port GPIOF
 #define SD_DETECT_EXTI_IRQn EXTI9_5_IRQn

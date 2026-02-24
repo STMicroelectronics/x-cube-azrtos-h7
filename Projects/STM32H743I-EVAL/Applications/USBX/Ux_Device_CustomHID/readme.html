@@ -51,17 +51,19 @@ device provides host with the requested descriptors (device,
 configuration, string). Those descriptors are used by host driver to
 identify the device capabilities.</p>
 <p>Once the STM32H743I-EVAL USB device successfully completed the
-enumeration phase: - Start the “USB HID Demonstrator” PC applet,
-available for download from www.st.com, and connect STM32 USB to PC -
-The device should be detected and shown in the USB HID target box -
-Press Graphic View button - Select “use SET_FEATURE” or “use SET_REPORT”
-in order to use SET_REPORT request to send HID report for LED control -
-Use the potentiometer of the STM32H743I-EVAL board to transfer the
+enumeration phase:<p>
+<p>- Start the “USB HID Demonstrator” PC applet,
+available for download from www.st.com, and connect STM32 USB to PC.<p>
+<p>- The device should be detected and shown in the USB HID target box.
+<p>- Press Graphic View button.<p>
+<p>- Select “use SET_FEATURE” or “use SET_REPORT”.<p>
+in order to use SET_REPORT request to send HID report for LED control:<p>
+<p>- Use the potentiometer of the STM32H743I-EVAL board to transfer the
 result of the converted voltage (via the ADC) to the PC host (these
-values are sent to the PC using the endpoint1 IN) - Make sure that the
-following report IDs are configured: LED_GREEN ID (0x1), LED_RED ID(0x2), LED_ORANGE
-ID(0x3), LED_BLUE ID(0x4), BUTTON1_ID(0x6) and Potentiometer_ID(0x7). -
-Select LEDs to switch on/off on the STM32H743I-EVAL board: a SET_REPORT
+values are sent to the PC using the endpoint1 IN).<p>
+<p>- Make sure that the following report IDs are configured: LED_GREEN ID (0x1),
+LED_RED ID(0x2), LED_ORANGE ID(0x3), LED_BLUE ID(0x4), BUTTON1_ID(0x6) and Potentiometer_ID(0x7).<p>
+<p>- Select LEDs to switch on/off on the STM32H743I-EVAL board: a SET_REPORT
 request will be sent.</p>
 <h4 id="error-behaviors"><b>Error behaviors</b></h4>
 <p>Host PC shows that USB device does not operate as designed (HID

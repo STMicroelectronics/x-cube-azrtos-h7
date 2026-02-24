@@ -503,7 +503,7 @@ ULONG       temp;
 static VOID set_and_send_port_event(UINT port_status, UINT port_change)
 {
 
-    /* Setup the approriate fields in the hub instance. */
+    /* Setup the appropriate fields in the hub instance. */
     g_hub_device->port_status = port_status;
     g_hub_device->port_change = port_change;
 
@@ -526,7 +526,7 @@ static VOID connect_device_to_hub()
 static VOID connect_device_to_hub_short_with_hub()
 {
 
-    /* Setup the approriate fields in the hub instance. */
+    /* Setup the appropriate fields in the hub instance. */
     g_hub_device->port_status = UX_HOST_CLASS_HUB_PORT_STATUS_CONNECTION | UX_HOST_CLASS_HUB_PORT_STATUS_POWER;
     g_hub_device->port_change = UX_HOST_CLASS_HUB_PORT_CHANGE_CONNECTION;
 
@@ -537,7 +537,7 @@ static VOID connect_device_to_hub_short_with_hub()
 static VOID disconnect_device_from_hub()
 {
 
-    /* Setup the approriate fields in the hub instance. */
+    /* Setup the appropriate fields in the hub instance. */
     g_hub_device->port_status = 0; /* Make sure the connection bit is off. */
     g_hub_device->port_change = UX_HOST_CLASS_HUB_PORT_CHANGE_CONNECTION;
 

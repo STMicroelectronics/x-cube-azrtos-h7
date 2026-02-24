@@ -1009,7 +1009,7 @@ CHAR *                  memory_pointer;
     hid_parameter.ux_device_class_hid_parameter_callback       = UX_NULL;
     hid_parameter.ux_slave_class_hid_instance_activate         = UX_NULL;
 
-    /* Initilize the device hid class. The class is connected with interface 0 */
+    /* Initialize the device hid class. The class is connected with interface 0 */
     status  =  ux_device_stack_class_register(_ux_system_slave_class_hid_name, ux_device_class_hid_entry,
                                               4, 0, (VOID *)&hid_parameter);
     // status |=  ux_device_stack_class_register(_ux_system_slave_class_hid_name, ux_device_class_hid_entry,
@@ -1478,7 +1478,7 @@ UX_SLAVE_TRANSFER                                  *slave_transfer_request;
     transfer_request -> ux_transfer_request_function =          UX_GET_DESCRIPTOR;
     transfer_request -> ux_transfer_request_type =              UX_REQUEST_IN | UX_REQUEST_TYPE_STANDARD | UX_REQUEST_TARGET_DEVICE;
 
-    /* Get unknown discriptor */
+    /* Get unknown descriptor */
     transfer_request -> ux_transfer_request_value =             11 << 8;
     transfer_request -> ux_transfer_request_index =             0;
     status = ux_host_stack_transfer_request(transfer_request);
@@ -1495,7 +1495,7 @@ UX_SLAVE_TRANSFER                                  *slave_transfer_request;
     transfer_request -> ux_transfer_request_function =          UX_GET_DESCRIPTOR;
     transfer_request -> ux_transfer_request_type =              UX_REQUEST_IN | UX_REQUEST_TYPE_STANDARD | UX_REQUEST_TARGET_INTERFACE;
 
-    /* Get class discriptor */
+    /* Get class descriptor */
     transfer_request -> ux_transfer_request_value =             (11 + UX_REQUEST_TYPE_CLASS) << 8;
     transfer_request -> ux_transfer_request_index =             0;
     status = ux_host_stack_transfer_request(transfer_request);

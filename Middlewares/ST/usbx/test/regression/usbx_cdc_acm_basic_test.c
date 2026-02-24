@@ -1568,7 +1568,7 @@ ULONG                                               mem_free;
     ux_test_hcd_sim_host_disconnect();
 
     /* Test enumeration no interrupt EP */
-    stepinfo(">>>>>>>>>>>> Enumerate device wihtout interrupt EP\n");
+    stepinfo(">>>>>>>>>>>> Enumerate device without interrupt EP\n");
     _ux_system_slave->ux_system_slave_device_framework_full_speed = device_framework_no_interrupt_ep;
     _ux_system_slave->ux_system_slave_device_framework_length_full_speed = sizeof(device_framework_no_interrupt_ep);
     ux_test_dcd_sim_slave_connect(UX_FULL_SPEED_DEVICE);
@@ -1591,7 +1591,7 @@ ULONG                                               mem_free;
         test_control_return(1);
     }
 
-    stepinfo(">>>>>>>>>>>> Enumerate device wihtout one of bulk EP\n");
+    stepinfo(">>>>>>>>>>>> Enumerate device without one of bulk EP\n");
     /* Pause bulk read/write since there is no bulk EP. */
     cdc_acm_slave_bulk_read_write = UX_FALSE;
 
@@ -2511,7 +2511,7 @@ ULONG       actual_length;
 void    test_thread_host_reception_callback(UX_HOST_CLASS_CDC_ACM *cdc_acm, UINT status, UCHAR *reception_buffer, ULONG reception_size)
 {
 
-    /* Incase target to test overflow case, buffers are not moved. */
+    /* In case target to test overflow case, buffers are not moved. */
     if (!cdc_acm_reception_overflow)
     {
         /* And move to the next reception buffer.  Check if we are at the end of the application buffer.  */

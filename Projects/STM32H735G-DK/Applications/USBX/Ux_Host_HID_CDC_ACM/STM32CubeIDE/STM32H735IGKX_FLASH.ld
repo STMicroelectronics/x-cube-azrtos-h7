@@ -170,7 +170,7 @@ SECTIONS
     *(.UsbHpcdSection)
   } >RAM_D1
 
-  .uart_bss 0x24036000 (NOLOAD):
+  .usbx_bss 0x24036000 (NOLOAD):
   {
     *(.UsbxPoolSection)
   } >RAM_D1

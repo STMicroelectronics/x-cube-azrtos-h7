@@ -38,7 +38,7 @@ the compile flags in the file "app_threadx.h".
 
 #### <b>Error behaviors</b>
 
-  - 'LED_RED' toggles every 1 second if an error occurs.
+  - 'LED_RED' toggles every 1 second if an error occurs while the 'LED_GREEN' is turned OFF.
 
 #### <b>Assumptions if any</b>
 

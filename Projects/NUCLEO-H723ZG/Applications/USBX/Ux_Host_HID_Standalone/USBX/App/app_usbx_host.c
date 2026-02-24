@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2020-2021 STMicroelectronics.
+  * Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -23,7 +23,7 @@
 /* USER CODE END 1 */
 
 /* Includes ------------------------------------------------------------------*/
-#include "app_usbx_host.h"
+#include "app_usbx.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -47,21 +47,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 
-/* USER CODE BEGIN UX_Host_Memory_Buffer */
-
-#if defined ( __ICCARM__ ) /* IAR Compiler */
-#pragma location = ".UsbxPoolSection"
-#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
-__attribute__((section(".UsbxPoolSection")))
-#elif defined ( __GNUC__ ) /* GNU Compiler */
-__attribute__((section(".UsbxPoolSection")))
-#endif
-
-/* USER CODE END UX_Host_Memory_Buffer */
-#if defined ( __ICCARM__ )
-#pragma data_alignment=4
-#endif
-__ALIGN_BEGIN static UCHAR ux_host_memory_buffer[USBX_HOST_APP_MEMORY_BUFFER_SIZE] __ALIGN_END;
+extern HCD_HandleTypeDef hhcd_USB_OTG_HS;
 
 /* USER CODE BEGIN PV */
 UX_HOST_CLASS_HID          *hid_instance;
@@ -85,21 +71,56 @@ static VOID ux_host_error_callback(UINT system_level, UINT system_context, UINT 
 UINT MX_USBX_Host_Init(VOID)
 {
   UINT ret = UX_SUCCESS;
-  UCHAR *pointer;
 
   /* USER CODE BEGIN MX_USBX_Host_Init0 */
+  /* Initialize the LL driver */
+  MX_USB_OTG_HS_HCD_Init();
+
+  /* Drive vbus */
+  USBH_DriverVBUS(USB_VBUS_TRUE);
 
   /* USER CODE END MX_USBX_Host_Init0 */
 
-  pointer = ux_host_memory_buffer;
-
-  /* Initialize USBX Memory */
-  if (ux_system_initialize(pointer, USBX_HOST_MEMORY_STACK_SIZE, UX_NULL, 0) != UX_SUCCESS)
+  /* Initialize the Stack Host USB*/
+  if (MX_USBX_Host_Stack_Init() != UX_SUCCESS)
   {
-    /* USER CODE BEGIN USBX_SYSTEM_INITIALIZE_ERROR */
+    /* USER CODE BEGIN MAIN_INITIALIZE_STACK_ERROR */
     return UX_ERROR;
-    /* USER CODE END USBX_SYSTEM_INITIALIZE_ERROR */
+    /* USER CODE END MAIN_INITIALIZE_STACK_ERROR */
   }
+
+  /* USER CODE BEGIN MX_USBX_Host_Init1 */
+
+  /* Enable USB Global Interrupt */
+  HAL_HCD_Start(&hhcd_USB_OTG_HS);
+
+  /* Start Application Message */
+  USBH_UsrLog("**** USB OTG HS in FS HID Host **** \n");
+  USBH_UsrLog("USB Host library started.\n");
+
+  /* Wait for Device to be attached */
+  USBH_UsrLog("Starting HID Application");
+  USBH_UsrLog("Connect your HID Device");
+
+  /* USER CODE END MX_USBX_Host_Init1 */
+
+  return ret;
+}
+
+/**
+  * @brief MX_USBX_Host_Stack_Init
+  *        Initialization of USB host stack.
+  *        Init USB Host stack, add register the host class stack
+  * @param  None
+  * @retval ret
+  */
+UINT MX_USBX_Host_Stack_Init(void)
+{
+  UINT ret = UX_SUCCESS;
+
+  /* USER CODE BEGIN MX_USBX_Host_Stack_Init_PreTreatment */
+
+  /* USER CODE END MX_USBX_Host_Stack_Init_PreTreatment */
 
   /* Install the host portion of USBX */
   if (ux_host_stack_initialize(ux_host_event_callback) != UX_SUCCESS)
@@ -139,57 +160,55 @@ UINT MX_USBX_Host_Init(VOID)
     /* USER CODE END USBX_HOST_HID_KEYBOARD_REGISTER_ERROR */
   }
 
-  /* USER CODE BEGIN MX_USBX_Host_Init1 */
+  /* Initialize the host controller driver */
+  ux_host_stack_hcd_register(_ux_system_host_hcd_stm32_name,
+                             _ux_hcd_stm32_initialize, USB_OTG_HS_PERIPH_BASE,
+                             (ULONG)&hhcd_USB_OTG_HS);
 
-  /* Initialize USBX_Host */
-  USBX_APP_Host_Init();
+  /* USER CODE BEGIN MX_USBX_Host_Stack_Init_PostTreatment */
 
-  /* USER CODE END MX_USBX_Host_Init1 */
+  /* USER CODE END MX_USBX_Host_Stack_Init_PostTreatment */
+
+  return ret ;
+}
+
+/**
+  * @brief  MX_USBX_Host_Stack_DeInit
+  *         Uninitialize of USB Host stack.
+  *         Uninitialize the host stack, unregister of host class stack and
+  *         unregister of the usb host controllers
+  * @param  None
+  * @retval ret
+  */
+UINT MX_USBX_Host_Stack_DeInit(void)
+{
+  UINT ret = UX_SUCCESS;
+
+  /* USER CODE BEGIN MX_USBX_Host_Stack_DeInit_PreTreatment */
+
+  /* USER CODE END MX_USBX_Host_Stack_DeInit_PreTreatment */
+
+  /* Unregister all the USB host controllers available in this system. */
+  ux_host_stack_hcd_unregister(_ux_system_host_hcd_stm32_name,
+                               USB_OTG_HS_PERIPH_BASE,
+                               (ULONG)&hhcd_USB_OTG_HS);
+
+  /* Unregister the host hid class */
+  if (ux_host_stack_class_unregister(ux_host_class_hid_entry) != UX_SUCCESS)
+  {
+    return UX_ERROR;
+  }
+
+  /* The code below is required for uninstalling the host portion of USBX.  */
+  if (ux_host_stack_uninitialize() != UX_SUCCESS)
+  {
+    return UX_ERROR;
+  }
+
+  /* USER CODE BEGIN MX_USBX_Host_Stack_DeInit_PostTreatment */
+  /* USER CODE END MX_USBX_Host_Stack_DeInit_PostTreatment */
 
   return ret;
-}
-
-/**
-  * @brief  _ux_utility_interrupt_disable
-  *         USB utility interrupt disable.
-  * @param  none
-  * @retval none
-  */
-ALIGN_TYPE _ux_utility_interrupt_disable(VOID)
-{
-  /* USER CODE BEGIN _ux_utility_interrupt_disable */
-  return(0);
-  /* USER CODE END _ux_utility_interrupt_disable */
-}
-
-/**
-  * @brief  _ux_utility_interrupt_restore
-  *         USB utility interrupt restore.
-  * @param  flags
-  * @retval none
-  */
-VOID _ux_utility_interrupt_restore(ALIGN_TYPE flags)
-{
-  /* USER CODE BEGIN _ux_utility_interrupt_restore */
-  UX_PARAMETER_NOT_USED(flags);
-  /* USER CODE END _ux_utility_interrupt_restore */
-}
-
-/**
-  * @brief  _ux_utility_time_get
-  *         Get Time Tick for host timing.
-  * @param  none
-  * @retval time tick
-  */
-ULONG _ux_utility_time_get(VOID)
-{
-  ULONG time_tick = 0U;
-
-  /* USER CODE BEGIN _ux_utility_time_get */
-  time_tick = HAL_GetTick();
-  /* USER CODE END _ux_utility_time_get */
-
-  return time_tick;
 }
 
 /**
@@ -408,45 +427,6 @@ VOID USBX_Host_Process(VOID *arg)
   ux_host_stack_tasks_run();
   USBX_HOST_HID_MOUSE_Task();
   USBX_HOST_HID_KEYBORAD_Task();
-}
-
-/**
-  * @brief  USBX_APP_Host_Init
-  *         Initialization of USB device.
-  * @param  none
-  * @retval none
-  */
-VOID USBX_APP_Host_Init(VOID)
-{
-  /* USER CODE BEGIN USB_Host_Init_PreTreatment_0 */
-
-  /* USER CODE END USB_Host_Init_PreTreatment_0 */
-
-  /* Initialize the LL driver */
-  MX_USB_OTG_HS_HCD_Init();
-
-  /* Initialize the host controller driver */
-  ux_host_stack_hcd_register(_ux_system_host_hcd_stm32_name,
-                             _ux_hcd_stm32_initialize, USB_OTG_HS_PERIPH_BASE,
-                             (ULONG)&hhcd_USB_OTG_HS);
-
-  /* Drive vbus */
-  USBH_DriverVBUS(USB_VBUS_TRUE);
-
-  /* Enable USB Global Interrupt */
-  HAL_HCD_Start(&hhcd_USB_OTG_HS);
-
-  /* USER CODE BEGIN USB_Host_Init_PreTreatment_1 */
-
-  /* Start Application Message */
-  USBH_UsrLog("**** USB OTG HS in FS HID Host **** \n");
-  USBH_UsrLog("USB Host library started.\n");
-
-  /* Wait for Device to be attached */
-  USBH_UsrLog("Starting HID Application");
-  USBH_UsrLog("Connect your HID Device");
-
-  /* USER CODE END USB_Host_Init_PreTreatment_1 */
 }
 
 /**

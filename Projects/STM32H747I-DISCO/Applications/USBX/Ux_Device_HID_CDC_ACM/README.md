@@ -56,6 +56,7 @@ Once STM32H747I-DISCO USB device successfully completed the enumeration phase:
 #### <b>Error behaviors</b>
 
 Host PC shows that USB device does not operate as designed (enumeration failed, for example PC cursor doesn't move or COM port enumeration failed).
+The LED_RED is toggling to indicate any error that has occurred.
 
 #### <b>Assumptions if any</b>
 
@@ -130,7 +131,7 @@ RTOS, ThreadX, USBX, USBXDevice, USB_OTG, High Speed, CDC, HID, VCP, USART, DMA,
 ### <b>Hardware and Software environment</b>
 
   - This application runs on STM32H747xx devices
-  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards revision MB1520-H747I-B02 and can be easily tailored to any other supported device and development board.
+  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards revision MB1248-H747I-D02 and can be easily tailored to any other supported device and development board.
   - STM32H747I-DISCO set-up:
     - Connect the STM32H747I-DISCO board CN1 to the PC through "MICRO-USB" to "Standard A" cable.
     - For VCP the configuration is dynamic for example it can be :
@@ -143,7 +144,7 @@ RTOS, ThreadX, USBX, USBXDevice, USB_OTG, High Speed, CDC, HID, VCP, USART, DMA,
   - The USART1 interface available on PA9 and PA10 of the microcontroller are connected to ST-LINK MCU.
     By default the USART1 communication between the target MCU and ST-LINK MCU is enabled.
 
-  Its configuration is as follows:
+  It's configuration is as following:
     - BaudRate = 115200 baud
     - Word Length = 8 Bits
     - Stop Bit = 1

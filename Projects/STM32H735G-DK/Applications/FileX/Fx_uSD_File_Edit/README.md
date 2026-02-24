@@ -45,7 +45,7 @@ That is why MX_SDMMC1_SD_Init() should be public to initialize the newly plugged
 
 #### <b>Known limitations</b>
 
-Performing quick plug/unplug of SD card may trigger the Error_Handler() function.
+None.
 
 ### <b>Notes</b>
 

@@ -5,3 +5,4 @@ In this repository, some middleware libraries **along with** the projects (demos
 ## List of unavailable projects
 
 * `./Projects/STM32H743I-EVAL/Applications/USBX/Ux_Device_Audio2.0_PlayBack`
+* `./Projects/STM32H743I-EVAL/Applications/USBX/Ux_Device_Audio20_Recording`

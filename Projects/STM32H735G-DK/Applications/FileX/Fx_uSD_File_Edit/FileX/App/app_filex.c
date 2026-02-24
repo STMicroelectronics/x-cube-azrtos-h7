@@ -110,7 +110,7 @@ UINT MX_FileX_Init(VOID *memory_ptr)
   ret = tx_byte_allocate(byte_pool, &pointer, FX_APP_THREAD_STACK_SIZE, TX_NO_WAIT);
 
   /* Check FX_APP_THREAD_STACK_SIZE allocation*/
-  if (ret != FX_SUCCESS)
+  if (ret != TX_SUCCESS)
   {
     return TX_POOL_ERROR;
   }

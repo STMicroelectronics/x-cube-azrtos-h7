@@ -41,7 +41,7 @@ The **AppUDPThread**, once started:
 
 #### <b>Error behaviors</b>
 
-+ The red LED is toggling to indicate any error that have occurred.
++ The red LED is toggling to indicate any error that have occurred while the green switch off.
 + In case the message exchange is not completed a failure message is printed on the HyperTerminal showing the actual sent message compared to the expected ones.
 
 #### <b>Assumptions if any</b>

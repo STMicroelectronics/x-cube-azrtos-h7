@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2018-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -41,16 +40,18 @@
 /* Touch screen driver structure initialization */
 MFXSTM32L152_TS_Mode_t MFXSTM32L152_TS_Driver =
 {
-  MFXSTM32L152_Init,
+  MFXSTM32L152_TS_Init,
+  MFXSTM32L152_DeInit,
+  MFXSTM32L152_TS_GestureConfig,
   MFXSTM32L152_ReadID,
-  MFXSTM32L152_Reset,
-  MFXSTM32L152_TS_Start,
-  MFXSTM32L152_TS_DetectTouch,
-  MFXSTM32L152_TS_GetXY,
+  MFXSTM32L152_TS_GetState,
+  MFXSTM32L152_TS_GetMultiTouchState,
+  MFXSTM32L152_TS_GetGesture,
+  MFXSTM32L152_TS_GetCapabilities,
   MFXSTM32L152_TS_EnableIT,
+  MFXSTM32L152_TS_DisableIT,
   MFXSTM32L152_TS_ClearIT,
   MFXSTM32L152_TS_ITStatus,
-  MFXSTM32L152_TS_DisableIT,
 };
 
 /* IO driver structure initialization */
@@ -102,9 +103,13 @@ MFXSTM32L152_IDD_Mode_t MFXSTM32L152_IDD_Driver =
 /** @defgroup MFXSTM32L152_Private_Function_Prototypes MFXSTM32L152 Private Function Prototypes
   * @{
   */
-static int32_t MFXSTM32L152_reg24_setPinValue(MFXSTM32L152_Object_t *pObj, uint8_t RegisterAddr, uint32_t PinPosition, uint8_t PinValue );
-static int32_t MFXSTM32L152_ReadRegWrap(void *handle, uint16_t Reg, uint8_t* Data, uint16_t Length);
-static int32_t MFXSTM32L152_WriteRegWrap(void *handle, uint16_t Reg, uint8_t* Data, uint16_t Length);
+static int32_t MFXSTM32L152_reg24_setPinValue(MFXSTM32L152_Object_t *pObj, uint8_t RegisterAddr, uint32_t PinPosition,
+                                              uint8_t PinValue);
+static int32_t MFXSTM32L152_ReadRegWrap(void *handle, uint16_t Reg, uint8_t *Data, uint16_t Length);
+static int32_t MFXSTM32L152_WriteRegWrap(void *handle, uint16_t Reg, uint8_t *Data, uint16_t Length);
+static int32_t MFXSTM32L152_TS_Start(MFXSTM32L152_Object_t *pObj);
+static int32_t MFXSTM32L152_TS_DetectTouch(MFXSTM32L152_Object_t *pObj);
+static int32_t MFXSTM32L152_TS_GetXY(MFXSTM32L152_Object_t *pObj, uint16_t *X, uint16_t *Y);
 /**
   * @}
   */
@@ -124,16 +129,16 @@ int32_t MFXSTM32L152_Init(MFXSTM32L152_Object_t *pObj)
 {
   int32_t ret = MFXSTM32L152_OK;
 
-  if(pObj->IsInitialized == 0U)
+  if (pObj->IsInitialized == 0U)
   {
     /* Initialize IO BUS layer */
     pObj->IO.Init();
 
-    if(MFXSTM32L152_SetIrqOutPinPolarity(pObj, MFXSTM32L152_OUT_PIN_POLARITY_HIGH) != MFXSTM32L152_OK)
+    if (MFXSTM32L152_SetIrqOutPinPolarity(pObj, MFXSTM32L152_OUT_PIN_POLARITY_HIGH) != MFXSTM32L152_OK)
     {
       ret = MFXSTM32L152_ERROR;
     }
-    else if(MFXSTM32L152_SetIrqOutPinType(pObj, MFXSTM32L152_OUT_PIN_TYPE_PUSHPULL) != MFXSTM32L152_OK)
+    else if (MFXSTM32L152_SetIrqOutPinType(pObj, MFXSTM32L152_OUT_PIN_TYPE_PUSHPULL) != MFXSTM32L152_OK)
     {
       ret = MFXSTM32L152_ERROR;
     }
@@ -153,8 +158,10 @@ int32_t MFXSTM32L152_Init(MFXSTM32L152_Object_t *pObj)
   */
 int32_t MFXSTM32L152_DeInit(MFXSTM32L152_Object_t *pObj)
 {
-  if(pObj->IsInitialized == 1U)
+  if (pObj->IsInitialized == 1U)
   {
+    /* De-Initialize IO BUS layer */
+    pObj->IO.DeInit();
     pObj->IsInitialized = 0U;
   }
   return MFXSTM32L152_OK;
@@ -171,7 +178,7 @@ int32_t MFXSTM32L152_Reset(MFXSTM32L152_Object_t *pObj)
   uint8_t tmp = MFXSTM32L152_SWRST;
 
   /* Soft Reset */
-  if(mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &tmp, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &tmp, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -190,7 +197,7 @@ int32_t MFXSTM32L152_LowPower(MFXSTM32L152_Object_t *pObj)
   uint8_t tmp = MFXSTM32L152_STANDBY;
 
   /* Enter standby mode */
-  if(mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &tmp, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &tmp, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -224,14 +231,14 @@ int32_t MFXSTM32L152_ReadID(MFXSTM32L152_Object_t *pObj, uint32_t *Id)
   /* Initialize IO BUS layer */
   pObj->IO.Init();
 
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_ID, &id, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_ID, &id, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
   else
   {
-  /* Store the device ID value */
-  *Id = id;
+    /* Store the device ID value */
+    *Id = id;
   }
 
   return ret;
@@ -275,7 +282,7 @@ int32_t MFXSTM32L152_EnableITSource(MFXSTM32L152_Object_t *pObj, uint8_t Source)
   uint8_t tmp;
 
   /* Get the current value of the INT_EN register */
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_SRC_EN, &tmp, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_SRC_EN, &tmp, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -285,7 +292,7 @@ int32_t MFXSTM32L152_EnableITSource(MFXSTM32L152_Object_t *pObj, uint8_t Source)
     tmp |= Source;
 
     /* Set the register */
-    if(mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_SRC_EN, &tmp, 1) != MFXSTM32L152_OK)
+    if (mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_SRC_EN, &tmp, 1) != MFXSTM32L152_OK)
     {
       ret = MFXSTM32L152_ERROR;
     }
@@ -314,7 +321,7 @@ int32_t MFXSTM32L152_DisableITSource(MFXSTM32L152_Object_t *pObj, uint8_t Source
   uint8_t tmp;
 
   /* Get the current value of the INT_EN register */
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_SRC_EN, &tmp, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_SRC_EN, &tmp, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -324,7 +331,7 @@ int32_t MFXSTM32L152_DisableITSource(MFXSTM32L152_Object_t *pObj, uint8_t Source
     tmp &= ~Source;
 
     /* Set the register */
-    if(mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_SRC_EN, &tmp, 1) != MFXSTM32L152_OK)
+    if (mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_SRC_EN, &tmp, 1) != MFXSTM32L152_OK)
     {
       ret = MFXSTM32L152_ERROR;
     }
@@ -351,9 +358,10 @@ int32_t MFXSTM32L152_DisableITSource(MFXSTM32L152_Object_t *pObj, uint8_t Source
 int32_t MFXSTM32L152_GlobalITStatus(MFXSTM32L152_Object_t *pObj, uint8_t Source)
 {
   int32_t ret;
-  uint8_t tmp, tmp1;
+  uint8_t tmp;
+  uint8_t tmp1;
 
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_PENDING, &tmp, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_PENDING, &tmp, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -380,7 +388,7 @@ int32_t MFXSTM32L152_GlobalITStatus(MFXSTM32L152_Object_t *pObj, uint8_t Source)
   *   @arg  MFXSTM32L152_IRQ_TS_TH : Touch Screen FIFO threshold triggered
   *   @arg  MFXSTM32L152_IRQ_TS_FULL : Touch Screen FIFO Full
   *   @arg  MFXSTM32L152_IRQ_TS_OVF : Touch Screen FIFO Overflow
-  *  /\/\ IMPORTANT NOTE /\/\ must not use MFXSTM32L152_IRQ_GPIO as argument, see IRQ_GPI_ACK1 and IRQ_GPI_ACK2 registers
+  *  /\/\ IMPORTANT NOTE /\/\ mustn't use MFXSTM32L152_IRQ_GPIO as argument, see IRQ_GPI_ACK1 and IRQ_GPI_ACK2 registers
   * @retval Component status
   */
 int32_t MFXSTM32L152_ClearGlobalIT(MFXSTM32L152_Object_t *pObj, uint8_t Source)
@@ -388,7 +396,7 @@ int32_t MFXSTM32L152_ClearGlobalIT(MFXSTM32L152_Object_t *pObj, uint8_t Source)
   int32_t ret = MFXSTM32L152_OK;
 
   /* Write 1 to the bits that have to be cleared */
-  if(mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_ACK, &Source, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_ACK, &Source, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -410,23 +418,23 @@ int32_t MFXSTM32L152_SetIrqOutPinPolarity(MFXSTM32L152_Object_t *pObj, uint8_t P
   uint8_t tmp;
 
   /* Get the current register value */
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_MFX_IRQ_OUT, &tmp, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_MFX_IRQ_OUT, &tmp, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
   else
   {
-  /* Mask the polarity bits */
-  tmp &= ~(uint8_t)0x02;
+    /* Mask the polarity bits */
+    tmp &= ~(uint8_t)0x02;
 
-  /* Modify the Interrupt Output line configuration */
-  tmp |= Polarity;
+    /* Modify the Interrupt Output line configuration */
+    tmp |= Polarity;
 
-  /* Set the new register value */
-  if(mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_MFX_IRQ_OUT, &tmp, 1) != MFXSTM32L152_OK)
-  {
-    ret = MFXSTM32L152_ERROR;
-  }
+    /* Set the new register value */
+    if (mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_MFX_IRQ_OUT, &tmp, 1) != MFXSTM32L152_OK)
+    {
+      ret = MFXSTM32L152_ERROR;
+    }
   }
 
   return ret;
@@ -446,7 +454,7 @@ int32_t MFXSTM32L152_SetIrqOutPinType(MFXSTM32L152_Object_t *pObj, uint8_t Type)
   uint8_t tmp;
 
   /* Get the current register value */
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_MFX_IRQ_OUT, &tmp, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_MFX_IRQ_OUT, &tmp, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -459,7 +467,7 @@ int32_t MFXSTM32L152_SetIrqOutPinType(MFXSTM32L152_Object_t *pObj, uint8_t Type)
     tmp |= Type;
 
     /* Set the new register value */
-    if(mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_MFX_IRQ_OUT, &tmp, 1) != MFXSTM32L152_OK)
+    if (mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_MFX_IRQ_OUT, &tmp, 1) != MFXSTM32L152_OK)
     {
       ret = MFXSTM32L152_ERROR;
     }
@@ -486,7 +494,7 @@ int32_t MFXSTM32L152_IO_Start(MFXSTM32L152_Object_t *pObj, uint32_t IO_Pin)
   uint8_t mode;
 
   /* Get the current register value */
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &mode, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &mode, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -513,7 +521,7 @@ int32_t MFXSTM32L152_IO_Start(MFXSTM32L152_Object_t *pObj, uint32_t IO_Pin)
     }
 
     /* Write the new register value */
-    if(mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &mode, 1) != MFXSTM32L152_OK)
+    if (mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &mode, 1) != MFXSTM32L152_OK)
     {
       ret = MFXSTM32L152_ERROR;
     }
@@ -534,28 +542,28 @@ int32_t MFXSTM32L152_IO_Init(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_IO_Init_t
   int32_t ret = MFXSTM32L152_OK;
 
   /* IT enable/disable */
-  switch(IoInit->Mode)
+  switch (IoInit->Mode)
   {
-  case MFXSTM32L152_GPIO_MODE_OFF:
-  case MFXSTM32L152_GPIO_MODE_ANALOG:
-  case MFXSTM32L152_GPIO_MODE_INPUT:
-  case MFXSTM32L152_GPIO_MODE_OUTPUT_OD:
-  case MFXSTM32L152_GPIO_MODE_OUTPUT_PP:
-    ret += MFXSTM32L152_IO_DisablePinIT(pObj, IoInit->Pin); /* first disable IT */
-    break;
+    case MFXSTM32L152_GPIO_MODE_OFF:
+    case MFXSTM32L152_GPIO_MODE_ANALOG:
+    case MFXSTM32L152_GPIO_MODE_INPUT:
+    case MFXSTM32L152_GPIO_MODE_OUTPUT_OD:
+    case MFXSTM32L152_GPIO_MODE_OUTPUT_PP:
+      ret += MFXSTM32L152_IO_DisablePinIT(pObj, IoInit->Pin); /* first disable IT */
+      break;
 
-  case MFXSTM32L152_GPIO_MODE_IT_RISING_EDGE:
-  case MFXSTM32L152_GPIO_MODE_IT_FALLING_EDGE:
-  case MFXSTM32L152_GPIO_MODE_IT_LOW_LEVEL:
-  case MFXSTM32L152_GPIO_MODE_IT_HIGH_LEVEL:
-    ret += MFXSTM32L152_IO_EnableIT(pObj); /* first enable IT */
-    break;
-  default:
-    break;
+    case MFXSTM32L152_GPIO_MODE_IT_RISING_EDGE:
+    case MFXSTM32L152_GPIO_MODE_IT_FALLING_EDGE:
+    case MFXSTM32L152_GPIO_MODE_IT_LOW_LEVEL:
+    case MFXSTM32L152_GPIO_MODE_IT_HIGH_LEVEL:
+      ret += MFXSTM32L152_IO_EnableIT(pObj); /* first enable IT */
+      break;
+    default:
+      break;
   }
 
   /* Set direction IN/OUT */
-  if((IoInit->Mode == MFXSTM32L152_GPIO_MODE_OUTPUT_PP) || (IoInit->Mode == MFXSTM32L152_GPIO_MODE_OUTPUT_OD))
+  if ((IoInit->Mode == MFXSTM32L152_GPIO_MODE_OUTPUT_PP) || (IoInit->Mode == MFXSTM32L152_GPIO_MODE_OUTPUT_OD))
   {
     ret += MFXSTM32L152_IO_InitPin(pObj, IoInit->Pin, MFXSTM32L152_GPIO_DIR_OUT);
   }
@@ -565,80 +573,88 @@ int32_t MFXSTM32L152_IO_Init(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_IO_Init_t
   }
 
   /* Set Push-Pull type */
-  switch(IoInit->Pull)
+  switch (IoInit->Pull)
   {
-  case MFXSTM32L152_GPIO_NOPULL:
-    ret += MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_TYPE1, IoInit->Pin, MFXSTM32L152_GPI_WITHOUT_PULL_RESISTOR);
-    break;
-  case MFXSTM32L152_GPIO_PULLUP:
-  case MFXSTM32L152_GPIO_PULLDOWN:
-    ret += MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_TYPE1, IoInit->Pin, MFXSTM32L152_GPI_WITH_PULL_RESISTOR);
-    break;
-  default:
-    break;
+    case MFXSTM32L152_GPIO_NOPULL:
+      ret += MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_TYPE1, IoInit->Pin,
+                                            MFXSTM32L152_GPI_WITHOUT_PULL_RESISTOR);
+      break;
+    case MFXSTM32L152_GPIO_PULLUP:
+    case MFXSTM32L152_GPIO_PULLDOWN:
+      ret += MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_TYPE1, IoInit->Pin,
+                                            MFXSTM32L152_GPI_WITH_PULL_RESISTOR);
+      break;
+    default:
+      break;
   }
 
-  if(IoInit->Mode == MFXSTM32L152_GPIO_MODE_OUTPUT_PP)
+  if (IoInit->Mode == MFXSTM32L152_GPIO_MODE_OUTPUT_PP)
   {
-    ret += MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_TYPE1, IoInit->Pin, MFXSTM32L152_GPO_PUSH_PULL);
+    ret += MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_TYPE1, IoInit->Pin,
+                                          MFXSTM32L152_GPO_PUSH_PULL);
   }
 
-  if(IoInit->Mode == MFXSTM32L152_GPIO_MODE_OUTPUT_OD)
+  if (IoInit->Mode == MFXSTM32L152_GPIO_MODE_OUTPUT_OD)
   {
-    ret += MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_TYPE1, IoInit->Pin, MFXSTM32L152_GPO_OPEN_DRAIN);
+    ret += MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_TYPE1, IoInit->Pin,
+                                          MFXSTM32L152_GPO_OPEN_DRAIN);
   }
 
   /* Set Pullup-Pulldown */
-  switch(IoInit->Pull)
+  switch (IoInit->Pull)
   {
-  case MFXSTM32L152_GPIO_NOPULL:
-    if((IoInit->Mode == MFXSTM32L152_GPIO_MODE_INPUT) || (IoInit->Mode == MFXSTM32L152_GPIO_MODE_ANALOG))
-    {
-      ret += MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_PUPD1, IoInit->Pin, MFXSTM32L152_GPIO_PULL_DOWN);
-    }
-    else
-    {
-      ret += MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_PUPD1, IoInit->Pin, MFXSTM32L152_GPIO_PULL_UP);
-    }
-    break;
-  case MFXSTM32L152_GPIO_PULLUP:
-    ret += MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_PUPD1, IoInit->Pin, MFXSTM32L152_GPIO_PULL_UP);
-    break;
-  case MFXSTM32L152_GPIO_PULLDOWN:
-    ret += MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_PUPD1, IoInit->Pin, MFXSTM32L152_GPIO_PULL_DOWN);
-    break;
-  default:
-    break;
+    case MFXSTM32L152_GPIO_NOPULL:
+      if ((IoInit->Mode == MFXSTM32L152_GPIO_MODE_INPUT) || (IoInit->Mode == MFXSTM32L152_GPIO_MODE_ANALOG))
+      {
+        ret += MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_PUPD1, IoInit->Pin,
+                                              MFXSTM32L152_GPIO_PULL_DOWN);
+      }
+      else
+      {
+        ret += MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_PUPD1, IoInit->Pin,
+                                              MFXSTM32L152_GPIO_PULL_UP);
+      }
+      break;
+    case MFXSTM32L152_GPIO_PULLUP:
+      ret += MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_PUPD1, IoInit->Pin,
+                                            MFXSTM32L152_GPIO_PULL_UP);
+      break;
+    case MFXSTM32L152_GPIO_PULLDOWN:
+      ret += MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_PUPD1, IoInit->Pin,
+                                            MFXSTM32L152_GPIO_PULL_DOWN);
+      break;
+    default:
+      break;
   }
 
   /* Set Irq event and type mode */
-  switch(IoInit->Mode)
+  switch (IoInit->Mode)
   {
-  case MFXSTM32L152_GPIO_MODE_IT_RISING_EDGE:
-    ret += MFXSTM32L152_IO_SetIrqEvtMode(pObj, IoInit->Pin, MFXSTM32L152_IRQ_GPI_EVT_EDGE);
-    ret += MFXSTM32L152_IO_SetIrqTypeMode(pObj, IoInit->Pin, MFXSTM32L152_IRQ_GPI_TYPE_HLRE);
-    ret += MFXSTM32L152_IO_EnablePinIT(pObj, IoInit->Pin);  /* last to do: enable IT */
-    break;
-  case MFXSTM32L152_GPIO_MODE_IT_FALLING_EDGE:
-    ret += MFXSTM32L152_IO_SetIrqEvtMode(pObj, IoInit->Pin, MFXSTM32L152_IRQ_GPI_EVT_EDGE);
-    ret += MFXSTM32L152_IO_SetIrqTypeMode(pObj, IoInit->Pin, MFXSTM32L152_IRQ_GPI_TYPE_LLFE);
-    ret += MFXSTM32L152_IO_EnablePinIT(pObj, IoInit->Pin);  /* last to do: enable IT */
-    break;
-  case MFXSTM32L152_GPIO_MODE_IT_HIGH_LEVEL:
-    ret += MFXSTM32L152_IO_SetIrqEvtMode(pObj, IoInit->Pin, MFXSTM32L152_IRQ_GPI_EVT_LEVEL);
-    ret += MFXSTM32L152_IO_SetIrqTypeMode(pObj, IoInit->Pin, MFXSTM32L152_IRQ_GPI_TYPE_HLRE);
-    ret += MFXSTM32L152_IO_EnablePinIT(pObj, IoInit->Pin);  /* last to do: enable IT */
-    break;
-  case MFXSTM32L152_GPIO_MODE_IT_LOW_LEVEL:
-    ret += MFXSTM32L152_IO_SetIrqEvtMode(pObj, IoInit->Pin, MFXSTM32L152_IRQ_GPI_EVT_LEVEL);
-    ret += MFXSTM32L152_IO_SetIrqTypeMode(pObj, IoInit->Pin, MFXSTM32L152_IRQ_GPI_TYPE_LLFE);
-    ret += MFXSTM32L152_IO_EnablePinIT(pObj, IoInit->Pin);  /* last to do: enable IT */
-    break;
-  default:
-    break;
+    case MFXSTM32L152_GPIO_MODE_IT_RISING_EDGE:
+      ret += MFXSTM32L152_IO_SetIrqEvtMode(pObj, IoInit->Pin, MFXSTM32L152_IRQ_GPI_EVT_EDGE);
+      ret += MFXSTM32L152_IO_SetIrqTypeMode(pObj, IoInit->Pin, MFXSTM32L152_IRQ_GPI_TYPE_HLRE);
+      ret += MFXSTM32L152_IO_EnablePinIT(pObj, IoInit->Pin);  /* last to do: enable IT */
+      break;
+    case MFXSTM32L152_GPIO_MODE_IT_FALLING_EDGE:
+      ret += MFXSTM32L152_IO_SetIrqEvtMode(pObj, IoInit->Pin, MFXSTM32L152_IRQ_GPI_EVT_EDGE);
+      ret += MFXSTM32L152_IO_SetIrqTypeMode(pObj, IoInit->Pin, MFXSTM32L152_IRQ_GPI_TYPE_LLFE);
+      ret += MFXSTM32L152_IO_EnablePinIT(pObj, IoInit->Pin);  /* last to do: enable IT */
+      break;
+    case MFXSTM32L152_GPIO_MODE_IT_HIGH_LEVEL:
+      ret += MFXSTM32L152_IO_SetIrqEvtMode(pObj, IoInit->Pin, MFXSTM32L152_IRQ_GPI_EVT_LEVEL);
+      ret += MFXSTM32L152_IO_SetIrqTypeMode(pObj, IoInit->Pin, MFXSTM32L152_IRQ_GPI_TYPE_HLRE);
+      ret += MFXSTM32L152_IO_EnablePinIT(pObj, IoInit->Pin);  /* last to do: enable IT */
+      break;
+    case MFXSTM32L152_GPIO_MODE_IT_LOW_LEVEL:
+      ret += MFXSTM32L152_IO_SetIrqEvtMode(pObj, IoInit->Pin, MFXSTM32L152_IRQ_GPI_EVT_LEVEL);
+      ret += MFXSTM32L152_IO_SetIrqTypeMode(pObj, IoInit->Pin, MFXSTM32L152_IRQ_GPI_TYPE_LLFE);
+      ret += MFXSTM32L152_IO_EnablePinIT(pObj, IoInit->Pin);  /* last to do: enable IT */
+      break;
+    default:
+      break;
   }
 
-  if(ret != MFXSTM32L152_OK)
+  if (ret != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -659,7 +675,7 @@ int32_t MFXSTM32L152_IO_InitPin(MFXSTM32L152_Object_t *pObj, uint32_t IO_Pin, ui
 {
   int32_t ret = MFXSTM32L152_OK;
 
-  if(MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_DIR1, IO_Pin, Direction) != MFXSTM32L152_OK)
+  if (MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPIO_DIR1, IO_Pin, Direction) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -682,7 +698,7 @@ int32_t MFXSTM32L152_IO_SetIrqEvtMode(MFXSTM32L152_Object_t *pObj, uint32_t IO_P
 {
   int32_t ret = MFXSTM32L152_OK;
 
-  if(MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_IRQ_GPI_EVT1, IO_Pin, Evt) != MFXSTM32L152_OK)
+  if (MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_IRQ_GPI_EVT1, IO_Pin, Evt) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -706,7 +722,7 @@ int32_t MFXSTM32L152_IO_SetIrqTypeMode(MFXSTM32L152_Object_t *pObj, uint32_t IO_
 {
   int32_t ret = MFXSTM32L152_OK;
 
-  if(MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_IRQ_GPI_TYPE1, IO_Pin, Type) != MFXSTM32L152_OK)
+  if (MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_IRQ_GPI_TYPE1, IO_Pin, Type) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -731,7 +747,7 @@ int32_t MFXSTM32L152_IO_WritePin(MFXSTM32L152_Object_t *pObj, uint32_t IO_Pin, u
   if (PinState != 0U)
   {
     /* Set the SET register */
-    if(MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPO_SET1, IO_Pin, 1) != MFXSTM32L152_OK)
+    if (MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPO_SET1, IO_Pin, 1) != MFXSTM32L152_OK)
     {
       ret = MFXSTM32L152_ERROR;
     }
@@ -739,7 +755,7 @@ int32_t MFXSTM32L152_IO_WritePin(MFXSTM32L152_Object_t *pObj, uint32_t IO_Pin, u
   else
   {
     /* Set the CLEAR register */
-    if(MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPO_CLR1, IO_Pin, 1) != MFXSTM32L152_OK)
+    if (MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_GPO_CLR1, IO_Pin, 1) != MFXSTM32L152_OK)
     {
       ret = MFXSTM32L152_ERROR;
     }
@@ -761,22 +777,22 @@ int32_t MFXSTM32L152_IO_ReadPin(MFXSTM32L152_Object_t *pObj, uint32_t IO_Pin)
   uint8_t tmpreg[3];
   uint32_t tmp;
 
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_GPIO_STATE1, &tmpreg[0], 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_GPIO_STATE1, &tmpreg[0], 1) != MFXSTM32L152_OK)
   {
     return MFXSTM32L152_ERROR;
   }
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_GPIO_STATE2, &tmpreg[1], 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_GPIO_STATE2, &tmpreg[1], 1) != MFXSTM32L152_OK)
   {
     return MFXSTM32L152_ERROR;
   }
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_GPIO_STATE3, &tmpreg[2], 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_GPIO_STATE3, &tmpreg[2], 1) != MFXSTM32L152_OK)
   {
     return MFXSTM32L152_ERROR;
   }
   tmp = ((uint32_t)tmpreg[0] + ((uint32_t)tmpreg[1] << 8) + ((uint32_t)tmpreg[2] << 16));
   tmp &= IO_Pin;
 
-  return(int32_t)(tmp);
+  return (int32_t)(tmp);
 }
 
 /**
@@ -789,7 +805,7 @@ int32_t MFXSTM32L152_IO_EnableIT(MFXSTM32L152_Object_t *pObj)
   int32_t ret = MFXSTM32L152_OK;
 
   /* Enable global IO IT source */
-  if(MFXSTM32L152_EnableITSource(pObj, MFXSTM32L152_IRQ_GPIO) != MFXSTM32L152_OK)
+  if (MFXSTM32L152_EnableITSource(pObj, MFXSTM32L152_IRQ_GPIO) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -807,7 +823,7 @@ int32_t MFXSTM32L152_IO_DisableIT(MFXSTM32L152_Object_t *pObj)
   int32_t ret = MFXSTM32L152_OK;
 
   /* Disable global IO IT source */
-  if(MFXSTM32L152_DisableITSource(pObj, MFXSTM32L152_IRQ_GPIO) != MFXSTM32L152_OK)
+  if (MFXSTM32L152_DisableITSource(pObj, MFXSTM32L152_IRQ_GPIO) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -827,7 +843,7 @@ int32_t MFXSTM32L152_IO_EnablePinIT(MFXSTM32L152_Object_t *pObj, uint32_t IO_Pin
 {
   int32_t ret = MFXSTM32L152_OK;
 
-  if(MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_IRQ_GPI_SRC1, IO_Pin, 1) != MFXSTM32L152_OK)
+  if (MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_IRQ_GPI_SRC1, IO_Pin, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -847,7 +863,7 @@ int32_t MFXSTM32L152_IO_DisablePinIT(MFXSTM32L152_Object_t *pObj, uint32_t IO_Pi
 {
   int32_t ret = MFXSTM32L152_OK;
 
-  if(MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_IRQ_GPI_SRC1, IO_Pin, 0) != MFXSTM32L152_OK)
+  if (MFXSTM32L152_reg24_setPinValue(pObj, MFXSTM32L152_REG_ADR_IRQ_GPI_SRC1, IO_Pin, 0) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -869,17 +885,17 @@ int32_t MFXSTM32L152_IO_ITStatus(MFXSTM32L152_Object_t *pObj, uint32_t IO_Pin)
   uint8_t tmpreg[3];
   uint32_t tmp;
 
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_GPI_PENDING1, &tmpreg[0], 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_GPI_PENDING1, &tmpreg[0], 1) != MFXSTM32L152_OK)
   {
     return MFXSTM32L152_ERROR;
   }
 
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_GPI_PENDING2, &tmpreg[1], 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_GPI_PENDING2, &tmpreg[1], 1) != MFXSTM32L152_OK)
   {
     return MFXSTM32L152_ERROR;
   }
 
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_GPI_PENDING3, &tmpreg[2], 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_GPI_PENDING3, &tmpreg[2], 1) != MFXSTM32L152_OK)
   {
     return MFXSTM32L152_ERROR;
   }
@@ -887,11 +903,11 @@ int32_t MFXSTM32L152_IO_ITStatus(MFXSTM32L152_Object_t *pObj, uint32_t IO_Pin)
   tmp = (uint32_t)tmpreg[0] + ((uint32_t)tmpreg[1] << 8) + ((uint32_t)tmpreg[2] << 16);
   tmp &= IO_Pin;
 
-  return(int32_t)tmp;
+  return (int32_t)tmp;
 }
 
 /**
-  * @brief  Clear the selected IO interrupt pending bit(s). It clear automatically also the general MFXSTM32L152_REG_ADR_IRQ_PENDING
+  * @brief  Clear the selected IO interrupt pending bit(s). Also clears automatically MFXSTM32L152_REG_ADR_IRQ_PENDING
   * @param  pObj   Pointer to component object.
   * @param  IO_Pin the IO interrupt to be cleared, could be:
   *   @arg  MFXSTM32L152_GPIO_PIN_x: Where x can be from 0 to 23.
@@ -902,7 +918,9 @@ int32_t MFXSTM32L152_IO_ClearIT(MFXSTM32L152_Object_t *pObj, uint32_t IO_Pin)
   /* Clear the IO IT pending bit(s) by acknowledging */
   /* it cleans automatically also the Global IRQ_GPIO */
   /* normally this function is called under interrupt */
-  uint8_t pin_0_7, pin_8_15, pin_16_23;
+  uint8_t pin_0_7;
+  uint8_t pin_8_15;
+  uint8_t pin_16_23;
 
   pin_0_7   = (uint8_t)(IO_Pin & 0x0000ffU);
   pin_8_15  = (uint8_t)(IO_Pin >> 8);
@@ -911,21 +929,21 @@ int32_t MFXSTM32L152_IO_ClearIT(MFXSTM32L152_Object_t *pObj, uint32_t IO_Pin)
 
   if (pin_0_7 != 0U)
   {
-    if(mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_GPI_ACK1, &pin_0_7, 1) != MFXSTM32L152_OK)
+    if (mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_GPI_ACK1, &pin_0_7, 1) != MFXSTM32L152_OK)
     {
       return MFXSTM32L152_ERROR;
     }
   }
   if (pin_8_15 != 0U)
   {
-    if(mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_GPI_ACK2, &pin_8_15, 1) != MFXSTM32L152_OK)
+    if (mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_GPI_ACK2, &pin_8_15, 1) != MFXSTM32L152_OK)
     {
       return MFXSTM32L152_ERROR;
     }
   }
   if (pin_16_23 != 0U)
   {
-    if(mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_GPI_ACK3, &pin_16_23, 1) != MFXSTM32L152_OK)
+    if (mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IRQ_GPI_ACK3, &pin_16_23, 1) != MFXSTM32L152_OK)
     {
       return MFXSTM32L152_ERROR;
     }
@@ -946,7 +964,7 @@ int32_t MFXSTM32L152_IO_EnableAF(MFXSTM32L152_Object_t *pObj)
   uint8_t mode;
 
   /* Get the current register value */
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &mode, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &mode, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -963,7 +981,7 @@ int32_t MFXSTM32L152_IO_EnableAF(MFXSTM32L152_Object_t *pObj)
     mode |= MFXSTM32L152_ALTERNATE_GPIO_EN;
 
     /* Write the new register value */
-    if(mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &mode, 1) != MFXSTM32L152_OK)
+    if (mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &mode, 1) != MFXSTM32L152_OK)
     {
       ret = MFXSTM32L152_ERROR;
     }
@@ -983,7 +1001,7 @@ int32_t MFXSTM32L152_IO_DisableAF(MFXSTM32L152_Object_t *pObj)
   uint8_t mode;
 
   /* Get the current register value */
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &mode, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &mode, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1000,7 +1018,7 @@ int32_t MFXSTM32L152_IO_DisableAF(MFXSTM32L152_Object_t *pObj)
     mode &= ~MFXSTM32L152_ALTERNATE_GPIO_EN;
 
     /* Write the new register value */
-    if(mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &mode, 1) != MFXSTM32L152_OK)
+    if (mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &mode, 1) != MFXSTM32L152_OK)
     {
       ret = MFXSTM32L152_ERROR;
     }
@@ -1013,7 +1031,41 @@ int32_t MFXSTM32L152_IO_DisableAF(MFXSTM32L152_Object_t *pObj)
 /* ------------------------------------------------------------------ */
 /* --------------------- TOUCH SCREEN ------------------------------- */
 /* ------------------------------------------------------------------ */
+/**
+  * @brief  Initialize the mfxstm32l152 and start the Touch Screen feature
+  * @param  pObj   Pointer to component object.
+  * @retval Component status
+  */
+int32_t MFXSTM32L152_TS_Init(MFXSTM32L152_Object_t *pObj)
+{
+  int32_t ret = MFXSTM32L152_OK;
 
+  if(pObj->IsInitialized == 0U)
+  {
+    /* Initialize IO BUS layer */
+    pObj->IO.Init();
+
+    if (MFXSTM32L152_SetIrqOutPinPolarity(pObj, MFXSTM32L152_OUT_PIN_POLARITY_HIGH) != MFXSTM32L152_OK)
+    {
+      ret = MFXSTM32L152_ERROR;
+    }
+    else if (MFXSTM32L152_SetIrqOutPinType(pObj, MFXSTM32L152_OUT_PIN_TYPE_PUSHPULL) != MFXSTM32L152_OK)
+    {
+      ret = MFXSTM32L152_ERROR;
+    }
+    else
+    {
+      pObj->IsInitialized = 1U;
+    }
+  }
+  /* Start the Touch Screen controller */
+  if (ret == MFXSTM32L152_OK)
+  {
+    ret = MFXSTM32L152_TS_Start(pObj);
+  }
+
+  return ret;
+}
 /**
   * @brief  Configures the touch Screen Controller (Single point detection)
   * @param  pObj   Pointer to component object.
@@ -1022,10 +1074,11 @@ int32_t MFXSTM32L152_IO_DisableAF(MFXSTM32L152_Object_t *pObj)
 int32_t MFXSTM32L152_TS_Start(MFXSTM32L152_Object_t *pObj)
 {
   int32_t ret;
-  uint8_t mode, tmp;
+  uint8_t mode;
+  uint8_t tmp;
 
   /* Get the current register value */
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &mode, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &mode, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1068,7 +1121,7 @@ int32_t MFXSTM32L152_TS_Start(MFXSTM32L152_Object_t *pObj)
     ret += MFXSTM32L152_IO_ClearIT(pObj, 0xFFFFFF);
   }
 
-  if(ret != MFXSTM32L152_OK)
+  if (ret != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1084,23 +1137,24 @@ int32_t MFXSTM32L152_TS_Start(MFXSTM32L152_Object_t *pObj)
 int32_t MFXSTM32L152_TS_DetectTouch(MFXSTM32L152_Object_t *pObj)
 {
   int32_t ret = MFXSTM32L152_OK;
-  uint8_t state, fifo_level;
+  uint8_t state;
+  uint8_t fifo_level;
 
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_TS_FIFO_STA, &state, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_TS_FIFO_STA, &state, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
   else
   {
-    if(((state & MFXSTM32L152_TS_CTRL_STATUS) == MFXSTM32L152_TS_CTRL_STATUS) != 0U)
+    if (((state & MFXSTM32L152_TS_CTRL_STATUS) == MFXSTM32L152_TS_CTRL_STATUS) != 0U)
     {
-      if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_TS_FIFO_LEVEL, &fifo_level, 1) != MFXSTM32L152_OK)
+      if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_TS_FIFO_LEVEL, &fifo_level, 1) != MFXSTM32L152_OK)
       {
         ret = MFXSTM32L152_ERROR;
       }
       else
       {
-        if(fifo_level > 0U)
+        if (fifo_level > 0U)
         {
           ret = 1;
         }
@@ -1127,17 +1181,109 @@ int32_t MFXSTM32L152_TS_GetXY(MFXSTM32L152_Object_t *pObj, uint16_t *X, uint16_t
   pObj->IO.ReadReg(pObj->IO.Address, MFXSTM32L152_TS_XY_DATA, data_xy, sizeof(data_xy));
 
   /* Calculate positions values */
-  *X = ((uint16_t)data_xy[1]<<4U) + ((uint16_t)data_xy[0]>>4U);
-  *Y = ((uint16_t)data_xy[2]<<4U) + ((uint16_t)data_xy[0]& 4U);
+  *X = ((uint16_t)data_xy[1] << 4U) + ((uint16_t)data_xy[0] >> 4U);
+  *Y = ((uint16_t)data_xy[2] << 4U) + ((uint16_t)data_xy[0] & 4U);
 
   /* Reset the FIFO memory content. */
   tmp = MFXSTM32L152_TS_CLEAR_FIFO;
-  if(mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_TS_FIFO_TH, &tmp, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_TS_FIFO_TH, &tmp, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
 
   return ret;
+}
+
+/**
+  * @brief  Get the touch screen X and Y positions values
+  * @param  pObj Component object pointer
+  * @param  State Single Touch structure pointer
+  * @retval Component status
+  */
+int32_t MFXSTM32L152_TS_GetState(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_State_t *State)
+{
+  int32_t ret = MFXSTM32L152_OK;
+
+  State->TouchDetected = 0;
+  State->TouchX = 0;
+  State->TouchY = 0;
+
+  if (MFXSTM32L152_TS_DetectTouch(pObj) == 1)
+  {
+    State->TouchDetected = 1;
+    MFXSTM32L152_TS_GetXY(pObj, (uint16_t *)&(State->TouchX), (uint16_t *)&(State->TouchY));
+  }
+
+  return ret;
+}
+
+/**
+  * @brief  Configure the MFXSTM32L152 gesture
+  * @param  pObj  Component object pointer
+  * @param  GestureInit Gesture init structure
+  * @retval MFXSTM32L152_OK
+  */
+int32_t MFXSTM32L152_TS_GestureConfig(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_Gesture_Init_t *GestureInit)
+{
+  /* Prevent unused argument(s) compilation warning */
+  (void)(pObj);
+  (void)(GestureInit);
+
+  /* Always return MFXSTM32L152_OK as feature not supported */
+  return MFXSTM32L152_OK;
+}
+
+/**
+  * @brief  Get the touch screen Xn and Yn positions values in multi-touch mode
+  * @param  pObj Component object pointer
+  * @param  State Multi Touch structure pointer
+  * @retval MFXSTM32L152_OK
+  */
+int32_t MFXSTM32L152_TS_GetMultiTouchState(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_MultiTouch_State_t *State)
+{
+  /* Prevent unused argument(s) compilation warning */
+  (void)(pObj);
+  (void)(State);
+
+  /* Always return MFXSTM32L152_OK as feature not supported */
+  return MFXSTM32L152_OK;
+}
+
+/**
+  * @brief  Get Gesture ID
+  * @param  pObj Component object pointer
+  * @param  GestureId: gesture ID
+  * @retval MFXSTM32L152_OK
+  */
+int32_t MFXSTM32L152_TS_GetGesture(MFXSTM32L152_Object_t *pObj, uint8_t *GestureId)
+{
+  /* Prevent unused argument(s) compilation warning */
+  (void)(pObj);
+  (void)(GestureId);
+
+  /* Always return MFXSTM32L152_OK as feature not supported */
+  return MFXSTM32L152_OK;
+}
+
+/**
+  * @brief  Get MFXSTM32L152 sensor capabilities
+  * @param  pObj Component object pointer
+  * @param  Capabilities pointer to MFXSTM32L152 sensor capabilities
+  * @retval Component status
+  */
+int32_t MFXSTM32L152_TS_GetCapabilities(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_Capabilities_t *Capabilities)
+{
+  /* Prevent unused argument(s) compilation warning */
+  (void)(pObj);
+
+  /* Store component's capabilities */
+  Capabilities->MultiTouch = 1;
+  Capabilities->Gesture    = 1;
+  Capabilities->MaxTouch   = MFXSTM32L152_MAX_NB_TOUCH;
+  Capabilities->MaxXl      = MFXSTM32L152_MAX_X_LENGTH;
+  Capabilities->MaxYl      = MFXSTM32L152_MAX_Y_LENGTH;
+
+  return MFXSTM32L152_OK;
 }
 
 /**
@@ -1150,7 +1296,7 @@ int32_t MFXSTM32L152_TS_EnableIT(MFXSTM32L152_Object_t *pObj)
   int32_t ret = MFXSTM32L152_OK;
 
   /* Enable global TS IT source */
-  if(MFXSTM32L152_EnableITSource(pObj, MFXSTM32L152_IRQ_TS_DET) != MFXSTM32L152_OK)
+  if (MFXSTM32L152_EnableITSource(pObj, MFXSTM32L152_IRQ_TS_DET) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1168,7 +1314,7 @@ int32_t MFXSTM32L152_TS_DisableIT(MFXSTM32L152_Object_t *pObj)
   int32_t ret = MFXSTM32L152_OK;
 
   /* Disable global TS IT source */
-  if(MFXSTM32L152_DisableITSource(pObj, MFXSTM32L152_IRQ_TS_DET) != MFXSTM32L152_OK)
+  if (MFXSTM32L152_DisableITSource(pObj, MFXSTM32L152_IRQ_TS_DET) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1184,7 +1330,7 @@ int32_t MFXSTM32L152_TS_DisableIT(MFXSTM32L152_Object_t *pObj)
 int32_t MFXSTM32L152_TS_ITStatus(MFXSTM32L152_Object_t *pObj)
 {
   /* Return TS interrupts status */
-  return(MFXSTM32L152_GlobalITStatus(pObj, MFXSTM32L152_IRQ_TS));
+  return (MFXSTM32L152_GlobalITStatus(pObj, MFXSTM32L152_IRQ_TS));
 }
 
 /**
@@ -1197,7 +1343,7 @@ int32_t MFXSTM32L152_TS_ClearIT(MFXSTM32L152_Object_t *pObj)
   int32_t ret = MFXSTM32L152_OK;
 
   /* Clear the global TS IT source */
-  if(MFXSTM32L152_ClearGlobalIT(pObj, MFXSTM32L152_IRQ_TS) != MFXSTM32L152_OK)
+  if (MFXSTM32L152_ClearGlobalIT(pObj, MFXSTM32L152_IRQ_TS) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1220,7 +1366,7 @@ int32_t MFXSTM32L152_IDD_Start(MFXSTM32L152_Object_t *pObj)
   uint8_t mode = 0;
 
   /* Get the current register value */
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_CTRL, &mode, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_CTRL, &mode, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1230,7 +1376,7 @@ int32_t MFXSTM32L152_IDD_Start(MFXSTM32L152_Object_t *pObj)
     mode |= MFXSTM32L152_IDD_CTRL_REQ;
 
     /* Start measurement campaign */
-    if(mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_CTRL, &mode, 1) != MFXSTM32L152_OK)
+    if (mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_CTRL, &mode, 1) != MFXSTM32L152_OK)
     {
       ret = MFXSTM32L152_ERROR;
     }
@@ -1245,7 +1391,7 @@ int32_t MFXSTM32L152_IDD_Start(MFXSTM32L152_Object_t *pObj)
   * @param  MfxIddConfig: Parameters depending on hardware config.
   * @retval Component status
   */
-int32_t MFXSTM32L152_IDD_Config(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_IDD_Config_t * MfxIddConfig)
+int32_t MFXSTM32L152_IDD_Config(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_IDD_Config_t *MfxIddConfig)
 {
   int32_t ret;
   uint8_t value;
@@ -1254,7 +1400,7 @@ int32_t MFXSTM32L152_IDD_Config(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_IDD_Co
   /* Get the current register value */
   ret = mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_SYS_CTRL, &mode, 1);
 
-  if((mode & MFXSTM32L152_IDD_EN) != MFXSTM32L152_IDD_EN)
+  if ((mode & MFXSTM32L152_IDD_EN) != MFXSTM32L152_IDD_EN)
   {
     /* Set the Functionalities to be enabled */
     mode |= MFXSTM32L152_IDD_EN;
@@ -1264,7 +1410,7 @@ int32_t MFXSTM32L152_IDD_Config(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_IDD_Co
   }
 
   /* Control register setting: number of shunts */
-  value =  ((MfxIddConfig->ShuntNbUsed << 1) & MFXSTM32L152_IDD_CTRL_SHUNT_NB);
+  value = ((MfxIddConfig->ShuntNbUsed << 1) & MFXSTM32L152_IDD_CTRL_SHUNT_NB);
   value |= (MfxIddConfig->VrefMeasurement & MFXSTM32L152_IDD_CTRL_VREF_DIS);
   value |= (MfxIddConfig->Calibration & MFXSTM32L152_IDD_CTRL_CAL_DIS);
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_CTRL, &value, 1);
@@ -1275,33 +1421,33 @@ int32_t MFXSTM32L152_IDD_Config(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_IDD_Co
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_PRE_DELAY, &value, 1);
 
   /* Shunt 0 register value: MSB then LSB */
-  value = (uint8_t) (MfxIddConfig->Shunt0Value >> 8);
+  value = (uint8_t)(MfxIddConfig->Shunt0Value >> 8);
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_SHUNT0_MSB, &value, 1);
-  value = (uint8_t) (MfxIddConfig->Shunt0Value);
+  value = (uint8_t)(MfxIddConfig->Shunt0Value);
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_SHUNT0_LSB, &value, 1);
 
   /* Shunt 1 register value: MSB then LSB */
-  value = (uint8_t) (MfxIddConfig->Shunt1Value >> 8);
+  value = (uint8_t)(MfxIddConfig->Shunt1Value >> 8);
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_SHUNT1_MSB, &value, 1);
-  value = (uint8_t) (MfxIddConfig->Shunt1Value);
+  value = (uint8_t)(MfxIddConfig->Shunt1Value);
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_SHUNT1_LSB, &value, 1);
 
   /* Shunt 2 register value: MSB then LSB */
-  value = (uint8_t) (MfxIddConfig->Shunt2Value >> 8);
+  value = (uint8_t)(MfxIddConfig->Shunt2Value >> 8);
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_SHUNT2_MSB, &value, 1);
-  value = (uint8_t) (MfxIddConfig->Shunt2Value);
+  value = (uint8_t)(MfxIddConfig->Shunt2Value);
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_SHUNT2_LSB, &value, 1);
 
   /* Shunt 3 register value: MSB then LSB */
-  value = (uint8_t) (MfxIddConfig->Shunt3Value >> 8);
+  value = (uint8_t)(MfxIddConfig->Shunt3Value >> 8);
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_SHUNT3_MSB, &value, 1);
-  value = (uint8_t) (MfxIddConfig->Shunt3Value);
+  value = (uint8_t)(MfxIddConfig->Shunt3Value);
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_SHUNT3_LSB, &value, 1);
 
   /* Shunt 4 register value: MSB then LSB */
-  value = (uint8_t) (MfxIddConfig->Shunt4Value >> 8);
+  value = (uint8_t)(MfxIddConfig->Shunt4Value >> 8);
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_SHUNT4_MSB, &value, 1);
-  value = (uint8_t) (MfxIddConfig->Shunt4Value);
+  value = (uint8_t)(MfxIddConfig->Shunt4Value);
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_SHUNT4_LSB, &value, 1);
 
   /* Shunt 0 stabilization delay */
@@ -1325,15 +1471,15 @@ int32_t MFXSTM32L152_IDD_Config(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_IDD_Co
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_SH4_STABILIZATION, &value, 1);
 
   /* Idd ampli gain value: MSB then LSB */
-  value = (uint8_t) (MfxIddConfig->AmpliGain >> 8);
+  value = (uint8_t)(MfxIddConfig->AmpliGain >> 8);
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_GAIN_MSB, &value, 1);
-  value = (uint8_t) (MfxIddConfig->AmpliGain);
+  value = (uint8_t)(MfxIddConfig->AmpliGain);
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_GAIN_LSB, &value, 1);
 
   /* Idd VDD min value: MSB then LSB */
-  value = (uint8_t) (MfxIddConfig->VddMin >> 8);
+  value = (uint8_t)(MfxIddConfig->VddMin >> 8);
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_VDD_MIN_MSB, &value, 1);
-  value = (uint8_t) (MfxIddConfig->VddMin);
+  value = (uint8_t)(MfxIddConfig->VddMin);
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_VDD_MIN_LSB, &value, 1);
 
   /* Idd number of measurements */
@@ -1349,7 +1495,7 @@ int32_t MFXSTM32L152_IDD_Config(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_IDD_Co
   value = MfxIddConfig->ShuntNbOnBoard;
   ret += mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_SHUNTS_ON_BOARD, &value, 1);
 
-  if(ret != MFXSTM32L152_OK)
+  if (ret != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1368,7 +1514,7 @@ int32_t MFXSTM32L152_IDD_ConfigShuntNbLimit(MFXSTM32L152_Object_t *pObj, uint8_t
   uint8_t mode = 0;
 
   /* Get the current register value */
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_CTRL, &mode, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_CTRL, &mode, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1381,7 +1527,7 @@ int32_t MFXSTM32L152_IDD_ConfigShuntNbLimit(MFXSTM32L152_Object_t *pObj, uint8_t
     mode |= ((ShuntNbLimit << 1) & MFXSTM32L152_IDD_CTRL_SHUNT_NB);
 
     /* Write noewx desired limit */
-    if(mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_CTRL, &mode, 1) != MFXSTM32L152_OK)
+    if (mfxstm32l152_write_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_CTRL, &mode, 1) != MFXSTM32L152_OK)
     {
       ret = MFXSTM32L152_ERROR;
     }
@@ -1418,7 +1564,7 @@ int32_t MFXSTM32L152_IDD_GetShuntUsed(MFXSTM32L152_Object_t *pObj)
   int32_t ret = MFXSTM32L152_OK;
   uint8_t tmp;
 
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_SHUNT_USED, &tmp, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_IDD_SHUNT_USED, &tmp, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1436,7 +1582,7 @@ int32_t MFXSTM32L152_IDD_EnableIT(MFXSTM32L152_Object_t *pObj)
   int32_t ret = MFXSTM32L152_OK;
 
   /* Enable global IDD interrupt source */
-  if(MFXSTM32L152_EnableITSource(pObj, MFXSTM32L152_IRQ_IDD) != MFXSTM32L152_OK)
+  if (MFXSTM32L152_EnableITSource(pObj, MFXSTM32L152_IRQ_IDD) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1454,7 +1600,7 @@ int32_t MFXSTM32L152_IDD_ClearIT(MFXSTM32L152_Object_t *pObj)
   int32_t ret = MFXSTM32L152_OK;
 
   /* Clear the global IDD interrupt source */
-  if(MFXSTM32L152_ClearGlobalIT(pObj, MFXSTM32L152_IRQ_IDD) != MFXSTM32L152_OK)
+  if (MFXSTM32L152_ClearGlobalIT(pObj, MFXSTM32L152_IRQ_IDD) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1470,7 +1616,7 @@ int32_t MFXSTM32L152_IDD_ClearIT(MFXSTM32L152_Object_t *pObj)
 int32_t MFXSTM32L152_IDD_GetITStatus(MFXSTM32L152_Object_t *pObj)
 {
   /* Return IDD interrupt status */
-  return(MFXSTM32L152_GlobalITStatus(pObj, MFXSTM32L152_IRQ_IDD));
+  return (MFXSTM32L152_GlobalITStatus(pObj, MFXSTM32L152_IRQ_IDD));
 }
 
 /**
@@ -1483,7 +1629,7 @@ int32_t MFXSTM32L152_IDD_DisableIT(MFXSTM32L152_Object_t *pObj)
   int32_t ret = MFXSTM32L152_OK;
 
   /* Disable global IDD interrupt source */
-  if(MFXSTM32L152_DisableITSource(pObj, MFXSTM32L152_IRQ_IDD) != MFXSTM32L152_OK)
+  if (MFXSTM32L152_DisableITSource(pObj, MFXSTM32L152_IRQ_IDD) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1507,7 +1653,7 @@ int32_t MFXSTM32L152_Error_ReadSrc(MFXSTM32L152_Object_t *pObj)
   uint8_t tmp;
 
   /* Get the current source register value */
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_ERROR_SRC, &tmp, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_ERROR_SRC, &tmp, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1530,7 +1676,7 @@ int32_t MFXSTM32L152_Error_ReadMsg(MFXSTM32L152_Object_t *pObj)
   uint8_t tmp;
 
   /* Get the current message register value */
-  if(mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_ERROR_MSG, &tmp, 1) != MFXSTM32L152_OK)
+  if (mfxstm32l152_read_reg(&pObj->Ctx, MFXSTM32L152_REG_ADR_ERROR_MSG, &tmp, 1) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1553,7 +1699,7 @@ int32_t MFXSTM32L152_Error_EnableIT(MFXSTM32L152_Object_t *pObj)
   int32_t ret = MFXSTM32L152_OK;
 
   /* Enable global Error interrupt source */
-  if(MFXSTM32L152_EnableITSource(pObj, MFXSTM32L152_IRQ_ERROR) != MFXSTM32L152_OK)
+  if (MFXSTM32L152_EnableITSource(pObj, MFXSTM32L152_IRQ_ERROR) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1571,7 +1717,7 @@ int32_t MFXSTM32L152_Error_ClearIT(MFXSTM32L152_Object_t *pObj)
   int32_t ret = MFXSTM32L152_OK;
 
   /* Clear the global Error interrupt source */
-  if(MFXSTM32L152_ClearGlobalIT(pObj, MFXSTM32L152_IRQ_ERROR) != MFXSTM32L152_OK)
+  if (MFXSTM32L152_ClearGlobalIT(pObj, MFXSTM32L152_IRQ_ERROR) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1587,7 +1733,7 @@ int32_t MFXSTM32L152_Error_ClearIT(MFXSTM32L152_Object_t *pObj)
 int32_t MFXSTM32L152_Error_GetITStatus(MFXSTM32L152_Object_t *pObj)
 {
   /* Return Error interrupt status */
-  return(MFXSTM32L152_GlobalITStatus(pObj, MFXSTM32L152_IRQ_ERROR));
+  return (MFXSTM32L152_GlobalITStatus(pObj, MFXSTM32L152_IRQ_ERROR));
 }
 
 /**
@@ -1600,7 +1746,7 @@ int32_t MFXSTM32L152_Error_DisableIT(MFXSTM32L152_Object_t *pObj)
   int32_t ret = MFXSTM32L152_OK;
 
   /* Disable global Error interrupt source */
-  if(MFXSTM32L152_DisableITSource(pObj, MFXSTM32L152_IRQ_ERROR) != MFXSTM32L152_OK)
+  if (MFXSTM32L152_DisableITSource(pObj, MFXSTM32L152_IRQ_ERROR) != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1613,7 +1759,7 @@ int32_t MFXSTM32L152_Error_DisableIT(MFXSTM32L152_Object_t *pObj)
   * @param  Component object pointer
   * @retval Component status
   */
-int32_t MFXSTM32L152_RegisterBusIO (MFXSTM32L152_Object_t *pObj, MFXSTM32L152_IO_t *pIO)
+int32_t MFXSTM32L152_RegisterBusIO(MFXSTM32L152_Object_t *pObj, MFXSTM32L152_IO_t *pIO)
 {
   int32_t ret;
 
@@ -1634,7 +1780,7 @@ int32_t MFXSTM32L152_RegisterBusIO (MFXSTM32L152_Object_t *pObj, MFXSTM32L152_IO
     pObj->Ctx.WriteReg = MFXSTM32L152_WriteRegWrap;
     pObj->Ctx.handle   = pObj;
 
-    if(pObj->IO.Init != NULL)
+    if (pObj->IO.Init != NULL)
     {
       ret = pObj->IO.Init();
     }
@@ -1660,11 +1806,14 @@ int32_t MFXSTM32L152_RegisterBusIO (MFXSTM32L152_Object_t *pObj, MFXSTM32L152_IO
   * @param  PinValue: 0/1
   * @retval Component status
   */
-static int32_t MFXSTM32L152_reg24_setPinValue(MFXSTM32L152_Object_t *pObj, uint8_t RegisterAddr, uint32_t PinPosition, uint8_t PinValue)
+static int32_t MFXSTM32L152_reg24_setPinValue(MFXSTM32L152_Object_t *pObj, uint8_t RegisterAddr, uint32_t PinPosition,
+                                              uint8_t PinValue)
 {
   int32_t ret = MFXSTM32L152_OK;
   uint8_t tmp;
-  uint8_t pin_0_7, pin_8_15, pin_16_23;
+  uint8_t pin_0_7;
+  uint8_t pin_8_15;
+  uint8_t pin_16_23;
 
   pin_0_7   = (uint8_t)(PinPosition & 0x0000ffU);
   pin_8_15  = (uint8_t)(PinPosition >> 8);
@@ -1693,7 +1842,7 @@ static int32_t MFXSTM32L152_reg24_setPinValue(MFXSTM32L152_Object_t *pObj, uint8
   if (pin_8_15 != 0U)
   {
     /* Get the current register value */
-    ret += mfxstm32l152_read_reg(&pObj->Ctx, ((uint16_t)RegisterAddr+1U), &tmp, 1);
+    ret += mfxstm32l152_read_reg(&pObj->Ctx, ((uint16_t)RegisterAddr + 1U), &tmp, 1);
 
     /* Set the selected pin direction */
     if (PinValue != 0U)
@@ -1706,13 +1855,13 @@ static int32_t MFXSTM32L152_reg24_setPinValue(MFXSTM32L152_Object_t *pObj, uint8
     }
 
     /* Set the new register value */
-    ret += mfxstm32l152_write_reg(&pObj->Ctx, ((uint16_t)RegisterAddr+1U), &tmp, 1);
+    ret += mfxstm32l152_write_reg(&pObj->Ctx, ((uint16_t)RegisterAddr + 1U), &tmp, 1);
   }
 
   if (pin_16_23 != 0U)
   {
     /* Get the current register value */
-    ret += mfxstm32l152_read_reg(&pObj->Ctx, ((uint16_t)RegisterAddr+2U), &tmp, 1);
+    ret += mfxstm32l152_read_reg(&pObj->Ctx, ((uint16_t)RegisterAddr + 2U), &tmp, 1);
 
     /* Set the selected pin direction */
     if (PinValue != 0U)
@@ -1725,10 +1874,10 @@ static int32_t MFXSTM32L152_reg24_setPinValue(MFXSTM32L152_Object_t *pObj, uint8
     }
 
     /* Set the new register value */
-    ret += mfxstm32l152_write_reg(&pObj->Ctx, ((uint16_t)RegisterAddr+2U), &tmp, 1);
+    ret += mfxstm32l152_write_reg(&pObj->Ctx, ((uint16_t)RegisterAddr + 2U), &tmp, 1);
   }
 
-  if(ret != MFXSTM32L152_OK)
+  if (ret != MFXSTM32L152_OK)
   {
     ret = MFXSTM32L152_ERROR;
   }
@@ -1744,7 +1893,7 @@ static int32_t MFXSTM32L152_reg24_setPinValue(MFXSTM32L152_Object_t *pObj, uint8
   * @param  Length buffer size to be written
   * @retval error status
   */
-static int32_t MFXSTM32L152_ReadRegWrap(void *handle, uint16_t Reg, uint8_t* pData, uint16_t Length)
+static int32_t MFXSTM32L152_ReadRegWrap(void *handle, uint16_t Reg, uint8_t *pData, uint16_t Length)
 {
   MFXSTM32L152_Object_t *pObj = (MFXSTM32L152_Object_t *)handle;
 
@@ -1759,7 +1908,7 @@ static int32_t MFXSTM32L152_ReadRegWrap(void *handle, uint16_t Reg, uint8_t* pDa
   * @param  Length buffer size to be written
   * @retval error status
   */
-static int32_t MFXSTM32L152_WriteRegWrap(void *handle, uint16_t Reg, uint8_t* pData, uint16_t Length)
+static int32_t MFXSTM32L152_WriteRegWrap(void *handle, uint16_t Reg, uint8_t *pData, uint16_t Length)
 {
   MFXSTM32L152_Object_t *pObj = (MFXSTM32L152_Object_t *)handle;
 
@@ -1781,4 +1930,3 @@ static int32_t MFXSTM32L152_WriteRegWrap(void *handle, uint16_t Reg, uint8_t* pD
 /**
   * @}
   */
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

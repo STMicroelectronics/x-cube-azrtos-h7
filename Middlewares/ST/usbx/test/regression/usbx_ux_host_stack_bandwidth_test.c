@@ -532,7 +532,7 @@ struct _test_def {
             hub[0].ux_device_hub_tt[1].ux_hub_tt_max_bandwidth = tests[test].tt_bandwidth;
         }
 
-        /* Switch to interface 0.1, bandwith OK */
+        /* Switch to interface 0.1, bandwidth OK */
         status = ux_host_stack_interface_setting_select(interfaces[1]);
         if (status != tests[test].status0)
         {

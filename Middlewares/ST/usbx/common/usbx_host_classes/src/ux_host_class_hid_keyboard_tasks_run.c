@@ -101,7 +101,7 @@ UINT                                    status;
     if (hid == UX_NULL)
         return;
 
-    /* Check if there is pending chnages.  */
+    /* Check if there is pending changes.  */
     if (keyboard -> ux_host_class_hid_keyboard_out_state != UX_STATE_WAIT)
         return;
 

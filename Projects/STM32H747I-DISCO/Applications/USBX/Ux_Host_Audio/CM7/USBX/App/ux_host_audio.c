@@ -97,7 +97,8 @@ VOID audio_playback_thread_entry(ULONG thread_input)
   UX_HOST_CLASS_AUDIO_TRANSFER_REQUEST transfer_request2;
   UX_HOST_CLASS_AUDIO_TRANSFER_REQUEST *actual_transfer_request;
   UX_HOST_CLASS_AUDIO_TRANSFER_REQUEST *previous_transfer_request;
-
+  UX_SEMAPHORE host_audio_transfer_request1_semaphore;
+  UX_SEMAPHORE host_audio_transfer_request2_semaphore;
   UX_PARAMETER_NOT_USED(thread_input);
 
   while(1)
@@ -270,7 +271,16 @@ VOID audio_playback_thread_entry(ULONG thread_input)
           transfer_request2.ux_host_class_audio_transfer_request_class_instance = audio_playback;
           transfer_request1.ux_host_class_audio_transfer_request_next_audio_transfer_request = &transfer_request2;
           transfer_request2.ux_host_class_audio_transfer_request_next_audio_transfer_request = UX_NULL;
-
+          /* Create and link semaphore for host audio transfer request 1 */
+          if (tx_semaphore_create(&host_audio_transfer_request1_semaphore, "host audio transfer request1 semaphore", 0) == TX_SUCCESS)
+          {
+            transfer_request1.ux_host_class_audio_transfer_request.ux_transfer_request_semaphore = host_audio_transfer_request1_semaphore;
+          }
+          /* Create and link semaphore for host audio transfer request 2 */
+          if (tx_semaphore_create(&host_audio_transfer_request2_semaphore, "host audio transfer request2 semaphore", 0) == TX_SUCCESS)
+          {
+            transfer_request2.ux_host_class_audio_transfer_request.ux_transfer_request_semaphore = host_audio_transfer_request2_semaphore;
+          }
           /* Set audio packet size */
           transfer_request1.ux_host_class_audio_transfer_request_packet_size = ux_host_class_audio_packet_size_get(audio_playback);
           transfer_request2.ux_host_class_audio_transfer_request_packet_size = ux_host_class_audio_packet_size_get(audio_playback);

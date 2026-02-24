@@ -109,7 +109,7 @@ RTOS, ThreadX, Threading, CMSIS RTOS, Semaphore, Mutex
 ### <b>Hardware and Software environment</b>
 
   - This application runs on STM32H747xx devices
-  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards Revision
+  - This application has been tested with STMicroelectronics STM32H747I-DISCO boards revision MB1248-H747I-D02
     and can be easily tailored to any other supported device and development board.
   - A virtual COM port appears in the HyperTerminal:
       - Hyperterminal configuration:

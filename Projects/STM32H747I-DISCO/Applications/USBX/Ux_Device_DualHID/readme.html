@@ -49,10 +49,11 @@ HID reports to move automatically the PC host machine cursor.</li>
 HID reports key.</li>
 </ul>
 <p>To customize the HID application by sending the mouse position &amp;
-key characters every 10ms: - For each 10ms, the application calls the
+key characters every 10ms:<p>
+<p>- For each 10ms, the application calls the
 GetPointerData() API to update the mouse position (x, y) and send the
-report buffer through the ux_device_class_hid_event_set() API. - For
-each 10ms, the application calls the GetKeyData() API to update the key
+report buffer through the ux_device_class_hid_event_set() API.<p>
+<p>- For each 10ms, the application calls the GetKeyData() API to update the key
 character and send the report buffer through the
 ux_device_class_hid_event_set() API.</p>
 <h4 id="expected-success-behavior"><b>Expected success behavior</b></h4>
@@ -72,7 +73,8 @@ button to send character.</li>
 <h4 id="error-behaviors"><b>Error behaviors</b></h4>
 <p>Host PC shows that USB device does not operate as designed
 (enumeration failed, for example PC cursor doesn’t move or COM port
-enumeration failed).</p>
+enumeration failed). The LED_RED is toggling to indicate any error that
+has occurred.</p>
 <h4 id="assumptions-if-any"><b>Assumptions if any</b></h4>
 <p>User is familiar with USB 2.0 “Universal Serial BUS” specification
 and HID class specification.</p>
@@ -178,7 +180,7 @@ environment</b></h3>
 <ul>
 <li>This application runs on STM32H747xx devices.</li>
 <li>This application has been tested with STMicroelectronics
-STM32H747I-DISCO boards revision MB1520-H747I-B02 and can be easily
+STM32H747I-DISCO boards revision MB1248-H747I-D02 and can be easily
 tailored to any other supported device and development board.</li>
 <li>STM32H747I-DISCO Set-up</li>
 <li>Connect the STM32H747I-DISCO board CN1 to the PC through “MICRO-USB”

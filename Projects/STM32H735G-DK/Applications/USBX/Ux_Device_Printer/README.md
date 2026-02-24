@@ -101,6 +101,11 @@ RTOS, ThreadX, USBXDevice, Device, USB_OTG, Full Speed, Printer.
   - This application runs on STM32H735xx devices.
   - This application has been tested with STMicroelectronics STM32H735G-DK boards revision: MB1520-H735I-B02
     and can be easily tailored to any other supported device and development board.
+
+  - STM32H735G-DK Set-up:
+
+    - JP7 must be left unconnected (USBFS position) to ensure proper USB unplug/plug detection and functionality. Connecting JP7 may prevent the device from correctly handling USB cable insertion and removal events.
+
   - This application uses USART3 to display logs, the hyperterminal configuration is as follows:
      - BaudRate = 115200 baud
      - Word Length = 8 Bits

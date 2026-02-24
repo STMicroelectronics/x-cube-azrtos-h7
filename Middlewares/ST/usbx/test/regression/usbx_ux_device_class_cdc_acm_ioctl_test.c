@@ -646,7 +646,7 @@ UINT                                                i;
         printf("ERROR #%d: read not started\n", __LINE__);
         error_counter ++;
     }
-#if 0 /* TODO: USBX-177 */
+#if 0 /* Pending: USBX-177 */
     /* Start write on another thread.  */
     test_slave_code = 2;
     tx_thread_resume(&tx_test_thread_slave_simulation);

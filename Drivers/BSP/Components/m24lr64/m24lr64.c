@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -24,10 +23,10 @@
 /** @addtogroup BSP
   * @{
   */
-  
+
 /** @addtogroup Components
   * @{
-  */ 
+  */
 
 /** @defgroup M24LR64 M24LR64
   * @{
@@ -36,27 +35,27 @@
 /** @defgroup M24LR64_Private_Types M24LR64 Private Types
   * @{
   */
-M24LR64_EEPROM_Drv_t   M24LR64_EEPROM_Driver = 
+M24LR64_EEPROM_Drv_t   M24LR64_EEPROM_Driver =
 {
   M24LR64_Init,
   M24LR64_DeInit,
-  M24LR64_Write,  
+  M24LR64_Write,
   M24LR64_Read,
   M24LR64_IsReady
-};    
+};
 /**
   * @}
-  */    
+  */
 /** @defgroup M24LR64_Private_FunctionPrototypes M24LR64 Private Function Prototypes
   * @{
   */
-static int32_t M24LR64_ReadWrap(void *handle, uint16_t Addr, uint8_t* Data, uint16_t Length);
-static int32_t M24LR64_WriteWrap(void *handle, uint16_t Addr, uint8_t* Data, uint16_t Length);
+static int32_t M24LR64_ReadWrap(void *handle, uint16_t Addr, uint8_t *Data, uint16_t Length);
+static int32_t M24LR64_WriteWrap(void *handle, uint16_t Addr, uint8_t *Data, uint16_t Length);
 static int32_t M24LR64_IsReadyWrap(void *handle, uint32_t Trials);
 
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup M24LR64_Private_Functions M24LR64 Private Functions
   * @{
@@ -66,42 +65,42 @@ static int32_t M24LR64_IsReadyWrap(void *handle, uint32_t Trials);
   * @param  Component object pointer
   * @retval Component status
   */
-int32_t M24LR64_RegisterBusIO (M24LR64_Object_t *pObj, M24LR64_IO_t *pIO)
+int32_t M24LR64_RegisterBusIO(M24LR64_Object_t *pObj, M24LR64_IO_t *pIO)
 {
   int32_t ret;
-    
-    if(pObj == NULL)
+
+  if (pObj == NULL)
+  {
+    ret = M24LR64_ERROR;
+  }
+  else
+  {
+    pObj->IO.Init      = pIO->Init;
+    pObj->IO.DeInit    = pIO->DeInit;
+    pObj->IO.Address   = pIO->Address;
+    pObj->IO.Write     = pIO->Write;
+    pObj->IO.Read      = pIO->Read;
+    pObj->IO.IsReady   = pIO->IsReady;
+
+    pObj->Ctx.Read     = M24LR64_ReadWrap;
+    pObj->Ctx.Write    = M24LR64_WriteWrap;
+    pObj->Ctx.IsReady  = M24LR64_IsReadyWrap;
+    pObj->Ctx.handle   = pObj;
+
+    if (pObj->IO.Init != NULL)
     {
-      ret = M24LR64_ERROR;
+      ret = pObj->IO.Init();
     }
     else
     {
-      pObj->IO.Init      = pIO->Init;
-      pObj->IO.DeInit    = pIO->DeInit;
-      pObj->IO.Address   = pIO->Address;
-      pObj->IO.Write     = pIO->Write;
-      pObj->IO.Read      = pIO->Read;
-      pObj->IO.IsReady   = pIO->IsReady;
-      
-      pObj->Ctx.Read     = M24LR64_ReadWrap;
-      pObj->Ctx.Write    = M24LR64_WriteWrap;
-      pObj->Ctx.IsReady  = M24LR64_IsReadyWrap;
-      pObj->Ctx.handle   = pObj;
-      
-      if(pObj->IO.Init != NULL)
-      {
-        ret = pObj->IO.Init();
-      }
-      else
-      {
-        ret = M24LR64_ERROR;
-      }
+      ret = M24LR64_ERROR;
     }
-  
+  }
+
   return ret;
 }
 
- 
+
 /**
   * @brief  Initializes the M24LR64 EEPROM component.
   * @param  pObj  M24LR64 object
@@ -109,13 +108,13 @@ int32_t M24LR64_RegisterBusIO (M24LR64_Object_t *pObj, M24LR64_IO_t *pIO)
   */
 int32_t M24LR64_Init(M24LR64_Object_t *pObj)
 {
-  if(pObj->IsInitialized != 1U)
+  if (pObj->IsInitialized != 1U)
   {
     pObj->IO.Init();
-    pObj->IsInitialized = 0;
+    pObj->IsInitialized = 1U;
   }
   return M24LR64_OK;
-} 
+}
 
 /**
   * @brief  DeInitializes the M24LR64 EEPROM component.
@@ -124,9 +123,9 @@ int32_t M24LR64_Init(M24LR64_Object_t *pObj)
   */
 int32_t M24LR64_DeInit(M24LR64_Object_t *pObj)
 {
-  if(pObj->IsInitialized != 0U)
+  if (pObj->IsInitialized != 0U)
   {
-    pObj->IsInitialized = 1;
+    pObj->IsInitialized = 0U;
   }
   return M24LR64_OK;
 }
@@ -163,7 +162,7 @@ int32_t M24LR64_IsReady(M24LR64_Object_t *pObj, uint32_t Trials)
 }
 /**
   * @}
-  */ 
+  */
 
 /** @addtogroup M24LR64_Private_FunctionPrototypes
   * @{
@@ -176,7 +175,7 @@ int32_t M24LR64_IsReady(M24LR64_Object_t *pObj, uint32_t Trials)
   * @param  Length Buffer size to be written
   * @retval Component status
   */
-static int32_t M24LR64_ReadWrap(void *handle, uint16_t Addr, uint8_t* pData, uint16_t Length)
+static int32_t M24LR64_ReadWrap(void *handle, uint16_t Addr, uint8_t *pData, uint16_t Length)
 {
   M24LR64_Object_t *pObj = (M24LR64_Object_t *)handle;
 
@@ -191,7 +190,7 @@ static int32_t M24LR64_ReadWrap(void *handle, uint16_t Addr, uint8_t* pData, uin
   * @param  Length  Buffer size to be written
   * @retval Component status
   */
-static int32_t M24LR64_WriteWrap(void *handle, uint16_t Addr, uint8_t* pData, uint16_t Length)
+static int32_t M24LR64_WriteWrap(void *handle, uint16_t Addr, uint8_t *pData, uint16_t Length)
 {
   M24LR64_Object_t *pObj = (M24LR64_Object_t *)handle;
 
@@ -207,7 +206,7 @@ static int32_t M24LR64_WriteWrap(void *handle, uint16_t Addr, uint8_t* pData, ui
 static int32_t M24LR64_IsReadyWrap(void *handle, uint32_t Trials)
 {
   M24LR64_Object_t *pObj = (M24LR64_Object_t *)handle;
-  
+
   return pObj->IO.IsReady(pObj->IO.Address, Trials);
 }
 
@@ -227,5 +226,3 @@ static int32_t M24LR64_IsReadyWrap(void *handle, uint32_t Trials)
 /**
   * @}
   */
-
-/******************* (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

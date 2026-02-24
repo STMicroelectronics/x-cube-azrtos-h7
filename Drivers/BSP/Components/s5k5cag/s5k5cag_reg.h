@@ -3,7 +3,7 @@
   * @file    s5k5cag_reg.h
   * @author  MCD Application Team
   * @brief   Header of s5k5cag_reg.c
-  *          
+  *
   ******************************************************************************
   * @attention
   *
@@ -16,7 +16,7 @@
   *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef S5K5CAG_REG_H
@@ -25,18 +25,18 @@
 #include <cmsis_compiler.h>
 
 #ifdef __cplusplus
- extern "C" {
-#endif 
+extern "C" {
+#endif
 
-/* Includes ------------------------------------------------------------------*/   
+/* Includes ------------------------------------------------------------------*/
 /** @addtogroup BSP
   * @{
-  */ 
+  */
 
 /** @addtogroup Components
   * @{
-  */ 
-  
+  */
+
 /** @addtogroup S5K5CAG
   * @{
   */
@@ -45,11 +45,11 @@
   * @{
   */
 
-/** 
+/**
   * @brief  S5K5CAG ID
-  */  
+  */
 #define  S5K5CAG_ID                       0x05CAU
-/** 
+/**
   * @brief  S5K5CAG Registers
   */
 #define S5K5CAG_INFO_CHIPID1              0x0040U
@@ -64,8 +64,8 @@
 /** @addtogroup S5K5CAG_Exported_Types
   * @{
   */
-typedef int32_t (*S5K5CAG_Write_Func)(void *, uint16_t, uint8_t*, uint16_t);
-typedef int32_t (*S5K5CAG_Read_Func) (void *, uint16_t, uint8_t*, uint16_t);
+typedef int32_t (*S5K5CAG_Write_Func)(void *, uint16_t, uint8_t *, uint16_t);
+typedef int32_t (*S5K5CAG_Read_Func)(void *, uint16_t, uint8_t *, uint16_t);
 
 typedef struct
 {
@@ -81,11 +81,11 @@ typedef struct
   * @{
   */
 int32_t s5k5cag_write_reg(s5k5cag_ctx_t *ctx, uint16_t reg, uint16_t *data, uint16_t length);
-int32_t s5k5cag_read_reg(s5k5cag_ctx_t *ctx, uint16_t reg, uint16_t* data, uint16_t length);
+int32_t s5k5cag_read_reg(s5k5cag_ctx_t *ctx, uint16_t reg, uint16_t *data, uint16_t length);
 
 /**
   * @}
-  */    
+  */
 #ifdef __cplusplus
 }
 #endif
@@ -93,14 +93,14 @@ int32_t s5k5cag_read_reg(s5k5cag_ctx_t *ctx, uint16_t reg, uint16_t* data, uint1
 #endif /* S5K5CAG_REG_H */
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

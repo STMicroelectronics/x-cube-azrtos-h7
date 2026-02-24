@@ -11,6 +11,10 @@
 
 #include "fx_stm32_levelx_nand_driver.h"
 
+#ifdef LX_NAND_SIMULATOR_DRIVER
+ULONG fx_lx_nand_sim_driver_buffer[(7 * TOTAL_BLOCKS + 4 + 2 * (BYTES_PER_PHYSICAL_PAGE + SPARE_BYTES_PER_PAGE)) / sizeof(ULONG)];
+#endif
+
 /* define the struct used to identify the levelx driver to instantiate */
 struct fx_lx_nand_driver_instance
 {
@@ -19,12 +23,14 @@ struct fx_lx_nand_driver_instance
     UINT id;
     UINT (*nand_driver_initialize)(LX_NAND_FLASH *);
     UINT initialized;
+    ULONG *buffer;
+    UINT buffer_size;
 };
 
 static struct fx_lx_nand_driver_instance fx_lx_nand_drivers[MAX_LX_NAND_DRIVERS] =
 {
 #ifdef LX_NAND_SIMULATOR_DRIVER
-    { .name = LX_NAND_SIMULATOR_DRIVER_NAME, .id = LX_NAND_SIMULATOR_DRIVER_ID, .nand_driver_initialize = lx_stm32_nand_simulator_initialize},
+    { .name = LX_NAND_SIMULATOR_DRIVER_NAME, .id = LX_NAND_SIMULATOR_DRIVER_ID, .nand_driver_initialize = lx_stm32_nand_simulator_initialize, .buffer=fx_lx_nand_sim_driver_buffer, .buffer_size=sizeof(fx_lx_nand_sim_driver_buffer)},
 #endif
 
 #ifdef LX_NAND_CUSTOM_DRIVER
@@ -33,8 +39,6 @@ static struct fx_lx_nand_driver_instance fx_lx_nand_drivers[MAX_LX_NAND_DRIVERS]
 };
 
 static struct fx_lx_nand_driver_instance *current_driver = NULL;
-
-ULONG fx_lx_nand_driver_buffer[(7 * TOTAL_BLOCKS + 4 + 2 * (BYTES_PER_PHYSICAL_PAGE + SPARE_BYTES_PER_PAGE)) / sizeof(ULONG)];
 
 /* Exported constants --------------------------------------------------------*/
 static const ULONG  num_drivers = sizeof(fx_lx_nand_drivers)/sizeof(fx_lx_nand_drivers[0]);
@@ -98,7 +102,7 @@ VOID  fx_stm32_levelx_nand_driver(FX_MEDIA *media_ptr)
                 {
 #ifdef FX_NAND_FORMAT_FLASH_BEFORE_OPEN
                     /* Format flash instance*/
-                    status = lx_nand_flash_format(&current_driver->flash_instance, current_driver->name, current_driver->nand_driver_initialize, fx_lx_nand_driver_buffer, sizeof(fx_lx_nand_driver_buffer));
+                    status = lx_nand_flash_format(&current_driver->flash_instance, current_driver->name, current_driver->nand_driver_initialize, current_driver->buffer, current_driver->buffer_size);
                     if (status != LX_SUCCESS)
                     {
                         media_ptr->fx_media_driver_status = FX_IO_ERROR;
@@ -107,7 +111,7 @@ VOID  fx_stm32_levelx_nand_driver(FX_MEDIA *media_ptr)
                     }
 #endif
                     /* Open flash instance*/
-                    status = lx_nand_flash_open(&current_driver->flash_instance, current_driver->name, current_driver->nand_driver_initialize, fx_lx_nand_driver_buffer, sizeof(fx_lx_nand_driver_buffer));
+                    status = lx_nand_flash_open(&current_driver->flash_instance, current_driver->name, current_driver->nand_driver_initialize, current_driver->buffer, current_driver->buffer_size);
 
                     /* LevelX driver correctly initialized */
                     if (status == LX_SUCCESS)

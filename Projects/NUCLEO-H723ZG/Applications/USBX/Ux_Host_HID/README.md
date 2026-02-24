@@ -130,7 +130,7 @@ In order to make the program work, you must do the following :
  - Rebuild all files and load your image into target memory
  - Run the application
 
-<b>Note</b>
+### <b>Note</b>
 
 The user has to check the list of the COM ports in Device Manager to find out the number of the COM ports that have been assigned (by OS) to the Stlink VCP.
 The application uses the bypass HSE clock (STlink MCO Output) which is HSI/2 (Default configuration).

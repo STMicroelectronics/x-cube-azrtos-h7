@@ -190,11 +190,15 @@ environment</b></h3>
 <li><p>This application has been tested with STMicroelectronics
 STM32H735G-DK boards revision: MB1520-H735I-B02 and can be easily
 tailored to any other supported device and development board.</p></li>
-<li><p>STM32H735G-DK set-up:</p>
+<li><p>STM32H735G-DK Set-up:</p>
 <ul>
-<li>Connect the DK board to remote PC (through a USB cable)</li>
-<li>Http clients: Microsoft Internet Explorer (v8 and later) or Google
-Chrome (v107)</li>
+<li><p>JP7 must be left unconnected (USBFS position) to ensure proper
+USB unplug/plug detection and functionality. Connecting JP7 may prevent
+the device from correctly handling USB cable insertion and removal
+events.</p></li>
+<li><p>Connect the DK board to remote PC (through a USB cable)</p></li>
+<li><p>Http clients: Microsoft Internet Explorer (v8 and later) or
+Google Chrome (v107)</p></li>
 </ul></li>
 <li><p>Remote PC Set-up</p>
 <ul>

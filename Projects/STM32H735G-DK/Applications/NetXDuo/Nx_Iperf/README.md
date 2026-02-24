@@ -36,7 +36,7 @@ The application then creates 4 threads with the same priorities :
 
  + The board IP address is printed on the HyperTerminal
  + When the web HTTP server is successfully started, then the user can test the performance on the web browser after entering the url http://@IP.
- + To execute each Iperf test you must do the following steps and have the expected result in this link https://docs.microsoft.com/en-us/azure/rtos/netx-duo/netx-duo-iperf/chapter3 .
+ + To execute each Iperf test you must do the following steps and have the expected result in this link https://github.com/eclipse-threadx/rtos-docs/blob/main/rtos-docs/netx-duo/netx-duo-iperf/chapter3.md .
 
 #### <b>Error behaviors</b>
 
@@ -82,6 +82,7 @@ void MX_ETH_Init(void)
       - Depending on the use case it is also possible to configure the cache attributes using the MPU.
       - Please refer to the **AN4838** "Managing memory protection unit (MPU) in STM32 MCUs".
       - Please refer to the **AN4839** "Level 1 cache on STM32F7 Series and STM32H7 Series"
+
 
 #### <b>ThreadX usage hints</b>
 
@@ -188,9 +189,9 @@ RTOS, Network, ThreadX, NetXDuo, Iperf, UART
 
 ### <b>How to use it ?</b>
 
-In order to make the program work, you must do the following :
+To run the application, follow these steps :
 
  - Open your preferred toolchain
  - Rebuild all files and load your image into target memory
  - Run the application
- - Run the [iperf tool] by following steps described in this link https://docs.microsoft.com/en-us/azure/rtos/netx-duo/netx-duo-iperf/chapter3 .
+ - Run the [iperf tool] by following steps described in this [link](https://github.com/eclipse-threadx/rtos-docs/blob/main/rtos-docs/netx-duo/netx-duo-iperf/chapter3.md).

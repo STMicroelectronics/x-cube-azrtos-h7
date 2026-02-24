@@ -182,7 +182,7 @@ UINT                    i;
 UCHAR                   action_matched;
 
 
-#if 0 /* TODO: Enable/disable HCD entry call display */
+#if 0 /* Pending: Enable/disable HCD entry call display */
 if (function != last_function)
 {
     last_function = function;

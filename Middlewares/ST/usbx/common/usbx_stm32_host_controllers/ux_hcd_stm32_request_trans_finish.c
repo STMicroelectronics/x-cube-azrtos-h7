@@ -75,6 +75,10 @@ VOID  _ux_hcd_stm32_request_trans_finish(UX_HCD_STM32 *hcd_stm32, UX_HCD_STM32_E
 {
 UX_TRANSFER *transfer;
 
+    /* If DMA not enabled, nothing to do.  */
+    if (!hcd_stm32 -> hcd_handle -> Init.dma_enable)
+        return;
+
     if (ed == UX_NULL)
         return;
 
@@ -86,6 +90,10 @@ UX_TRANSFER *transfer;
 
     /* If there is no data, it's OK.  */
     if (ed -> ux_stm32_ed_data == UX_NULL)
+        return;
+
+    /* If Setup it's OK.  */
+    if (ed -> ux_stm32_ed_data == ed -> ux_stm32_ed_setup)
         return;
 
     /* If the data is aligned, it's OK.  */
@@ -100,10 +108,9 @@ UX_TRANSFER *transfer;
                                 transfer -> ux_transfer_request_actual_length);
     }
 
-    /* Free the aligned memory.  */
-    if (ed -> ux_stm32_ed_data != ed -> ux_stm32_ed_setup)
+    /* Free the aligned memory outside ISR context  */
+    if (ed -> ux_stm32_ed_type != EP_TYPE_ISOC)
     {
-      _ux_utility_memory_free(ed -> ux_stm32_ed_data);
-      ed -> ux_stm32_ed_data = UX_NULL;
+      ed -> ux_stm32_ed_data_free = UX_HCD_STM32_ED_STATUS_ALIGNED_BUFFER_PENDING_FREE;
     }
 }

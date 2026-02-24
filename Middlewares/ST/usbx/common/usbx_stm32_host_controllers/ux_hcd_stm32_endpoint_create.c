@@ -163,6 +163,27 @@ ULONG                   endpoint_bInterval;
         return(UX_NO_ED_AVAILABLE);
     }
 
+    ed -> ux_stm32_ed_speed = (UCHAR)device_speed;
+    ed -> ux_stm32_ed_dir   = (endpoint -> ux_endpoint_descriptor.bEndpointAddress & 0x80) ? 1 : 0;
+    ed -> ux_stm32_ed_type  =  endpoint_type;
+    packet_size             =  endpoint -> ux_endpoint_descriptor.wMaxPacketSize & UX_MAX_PACKET_SIZE_MASK;
+
+    if (endpoint -> ux_endpoint_descriptor.wMaxPacketSize & UX_MAX_NUMBER_OF_TRANSACTIONS_MASK)
+    {
+
+        /* Free the ED.  */
+        ed -> ux_stm32_ed_status = UX_HCD_STM32_ED_STATUS_FREE;
+
+        /* High bandwidth are not supported for now.  */
+        return(UX_FUNCTION_NOT_SUPPORTED);
+    }
+
+    /* By default scheduler is not needed.  */
+    ed -> ux_stm32_ed_sch_mode = 0U;
+
+    /* By default data pointer is not used.  */
+    ed -> ux_stm32_ed_data = UX_NULL;
+
     /* Check for interrupt and isochronous endpoints.  */
     if ((endpoint_type == EP_TYPE_INTR) || (endpoint_type == EP_TYPE_ISOC))
     {
@@ -171,7 +192,7 @@ ULONG                   endpoint_bInterval;
         if ((device->ux_device_current_configuration->ux_configuration_first_interface->ux_interface_descriptor.bInterfaceClass == 0x9U) &&
             (endpoint -> ux_endpoint_descriptor.bInterval > 9U))
         {
-          /* Some hubs has an issue with larger binterval scheduling */
+            /* Some hubs has an issue with larger binterval scheduling */
             endpoint_bInterval = UX_HCD_STM32_MAX_HUB_BINTERVAL;
         }
         else
@@ -181,6 +202,14 @@ ULONG                   endpoint_bInterval;
 
         /* Set the interval mask for high speed or isochronous endpoints.  */
         ed -> ux_stm32_ed_interval_mask = (1 << (endpoint_bInterval - 1U)) - 1U;
+
+        /* Allocate aligned buffer, if DMA not enabled nothing to do.  */
+        if ((hcd_stm32 -> hcd_handle -> Init.dma_enable) && (endpoint_type == EP_TYPE_ISOC))
+        {
+          ed -> ux_stm32_ed_aligned_data = _ux_utility_memory_allocate(UX_NO_ALIGN,
+                                                                       UX_CACHE_SAFE_MEMORY,
+                                                                       packet_size);
+        }
       }
       else
       {
@@ -226,25 +255,6 @@ ULONG                   endpoint_bInterval;
 
     /* Now do the opposite, attach the ED container to the physical ED.  */
     ed -> ux_stm32_ed_endpoint =  endpoint;
-    ed -> ux_stm32_ed_speed = (UCHAR)device_speed;
-    ed -> ux_stm32_ed_dir = (endpoint -> ux_endpoint_descriptor.bEndpointAddress & 0x80) ? 1 : 0;
-    ed -> ux_stm32_ed_type     =  endpoint_type;
-    packet_size                =  endpoint -> ux_endpoint_descriptor.wMaxPacketSize & UX_MAX_PACKET_SIZE_MASK;
-    if (endpoint -> ux_endpoint_descriptor.wMaxPacketSize & UX_MAX_NUMBER_OF_TRANSACTIONS_MASK)
-    {
-
-        /* Free the ED.  */
-        ed -> ux_stm32_ed_status =  UX_HCD_STM32_ED_STATUS_FREE;
-
-        /* High bandwidth are not supported for now.  */
-        return(UX_FUNCTION_NOT_SUPPORTED);
-    }
-
-    /* By default scheduler is not needed.  */
-    ed -> ux_stm32_ed_sch_mode = 0;
-
-    /* By default data pointer is not used.  */
-    ed -> ux_stm32_ed_data = UX_NULL;
 
     /* Call HAL to initialize the host channel.  */
     HAL_HCD_HC_Init(hcd_stm32->hcd_handle,

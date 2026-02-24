@@ -1,4 +1,4 @@
-/* This tests the case where the get hub status commmand fails when a port is being reset. 
+/* This tests the case where the get hub status command fails when a port is being reset. 
    The specific test case is in ux_host_class_hub_port_reset.c. */
 
 #include "usbx_ux_test_hub.h"

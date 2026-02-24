@@ -27,7 +27,7 @@ After repeating the sequence above 3 times, the <b>MainThread</b> should destroy
 
 #### <b>Error behaviors</b>
 
-LED_RED toggles every 1 second if an error occurs.
+'LED_RED' toggles every 1 second if an error occurs while the 'LED_GREEN' is turned OFF.
 An error message is printed to the serial port.
 
 #### <b>Assumptions if any</b>

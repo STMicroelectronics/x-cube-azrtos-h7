@@ -288,13 +288,13 @@ static void    test_isr(void)
 
 /* OS wrappers. */
 
-static void ux_test_semaphore_get(TX_SEMAPHORE *sempahore, UINT wait_option)
+static void ux_test_semaphore_get(TX_SEMAPHORE *semaphore, UINT wait_option)
 {
 
 UINT status;
 
 
-    status =  ux_utility_semaphore_get(sempahore, wait_option);
+    status =  ux_utility_semaphore_get(semaphore, wait_option);
     if (status != UX_SUCCESS)
     {
 
@@ -1676,7 +1676,7 @@ UX_TEST_ACTION action = { 0 };
     action.function = UX_HCD_TRANSFER_REQUEST;
     action.req_action = UX_TEST_SETUP_MATCH_REQ_V_I;
     action.no_return = 0; /* Host side tests, the actual request is not sent.  */
-                          /* TODO: modify testing to make changes in device side.  */
+                          /* Pending: modify testing to make changes in device side.  */
     action.req_setup = setup;
     action.thread_to_match = thread_to_match;
 
@@ -2412,7 +2412,7 @@ CHAR                            *memory_pointer;
 #endif
     global_storage_parameter.ux_slave_class_storage_parameter_lun[0].ux_slave_class_storage_media_status          =  default_device_media_status;
 
-    /* Initilize the device storage class. The class is connected with interface 0 on configuration 1. */
+    /* Initialize the device storage class. The class is connected with interface 0 on configuration 1. */
     status =  ux_device_stack_class_register(_ux_system_slave_class_storage_name, ux_test_device_class_storage_entry,
                                                 1, 0, (VOID *)&global_storage_parameter);
     if (status != UX_SUCCESS)
@@ -2641,9 +2641,9 @@ static void let_storage_thread_run()
     lock_in_storage_thread();
     tx_thread_sleep(100);
 
-    /* TODO: match a 2 second sleep via test action engine (trademark)? */
+    /* Pending: match a 2 second sleep via test action engine (trademark)? */
 
-    /* Wait for storage thread to complete a single cycle. We know it has when it does the 2 second sleep (hopefullly
+    /* Wait for storage thread to complete a single cycle. We know it has when it does the 2 second sleep (hopefully
        there aren't any other sleeps it does though...). */
     UINT global_storage_thread_state;
     do
@@ -2654,7 +2654,7 @@ static void let_storage_thread_run()
     } while (global_storage_thread_state != TX_SLEEP);
 }
 
-/* Test unit ready test resourcs. */
+/* Test unit ready test resources. */
 
 UCHAR turt_unit_attention_first_semaphore_get_fails_check_action_function()
 {
@@ -3441,7 +3441,7 @@ UINT                            i;
     /* Specific test case: while (media_retry-- != 0) fails */
     /* Specific test case: if (*(cbw + UX_HOST_CLASS_STORAGE_CBW_FLAGS) == UX_HOST_CLASS_STORAGE_DATA_IN) in
        ux_host_class_transport_bo */
-    /* Note: this one is a pain in the ass, since the sense code check is after
+    /* Note: this one is quite challenging, since the sense code check is after
        the data phase length check. This means the data phase has to "succeed",
        but the sense code contains an error. Is this even possible? I think so:
        if the device has less data to send than the host requests, but pads out
@@ -3669,8 +3669,8 @@ static UX_TEST_ERROR_CALLBACK_ERROR dltt_media_not_supported_error = { UX_SYSTEM
 static UCHAR                        dltt_unit_test_called_actions_data[UX_HOST_CLASS_STORAGE_MAX_MEDIA][sizeof(global_cbw_data_unit_ready_test_sbc)];
 static UX_TEST_ACTION               dltt_unit_test_called_actions[UX_HOST_CLASS_STORAGE_MAX_MEDIA + 1];
 
-/* This tests every possible permutation of LUN types within the allowable number of medias
-   (UX_HOST_CLASS_STORAGE_MAX_MEDIA). We don't use the max LUNs because it's possible for us to run out of medias
+/* This tests every possible permutation of LUN types within the allowable number of media
+   (UX_HOST_CLASS_STORAGE_MAX_MEDIA). We don't use the max LUNs because it's possible for us to run out of media
    (USBX-93). */
 static void dltt_test_every_lun_type_permutation(UINT luns_remaining)
 {
@@ -3708,7 +3708,7 @@ UX_TEST_ACTION  media_not_supported_match_action = create_error_match_action_fro
         /* Initialize actions. */
         ux_utility_memory_set(dltt_unit_test_called_actions, 0, sizeof(dltt_unit_test_called_actions));
 
-        /* Get the number of medias we expect the LUNs should have, and add errors to ignore. */
+        /* Get the number of media we expect the LUNs should have, and add errors to ignore. */
         expected_medias = 0;
         expected_unit_ready_tests = 0;
         for (lun_idx = 0; lun_idx < ARRAY_COUNT(global_persistent_slave_storage->ux_slave_class_storage_lun); lun_idx++)
@@ -4580,7 +4580,7 @@ UX_TEST_ACTION     actions[3] = { 0 };
 
     lock_out_storage_thread();
 
-    /* In order to get USBX to send the REQUEST_SENSE comand, a CSW must contain an error. Therefore, we need to error
+    /* In order to get USBX to send the REQUEST_SENSE command, a CSW must contain an error. Therefore, we need to error
        CSWs. */
     actions[0] = create_csw_error_action(tx_thread_identify(), UX_HOST_CLASS_STORAGE_CSW_FAILED);
     actions[1] = create_csw_error_action(tx_thread_identify(), UX_HOST_CLASS_STORAGE_CSW_FAILED);
@@ -4948,7 +4948,7 @@ UX_TEST_ACTION              two_transfers_actions[] = {
     /* For these cases, the device should stall the bulk out during the data
        phase. That is what we do during this test.
 
-       We do this test twice for good measuer: one that requires one slave transfer,
+       We do this test twice for good measure: one that requires one slave transfer,
        and one that requires two slave transfers. */
     stepinfo("thirteen_cases_9_11_test_host\n");
 
@@ -5238,7 +5238,7 @@ UX_HCD_SIM_HOST             *hcd_sim_host = global_hcd -> ux_hcd_controller_hard
 
     /* Proof of concept for USBX_78. */
 
-    stepinfo("    simulataneous control transfers test\n");
+    stepinfo("    simultaneous control transfers test\n");
 
     work_transfer.function = hssctcesmt_do_configuration_reset_function;
 
@@ -5620,7 +5620,7 @@ void(*tests[])() =
         reset_to_bo();
     }
 
-    /* The storage thread runs every two seconds. Make sure it runs at least once so the device reset will occurr. */
+    /* The storage thread runs every two seconds. Make sure it runs at least once so the device reset will occur. */
     ux_utility_delay_ms(UX_TEST_SLEEP_STORAGE_THREAD_RUN_ONCE);
 
     /* Disconnect device and host. */

@@ -217,7 +217,7 @@ UX_DEVICE               *enum_next;
     {
         _ux_utility_memory_free(device -> ux_device_packed_configuration);
 
-        /* Pointer and keep count is set NULL later while reseting instance memory.  */
+        /* Pointer and keep count is set NULL later while resetting instance memory.  */
     }
 
     /* We need the HCD address for the control endpoint removal and to free

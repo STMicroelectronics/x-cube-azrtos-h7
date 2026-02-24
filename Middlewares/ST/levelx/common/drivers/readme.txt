@@ -6,6 +6,22 @@
   *          LevelX low level drivers for STM32 devices.
   ******************************************************************************
   */
+
+## V3.2.3 / 03-10-2025 ###
+=================================
+Main changes
+-------------
+-  Remove unused flash buffer "nand_flash_buffer".
+ + template/lx_stm32_nand_driver.c
+
+## V3.2.2 / 22-08-2025 ###
+=================================
+Main changes
+-------------
+-  Make "NAND Simulator" and "NAND Custom" interfaces cohabitate.
+ + template/lx_stm32_nand_driver.c
+ + template/lx_stm32_nand_driver.h
+
 ## V3.2.1 / 02-06-2025 ###
 =================================
 Main changes

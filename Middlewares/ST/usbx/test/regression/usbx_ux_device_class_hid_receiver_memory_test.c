@@ -522,7 +522,7 @@ ULONG                                               test_n;
 
     stepinfo(">>>>>>>>>> - _class_register\n");
 
-    /* Initilize the device hid class. */
+    /* Initialize the device hid class. */
     status  = ux_device_stack_class_register(_ux_system_slave_class_hid_name, ux_device_class_hid_entry,
                                              1,1, (VOID *)&hid_mouse_parameter);
     status |= ux_device_stack_class_register(_ux_system_slave_class_hid_name, ux_device_class_hid_entry,
