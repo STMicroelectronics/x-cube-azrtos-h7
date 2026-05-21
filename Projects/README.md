@@ -6,3 +6,7 @@ In this repository, some middleware libraries **along with** the projects (demos
 
 * `./Projects/STM32H743I-EVAL/Applications/USBX/Ux_Device_Audio2.0_PlayBack`
 * `./Projects/STM32H743I-EVAL/Applications/USBX/Ux_Device_Audio20_Recording`
+
+## Note
+
+Although `Ux_Device_Audio2.0_PlayBack` does not functionally depend on `STM32_Audio` middleware, it cannot be built without it due to BSP dependencies.
